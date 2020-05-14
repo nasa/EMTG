@@ -1,0 +1,143 @@
+\chapter{Astrodynamics}
+\label{chap:astrodynamics}
+
+\hl{Donald}
+
+\section{Universe}
+\label{sec:universe}
+
+\hl{Donald}
+
+Each \texttt{universe} owns a \texttt{frame} object and a vector of \texttt{body} object.
+
+\section{Body}
+\label{sec:body}
+
+\hl{Donald}
+
+Each \texttt{body} class owns a \texttt{frame} object and a \texttt{bplane} object.
+
+\section{Frame}
+\label{sec:frame}
+
+The \texttt{Frame} class handles transformations between EMTG's available reference frames. EMTG supports the following reference frames:
+
+\begin{itemize}
+	\item \textbf{\texttt{ICRF}}: A frame aligned with the International Celestial Reference Frame (ICRF) as defined in the \ac{IAU} Cartographic Coordinates and Rotational Elements document \cite{IAU_cartographic_coordinates_2018} and in \ac{SPICE} \cite{SPICE}. All of EMTG's internal calculations are performed in ICRF, so if the user specifies a state in some other frame, then the \texttt{frame} class has to transform it.
+	
+	\item \textbf{\texttt{J2000\_BCI (J2000 body-centered inertial)}}: A frame defined by the first two Euler rotations ($\alpha$ and $\delta$) in the \ac{IAU} Cartographic Coordinates and Rotational Elements document \cite{IAU_cartographic_coordinates_2018}, evaluated at January 1st, 2000 (J2000). This frame uses only the constant terms of the rotation, since the time-dependent terms are expressed as time since the J2000 epoch.
+	
+	\item \textbf{\texttt{J2000\_BCF (J2000 body-centered fixed)}}: A frame defined by a third Euler rotation beyond \texttt{J2000\_BCI} - a rotation about the \textit{z} axis by $W$ as defined in the \ac{IAU} Cartographic Coordinates and Rotational Elements document \cite{IAU_cartographic_coordinates_2018}. The first two rotations are evaluated at the J2000 epoch, but the $W$ rotation is evaluated at the epoch of the state being rotated. EMTGv9 only supports the linear component of the rotation, \textit{i.e} $W = W_0 + \dot{W}$. This was judged sufficient for EMTG's intended use cases. EMTG's \texttt{J2000\_BCF} is still an inertial frame; the time derivatives of the unit vectors of the \texttt{J2000\_BCF} frame are all zero. In other words, the position and velocity are rotated according to the IAU angles, but the velocity transformation does not include the $\mathbf{\omega} \times \mathbf{r}$ term. This is deliberate and is a definition that is often used for designing planetary probe trajectories. \hl{Kyle, Noble}
+	
+	\item \textbf{\texttt{TrueOfDate\_BCI (true-of-date body-centered inertial)}}: A frame identical to \texttt{J2000\_BCI} except that all three Euler rotations are evaluated at the epoch of the state being rotated.
+	
+	\item \textbf{\texttt{TrueOfDate\_BCF (true-of-date body-centered fixed)}}: A frame identical to \texttt{J2000\_BCF} except that all three Euler rotations are evaluated at the epoch of the state being rotated.
+	
+	\item \textbf{\texttt{PrincipleAxes}}: \hl{Noble}. Not yet fully implemented.
+	
+	\item \textbf{\texttt{Topocentric}}: \hl{Noble}. Not yet fully implemented.
+
+	\item \textbf{\texttt{Polar}}: \hl{Noble}. Not yet fully implemented.
+	
+	\item \textbf{\texttt{J2000\_BCR (J2000 body-centered rotating)}}: A frame identical to \texttt{J2000\_BCF} except that the velocity vector is with respect to the rotating BCF frame. In other words, the $\mathbf{\omega} \times \mathbf{r}$ term is included, unlike in the \texttt{J2000\_BCF} frame. Not yet implemented.
+	
+	\item \textbf{\texttt{TrueOfDate\_BCR (true-of-date body-centered rotating)}}: A frame identical to \texttt{J2000\_BCR} except that all three Euler rotations are evaluated at the epoch of the state being rotated. Not yet implemented.
+	
+	\item \textbf{RIC (radial-intrack-crosstrack)}: A frame defined by the position and velocity vectors of the central body relative to some other reference body. For example, OSIRIS-REx uses a RIC frame where the \texttt{x} axis is the vector from the Sun to Bennu $\mathbf{r}$, the \texttt{z} axis is the angular momentum vector of Bennu about the sun $\mathbf{h} = \mathbf{r} \times \mathbf{v}$, and the \texttt{y} axis completes the right-handed set, $\mathbf{h} \times \mathbf{v}$. (not yet implemented)
+	
+	\item \textbf{SAM (sun-angular momentum, also called sun-north)}: The $x$ axis points from the central body to a reference body (\textit{i.e.} the Sun). The $y$ axis is the cross product of the \texttt{J2000BCI} spin pole and the $x$ axis. The $z$ axis complete the right-handed set.
+\end{itemize}
+
+At construction, the owning object passes in the three Euler rotation angles and their first-order derivatives ($\alpha_0, \dot{\alpha}, \delta_0, \dot{\delta}, W, \dot{W}$). The \texttt{initialize\_J2000()} method is called by the constructor and creates the rotation matrices between \texttt{ICRF} and \texttt{J2000\_BCI}. These rotations are immediately available. The time-dependent transformations not evaluated immediately because the epoch of interest is not yet known. Instead, they are evaluated when the owning object, or another method of the \texttt{frame} itself, calls the \texttt{construct\_rotation\_matrices()} method. The rotations can be constructed with or without derivative information, as needed.
+
+The owning object may then perform the transformation either by calling \textit{get\_R()} and \texttt{get\_dRdt} and performing the transformation outside the frame class, or more safely, by calling the \texttt{rotate\_frame\_to\_frame()} method. The \texttt{rotate\_frame\_to\_frame()} method performs the transformation and returns both the transformed state and its derivatives.
+
+The \hl{\texttt{rotate\_frame\_to\_frame()} method will be the only safe way to transform to and from \texttt{Topocentric}, \texttt{Polar}, \texttt{J2000\_BCR}, and \texttt{TrueOfDate\_BCR} once they are fully implemented. We plan to force EMTG to use \texttt{rotate\_frame\_to\_frame()} everywhere, just to make sure.}
+
+\section{B-plane}
+\label{sec:bplane}
+
+\hl{Donald}
+
+\section{Acceleration Model}
+\label{sec:acceleration_model}
+
+\hl{Donald}
+
+The \texttt{AccelerationModel} abstract base class establishes the interface between any derived acceleration models and EMTG's equations of motion classes (\ref{sec:Equations of Motion}) as well as any other entities that may have a need to directly it (MGALT with perturbations). The methods \texttt{AccelerationModel::setEpoch} and \texttt{AccelerationModel::setEpochJD} are used to set the current epoch (in seconds past the J2000 epoch and the Julian date in days respectively) to be used by any time-dependent acceleration terms (e.g. body rotational states, ephemeris-based gravity calculations, atmospheric drag). The \texttt{AccelerationModel::computeAcceleration} method takes a spacecraft state vector and two boolean flags that control derivative computation as inputs and computes the instantaneous acceleration experienced by the spacecraft. The method is also overloaded to accept a thrust control vector for powered flight. The current acceleration vector can be extracted from the \texttt{AccelerationModel} using \texttt{AccelerationModel::getAcceleration}. The \texttt{AccelerationModel::populateInstrumentationFile} method will write the acceleration contributions from all \texttt{AccelerationModelTerms} to the input \texttt{ofstream} for the input epoch (this method is also overloaded with a version that accepts a control vector as an input). 
+
+The methods \texttt{setdCurrentEpochdPropVar} and \texttt{setdCurrentEpochdPropVarPrevious} set the partial derivative values for the current epoch w.r.t. the independent variable of integration and the current epoch (the latter should be trivially 1.0). \texttt{setdstate\_dotdProp\_varsPtr} is used to set a pointer to the container where all propagation variable partials of $\dot{\mathbf{X}}$ should be stored. This method is called by an \texttt{Integrand} object and creates a link for passing propagation variable partials computed by an \texttt{AccelerationModel} to an \texttt{IntegrationScheme}. The container is an $n\times2$ matrix where $n$ is the size of the state vector (e.g. Eq. (\ref{eq:EOM_v}) - (\ref{eq:EOM_oxidizer}) would require a 10 $\times$ 2 matrix. The two columns respectively correspond to time partials w.r.t. the current independent variable of propagation and previous phase flight time variables (i.e. current epoch). In some instances, on exit from an AccelerationModel the first column might not directly correspond with partials w.r.t the independent variable. For example, the \texttt{SpacecraftAccelerationModel} computes partials of $\dot{\mathbf{X}}$ w.r.t. the current epoch and w.r.t. the current flight time, but then the \texttt{SundmanSpacecraftEOM} modifies them to correspond to integration with respect to the angular anomaly via the chain rule. Finally, \texttt{setdstatedProp\_vars} sets the current values of the state partials w.r.t. the independent variable of propagation as well as the explicit partials w.r.t. current epoch.
+
+\subsection{SpacecraftAccelerationModel}
+\label{sec:spacecraft_acceleration_model}
+
+The \texttt{SpacecraftAccelerationModel} class implements a Cartesian acceleration model for spacecraft motion with respect to the center of a gravitating body. A \texttt{SpacecraftAccelerationModel} can model the perturbative effects of $n$ third body gravity sources, spherical body solar radiation pressure, central body oblateness (J2) and gas drag assuming an exponential atmosphere model.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.3\linewidth]{./astrodynamics/AccelerationModel_inheritance.pdf}
+    \caption{\label{fig:AccelerationModel_inheritance} AccelerationModel inheritance diagram.}
+\end{figure} 
+
+A \texttt{SpacecraftAccelerationModel} constructor requires pointers to a \texttt{MissionOptions} object, a \texttt{JourneyOptions} object, a \texttt{Universe} object, a vector of decision variable descriptions and a \texttt{Spacecraft} object. The input parameters \texttt{num\_STM\_rows\_in}, \texttt{num\_STM\_columns\_in} size the state propagation matrix that the acceleration model will compute. The \texttt{STM\_start\_index} input parameter is used to inform the equations of motion object that calls the \texttt{SpacecraftAccelerationModel} where the STM entries begin in the extended state vector (state entries + STM entries). The boolean parameter \texttt{needCentralBody} indicates whether or not central body gravity should be included in the total acceleration calculation. This is useful for using a \texttt{SpacecraftAccelerationModel} to compute perturbations only (i.e. for an MGALT phase that models perturbations impulses, and accounts for two-body motion with a \texttt{KeplerPropagator}).
+
+On construction, the method \texttt{SpacecraftAccelerationModel::constructorInitialize} sizes various internal containers, tests if the acceleration is being computed in a heliocentric frame and then constructs whatever \texttt{AccelerationModelTerms} were requested by the user (via the \texttt{JourneyOptions} object pointer). Calls to the \texttt{SpacecraftAccelerationModel} are categorized as heliocentric/non-heliocentric for the purposes of computing the distance from the sun for solar electric power calculations (non-heliocentric trajectories require an extra vector addition step and an associated ephemeris look-up to compute the sun-spacecraft distance).
+
+The primary public method of the \texttt{SpacecraftAccelerationModel} is \texttt{SpacecraftAccelerationModel::computeAcceleration}, which computes and stores the acceleration on the spacecraft. The inputs to this method are the spacecraft state vector, two flags indicating whether or not partial derivatives of the acceleration model should be computed and a control vector $\mathbf{u}$ (if the control overload is being called). Prior to calling this method, it is important to set the current epoch using \texttt{AccelerationModel::setEpoch} or \texttt{AccelerationModel::setEpochJD}. The majority of the public methods in \texttt{SpacecraftAccelerationModel} are get methods for extracting acceleration information from the model. These include \texttt{SpacecraftAccelerationModel::getAccelerationVec} (returns a vector of the total acceleration experienced by the spacecraft in the central body ICRF frame), \texttt{SpacecraftAccelerationModel::getGravityAccelerationVec} (returns a vector of the total gravitational acceleration on the spacecraft in the central body ICRF frame), \texttt{SpacecraftAccelerationModel::getGravityAccelSources} (returns a vector of 3-tuples, where each tuple contains a body name, body mu, and the acceleration of the spacecraft due to the body), \texttt{SpacecraftAccelerationModel::getSRPAccelerationVec} (returns the acceleration vector due to solar radiation pressure), \texttt{SpacecraftAccelerationModel::getThrustAccelerationVec} (returns the acceleration vector due to the spacecraft's thruster), \texttt{SpacecraftAccelerationModel::getThrusterMaxMassFlowRate} (returns the mass flow rate of the thruster), \texttt{SpacecraftAccelerationModel::getControlNorm} (returns the norm of the control parameters $u_x,~u_y,~u_z$), \texttt{SpacecraftAccelerationModel::getDutyCycle} (returns the duty cycle of the propulsion system), \texttt{SpacecraftAccelerationModel::getfx} (returns the state propagation matrix), \texttt{SpacecraftAccelerationModel::getSTMrowDim} (returns the row dimension of the state transition matrix)
+, \texttt{SpacecraftAccelerationModel::getSTMcolDim} (returns the column dimension of the state transition matrix), \texttt{SpacecraftAccelerationModel::getSTMstartIndex} (returns the index in the augmented state vector where the state transition matrix entries begin), \texttt{SpacecraftAccelerationModel::getCB2SC} (returns the distance from the central body to the spacecraft).
+
+The \texttt{SpacecraftAccelerationModel::populateInstrumentationFile} method includes an overload with control and generates acceleration data for the current epoch and spacecraft state vector and writes it to the input \texttt{std::ofstream}. To do so, this method first writes the current JD epoch, the spacecraft state vector (including mass) and the total acceleration vector. Then, the method calls \texttt{AccelerationModelTerm::populateInstrumentationFile} for each term included in the acceleration calculation.
+
+The private method \texttt{SpacecraftAccelerationModel::initializeAndComputeGeometry} zeros out the acceleration vector and the state propagation matrix (but sets the $\frac{\partial \mathbf{v}}{\partial \mathbf{v}}$ submatrix equal to $\mathbb{I}_{3\times3}$) and calls \texttt{SpacecraftAccelerationModel::computeScCbSunTriangle}. This method computes the position/velocity of the spacecraft w.r.t. the sun as well as the following partial derivative information:
+
+\begin{align}
+    &\frac{\partial \mathbf{r}_{\odot}}{\partial t} \label{eq:dr_sundepoch} \\
+    &\frac{\partial \mathbf{r}_{\odot}}{\partial \Delta t_{\text{p}}} \label{eq:dr_sundflighttime}
+\end{align},
+
+\noindent where $\Delta t_{\text{p}}$ is the current phase flight time. If the trajectory is heliocentric, then Eq. (\ref{eq:dr_sundepoch}) and (\ref{eq:dr_sundflighttime}) are both zero.
+
+
+
+
+
+
+\section{Equations of Motion}
+\label{sec:Equations of Motion}
+
+All equations of motion classes are instances of the Integrand class, which is operated on by an EMTG IntegrationScheme class in order to numerically integrate a state vector.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.3\linewidth]{./astrodynamics/Integrand_EOM_inheritance.pdf}
+    \caption{\label{fig:Integrand_EOM_inheritance} Integrand inheritance diagram.}
+\end{figure}
+
+The \texttt{TimeDomainSpacecraftEOM} class encodes the first order Cartesian differential equations of motion using time as the independent variable and is derived from the \texttt{Integrand} class, which is called by implementations of the EMTG \texttt{IntegrationScheme} class. Specifically, an \texttt{IntegrationScheme} implementation calls the \texttt{TimeDomainSpacecraftEOM::evaluate} method in order to compute the current values of the differential equations (at a given epoch) as well as the orbit variational equations:
+
+\begin{align}
+\dot{\mathbf{r}} &= \mathbf{v} \label{eq:EOM_v}\\
+\dot{\mathbf{v}} &= \mathbf{a} \label{eq:EOM_a} \\
+\dot{m} &= -\|\mathbf{u}\|\dot{m}_{\text{max}} \label{eq:EOM_m} \\
+\dot{t} &= 1 \label{eq:EOM_epoch} \\
+\dot{f}_{\text{virt}} &= \dot{m}_{\text{ACS}} \label{eq:EOM_fuel} \\
+\dot{o}_{\text{virt}} &= \|\mathbf{u}\|\dot{m}_{\text{max}} \label{eq:EOM_oxidizer} \\
+\dot{\mathbf{\Phi}} &= \mathbf{A} \mathbf{\Phi} \label{eq:variational_eq},
+\end{align}
+
+\noindent where $\dot{m}_{\text{max}}$ is the maximum mass flow rate, $\mathbf{u} = \left[ u_x~~u_y~~uz \right]^T; \|\mathbf{u}\| \le 1$ is the maneuver control vector (\ref{subsec:TwoPointShootingLowThrustPhase}) $\mathbf{A} = \frac{\partial \dot{\mathbf{X}}}{\partial \mathbf{X}}$ is the state propagation matrix and $\mathbf{X} = \left[\mathbf{r} ~~ \mathbf{v} ~~ m ~~ t ~~ f_{\text{virt}} ~~ o_{\text{virt}} \right]^T$. Note that a differential equation is included for the current epoch $t$ (Eq. \ref{eq:EOM_epoch}), which is used to compute the current epoch if the independent variable of integration is not time (e.g. a Sundman propagator).
+
+The \texttt{TimeDomainSpacecraftEOM::evaluate} method has two overloads, one for use with a control input, and one without (for ballistic trajectories). The \texttt{TimeDomainSpacecraftEOM::evaluate} method, first calls \texttt{TimeDomainSpacecraftEOM::computeAcceleration} (which has overloads for control/no control), which first sets the current epoch in the SpacecraftAccelerationModel and passes it pointers that it will use to extract time of flight and epoch partials from the SpacecraftAccelerationModel. Then, \texttt{TimeDomainSpacecraftEOM::computeAcceleration} calls \texttt{SpacecraftAccelerationModel::computeAcceleration}, which computes the instantaneous acceleration of the spacecraft and stores that vector. Next, \texttt{TimeDomainSpacecraftEOM::evaluate} calls \texttt{TimeDomainSpacecraftEOM::ballisticEOM}, the method that computes the first order differential equations of motion for ballistic flight. To do this, it extracts the current acceleration vector from the \texttt{SpacecraftAccelerationModel}. Despite the fact that it computes ballistic EOMs, this method also computes the differential equation for virtual chemical fuel if ACS usage is being tracked (section \ref{sec:propellant_and_dry_mass_constraints}). If the control overloaded \texttt{TimeDomainSpacecraftEOM::evaluate} is called, then \texttt{TimeDomainSpacecraftEOM::propulsionEOM} is called next, which computes the mass flow rate first order differential equations. Both overloads of \texttt{TimeDomainSpacecraftEOM::evaluate} set time derivative of current epoch (state vector entry 7) to 1.0, i.e. current epoch is (trivially) integrated, and it's time rate of change is 1.0. Finally, \texttt{TimeDomainSpacecraftEOM::evaluate} computes the variational equations by extracting the state propagation matrix from the SpacecraftAccelerationModel and computing the first order matrix differential equation.
+
+The SundmanDomainSpacecraftEOM inherits from the TimeDomainSpacecraftEOM and applies the multiplicative transform to the t-domain EOM that transforms them to $\tau$-domain. It also computes the modified variational equations that account for this transformation:
+
+\begin{align}
+\mathring{\mathbf{X}} &= \frac{d\mathbf{X}}{d\tau} = \left( \frac{d\mathbf{X}}{dt} \right) \frac{dt}{d\tau} = \dot{\mathbf{X}}c_{\gamma} r^{\gamma} = \dot{\mathbf{X}}\eta\\
+\mathring{\mathbf{\Phi}} &= \frac{\partial \mathring{\mathbf{X}}}{\partial \mathbf{X}} = \left( \frac{\partial \dot{\mathbf{X}}}{\partial \mathbf{X}}\eta + \dot{\mathbf{X}}\frac{\partial \eta}{\partial \mathbf{X}} \right) \mathbf{\Phi} = \left( \mathbf{A}\eta + \dot{\mathbf{X}}\frac{\partial \eta}{\partial \mathbf{X}} \right) \mathbf{\Phi}
+\end{align}
+
+\noindent where $\eta = c_{\gamma}r^{\gamma}$ is the multiplicative Sundman transformation function, $c_{\gamma}$ is a constant, which is set equal to the Universe length unit (LU), and $\gamma$ is the Sundman power constant, which is set to 1.0 in the current implementation. This means that the integration time steps correspond to a eccentric anomaly (to within a constant scale factor).
+
+
+
+

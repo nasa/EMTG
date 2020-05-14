@@ -1,0 +1,443 @@
+\externaldocument{../SplineEphem/c-SplineEphem}
+\externaldocument{../hardware_models/c-hardware_models}
+
+\chapter{Boundary Conditions}
+\label{chap:boundary-conditions}
+
+\section{BoundaryEventBase}
+\label{sec:boundaryeventbase}
+
+\texttt{BoundaryEventBase} is the abstract base class from which all boundary events are derived. The base class defines the interfaces common to all boundary events and also the common fields, including the state before and after the event. For a full class hierarchy of all boundary conditions, see ``EMTG::BoundaryEvents::BoundaryEventBase'' in the \ac{EMTG} Doxygen. All classes are described conceptually below.
+
+\section{EdelbaumSpiral}
+\label{sec:EdelbaumSpiral}
+
+\texttt{EdelbaumSpiral} is an owned subclass of \texttt{EphemerisPeggedSpiralDeparture} and \texttt{EphemerisPeggedSpiralArrival} and handles the mathematics of a segmented Edelbaum Spiral. This technique is used in EMTG to approximate a many-revolution low-thrust spiral about a body in the current universe. For example, one may wish to spiral from LEO to escape from the Earth, or from the edge of the Mars sphere of influence down to the orbital distance of Phobos or Deimos. Edelbaum's approximation provides a fast, sufficiently accurate model that allows spirals to be included with an EMTG broad search without having to explicitly model and optimize the path of the spacecraft during the spiral.
+
+Edelbaum's approximation consists of modeling the initial and final orbits about the body as co-planar circles and then assuming that the thrust level is sufficiently low that the transfer orbit is also nearly circular. The total $\Delta v$ for the transfer may then be written as:
+
+\begin{equation}
+	\label{eq:edelbaum_delta_v}
+	\Delta v = \abs{\sqrt{\frac{\mu}{r_1} -\sqrt{\frac{\mu}{r_2}}}}
+\end{equation}
+
+Edelbaum's technique makes the assumption of constant thrust and specific impulse across the entire spiral. This does not accurately reflect a spiral using solar-electric propulsion about a body whose orbit has significant eccentricity because as the body moves closer to or farther from the sun, the available power changes and so does the available thrust and specific impulse. Accordingly, EMTG supports splitting an Edelbaum spiral into multiple segments, each modeling an equal portion of the spiral $\Delta v$. At the beginning of each segment, the power, thrust, and specific impulse are re-computed based on the body's distance from the sun.
+
+The actual mathematics of the Edelbaum segments are handled in \texttt{EdelbaumSpiralSegment}. \texttt{EdelbaumSpiral} contains a vector of \texttt{EdelbaumSpiral} objects. Other than holding the segment objects, \texttt{EdelbaumSpiral}'s job is to calculate the total $\Delta v$ as per Equation \ref{eq:edelbaum_delta_v} and to provide the final state, \textit{i.e.} the state at the end of the final \texttt{EdelbaumSpiralSegment}, and its derivatives to the parent boundary condition object. \texttt{EdelbaumSpiral} does not itself introduce any new decision variables or constraints.
+
+\subsection{EdelbaumSpiralSegment}
+\label{subsec:EdelbaumSpiralSegment}
+
+\texttt{EdelbaumSpiralSegment} is an owned subclass of \textit{EdelbaumSpiral} that performs the actual Edelbaum spiral calculations for each segment. The segment $\Delta v$ is provided at problem setup via Equation \ref{eq:edelbaum_delta_v} and is fixed during problem execution. In order to simplify the partial derivatives of the spiral's final state with respect to the decision variables, EMTG uses a ``sparse'' spiral transcription.
+
+The time of flight, the mass at the end of the segment, and the electric propellant and chemical fuel (for ACS) consumed during the segment are encoded as decision variables as described in Table \ref{tab:decision_variables_EdelbaumSpiralSegment}. Nonlinear constraints are then imposed as per Table \ref{tab:constraints_EdelbaumSpiralSegment} to ensure that the encoded flight time, mass, and propellant match the computed flight time, mass, and propellant. These constraints are simple to formulate and have simple partial derivatives. EMTG can then compute the total propellant and time required for the spiral by simply adding up the relevant decision variables for each \texttt{EdelbaumSpiralSegment}.
+
+\begin{table}
+	\centering
+	\caption{Decision variables that define an \texttt{EdelbaumSpiralSegment}}
+	\label{tab:decision_variables_EdelbaumSpiralSegment}
+	\begin{tabular}{ll}
+		\hline\hline
+		Variable & Description\\
+		\hline
+		$TOF$ & time-of-flight of the segment\\
+		$m_f$ &mass at the right-hand side of the segment\\
+		$m_{ep}$ & virtual electric propellant\\
+		$m_{cf}$ &virtual chemical fuel (for ACS desats)\\
+		\hline\hline		
+	\end{tabular}
+\end{table}
+
+\begin{table}
+	\centering
+	\caption{Constraints that define an \texttt{EdelbaumSpiralSegment}}
+	\label{tab:constraints_EdelbaumSpiralSegment}
+	\begin{tabular}{ll}
+		\hline\hline
+		Constraint & Depends on\\
+		\hline		
+		$TOF_{computed} = TOF_{encoded}$& $TOF_{encoded}$, all previous time variables, $m_{i}$\\
+		$m_{ep,computed} = m_{ep,encoded}$& $m_{ep,encoded}$, all previous time variables, $m_{i}$\\
+		
+		$m_{cf,computed} = m_{cf,encoded}$& $m_{cf,encoded}$, $m_{i}$ (if tracking ACS), $TOF_{encoded}$ (if tracking ACS)\\
+		\hline\hline		
+	\end{tabular}
+\end{table}
+
+The initial mass for each segment, $m_i$, is drawn either from the parent boundary condition's encoded mass (for the first segment) or from the previous segment's encoded final mass (for later segments).
+
+
+\section{DepartureEvent}
+\label{sec:departureevent}
+
+\texttt{DepartureEvent} is an intermediate abstract base class that specializes \texttt{BoundaryEventBase} to the specific needs of a departure event. \texttt{DepartureEvent} is then an abstract base class for all of the various departure events described below.
+
+The child departure events all derive both from \texttt{DepartureEvent} and from whatever class of boundary they are (\texttt{EphemerisPeggedboundary}, \texttt{EphemerisReferencedBoundary}, \texttt{FreePointBoundary}, or \texttt{PeriapseBoundary}).
+
+Some departure events encode a ``wait time,'' \textit{i.e.} a decision variable that defines the period of time between either the \texttt{launch\_window\_open\_date} or the end of the previous journey, and the beginning of the current journey. The bounds on the wait time are defined by the user. Any departure event that has a wait time and begins a journey other than the first includes a mass continuity constraint such that the mass at the beginning of the departure event matches the mass at the end of the previous journey's arrival event.
+
+\section{ArrivalEvent}
+\label{sec:arrivalevent}
+
+\texttt{ArrivalEvent} is an intermediate abstract base class that specializes \texttt{BoundaryEventBase} to the specific needs of a arrival event. \texttt{ArrivalEvent} is then an abstract base class for all of the various arrival events described below.
+
+The child arrival events all derive both from \texttt{ArrivalEvent} and from whatever class of boundary they are (\texttt{EphemerisPeggedboundary}, \texttt{EphemerisReferencedBoundary}, \texttt{FreePointBoundary}, or \texttt{PeriapseBoundary}).
+
+\clearpage
+\section{EphemerisPeggedBoundary}
+\label{sec:ephemerispeggedboundary}
+
+\texttt{EphemerisPeggedBoundary} is an abstract base class for all boundary events that are pegged to an ephemeris object. For example, if you want to intercept or rendezvous with Ceres, or depart from Ceres in a ``patched-conic'' fashion, all of those boundary events are ``ephemeris-pegged.'' The base \texttt{EphemerisPeggedBoundary} class contains the code to look up the position and velocity of the ephemeris point as a function of time and insert it into the spacecraft state vector.
+
+The user provides the identity of the ephemeris object to which the boundary is pegged. The position and velocity of the body, along with derivatives, will then be computed with either SPICE or SplineEphem (Chapter \ref{chap:splineephem}).
+
+\subsection{EphemerisPeggedDeparture}
+\label{subsec:ephemerispeggeddeparture}
+
+\texttt{EphemerisPeggedDeparture} derives from both \texttt{EphemerisPeggedBoundary} and \texttt{DepartureEvent}, and is an abstract base class for several boundary classes as defined below.
+
+\subsubsection{EphemerisPeggedFreeDirectDeparture}
+\label{subsubsec:EphemerisPeggedFreeDirectDeparture}
+
+\texttt{EphemerisPeggedFreeDirectDeparture} is the simplest form of \texttt{EphemerisPeggedDeparture} in which the spacecraft takes on the position and velocity of the ephemeris point. Mass is chosen as a decision variable. \texttt{EphemerisPeggedFreeDirectDeparture} has a wait time, and therefore in journeys after than the first, its \texttt{DepartureEvent} base class will create a mass continuity constraint. If the \texttt{EphemerisPeggedFreeDirectDeparture} is the first event in the mission, then the user may choose to either fix the mass (by setting \texttt{allow\_initial\_mass\_to\_vary} to false), or allow the mass to vary between zero and the user-defined \texttt{maximum\_mass} (by setting \texttt{allow\_initial\_mass\_to\_vary} to true).
+
+
+\subsubsection{EphemerisPeggedLaunchDirectInsertion}
+\label{subsubsec:EphemerisPeggedLaunchDirectInsertion}
+
+\texttt{EphemerisPeggedLaunchDirectInsertion} describes a patched-conic launch or departure event. Three new decision variables are added - the magnitude of the departure $v_\infty$, and the right ascension and declination of the departure asymptote in the \ac{ICRF}. The user provides the bounds for all three decision variables.
+
+If the \texttt{EphemerisPeggedLaunchDirectInsertion} begins the first journey in the mission, then the mass is chosen according to the launch vehicle model (Section \ref{sec:LaunchVehicle}). The user may select from a range of launch vehicle models including ``fixed initial mass.'' The user may also choose to either fix the initial mass to whatever the launch vehicle model provides for a given value of $v_\infty$ (by setting \texttt{allow\_initial\_mass\_to\_vary} to false), or allow the mass to vary between zero and the maximum value provided by the launch vehicle (by setting \texttt{allow\_initial\_mass\_to\_vary} to true). Each launch vehicle model comes complete with minimum and maximum $C_3$ values, and if they are more restrictive than the user-defined bounds on $v_\infty$, then \ac{EMTG} will adjust those bounds to fit within the launch vehicle's capability. If the launch vehicle's capability to a given $v_\infty$ exceeds the user-defined \texttt{maximum\_mass}, then the mass will be truncated to the user-defined value.
+
+If the \texttt{EphemerisPeggedLaunchDirectInsertion} begins a later journey in the mission, then the departure maneuver will be modeled as an impulsive burn using the spacecraft's thrusters.
+
+\subsubsection{EphemerisPeggedFlybyOut}
+\label{subsubsec:EphemerisPeggedFlybyOut}
+
+\texttt{EphemerisPeggedFlybyOut} is an abstract base class for all of the types of \texttt{EphemerisPeggedDeparture} that represent the outgoing half of a patched-conic flyby - \texttt{EphemerisPeggedZeroTurnFlyby}, \texttt{EphemerisPeggedUnpoweredFlyby}, and \texttt{EphemerisPeggedPoweredFlyby}. \texttt{EphemerisPeggedFlybyOut} encodes three new decision variables, the $x$, $y$, and $z$ components of $\mathbf{v}_{\infty-out}$ in the \ac{ICRF}. 
+\texttt{EphemerisPeggedFlybyOut}-derived boundary events pull their mass directly from the end of the previous journey and so do not encode their own mass variable. They do, however, all need to do math based on the previous arrival event's $\mathbf{v}_{\infty-in}$ and therefore \texttt{EphemerisPeggedFlybyOut} locates decision variables that define that vector.
+
+\subsubsection{EphemerisPeggedZeroTurnFlyby}
+\label{subsubsec:EphemerisPeggedZeroTurnFlyby}
+
+\texttt{EphemerisPeggedZeroTurnFlyby} is the simplest form of ephemeris-pegged outgoing flyby. This boundary event is used when the flyby is of a very small body and therefore the bend angle is very small. Because the derivatives of a very small bend angle are highly unstable, it is both adequate and recommended to simply not model the bend angle at all. \texttt{EphemerisPeggedZeroTurnFlyby} therefore includes three equality constraints to guarantee that $\mathbf{v}_{\infty-out}$ matches the previous event's $\mathbf{v}_{\infty-in}$.
+
+\subsubsection{EphemerisPeggedUnpoweredFlyby}
+\label{subsubsec:EphemerisPeggedUnpoweredFlyby}
+
+\texttt{EphemerisPeggedUnpoweredFlyby} defines the outgoing half of a patched conic flyby about a body large enough to generate a significant bend angle. The flyby is unpowered, \textit{i.e} no maneuver is performed at periapse.
+
+\texttt{EphemerisPeggedUnpoweredFlyby} adds two new constraints - one to require that the magnitude of $v_{\infty-out}$ matches the magnitude of the previous event's $v_{\infty-in}$, and one to ensure that the bend angle does not require the spacecraft to fly below a user-defined safe distance $h_{safe}$ from the body as described in Equations \ref{eq:unpowered_flyby_constraint}-\ref{eq:unpowered_flyby_bend_angle}.
+
+\begin{align}
+	\label{eq:unpowered_flyby_constraint}
+	F &= h_{FB} - h_{safe}\\
+	\label{eq:unpowered_flyby_altitude}
+	h_{FB} &= \frac{\mu}{v^2_{\infty-out}} \left( \frac{1}{\sin \frac{\delta_{FB}}{2}} - 1\right) - r_{body}\\
+	\label{eq:unpowered_flyby_bend_angle}
+	\delta_{FB} &= \arccos \left( \frac{\mathbf{v}_{\infty-out} \bullet \mathbf{v}_{\infty-in}}{v_{\infty-out} v_{\infty-in}} \right)
+\end{align}
+
+\subsubsection{EphemerisPeggedPoweredFlyby}
+\label{subsubsec:EphemerisPeggedPoweredFlyby}
+
+\texttt{EphemerisPeggedPoweredFlyby} defines the outgoing half of a patched conic flyby about a body large enough to generate a significant bend angle. The flyby is powered, \textit{i.e} an impulse is performed at periapse aligned with the spacecraft's velocity vector.
+
+\texttt{EphemerisPeggedPoweredFlyby} adds one new variable, defining the periapse distance $r_p$, and one constraint to require that the bend angle be feasible as described below.
+
+\begin{align}
+	\label{eq:powered_flyby_turn_angle}
+	F &= \arcsin\frac{1}{e_{in}} + \arcsin\frac{1}{e_{out}} - \delta_{FB}\\
+	\delta_{FB} &= \arccos \left( \frac{\mathbf{v}_{\infty-out} \bullet \mathbf{v}_{\infty-in}}{v_{\infty-out} v_{\infty-in}} \right)\\
+	e_{in} &= 1 + \mathbf{v}_{\infty-in} \bullet \mathbf{v}_{\infty-in} \frac{r_p}{\mu}\\
+	e_{out} &= 1 + \mathbf{v}_{\infty-out} \bullet \mathbf{v}_{\infty-out} \frac{r_p}{\mu}
+\end{align}
+
+In addition, \texttt{EphemerisPeggedPoweredFlyby} must compute the $\Delta v$ magnitude of the periapse impulse and also the change in mass due to the maneuver. The $Delta v$ calculation is described as,
+
+\begin{align}
+	\label{eq:powered_flyby_deltav}
+	\Delta v_{FB} &= \abs{B_{\Delta v} - A_{\Delta v}}\\
+	A_{\Delta v} &= \sqrt{\mathbf{v}_{\infty-in} \bullet \mathbf{v}_{\infty-in} + 2\frac{mu}{r_p}}\\
+	B_{\Delta v} &= \sqrt{\mathbf{v}_{\infty-out} \bullet \mathbf{v}_{\infty-out} + 2\frac{mu}{r_p}}
+\end{align}
+
+\noindent and the mass calculation is described as,
+
+\begin{align}
+	\label{eq:powered_flyby_mass}
+	m_{after-flyby} = m_{before_flyby} - m_{fuel} - m_{oxidizer}
+\end{align}
+
+\noindent where $m_{fuel}$ and $m_{oxidizer}$ are computed using the chemical propulsion model as described in Section \ref{sec:ChemicalPropulsionSystem}.
+
+\subsubsection{EphemerisPeggedSpiralDeparture}
+\label{subsubsec:EphemerisPeggedSpiralDeparture}
+
+\texttt{EphemerisPeggedSpiralDeparture} models an escape spiral from a body in the universe. The user provides the starting and ending orbit radius. \texttt{EphemerisPeggedSpiralDeparture} contains an \texttt{EdelbaumSpiral} object that does all of the computations. \texttt{EphemerisPeggedSpiralDeparture} puts the final state and its derivatives into the standard \texttt{state\_after\_event}, \texttt{Derivatives\_of\_StateAfterEvent}, and \texttt{Derivatives\_of\_StateAfterEvent\_wrt\_Time}.
+
+\subsection{EphemerisPeggedArrival}
+\label{subsec:ephemerispeggedarrival}
+
+\texttt{EphemerisPeggedArrival} derives from both \texttt{EphemerisPeggedBoundary} and \texttt{ArrivalEvent}, and is an abstract base class for several boundary classes as defined below.
+
+\subsubsection{EphemerisPeggedLTRendezvous}
+\label{subsubsec:EphemerisPeggedLTRendezvous}
+
+\texttt{EphemerisPeggedLTRendezvous} is the simplest form of \texttt{EphemerisPeggedArrival} in which the spacecraft takes on the position and velocity of the ephemeris point. The spacecraft mass is chosen between $\pm$1.0e-13 and the user-defined \texttt{maximum\_mass}.
+
+\subsubsection{EphemerisPeggedArrivalWithVinfinity}
+\label{subsubsec:EphemerisPeggedArrivalWithVinfinity}
+
+\texttt{EphemerisPeggedArrivalWithVinfinity} is an abstract base class for all \texttt{EphemerisPeggedArrival} events that require a $\mathbf{v}_\infty$ vector. \texttt{EphemerisPeggedArrival} encodes three new decision variables, the $x$, $y$, and $z$ components of $\mathbf{v}_{\infty-in}$ in the \ac{ICRF}.
+
+\subsubsection{EphemerisPeggedChemRendezvous}
+\label{subsubsec:EphemerisPeggedChemRendezvous}
+
+\texttt{EphemerisPeggedChemRendezvous} is a derived class of \texttt{EphemerisPeggedArrivalWithVinfinity} that represents the case where the spacecraft performs an impulsive maneuver to match both position and velocity with the target body but ignores the gravity of that body. This is suitable for modeling rendezvous with an asteroid or comet. The rendezvous maneuver performance is calculated using the chemical propulsion model in Section \ref{sec:ChemicalPropulsionSystem}.
+
+\subsubsection{EphemerisPeggedOrbitInsertion}
+\label{subsubsec:EphemerisPeggedOrbitInsertion}
+
+\texttt{EphemerisPeggedOrbitInsertion} is a derived class of \texttt{EphemerisPeggedArrivalWithVinfinity} that represents the case where the spacecraft performs a two-dimensional patched-conic orbit insertion at the target body. By ``two-dimensional,'' we mean that EMTG only considered the \ac{SMA} and \ac{ECC} of the desired orbit about the target, and none of the angles. The magnitude of the insertion $\Delta v$ is computed as,
+
+\begin{align}
+	\label{eq:EphemerisPeggedOrbitInsertion}
+	\Delta v &= v_{p-hyperbola} - v_{p-ellipse}\\
+	v_{p-ellipse} &= \sqrt{\mu * \left( \frac{2}{r_p} - \frac{1}{SMA}\right)}\\
+	v_{p-hyperbola} &= \sqrt{v^2_\infty + 2\frac{mu}{r_p}}\\
+	r_p &=SMA \left(1 - ECC\right)
+\end{align}
+
+The user may elect to perform a fixed-magnitude TCM immediately prior to the insertion maneuver, which is calculated using the chemical propulsion model in Section \ref{sec:ChemicalPropulsionSystem}.
+
+\subsubsection{EphemerisPeggedFlybyIn}
+\label{subsubsec:EphemerisPeggedFlybyIn}
+
+\texttt{EphemerisPeggedFlybyIn} is a derived class of \texttt{EphemerisPeggedArrivalWithVinfinity}. \texttt{EphemerisPeggedFlybyIn} adds the ability for the user to define bounds for the components of $\mathbf{v}_{\infty-in}$ and to model a TCM, whose performance is calculated using the chemical propulsion model in Section \ref{sec:ChemicalPropulsionSystem}.
+
+\texttt{EphemerisPeggedFlybyIn} is also a base class of \texttt{EphemerisPeggedIntercept}. If a patched conic phase appears in the middle of a journey, then \texttt{EphemerisPeggedFlybyIn} is used. If the event occurs at the end of a journey, then \textit{EphemerisPeggedIntercept} is used instead.
+
+\subsubsection{EphemerisPeggedIntercept}
+\label{subsubsec:EphemerisPeggedIntercept}
+
+\texttt{EphemerisPeggedIntercept} represents the scenario where the spacecraft intercepts a body at the end of a journey, \textit{i.e.} matches position but not velocity. \texttt{EphemerisPeggedIntercept} is derived from \texttt{EphemerisPeggedFlybyIn} but adds the ability to constrain the magnitude of  $v_{\infty-in}$.
+
+
+\subsubsection{EphemerisPeggedMomentumTransfer}
+\label{subsubsec:ephemerispeggedmomentumtransfer}
+
+\texttt{EphemerisPeggedMomentumTransfer} is a derived class of \texttt{EphemerisPeggedIntercept} that is used in the special case where the spacecraft collides with the destination body and transfers momentum to it. The state after the event therefore represents the destination body after the collision and is represented by:
+
+\begin{align}
+	\label{eq:ephemerispeggedmomentumtransfer}
+	m^+ &= m_{s/c} + m_{body}
+	v_z^+ &= v_{z-body} + v_{\infty-z-s/c} \beta \frac{m_{s/c}}{\left(m_{s/c} + m_{body}\right)}\\
+	v_y^+ &= v_{y-body} + v_{\infty-y-s/c} \beta \frac{m_{s/c}}{\left(m_{s/c} + m_{body}\right)}\\
+	v_x^+ &= v_{x-body} + v_{\infty-x-s/c} \beta \frac{m_{s/c}}{\left(m_{s/c} + m_{body}\right)}\\
+	z^+ &= z_{body}\\
+	y^+ &= y_{body}\\
+	x^+ &= x_{body}\\
+\end{align}
+
+The term $\beta$ is a scale factor that encompasses the plasticity of the impact, the crater formation, and the ejecta released by the impact. The user specifies $\beta$ in the \texttt{JourneyOptions} object as \texttt{impact\_momentum\_enhancement\_factor}.
+
+\subsubsection{EphemerisPeggedSpiralArrival}
+\label{subsubsec:EphemerisPeggedSpiralArrival}
+
+\texttt{EphemerisPeggedSpiralArrival} models a capture spiral from a body in the universe. The user provides the starting and ending orbit radius. \texttt{EphemerisPeggedSpiralArrival} contains an \texttt{EdelbaumSpiral} object that does all of the computations. \texttt{EphemerisPeggedSpiralArrival} puts the final state and its derivatives into the standard \texttt{state\_after\_event}, \texttt{Derivatives\_of\_StateAfterEvent}, and \texttt{Derivatives\_of\_StateAfterEvent\_wrt\_Time}.
+
+\section{EphemerisReferencedBoundary}
+\label{sec:ephemerisreferencedboundary}
+
+\texttt{EphemerisReferencedBoundary} is the abstract base class for all boundary events that are defined \textit{relative} to an ephemeris point but not \textit{on} the ephemeris point. In other words, the boundary point is ``referenced'' to an ephemeris point and moves with it, but additional information is needed to define the boundary relative to the ephemeris point.
+
+In EMTGv9, ephemeris-referenced boundary conditions are defined as lying on a triaxial ellipsoid centered on an ephemeris point. For example, this could include the sphere of influence of a planet or a triaxial ellipsoid representing the surface of a non-spherical body like Ceres. The user provides the three semi-axes of the ellipsoid in the \ac{ICRF} coordinate system. The \texttt{EphemerisReferencedBoundary} base class then creates two new variables to represent the \ac{ICRF} right-ascension and declination of the boundary point's position on the ellipsoid. The distance from the center of the ellipsoid is then computed as,
+
+\begin{equation}
+	\label{eq:trixial_ellipsoid}
+	r = \sqrt{\frac{1.0}{\frac{\cos^2 RA \cos^2 DEC}{a^2} + \frac{\sin^2 RA \cos^2 DEC}{b^2} + \frac{\sin^2 DEC}{c^2}}}
+\end{equation}
+
+\texttt{EphemerisReferencedBoundary} also computes the partial derivatives of the boundary point relative to the RA, and DEC decision variables as well as any variables that affect the position of the ephemeris point that the boundary is referenced to. The velocity of the boundary point relative to the ephemeris point is assumed to be zero unless overriden by a derived class, \textit{e.g.} as described in Sections \ref{subsubsec:EphemerisReferencedArrivalWithVinfinityExterior} and \ref{subsubsec:EphemerisReferencedArrivalWithVinfinityInterior} below.
+
+\subsection{EphemerisReferencedDeparture}
+\label{subsec:EphemerisReferencedDeparture}
+
+\texttt{EphemerisReferencedDeparture} derives from both \texttt{EphemerisReferencedBoundary} and \texttt{DepartureEvent}, and is an abstract base class for several boundary classes as defined below. Typically these classes are only used to define the first boundary event in a mission.
+
+\subsection{EphemerisReferencedDepartureExterior}
+\label{subsubsec:EphemerisReferencedDepartureExterior}
+
+\texttt{EphemerisReferencedDepartureExterior} derives from \texttt{EphemerisReferencedDeparture}, and represents the case where the boundary point lies on the edge of a triaxial ellipsoid surrounding a \textit{body in the current journey's universe}. The spacecraft can then be thought of as \textit{exiting} the ellipsoid. Relevant examples include a low-thrust spiral escape, where the spiral itself is not modeled in \ac{EMTG}.  \texttt{EphemerisReferencedDepartureExterior} is an abstract base class for several boundary classes as defined below.
+
+\subsection{EphemerisReferencedFreeDirectDepartureExterior}
+\label{subsec:EphemerisReferencedFreeDirectDepartureExterior}
+
+\texttt{EphemerisReferencedFreeDirectDepartureExterior} is a derived class of \texttt{EphemerisReferencedDepartureExterior} that represents a spacecraft beginning at the boundary of a Universe \ac{SOI} and traveling inward. It encodes no new variables or constraints.
+
+\subsection{EphemerisReferencedDepartureInterior}
+\label{subsubsec:EphemerisReferencedDepartureInterior}
+
+\texttt{EphemerisReferencedDepartureExterior} derives from \texttt{EphemerisReferencedDeparture}, and represents the case where the boundary point lies on the edge of a triaxial ellipsoid surrounding the \textit{central body of the current journey's universe}. The spacecraft can then be thought of as \textit{entering} the ellipsoid. Relevant examples include a low-thrust capture at a body, where the interplanetary trajectory is not modeled in \ac{EMTG}. \texttt{EphemerisReferencedDepartureExterior} is an abstract base class for several boundary classes as defined below.
+
+
+\subsection{EphemerisReferencedFreeDirectDepartureInterior}
+\label{subsec:EphemerisReferencedFreeDirectDepartureInterior}
+
+\texttt{EphemerisReferencedFreeDirectDepartureInterior} is a derived class of \texttt{EphemerisReferencedDepartureInterior} that represents a spacecraft beginning at the boundary of a body's \ac{SOI} and traveling outward. It encodes no new variables or constraints.
+
+\subsection{EphemerisReferencedArrival}
+\label{subsec:EphemerisReferencedArrival}
+
+\texttt{EphemerisReferencedArrival} derives from both \texttt{EphemerisReferencedBoundary} and \texttt{ArrivalEvent}, and is an abstract base class for several boundary classes as defined below.
+
+\subsection{EphemerisReferencedArrivalExterior}
+\label{subsubsec:EphemerisReferencedArrivalExterior}
+
+\texttt{EphemerisReferencedArrivalExterior} derives from \texttt{EphemerisReferencedArrival}, and represents the case where the boundary point lies on the edge of a triaxial ellipsoid surrounding a \textit{body in the current journey's universe}. The spacecraft can then be thought of as \textit{entering} the ellipsoid from the \textit{exterior}. Relevant examples include entering the sphere of influence of a body or landing on the surface of a body.  \texttt{EphemerisReferencedArrivalExterior} is an abstract base class for several boundary classes as defined below.
+
+On the right-hand side of the boundary, the state vector is transformed by \textit{subtracting} the position and velocity of the ephemeris point relative to the central body, thus transforming the state into the frame of the ephemeris point.
+
+\subsection{EphemerisReferencedLTRendezvousExterior}
+\label{subsubsec:EphemerisReferencedLTRendezvousExterior}
+
+\texttt{EphemerisReferencedLTRendezvousExterior} is the simplest form of \texttt{EphemerisReferencedArrivalExterior} in which the spacecraft comes to a rest relative to the ephemeris point at the edge of the bounding ellipsoid. \texttt{EphemerisReferencedLTRendezvousExterior} does not include any additional decision variables or constraints.
+
+\subsection{EphemerisReferencedArrivalWithVinfinityExterior}
+\label{subsubsec:EphemerisReferencedArrivalWithVinfinityExterior}
+
+\texttt{EphemerisReferencedArrivalWithVinfinityExterior} extends \texttt{EphemerisReferencedArrivalExterior} by adding three decision variables for the magnitude, right ascension, and declination of the velocity vector in the ICRF. \texttt{EphemerisReferencedArrivalWithVinfinityExterior} serves as an abstract base class for ephemeris-referenced ``exterior'' boundary events that require a velocity vector relative to the bounding ellipsoid. The user defines the bounds on the velocity magnitude.
+
+\subsection{EphemerisReferencedInterceptExterior}
+\label{subsubsec:EphemerisReferencedInterceptExterior}
+
+\texttt{EphemerisReferencedInterceptExterior} is a derived class of \texttt{EphemerisReferencedArrivalWithVinfinityExterior} that describes a spacecraft arriving at the bounding ellipsoid with a relative velocity and an optional impulsive TCM. The user defines the size of the TCM and the performance is calculated from the spacecraft's monoprop system as defined in Chapter \ref{chap:hardware_models}.
+
+\subsection{EphemerisReferencedArrivalInterior}
+\label{subsubsec:EphemerisReferencedArrivalInterior}
+
+\texttt{EphemerisReferencedArrivalExterior} derives from \texttt{EphemerisReferencedArrival}, and represents the case where the boundary point lies on the edge of a triaxial ellipsoid surrounding the \textit{central body of the current journey's universe}. The spacecraft can then be thought of as \textit{exiting} the ellipsoid from the \textit{interior}. Relevant examples include departing the sphere of influence of a body. \texttt{EphemerisReferencedArrivalExterior} is an abstract base class for several boundary classes as defined below.
+
+On the right-hand side of the boundary, the state vector is transformed by \textit{adding} the position and velocity of the central body relative to the \textit{next} journey's central body, thus transforming the state into the frame of the next journey.
+
+\subsection{EphemerisReferencedLTRendezvousInterior}
+\label{subsubsec:EphemerisReferencedLTRendezvousInterior}
+
+\texttt{EphemerisReferencedLTRendezvousInterior} is the simplest form of \texttt{EphemerisReferencedArrivalInterior} in which the spacecraft comes to a rest relative to the ephemeris point at the edge of the bounding ellipsoid. \texttt{EphemerisReferencedLTRendezvousInterior} does not include any additional decision variables or constraints.
+
+\subsection{EphemerisReferencedArrivalWithVinfinityInterior}
+\label{subsubsec:EphemerisReferencedArrivalWithVinfinityInterior}
+
+\texttt{EphemerisReferencedArrivalWithVinfinityInterior} extends \texttt{EphemerisReferencedArrivalInterior} by adding three decision variables for the magnitude, right ascension, and declination of the velocity vector in the ICRF. \texttt{EphemerisReferencedArrivalWithVinfinityInterior} serves as an abstract base class for ephemeris-referenced ``exterior'' boundary events that require a velocity vector relative to the bounding ellipsoid. The user defines the bounds on the velocity magnitude.
+
+\subsection{EphemerisReferencedInterceptInterior}
+\label{subsubsec:EphemerisReferencedInterceptInterior}
+
+\texttt{EphemerisReferencedInterceptInterior} is a derived class of \texttt{EphemerisReferencedArrivalWithVinfinityInterior} that describes a spacecraft arriving at the bounding ellipsoid with a relative velocity and an optional impulsive TCM. The user defines the size of the TCM and the performance is calculated from the spacecraft's monoprop system as defined in Chapter \ref{chap:hardware_models}.
+
+\section{FreePointBoundary}
+\label{sec:freepointboundary}
+
+\texttt{FreePointBoundary} is a base class for all boundary conditions that begin at a point in space that is defined as a cartesian or \ac{COE} state relative to the central body. The user may choose to fix or vary within bounds any of the six elements of the position and velocity state on the left-hand side of the boundary. If the user chooses to fix any of these values, they are still variables but their bounds are $\pm$1.0e-13, so the solver cannot move them. EMTG also encodes a mass on the left-hand side of the boundary event. Some derived classes of \texttt{FreePointBoundary} may encode additional variables as discussed below.
+
+The user may choose a frame to encode their \texttt{FreePointBoundary}. That frame applies both to the bounds/fixed values and also to the initial guess.
+
+\subsection{FreePointDeparture}
+\label{subsec:FreePointDeparture}
+
+\texttt{FreePointDeparture} derives from both \texttt{FreePointBoundary} and \texttt{DepartureEvent}, and is an abstract base class for several boundary classes as defined below.
+
+If a \texttt{FreePointDeparture} of any kind occurs at the beginning of a journey after the previous journey ended in a  \texttt{FreePointArrival} or \texttt{EphemerisReferencedArrival}, then the 6-state is not encoded and instead is drawn from the previous boundary event.
+
+\subsubsection{FreePointFreeDirectDeparture}
+\label{subsubsec:FreePointFreeDirectDeparture}
+
+\texttt{FreePointFreeDirectDeparture} is the simplest form of \texttt{FreePointDeparture} in which the spacecraft takes on the position and velocity of the free point. Mass is chosen as a decision variable. \texttt{FreePointFreeDirectDeparture} has a wait time, and therefore in journeys after than the first, its \texttt{DepartureEvent} base class will create a mass continuity constraint. If the \texttt{FreePointFreeDirectDeparture} is the first event in the mission, then the user may choose to either fix the mass (by setting \texttt{allow\_initial\_mass\_to\_vary} to false), or allow the mass to vary between zero and the user-defined \texttt{maximum\_mass} (by setting \texttt{allow\_initial\_mass\_to\_vary} to true).
+
+\subsubsection{FreePointDirectInsertion}
+\label{subsubsec:FreePointDirectInsertion}
+
+\texttt{FreePointDirectInsertion} describes an impulsive departure from a free point. Three new decision variables are added - the magnitude of the departure $v_\infty$, and the right ascension and declination of the departure asymptote in the \ac{ICRF}. The user provides the bounds for all three decision variables.
+
+If the \texttt{FreePointDirectInsertion} describes the first event in a mission, then the user may choose to fix the departure mass (by setting \texttt{allow\_initial\_mass\_to\_vary} to false) or to allow it to vary up to a user-defined \texttt{maximum\_mass} (by setting \texttt{allow\_initial\_mass\_to\_vary} to true). If the \texttt{FreePointDirectInsertion} describes a later event in the mission, then a mass continuity constraint is applied to ensure that the mass at departure masses the previous event's mass at arrival.
+
+The departure maneuver is modeled as an impulsive burn using the spacecraft's thrusters as per Section \ref{sec:ChemicalPropulsionSystem}. The user may opt to constrain the departure maneuver to be along the boundary point's velocity vector by setting the \texttt{force\_free\_point\_direct\_insertion\_along\_velocity\_vector} flag.
+
+\subsection{FreePointArrival}
+\label{subsec:FreePointArrival}
+
+\texttt{FreePointArrival} derives from both \texttt{FreePointBoundary} and \texttt{ArrivalEvent}, and is an abstract base class for several boundary classes as defined below.
+
+\subsubsection{FreePointLTRendezvous}
+\label{subsubsec:FreePointLTRendezvous}
+
+\texttt{FreePointLTRendezvous} is the simplest form of \texttt{FreePointArrival} and represents matching position and velocity with the free point. No additional variables or constraints are added.
+
+\subsubsection{FreePointArrivalWithVinfinity}
+\label{subsubsec:FreePointArrivalWithVinfinity}
+
+\texttt{FreePointArrivalWithVinfinity} is an abstract base class for two derived classes below. It adds three new decision variables for the three components of $\mathbf{v}_\infty$ and a user-defined constraint on the magnitude, $v_\infty$. The bounds on the $\mathbf{v}_\infty$ components are restricted to be $\pm$ the upper bound on $v_\infty$.
+
+\subsubsection{FreePointIntercept}
+\label{subsubsec:FreePointIntercept}
+
+\texttt{FreePointIntercept} is a derived class of \texttt{FreePointArrivalWithVinfinity} that does not add any new capabilities except to be not abstract. This represents the scenario where the spacecraft has to match position with the free point but not velocity. \texttt{FreePointIntercept} can perform the mass drop and propellant consumption associated with a fixed-magnitude TCM. If applied, the TCM is done on the spacecraft's monoprop system as defined in Chapter \ref{chap:hardware_models}.
+
+\subsubsection{FreePointChemRendezvous}
+\label{subsubsec:FreePointChemRendezvous}
+
+\texttt{FreePointChemRendezvous} is a derived class of \texttt{FreePointArrivalWithVinfinity} that adds a maneuver to match velocity with the free point. This maneuver is be performed on the spacecraft's biprop system as defined in Chapter \ref{chap:hardware_models}. \texttt{FreePointChemRendezvous} can perform the mass drop and propellant consumption associated with a fixed-magnitude TCM. If applied, the TCM is done on the spacecraft's monoprop system as defined in Chapter \ref{chap:hardware_models}.
+
+\section{PeriapseBoundary}
+\label{sec:periapseboundary}
+
+\texttt{PeriapseBoundary} is an abstract base class for all boundary events that happen at periapse of the spacecraft's orbit about the central body. \hl{In the current implementation, PeriapseBoundary only guarantees that the spacecraft be at \textit{an} apse, not necessarily the right one. In practice this has never been a concern, but we could fix it some day.}
+
+\texttt{PeriapseBoundary} encodes three variables for position and three for velocity. Position is encoded a radius, a right ascension, and a declination in the \ac{ICRF}. The user defines the bounds on the radius.
+
+There are two options for encoding velocity, controlled by a user-defined switch. The velocity can be encoded either as magnitude, right ascension, and declination (\texttt{SphericalRADEC}), or as magnitude, azimuth, and flight path angle (\texttt{SphericalAZFPA}). The \texttt{SphericalAZFPA} representation implicitly guarantees that the spacecraft is at an apse, \textit{i.e.} $\mathbf{r} \bullet \mathbf{v} = 0$. The \texttt{SphericalRADEC} does not guarantee $\mathbf{r} \bullet \mathbf{v} = 0$, and so if this representation is selected then \texttt{PeriapseBoundary} imposes an explicit constraint.
+
+\subsection{PeriapseDeparture}
+\label{subsec:PeriapseDeparture}
+
+\texttt{PeriapseDeparture} derives from both \texttt{PeriapseBoundary} and \texttt{DepartureEvent}, and is an abstract base class for several boundary classes as defined below.
+
+\subsection{PeriapseLaunchOrImpulsiveDeparture}
+\label{subsec:PeriapseLaunchOrImpulsiveDeparture}
+
+\texttt{PeriapseLaunchOrImpulsiveDeparture} represents the case of a spacecraft departing from periapse of an orbit about the central body by means of an impulse. At the user's discretion, this impulse can either be provided by the spacecraft's thrusters or by a launch vehicle. The departure maneuver is assumed to occur along the spacecraft's velocity vector. \texttt{PeriapseLaunchOrImpulsiveDeparture} adds one variable to describe the size of the maneuver.
+
+If a launch vehicle model is used, then the resulting periapse velocity is converted into a $C_3$ and passed to the launch vehicle code (Section \ref{sec:LaunchVehicle}) to determine the maximum allowable mass. The encoded mass of the vehicle is then either constrained to match the launch vehicle capability (if \texttt{allow\_initial\_mass\_to\_vary} is false), or to be less than or equal to the launch vehicle capability (if \texttt{allow\_initial\_mass\_to\_vary} is true).
+
+If a launch vehicle model is not used, then the initial mass is either fixed at the user-defined \texttt{maximum\_mass} (if \texttt{allow\_initial\_mass\_to\_vary} is false), or to be less than or equal to \texttt{maximum\_mass} (if \texttt{allow\_initial\_mass\_to\_vary} is true). The departure maneuver is performed using the spacecraft's thrusters as described in Section \ref{sec:ChemicalPropulsionSystem}.
+
+If the \texttt{PeriapseLaunchOrImpulsiveDeparture} is the first event in the mission, then \texttt{PeriapseLaunchOrImpulsiveDeparture} adds a constraint on the inclination of the initial orbit such that it matches the bounds on the \ac{DLA} as imposed by the user.
+
+This boundary event is most commonly used to describe, in reasonably high fidelity, the departure of a spacecraft from a parking orbit during launch. The \ac{RA} and \ac{DEC} entries in the .emtg summary line for \texttt{PeriapseLaunchOrImpulsiveDeparture} represent the \ac{RLA} and \ac{DLA}, \textit{not} the \ac{RA} and \ac{DEC} of the departure impulse.
+
+\subsection{PeriapseArrival}
+\label{subsec:PeriapseArrival}
+
+\texttt{PeriapseArrival} derives from both \texttt{PeriapseBoundary} and \texttt{ArrivalEvent}, and is an abstract base class for several boundary classes as defined below.
+
+\subsection{PeriapseFlybyIn}
+\label{subsubsec:PeriapseFlybyIn}
+
+\texttt{PeriapseFlybyIn} represents the case where the spacecraft arrives at periapse of an orbit relative to the central body and matches position and velocity. The user defines the bounds on the magnitude of the position vector (\textit{i.e.} the radius value). All other computations are handled by the \texttt{PeriapseArrival} and \texttt{PeriapseBoundary} base classes. This boundary event is typically used to represent periapse of a gravity assist maneuver, but when combined with orbit element constraints as described in Section \ref{sec:specialized_boundary_constraints}, can also be used to model orbit insertion.
+
+\section{Boundary Constraints}
+\label{sec:specialized_boundary_constraints}
+
+At construction, each boundary event object constructs a vector of constraint objects, all of which inherit from \texttt{SpecializedBoundaryConstraintBase}. 
+
+The boundary events are constructed by the \texttt{SpecializedBoundaryConstraintFactory()} function. At run-time, \texttt{BoundaryEventBase} calls \texttt{calcbounds()}, \texttt{process\_constraint()}, and \texttt{output()} on each constraint object.
+
+The boundary event constraints are listed in full, both in terms of design and also user documentation, in the scripted constraints document. The individual constraints are not listed here in the software design document because we wanted to keep all of the scripted constraints together in one place. EMTGv9's constraint architecture is designed such that a developer, or even a user, can write a new constraint without touching the rest of the program.
+
+\subsection{Orbit Element Constraints}
+\label{subsec:boundary_orbit_element_constraints}
+
+A subset of the available specialized boundary constraints are specified with respect to the classical orbit elements at the boundary point, in a frame of the user's choice. All such constraints inherit from the base \texttt{OrbitElementConstraintBase} class, itself a derived class of \texttt{SpecializedBoundaryConstraintBase}.
+
+\hl{Donald} will describe how the base orbit element constraint class interacts with \texttt{BoundaryEventBase} to retrieve the orbit elements and their derivatives.

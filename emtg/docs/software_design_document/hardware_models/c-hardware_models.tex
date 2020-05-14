@@ -1,0 +1,351 @@
+\externaldocument{../mission/c-Mission}
+\externaldocument{../mission/c-phase}
+
+\chapter{Hardware Models}
+\label{chap:hardware_models}
+
+\section{Overview}
+\label{sec:hardware-overview}
+
+All calculations in EMTGv9 that model the performance of hardware, \textit{i.e.} a launch vehicle or a spacecraft, are handled by \ac{EMTG}'s hardware classes. These classes are deliberately designed such that they can be used both by EMTG itself and by external programs. For example, the classes described in this chapter are also used by \ac{GMAT} and can also be compiled as a Python module.
+
+The purpose of the separable hardware models is threefold. First, we wanted to create hardware models that could be used by many tools, not just EMTG. Second, we wanted a way to configuration manage spacecraft and launch vehicle properties just like we do ephemeris files. Third, we wanted all information about physical hardware to reside in text files that are not distributed with \ac{EMTG}. That way we can distribute \ac{EMTG} without any proprietary or ITAR/EAR restricted information.
+
+\section{Launch Vehicle Model}
+\label{sec:LaunchVehicle}
+
+The \texttt{LaunchVehicle} class is responsible for calculating the performance (delivered mass) of a launch vehicle to an input \ac{C3} as well as the derivative of the delivered mass with respect to a changing \ac{C3}. \ac{EMTG} currently supports only a polnomial function of mass as a function of \ac{C3},
+
+\begin{equation}
+	m \left(C_3\right) = \left(1 - \eta_{LV}\right) \sum_{i=0}^{n} c_i C_3^i - m_{adapter}
+	\label{eq:launch_vehicle_polynomial}
+\end{equation}
+%
+where $\eta_{LV}$ is launch vehicle margin as specified in the user's .emtgopt mission script, the $c_i$ are coefficients associated with the particular launch vehicle, and $m_{adapter}$ is the launch vehicle adapter mass specified.
+
+The \texttt{LaunchVehicle} class is designed such that additional launch vehicle models may be added at a later date.
+
+\subsection{Launch Vehicle Library}
+\label{subsec:LaunchVehicleLibrary}
+
+The coefficients necessary to define a \texttt{LaunchVehicle}, as well as the upper and lower bounds on the validity of the performance polynomial and the upper and lower bounds on the \ac{DLA}, are held in a \texttt{LaunchVehicleOptions} object. A set of \texttt{LaunchVehicleOptions} objects are held in a \texttt{LaunchVehicleOptionsLibrary}.
+
+\texttt{LaunchVehicleOptionsLibrary} reads a text file defining a set of launch vehicles. Each launch vehicle is associated with a ``launch vehicle key string.'' The user provides a key string to \ac{EMTG}, and \ac{EMTG} in turn passes the key string into the \texttt{LaunchVehicleOptionsLibrary} and returns the particular \texttt{LaunchVehicleOptions} object that the user wants. The \texttt{LaunchVehicleOptions} object is then passed as an argument to the constructor of \texttt{LaunchVehicle} to create the calculation object. The \texttt{LaunchVehicleOptionsFactory} function performs these steps.
+
+\section{Spacecraft Model}
+\label{sec:spacecraft}
+
+The \texttt{Spacecraft} class handles all modeling of properties of the spacecraft propulsion and power system, as well as book-keeping of any propellant tank constraints. A spacecraft in \ac{EMTG} is composed of a number of stages. The primary job of the spacecraft class is to hold a vector of \texttt{Stage} objects as described in Section \ref{sec:stage}. The \texttt{Spacecraft} class also tracks the indices of all of the virtual propellant tank variables in the optimization problem so that \ac{EMTG} can perform global accounting of chemical fuel, chemical oxidizer, and electric propellant as described in Section \ref{sec:propellant_and_dry_mass_constraints}. The rest of \ac{EMTG} interacts with all properties of the \texttt{Stage} objects via the \texttt{Spacecraft} interface.
+
+The \texttt{Spacecraft} object and its children are populated based on the contents of a \texttt{SpacecraftOptions} object. Further information about \texttt{SpacecraftOptions} is contained in Section \ref{sec:SpacecraftOptions-and-libraries}.
+
+\section{Stage Model}
+\label{sec:stage}
+
+A \texttt{Spacecraft} contains one or more \texttt{Stage} objects. Each \texttt{Stage} object describes the power system, thrusters, and propellant tanks for one stage of a spacecraft. If the spacecraft's active \texttt{Stage} is changed, then the power, propulsion, and tank properties also change. This can be used for true multi-stage spacecraft or just to change propulsion and power characteristics to represent hardware degradation late in a mission.
+
+Each \texttt{Stage} object contains a \texttt{PowerSystem} \ref{subsec:PowerSystem} object, a \texttt{ChemicalPropulsionSystem} \ref{subsec:ChemicalPropulsionSystem}, an \texttt{ElectricPropulsionSystem} \ref{subsec:ElectricPropulsionSystem}, and vectors of decision variable indexes corresponding to stage-specific propellant tank constraints. 
+
+\texttt{Stage} objects are configured based on the contents of a \texttt{StageOptions} object as described in Section \ref{subsec:SpacecraftOptions-and-libraries}.
+
+\section{Power System Model}
+\label{subsec:PowerSystem}
+
+The \texttt{PowerSystem} object computes the power properties of the spacecraft as a function of position in the solar system and time since launch. \ac{EMTG} has two different models of solar power systems and one fixed power model. All three models can also be subjected to time degradation.
+
+The first and simplest of \ac{EMTG}'s power models is a constant power,
+
+\begin{equation}
+	P_{produced,0} = P_0
+	\label{eq:constpower}
+\end{equation}
+%
+where $P_{produced,0}$ is the output of the spacecraft's power supply at the beginning of the mission and $P_0$ is a quantity supplied by the user.
+
+There are also two models for a solar power system. The first is a polynomial model,
+
+\begin{equation}
+	P_{produced,0}\left(r\right) = \frac{P_0}{r^2} \left(\gamma_0 + \gamma_1 r + \gamma_2 r^2 + \gamma_3 r^3 + \gamma_4 r^4 + \gamma_5 r^5 + \gamma_6 r^6\right)
+	\label{eq:polypower}
+\end{equation}
+%
+where the $\gamma_i$ are user supplied coefficients fit to ground test data of a particular solar cell and $r$ is the distance from the spacecraft to the sun in AU. The second solar power model, using the same coefficients, was developed by Carl Sauer for the SEPTOP tool,
+
+\begin{equation}
+P_{produced,0}\left(r\right) = \frac{P_0}{r^2} \left(\frac{\gamma_0 + \gamma_1 / r + \gamma_2 / r^2}{1 + \gamma_3 r + \gamma_4 r^2}\right)
+\label{eq:sauerpower}
+\end{equation}
+
+The choice of appropriate solar power model for each application is based on which one better fits the cell performance data supplied by the manufacturer.
+
+Time decay may then be applied to any of the three power supply models, yielding an expressing for the power produced by the spacecraft,
+
+\begin{equation}
+P_{produced}\left(r, t\right) = P_{produced,0}\left(r\right) \exp{-\lambda t}
+\label{eq:timepower}
+\end{equation}
+%
+where $lambda$ is a user-supplied rate constant and $t$ is the number of years since the user-defined power system reference epoch.
+
+The power available to the propulsion system is then calculated as,
+
+\begin{equation}
+	P_{available}\left(r, t\right) = \left(1 -  \eta_{power}\right) * \left(P_{produced}\left(r, t\right)  - P_{bus}\left(r\right)\right)
+	\label{eq:availablepower}
+\end{equation}
+%
+where $\eta_{power}$ is propulsion power margin and is supplied in the user's .emtgopt input file, and $P_{bus}\left(r\right)$ is the power required by the spacecraft bus for non-propulsion functions.
+
+\ac{EMTG} has two different models to compute $P_{bus}\left(r\right)$. The first is a quadratic model,
+
+\begin{equation}
+	P_{produced,0}\left(r\right) = \beta_0 + \beta_1 / r + \beta_2 / r^2
+	\label{eq:quadratic_bus_power}
+\end{equation}
+%
+where the $\beta_i$ are user-supplied coefficients. There is also a conditional model,
+
+\begin{align}
+P_{produced,0}\left(r\right) &= \beta_0 & \text{ if } P_{produced}\left(r, t\right) > \beta_0\\
+&= \beta_0  + \beta_1 \left(\beta_2 - (P_{produced}\left(r, t\right)\right) & \text{ otherwise }
+\label{eq:conditional_bus_power}
+\end{align}
+
+The user may select any combination of power supply and bus power models, with or without time decay. The time decay mode currently does not work properly with the \ac{MGALT} phase transcription \ref{subsubsec:MGALT} because there are some issues with chaining the time derivatives of the match point constraints.
+
+\section{Propulsion System Model}
+\label{sec:PropulsionSystem}
+
+Each \texttt{Stage} object contains a \texttt{ChemicalPropulsionSystem} and an \texttt{ElectricPropulsionSystem}. Both inherit from the \texttt{PropulsionSystem} abstract base class. \texttt{PropulsionSystem} holds values for \ac{Isp}, thrust, and system mass. None of these need to be constants - the derived classes can compute them based on other supplied information. \texttt{PropulsionSystem} also defines interfaces common to both \texttt{ChemicalPropulsionSystem} and \texttt{ElectricPropulsionSystem}.
+
+\subsection{Chemical Propulsion System Model}
+\label{subsec:ChemicalPropulsionSystem}
+
+\ac{EMTG}'s \texttt{ChemicalPropulsionSystem} class computes the propellant consumed by the spacecraft in both biprop and monoprop modes. Fuel and oxidizer consumption for a maneuver are computed along with their derivatives with respect to decision variables. The user provides the \ac{Isp} of the monoprop and biprop modes, along with a mixture ratio. \ac{EMTG} assumes that all major maneuvers (maneuvers chosen by the optimizer) are biprop and all proportional TCMs and attitude control mass drops are monoprop. The user may individually override any biprop maneuver to make it monoprop. The \texttt{ChemicalPropulsionSystem} class may also be supplied with ``mass per string'' and ``number of strings'' quantities that are used to calculate the dry mass of the system.
+
+\hl{EMTG currently models all chemical maneuvers as impulses. Thrust is only considered when writing a maneuver spec file. Only one thrust value is provided for the ChemicalPropulsionSystem, applicable to both monoprop and biprop modes. This is not technically correct. There should be two thrust values for each ChemicalPropulsionSystem object. This will be changed later.}
+
+\subsection{Electric Propulsion System Model}
+\label{subsec:ElectricPropulsionSystem}
+
+The \texttt{ElectricPropulsionSystem} class computes the performance characteristics of the spacecraft's electric propulsion system. It can also size the system if provided with a ``mass per string'' and ``number of strings.'' \texttt{ElectricPropulsionSystem} also computes the derivatives of thrust, \ac{Isp}, mass flow rate, \textit{etc.} with respect to input power.
+
+\ac{EMTG} supports many types of electric thruster model, each of which is described in its own section below. The thruster models return the active thrust, \ac{Isp}, mass flow rate $\dot m$, and the ``active power'' $P_{active}$ used by the propulsion system. $P_{active}$ may be equal to or less than $P_{available}$. All thrust and mass flow rate outputs are scaled by a user defined operational duty cycle. The thrust is scaled by an additional user-defined ``thrust scale factor'' that is used to represent canted thrusters.
+
+\subsubsection{Constant Thrust and \ac{Isp} electric thruster model}
+\label{subsubsec:const_thrust_isp}
+
+The simplest electric thruster model is constant thrust and \ac{Isp}. This model does not require an input power and returns zero for all derivatives. The propulsion system is modeled as a single "super thruster."
+
+\subsubsection{Fixed Efficiency, Constant \ac{Isp} electric thruster model}
+\label{subsubsec:fixed_efficiency_constant_Isp}
+
+\ac{EMTG} can model the performance of a propulsion system with fixed \ac{Isp} and propulsion system efficiency $\eta_{prop}$. The propulsion system is modeled as a single "super thruster." The user provides bounds on $P_{active}$. If $P_{available}$ exceeds $P_{active,max}$ then it is clipped to $P_{active,max}$. If $P_{available}$ is less than $P_{active,min}$ then no thrusting occurs. The thrust is computed as,
+
+\begin{equation}
+	T = \frac{2000 \eta_{prop}}{I_{sp} g_0} P_{active}
+	\label{eq:fixed_efficiency_constant_Isp_thrust}
+\end{equation}
+%
+where $g_0$ is the acceleration due to gravity at sea level on Earth, 9.80665 $m/s^2$.
+
+Mass flow rate is given by,
+
+\begin{equation}
+\dot m = \frac{T}{I_{sp} g_0}
+\label{eq:fixed_efficiency_constant_Isp_mdot}
+\end{equation}
+
+The partial derivatives of thrust and mass flow rate with respect to input power are,
+
+\begin{align}
+	\frac{\partial T}{\partial P} &= \frac{2000 \eta_{prop}}{I_{sp} g_0}\\
+	\frac{\partial \dot m}{\partial P} &= \frac{1}{I_{sp} g_0}\frac{\partial T}{\partial P}
+	\label{eq:fixed_efficiency_constant_Isp_derivatives}
+\end{align}
+
+\subsubsection{1D Polynomial electric thruster model}
+\label{subsubsec:polynomial-electric-thruster}
+
+The next higher level of fidelity is a polynomial approximation of thrust and \ac{Isp} as a function of input power. Individual thrusters, and so the \texttt{ElectricPropulsionSystem::compute\_number\_of\_active\_thrusters} is called as described in Section \ref{subsubsec:multi-thruster-switching}. \texttt{ElectricPropulsionSystem::compute\_number\_of\_active\_thrusters} returns the number of active strings and the input power per string. The thrust and mass flow rate per string is then computed as,
+
+\begin{align}
+	T &= a_t + b_t P + c_t P^2 + d_t P^3 + e_t P^4 + f_t P^5 + g_t P^6\\
+	\dot m &= a_f + b_f P + c_f P^2 + d_f P^3 + e_f P^4 + f_f P^5 + g_f P^6\\
+	\label{eq:poly1Dthruster}
+\end{align}
+%
+where the coefficients are all supplied by the user. Equations \ref{eq:poly1Dthruster} define a single string and are multiplied by the number of active strings to determine the total thrust and mass flow rate of the system. The input power per string is multiplied by the number of active strings to get the total $P_{active}$.
+
+\subsubsection{1D Smooth-stepped electric thruster model}
+\label{subsubsec:smooth-stepped-electric-thruster}
+
+While electric thruster performance is often modeled as a smooth function as in Section \ref{subsubsec:polynomial-electric-thruster}, in actuality they are operated at set performance points. It is typically possible to adjust mass flow rate and input voltage on grid. This results in discrete throttle settings. The propulsion system can take on any of these discrete settings if enough power is available.
+
+\ac{EMTG}'s 1D smooth-stepped electric thruster model operates directly on the discrete throttle points. Full details of the motivation and calculations behind the 1D smooth-stepped model may be found in Knittel \textit{et al.} \cite{Knittel_2Dthrottle} and are summarized here. The user supplies a list of throttle points that are read into \ac{EMTG} \texttt{ThrottleSetting} objects and a sorting rule. The \texttt{ThrottleTable} class then creates non-dominated set of \texttt{ThrottleSetting} objects based on the sorting rule. The currently available sorting rules are:
+
+\begin{itemize}
+	\item highest thrust per available power
+	\item lowest mass flow rate per available power
+	\item highest system efficiency per available power
+	\item highest \ac{Isp} per available power
+	\item full set - use all user-supplied throttle points	
+\end{itemize}
+
+A gradient based optimization tool like \ac{EMTG} requires thrust and \ac{Isp} to be first-differentiable with respect to input power and therefore the step function cannot be used directly. This is possible using the so-called Heaviside step function (see equation \ref{eq:Heaviside}) \cite{EMTG_OperationalConstraints}. A Heaviside function has a value of one for an input greater than or equal to a critical value, and zero for all other inputs. Each throttle point is modeled with a Heaviside function that turns its value of thrust and mass flow rate ``on'' at its input thruster power. However, the magnitude of each Heaviside function only reflects a step increase over the previous throttle point's value. Let $P_\textrm{a}$ be the continuously defined power available to the PPU, and $x_i \in \left\{x_1,x_2,\dots,x_n\right\}$ denote either a mass flow rate or thrust magnitude set point associated with a power level $P_i\in\left\{P_1,P_2,\dots,P_n\right\}$.  
+
+\begin{align}
+H_{i} &= \left \{
+\begin{tabular}{cc}
+1 & if $S_i \geq 0$\\
+0 & if $S_i < 0$
+\end{tabular}
+\right.
+\label{eq:Heaviside}\\
+S_i &= P_\textrm{a} - P_i
+\label{eq:Si}
+\end{align}
+
+The mass flow rate or thrust magnitude available at a given power available is then:
+
+\begin{align}
+x &= x_1H_1+\sum\limits_{i=2}^{n}(x_i-x_{i-1})H_{i}
+\label{eq:1dHeaviside_thrust}
+\end{align}
+
+Implementing equation \ref{eq:1dHeaviside_thrust} solves the first of the three criteria set out above, in that the model output perfectly matches the capability of the thruster at any input power. However, this model does not meet the second criteria. The differentiability problem is solved by replacing the discontinuous Heaviside functions with logistics functions (Figure \ref{fig:heavisideapprox}) which smoothly and continuously approximate step increases:
+
+\begin{align}
+\bar{H}_{i} &= \frac{1}{1 + e^{-kS_i}}
+\label{eq:logistic}
+\end{align}
+
+The parameter $k$, or throttle sharpness, determines how closely the logistics functions model the step increases of the Heaviside functions. 
+
+The net model which solves the first two criteria set out above we name the 1-D stepped model and is presented in equation \ref{eq:1dstepped_thrust}:
+
+\begin{align} 
+x &= x_1\bar{H}_1+\sum\limits_{i=2}^{n}(x_i-x_{i-1})\bar{H}_i
+\label{eq:1dstepped_thrust}
+\end{align}
+and the relevant analytical derivative is:
+
+\begin{align}
+\frac{dx}{dP_\textrm{a}} &= kx_1\bar{H}_1^2e^{-kS_i}+k\sum\limits_{i=2}^{n}(x_i-x_{i-1})\bar{H}_i^2e^{-kS_i}
+\label{eq:1dstepped_thrust_dp}
+\end{align}
+
+For a conceptual example of how this model works, let throttle levels 1 and 2 be consecutive members of a chosen non-dominated set requiring 1 kW and 2 kW to operate and generating 100 mN and 150 mN of thrust, respectively. As the power available to the thrusters increases past 2 kW, the Heaviside function for throttle level 2 switches ``on.'' However, because the engine is already outputting 100 mN from throttle point 1, the step increase associated with throttle level 2's Heaviside function is only 50 mN resulting in a net output of 150 mN. The input power has not yet been reached for any of the other throttle levels, so they do not contribute to the ``net'' thrust and mass flow rate, even though they are summed over. 
+
+For values of $k$ greater than 1000, the Heaviside step function and the logistics function approximation are nearly indistinguishable. However, this has negative effects for the differentiability of the function. As $k$ increases, the derivatives with respect to power in the ``flat'' regions grow closer and closer to zero, and the derivative for $P_\textrm{a}$ = $P_i$ becomes larger and larger. In practice, the value of $k$ should be chosen for the specific throttle box, and the capability of the gradient-based optimizer. Further, there could be a separate value of $k$ chosen for each throttle level, if so desired, but here we assume that one identical value is used everywhere.
+
+The user provides the throttle points in the form of a throttle table file. In practice, the optimizer performs poorly when multiplying two logistics function smoothers together. This is probably because the derivatives of the logistics function are very sharp. It is therefore a good idea to encode multi-thruster throttle points directly into the throttle table file instead of having the file represent a single thruster and instructing \ac{EMTG} to also switch thrusters on and off.
+
+\subsubsection{2D Throttling}
+\label{subsubsec:2D-throttling}
+
+While the 1D polynomial and smooth-stepped models presented earlier are adequate in most circumstances, they still require the user to choose \textit{a priori} how to traverse the throttle grid. It is preferable to make the entire range of throttle settings available and let the optimizer choose. This is an in-progress capability in \ac{EMTG}. The spacecraft model supports it but the phase transcriptions currently do not.
+
+\ac{EMTG}'s hardware classes support two 2D thruster models. One is a fixed efficiency, variable specific impulse approximation and one is a 2D smooth-step. Both compute thrust and mass flow rate as a function of input power and a control parameter $u_{command}$. At the time of this writing, \hl{neither of these 2D modes is supported by any of the phase transcriptions.}
+
+\noindent\paragraph{Fixed efficiency, Variable Specific Impulse electric thruster model}
+\label{subsubsubsec:fixed-efficiency-VSI}
+
+The propulsion system may be modeled with a fixed efficiency and a variable \ac{Isp}. This is identical to the model described in Section \ref{subsubsec:fixed_efficiency_constant_Isp} except that the \ac{Isp} is a control variable. In EMTGv8, the low-thrust transcriptions could be configured to allow the optimizer to choose a $u_{command}$, representing \ac{Isp}, at each control step. \hl{This is not yet implemented in EMTGv9. However the modeling does exist and is described here.}
+
+The \ac{Isp} is given by,
+
+\begin{equation}
+I_{sp} = \left(I_{sp,max} - I_{sp,min}\right) u_{command} + I_{sp,min}
+\label{eq:fixed_efficiency_VSI_Isp}
+\end{equation}
+
+As in \ref{subsubsec:fixed_efficiency_constant_Isp}, the thrust and mass flow rate, and their derivatives with respect to power, are governed by Equations \ref{eq:fixed_efficiency_constant_Isp_thrust}-\ref{eq:fixed_efficiency_constant_Isp_derivatives}. The only difference is that there now exist partial derivatives of thrust and mass flow rate with respect to $u_{command}$.
+
+\begin{align}
+	\frac{\partial T}{\partial u_{command}} &= -\frac{T}{I_{sp}} \left(I_{sp,max} - I_{sp,min}\right)\\
+	\frac{\partial \dot m}{\partial u_{command}} &= -\frac{2 \dot m}{I_{sp}} \left(I_{sp,max} - I_{sp,min}\right)	
+\label{eq:fixed_efficiency_VSI_derivatives_wrt_Isp}
+\end{align}
+
+\noindent\paragraph{2D Smooth-Stepped electric thruster model}
+\label{subsubsubsec:2D-smooth-stepped}
+
+The \texttt{ElectricPropulsionSystem} class also contains a 2D smooth-stepped model that allows the optimizer to traverse the entire throttle grid. Full details of this model may be found in Reference \cite{Knittel_2Dthrottle}. As in Section \ref{subsubsubsec:fixed-efficiency-VSI}, an additional control parameter $u_{command}$ is necessary. Any parameter which has a discrete value at each throttle setting could be used (thrust, $I_{sp}$, voltage, current, $\dot{m}$), but the fewer settings that the control variable has, the more effective it will be. \hl{This model is supported by the ElectricPropulsionSystem class but is not supported by the phase transcriptions}.
+
+Similar to the 1-D model, the 2-D model uses the logistics function approximation to the Heaviside step function to turn each throttle point ``on'', however in the 2-D model, each throttle point uses Heaviside functions to turn the throttle level ``off'' as well. Because of the increased dimensionality, there is no \textit{a priori} order to the throttle points. From a given pair of $P_\textrm{a}$ and $u_{\textrm{command}}$, depending which (or both) control variable changes to move in the throttle grid, many different throttle levels could be the next to be activated. This creates a 2-D region over which each throttle point is active.
+
+As the throttle table is initially parsed, the values of $P_{\textrm{on},i}$, $P_{\textrm{off},i}$, $\dot{m}_{\textrm{on},i}$, and  $\dot{m}_{\textrm{off},i}$ are found for each throttle level. The ``on'' value for each throttle level always corresponds to the operating conditions of the given throttle level. Power and the command variable are sorted in slightly different manners to determine the ``off'' condition. All of the throttle points are sorted by their required voltage input. For a given throttle level, the critical value of voltage which turns it ``off'' by way of a negative Heaviside step function is the next greater voltage level, regardless of required input power. Unless, for the given power level, there are no additional valid throttle points at a higher voltage level, in which case no value of $u_{\textrm{voltage}}$ would turn this point ``off''. On the other hand, the critical available power is found by sorting only those throttle levels with identical input voltage and selecting the next greater input power. If no such point exists, then there is no available power which delivers an ``off'' command for this throttle point. 
+
+Given both sorting methods, the 2-D model will be most effective by selecting a command variable with few discrete levels. For example, even though the \ac{NEXT} thruster has 40 total throttle settings, there are only 12 distinct values of voltage and 8 distinct values of mass flow rate \cite{NEXTTT11}. If there are many distinct command variable settings, then there will be more switching that occurs as power available varies. The more switches needed, the greater the computation time for the model. Further, if two distinct command variable settings are very close to each other, the value of $k$ is constrained lest two settings could be transitioning ``on'' at the same input power. 
+
+As with the 1-D model, the net thrust output by the EP system is a summation of the thrust and mass flow rate functions for all throttle points. Assuming that the command variable is voltage, the thrust and mass flow rate generated is:
+\begin{align}
+x &= \sum\limits_{i=1}^{n}x_i(\bar{H}_{P_{\textrm{on},i}} - \bar{H}_{P_{\textrm{off},i}})(\bar{H}_{V_{\textrm{on},i}} - \bar{H}_{V_{\textrm{off},i}})
+\label{eq:2dthrustnet}
+\end{align}
+Recalling that $\bar{H}_P$ was defined in equation \ref{eq:logistic}, we simply now add a more detailed subscript to distinguish between the command variable and power available. $\bar{H}_V$ takes the same form, simply with critical values of voltage instead of power:
+\begin{align}
+\bar{H}_{V_i} &= \frac{1}{1 + e^{-k(u_{\textrm{voltage}}-V_i)}}
+\label{eq:logisticVoltage}
+\end{align}
+The derivatives with respect to decision variables are defined in the following equations (again with voltage as the command variable):
+\begin{align}
+\frac{\partial x}{\partial P_\textrm{a}} &= k\sum\limits_{i=1}^{n}x_i(\bar{H}_{V_{\textrm{on},i}} - \bar{H}_{V_{\textrm{off},i}})(e^{-k(P_\textrm{a}-P_{\textrm{on},i})}\bar{H}^2_{P_{\textrm{on},i}}-e^{-k(P_\textrm{a}-P_{\textrm{off},i})}\bar{H}^2_{P_{\textrm{off},i}})
+\label{eq:2dstepped_thrust_dp}\\
+\frac{\partial x}{\partial u_{\textrm{voltage}}} &= k\sum\limits_{i=1}^{n}x_i(\bar{H}_{P_{\textrm{on},i}} - \bar{H}_{_{\textrm{off},i}})(e^{-k(u_{\textrm{voltage}}-V_{\textrm{on},i})}\bar{H}^2_{V_{\textrm{on},i}}-e^{-k(u_{\textrm{voltage}}-V_{\textrm{off},i})}\bar{H}^2_{V_{\textrm{off},i}})
+\label{eq:2dstepped_mdot_dvoltage}
+\end{align} 
+
+\subsubsection{Multi-thruster switching}
+\label{subsubsec:multi-thruster-switching}
+
+\texttt{ElectricPropulsionSystem}'s \texttt{compute\_number\_of\_active\_thrusters()} method can determine how many of a set of thrusters to fire at a time, depending on $P_{available}$ as computed in Equation \ref{eq:availablepower}. The user defines how many thruster/\ac{PPU} strings are available on the spacecraft and \texttt{compute\_number\_of\_active\_thrusters()} determines how many should be operated and at what input power. \ac{EMTG} assumes that all thruster/\ac{PPU} strings are identical. Each string has a minimum power $P_{min}$ and a maximum power $P_{max}$.
+
+The user chooses between two throttle logic rules. \texttt{MaxThrusters} instructs \texttt{compute\_number\_of\_active\_thrusters()} to fire as many thrusters as possible for a given $P_{available}$. This usually results in thrusters being fired close to their $P_{min}$, resulting in poor performance. \texttt{MinThrusters} fires as few thrusters as possible to use the entire $P_{available}$, often resulting in thrusters being fired closer to their $P_{max}$ and resulting in better performance. Both throttle logics are provided because the ``best'' choice is sometimes non-intuitive.
+
+A discrete change in the number of operating thruster/\ac{PPU} strings would result in a discontinuity in the optimization problem and confuse a gradient-based optimizer. Therefore \texttt{compute\_number\_of\_active\_thrusters()} uses a smoothed Heaviside step step function approach just like the smooth-stepped thruster model described in Section \ref{subsubsec:smooth-stepped-electric-thruster} \cite{EMTG_OperationalConstraints}.
+
+In the context of multi-thruster switching, we define a set of Heaviside step functions $H_i\left(P\right)$,
+\begin{equation}
+H_i\left(P\right) = \frac{1}{1 + \exp{\left(-2 k \left(P - P_i^*\right)\right)}}
+\end{equation}
+%
+where each Heaviside step function $H_i\left(P\right)$ defines the switch state of the \textit{i}th thruster and $k$ defines the sharpness of the transition. The larger the value of $k$, the closer $H_i\left(P\right)$ approximates the Heaviside step function. However, while the derivatives $H'_i\left(P\right)$ increase as $k$ increases, they remain finite and $H_i\left(P\right)$ remains continuous. We find that the optimizer behaves best when the derivatives are reasonably small (\textit{i.e.} small $k$) but we also find that if $k$ is too small then the thruster model will frequently report a fractional non-integer $H_i\left(P\right)$. $N_{active}$ may then be defined as,
+%
+\begin{equation}
+N_{active} = \sum_{i=1}^{N} H_i\left(P\right)
+\label{eq:computation_of_N_active}
+\end{equation}
+
+To fully define $N_{active}$, it is necessary to define the transition powers $P_i$ at which a thruster would be switched on and off. If the \texttt{MinThrusters} logic is used, then each $P_i$ is an integer multiple of $P_{max}$ except for $P_1$, which is equal to $P_{min}$. Alternatively if the \texttt{MaxThrusters} logic is used, then each $P_i$ would then be an integer multiple of $P_{min}$. It is also possible to define other switching laws such as maximum thrust or maximum \ac{Isp}, in which case one would need to compute the $P_i$ where those merit functions change as a function of number of thrusters.
+
+As a practical note, we find that multiplying Heaviside smooth-step functions together causes difficulty for a gradient-based optimizer. We therefore recommend that the multi-thruster switching model and the smooth-stepped thruster model not be used together. Instead, expand the throttle table used by the smooth-stepped thruster model such that it includes multi-thruster operating points.
+
+\subsection{Configuring the Spacecraft Class}
+\label{subsec:configuring-the-spacecraft-class}
+
+The \texttt{Spacecraft} class is configured by passing a \texttt{SpacecraftOptions} object into the \texttt{Spacecraft} constructor. There are three ways to configure a \texttt{SpacecraftOptions} object - via programmatic assignment, by choosing systems out of library files, or by supplying a spacecraft file. All three are available in \ac{EMTG} via the \texttt{SpacecraftOptionsFactory()} function and are also available when the hardware classes are used by other programs or accessed directly from Python. We encourage anyone who wishes to use \ac{EMTG}'s hardware model classes in their own code to start from the examples in \texttt{SpacecraftOptionsFactory()}.
+
+\subsubsection{Constructing the Spacecraft by Programmatic Assignment}
+\label{subsubsec:construct_spacecraft_programmatic}
+
+It is possible to construct a \texttt{SpacecraftOptions} object entirely via \texttt{set()} methods. \ac{EMTG} has a mode that does this based on choices made by the user in the .emtgopt script. This mode exists because we wanted something as similar as possible to how \ac{EMTGv8} worked. Based on user inputs, \texttt{SpacecraftOptionsFactory} creates \texttt{PowerSystemOptions}, \texttt{ElectricPropulsionSystemOptions}, and \texttt{ChemicalPropulsionSystemOptions} objects. It creates a single \texttt{StageOptions} object and adds the \texttt{PowerSystemOptions}, \texttt{ElectricPropulsionSystem}, and \texttt{ChemicalPropulsionSystem} to it. Finally it creates a \texttt{SpacecraftOptions} object with a single stage. Global propellant tank and dry mass constraints are enabled if appropriate.
+
+The \texttt{get\_thruster\_coefficients\_from\_library()} function contains a small hard-coded library of public-domain thruster polynomial coefficients, sourced from published papers. This is the only hardware data anywhere in the \ac{EMTG} code base. If operating in legacy mode, the the \texttt{ElectricPropulsionSystem} object will be configured with one of these coefficient sets.
+
+Programmatic construction of a \texttt{SpacecraftOptions} object is a flexible way for developers to use \ac{EMTG}'s hardware models with their own program's user interfaces.
+
+\subsubsection{Constructing the Spacecraft from Library Files}
+\label{subsubsec:construct_spacecraft_library_files}
+
+A \texttt{SpacecraftOptions} object may also be constructed by choosing components from hardware library files. In this mode, the user specifies paths to a .emtg\_powersystemsopt and a .emtg\_propulsionsystemopt file. The user also specifies key strings for the power system, the chemical propulsion system, and the electric propulsion system. The files are then parsed and the \texttt{PowerSystemOptions}, \texttt{ChemicalPropulsionSystemOptions}, and \texttt{ElectricPropulsionSystemOptions} objects are created. These are then attached to a \texttt{StageOptions} object, which in turn is attached to a \texttt{SpacecraftOptions} object. Global propellant tank and dry mass constraints are enabled if appropriate.
+
+The method of constructing \texttt{SpacecraftOptions} from libraries allows the user to keep a database of different components and very quickly set up trade studies that explore the space of trajectory and systems options. We recommend that the library files be configuration managed.
+
+\subsubsection{Constructing the Spacecraft from a Spacecraft File}
+\label{subsubsec:construct_spacecraft_from_file}
+
+Finally, a \texttt{SpacecraftOptions} object may be constructed from a .emtg\_spacecraftopt file. This is the most flexible of the spacecraft construction interfaces but also the most complex. A .emtg\_spacecraftopt file defines a spacecraft with one or more stages. Each stage block is self-contained and has libraries of power and propulsion systems, as well as key strings to tell \texttt{SpacecraftOptions} which system to use for which purpose. Each stage may have its own propellant tank and dry mass constraints in addition to the global constraints. The .emtg\_spacecraftopt file is the only way to specify a multi-stage spacecraft to \ac{EMTG}.
+
+Regardless of which construction method is used, \ac{EMTG} writes out a .emtg\_spacecraftopt file. This file may then be re-used as input to future \ac{EMTG} runs. We highly recommend that as soon as a spacecraft design stabilizes, it should be configuration managed.

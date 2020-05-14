@@ -1,0 +1,28 @@
+\chapter{Objective Functions}
+\label{chap:objective-functions}
+
+\hl{Jacob}
+
+Describe each objective function.
+
+\section{ObjectiveFunctionBase}
+\label{sec:objectivefunctionbase}
+
+\section{ObjectiveFunctionFactory}
+\label{sec:objectivefunctionfactory}
+
+\section{MaximizeDistanceFromCentralBodyObjective}
+\label{sec:maximizedistancefromcentralbodyobjective}
+
+This objective function maximizes the distance from the central body,
+
+\begin{equation}
+	J = \sqrt{x_{cb}^2 + y_{cb}^2 + z_{cb}^2}
+	\label{eq:maximizedistancefromcentralbodyobjective}
+\end{equation}
+
+The user specifies which journey the objective function applies to and the objective function is applied to the arrival event at the end of that journey.
+
+For example, the user may wish to deflect a hazardous asteroid from hitting the Earth. The user would design a mission to the asteroid, then perform an \texttt{EphemerisPeggedMomentumTransfer} at the asteroid to simulate a kinetic impactor transferring momentum from the spacecraft to the asteroid. The remainder of the mission journeys and phases would track the motion of the post-deflection asteroid. The final journey would occur inside the Earth's sphere of influence and would end with a \texttt{PeriapseFlybyIn} event to simulate the asteroid's closest approach to the Earth. The user would then employ the \texttt{MaximizeDistanceFromCentralBodyObjective} to instruct EMTG to maximize the periapse distance.
+
+A second example would be if the user wants to design mission to escape from the central body (\textit{i.e.} the Sun or the Earth). This mission would end with a \texttt{FreePointLTRendezvous} or \texttt{FreePointIntercept} and use this same objective function.

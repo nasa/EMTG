@@ -1,0 +1,75 @@
+\chapter{Utilities}
+\label{chap:utilities}
+
+\section{Writey\_Thing}
+\label{sec:writey_thing}
+
+\texttt{Writey\_thing} is a base class that handles most of EMTG's file writing features. \texttt{Journey}, \texttt{Phase}, and \texttt{BoundaryEventBase} all inherit from \texttt{writey\_thing}, as do their various owned member classes. \texttt{writey\_thing} implements the following methods:
+
+\begin{itemize}
+	\item \texttt{write\_output\_line} - writes a line in the .emtg output file, subject to arguments from the caller. See Doxygen for details.
+	\item \texttt{write\_ephemeris\_line} - writes a line in the .emtg\_ephemeris file. \texttt{write\_ephemeris\_line} may be called with or without control and propulsion arguments, depending on the use case.
+	\item \texttt{write\_ephemeris\_state} - writes the state (epoch, position, velocity and optional mass) component of an ephemeris line. Called only by \texttt{write\_ephemeris\_line}.
+\end{itemize}
+
+\section{Sparsey\_Thing}
+\label{sec:sparsey_thing}
+
+\texttt{Sparsey\_thing} is a base class that stores the handles the construction of the problem Jacobian sparsity problem. \texttt{Sparsey\_thing} also stores pointers to the vectors that define the NLP problem, \textit{i.e.} \texttt{Xlowerbounds, Xupperbounds, Xdescriptions, X\_scale\_factors, F, Flowerbounds, Fupperbounds, Fdescriptions, A, Adescriptions, iAfun, jAvar, Gdescriptions, iGfun, and jGvar}. \texttt{Sparsey\_thing} also keeps track of the \texttt{prefix} that precedes the text description of any decision variables or constraints owned by the derived class.
+
+\texttt{Sparsey\_thing} also implements a number of helper methods that aid in constructing the Jacobian sparsity pattern. Each of these methods, as described below, alias to identically named functions in the \texttt{solver\_utilites} namespace. The purpose of these aliases is to simplify the call syntax so that the programmer does not have to pass in pointers to the NLP problem definition vectors every time a new piece of code is written. \texttt{Sparsey\_thing} both owns those pointers and handles passing them into the various \texttt{solver\_utilities} functions.
+
+\begin{itemize}
+	\item \texttt{create\_sparsity\_entry} - Create a single entry in the Jacobian sparsity pattern and update \texttt{Gdescriptions} appropriately. \texttt{create\_sparsity\_entry} may be passed either a scalar helper index or a vector of helper indices. If passed a vector, \texttt{create\_sparsity\_entry} will append it. \texttt{create\_sparsity\_entry} must be given the Findex of the constraint of interest and either the Xindex of the decision variable that it has a derivative with respect to or a search string, starting location, and search direction in the Xdescriptions vector.
+	\item \texttt{create\_sparsity\_vector} - Create several entries in the Jacobian sparsity pattern. This works the same way as \texttt{create\_sparsity\_entry} except that the caller \texttt{must} pass in a vector of helper indices, a search string, a starting location in Xdescriptions, a search direction, and a number of entries to add. \texttt{create\_sparsity\_vector} will find the entry corresponding to the search string and then add not only that decision variable but also the next caller-supplied \textit{n} variables to the sparsity pattern.
+\end{itemize}
+
+\section{Solver Utilities}
+\label{sec:solver_utilities}
+
+\texttt{Solver\_utilities} is a namespace of helper functions that construct the Jacobian sparsity pattern. They are fully described in Section \ref{sec:sparsey_thing} and are aliased by methods of \texttt{sparsey\_thing}. In addition, \texttt{solver\_utilities} includes the \texttt{detect\_duplicate\_Jacobian\_entries()} helper function, which does exactly what it sounds like.
+
+\section{String Utilities}
+\label{sec:string_utilities}
+
+\texttt{String\_utilities} is a namespace for string manipulation functions. Right now it contains only one, \texttt{convert\_number\_to\_formatted\_string}, which does exactly what is sounds like and is third-party code sourced from a Stack Overflow post at \url{http://stackoverflow.com/questions/7132957/c-scientific-notation-format-number}.
+
+\section{File Utilities}
+\label{sec:file_utilities}
+
+\texttt{File\_utilities} is a namespace that contains file manipulation functions:
+
+\begin{itemize}
+	\item \texttt{safeGetLine()} - A ``safe'' version of \texttt{std::getline()} that is agnostic to line termination character. This is very important for cross-platform compatibility.
+	\item \texttt{get\_all\_files\_with\_extension} uses \texttt{boost::filesytem} to make a list of all files in a directory with a given extension. This is useful, for example, to find all of the .bsp files in one's \texttt{Universe/ephemeris\_files} directory.
+\end{itemize}
+
+\section{Maneuver spec writer}
+\label{sec:maneuver_spec_writer}
+
+The maneuver spec writer is a set of helper classes that create lines in the maneuver spec file that can be read by MONSTER, PIRATE, PyGMATscripter, \textit{etc.}. There are two classes:
+
+\begin{itemize}
+	\item \texttt{maneuver\_spec\_line} - A container class of \texttt{maneuver\_spec\_item} objects. A given maneuver may have multiple items in it if the thrust, mass flow rate, \textit{etc.} chane during the maneuver.
+	\item \texttt{maneuver\_spec\_item} - A container of all of the data items that fully define a maneuver item, including thrust, mass flow rate, start epoch, duration, direction, duty cycle, initial and final mass, and $\Delta v$. \texttt{maneuver\_spec\_item} does the actual writing.
+\end{itemize}
+
+\section{Target spec writer}
+\label{sec:target_spec_writer}
+
+\texttt{Target\_spec\_line} is a helper class for writing lines in a target spec file that can be read by MONSTER, PIRATE, PyGMATscripter, \textit{etc.}. It stores the epoch, frame, central body, and state vector (position, velocity, mass) associated with the target. When appropriate, \texttt{target\_spec\_line} will also store and write BdotR, BdotT, and an ET seconds since J2000 representation of epoch.
+
+\section{MJD to Gregorian Date Converter}
+\label{sec:MJD_to_Gregorian_date_converter}
+
+\texttt{Mjd\_to\_mdyhms}, supplied to the \ac{EMTG} team by Brent Barbee, is a helper function that converts \ac{MJD} to Gregorian month, day, year, hours, minutes, seconds. \texttt{Mjd\_to\_mdyhms} is used only in outputting .emtg summary files. We may eventually switch to SPICE for this, as we do in all other types of outputs.
+
+\section{Ephemeris Reader}
+\label{sec:ephemeris_reader}
+
+\texttt{Ephemeris\_reader} is a helper class to ingest and fit a spline to a .emtg\_ephemeris file. This can be useful if one wants to track a reference trajectory. \texttt{Ephemeris\_reader} uses the Gnu Scientific Library spline package.
+
+\section{Inverse Covariance Reader}
+\label{sec:inverse_covariance_reader}
+
+\texttt{Covariance\_reader} is a helper class that ingests and fits splines to a time-history of inverse covariance matrices. \texttt{Covariance\_reader} uses the Gnu Scientific Library spline package.

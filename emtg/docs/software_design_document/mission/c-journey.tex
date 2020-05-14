@@ -1,0 +1,42 @@
+\chapter{Journey}
+\label{chap:journey}
+
+\section{Overview}
+\label{sec:journey_overview}
+
+The \texttt{Journey} class is an intermediate container that is a member of \texttt{Mission} and owns a \texttt{boost::ptr\_vector} of \texttt{Phase} objects. \texttt{Journey} inherits from \texttt{sparsey\_thing} and therefore contains pointers to all of the data vectors that define the \ac{NLP} problem and all of the utility methods that compute the Jacobian sparsity pattern.
+
+The \texttt{Journey} class has the following methods:
+
+\begin{itemize}
+	\item \texttt{calcbounds()} - Calculates the upper and lower bounds, as well as scale factors, for any owned decision variables and constraints. Calls the \texttt{setup\_calcbounds()} and \texttt{calcbounds()} methods of any owned \texttt{Phase} objects.
+	\item \texttt{process\_journey()} - Evaluates any owned constraints and their partial derivatives. Calls the \texttt{evaluate()} methods of any owned \texttt{Phase} objects.
+	\item \texttt{output()} - Writes the .emtg output file for the evaluated journey. Calls the \texttt{output()} methods of any owned \texttt{Phase} objects. Writes the header for each journey, any mass increments, the boundary states, approximated ephemeris-pegged flyby periapse states, and any mass drops. Calls the \texttt{output\_specialized\_constraints()} method on the arrival and departure boundary events of each owned \texttt{Phase}.
+	\item \texttt{output\_ephemeris()} - Writes an ephemeris file and acceleration output file for the evaluated mission by calling the \texttt{output\_ephemeris()} of any owned \texttt{Phase} objects. Writes a .cmd and .py file that uses \texttt{mkspk.exe} to create a SPICE kernel from the ephemeris file.
+	\item \texttt{output\_STMs()} - Writes text files for each state transition matrix (STM) in the mission by calling the \texttt{output\_STMs()} method on any owned \texttt{Phase} objects.
+	\item \texttt{output\_maneuver\_and\_target\_spec()} - Writes maneuver and target specification files by calling the \texttt{output\_maneuver\_and\_target\_spec()} methods of any owned \texttt{Phase} objects. These files are read by PIRATE, MONSTER, PyGMATscripter, and eventually also interfaces to Monte and provide the necessary information to re-target each maneuver in an operational navigation tool.
+	\item \texttt{getNumberOfPhases()} - Returns the number of owned \texttt{Phase} objects.
+	\item \texttt{getPhase()} - Returns a pointer to the desired \texttt{Phase} object.
+	\item \texttt{getFirstPhase()} - Returns a pointer to the first \texttt{Phase} object.
+	\item \texttt{getLastPhase()} - Returns a pointer to the last \texttt{Phase} object.
+	\item \texttt{getDeterministicDeltav()} - Sums and returns the deterministic $\Delta v$ in the owned \texttt{Phase} objects. Each \texttt{Phase} is responsible for computing its deterministic $\Delta v$.
+	\item \texttt{getStatisticalDeltav()} - Sums and returns the statistical $\Delta v$ in the owned \texttt{Phase} objects. Each \texttt{Phase} is responsible for computing its statistical $\Delta v$.
+	\item \texttt{getFinalMass()} - Returns the mass at the end of the last \texttt{Phase} in this journey.
+\end{itemize}
+
+
+\section{Journey-end $\Delta v$}
+\label{sec:journey_end_deltav}
+
+The user may define a fixed \texttt{journey\_end\_deltav} for each \texttt{Journey}. This could represent, for example, a known set of maneuvers that will be performed after arrival at the target body. This could be expressed as a fixed mass drop, but \texttt{journey\_end\_deltav} allows the user to define a $\Delta v$ and apply it against the spacecraft mass at the end of the journey, using the appropriate spacecraft \texttt{Stage} monoprop system.
+
+The actual computation of propellant use for the journey-end $Delta v$ is done in \texttt{ArrivalEvent}, but \texttt{Journey} extracts that information from the last \texttt{Phase} and outputs it.
+
+\section{Journey time and epoch constraints}
+\label{sec:journey_time_and_epoch_constraints}
+
+The user may elect to constrain a given \texttt{Journey}'s departure date. This is done by summing the launch epoch and all of the flight time variables that occur prior to the beginning of the \texttt{Journey}.
+
+In addition, the user may choose to constrain a \texttt{Journey}'s \textit{flight time}, \textit{aggregate flight time}, or \textit{arrival epoch}. It is not currently possible to constrain more than one of these at a time.
+
+\textit{Flight time} refers to the sum of all phase time of flight variables and boundary event time widths in the \texttt{Journey}. \textit{Aggregate flight time} refers to the sum of all phase flight time and boundary event time width variables up to and including the \texttt{Journey}. \textit{Arrival epoch} computed by adding the launch epoch to the \textit{aggregate flight time}.

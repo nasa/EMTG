@@ -1,0 +1,88 @@
+\externaldocument{../mission/c-Mission}
+\externaldocument{../mission/c-Phase}
+\externaldocument{../ObjectiveFunctions/c-ObjectiveFunctions}
+\externaldocument{../hardware\_models/c-hardware\_models}
+\externaldocument{../integration/c-integration}
+\externaldocument{../propagation/c-propagation}
+\externaldocument{../inner_loop/c-inner_loop}
+
+\chapter{Core}
+\label{chap:core}
+
+\section{EMTG enums}
+\label{sec:EMTG_enums}
+
+\texttt{EMTG\_enums.h} is where we keep the enums that define EMTG's various modes. These enums are used to control switches in various class constructors throughout the rest of EMTG. The enums are listed below.
+
+The following enums define the structure of the problem:
+\begin{itemize}
+	\item \textbf{PhaseType} - allows the user to specify a phase type as defined in Chapter \ref{chap:phase}.
+	\item \textbf{StateRepresentation} - allows the user to specify how a given state vector is described in the problem. This is used in parallel shooting transcriptions (Section \ref{sec:parallel_shooting_phase}) and in PeriapseBoundary and FreePointBoundary (Sections \ref{sec:freepointboundary} and \ref{sec:periapseboundary})
+	\item \textbf{ObjectiveFunctionType} - defines the objective function type as defined in Chapter \ref{chap:ObjectiveFunctions}.
+\end{itemize}
+
+The following enums define the spacecraft:
+\begin{itemize}
+	\item \textbf{SpacecraftModelInputType} - defines whether EMTG reads the spacecraft model from a file, constructs it from library entries, or constructs it from entries in the \texttt{.emtgopt} file, as described in Chapter \ref{chap:hardware_models}.
+	\item \textbf{SpacecraftBusPowerType} - defines the spacecraft bus power model as described in Chapter \ref{chap:hardware_models}.
+	\item \textbf{SpacecraftPowerSupplyType} - defines the spacecraft power supply type (solar vs radioisotope/nuclear) as described in Chapter \ref{chap:hardware_models}.
+	\item \textbf{SpacecraftPowerSupplyCurveType} - defines the spacecraft power supply curve type as described in Chapter \ref{chap:hardware_models}.
+	\item \textbf{SpacecraftThrusterMode} - defines which type of model to use for a given thruster, as described in Chapter \ref{chap:hardware_models}.
+	\item \textbf{ThrottleLogic} - defines which set of rules to use for determining the number of thrusters to fire, as described in Chapter \ref{chap:hardware_models}.
+	\item \textbf{PropulsionSystemChoice} - determines which propulsion system (monoprop, biprop, or electric) the spacecraft uses for a given maneuver, as described in Chapter \ref{chap:hardware_models}.
+\end{itemize}
+
+The following enums define boundary events:
+\begin{itemize}
+	\item \textbf{BoundaryClass} - defines whether a given boundary event will be constructed as an \texttt{EphemerisPeggedBoundary}, \texttt{FreePointBoundary}, \texttt{EphemerisReferencedBoundary}, or \texttt{PeriapseBoundary}, as described in Chapter \ref{chap:boundary-conditions}.
+	\item \textbf{DepartureType} - defines the type of a departure event, within its class, as described in Chapter \ref{chap:boundary-conditions}.
+	\item \textbf{ArrivalType} - defines the type of a arrival event, within its class, as described in Chapter \ref{chap:boundary-conditions}.
+\end{itemize}
+
+The following enums control EMTG's physics engine:
+\begin{itemize}
+	\item \textbf{PropagatorType} - defines whether EMTG uses a Kepler or integrated propagator for a given propagation as described in Chapter \ref{chap:Propagation}.
+	\item \textbf{IntegratorType} - defines whether EMTG uses a fixed-step or adaptive-step integrator for a given propagation as described in Chapter \ref{chap:integration}.
+	\item \textbf{PropagationDomain} - defines whether EMTG uses time-domain or Sundman-domain integration for a given propagation as described in Chapter \ref{chap:integration}.
+	\item \textbf{DutyCycleType} - defines whether EMTG uses averaged or ``realistic'' duty cycle for thrust arcs in the \ac{PSFB} transcription, as described in Section \ref{subsec:PSFB}.
+	\item \textbf{ReferenceFrame} - defines the reference frame for a given calculation, as described in Section \ref{sec:frame}.
+\end{itemize}
+
+The following enums control EMTG's solvers:
+\begin{itemize}
+	\item \textbf{InnerLoopSolverType} - defines which inner-loop solver (NLP-only, MBH, textit{etc.}) will be used for this run of EMTG, as described in Chapter \ref{chap:solvers}.
+	\item \textbf{NLPMode} - defines whether EMTG runs its NLP solver in feasible point, optimize, or filament finder mode as described in Chapter \ref{chap:solvers}.
+\end{itemize}
+
+\section{doubleType}
+\label{sec:doubleType}
+
+\texttt{doubleType.h} is a very simple header that can be included in any EMTG source file and enables the use of the \ac{GSAD} package. It checks to see if the \texttt{AD\_INSTRUMENTATION} compiler macro is set. If so, the \texttt{doubleType} macro is defined as \texttt{GSAD::adouble} and the \texttt{\_getValue} and \texttt{\_setValue(x, y)} macros are defined as \texttt{GSAD::adouble::getValue()} and \texttt{GSAD::adouble::setValue(x, y)} macros, respectively. If the \texttt{AD\_INSTRUMENTATION} compiler macro is \textit{not} set, then \texttt{doubleType} is defined as \texttt{double} and \texttt{\_getValue} and \texttt{\_setValue(x, y)} are defined as white space.
+
+\texttt{doubleType.h}, while only 20 lines long, is the key piece of code that enables EMTG to be its own partial derivative checker.
+
+\section{Chinchilla}
+\label{sec:chinchilla}
+
+\texttt{Chinchilla.h} is a splash screen that draws an ascii picture of Clementine, the mascot of the EMTG program.
+
+\section{MissionOptions}
+\label{sec:missionoptions}
+
+The \texttt{MissionOptions} class reads and write the \texttt{.emtgopt} files that control EMTG. \texttt{MissionOptions} contains options that globally control EMTG, plus a vector of \texttt{JourneyOptions} objects that control each individual journey.
+
+Because \texttt{MissionOptions} must be changed in several different places each time a new option is added, we chose to generated it using an auto-coder. The developer need only modify \texttt{OptionsOverhaul/list\_of\_missionoptions.csv} and then run \textit{PyEMTG/OptionsOverhaul/make\_EMTG\_missionoptions\_journeyoptions.py}. The auto-coder will then validate the .csv file to ensure that all necessary fields are present, and will then generate the \texttt{MissionOptions} and \texttt{JourneyOptions} classes in both C++ and Python. The fields of \texttt{MissionOptions} and \texttt{JourneyOptions} are defined in a .csv file because it is plain text and easy to configuration-manage via Git.
+
+By default, \texttt{MissionOptions} will only write out a given option if it \textit{does not match its default value}. This way each \texttt{.emtgopt} file is as short and easy to read as possible.
+
+\section{JourneyOptions}
+\label{sec:journeyoptions}
+
+The \texttt{JourneyOptions} class controls the construction and evaluation of each \texttt{Journey} object and owned \texttt{Phase} objects. Like \texttt{MissionOptions}, \texttt{JourneyOptions} is generated via an auto-coder. The same auto-coder generates both classes. Also like \texttt{MissionOptions}, \texttt{JourneyOptions} only writes out options that do \textit{not} take their default values.
+
+\section{Problem}
+\label{sec:problem}
+
+The \texttt{Problem} class is a base class for all EMTG problem types. As of this writing, \texttt{mission} (Chapter \ref{chap:mission}) is the only derived class of \texttt{Problem} but we keep the \texttt{Problem} class in case this changes later.
+
+The main purpose of the \texttt{Problem} class is to hold all of the fields necessary to interact with an \ac{NLP} problem solver, including the decision vector, constraint vector, bounds, Jacobian, and Jacobian sparsity pattern. In addition, \texttt{Problem} contains helper methods to check the infinity-norm of the constraint violation vector and to check the decision vector, constraint vector, and Jacobian for infinite or undefined values.

@@ -1,0 +1,22 @@
+\chapter{Regression Testbed}
+\label{chap:testing}
+
+\hl{Alec and Sean}
+
+\section{Comparatron Function}
+\label{sec:comparatronfunction}
+
+\texttt{Comparatron} is a method of the PyEMTG \texttt{Mission} class which compares all EMTG output attributes against those of a baseline case. Strings are compared directly and numeric values are checked against a default tolerance of 1e-15. Alternative tolerance values for any attribute can be provided as a dictionary into the function. If all values are in agreement, \texttt{Comparatron} returns a boolean value ``True". If any values are not within the tolerance between the two cases, then a value of ``False" is returned along with a csv output file of all values that do not match.
+
+Since \texttt{Comparatron} is written entirely in Python, all classes referenced in this section are PyEMTG classes, not EMTG C++ classes.
+
+The syntax for calling \texttt{Comparatron} is: ``$pass\_test=myMission.Comparatron(path\_to\_baseline,\linebreak csv\_file\_name=None,full\_output=False,tolerance\_dict=\{\},default\_tolerance=$1e-15$)$.'' Note that this is Python syntax. Any argument with an ``='' sign denotes the default value that will be used if the argument is not passed in. The function arguments are as follows:
+\begin{itemize}[label=$\bullet$]
+	\item $path\_to\_baseline$: The full file path to the EMTG output file to compare against. This is the only required argument.
+	\item $csv\_file\_name$: The name of the csv output file that is written if there are any discrepancies to report. If no file name is provided then the mission name will be used.
+	\item $full\_output$: Dictates what is written to the csv output file. If False, only values that do not meet the tolerance will be written to the output. If True, than any values that are not in exact agreement (regardless of whether they are within the tolerance) will be written. 
+	\item $tolerance\_dict$: Overrides the default tolerance for specific mission, journey, or mission event attributes. The argument takes a dictionary with the attribute as the key and the new tolerance as the value (i.e. \{`total\_statistical\_deltav':1e-6,`Declination':1e-8\}).
+	\item $default\_tolerance$: Provides a default tolerance value for all attributes that do not appear in the tolerance dictionary. A value of 1e-15 will be used unless the user provides a new default value here.
+\end{itemize}
+
+When running \texttt{Comparatron}, the function will first check to make sure that both cases have the same number of journeys and mission events. If there are discrepancies in either, the function will not return the usual True/False boolean but will instead return a string saying ``Journey Mismatch" or ``Journey \# Mission Events Mismatch" and will stop immediately. If this check is passed, \texttt{Comparatron} will then check every \texttt{Mission}, \texttt{Journey}, and \texttt{MissionEvent} class attribute across cases and record any names that do not agree or any attributes that appear only in one---these will be written to the csv output file. The attributes for each class include both functions within the class as well as alphanumeric values (i.e. dates, the central body, and $\Delta v$). All alphanumeric-valued attributes are parsed into a temporary dataframe for the overall mission and for each journey and mission event. These temporary dataframes are split in two, one for strings and one for numerics. The strings are compared directly while the corresponding numeric dataframes between the two EMTG cases are subtracted and checked against the tolerance. All values that do not completely agree are stored into a final comparison dataframe, which gets written to a csv output file if discrepancies are found.

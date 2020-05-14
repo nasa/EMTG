@@ -1,0 +1,112 @@
+\externaldocument{../mission/c-boundary_conditions}
+
+\chapter{Objective Functions}
+\label{chap:ObjectiveFunctions}
+
+\section{Overview}
+\label{sec:objectivefunction_overview}
+
+\ac{EMTG} provides a variety of different objective functions that the user may use in an optimization problem. Objective functions compute their own bounds and sparsity patterns, and interact with the rest of the \ac{EMTG} problem via a pointer to the mission object. All objective functions inherit from \texttt{ObjectiveFunctionBase} and are constructed by \texttt{ObjectiveFunctionFactory}. \ac{EMTG}'s optimizer is always configured to make the objective function as small as possible. Accordingly, any objective functions that seek to maximize a quantity do so by minimizing the negative of that quantity.
+
+All objective functions contain the following methods:
+
+\begin{itemize}
+	\item \texttt{calcbounds()} - Calculates the sparsity pattern of the objective function.
+	\item \texttt{process()} - Computes the value of the objective function and its partial derivatives.
+	\item \texttt{output()} - Writes the name and value of the objective function to the .emtg summary file.
+\end{itemize}
+
+\section{MinimizeDeltavObjective}
+\label{sec:MinimizeDeltavObjective}
+
+\texttt{MinimizeDeltavObjective} minimizes the total deterministic $\Delta v$ in the mission, including any $\Delta v$ performed during a boundary event. \texttt{MinimizeDeltavObjective} relies on each phase's \texttt{process\_deltav\_contribution()} method to work. \hl{Since process\_deltav\_contribution() is only fully implemented in MGAnDSMs, MinimizeDeltavObjective only works with missions that are entirely composed of MGAnDSMs phases.} This turns out not to be a significant handicap because $\Delta v$ is a poor objective function for low-thrust missions anyway because it does not map directly to propellant consumption or any other spacecraft system metric.
+
+\section{MaximizeMassObjective}
+\label{sec:MaximizeMassObjective}
+
+\texttt{MaximizeMassObjective} maximizes the final mass of the spacecraft at the end of the mission, including any propellant margin and additional mass that may have been added during the mission such as samples from a small body. \texttt{MaximizeMassObjective} operates only on the mass element of the state vector in the final phase's arrival event. This is usually directly encoded in the decision vector, but \texttt{MaximizeMassObjective} does not explicitly require this.
+
+\section{MaximizeLogeMassObjective}
+\label{sec:MaximizeLogeMassObjective}
+
+\texttt{MaximizeLogeMassObjective} is the natural log of \texttt{MaximizeMassObjective}. This is sometimes better behaved numerically, especially on \ac{MGAnDSMs} problems.
+
+\section{MaximizeLog10MassObjective}
+\label{sec:MaximizeLog10MassObjective}
+
+\texttt{MaximizeLog10MassObjective} is the log base 10 of \texttt{MaximizeMassObjective}. This is sometimes better behaved numerically than \texttt{MaximizeMassObjective}, especially on \ac{MGAnDSMs} problems.
+
+\section{MaximizeDryMassObjective}
+\label{sec:MaximizeDryMassObjective}
+
+\texttt{MaximizeDryMassObjective} is similar to \texttt{MaximizeMassObjective} except that propellant margin is removed. This is done by adding up the virtual tank variables for all phases and boundary events associated with the final stage of the spacecraft, then scaling each tank value by its user-supplied margin factor. Sometimes optimizing on \texttt{MaximizeDryMassObjective} gives a different answer than \texttt{MaximizeMassObjective} because if you have to spend more propellant to deliver more final mass, you may have to give up more of that final mass in propellant margin.
+
+\section{MaximizeLog10DryMassObjective}
+\label{sec:MaximizeLog10DryMassObjective}
+
+\texttt{MaximizeLog10DryMassObjective} is the natural log of \texttt{MaximizeDryMassObjective}. This is sometimes better behaved numerically, especially on \ac{MGAnDSMs} problems.
+
+\section{MaximizeLogeDryMassObjective}
+\label{sec:MaximizeLogeDryMassObjective}
+
+\texttt{MaximizeLogeDryMassObjective} is the natural log of \texttt{MaximizeDryMassObjective}. This is sometimes better behaved numerically, especially on \ac{MGAnDSMs} problems.
+
+\section{MinimizeTimeObjective}
+\label{sec:MinimizeTimeObjective}
+
+\texttt{MinimizeTimeObjective} minimizes the total mission flight time by summing each phase flight time, wait time, and finite boundary event time width (for spiral segments). \texttt{MinimizeTimeObjective} is posed to the optimizer as a linear constraint.
+
+\section{MaximizeInitialMassObjective}
+\label{sec:MaximizeInitialMassObjective}
+
+\texttt{MaximizeInitialMassObjective} maximizes the initial mass of the spacecraft. It operates only on the mass element of the state vector in the first phase's departure event.
+
+\section{ArriveAsEarlyAsPossibleObjective}
+\label{sec:ArriveAsEarlyAsPossibleObjective}
+
+\texttt{ArriveAsEarlyAsPossibleObjective} minimizes the epoch of the final event in the mission. This is not the same thing as minimizing flight time, as it will move the launch date within user-specified bounds as needed in order to arrive as early as possible.
+
+\section{ArriveAsLateAsPossibleObjective}
+\label{sec:ArriveAsLateAsPossibleObjective}
+
+\texttt{ArriveAsLateAsPossibleObjective} maximizes the epoch of the final event in the mission.
+
+\section{DepartAsEarlyAsPossibleObjective}
+\label{sec:DepartAsEarlyAsPossibleObjective}
+
+\texttt{DepartAsEarlyAsPossibleObjective} minimizes the epoch of the first event in the mission. This epoch is usually encoded directly in the decision vector, but \texttt{DepartAsEarlyAsPossibleObjective} does not explicitly require it.
+
+\section{DepartAsLateAsPossibleObjective}
+\label{sec:DepartAsLateAsPossibleObjective}
+
+\texttt{DepartAsEarlyAsPossibleObjective} maximizes the epoch of the first event in the mission. This epoch is usually encoded directly in the decision vector, but \texttt{DepartAsEarlyAsPossibleObjective} does not explicitly require it.
+
+\section{MinimizeChemicalFuelObjective}
+\label{sec:MinimizeChemicalFuelObjective}
+
+\texttt{MinimizeChemicalFuelObjective} minimizes the total consumption of chemical fuel across the mission. It does so by summing all virtual chemical fuel variables in the mission, regardless of what spacecraft stage they are attached to. Note that this is not the same thing as minimizing the sum of chemical fuel and oxidizer. This objective function is very useful if the spacecraft's oxidizer tank is constrained and the user wishes to minimize the amount of fuel used in both monoprop and biprop maneuvers while strictly obeying the oxidizer constraint.
+
+\section{MinimizeElectricPropellantObjective}
+\label{sec:MinimizeElectricPropellantObjective}
+
+\texttt{MinimizeElectricPropellantObjective} minimizes the use of electric propellant in the mission. It does so by summing all virtual electric propellant variables in the mission, regardless of what spacecraft stage they are attached to.
+
+\section{MinimizeTotalPropellantObjective}
+\label{sec:MinimizeTotalPropellantObjective}
+
+\texttt{MinimizeTotalPropellantObjective} minimizes the sum of all types of propellant in the mission by summing all virtual propellant variables.
+
+\section{MinimizeWaypointTrackingErrorObjective}
+\label{sec:MinimizeWaypointTrackingErrorObjective}
+
+\texttt{MinimizeWaypointTrackingErrorObjective} minimizes the average distance between the spacecraft and a user-supplied reference trajectory. \hl{This objective function is not yet fully implemented and when complete will be compatible only with parallel shooting phase types. The distance between the spacecraft and the reference trajectory will be sampled at the left-hand side of each parallel shooting step. Distance will be calculated in terms of either Euclidean distance or Mahalanobis distance.}
+
+\section{MinimizeInitialImpulseObjective}
+\label{sec:MinimizeInitialImpulseObjective}
+
+\texttt{MinimizeInitialImpulseObjective} minimizes the initial impulse in the first phase's departure event. This objective function is most commonly used to minimize launch $C_3$.
+
+\section{MaximizeDistanceFromCentralBodyObjective}
+\label{sec:MaximizeDistanceFromCentralBodyObjective}
+
+\texttt{MaximizeDistanceFromCentralBodyObjective} maximizes the distance between the spacecraft and the final journey's central body at the end of the mission. This objective function is commonly used in planetary defense applications after an \texttt{EphemerisPeggedMomentumTransfer} as described in Section \ref{subsubsec:ephemerispeggedmomentumtransfer}. The remainder of the mission after the \texttt{EphemerisPeggedMomentumTransfer} represents the path of a solar system body that has been deflected in some way, and the final journey's universe is centered on the Earth. \texttt{MaximizeDistanceFromCentralBodyObjective} therefore maximizes the distance by which the body misses the Earth.

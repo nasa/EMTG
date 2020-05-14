@@ -1,0 +1,19 @@
+\chapter{Derivative Testbed}
+\label{chap:testing}
+
+One of the most challenging aspects of creating an optimization tool is the need to code, test, and maintain analytical derivatives of each of the objective functions and constraints with respect to the decision variables. This testing is often done with finite differencing or by creating stand-alone testbeds that use algorithmic differentiation or complex step differentiation via operator overloading. Neither of these methods is reliable because the former is subject to finite differencing rounding and truncation error and the latter introduces a risk of human error when re-coding a derivative from the stand-alone testbed to the main program code.
+
+After many frustrating years of using both of the above methods, we decided to build \ac{EMTG} version 9 a very different way. The entire \ac{EMTG} version 9 code base is compatible with algorithmic differentation via the \ac{GSAD} package. All values that are used in the computation of a constraint or objective function are specified as \texttt{doubleType}, which in turn may be cast as \texttt{double} or \texttt{GSAD::adouble} depending on whether one is compiling in optimization mode or testbed mode.
+
+The derivatives testbed executes \ac{EMTG} in ``evaluate trialX'' mode with algorithmic differentation available. The testbed prints out the following files:
+
+\begin{itemize}
+	\item \texttt{Mission\_XFout.csv} - Lists the decision variables and constraints along with their bounds and values. This is the same file that is written when executing \ac{EMTG} the normal way.
+	\item \texttt{Mission\_Gout.csv} - Lists every single partial derivative of every nonlinear constraint and the objective function with respect to every decision variable in its sparsity pattern. Lists the analytical value, the algorithmic differentiation value, the relative and absolute errors, the ratios between the analytical and algorithmic values, the indices in the sparse Jacobian, and the order of magnitude of the derivative entry.
+	\item \texttt{Mission\_Aout.csv} - Same as \texttt{Mission\_Gout.csv} but for linear constraints and objectives.
+	\item \texttt{Mission\_MissingEntries.csv} - Lists the Jacobian indices and order of magnitude of any derivative entry that \textit{should} exist based on the derivative directions polled from each algorithmic differentation calculation object, but the programmer forgot to code.
+\end{itemize}
+
+The derivatives testbed allows a developer to trivially test a highly complex optimization problem and ensure that the derivatives are as correct as possible. The only complications are when an entry is so small that the true value is obscured by floating point chaos.
+
+Developers may also construct smaller-scale derivatives testbeds that test only portions of \ac{EMTG}. The repository includes testbeds for boundary events, propagation, the \ac{MGALT} \ac{STM}-\ac{MTM} chain, and frame rotations. These secondary testbeds are not maintained like the main testbed and are provided only as examples of how to make tests.

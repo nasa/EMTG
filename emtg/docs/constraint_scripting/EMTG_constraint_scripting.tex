@@ -1,0 +1,867 @@
+\documentclass[11pt]{article}
+
+%% PACKAGES
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{url}
+\usepackage[printonlyused]{acronym}
+\usepackage[ruled]{algorithm}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{overpic}
+\usepackage{calc}
+\usepackage{color}
+%\usepackage{times}
+%\usepackage{ragged2e}
+ \usepackage[margin=1.0in]{geometry}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{textcomp}
+\usepackage{cite}
+\usepackage{mdwlist}
+\usepackage{subfiles}
+\usepackage{enumitem}
+\usepackage{calc}
+\usepackage{array}
+\usepackage{units}
+\usepackage{arydshln,leftidx,mathtools}
+\usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{relsize}
+\usepackage{float}
+\usepackage{makecell}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\makeatletter
+\let\@tmp\@xfloat
+\usepackage{fixltx2e}
+\let\@xfloat\@tmp
+\makeatother
+
+\usepackage[subfigure]{tocloft}
+\usepackage[singlespacing]{setspace}
+%\usepackage[nodisplayskipstretch]{setspace}
+%\setstretch{1.0}
+
+%\renewcommand\cftsecafterpnum{\vskip\baselineskip}
+%\renewcommand\cftsubsecafterpnum{\vskip\baselineskip}
+%\renewcommand\cftsubsubsecafterpnum{\vskip\baselineskip}
+
+%\usepackage{mathtools}
+%\usepackage[framed]{mcode}
+
+\usepackage{pgfplots}
+
+\usepackage{cancel}
+
+\usepackage{tikz}
+\usetikzlibrary{calc,patterns,decorations.pathmorphing,decorations.markings,fit,backgrounds}
+
+\usepackage[strict]{changepage} %use to manually place figs/tables to get them within the margins
+
+\makeatletter
+\g@addto@macro\normalsize{%
+  \setlength\abovedisplayskip{0.25pt}
+  \setlength\belowdisplayskip{0.25pt}
+  \setlength\abovedisplayshortskip{0.25pt}
+  \setlength\belowdisplayshortskip{0.25pt}
+}
+\makeatother
+
+
+
+\setlength{\parskip}{\baselineskip}
+
+%% GRAPHICS PATH
+\graphicspath{{./pictures/pdf/}{./pictures/ps/}{./pictures/png/}}
+
+%% TODO
+\newcommand{\todo}[1]{\vspace{5 mm}\par \noindent \framebox{\begin{minipage}[c]{0.98 \columnwidth} \ttfamily\flushleft \textcolor{red}{#1}\end{minipage}}\vspace{5 mm}\par}
+
+%% MACROS
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+\providecommand{\dualnorm}[1]{\norm{#1}_\ast}
+\providecommand{\set}[1]{\lbrace\,#1\,\rbrace}
+\providecommand{\cset}[2]{\lbrace\,{#1}\nobreak\mid\nobreak{#2}\,\rbrace}
+\providecommand{\onevect}{\mathbf{1}}
+\providecommand{\zerovect}{\mathbf{0}}
+\providecommand{\field}[1]{\mathbb{#1}}
+\providecommand{\C}{\field{C}}
+\providecommand{\R}{\field{R}}
+\providecommand{\polar}{\triangle}
+\providecommand{\Cspace}{\mathcal{Q}}
+\providecommand{\Fspace}{\mathcal{F}}
+\providecommand{\free}{\text{\{}\mathsf{free}\text{\}}}
+\providecommand{\iff}{\Leftrightarrow}
+\providecommand{\qstart}{q_\text{initial}}
+\providecommand{\qgoal}{q_\text{final}}
+\providecommand{\contact}[1]{\Cspace_{#1}}
+\providecommand{\feasible}[1]{\Fspace_{#1}}
+\providecommand{\prob}[2]{p(#1|#2)}
+\providecommand{\prior}[1]{p(#1)}
+\providecommand{\Prob}[2]{P(#1|#2)}
+\providecommand{\Prior}[1]{P(#1)}
+\providecommand{\parenth}[1] {\left(#1\right)}
+\providecommand{\braces}[1] {\left\{#1\right\}}
+\providecommand{\micron}{\hbox{\textmu m}}
+
+%% MATH FUNCTION NAMES
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\cone}{cone}
+\DeclareMathOperator{\homog}{homog}
+\DeclareMathOperator{\domain}{dom}
+\DeclareMathOperator{\range}{range}
+\DeclareMathOperator{\argmax}{arg\,max}
+\DeclareMathOperator{\argmin}{arg\,min}
+\DeclareMathOperator{\area}{area}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\mathspan}{span}
+\DeclareMathOperator{\sn}{sn}
+\DeclareMathOperator{\cn}{cn}
+\DeclareMathOperator{\dn}{dn}
+\DeclareMathOperator*{\minimize}{minimize}
+
+\DeclareMathOperator{\atan2}{atan2}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+%\setlength{\RaggedRightParindent}{2em}
+%\setlength{\RaggedRightRightskip}{0pt plus 3em}
+%\pagestyle{empty}
+
+
+
+
+\title{{\Huge EMTGv9 Constraint Scripting}}
+\vspace{0.5cm}
+\author
+{
+	Donald H. Ellison \thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Flight Dynamics and Mission Design Branch Code 595},
+	Jacob A. Englander \thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Flight Dynamics and Mission Design Branch Code 595}
+	Ryo Nakamura \thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Flight Dynamics and Mission Design Branch Code 595, detailed from JAXA}
+}
+\vspace{0.5cm}
+
+\date{}
+
+\begin{document}
+
+\begin{titlepage}
+\maketitle
+%\thispagestyle{empty}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|}
+		\hline
+		\textbf{Revision Date} & \textbf{Author} & \textbf{Description of Change} \\ \hline
+		\date{November 20, 2018} & Donald Ellison & Listing of current implemented constraints \\
+		\hline
+		\date{January 16, 2019} & Jacob Englander & \makecell[l]{Updated to reflect new organization of .emtgopt file.\\Added overview section.} \\
+		\hline
+		\date{December 21, 2018} & Jacob Englander & \makecell[l]{Added phase distance constraint, boundary distance constraint,\\ MGAnDSMs maneuver constraints, PSFB thrust angle constraint,\\ and PSFB duty cycle control} \\
+		\hline
+		\date{January 16, 2018} & Jacob Englander & \makecell[l]{Added introductory material and instructions for how to use the \\scripted constraints with the new modular options file format.} \\
+		\hline
+		\date{January 23, 2018} & Jacob Englander & \makecell[l]{Added RBP, RPB, RRP, and RPR angle constraint documentation.} \\
+		\hline
+		\date{February 5, 2019} & Jacob Englander & \makecell[l]{Updated to new options file spec, commentable constraints,\\and BPT angle with constant bounds.} \\
+		\hline
+		\date{February 11, 2019} & Jacob Englander & \makecell[l]{Added BCF latitude and longitude boundary constraints. Changed\\ parallel shooting constraint text to recognize that PSFB is no longer\\ the only parallel shooting phase type.}\\
+		\date{February 14, 2019} & Jacob Englander & \makecell[l]{Added velocity declination constraint.}\\
+		\hline
+		\date{February 28, 2019} & Jacob Englander & \makecell[l]{Added vertical flight path angle and velocity magnitude constraints.}\\
+		\hline
+		\date{October 10, 2019} & Ryo Nakamura & \makecell[l]{Added spinning body-relative velocity magnitude constraint.}\\
+		\hline
+    \date{October 23, 2019} & Ryo Nakamura & \makecell[l]{Added detic latitude, detic altitude, spherical velocity azimuth,\\ relative velocity azimuth, and relative velocity HFPA constraint.}\\
+		\hline
+	\end{tabular}
+\end{table}
+\end{titlepage}
+
+
+
+\newpage
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+\clearpage
+\setcounter{page}{1}
+
+\input{./acronymlist}
+
+\section{Overview}
+\label{sec:overview}
+
+EMTGv9 allows the user to specify a wide range of scripted constraints beyond what is available in the GUI. This document describes the three classes of constraints - boundary constraints, maneuver constraints, and phase distance constraints (also known as path constraints).
+
+EMTGv9's .emtgopt input file contains a separate, copyable block for each journey in the mission. At the end of each journey, blocks exist for each of the three classes of constraints as shown below:
+
+\begin{verbatim}
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+\end{verbatim}
+
+Internally, the constraints are stored in the JourneyOptions structure as lists of strings:
+
+\begin{verbatim}
+JourneyOptions.ManeuverConstraintDefinitions
+JourneyOptions.BoundaryConstraintDefinitions
+JourneyOptions.PhaseDistanceConstraintDefinitions
+\end{verbatim}
+
+PyEMTG collects the journey-level lists of constraints into ``master'' constraint lists that exist at the mission level as shown below. To do this, call \texttt{MissionOptions.AssembleMasterConstraintVectors}. You can also disassemble the master constraint list back to the journey level via  \texttt{MissionOptions.DisassembleMasterDecisionVector}.
+
+\begin{verbatim}
+MissionOptions.ManeuverConstraintDefinitions
+MissionOptions.BoundaryConstraintDefinitions
+MissionOptions.PhaseDistanceConstraintDefinitions
+\end{verbatim}
+
+If you wish to edit scripted constraints at the journey level via Python, do the following:
+
+\begin{verbatim}
+MissionOptions.DisassembleMasterDecisionVector()
+<your constraint edits here>
+MissionOptions.AssembleMasterConstraintVectors()
+\end{verbatim}
+
+Alternatively, if you wish to edit at the mission level, perform the procedure below. However, you will need to prefix \texttt{jJ} to the constraint names when manipulating the master constraint definition lists, where \texttt{J} is the index of the journey that you wish to edit.
+
+\begin{verbatim}
+MissionOptions.AssembleMasterConstraintVectors()
+<your constraint edits here>
+MissionOptions.DisassembleMasterDecisionVector()
+\end{verbatim}
+
+Remember to call \texttt{MissionOptions.DisassembleMasterDecisionVector} and \texttt{MissionOptions.AssembleMasterDecisionVector} as appropriate so that the mission and journey-level constraint definition lists remain in sync. In a future update, we will find a way to make this happen automatically.
+
+The user may comment out a constraint with the \texttt{\#} character. The constraint will remain in the script through ingest and rewrite in PyEMTG and EMTG, but will not be used in optimization.
+
+\section{Boundary Constraints}
+\label{sec:boundaryConstraints}
+
+Boundary constraints may be applied to any boundary condition class. In order to apply the constraint to the left boundary of a particular phase/journey, the constraint should be tagged as a departure constraint (e.g. p2\_departure\_orbitperiod\_1yr\_1.1yr). Likewise, for a right boundary, it would be tagged as ``arrival''.
+
+Boundary constraints are specified in the boundary constraint block at the end of each journey in the .emtgopt file.
+
+\subsection{Classical Orbit Element Boundary Constraints}
+\label{sec:boundaryCOEconstraints}
+
+Distance-based constraints may be specified in kilometers (km), nautical miles (nmi), \ac{AU} (AU) or universe length units (LU). Angular constraints may be specified in degrees (deg) or radians (rad). Time constraints may be specified in seconds (sec), hours (hr), days (d) or years (yr).
+
+\subsubsection{Semimajor Axis}
+\label{sec:boundarySMAconstraint}
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+pP_arrival_SMA_10000km_12000km
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsubsection{Inclination}
+\label{sec:boundaryINCconstraint}
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+pP_arrival_INC_40deg_40.1deg
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsubsection{Eccentricity}
+\label{sec:boundaryECCconstraint}
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+pP_arrival_ECC_0.6_0.7
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsubsection{Right Ascension of the Ascending Node}
+\label{sec:boundaryRAANconstraint}
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+pP_arrival_RAAN_0.1rad_0.15rad
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsubsection{Argument of Periapse}
+\label{sec:boundaryAOPconstraint}
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+pP_arrival_AOP_0.1rad_0.15rad
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsubsection{True Anomaly}
+\label{sec:boundaryTAconstraint}
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+pP_arrival_trueanomaly_10deg_15deg
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{COE Derived Constraints}
+\label{sec:boundaryCOEderivedConstraints}
+
+\subsubsection{Orbit Period}
+\label{sec:boundaryOrbitPeriod}
+
+\textcolor{red}{The orbit period constraint}
+
+\subsubsection{Periapse Distance}
+\label{sec:boundaryOrbitPeriapse}
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+pP_arrival_periapsedistance_10000nmi_12000nmi
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsubsection{Apoapse Distance}
+\label{sec:boundaryOrbitApoapse}
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+pP_arrival_apoapsedistance_10000nmi_12000nmi
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{Distance Constraint}
+\label{sec:boundaryDistanceConstraint}
+
+The user may constrain the distance between any boundary condition and any body in the Universe file. The user specifies the phase prefix, ``arrival'' or ``departure,'' the body of interest as either ``cb'' or an integer index from the Universe file, and lower and upper bounds. The constraint may be posed in km, AU, or Universe LU.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_distanceconstraint_3_0.0au_1.0au
+p0_departure_distanceconstraint_cb_0.0au_3.5au
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{Angle Constraints}
+\label{subsec:boundaryAngleConstraint}
+
+The user may constrain the angle between the sun, the spacecraft, and a reference body. This may be done in terms of the Sun-Body-Probe (SBP) or Sun-Probe-Body (SPB). This set of constraints can be used to represent anything from the phase angle at encounter with an asteroid (Sun-asteroid-Probe) or the Sun-Earth-Probe (SEP) or Sun-Probe-Earth (SPE) angles.
+
+There are four versions of these constraints as detailed below. The first two versions apply only to ephemeris-pegged boundary conditions that encode a $v_\infty$ vector, such as intercept/flyby, chemical rendezvous, and orbit insertion. The last two may be applied to any class of boundary condition.
+
+\begin{enumerate}
+	\item \textbf{Ephemeris-pegged Reference-Body-Probe (RBP)}. The user only needs to provide the reference body. The constraint uses the boundary position vector to represent the Body and the sum of the boundary position vector and the spacecraft $v_\infty$ vector to represent the Probe. An example would be Sun-asteroid-Probe angle for an ephemeris-pegged asteroid flyby, where the Sun is the Reference and the asteroid is the Body.
+	\item \textbf{Ephemeris-pegged Reference-Probe-Body (RPB)}. The user only needs to provide the reference body. The constraint uses the boundary position vector to represent the Body and the sum of the boundary position vector and the spacecraft $v_\infty$ vector to represent the Probe. An example would be Sun-Probe-asteroid angle for an ephemeris-pegged asteroid flyby, where the Sun is the Reference and the asteroid is the Body.
+	\item \textbf{Reference-Reference-Probe (RRP)}. The user specifies two reference bodies and the spacecraft's position vector is used for the Probe. One example is Sun-Earth-Probe angle, where the Sun and the Earth are the two references. Another example is Sun-asteroid-Probe angle for a flyby that is specified with any boundary class other than ephemeris-pegged.
+	\item \textbf{Reference-Probe-Reference (RPR)}. The user specifies two reference bodies and the spacecraft's position vector is used for the Probe. One example is Sun-Probe-Earth angle, where the Sun and the Earth are the two references. Another example is Sun-Probe-asteroid angle for a flyby that is specified with any boundary class other than ephemeris-pegged.
+\end{enumerate}
+
+\subsubsection{RBP and RPB angle constraints}
+\label{subsubsec:RBP_and_RPB}
+
+The RBP and RPB constraints are specified as shown below. The user may identify the reference body using either ``cb'' for the central body or an integer encoding a body's index in that Journey's Universe file. The lower and upper bounds on the constraint are specified in degrees.
+
+The RBP and RPB constraints may only be specified for ephemeris-pegged arrival events that encode a $v_\infty$ vector, \textit{i.e.} intercept/flyby, chemical rendezvous, and orbit insertion. Note that because RBP and RPB only work with ephemeris-pegged boundary event, we can make the assumption that the ``body'' is the body associated with the boundary event and so we only need to encode the ``reference'' in the constraint description as shown below.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_RBP_cb_0.0_15.0
+p3_arrival_RPB_5_8.3_17.2
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+
+\subsubsection{RRP and RPR angle constraints}
+\label{subsubsec:RRP_and_RP}
+
+The RRP and RPR constraints are specified as shown below. The syntax for RRP and RPR requires that the user specify two reference bodies. The user may identify the reference body using either ``cb'' for the central body or an integer encoding a body's index in that Journey's Universe file. The lower and upper bounds on the constraint are specified in degrees.
+
+The RRP and RPR constraints may be applied to any boundary event.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_RRP_cb_3_0.0_15.0
+p3_departure_RPR_5_7_8.3_17.2
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{Angular Momentum Reference Angle Constraint}
+\label{subsec:angular_momentum_reference_angle}
+
+The user may choose to constrain the angle between the spacecraft's ICRF angular momentum vector relative to the central body and the vector to some reference body. For example, the user may need to constrain that the final orbit of the spacecraft about some body be in the terminator plane, \textit{i.e.} the angle between the vector to the sun and the angular momentum vector is zero.
+
+The user may supply this constraint in degrees or radians.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_angularMomentumReferenceAngle_cb_0.0deg_15.0deg
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+
+\subsection{Departure or Arrival Maneuver Thruster Set}
+\label{subsec:boundary_constrainThrusterSet}
+
+The user may direct a particular chemical departure or arrival maneuver to be either ``monoprop'' or ``biprop.'' EMTG will then use the $I_{sp}$ specified for monoprop or biprop in the spacecraft file.
+
+This class of constraint is applied to departure type \texttt{0: launch or direct insertion} (when a launch vehicle is not used) and arrival types \texttt{0: insertion into parking orbit (use chemical Isp)} and \texttt{1: rendezvous (with chemical maneuver)}, as well as powered patched-conic flybys. All other boundary types will ignore this class of constraint.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_monoprop
+p3_departure_biprop
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{BCF Longitude}
+\label{subsec:BCF_longitude}
+
+The user may constrain longitude in the J2000 \ac{BCF} frame as defined in the current journey's Universe file. Longitude is computed as,
+
+\begin{equation}
+	\label{eq:longitude}
+	\lambda = \atan2\left (y_{J2000BCF}, x_{J2000BCF} \right)
+\end{equation}
+
+\noindent and is given in the range $\left[-180.0, 180.0 \right]$. The user provides lower and upper bounds on longitude, in degrees.
+
+Note that this constraint is computed in the \textit{universe's central body's} J2000 \ac{BCF} frame. This is true regardless of boundary class.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_departure_longitude_84.0_85.0
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{BCF Latitude}
+\label{subsec:BCF_latitude}
+
+The user may constrain latitude in the J2000 \ac{BCF} frame as defined in the current journey's Universe file. This is also known as geocentric latitude as opposed to geodetic latitude. Latitude is computed as,
+
+\begin{equation}
+	\label{eq:latitude}
+	\begin{aligned}
+		\theta = \atan2\left (z_{J2000BCF}, r_{xy_{J2000BCF}} \right)\\
+		r_{xy_{J2000BCF}} = \sqrt{\left(x_{J2000BCF}^2 + y_{J2000BCF}^2\right)}
+	\end{aligned}
+\end{equation}
+
+\noindent and is given in the range $\left[-180.0, 180.0 \right]$. The user provides lower and upper bounds on longitude, in degrees.
+
+Note that this constraint is computed in the \textit{universe's central body's} J2000 \ac{BCF} frame. This is true regardless of boundary class.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_departure_BCFlatitude_-29.0_-28.0
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{(Geo)Detic Latitude}
+\label{subsec:detic_latitude}
+
+The user may constrain (geo)detic latitude. The user may specify this constraint in J2000BCF and TrueOfDateBCI frames. The user provides lower and upper bounds on latitude, in degrees.
+Note that this constraint has a singularity at the pole.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_DeticLatitude_25.0_26.0_trueofdatebcf
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{(Geo)Detic Altitude}
+\label{subsec:detic_altitude}
+
+The user may constrain (geo)detic altitude. The user may specify this constraint in J2000BCF and TrueOfDateBCI frames. The user provides lower and upper bounds on altitude, in km.
+Note that (derivative of) this constraint has a singularity at the pole.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_DeticAltitude_206.0_207.0_trueofdatebcf
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{(Geo)Detic Target Body Elevation}
+\label{subsec:detic_altitude}
+
+The user may constrain the (geo)detic elevation of a target body with respect to the surface normal vector of a spheroid with flattening factor $f$. The target body is specified using an integer encoding a body's index in that Journey's Universe file. The user may specify this constraint in J2000BCF and TrueOfDateBCI frames. The user provides lower and upper bounds on detic elevation, in degrees.
+
+%\noindent Note that (derivative of) this constraint has a singularity at the pole.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_DeticElevation_10_70.0_90.0_trueofdatebcf
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{Velocity Declination}
+\label{subsec:velocity_declination}
+
+The user may constrain velocity declination, given by:
+
+\begin{equation}
+	\delta _v = \atan2 \left(v_z, v_{xy} \right)
+\end{equation}
+
+\noindent where $v_{xy}$ is the projection of the velocity vector onto the x-y plane. The user may specify this constraint in ICRF, J2000BCI, J2000BCF, TrueOfDateBCI, and TrueOfDateBCF frames.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_departure_VelocityDeclination_-20.0_5.0_ICRF
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{Vertical Flight Path Angle (VFPA)}
+\label{subsec:velocity_vertical_flight_path_angle}
+The user may constrain vertical flight path angle, given by:
+
+\begin{equation}
+\psi = \arccos \left(\frac{\mathbf{r} \cdot \mathbf{v} }{rv}\right)
+\end{equation}
+
+\noindent where the $CF$ denotes the constraint frame. The user may specify this constraint in ICRF, J2000BCI, J2000BCF, TrueOfDateBCI, and TrueOfDateBCF frames.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_VFPA_97.0_98.0_J2000BCF
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{Velocity magnitude}
+\label{subsec:velocity_magnitude}
+The user may constrain velocity magnitude in km/s. The user may specify this constraint in ICRF, J2000BCI, J2000BCF, TrueOfDateBCI, and TrueOfDateBCF frames.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_VelocityMagnitude_11.9_12.1_J2000BCF
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{Velocity Spherical Azimuth}
+\label{subsec:velocity_sphericalazimuth}
+The user may constrain spherical azimuth angle of inertial velocity vector in degrees. The spherical azimuth angle is given as
+\begin{equation}
+	\label{eq:velocity_Az}
+	\begin{aligned}
+		&Az = \arctan{\frac{v_{east}}{v_{north}}}
+	\end{aligned}
+\end{equation}
+,where $v_{east}$ and $v_{north}$ are inertial velocity elements at the spherical local coordinate as
+\begin{equation}
+	\label{eq:velocity_local}
+	\begin{aligned}
+		\begin{bmatrix}
+		v_{up}\\
+		v_{east}\\
+		v_{north}
+		\end{bmatrix} =
+		\begin{bmatrix}
+		\cos{\phi} & 0 & \sin{\phi}\\
+		0 & 1 & 0\\
+		-\sin{\phi} & 0 & \cos{\phi}
+		\end{bmatrix}
+		\begin{bmatrix}
+		\cos{\lambda} & \sin{\lambda} & 0\\
+		-\sin{\lambda}& \cos{\lambda} & 0\\
+		0 & 0 & 1
+		\end{bmatrix}
+		\begin{bmatrix}
+		v_{r}\\
+		v_{r}\\
+		v_{r}
+		\end{bmatrix}
+	\end{aligned}
+\end{equation}
+Here, $\phi$ is a (geo)centric latitude and $\lambda$ is a longitude. The user may specify this constraint in J2000BCF and TrueOfDateBCF frames.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_VelocitySphericalAzimuth_50.1_50.2_trueofdatebcf
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{Relative Velocity magnitude}
+\label{subsec:relativevelocity_magnitude}
+The user may constrain magnitude of velocity vector relative to central body's ground (or atmosphere) in km/s. The relative velocity vector and the magnitude are given by
+\begin{equation}
+	\label{eq:rel_velocity}
+	\begin{aligned}
+		\vec{v_r} = \vec{v} - \vec{\omega} \times \vec{r} = \vec{v} -
+		\begin{bmatrix}
+		0 & -\omega_3 & \omega_2 \\
+		\omega_3 & 0 & -\omega_1 \\
+		-\omega_2 & \omega_1 & 0
+		\end{bmatrix}
+		\vec{r}
+	\end{aligned}
+\end{equation}
+\begin{equation}
+	\label{eq:rel_velocity_magnitude}
+	\begin{aligned}
+		&v_r = \left|\vec{v_r}\right| = \sqrt{v_{rx}^{2}+v_{ry}^{2}+v_{rz}^{2}}
+	\end{aligned}
+\end{equation}
+The user may specify this constraint in J2000BCF and TrueOfDateBCF frames.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_RelativeVMagnitude_11.9_12.1_J2000BCF
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{Relative Velocity Azimuth}
+\label{subsec:relativevelocity_azimuth}
+The user may constrain azimuth angle of velocity vector relative to central body's ground (or atmosphere) in degrees. The azimuth angle is given as
+\begin{equation}
+	\label{eq:rel_velocity_Az}
+	\begin{aligned}
+		&Az = \arctan{\frac{v_{r_{east}}}{v_{r_{north}}}}
+	\end{aligned}
+\end{equation}
+,where $v_{r_{east}}$ and $v_{r_{north}}$ are relative velocity elements at the horizontal local coordinate as
+\begin{equation}
+	\label{eq:rel_velocity_local}
+	\begin{aligned}
+		\begin{bmatrix}
+		v_{r_{up}}\\
+		v_{r_{east}}\\
+		v_{r_{north}}
+		\end{bmatrix} =
+		\begin{bmatrix}
+		\cos{\phi} & 0 & \sin{\phi}\\
+		0 & 1 & 0\\
+		-\sin{\phi} & 0 & \cos{\phi}
+		\end{bmatrix}
+		\begin{bmatrix}
+		\cos{\lambda} & \sin{\lambda} & 0\\
+		-\sin{\lambda}& \cos{\lambda} & 0\\
+		0 & 0 & 1
+		\end{bmatrix}
+		\begin{bmatrix}
+		v_{rx}\\
+		v_{ry}\\
+		v_{rz}
+		\end{bmatrix}
+	\end{aligned}
+\end{equation}
+Here, $\phi$ is a (geo)detic latitude and $\lambda$ is a longitude. The user may specify this constraint in J2000BCF and TrueOfDateBCF frames.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_RelativeVAzimuth_50.1_50.2_trueofdatebcf
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{Relative Velocity Horizontal Flight Path Angle(HFPA)}
+\label{subsec:relativevelocity_hfpa}
+The user may constrain horizontal flight path angle of velocity vector relative to central body's ground (or atmosphere) in degrees. The HFPA is given as
+\begin{equation}
+	\label{eq:rel_velocity_HFPA}
+	\begin{aligned}
+		&HFPA = \arctan{\frac{v_{r_{up}}}{\sqrt{v_{r_{north}}^2 + v_{r_{east}}^2}}}
+	\end{aligned}
+\end{equation}
+,where $v_{r_{east}}$ and $v_{r_{north}}$ are relative velocity elements at the horizontal local coordinate as
+\begin{equation}
+	\label{eq:rel_velocity_local}
+	\begin{aligned}
+		\begin{bmatrix}
+		v_{r_{up}}\\
+		v_{r_{east}}\\
+		v_{r_{north}}
+		\end{bmatrix} =
+		\begin{bmatrix}
+		\cos{\phi} & 0 & \sin{\phi}\\
+		0 & 1 & 0\\
+		-\sin{\phi} & 0 & \cos{\phi}
+		\end{bmatrix}
+		\begin{bmatrix}
+		\cos{\lambda} & \sin{\lambda} & 0\\
+		-\sin{\lambda}& \cos{\lambda} & 0\\
+		0 & 0 & 1
+		\end{bmatrix}
+		\begin{bmatrix}
+		v_{rx}\\
+		v_{ry}\\
+		v_{rz}
+		\end{bmatrix}
+	\end{aligned}
+\end{equation}
+Here, $\phi$ is a (geo)detic latitude and $\lambda$ is a longitude. The user may specify this constraint in J2000BCF and TrueOfDateBCF frames.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_RelativeVHFPA_-14.1_-14.0_trueofdatebcf
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+
+\section{MGAnDSMs Maneuver Constraints}
+\label{sec:MGAnDSMs_Maneuver_Constraints}
+
+The \ac{MGAnDSMs} transcription allows the optimizer to place up to $n$ deep-space maneuvers in each phase of a multiple gravity-assist mission. Nominally, the numerical optimizer will place the maneuvers in locally optimal locations based on the \ac{NLP} necessary conditions for optimality. There are, however, many instances where the mission designer will want to constrain the parameters of a particular maneuver for practical reasons including, but not limited to:
+
+\begin{enumerate}
+	\item Navigation restrictions: no maneuver pre/post another mission critical event
+	\item Engine type: restrict a certain maneuver to be executed with a particular propulsion system (bipropellant or monopropellant thruster sets)
+	\item Magnitude: constrain the size of a particular maneuver due to hardware limitations or practical navigation concerns
+\end{enumerate}
+
+Individual maneuver constraints are specified in the .emtgopt file. Each journey has a maneuver constraint block:
+
+\begin{verbatim}
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+constraint_1
+constraint_2
+constraint_3
+.
+.
+.
+constraint_n
+END_MANEUVER_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\noindent The basic maneuver constraint syntax identifies the journey and phase that the maneuver is in, as well as its index within the phase (indexed from zero).
+
+\noindent Instructions on how to specify different types of maneuver constraints are provided in the following sections along with examples.
+
+\subsection{Maneuver Epoch}
+\label{subsec:MGAnDSMs_constraintEpoch}
+
+Maneuver positions can be specified via their epoch in a variety of ways: an absolute epoch, epoch offset with respect to another mission event (e.g. another maneuver's epoch), or an epoch offset w.r.t. a right or left phase boundary.
+
+\subsubsection{Absolute Epoch}
+
+A maneuver may be fixed in time by specifying either a \ac{MJD} or \ac{JD}.
+
+\begin{verbatim}
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+p0b0_epoch_abs_51544.0_51544.5
+END_MANEUVER_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsubsection{Epoch Relative to Phase Boundary}
+
+A maneuver may be defined relative to the left or right boundary of the phase, in units of days.
+
+\begin{verbatim}
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+p0b0_epoch_lboundary_14.0_10000.0
+p0b0_epoch_rboundary_60.0_10000.0
+END_MANEUVER_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsubsection{Epoch Relative to Previous or Next Event}
+
+A maneuver may be defined relative to the previous or next event in the phase (\textit{i.e.} another maneuver or a boundary), in units of days.
+
+\begin{verbatim}
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+p0b0_epoch_next_14.0_10000.0
+p0b0_epoch_previous_60.0_10000.0
+END_MANEUVER_CONSTRAINT_BLOCK
+\end{verbatim}
+
+
+\subsection{Maneuver Magnitude}
+\label{subsec:MGAnDSMs_constraintMagnitude}
+
+The user may constrain the magnitude of any MGAnDSMs maneuver, in units of km/s.
+
+\begin{verbatim}
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+p0b0_magnitude_0.0_0.01
+END_MANEUVER_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{Maneuver Thruster Set}
+\label{subsec:MGAnDSMs_constrainThrusterSet}
+
+The user may direct a particular MGAnDSMs maneuver to be either ``monoprop'' or ``biprop.'' EMTG will then use the $I_{sp}$ specified for monoprop or biprop in the spacecraft file.
+
+\begin{verbatim}
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+p0b0_monoprop
+END_MANEUVER_CONSTRAINT_BLOCK
+\end{verbatim}
+
+
+\section{Parallel Shooting Maneuver Constraints}
+\label{subsec:PS_maneuver_constraints}
+
+The parallel shooting transcriptions, \ac{PSFB} and \ac{PSBI} transcriptions decompose a low-thrust phase into \textit{n} subphases, or `steps.'' Each individual step may have up to \textit{m} maneuvers, or ``substeps,'' each of which has its own \ac{NLP} control parameters. As in \ac{MGAnDSMs}, constraints may be placed in the maneuver constraint block. \ac{PSFB} and \ac{PSBI} are designed such that constraints are placed at the step level, not at the substep level.
+
+\subsection{Parallel Shooting Duty Cycle}
+\label{subsec:PS_duty_cycle}
+
+The user may directly constrain the duty cycle in each parallel shooting step as a floating point variable in [0.0, 1.0]. If EMTG is set to ``averaged'' duty cycle mode, this duty cycle will be applied as a multiplier to both thrust and mass flow rate. If EMTG is set to ``high-fidelity'' duty cycle mode, then the spacecraft will thrust for that percentage of the step length and then insert a forced coast until the end of the step.
+
+\begin{verbatim}
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+p0b0_dutycycle_0.9
+END_MANEUVER_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{Parallel Shooting body-probe-thrust angle}
+\label{subsec:PS_BPT}
+
+The user may constrain the \ac{BPT} angle for any \ac{PSFB} or \ac{PSBI} phase of the CAESAR trajectory. This constraint applies to an entire phase rather than a particular step of that phase. For convergence reasons, the constraint is on the cosine of the BPT angle rather than the BPT angle itself.
+
+The upper and lower bounds on $\cos \left(\theta_{BPT}\right)$ are expressed as functions of $r$, the distance between the spacecraft and a reference body of the user's choice. This formulation allows for BPT angle constraints that become stricter as the spacecraft flies closer to the reference body and less strict as the spacecraft flies away from the reference body. The upper and lower bounds are fit using the \ac{4PL} curve as per Equations \ref{eq:BPT_angle_bounds}.
+
+\begin{equation}
+	\label{eq:BPT_angle_bounds}
+	\begin{aligned}
+		L\left(r\right) \leq \cos \left(\theta_{BPT}\right) \leq U\left(r\right)\\
+		U\left(r\right) = \alpha_{Ud} + \frac{\alpha_{Ua} - \alpha_{Ud}}{1.0 + \left(\frac{r}{\alpha_{Uc}}\right)^{\alpha_{Ub}}}\\
+		L\left(r\right) = \alpha_{Ld} + \frac{\alpha_{La} - \alpha_{Ld}}{1.0 + \left(\frac{r}{\alpha_{Lc}}\right)^{\alpha_{Lb}}}
+	\end{aligned}
+\end{equation}
+
+When specifying the constraint, the user must provide four coefficients each for the \ac{4PL} curves associated with the maximum and minimum values for $\cos \left(\theta_{BPT}\right)$, as well as the identity of the reference body. The reference body may be encoded as ``cb'' for the central body, or with an integer code describing the reference body's position in the Universe file. Note that the blow code block needs to be one line in the .emtgopt file.
+
+Alternatively, the user may specify the constraint with a constant lower and upper bound. The bounds are given in degrees.
+
+\begin{verbatim}
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+p0_bpt_cb_0.1879254,24.6087500,0.9480499,0.8878154...
+           _1.6239600,14.9903500,0.8006161,-0.8878154
+p0_bpt_cb_27.4_152.6
+END_MANEUVER_CONSTRAINT_BLOCK
+\end{verbatim}
+
+
+\section{Phase Distance Constraint}
+\label{sec:PhaseDistanceConstraint}
+
+The user may constrain the distance between the spacecraft and any other body in the universe file. The body may be expressed either as ``cb'' for the central body, or with an integer code describing the reference body's position in the Universe file. The lower and upper bounds on the distance constraint may be specified in LU, AU, or km.
+
+At the moment, this constraint works in \ac{MGALT}, \ac{FBLT}, \ac{PSBI}, and \ac{PSFB}. \ac{MGAnDSMs} does not currently have a phase distance constraint.
+
+Each Journey block in the .emtgopt file has its own phase distance constraint section.
+
+\begin{verbatim}
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+p0_4_0.9au_10.0au
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+\end{verbatim}
+
+
+%\bibliographystyle{AAS_publication}
+%\bibliography{EMTGbib_Jacob_June_2014}
+
+
+
+\end{document}

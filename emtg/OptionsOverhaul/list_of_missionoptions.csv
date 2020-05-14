@@ -1,0 +1,161 @@
+dataType,name,scale,length,defaultValue,lowerBound,upperBound,comment,description
+std::string,mission_name,,,default,,,mission name,mission name
+ObjectiveFunctionType,objective_type,,,2,0,27,"objective type, see ObjectiveFunctionType in EMTG_enums.h",objective function type\n#0: minimum deltaV\n#1: minimum time\n#2: maximum final mass\n#3: maximize initial mass\n#4: depart as late as possible in the window\n#5: depart as early as possible in the window\n#6: maximize orbit energy\n#7: minimize launch mass\n#8: arrive as early as possible\n#9: arrive as late as possible\n#10: minimum propellant (not the same as #2)\n#11: maximum dry/wet ratio\n#12: maximum arrival kinetic energy\n#13: minimum BOL power\n#14: maximize log_10(final mass)\n#15: maximum log_e(final mass)\n#16: maximum dry mass margin\n#17: maximum dry mass\n#18: maximum log_10(dry mass)\n#19: maximum log_e(dry mass)\n#20: minimize chemical fuel\n#21: minimize chemical oxidizer\n#22: minimize electric propellant\n#23: minimize total propellant\n#24: minimize waypoint tracking error\n#25: minimize initial impulse magnitude\n#26: maximize distance from central body
+size_t,objective_journey,,,0,0,inf,Journey associated with objective function (if applicable),Journey associated with objective function (if applicable)
+bool,include_initial_impulse_in_cost,,,0,0,1,Include the initial impulse in calculating the delta-v objective function?,Include the initial impulse in calculating the delta-v objective function?
+bool,global_timebounded,,,1,0,1,"0: unbounded, 1: bounded total time (note that the global arrival date bound is by definition the same as the last journey's arrival date bound and is not duplicated","0: unbounded, 1: bounded total time (note that the global arrival date bound is by definition the same as the last journey's arrival date bound and is not duplicated"
+double,launch_window_open_date,86400,,53782,0,inf,launch window open date (MJD),launch window open date (MJD)
+std::vector<double>,total_flight_time_bounds,86400,2,"[0.0, 302]","[0.0, 1e-10]","[inf, inf]",flight time bounds (days),flight time bounds (days)
+std::vector<double>,DLA_bounds,,2,"[-90.0, 90.0]","[-90.0, -90.0]","[90.0, 90.0]",DLA in degrees,DLA in degrees
+std::vector<double>,RLA_bounds,,2,"[-2880.0, 2880.0]",-inf,inf,RLA in degrees,RLA in degrees
+PhaseType,mission_type,,,2,0,9,"mission type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase, #9: variable phase type",phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable phase type
+int,NLP_solver_type,,,0,0,1,"NLP solver type,#0: SNOPT,#1: WORHP",NLP solver type\n#0: SNOPT\n#1: WORHP
+NLPMode,NLP_solver_mode,,,1,0,2,"NLP solver mode,#0: find feasible point only,#1: find optimal solution,#2: satisfy equality constraints",NLP solver mode\n#0: find feasible point only\n#1: find optimal solution\n#2: satisfy equality constraints
+bool,quiet_NLP,,,1,0,1,Quiet NLP solver?,Quiet NLP solver?
+bool,ACE_feasible_point_finder,,,0,0,1,Enable ACE feasible point finder?,Enable ACE feasible point finder?
+bool,MBH_always_write_archive,,,0,0,1,"Write every hop to the MBH archive, even if it is not an improvement?","Write every hop to the MBH archive, even if it is not an improvement?"
+bool,MBH_archive_state_vector,,,0,0,1,include state vector in MBH archive file?,include state vector in MBH archive file?
+int,MBH_max_not_improve,,,10000,1,inf,quantity Max_not_improve for MBH,quantity Max_not_improve for MBH
+int,MBH_max_trials,,,1000000,1,inf,maximum number of trials for MBH,maximum number of trials for MBH
+int,MBH_max_run_time,,,60,0,inf,"maximum run time for MBH, in seconds","maximum run time for MBH, in seconds"
+double,MBH_max_step_size,,,1,1.00E-10,inf,Maximum step size (uniform) or scale factor (other distributions),Maximum step size (uniform) or scale factor (other distributions)
+int,MBH_hop_distribution,,,2,0,3,"MBH hop probabilty distribution,#0: uniform,#1: Cauchy,#2: Pareto,#3: Gaussian",MBH hop probabilty distribution\n#0: uniform\n#1: Cauchy\n#2: Pareto\n#3: Gaussian
+double,MBH_Pareto_alpha,,,1.4,1.00E-10,inf,Pareto distribution alpha,Pareto distribution alpha
+bool,MBH_write_every_improvement,,,0,0,1,Write every MBH improvement for later animation?,Write every MBH improvement for later animation?
+double,MBH_time_hop_probability,,,0.05,0,1,probability of MBH time hop operation,probability of MBH time hop operation
+double,snopt_feasibility_tolerance,,,1.00E-05,1.00E-10,1,feasibility tolerance,feasibility tolerance
+double,snopt_optimality_tolerance,,,1.00E-05,1.00E-10,1,optimality tolerance,optimality tolerance
+double,NLP_max_step,,,1,1.00E-10,1,NLP max step,NLP max step
+size_t,snopt_major_iterations,,,8000,0,inf,NLP major iterations,NLP major iterations
+size_t,snopt_minor_iterations,,,500,0,inf,NLP minor iterations,NLP minor iterations
+int,snopt_max_run_time,,,15,0,inf,NLP max run time (seconds),NLP max run time (seconds)
+bool,enable_Scalatron,,,1,0,1,Enable Scalatron?,Enable Scalatron?
+bool,enable_NLP_chaperone,,,1,0,1,Enable NLP chaperone?,Enable NLP chaperone?
+bool,seed_MBH,,,0,0,1,Seed MBH?,Seed MBH?
+bool,skip_first_nlp_run,,,0,0,1,Skip first NLP run in an MBH process?,Skip first NLP run in an MBH process?
+bool,NLP_stop_on_goal_attain,,,0,0,1,Stop NLP on goal attain?,Stop NLP on goal attain?
+double,NLP_objective_goal,,,0,-inf,inf,Objective value at which NLP stops,Objective value at which NLP stops
+int,MBH_RNG_seed,,,-1,-inf,inf,MBH RNG seed (negative number means system clock),MBH RNG seed (negative number means system clock)
+bool,print_NLP_movie_frames,,,0,0,1,Print NLP movie frames?,Print NLP movie frames?
+bool,quiet_basinhopping,,,0,0,1,Quiet MBH?,Quiet MBH?
+std::string,SPICE_leap_seconds_kernel,,,naif0012.tls,,,SPICE leap seconds kernel - required for SPICE to work,SPICE leap seconds kernel - required for SPICE to work
+std::string,SPICE_reference_frame_kernel,,,pck00010.tpc,,,SPICE_reference_frame_kernel,SPICE_reference_frame_kernel
+std::string,universe_folder,,,C:/Utilities/Universe,,,Universe folder,Universe folder
+int,ephemeris_source,,,2,0,2,"0: static, 1: SPICE (default to static if no SPICE file supplied for a body), 2: SplineEphem","0: static, 1: SPICE (default to static if no SPICE file supplied for a body), 2: SplineEphem"
+size_t,SplineEphem_points_per_period,,,360,1,inf,How many sample points should SplineEphem use per orbital period of each body?,How many sample points should SplineEphem use per orbital period of each body?
+size_t,SplineEphem_non_central_body_sun_points_per_period,,,10000,1,inf,How many sample points should SplineEphem use per orbital period of the sun with respect to the central body?,How many sample points should SplineEphem use per orbital period of the sun with respect to the central body?
+bool,SplineEphem_truncate_ephemeris_at_maximum_mission_epoch,,,0,0,1,Truncate SplineEphem at maximum mission epoch?,"Truncate SplineEphem at maximum mission epoch?\n#If you enable this option, global search will be impeded but you will save a lot of memory\n#Useful for monte-carlo, launch period analysis, etc."
+double,earliestPossibleEpoch,,,51554.5,33251,100000,Beginning of the SplineEphem data set,Beginning of the SplineEphem data set
+double,latestPossibleEpoch,,,88058,33251,100000,End of the SplineEphem data set,End of the SplineEphem data set
+PropagatorType,propagatorType,,,0,0,1,"Propagator type,#0: Keplerian propagator,#1: Integrated propagator",Propagator type\n#0: Keplerian propagator\n#1: Integrated propagator
+IntegratorType,integratorType,,,1,0,1,"Integrator type,#0: rk7813M adaptive step,#1: rk8 fixed step",Integrator type\n#0: rk7813M adaptive step\n#1: rk8 fixed step
+double,integrator_tolerance,,,1.00E-08,1.00E-12,1,adaptive step integrator tolerance,adaptive step integrator tolerance
+double,integration_time_step_size,,,86400,1.00E-10,inf,"integration step size (maximum for adaptive, fixed for fixed)","integration step size (maximum for adaptive, fixed for fixed)"
+int,num_timesteps,,,20,1,inf,number of timesteps per phase,number of timesteps per phase
+size_t,spiral_segments,,,1,1,inf,number of spiral segments,number of spiral segments
+bool,allow_initial_mass_to_vary,,,0,0,1,Allow the mass at the beginning of the first journey to vary up to the allowed maximum?,Allow the mass at the beginning of the first journey to vary up to the allowed maximum?
+double,maximum_mass,,,525.2,1.00E-10,inf,maximum possible mass of the spacecraft (kg),maximum possible mass of the spacecraft (kg)
+double,IspLT,,,3000,1,inf,specific impulse of the engine used for low-thrust maneuvers,specific impulse of the engine used for low-thrust maneuvers
+double,IspLT_minimum,,,1,1,inf,minimum specific impulse for variable specific impulse problems,minimum specific impulse for variable specific impulse problems
+double,IspChem,,,320,1,inf,specific impulse of the engine used for impulsive maneuvers,specific impulse of the engine used for impulsive maneuvers
+double,Thrust,,,0.1,1.00E-10,inf,"thrust of the spacecraft, in Newtons","thrust of the spacecraft, in Newtons"
+double,LV_margin,,,0,0,1,LV margin (as a fraction),LV margin (as a fraction)
+double,LV_adapter_mass,,,0,0,inf,LV adapter mass (kg),LV adapter mass (kg)
+int,engine_type,,,6,0,32,"low-thrust engine type, from original EMTGv8 list","low-thrust engine type\n#0: fixed thrust/Isp\n#1: constant Isp, efficiency, EMTG computes input power\n#2: choice of power model, constant efficiency, EMTG chooses Isp\n#3: choice of power model, constant efficiency and Isp\n#4: continuously-varying specific impulse\n#5: custom thrust and mass flow rate polynomial\n#6: NSTAR\n#7: XIPS-25\n#8: BPT-4000 High-Isp\n#9: BPT-4000 High-Thrust\n#10: BPT-4000 Ex-High-Isp\n#11: NEXT high-Isp v9\n#12: VASIMR (argon, using analytical model)\n#13: Hall Thruster (Xenon, using analytical model)\n#14: NEXT high-ISP v10\n#15: NEXT high-thrust v10\n#16: BPT-4000 MALTO\n#17: NEXIS Cardiff 8-15-201\n#18: H6MS Cardiff 8-15-2013\n#19: BHT20K Cardiff 8-16-2013\n#20: Aerojet HiVHAC EM\n#21: 13 kW STMD Hall high-Isp (not available in open-source)\n#22: 13 kW STMD Hall high-thrust (not available in open-source)\n#23: NEXT TT11 High-Thrust\n#24: NEXT TT11 High-Isp\n#25: NEXT TT11 Expanded Throttle Table\n#26: 13 kW STMD Hall high-Isp 10-1-2014 (not available in open-source)\n#27: 13 kW STMD Hall medium-thrust 10-1-2014 (not available in open-source)\n#28: 13 kW STMD Hall high-thrust 10-1-2014 (not available in open-source)\n#29: 2D Throttle table\n#30: 1D Throttle table high-thrust\n#31: 1D Throttle table high-Isp\n#32: 2D polynomial fit"
+int,number_of_electric_propulsion_systems,,,1,1,inf,number of thruster systems (used to be called number of engines),number of thruster systems (used to be called number of engines)
+double,engine_duty_cycle,,,1,1.00E-10,1,percentage of time that engine can operate,percentage of time that engine can operate
+DutyCycleType,duty_cycle_type,,,0,0,1,"duty cycle type,#0: averaged,#1: realistic",duty cycle type\n#0: averaged\n#1: realistic
+double,thrust_scale_factor,,,1,1.00E-10,1,"scale factor to apply to thrust ONLY, not mass flow rate, can use to approximate cosine loss","scale factor to apply to thrust ONLY, not mass flow rate, can use to approximate cosine loss"
+double,power_at_1_AU,,,5,1.00E-10,inf,Power at 1 AU (kW),Power at 1 AU (kW)
+SpacecraftPowerSupplyType,power_source_type,,,1,0,1,"power source type, 0: fixed, 1: solar","power source type, 0: fixed, 1: solar"
+SpacecraftPowerSupplyCurveType,solar_power_model_type,,,0,0,1,"Solar power model type,#0: classic Sauer model,#1: polynomial (0th order on the left)",Solar power model type\n#0: classic Sauer model\n#1: polynomial (0th order on the left)
+std::vector<double>,solar_power_gamma,,7,"[1.32077,-0.10848,-0.11665,0.10843,-0.01279,0.0,0.0]",-inf,inf,"solar power coefficients gamma_1 through gamma_5, if all gamma = [1 0 0 0 0], then solar power is a simple 1/r^2","solar power coefficients gamma_1 through gamma_5, if all gamma = [1 0 0 0 0], then solar power is a simple 1/r^2"
+double,power_margin,,,0,0,1,power margin (fraction),power margin (fraction)
+double,power_decay_rate,,,0,0,1,power system decay rate (fraction per year),power system decay rate (fraction per year)
+double,power_system_decay_reference_epoch,86400,,51544.5,0,inf,reference date when the power system begins to decay,reference date when the power system begins to decay
+double,throttle_sharpness,,,100,1,100000,"Throttle sharpness (higher means more precise, lower means smoother)","Throttle sharpness (higher means more precise, lower means smoother)"
+ThrottleLogic,throttle_logic_mode,,,1,0,1,"Throttle logic mode #0: maximum number of thrusters,#1: minimum number of thrusters",Throttle logic mode\n#0: maximum number of thrusters\n#1: minimum number of thrusters
+std::vector<double>,spacecraft_power_coefficients,,3,"[0,0,0]",-inf,inf,"spacecraft power coefficients A, B, and C represent the power requirements of the spacecraft at a distance r from the sun, #i.e. heaters, communications, etc","spacecraft power coefficients A, B, and C\n#represent the power requirements of the spacecraft at a distance r from the sun\n#i.e. heaters, communications, etc"
+std::vector<double>,engine_input_thrust_coefficients,,7,"[0.0,0.0,0.0,0.0,0.0,0.0,0.0]",-inf,inf,thrust polynomial coefficients,thrust polynomial coefficients
+std::vector<double>,engine_input_mass_flow_rate_coefficients,,7,"[0.0,0.0,0.0,0.0,0.0,0.0,0.0]",-inf,inf,mass flow rate polynomial coefficients,mass flow rate polynomial coefficients
+std::vector<double>,engine_input_power_bounds,,2,"[0.0, 5.0]",0,inf,thruster input power bounds (kW),thruster input power bounds (kW)
+double,user_defined_engine_efficiency,,,0.7,1.00E-10,1,Propulsion system efficiency (fraction),Propulsion system efficiency (fraction)
+SpacecraftBusPowerType,spacecraft_power_model_type,,,0,0,1,spacecraft power model type,"spacecraft power model type\n#0: P_sc = A + B/r + C/r^2\n#1: P_sc = A if P > A, A + B(C - P) otherwise"
+double,TCM_Isp,,,200,1,inf,Isp for TCMs,Isp for TCMs
+double,TCM_post_launch,,,0,0,inf,TCM magnitude post-launch (km/s),TCM magnitude post-launch (km/s)
+double,TCM_pre_flyby,,,0,0,inf,TCM magnitude before flybys (km/s),TCM magnitude before flybys (km/s)
+double,TCM_maneuver_fraction,,,0,0,1,Post-DSM TCM magnitude as a fraction of DSM magnitude,Post-DSM TCM magnitude as a fraction of DSM magnitude
+bool,trackACS,,,0,0,1,Track ACS propellant consumption?,Track ACS propellant consumption?
+double,ACS_kg_per_day,,,0,0,inf,ACS propellant consumption (kg/day),ACS propellant consumption (kg/day)
+std::vector<double>,final_mass_constraint_bounds,,2,"[0.0, 0.0]",0,inf,Bounds on final mass constraints,Bounds on final mass constraints
+bool,constrain_final_mass,,,0,0,1,Constrain final wet mass?,Constrain final wet mass?
+bool,constrain_dry_mass,,,0,0,1,Constrain dry mass?,Constrain dry mass?
+bool,enable_electric_propellant_tank_constraint,,,0,0,1,Constrain electric propellant tank?,Constrain electric propellant tank?
+double,maximum_electric_propellant,,,1000,0,inf,Electric propellant tank capacity (kg),Electric propellant tank capacity (kg)
+double,electric_propellant_margin,,,0,0,1,Electric propellant margin (fraction),Electric propellant margin (fraction)
+bool,enable_chemical_propellant_tank_constraint,,,0,0,1,Constrain chemical propellant?,Constrain chemical propellant?
+double,maximum_chemical_fuel,,,1000,0,inf,Chemical fuel tank capacity (kg),Chemical fuel tank capacity (kg)
+double,maximum_chemical_oxidizer,,,1000,0,inf,Chemical oxidizer tank capacity (kg),Chemical oxidizer tank capacity (kg)
+double,bipropellant_mixture_ratio,,,0.925,1.00E-10,1,Bipropellant mixture ratio,Bipropellant mixture ratio
+double,chemical_propellant_margin,,,0,0,1,Chemical propellant margin (fraction),Chemical propellant margin (fraction)
+SpacecraftModelInputType,SpacecraftModelInput,,,2,0,2,"Spacecraft object input type,#0: Assemble from libraries,#1: Read .emtg_spacecraftoptions file,#2: Assemble from missionoptions object",Spacecraft object input type\n#0: Assemble from libraries\n#1: Read .emtg_spacecraftoptions file\n#2: Assemble from missionoptions object
+std::string,HardwarePath,,,c:/Utilities/HardwareModels/,,,HardwarePath,HardwarePath
+std::string,ThrottleTableFile,,,empty.ThrottleTable,,,ThrottleTableFile,ThrottleTableFile
+std::string,LaunchVehicleLibraryFile,,,NLSII_August2018.emtg_launchvehicleopt,,,LaunchVehicleLibraryFile,LaunchVehicleLibraryFile
+std::string,PowerSystemsLibraryFile,,,default.emtg_powersystemsopt,,,PowerSystemsLibraryFile,PowerSystemsLibraryFile
+std::string,PropulsionSystemsLibraryFile,,,4_18_2017.emtg_propulsionsystemopt,,,PropulsionSystemsLibraryFile,PropulsionSystemsLibraryFile
+std::string,SpacecraftOptionsFile,,,default.emtg_spacecraftopt,,,SpacecraftOptionsFile,SpacecraftOptionsFile
+std::string,LaunchVehicleKey,,,Atlas_V_401,,,LaunchVehicleKey,LaunchVehicleKey
+std::string,PowerSystemKey,,,5kW_basic,,,PowerSystemKey,PowerSystemKey
+std::string,ElectricPropulsionSystemKey,,,NSTAR,,,ElectricPropulsionSystemKey,ElectricPropulsionSystemKey
+std::string,ChemicalPropulsionSystemKey,,,DefaultChemicalPropulsionSystem,,,ChemicalPropulsionSystemKey,ChemicalPropulsionSystemKey
+bool,perturb_SRP,,,0,0,1,solar radiation pressure?,solar radiation pressure?
+bool,perturb_thirdbody,,,0,0,1,third body perturbations?,third body perturbations?
+bool,perturb_J2,,,0,0,1,J2?,J2?
+double,spacecraft_area,,,70,0,inf,"spacecraft area (for SRP, in m^2)","spacecraft area (for SRP, in m^2)"
+double,coefficient_of_reflectivity,,,1,0,inf,Coefficient of reflectivity,Coefficient of reflectivity
+double ,solar_percentage,,,1,0,1,Percentage of the Sun seen by the spacecraft,Percentage of the Sun seen by the spacecraft
+double,solar_flux,,,1359.39,0,inf,Solar constant (flux density at 1 AU) [W/m^2 = kg/s^3],Solar constant (flux density at 1 AU) [W/m^2 = kg/s^3]
+double,speed_of_light_vac,,,299792458,0,inf,Speed of light in a vacuum [m/s],Speed of light in a vacuum [m/s]
+double,forced_post_launch_coast,86400,,0,0,inf,"Forced post-launch coast, in days","Forced post-launch coast, in days"
+double,forced_pre_flyby_coast,86400,,0,0,inf,"Forced pre-flyby coast, in days","Forced pre-flyby coast, in days"
+double,forced_post_flyby_coast,86400,,0,0,inf,"Forced post-flyby coast, in days","Forced post-flyby coast, in days"
+std::string,waypoint_file_path,,,./banana.ephemeris,,,Path to waypoint file,Path to waypoint file
+std::string,covariance_file_path,,,./shampoo_bottle.ephemeris,,,Path to covariance file,Path to covariance file
+StateRepresentation,ParallelShootingStateRepresentation,,,1,0,2,"state representation for parallel shooting (Cartesian, SphericalRADEC, SphericalAZFPA)","state representation for parallel shooting (Cartesian, SphericalRADEC, SphericalAZFPA)"
+StateRepresentation,PeriapseBoundaryStateRepresentation,,,1,0,2,"state representation for periapse boundary conditions (Cartesian, SphericalRADEC, SphericalAZFPA)","state representation for periapse boundary conditions (Cartesian, SphericalRADEC, SphericalAZFPA)"
+bool,print_only_non_default_options,,,1,0,1,Write only options that are *not* default into the .emtgopt file?,Write only options that are *not* default into the .emtgopt file?
+ReferenceFrame,output_file_frame,,,1,0,7,"reference frame for output file (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar)","reference frame for output file (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar)"
+bool,override_default_output_file_name,,,0,0,1,Override default output file name?,Override default output file name?
+std::string,forced_output_file_name,,,forced_output_file_name,,,User-defined output file name,User-defined output file name
+bool,output_dormant_journeys,,,0,0,1,Output ephemeris for time spent waiting between journeys?,Output ephemeris for time spent waiting between journeys?
+double,post_mission_wait_time,,,0,0,inf,How long to output an ephemeris after the mission end (days),How long to output an ephemeris after the mission end (days)
+bool,override_working_directory,,,0,0,1,Override the working directory?,Override the working directory?
+std::string,forced_working_directory,,,..//EMTG_v9_Results,,,User-defined working directory,User-defined working directory
+bool,override_mission_subfolder,,,0,0,1,Create a mission subfolder?,Create a mission subfolder?
+std::string,forced_mission_subfolder,,,mission_subfolder,,,Mission subfolder,Mission subfolder
+bool,short_output_file_names,,,1,0,1,Shorten output file names?,Shorten output file names?
+bool,generate_forward_integrated_ephemeris,,,0,0,1,Generate forward-integrated ephemeris?,Generate forward-integrated ephemeris?
+int,forward_integrated_ephemeris_central_body_SPICE_ID,,,10,-inf,inf,SPICE ID of central body for forward integrated ephemeris,SPICE ID of central body for forward integrated ephemeris
+bool,add_control_switch_line_to_ephemeris,,,0,0,1,Add control switch line to ephemeris?,Add control switch line to ephemeris?
+bool,append_mass_to_ephemeris_output,,,0,0,1,Append mass to ephemeris output?,Append mass to ephemeris output?
+bool,append_control_to_ephemeris_output,,,0,0,1,Append control vector to ephemeris output?,Append control vector to ephemeris output?
+bool,append_thrust_to_ephemeris_output,,,0,0,1,Append thrust magnitude to ephemeris output?,Append thrust magnitude to ephemeris output?
+bool,append_mdot_to_ephemeris_output,,,0,0,1,Append mass flow rate to ephemeris output?,Append mass flow rate to ephemeris output?
+bool,append_Isp_to_ephemeris_output,,,0,0,1,Append Isp to ephemeris output?,Append Isp to ephemeris output?
+bool,append_active_power_to_ephemeris_output,,,0,0,1,Append active power to ephemeris output?,Append active power to ephemeris output?
+bool,append_number_of_active_engines_to_ephemeris_output,,,0,0,1,Append number of active propulsion systems to ephemeris output?,Append number of active propulsion systems to ephemeris output?
+bool,append_throttle_level_to_ephemeris_output,,,0,0,1,Append throttle level to ephemeris output?,Append throttle level to ephemeris output?
+bool,call_system_to_generate_bsp,,,0,0,1,Should EMTG make a system call to clean the .ephemeris file and call python to call spice to generate the bsp?,Generate bsp?
+std::string,spice_utilities_path,,,c:/utilities/cspice/exe,,,Where are the spice utilities brief and mkspk located?,Where are spice utilities?
+std::string,spice_utility_extension,,,".exe",,,What is the file extension on the spice utlities? Likely either ".exe" for Windows or "" for *nix,Spice utility extension
+std::string,pyemtg_path,,,"c:/emtg/PyEMTG/",,,Where is PyEMTG located?,PyEMTG path
+int,spacecraft_SPICE_ID,,,-52284,-inf,inf,SPICE ID of spacecraft for bsp,SPICE ID of spacecraft
+bool,background_mode,,,0,0,1,Close program after completion?,Close program after completion?
+bool,output_STMs,,,0,0,1,Output STMs?,Output STMs?
+bool,output_maneuver_and_target_spec_files,,,0,0,1,Output maneuver and target spec files?,Output maneuver and target spec files?
+bool,generate_acceleration_model_instrumentation_file,,,0,0,1,generates a complete output of all acceleration model data at each integration time step (only works for numerically integrated trajectories,generates a complete output of all acceleration model data at each integration time step (only works for numerically integrated trajectories
+size_t,stop_after_journey,,,32767,0,inf,"Stop after a particular journey? (if this value is greater than the number of journeys, do the whole mission)","Stop after a particular journey? (if this value is greater than the number of journeys, do the whole mission)"
+InnerLoopSolverType,run_inner_loop,,,1,0,4,Which inner loop solver to run?,"which inner loop solver to run?\n#0: none, evaluate trialX\n#1: run MBH\n#2: run constrained DE\n#3: run NLP using trialX as initial guess\n#4: filament walker"
+bool,check_derivatives,,,0,0,1,Check derivatives using NLP finite differencing?,Check derivatives using NLP finite differencing?
+std::string,user_data,,,None,,,Field for taking notes,Field for taking notes

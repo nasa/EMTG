@@ -1,0 +1,14 @@
+\chapter{Common Design Elements}
+\label{chap:common}
+
+\section{Internal Calculation Frame}
+\label{sec:internal_calculation_frame}
+
+All internal calculations in EMTG are performed in the \ac{ICRF} as defined in International Celestial Reference Frame (ICRF) as defined in the \ac{IAU} Cartographic Coordinates and Rotational Elements document \cite{IAU_cartographic_coordinates_2018} and in \ac{SPICE} \cite{SPICE}. SPICE\'s \texttt{J2000} frame is identical to ICRF. The frame is always centered on whatever celestial body or barycenter that is relevant to the calculation, \textit{i.e.} the Sun, the Earth, or any other body or point \textit{that can be defined in SPICE}.
+
+In some cases, the user may specify states or constraints in frames other than ICRF, or request output in frames other than ICRF. EMTG handles state input and output in alternative frames by rotating into ICRF, performing the calculations, and then rotating back to the requested output frame only at the last moment before the output is printed. Constraints, as described in Sections \ref{sec:specialized_boundary_constraints}, \ref{subsubsec:MGAnDSMs_maneuver_constraints}, and \ref{subsubsec:MGAnDSMs_maneuver_constraints}, work differently in that the constraint objects rotate EMTG's internal state into the frame of the constraint. The latter case occurs only in the individual constraint objects and therefore the rotated states are never available to the rest of the program and there is no opportunity for confusion as to what frame EMTG is working in.
+
+\section{Units}
+\label{sec:units}
+
+All internal calculations are performed in units of kilometers, kilograms, and seconds. If particular piece of code needs to use a different unit system, then conversion is performed at the point where it is necessary and not passed to other parts of the code. The most frequent use of non-standard units is in input and output functions.

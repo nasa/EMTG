@@ -1,0 +1,89 @@
+Welcome to EMTGv9 Open Source Release
+README.opensource file compiled by Jacob Englander 4-20-2020
+
+This package contains all of the code that NASA GSFC is releasing for the Evolutionary Mission Trajectory Generator, version 9. No third-party code is included in this release.
+You will need to download the third-party components yourself. This information is detailed in documents that may be found in the docs/build_system folder.
+
+In particular, you will need a license for SNOPT. This is not free. Many of you probably already have SNOPT, and the rest may have to purchase it.
+EMTGv9 is known to work with SNOPT 7.5 and 7.6. It probably also works with 7.7 but I can't verify this because I don't have a license for 7.7. Older versions *might* work.
+
+You will want to download SPICE ephemeris files for the bodies that you are visiting. I recommend downloading the full 3+ GB set from http://naif.jpl.nasa.gov/naif/ and placing it in your Universe/ephemeris_files folder
+
+Note that regardless of whether you download all of the various SPICE ephemerides for the solar system, you will need to download de430.bsp from https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de430.bsp and place it in your Universe/ephemeris_files folder. I could not supply this file because it is too large for Github.
+
+You must edit the EMTG-Config.cmake file as follows:
+
+1) Change the CSPICE_DIR to wherever you have placed your CSPICE package. CSPICE_DIR should point to the root CSPICE directory.
+
+2) Change the SNOPT_ROOT_DIR to be wherever you have placed the unzipped SNOPT folder.  From this directory, it will seek the traditional /lib and /interface folders (as appropriate to your SNOPT version, which should be auto detected).  Report any problems to the EMTG lead developers.
+	Example: This is currently usually a directory called "snopt7"
+
+3) Change the 'BOOST_ROOT' to the root of your boost installer.  This presupposes you have already built boost (run its bootstrapper)
+		3a) Optionally, if during the run phase of CMAKE boost is not being found, uncomment the next two lines and specifically specify the BOOST_INCLUDEDIR and BOOST_LIBRARYDIR.  The default options are traditional variants that are sometimes chosen by boost installers, but yours may vary.
+
+Once all the above is in place, open CMake, and point the source directory at the EMTG root directory.  Point the build directory to the directory of your choice (may be the same). Run configure, then Generate, as per the usual CMake Process.
+This will create either  makefile for Linux or a Visual Studio project for Windows, or an Xcode project for Mac.
+
+EMTGv9 is provided "as is" in its imperfect but very capable state. The US Government, NASA, and the developers cannot guarantee that the results you produce with EMTG are correct.
+EMTG is intended for use as a trade study tool and an initial guess generator for a flight navigation tool. We recommend that you use it in those contexts and only those contexts.
+
+***************************************************************************************************************************************************************
+The EMTG development team is pleased to share the fruits of our labors with you. We ask, but do not require, that if you do something really awesome with it please publish
+your awesome thing and cite us.
+***************************************************************************************************************************************************************
+
+
+Frequently asked questions and complaints (FAQAC):
+
+Q: Is there a user manual?
+A: No. There is a tutorial for basic EMTG use and a document on constraint scripting. Otherwise, this is an excellent opportunity for a contribution from the open source community.
+
+C: Your GUI is terrible.
+A: Yes it is. This is another excellent opportunity for a contribution from the open source community.
+
+Q: Can you give me technical support for installing and operating EMTG?
+A: We are very busy and cannot promise anything. But you can ask and might get lucky.
+
+Q: Will EMTG work on Linux? If so, why is there not a Linux build document?
+A: Yes, it will. CMake works wonderfully on Linux, so all you need to do is go get the same packages that EMTG needs for Windows and then run the CMake.
+I am assuming that if you are a Linux user, then you are comfortable doing these things.
+
+Q: Will EMTG work on a Mac?
+A: Yes.
+
+Q: If EMTG works on a Mac, then why don't you provide build instructions?
+A: I don't have a Mac, so I would not be able to test them.
+
+Q: Will EMTG work on my smart phone?
+A: Probably. But I don't have one of those either so I can't test it. If you try it and it works, I'd love to hear about it!
+
+Q: Will EMTG work on my abacus?
+A: That may be a stretch.
+
+Q: How frequently will you update EMTG?
+A: We are constantly working on EMTG. However, to comply with NASA software release regulations, we are only able to do open source releases infrequently. We hope to update
+the open-source version of EMTGv9 approximately yearly.
+
+Q: I don't like the NASA Open Source License. Can you release EMTGv9 under a different license?
+A: No.
+
+Q: Can you make me an executable?
+A: No. EMTG depends on a number of third-party packages and NASA does not have the right to distribute them.
+
+Q: My PyEMTG doesn't work.
+A: Unfortunately the various Python libraries change so fast that I can't keep up with them. Please make adjustments to PyEMTG as-needed to make it work on your system.
+
+Q: I have SNOPT version (something other than 7.5 or 7.6). Will it work with EMTG?
+A: I don't know. Feel free to try it. You can make changes to src/InnerLoop/snoptProblemExtension.h to get it to talk to your SNOPT.
+
+Q: Can I use this commercially?
+A: Sure.
+
+Q: Can I teach a class with this?
+A: Absolutely!
+
+C: I found a bug!
+A: Thank you for participating in the public testing program. Please tell us about the bug so that we can fix it for future versions!
+
+Q: What happens if my spacecraft blows up?
+A: I am very sorry for your loss. But unfortunately it's your spacecraft and not mine.

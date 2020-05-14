@@ -1,0 +1,41 @@
+\chapter{Math}
+\label{chap:math}
+
+\section{Matrix}
+\label{sec:EMTG_Matrix}
+
+\ac{EMTG} performs all matrix and vector computations using the \texttt{EMTG\_Matrix} class. \texttt{EMTG\_Matrix} provides dense matrix functionality that is templated and can be used with regular double precision numbers, integers, booleans, or algorithmic differentiation calculation objects. For a full exhaustive list of methods available in \texttt{EMTG\_Matrix}, see the Doxygen output.
+
+The developer may turn matrix error checking on and off at compile time. It is very useful to have this checking turned on during development but once code is fully developed and tested the error checking is removed for speed.
+
+\section{Tensor}
+\label{sec:EMTG_Tensor}
+
+\texttt{EMTG\_Tensor} is similar to \texttt{EMTG\_Matrix} but for 3-tensors. \texttt{EMTG\_Tensor} implements fewer operations than \texttt{EMTG\_Matrix} because tensors are very rare in \ac{EMTG} and not many operations are needed. A full list of methods in \texttt{EMTG\_Tensor} is included in the Doxygen output.
+
+\section{Interpolator}
+\label{sec:EMTG_interpolator}
+
+The \texttt{interpolator} class is a very simple linear interpolator that is used by \ac{EMTG} when parsing initial guesses. It operates on a \texttt{std::vector} of \texttt{std::pair} objects.
+
+\section{EMTG math utilities and constants}
+\label{sec:EMTG_math}
+
+The \texttt{EMTG\_math.h} header contains mathematical constants and basic functions that do not fit anywhere else. These include:
+
+\begin{itemize}
+	\item Definitions of $\pi$, $\pi/2$, and $2\pi$.
+	\item The conversion from degrees to radians.
+	\item A definition of a ``small'' number in \ac{EMTG}, currently set to 1.0e-13.
+	\item A definition of a ``large'' number in \ac{EMTG}, currently set to 1.0e+30.
+	\item An \texttt{sgn()} function to find the sign of a value. Works for double, int, and algorithmic differenation overloaded computation objects.
+	\item \texttt{acosh()} and \texttt{asinh()} functions, compatible with algorithmic differentiation.
+	\item \texttt{safe\_acos()} and \texttt{safe\_asin()} functions that clip the input argument between 0.0 and 1.0 and so never fail, compatible with algorithmic differentation.
+	\item A \texttt{norm()} function for \texttt{std::vector}, which is rarely used but sometimes helpful. Compatible with algorithmic differentation.
+	\item An \texttt{absclip()} function to return a value clipped between plus or minus a user-supplied maximum absolute value. Compatible with algorithmic differentiation.
+\end{itemize}
+
+\section{RandUtils}
+\label{sec:randutils}
+
+\ac{EMTG} uses the \texttt{randutils} package by Melissa O'Neill to generate random numbers. This is the only third-party code that is distributed with the \ac{EMTG} code base, and is released under the MIT License. The license is included in its entirety at the beginning of \texttt{randutils.h}.

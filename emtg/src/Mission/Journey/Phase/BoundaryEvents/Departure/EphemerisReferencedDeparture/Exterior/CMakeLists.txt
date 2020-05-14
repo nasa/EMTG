@@ -1,0 +1,12 @@
+
+set(EPHEMERIS_REFERENCED_DEPARTURE_EXTERIOR_HEADERS ${EPHEMERIS_REFERENCED_DEPARTURE_EXTERIOR_HEADERS} 
+                               ${CMAKE_CURRENT_SOURCE_DIR}/EphemerisReferencedDepartureExterior.h
+                               ${CMAKE_CURRENT_SOURCE_DIR}/EphemerisReferencedFreeDirectDepartureExterior.h)
+
+set(EPHEMERIS_REFERENCED_DEPARTURE_EXTERIOR_SOURCE ${EPHEMERIS_REFERENCED_DEPARTURE_EXTERIOR_SOURCE} 
+                              ${CMAKE_CURRENT_SOURCE_DIR}/EphemerisReferencedDepartureExterior.cpp
+                              ${CMAKE_CURRENT_SOURCE_DIR}/EphemerisReferencedFreeDirectDepartureExterior.cpp)
+
+set(EPHEMERIS_REFERENCED_DEPARTURE_EXTERIOR_FILES ${EPHEMERIS_REFERENCED_DEPARTURE_EXTERIOR_FILES} 
+                             ${EPHEMERIS_REFERENCED_DEPARTURE_EXTERIOR_HEADERS} 
+                             ${EPHEMERIS_REFERENCED_DEPARTURE_EXTERIOR_SOURCE} PARENT_SCOPE)

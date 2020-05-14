@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ada40159-64f7-4599-9970-e285e0cab1b0}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>PyEMTG.py</StartupFile>
+    <SearchPath>SimpleMonteCarlo</SearchPath>
+    <SearchPath>SimpleMonteCarlo;GMAT_mission_renderer;SpiceyPy_Utilities;SimpleMonteCarlo</SearchPath>
+    <WorkingDirectory>C:\emtg\OptionsOverhaul</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId>Global|PythonCore|3.7</InterpreterId>
+    <InterpreterArguments>
+    </InterpreterArguments>
+    <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
+    <IsWindowsApplication>False</IsWindowsApplication>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Archive.py" />
+    <Compile Include="ArchivePanel.py" />
+    <Compile Include="AstroFunctions.py" />
+    <Compile Include="auto_boost_python.py" />
+    <Compile Include="Body.py" />
+    <Compile Include="BodyPicker.py" />
+    <Compile Include="BubbleOptions.py" />
+    <Compile Include="bulletproof.py" />
+    <Compile Include="clusterize.py" />
+    <Compile Include="ConvergenceAnimator\Frow.py" />
+    <Compile Include="ConvergenceAnimator\NLPanimation.py" />
+    <Compile Include="ConvergenceAnimator\NLPframe.py" />
+    <Compile Include="ConvergenceAnimator\Xrow.py" />
+    <Compile Include="Converters\batch_convert_MGALT_to_PSFB_HiFi.py" />
+    <Compile Include="Converters\batch_convert_MGALT_to_PSFB_HiFi_notParallel.py" />
+    <Compile Include="Converters\convert_CoastPhase_to_SundmanCoastPhase.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Converters\Convert_emtgopt_v1_to_v2.py" />
+    <Compile Include="Converters\Convert_TwoPointShootingLowThrust_to_PSFB.py" />
+    <Compile Include="Converters\MGAnDSMs_HiFi_to_LowFi_Flybys.py" />
+    <Compile Include="Converters\PSFB_converter_driver.py" />
+    <Compile Include="EOM.py" />
+    <Compile Include="GlobalOptionsPanel.py" />
+    <Compile Include="GMAT_mission_renderer\GMR_Driver.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="HighFidelity\HighFidelityDriver.py" />
+    <Compile Include="HighFidelity\HighFidelityFlybyIn.py" />
+    <Compile Include="HighFidelity\HighFidelityFlybyOut.py" />
+    <Compile Include="HighFidelity\HighFidelityHalfFlyby.py" />
+    <Compile Include="HighFidelity\HighFidelityJourney.py" />
+    <Compile Include="HighFidelity\HighFidelityLaunch.py" />
+    <Compile Include="HighFidelity\HighFidelityToPatchedConic.py" />
+    <Compile Include="HighFidelity\HighFidelityTrajectory.py" />
+    <Compile Include="Journey.py" />
+    <Compile Include="JourneyOptions.py" />
+    <Compile Include="JourneyOptionsPanel\ArrivalElementsPanel.py" />
+    <Compile Include="JourneyOptionsPanel\DepartureElementsPanel.py" />
+    <Compile Include="JourneyOptionsPanel\JourneyOptionsPanel.py" />
+    <Compile Include="JourneyOptionsPanel\JourneyStagingPanel.py" />
+    <Compile Include="JourneyOptionsPanel\OrbitElementsPanel.py" />
+    <Compile Include="JourneyOptionsV1.py" />
+    <Compile Include="kepler.py" />
+    <Compile Include="Mission.py" />
+    <Compile Include="MissionEvent.py" />
+    <Compile Include="MissionOptions.py" />
+    <Compile Include="MissionOptionsV1.py" />
+    <Compile Include="MissionPanel.py" />
+    <Compile Include="NSGAIIFilter.py" />
+    <Compile Include="NSGAIIpanel.py" />
+    <Compile Include="NSGAIIpopulation.py" />
+    <Compile Include="OptionsNotebook.py" />
+    <Compile Include="OptionsOverhaul\make_EMTG_missionoptions_journeyoptions.py" />
+    <Compile Include="OptionsOverhaul\make_journeyoptions_header.py" />
+    <Compile Include="OptionsOverhaul\make_journeyoptions_python.py" />
+    <Compile Include="OptionsOverhaul\make_journeyoptions_source.py" />
+    <Compile Include="OptionsOverhaul\make_missionoptions_header.py" />
+    <Compile Include="OptionsOverhaul\make_missionoptions_python.py" />
+    <Compile Include="OptionsOverhaul\make_missionoptions_source.py" />
+    <Compile Include="OptionsOverhaul\make_PyMissionOptions.py" />
+    <Compile Include="OptionsOverhaul\optionValidator.py" />
+    <Compile Include="OutputOptionsPanel.py" />
+    <Compile Include="PEATSA\analyze_convergence.py" />
+    <Compile Include="PEATSA\Burn.py" />
+    <Compile Include="PEATSA\combine_existing_PEATSA_scripts.py" />
+    <Compile Include="PEATSA\EMTGInterfaceReaders.py" />
+    <Compile Include="PEATSA\EMTGInterfaceWriters.py" />
+    <Compile Include="PEATSA\grab_best_peatsa_results.py" />
+    <Compile Include="PEATSA\impatiently_run_post_process_now.py" />
+    <Compile Include="PEATSA\kill_iteration.py" />
+    <Compile Include="PEATSA\make_fresh_peatsa_run_hot.py" />
+    <Compile Include="PEATSA\moveFiles.py" />
+    <Compile Include="PEATSA\PEATSA.py" />
+    <Compile Include="PEATSA\PEATSAbox.py" />
+    <Compile Include="PEATSA\PEATSAbusboy.py" />
+    <Compile Include="PEATSA\PEATSAchef.py" />
+    <Compile Include="PEATSA\PEATSAdelivery.py" />
+    <Compile Include="PEATSA\PEATSAmenu.py" />
+    <Compile Include="PEATSA\PEATSAoven.py" />
+    <Compile Include="PEATSA\PEATSAwaiter.py" />
+    <Compile Include="PEATSA\PEATSA_script_generator.py" />
+    <Compile Include="PEATSA\run_locally.py" />
+    <Compile Include="PEATSA\State.py" />
+    <Compile Include="PEATSA\update_existing_PEATSA_script.py" />
+    <Compile Include="PEATSA\Util.py" />
+    <Compile Include="PhysicsOptionsPanel.py" />
+    <Compile Include="PlotOptions.py" />
+    <Compile Include="PyEMTG.py" />
+    <Compile Include="PyEMTG_interface.py" />
+    <Compile Include="PyGMATscripter\PyGMAT2Darray.py" />
+    <Compile Include="PyGMATscripter\PyGMATachieve.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PyGMATscripter\PyGMATarray.py" />
+    <Compile Include="PyGMATscripter\PyGMATbase.py" />
+    <Compile Include="PyGMATscripter\PyGMATbody.py" />
+    <Compile Include="PyGMATscripter\PyGMATchemical_tank.py" />
+    <Compile Include="PyGMATscripter\PyGMATchemical_thruster.py" />
+    <Compile Include="PyGMATscripter\PyGMATconstraint.py" />
+    <Compile Include="PyGMATscripter\PyGMATcoordinatesystem.py" />
+    <Compile Include="PyGMATscripter\PyGMATelectric_powersystem.py" />
+    <Compile Include="PyGMATscripter\PyGMATelectric_tank.py" />
+    <Compile Include="PyGMATscripter\PyGMATelectric_thruster.py" />
+    <Compile Include="PyGMATscripter\PyGMATfiniteburn.py" />
+    <Compile Include="PyGMATscripter\PyGMATforcemodel.py" />
+    <Compile Include="PyGMATscripter\PyGMATfunction.py" />
+    <Compile Include="PyGMATscripter\PyGMATimpulsiveburn.py" />
+    <Compile Include="PyGMATscripter\PyGMATjourney.py" />
+    <Compile Include="PyGMATscripter\PyGMATlaunchvehicle.py" />
+    <Compile Include="PyGMATscripter\PyGMATmission.py" />
+    <Compile Include="PyGMATscripter\PyGMATphase.py" />
+    <Compile Include="PyGMATscripter\PyGMATpropagator.py" />
+    <Compile Include="PyGMATscripter\PyGMATreport.py" />
+    <Compile Include="PyGMATscripter\PyGMATsolver.py" />
+    <Compile Include="PyGMATscripter\PyGMATspacecraft.py" />
+    <Compile Include="PyGMATscripter\PyGMATuniverse.py" />
+    <Compile Include="PyGMATscripter\PyGMATvariable.py" />
+    <Compile Include="PyGMATscripter\PyGMATvary.py" />
+    <Compile Include="PyGMATscripter\PyGMATview.py" />
+    <Compile Include="PyGMATscripter\PyGMATxyplot.py" />
+    <Compile Include="PyGMATscripter\PyGMAT_FBLT_phase.py" />
+    <Compile Include="PyGMATscripter\PyGMAT_forward_targeted_block.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PyGMATscripter\PyGMAT_forward_targeted_mission.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="PyGMATscripter\PyGMAT_MGAnDSMs_phase.py" />
+    <Compile Include="PyGMATscripter\PySpacecraft.py" />
+    <Compile Include="ReportGenerators\BodyDistanceReport.py" />
+    <Compile Include="ReportGenerators\DistanceToBodiesGenerator.py" />
+    <Compile Include="ReportGenerators\EMTG_ephemeris_reader.py" />
+    <Compile Include="ReportGenerators\ManeuverFileGenerator.py" />
+    <Compile Include="ReportGenerators\MonteCarloTestDriver.py" />
+    <Compile Include="ReportGenerators\PSFBthrustHistoryTable.py" />
+    <Compile Include="ReportGenerators\TargetFileGenerator.py" />
+    <Compile Include="ReportGenerators\ThrottleTableReport.py" />
+    <Compile Include="SimpleMonteCarlo\clean_spiceicles.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SimpleMonteCarlo\ConOpsPeriod.py" />
+    <Compile Include="SimpleMonteCarlo\EMTG_to_MONSTER.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="SimpleMonteCarlo\maneuverExecutionError.py" />
+    <Compile Include="SimpleMonteCarlo\MGAnDSMs_MissedManeuver.py" />
+    <Compile Include="SimpleMonteCarlo\SimpleSEPMonteCarloStep.py" />
+    <Compile Include="SmallBodyList.py" />
+    <Compile Include="SolverOptionsPanel.py" />
+    <Compile Include="SpacecraftOptionsPanel\ConventionalHardwarePanel.py" />
+    <Compile Include="SpacecraftOptionsPanel\LibraryHardwarePanel.py" />
+    <Compile Include="SpacecraftOptionsPanel\SpacecraftOptionsPanel.py" />
+    <Compile Include="SpacecraftOptionsPanel\TankPanel.py" />
+    <Compile Include="SpiceyPy_Utilities\SpiceyPy_Utilities.py" />
+    <Compile Include="test_PyMissionOptions.py" />
+    <Compile Include="ThrottleTable.py" />
+    <Compile Include="Universe.py" />
+    <Compile Include="UniverseNotebook.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ConvergenceAnimator" />
+    <Folder Include="Converters" />
+    <Folder Include="HighFidelity" />
+    <Folder Include="JourneyOptionsPanel" />
+    <Folder Include="GMAT_mission_renderer\" />
+    <Folder Include="OptionsOverhaul" />
+    <Folder Include="OptionsOverhaul\.vs\" />
+    <Folder Include="OptionsOverhaul\.vs\JSON\" />
+    <Folder Include="OptionsOverhaul\.vs\JSON\v15\" />
+    <Folder Include="PEATSA" />
+    <Folder Include="PyGMATscripter" />
+    <Folder Include="ReportGenerators" />
+    <Folder Include="SimpleMonteCarlo" />
+    <Folder Include="SpacecraftOptionsPanel" />
+    <Folder Include="SpiceyPy_Utilities" />
+  </ItemGroup>
+  <ItemGroup>
+    <InterpreterReference Include="Global|PythonCore|3.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="OptionsOverhaul\.vs\JSON\v15\.suo" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>
