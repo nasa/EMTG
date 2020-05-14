@@ -1,11 +1,9 @@
 Welcome to EMTGv9 Open Source Release
 README.opensource file compiled by Jacob Englander 4-20-2020
 
-This package contains all of the code that NASA GSFC is releasing for the Evolutionary Mission Trajectory Generator, version 9. No third-party code is included in this release.
-You will need to download the third-party components yourself. This information is detailed in documents that may be found in the docs/build_system folder.
+This package contains all of the code that NASA GSFC is releasing for the Evolutionary Mission Trajectory Generator, version 9. No third-party code is included in this release. You will need to download the third-party components yourself. This information is detailed in documents that may be found in the docs/build_system folder.
 
-In particular, you will need a license for SNOPT. This is not free. Many of you probably already have SNOPT, and the rest may have to purchase it.
-EMTGv9 is known to work with SNOPT 7.5 and 7.6. It probably also works with 7.7 but I can't verify this because I don't have a license for 7.7. Older versions *might* work.
+In particular, you will need a license for SNOPT. This is not free. Many of you probably already have SNOPT, and the rest may have to purchase it. EMTGv9 is known to work with SNOPT 7.5 and 7.6. It probably also works with 7.7 but I can't verify this because I don't have a license for 7.7. Older versions *might* work.
 
 You will want to download SPICE ephemeris files for the bodies that you are visiting. I recommend downloading the full 3+ GB set from http://naif.jpl.nasa.gov/naif/ and placing it in your Universe/ephemeris_files folder
 
@@ -21,11 +19,9 @@ You must edit the EMTG-Config.cmake file as follows:
 3) Change the 'BOOST_ROOT' to the root of your boost installer.  This presupposes you have already built boost (run its bootstrapper)
 		3a) Optionally, if during the run phase of CMAKE boost is not being found, uncomment the next two lines and specifically specify the BOOST_INCLUDEDIR and BOOST_LIBRARYDIR.  The default options are traditional variants that are sometimes chosen by boost installers, but yours may vary.
 
-Once all the above is in place, open CMake, and point the source directory at the EMTG root directory.  Point the build directory to the directory of your choice (may be the same). Run configure, then Generate, as per the usual CMake Process.
-This will create either  makefile for Linux or a Visual Studio project for Windows, or an Xcode project for Mac.
+Once all the above is in place, open CMake, and point the source directory at the EMTG root directory.  Point the build directory to the directory of your choice (may be the same). Run configure, then Generate, as per the usual CMake Process. This will create either  makefile for Linux or a Visual Studio project for Windows, or an Xcode project for Mac.
 
-EMTGv9 is provided "as is" in its imperfect but very capable state. The US Government, NASA, and the developers cannot guarantee that the results you produce with EMTG are correct.
-EMTG is intended for use as a trade study tool and an initial guess generator for a flight navigation tool. We recommend that you use it in those contexts and only those contexts.
+EMTGv9 is provided "as is" in its imperfect but very capable state. The US Government, NASA, and the developers cannot guarantee that the results you produce with EMTG are correct. EMTG is intended for use as a trade study tool and an initial guess generator for a flight navigation tool. We recommend that you use it in those contexts and only those contexts.
 
 ***************************************************************************************************************************************************************
 The EMTG development team is pleased to share the fruits of our labors with you. We ask, but do not require, that if you do something really awesome with it please publish
@@ -45,8 +41,7 @@ Q: Can you give me technical support for installing and operating EMTG?
 A: We are very busy and cannot promise anything. But you can ask and might get lucky.
 
 Q: Will EMTG work on Linux? If so, why is there not a Linux build document?
-A: Yes, it will. CMake works wonderfully on Linux, so all you need to do is go get the same packages that EMTG needs for Windows and then run the CMake.
-I am assuming that if you are a Linux user, then you are comfortable doing these things.
+A: Yes, it will. CMake works wonderfully on Linux, so all you need to do is go get the same packages that EMTG needs for Windows and then run the CMake. I am assuming that if you are a Linux user, then you are comfortable doing these things.
 
 Q: Will EMTG work on a Mac?
 A: Yes.
@@ -61,8 +56,7 @@ Q: Will EMTG work on my abacus?
 A: That may be a stretch.
 
 Q: How frequently will you update EMTG?
-A: We are constantly working on EMTG. However, to comply with NASA software release regulations, we are only able to do open source releases infrequently. We hope to update
-the open-source version of EMTGv9 approximately yearly.
+A: We are constantly working on EMTG. However, to comply with NASA software release regulations, we are only able to do open source releases infrequently. We hope to update the open-source version of EMTGv9 approximately yearly.
 
 Q: I don't like the NASA Open Source License. Can you release EMTGv9 under a different license?
 A: No.
