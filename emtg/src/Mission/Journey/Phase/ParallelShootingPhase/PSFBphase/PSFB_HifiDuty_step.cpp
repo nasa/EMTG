@@ -355,13 +355,6 @@ namespace EMTG
 
                     this->CumulativeAugmentedSTM[subStepIndex] = StrippedSTM * this->ThrustAugmentedSTM[subStepIndex];
                 }
-
-                //Step 5.3: get the time derivatives directly from CoastSTM, since they are feed-forward
-                for (size_t i : {0, 1, 2, 3, 4, 5, 6, 8, 9})
-                {
-                    this->CumulativeAugmentedSTM[0](i, 7) = this->CoastSTM(i, 7);
-                    this->CumulativeAugmentedSTM[0](i, 13) = this->CoastSTM(i, 13);
-                }
             }
 
         }//end process_step_main
