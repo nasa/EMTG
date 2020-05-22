@@ -87,7 +87,7 @@ class MissionOptions(object):
         self.Thrust = 0.1 #thrust of the spacecraft, in Newtons
         self.LV_margin = 0 #LV margin (as a fraction)
         self.LV_adapter_mass = 0 #LV adapter mass (kg)
-        self.engine_type = 6 #low-thrust engine type, from original EMTGv8 list
+        self.engine_type = 5 #low-thrust engine type, from original EMTGv8 list
         self.number_of_electric_propulsion_systems = 1 #number of thruster systems (used to be called number of engines)
         self.engine_duty_cycle = 1 #percentage of time that engine can operate
         self.duty_cycle_type = 0 #duty cycle type,#0: averaged,#1: realistic

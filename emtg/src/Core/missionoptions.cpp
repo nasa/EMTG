@@ -88,7 +88,7 @@ namespace EMTG
         this->Thrust = 0.1;
         this->LV_margin = 0;
         this->LV_adapter_mass = 0;
-        this->engine_type = 6;
+        this->engine_type = 5;
         this->number_of_electric_propulsion_systems = 1;
         this->engine_duty_cycle = 1;
         this->duty_cycle_type = (DutyCycleType) 0;
