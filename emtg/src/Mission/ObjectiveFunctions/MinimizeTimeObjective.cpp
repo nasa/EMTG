@@ -38,9 +38,11 @@ namespace EMTG
         void MinimizeTimeObjective::calcbounds()
         {
             //this objective function has derivatives with respect to all time variables
-            for (size_t Xindex = 0; Xindex < this->Xdescriptions->size(); ++Xindex)
+            std::vector<size_t> timeVariables = this->myMission->getJourney(this->myOptions->number_of_journeys - 1)->getLastPhase()->getArrivalEvent()->get_Xindices_EventRightEpoch();
+
+            for (size_t Xindex : timeVariables)
             {
-                if (Xdescriptions->operator[](Xindex).find("time") < 1024)
+                if (!(Xdescriptions->operator[](Xindex).find("epoch") < 1024))//we want to exclude launch epoch, which is the only thing called "epoch"
                 {
                     this->iAfun->push_back(0);
                     this->jAvar->push_back(Xindex);

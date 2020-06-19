@@ -78,7 +78,7 @@ namespace EMTG
             }
 
             //boundary constraints
-            this->construct_boundary_constraints();
+            this->construct_journey_boundary_constraints();
 
             //journey-end maneuver propellant
             this->journey_end_propellant_used = 0.0;
@@ -87,14 +87,26 @@ namespace EMTG
             this->final_mass_increment = 0.0;
         }//end initialize()
 
-        void ArrivalEvent::construct_boundary_constraints()
+        void ArrivalEvent::construct_journey_boundary_constraints()
+        {
+            std::vector<std::string> constraintsToAdd = this->myJourneyOptions->BoundaryConstraintDefinitions;
+            this->construct_boundary_constraints(constraintsToAdd);
+        }
+
+        void ArrivalEvent::construct_boundary_constraints(std::vector<std::string> givenConstraints)
         {
             //first construct this event's tag
             std::string Tag = "p" + std::to_string(this->phaseIndex)
                 + "_arrival";
 
+            //clear the current constraint vector
+            this->mySpecializedConstraints.clear();
+
+            //are we adding constraints from journeyOptions or from an input vector?
+            std::vector<std::string>* constraintsToAdd = &givenConstraints;
+
             //now, loop over constraints to see if they are relevant
-            for (std::string& constraint : this->myJourneyOptions->BoundaryConstraintDefinitions)
+            for (std::string& constraint : *constraintsToAdd)
             {
                 if (constraint.find("#") != 0) //don't create a constraint if it is commented out
                 {

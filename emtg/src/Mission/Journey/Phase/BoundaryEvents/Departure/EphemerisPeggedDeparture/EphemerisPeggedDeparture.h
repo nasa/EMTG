@@ -63,7 +63,7 @@ namespace EMTG
                                     HardwareModels::Spacecraft* mySpacecraft,
                                     missionoptions* myOptions) {};
             //destructor
-            ~EphemerisPeggedDeparture() {};
+            virtual ~EphemerisPeggedDeparture() {};
 
             //output
             virtual void output(std::ofstream& outputfile,
@@ -76,7 +76,7 @@ namespace EMTG
 
         protected:
 
-            virtual void calcbounds_event_left_side();
+            virtual void calcbounds_event_left_side(std::vector<size_t> timeVariables);
 
             virtual void calcbounds_event_right_side();
 

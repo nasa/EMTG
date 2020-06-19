@@ -174,6 +174,7 @@ class phaseBlock(object):
             newJourney.arrival_type = 3 #rendezvous with no maneuver
             newJourney.destination_list[1] = -1
             newJourney.AllowJourneyFreePointArrivalToPropagate = 0
+            newJourney.arrival_elements_state_representation = 0 #Cartesian
             newJourney.arrival_elements_vary_flag = [1, 1, 1, 1, 1, 1]
             
             rotR = self.rotate_from_local_to_ICRF(np.array(self.endState[0:3]))
@@ -258,7 +259,12 @@ class phaseBlock(object):
                 newJourney.CoastPhaseForwardIntegrationStepLength = mission_time_step_size
                 newJourney.CoastPhaseBackwardIntegrationStepLength = mission_time_step_size
                 
-            
+        #Step 11: staging
+        if not isLast:
+            newJourney.stage_before_arrival = 0
+            newJourney.stage_after_arrival = 0
+        if not isFirst:
+            newJourney.stage_after_departure = 0
             
         return newJourney, phaseIndex
         

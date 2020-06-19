@@ -17,6 +17,7 @@
 // governing permissions and limitations under the License.
 
 #include "FreePointArrival.h"
+#include "StateRepresentationFactory.h"
 
 namespace EMTG
 {
@@ -66,15 +67,29 @@ namespace EMTG
                 mySpacecraft,
                 myOptions);
 
-            this->myStateRepresentation = this->myJourneyOptions->arrival_elements_state_representation;
+            this->myStateRepresentationEnum = this->myJourneyOptions->arrival_elements_state_representation;
+
+            //create the state representation
+            this->myStateRepresentation = Astrodynamics::CreateStateRepresentation(this->myStateRepresentationEnum, this->myUniverse->mu);
 
             this->myEncodedReferenceFrame = this->myJourneyOptions->arrival_elements_frame;
 
             this->ReferenceEpoch = this->myJourneyOptions->arrival_elements_reference_epoch;
+
+            //are we using an object-referenced frame? If so, let's make a body
+            if (this->myEncodedReferenceFrame == ReferenceFrame::ObjectReferenced)
+            {
+                if (this->myOptions->Journeys[journeyIndex].destination_list[1] < 1)
+                {
+                    throw std::invalid_argument(this->name + " reference body must be set to a body in the universe. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                }
+                else
+                    this->myBody = &myUniverse->bodies[this->myOptions->Journeys[journeyIndex].destination_list[1] - 1];
+            }
         }//end initialize()
         
         //******************************************calcbounds methods
-        void FreePointArrival::calcbounds_event_left_side()
+        void FreePointArrival::calcbounds_event_left_side(std::vector<size_t> timeVariables)
         {
             this->X_index_of_first_decision_variable_in_this_event = this->Xdescriptions->size();
 
@@ -93,7 +108,7 @@ namespace EMTG
             StateBounds.push_back({ 1.0e-13, this->myJourneyOptions->maximum_mass });
 
             //Step 2: base free point boundary
-            FreePointBoundary::calcbounds_event_left_side(StateBounds);
+            FreePointBoundary::calcbounds_event_left_side(StateBounds, timeVariables);
         }//end calcbounds_event_left_side()
 
         void FreePointArrival::calcbounds_event_right_side()

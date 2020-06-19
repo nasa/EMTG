@@ -150,6 +150,8 @@ namespace EMTG
 
         FreePointBoundary::~FreePointBoundary()
         {
+            delete this->myStateRepresentation;
+
             if (this->AllowStateToPropagate)
             {
                 delete this->myPropagator;
@@ -165,25 +167,99 @@ namespace EMTG
 
         //method to handle bounds for event left state
         //state is encoded in cartesian coordinates
-        void FreePointBoundary::calcbounds_event_left_side(const std::vector< std::tuple<double, double> >& StateBounds)
+        void FreePointBoundary::calcbounds_event_left_side(const std::vector< std::tuple<double, double> >& StateBounds, std::vector<size_t> timeVariables)
         {
-            //First, make sure that our state representation is valid.
-            //We have to do it here so that prefix is initialized.
-            if (this->myStateRepresentation == StateRepresentation::SphericalAZFPA)
-            {
-                throw std::invalid_argument(this->prefix + "'SphericalAZFPA' is not a valid state representation for free point boundary events.");
-            }
-            else if (this->myStateRepresentation == StateRepresentation::SphericalRADEC)
-            {
-                throw std::invalid_argument(this->prefix + "'SphericalRADEC' is not a valid state representation for free point boundary events.");
-            }
-
             //Step 1: set the current stage
             this->mySpacecraft->setActiveStage(this->stageIndex);
 
             //Step 2: first six decision variables and sparsity entries
+            std::vector< std::tuple<std::string, double, bool> > statesToRepresent; //state name, scale factor, isAngle
+            switch (this->myStateRepresentationEnum)
+            {
+                case StateRepresentation::SphericalRADEC:
+                {
+                    statesToRepresent.push_back({ "r",  this->myUniverse->LU, false });
+                    statesToRepresent.push_back({ "RA",  1.0, true });
+                    statesToRepresent.push_back({ "DEC", 1.0, true });
+                    statesToRepresent.push_back({ "v", this->myUniverse->LU / this->myUniverse->TU, false });
+                    statesToRepresent.push_back({ "vRA",  1.0, true });
+                    statesToRepresent.push_back({ "vDEC", 1.0, true });
+
+                    break;
+                }
+                case StateRepresentation::SphericalAZFPA:
+                {
+                    statesToRepresent.push_back({ "r",  this->myUniverse->LU, false });
+                    statesToRepresent.push_back({ "RA", 1.0, true });
+                    statesToRepresent.push_back({ "DEC", 1.0, true });
+                    statesToRepresent.push_back({ "v", this->myUniverse->LU / this->myUniverse->TU, false });
+                    statesToRepresent.push_back({ "AZ", 1.0, true });
+                    statesToRepresent.push_back({ "FPA", 1.0, true });
+
+                    break;
+                }
+                case StateRepresentation::Cartesian:
+                {
+                    statesToRepresent.push_back({ "x",  this->myUniverse->LU, false });
+                    statesToRepresent.push_back({ "y",  this->myUniverse->LU, false });
+                    statesToRepresent.push_back({ "z",  this->myUniverse->LU, false });
+                    statesToRepresent.push_back({ "vx", this->myUniverse->LU / this->myUniverse->TU, false });
+                    statesToRepresent.push_back({ "vy", this->myUniverse->LU / this->myUniverse->TU, false });
+                    statesToRepresent.push_back({ "vz", this->myUniverse->LU / this->myUniverse->TU, false });
+
+                    break;
+                }
+                case StateRepresentation::COE:
+                {
+                    statesToRepresent.push_back({ "SMA",  this->myUniverse->LU, false });
+                    statesToRepresent.push_back({ "ECC",  1.0, false });
+                    statesToRepresent.push_back({ "INC",  1.0, true });
+                    statesToRepresent.push_back({ "RAAN", 1.0, true });
+                    statesToRepresent.push_back({ "AOP", 1.0, true });
+                    statesToRepresent.push_back({ "TA",  1.0, true });
+
+                    break;
+                }
+                case StateRepresentation::MEE:
+                {
+                    statesToRepresent.push_back({ "P",  this->myUniverse->LU, false });
+                    statesToRepresent.push_back({ "F",  1.0, false });
+                    statesToRepresent.push_back({ "G",  1.0, false });
+                    statesToRepresent.push_back({ "H",  1.0, false });
+                    statesToRepresent.push_back({ "K",  1.0, false });
+                    statesToRepresent.push_back({ "L",  1.0, true });
+
+                    break;
+                }
+                case StateRepresentation::IncomingBplane:
+                {
+                    statesToRepresent.push_back({ "VINFin",  this->myUniverse->LU / this->myUniverse->TU, false });
+                    statesToRepresent.push_back({ "RHAin",  1.0, true });
+                    statesToRepresent.push_back({ "DHAin",  1.0, true });
+                    statesToRepresent.push_back({ "BRADIUSin", this->myUniverse->LU, false });
+                    statesToRepresent.push_back({ "BTHETAin", 1.0, true });
+                    statesToRepresent.push_back({ "TAin",  1.0, true });
+
+                    break;
+                }
+                case StateRepresentation::OutgoingBplane:
+                {
+                    statesToRepresent.push_back({ "VINFout",  this->myUniverse->LU / this->myUniverse->TU, false });
+                    statesToRepresent.push_back({ "RHAout",  1.0, true });
+                    statesToRepresent.push_back({ "DHAout",  1.0, true });
+                    statesToRepresent.push_back({ "BRADIUSout", this->myUniverse->LU, false });
+                    statesToRepresent.push_back({ "BTHETAout", 1.0, true });
+                    statesToRepresent.push_back({ "TAout",  1.0, true });
+
+                    break;
+                }
+                default:
+                    throw std::invalid_argument("FreePointBoundary does not recognize state representation " + std::to_string(this->myStateRepresentationEnum) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__) + ".");
+            }
+
             for (size_t stateIndex = 0; stateIndex < 7; ++stateIndex)
             {
+                //is this a mass?
                 if (stateIndex == 6)
                 {
                     if (this->isFirstEventInMission && !this->myOptions->allow_initial_mass_to_vary)
@@ -197,31 +273,19 @@ namespace EMTG
                 }
                 else
                 {
-                    //if this is COE representation, then we need to change the angles from degrees to radians on the way in
-                    if (this->myStateRepresentation == StateRepresentation::COE)
+                    //is this an angle? if so, transform the bounds from degrees to radians
+                    if (std::get<2>(statesToRepresent[stateIndex]) == true) 
                     {
-                        if (stateIndex > 1)
-                        {
-                            Xlowerbounds->push_back(std::get<0>(StateBounds[stateIndex]) * math::PI / 180.0);
-                            Xupperbounds->push_back(std::get<1>(StateBounds[stateIndex]) * math::PI / 180.0);
-                        }
-                        else
-                        {
-                            Xlowerbounds->push_back(std::get<0>(StateBounds[stateIndex]));
-                            Xupperbounds->push_back(std::get<1>(StateBounds[stateIndex]));
-                        }
-
-                        X_scale_factors->push_back(1.0 / this->myUniverse->COE_scale_factors(stateIndex));
-                        Xdescriptions->push_back(prefix + "event left state " + this->COENames[stateIndex]);
+                        Xlowerbounds->push_back(std::get<0>(StateBounds[stateIndex]) * math::PI / 180.0);
+                        Xupperbounds->push_back(std::get<1>(StateBounds[stateIndex]) * math::PI / 180.0);
                     }
                     else
                     {
-                        this->Xlowerbounds->push_back(std::get<0>(StateBounds[stateIndex]));
-                        this->Xupperbounds->push_back(std::get<1>(StateBounds[stateIndex]));
-
-                        X_scale_factors->push_back(1.0 / this->myUniverse->continuity_constraint_scale_factors(stateIndex));
-                        Xdescriptions->push_back(prefix + "event left state " + stateNames[stateIndex]);
+                        Xlowerbounds->push_back(std::get<0>(StateBounds[stateIndex]));
+                        Xupperbounds->push_back(std::get<1>(StateBounds[stateIndex]));
                     }
+                    X_scale_factors->push_back(std::get<1>(statesToRepresent[stateIndex]));
+                    Xdescriptions->push_back(prefix + "event left state " + std::get<0>(statesToRepresent[stateIndex]));
                 }
                 this->Xindex_encoded_state.push_back(this->Xdescriptions->size() - 1);
 
@@ -243,16 +307,18 @@ namespace EMTG
                 this->X_scale_factors->push_back(1.0 / this->myUniverse->continuity_constraint_scale_factors(7));
                 this->Xdescriptions->push_back(prefix + "event left state epoch");
                 this->Xindex_encoded_state.push_back(this->Xdescriptions->size() - 1);
+                timeVariables.insert(timeVariables.begin(), this->Xdescriptions->size() - 1);
             }
 
-            this->calculate_dependencies_left_epoch();
+            this->calculate_dependencies_left_epoch(timeVariables);
 
             //Step 4: If we allow the state to propagate
             if (this->AllowStateToPropagate
                 || this->myEncodedReferenceFrame == ReferenceFrame::J2000_BCF
                 || this->myEncodedReferenceFrame == ReferenceFrame::TrueOfDate_BCI
                 || this->myEncodedReferenceFrame == ReferenceFrame::TrueOfDate_BCF
-                || this->myEncodedReferenceFrame == ReferenceFrame::SAM)
+                || this->myEncodedReferenceFrame == ReferenceFrame::SAM
+                || this->myEncodedReferenceFrame == ReferenceFrame::ObjectReferenced)
             {
                 //all state variables, including mass in an FreePointBoundary event have a derivative with respect to epoch
                 //we'll put in a dummy derivative of 0.0 for now, and later, when the event is processed, we'll do it right
@@ -273,6 +339,8 @@ namespace EMTG
         {
             this->Derivatives_of_StateAfterEvent = this->Derivatives_of_StateBeforeEvent;
             this->Derivatives_of_StateAfterEvent_wrt_Time = this->Derivatives_of_StateBeforeEvent_wrt_Time;
+
+            this->Xindices_EventRightEpoch = this->Xindices_EventLeftEpoch;
         }//end calcbounds_event_right_side
 
         //process methods
@@ -293,128 +361,31 @@ namespace EMTG
             }
             this->state_before_event(6) = this->StateBeforeEventEncoded(6);
 
-            //Step 2.1: if necessary, convert from COE to cartesian
-            if (this->myStateRepresentation == StateRepresentation::COE)
+            //Step 2.1: convert to Cartesian, store the derivatives
+            //Step 2.1.1: convert
+            math::Matrix<doubleType> stateBeforeEventCartesian = this->myStateRepresentation->convertFromRepresentationToCartesian(this->StateBeforeEventEncoded.getSubMatrix1D(0, 5), needG);
+
+            //Step 2.1.2: put in state container - overwrite the original encoded state
+            for (size_t stateIndex : {0, 1, 2, 3, 4, 5})
             {
-                //Step 2.1.1: convert
-                doubleType SMA = this->StateBeforeEventEncoded(0);
-                doubleType ECC = this->StateBeforeEventEncoded(1);
-                doubleType INC = this->StateBeforeEventEncoded(2);
-                doubleType RAAN = this->StateBeforeEventEncoded(3);
-                doubleType AOP = this->StateBeforeEventEncoded(4);
-                doubleType TA = this->StateBeforeEventEncoded(5);
+                this->StateBeforeEventEncoded(stateIndex) = stateBeforeEventCartesian(stateIndex);
+            }
+            
+            //Step 2.1.3: derivatives
+            if (needG)
+            {
+                //Step 2.1.3.1: extract the transformation matrix
+                math::Matrix<doubleType> TransformationMatrix = this->myStateRepresentation->getRepresentationToCartesianTransitionMatrix();
 
-                double mu = this->myUniverse->mu;
-                
-                doubleType ECC2 = ECC * ECC;
-
-                doubleType rx = SMA * (-ECC2 + 1)*(-sin(RAAN)*sin(AOP + TA)*cos(INC) + cos(RAAN)*cos(AOP + TA)) / (ECC*cos(TA) + 1);
-                doubleType ry = SMA * (-ECC2 + 1)*(sin(RAAN)*cos(AOP + TA) + sin(AOP + TA)*cos(INC)*cos(RAAN)) / (ECC*cos(TA) + 1);
-                doubleType rz = SMA * (-ECC2 + 1)*sin(INC)*sin(AOP + TA) / (ECC*cos(TA) + 1);
-                doubleType vx = -mu * ((ECC*sin(AOP) + sin(AOP + TA))*cos(RAAN) + (ECC*cos(AOP) + cos(AOP + TA))*sin(RAAN)*cos(INC)) / sqrt(SMA*mu*(-ECC2 + 1));
-                doubleType vy = -mu * ((ECC*sin(AOP) + sin(AOP + TA))*sin(RAAN) - (ECC*cos(AOP) + cos(AOP + TA))*cos(INC)*cos(RAAN)) / sqrt(SMA*mu*(-ECC2 + 1));
-                doubleType vz = mu * (ECC*cos(AOP) + cos(AOP + TA))*sin(INC) / sqrt(SMA*mu*(-ECC2 + 1));
-
-                //Step 2.1.2: put in state containers - override the original encoded state
-                this->StateBeforeEventEncoded(0) = rx;
-                this->StateBeforeEventEncoded(1) = ry;
-                this->StateBeforeEventEncoded(2) = rz;
-                this->StateBeforeEventEncoded(3) = vx;
-                this->StateBeforeEventEncoded(4) = vy;
-                this->StateBeforeEventEncoded(5) = vz;
-
-                //Step 2.1.3: derivatives
-                if (needG)
+                //Step 2.1.3.2: insert into the derivative tuples
+                for (size_t nativeStateIndex : {0, 1, 2, 3, 4, 5})
                 {
-                    //Step 2.1.3.1: compute derivatives
-                    double ECCcosTAPlus1Squared = ((ECC*cos(TA) + 1) * (ECC*cos(TA) + 1))_GETVALUE;
-
-                    double drx_dSMA = ((-ECC2 + 1)*(-sin(RAAN)*sin(AOP + TA)*cos(INC) + cos(RAAN)*cos(AOP + TA)) / (ECC*cos(TA) + 1))_GETVALUE;
-                    double drx_dECC = (-2 * ECC*SMA*(-sin(RAAN)*sin(AOP + TA)*cos(INC) + cos(RAAN)*cos(AOP + TA)) / (ECC*cos(TA) + 1) - SMA * (-ECC2 + 1)*(-sin(RAAN)*sin(AOP + TA)*cos(INC) + cos(RAAN)*cos(AOP + TA))*cos(TA) / ECCcosTAPlus1Squared)_GETVALUE;
-                    double drx_dINC = (SMA*(-ECC2 + 1)*sin(INC)*sin(RAAN)*sin(AOP + TA) / (ECC*cos(TA) + 1))_GETVALUE;
-                    double drx_dRAAN = (SMA*(-ECC2 + 1)*(-sin(RAAN)*cos(AOP + TA) - sin(AOP + TA)*cos(INC)*cos(RAAN)) / (ECC*cos(TA) + 1))_GETVALUE;
-                    double drx_dAOP = (SMA*(-ECC2 + 1)*(-sin(RAAN)*cos(INC)*cos(AOP + TA) - sin(AOP + TA)*cos(RAAN)) / (ECC*cos(TA) + 1))_GETVALUE;
-                    double drx_dTA = (ECC*SMA*(-ECC2 + 1)*(-sin(RAAN)*sin(AOP + TA)*cos(INC) + cos(RAAN)*cos(AOP + TA))*sin(TA) / ECCcosTAPlus1Squared + SMA * (-ECC2 + 1)*(-sin(RAAN)*cos(INC)*cos(AOP + TA) - sin(AOP + TA)*cos(RAAN)) / (ECC*cos(TA) + 1))_GETVALUE;
-
-                    double dry_dSMA = ((-ECC2 + 1)*(sin(RAAN)*cos(AOP + TA) + sin(AOP + TA)*cos(INC)*cos(RAAN)) / (ECC*cos(TA) + 1))_GETVALUE;
-                    double dry_dECC = (-2 * ECC*SMA*(sin(RAAN)*cos(AOP + TA) + sin(AOP + TA)*cos(INC)*cos(RAAN)) / (ECC*cos(TA) + 1) - SMA * (-ECC2 + 1)*(sin(RAAN)*cos(AOP + TA) + sin(AOP + TA)*cos(INC)*cos(RAAN))*cos(TA) / ECCcosTAPlus1Squared)_GETVALUE;
-                    double dry_dINC = (-SMA * (-ECC2 + 1)*sin(INC)*sin(AOP + TA)*cos(RAAN) / (ECC*cos(TA) + 1))_GETVALUE;
-                    double dry_dRAAN = (SMA*(-ECC2 + 1)*(-sin(RAAN)*sin(AOP + TA)*cos(INC) + cos(RAAN)*cos(AOP + TA)) / (ECC*cos(TA) + 1))_GETVALUE;
-                    double dry_dAOP = (SMA*(-ECC2 + 1)*(-sin(RAAN)*sin(AOP + TA) + cos(INC)*cos(RAAN)*cos(AOP + TA)) / (ECC*cos(TA) + 1))_GETVALUE;
-                    double dry_dTA = (ECC*SMA*(-ECC2 + 1)*(sin(RAAN)*cos(AOP + TA) + sin(AOP + TA)*cos(INC)*cos(RAAN))*sin(TA) / ECCcosTAPlus1Squared + SMA * (-ECC2 + 1)*(-sin(RAAN)*sin(AOP + TA) + cos(INC)*cos(RAAN)*cos(AOP + TA)) / (ECC*cos(TA) + 1))_GETVALUE;
-
-                    double drz_dSMA = ((-ECC2 + 1)*sin(INC)*sin(AOP + TA) / (ECC*cos(TA) + 1))_GETVALUE;
-                    double drz_dECC = (-2 * ECC*SMA*sin(INC)*sin(AOP + TA) / (ECC*cos(TA) + 1) - SMA * (-ECC2 + 1)*sin(INC)*sin(AOP + TA)*cos(TA) / ECCcosTAPlus1Squared)_GETVALUE;
-                    double drz_dINC = (SMA*(-ECC2 + 1)*sin(AOP + TA)*cos(INC) / (ECC*cos(TA) + 1))_GETVALUE;
-                    double drz_dRAAN = 0.0;
-                    double drz_dAOP = (SMA*(-ECC2 + 1)*sin(INC)*cos(AOP + TA) / (ECC*cos(TA) + 1))_GETVALUE;
-                    double drz_dTA = (ECC*SMA*(-ECC2 + 1)*sin(INC)*sin(TA)*sin(AOP + TA) / ECCcosTAPlus1Squared + SMA * (-ECC2 + 1)*sin(INC)*cos(AOP + TA) / (ECC*cos(TA) + 1))_GETVALUE;
-
-                    double dvx_dSMA = (mu*((ECC*sin(AOP) + sin(AOP + TA))*cos(RAAN) + (ECC*cos(AOP) + cos(AOP + TA))*sin(RAAN)*cos(INC)) / (2 * SMA*sqrt(SMA*mu*(-ECC2 + 1))))_GETVALUE;
-                    double dvx_dECC = (-ECC * mu*((ECC*sin(AOP) + sin(AOP + TA))*cos(RAAN) + (ECC*cos(AOP) + cos(AOP + TA))*sin(RAAN)*cos(INC)) / (sqrt(SMA*mu*(-ECC2 + 1))*(-ECC2 + 1)) - mu * (sin(AOP)*cos(RAAN) + sin(RAAN)*cos(AOP)*cos(INC)) / sqrt(SMA*mu*(-ECC2 + 1)))_GETVALUE;
-                    double dvx_dINC = (mu*(ECC*cos(AOP) + cos(AOP + TA))*sin(INC)*sin(RAAN) / sqrt(SMA*mu*(-ECC2 + 1)))_GETVALUE;
-                    double dvx_dRAAN = (-mu * (-(ECC*sin(AOP) + sin(AOP + TA))*sin(RAAN) + (ECC*cos(AOP) + cos(AOP + TA))*cos(INC)*cos(RAAN)) / sqrt(SMA*mu*(-ECC2 + 1)))_GETVALUE;
-                    double dvx_dAOP = (-mu * ((-ECC * sin(AOP) - sin(AOP + TA))*sin(RAAN)*cos(INC) + (ECC*cos(AOP) + cos(AOP + TA))*cos(RAAN)) / sqrt(SMA*mu*(-ECC2 + 1)))_GETVALUE;
-                    double dvx_dTA = (-mu * (-sin(RAAN)*sin(AOP + TA)*cos(INC) + cos(RAAN)*cos(AOP + TA)) / sqrt(SMA*mu*(-ECC2 + 1)))_GETVALUE;
-
-                    double dvy_dSMA = (mu*((ECC*sin(AOP) + sin(AOP + TA))*sin(RAAN) - (ECC*cos(AOP) + cos(AOP + TA))*cos(INC)*cos(RAAN)) / (2 * SMA*sqrt(SMA*mu*(-ECC2 + 1))))_GETVALUE;
-                    double dvy_dECC = (-ECC * mu*((ECC*sin(AOP) + sin(AOP + TA))*sin(RAAN) - (ECC*cos(AOP) + cos(AOP + TA))*cos(INC)*cos(RAAN)) / (sqrt(SMA*mu*(-ECC2 + 1))*(-ECC2 + 1)) - mu * (sin(AOP)*sin(RAAN) - cos(AOP)*cos(INC)*cos(RAAN)) / sqrt(SMA*mu*(-ECC2 + 1)))_GETVALUE;
-                    double dvy_dINC = (-mu * (ECC*cos(AOP) + cos(AOP + TA))*sin(INC)*cos(RAAN) / sqrt(SMA*mu*(-ECC2 + 1)))_GETVALUE;
-                    double dvy_dRAAN = (-mu * ((ECC*sin(AOP) + sin(AOP + TA))*cos(RAAN) + (ECC*cos(AOP) + cos(AOP + TA))*sin(RAAN)*cos(INC)) / sqrt(SMA*mu*(-ECC2 + 1)))_GETVALUE;
-                    double dvy_dAOP = (-mu * (-(-ECC * sin(AOP) - sin(AOP + TA))*cos(INC)*cos(RAAN) + (ECC*cos(AOP) + cos(AOP + TA))*sin(RAAN)) / sqrt(SMA*mu*(-ECC2 + 1)))_GETVALUE;
-                    double dvy_dTA = (-mu * (sin(RAAN)*cos(AOP + TA) + sin(AOP + TA)*cos(INC)*cos(RAAN)) / sqrt(SMA*mu*(-ECC2 + 1)))_GETVALUE;
-
-                    double dvz_dSMA = (-mu * (ECC*cos(AOP) + cos(AOP + TA))*sin(INC) / (2 * SMA*sqrt(SMA*mu*(-ECC2 + 1))))_GETVALUE;
-                    double dvz_dECC = (ECC*mu*(ECC*cos(AOP) + cos(AOP + TA))*sin(INC) / (sqrt(SMA*mu*(-ECC2 + 1))*(-ECC2 + 1)) + mu * sin(INC)*cos(AOP) / sqrt(SMA*mu*(-ECC2 + 1)))_GETVALUE;
-                    double dvz_dINC = (mu*(ECC*cos(AOP) + cos(AOP + TA))*cos(INC) / sqrt(SMA*mu*(-ECC2 + 1)))_GETVALUE;
-                    double dvz_dRAAN = 0.0;
-                    double dvz_dAOP = (mu*(-ECC * sin(AOP) - sin(AOP + TA))*sin(INC) / sqrt(SMA*mu*(-ECC2 + 1)))_GETVALUE;
-                    double dvz_dTA = (-mu * sin(INC)*sin(AOP + TA) / sqrt(SMA*mu*(-ECC2 + 1)))_GETVALUE;
-
-                    //Step 2.1.3.1: now put the derivatives in to containers
-                    this->dStateBeforeEventEncoded_dEncodedElements(0, 0) = drx_dSMA;
-                    this->dStateBeforeEventEncoded_dEncodedElements(0, 1) = drx_dECC;
-                    this->dStateBeforeEventEncoded_dEncodedElements(0, 2) = drx_dINC;
-                    this->dStateBeforeEventEncoded_dEncodedElements(0, 3) = drx_dRAAN;
-                    this->dStateBeforeEventEncoded_dEncodedElements(0, 4) = drx_dAOP;
-                    this->dStateBeforeEventEncoded_dEncodedElements(0, 5) = drx_dTA;
-
-                    this->dStateBeforeEventEncoded_dEncodedElements(1, 0) = dry_dSMA;
-                    this->dStateBeforeEventEncoded_dEncodedElements(1, 1) = dry_dECC;
-                    this->dStateBeforeEventEncoded_dEncodedElements(1, 2) = dry_dINC;
-                    this->dStateBeforeEventEncoded_dEncodedElements(1, 3) = dry_dRAAN;
-                    this->dStateBeforeEventEncoded_dEncodedElements(1, 4) = dry_dAOP;
-                    this->dStateBeforeEventEncoded_dEncodedElements(1, 5) = dry_dTA;
-
-                    this->dStateBeforeEventEncoded_dEncodedElements(2, 0) = drz_dSMA;
-                    this->dStateBeforeEventEncoded_dEncodedElements(2, 1) = drz_dECC;
-                    this->dStateBeforeEventEncoded_dEncodedElements(2, 2) = drz_dINC;
-                    this->dStateBeforeEventEncoded_dEncodedElements(2, 3) = drz_dRAAN;
-                    this->dStateBeforeEventEncoded_dEncodedElements(2, 4) = drz_dAOP;
-                    this->dStateBeforeEventEncoded_dEncodedElements(2, 5) = drz_dTA;
-
-                    this->dStateBeforeEventEncoded_dEncodedElements(3, 0) = dvx_dSMA;
-                    this->dStateBeforeEventEncoded_dEncodedElements(3, 1) = dvx_dECC;
-                    this->dStateBeforeEventEncoded_dEncodedElements(3, 2) = dvx_dINC;
-                    this->dStateBeforeEventEncoded_dEncodedElements(3, 3) = dvx_dRAAN;
-                    this->dStateBeforeEventEncoded_dEncodedElements(3, 4) = dvx_dAOP;
-                    this->dStateBeforeEventEncoded_dEncodedElements(3, 5) = dvx_dTA;
-
-                    this->dStateBeforeEventEncoded_dEncodedElements(4, 0) = dvy_dSMA;
-                    this->dStateBeforeEventEncoded_dEncodedElements(4, 1) = dvy_dECC;
-                    this->dStateBeforeEventEncoded_dEncodedElements(4, 2) = dvy_dINC;
-                    this->dStateBeforeEventEncoded_dEncodedElements(4, 3) = dvy_dRAAN;
-                    this->dStateBeforeEventEncoded_dEncodedElements(4, 4) = dvy_dAOP;
-                    this->dStateBeforeEventEncoded_dEncodedElements(4, 5) = dvy_dTA;
-
-                    this->dStateBeforeEventEncoded_dEncodedElements(5, 0) = dvz_dSMA;
-                    this->dStateBeforeEventEncoded_dEncodedElements(5, 1) = dvz_dECC;
-                    this->dStateBeforeEventEncoded_dEncodedElements(5, 2) = dvz_dINC;
-                    this->dStateBeforeEventEncoded_dEncodedElements(5, 3) = dvz_dRAAN;
-                    this->dStateBeforeEventEncoded_dEncodedElements(5, 4) = dvz_dAOP;
-                    this->dStateBeforeEventEncoded_dEncodedElements(5, 5) = dvz_dTA;
-                }//end derivatives of orbit elements
-            }//end orbit elements
+                    for (size_t cartesianStateIndex : {0, 1, 2, 3, 4, 5})
+                    {
+                        this->dStateBeforeEventEncoded_dEncodedElements(cartesianStateIndex, nativeStateIndex) = TransformationMatrix(cartesianStateIndex, nativeStateIndex);
+                    }
+                }
+            }//end derivatives
 
             //Step 3: figure out the current epoch
             this->process_left_epoch(X, Xindex, F, Findex, G, needG);
@@ -464,6 +435,25 @@ namespace EMTG
                         ReferenceFrame::J2000_BCI,
                         dreferenceVector_dt,
                         this->EventLeftEpoch);
+                }
+                else if (this->myEncodedReferenceFrame == ReferenceFrame::ObjectReferenced)
+                {
+                    //we need the vector to the refernce body and its time derivative
+                    referenceVector.resize(6, 1, 0.0);
+                    dreferenceVector_dt.resize(6, 1, 0.0);
+
+                    doubleType bodyState[12];
+                    this->myBody->locate_body(this->EventLeftEpoch,
+                        bodyState,
+                        needG,
+                        *this->myOptions);
+
+                    //set vector *to* reference body
+                    for (size_t stateIndex : {0, 1, 2, 3, 4, 5})
+                    {
+                        referenceVector(stateIndex) = bodyState[stateIndex];
+                        dreferenceVector_dt(stateIndex) = bodyState[stateIndex + 6];
+                    }
                 }
 
                 this->myUniverse->LocalFrame.rotate_frame_to_frame(this->myEncodedReferenceFrame,//OriginalReferenceFrame
@@ -578,19 +568,7 @@ namespace EMTG
                 }
 
                 //Step 7: assemble the derivatives of state_before_event with respect to the encoded state
-                switch (this->myStateRepresentation)
-                {
-                    case StateRepresentation::Cartesian:
-                    {
-                        this->dStateBeforeEvent_dStateBeforeEventEncoded = this->dStateBeforeEvent_dStateBeforeEventICRF * this->dStateBeforeEventICRF_dStateBeforeEventEncoded;
-                        break;
-                    }
-                    case StateRepresentation::COE:
-                    {
-                        this->dStateBeforeEvent_dStateBeforeEventEncoded = this->dStateBeforeEvent_dStateBeforeEventICRF * this->dStateBeforeEventICRF_dStateBeforeEventEncoded * this->dStateBeforeEventEncoded_dEncodedElements;
-                        break;
-                    }
-                }//end switch on state representation
+                this->dStateBeforeEvent_dStateBeforeEventEncoded = this->dStateBeforeEvent_dStateBeforeEventICRF * this->dStateBeforeEventICRF_dStateBeforeEventEncoded * this->dStateBeforeEventEncoded_dEncodedElements;
 
                 //Step 8: insert the derivatives into the appropriate tuples
                 for (size_t encodedStateIndex = 0; encodedStateIndex < 7; ++encodedStateIndex)
@@ -606,7 +584,8 @@ namespace EMTG
                     || this->myEncodedReferenceFrame == ReferenceFrame::J2000_BCF
                     || this->myEncodedReferenceFrame == ReferenceFrame::TrueOfDate_BCI
                     || this->myEncodedReferenceFrame == ReferenceFrame::TrueOfDate_BCF
-                    || this->myEncodedReferenceFrame == ReferenceFrame::SAM)
+                    || this->myEncodedReferenceFrame == ReferenceFrame::SAM
+                    || this->myEncodedReferenceFrame == ReferenceFrame::ObjectReferenced)
                 {
                     //put time derivatives into tuples
                     //all state variables except mass in an EphemerisPeggedBoundary event have a derivative with respect to epoch

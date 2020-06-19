@@ -50,7 +50,8 @@ namespace EMTG
             virtual void calcbounds_event_interface_state(const std::vector<double>& RAbounds,
                 const std::vector<double>& DECbounds,
                 std::vector<double>& MassBounds,
-                const std::vector<double>& EpochBounds); //I did not make this abstract because it gets overloaded by two of the three derived classes
+                const std::vector<double>& EpochBounds,
+                std::vector<size_t>& timeVariables); //I did not make this abstract because it gets overloaded by two of the three derived classes
 
             virtual void process_event_interface_state(const std::vector<doubleType>& X,
                 size_t& Xindex,

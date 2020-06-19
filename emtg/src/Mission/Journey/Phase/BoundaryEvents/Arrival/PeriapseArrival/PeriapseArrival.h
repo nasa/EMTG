@@ -51,7 +51,7 @@ namespace EMTG
                 missionoptions* myOptions);
 
             //destructor
-            ~PeriapseArrival() {};
+            virtual ~PeriapseArrival() {};
             
             //output
             virtual void output_maneuver_and_target_spec(std::ofstream& maneuver_spec_file, std::ofstream& target_spec_file, bool& haveManeuverNeedTarget);
@@ -62,7 +62,8 @@ namespace EMTG
             //method to calculate event left side
 
             virtual void calcbounds_event_left_side(const std::vector<double>& RadiusBounds,
-                const std::vector<double>& VelocityMagnitudeBounds);
+                const std::vector<double>& VelocityMagnitudeBounds,
+                std::vector<size_t> timeVariables);
 
             virtual void calcbounds_event_right_side();
 

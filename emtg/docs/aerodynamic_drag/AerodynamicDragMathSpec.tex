@@ -1,0 +1,454 @@
+\documentclass[]{article}
+\usepackage{nomencl}
+\usepackage{hyperref}
+\hypersetup{pdffitwindow=true,
+	pdfpagemode=UseThumbs,
+	breaklinks=true,
+	colorlinks=true,
+	linkcolor=black,
+	citecolor=black,
+	filecolor=black,
+	urlcolor=black}
+
+\usepackage{verbatim}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}%
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{subfigure}
+\usepackage[makeroom]{cancel}
+\usepackage{indentfirst}
+\usepackage{color}
+\usepackage{bm}
+\usepackage{mathtools}
+
+\usepackage{rotating}
+\usepackage{comment}
+\usepackage{here}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{pdfpages}
+\usepackage{float}
+\usepackage[section]{placeins}
+
+\usepackage{array}
+
+% quotes
+\newcommand{\quotes}[1]{``#1''}
+
+% vectors and such
+\newcommand{\vb}[1]{\bm{#1}} % bold
+\newcommand{\vbd}[1]{\dot{\bm{#1}}} % dot
+\newcommand{\vbdd}[1]{\ddot{\bm{#1}}} % double dot
+\newcommand{\vbh}[1]{\hat{\bm{#1}}} % hat
+\newcommand{\vbt}[1]{\tilde{\bm{#1}}} % tilde
+\newcommand{\vbth}[1]{\hat{\tilde{\bm{#1}}}} % tilde hat
+\newcommand{\ddt}[1]{\frac{\mathrm{d} #1}{\mathrm{d} t}} % time derivative
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}} % partial derivative
+\newcommand{\crossmat}[1]{\left\{ {#1} \right\}^{\times}} % crossmat
+
+
+\makenomenclature
+\makeindex
+
+%opening
+\title{Aerodynamic Drag in EMTGv9 Acceleration Model: Mathematical Specification}
+\author{Noble Hatten}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+	This document describes the models used to implement an aerodynamic drag term in the spacecraft acceleration model of EMTGv9. Information on the software implementation are given in a different document.
+
+\end{abstract}
+
+\tableofcontents
+
+\printnomenclature
+
+%%%%%%%%%%%%%
+\section{Introductory Notesl}
+\label{sec:introl}
+%%%%%%%%%%%%%%%%
+
+Unless otherwise stated, ``BCI'' and ``BCF'' refer to the true-of-date, central-body-centered, central-body-inertial (or -fixed) frames.
+
+%%%%%%%%%%%%%
+\section{Acceleration Model}
+\label{sec:acceleration_model}
+%%%%%%%%%%%%%%%%
+
+Spacecraft acceleration due to aerodynamic drag is calculated using the standard assumptions for a 3DOF space object \cite{sme}:
+
+\begin{align}
+	\label{eq:drag_acceleration}
+	\vb{a} &= - \frac{1}{2} \rho \frac{C_d A}{m} v_r \vb{v}_r,
+\end{align}
+
+\noindent where $\vb{a}$ is the acceleration vector due to drag, $\rho$ is the atmospheric density, $C_d$ is the drag coefficient, $m$ is the mass of the spacecraft, $\vb{v}_r$ is the velocity of the spacecraft relative to the atmosphere, and $A$ is the area of the spacecraft ``exposed'' to $\vb{v}_r$. $v_r$ is the norm of $\vb{v}_r$. This formulation is sometimes called the ``cannonball'' model because $A$ and $C_d$ are assumed not to vary with spacecraft attitude, as would be the case if the spacecraft were a sphere (i.e., a cannonball). This assumption simplifies the model because it allows the model to ignore spacecraft attitude altogether.
+
+
+%%%%%%%%%%%%%%%%%%%
+\section{Atmospheric Density Model}
+\label{sec:atmospheric_density_model}
+%%%%%%%%%%%%%%%%%%%
+
+Many models exist for modeling atmospheric density. Currently, EMTGv9 supports an exponential atmosphere model with piecewise-constant scale heights \cite{sme}. In other words, density is a function of altitude only, and varies based on exponential interpolation between fixed density-at-altitude values:
+
+\begin{align}
+	\rho (h) &= \rho \left( h_i \right) \exp \left[ \frac{h_i - h}{H_i} \right], \quad h_i \leq h \leq h_{i+1},
+\end{align}
+
+\noindent where $h$ is altitude, $H$ is a scale height, and $i$ is an index. If the atmospheric model is defined using assumed density-at-altitude values, then the scale heights are calculated by
+
+\begin{align}
+	H_i &= \frac{ h_i - h_{i+1}}{\log \left[ \frac{\rho \left( h_{i+1} \right)}{\rho \left(h_i \right)} \right]}
+\end{align}
+
+\noindent This formulation results in a continuous but not smooth $\rho (h)$ profile. Third-order continuity (i.e., second-order smoothness) is introduced by means of a multiplicative polynomial weighting function used when $h$ is near an $h_i$ \cite{hatten:asr2017, jancaitis:jgr1974}. The weighting function is
+
+\begin{align}
+	w &= \xi^4 \left( -20 \xi^3 + 70 \xi^2 - 84 \xi + 35 \right),
+\end{align}
+
+\noindent where
+
+\begin{align}
+	\xi &= \begin{cases}
+	\frac{h - \left(h_i - \alpha \right)}{2 \alpha}, & h_i \leq h \leq h_i + \alpha \\
+	\frac{h - \left( h_{i + 1} - \alpha \right)}{2 \alpha}, & h_{i+1} - \alpha \leq h \leq h_{i+1}
+	\end{cases}
+\end{align}
+
+\noindent $\alpha$ is a user-set parameter that controls how far away from altitude-layer boundaries the smoothing is performed. In practice, $\alpha = 0.05$ km. CHECK. Then,
+
+\begin{align}
+	H_i' &= \begin{cases}
+	H_{i+1} + w \left( H_i - H_{i-1} \right), & h_i \leq h \leq h_i + \alpha \\
+	H_i + w \left( H_{i+1} - H_i \right), & h_{i+1} - \alpha \leq h \leq h_{i+1} \\
+	H_i, & h_i + \alpha \leq h \leq h_{i+1} - \alpha
+	\end{cases}
+\end{align}
+
+Finally,
+
+\begin{align}
+	\rho (h) &= \begin{cases}
+	\rho \left( h_i \right) \exp \left[ \frac{h_i - h}{H_i'} \right], & h_i \leq h \leq h_{i+1} - \alpha \\
+	\rho \left( h_{i+1} \right) \exp \left[ \frac{h_{i+1} - h}{H_i'} \right], & h_{i+1} - \alpha \leq h \leq h_{i+1}
+	\end{cases}
+\end{align}
+
+%%%%%%%%%%%%%%
+\section{Relative Velocity}
+\label{sec:relative_velocity}
+%%%%%%%%%%%%%%
+
+The relative velocity $\vb{v}_r$ is defined by
+
+\begin{align}
+	\label{eq:relative_velocity}
+	\vb{v}_r &= \vb{v} - \vb{\omega} \times \vb{r} + \vb{v}_w,
+\end{align}
+
+\noindent where $\vb{v}$ is the inertial velocity of the spacecraft relative to the central body (part of the spacecraft's state), $\vb{\omega}$ is the angular velocity vector of the true-of-date, central-body-centered, central-body-fixed (BCF) frame with respect to the ICRF frame, $\vb{r}$ is the position of the spacecraft relative to the central body (part of the spacecraft state), and $\vb{v}_w$ is the velocity vector of the ``wind.'' Currently, it is assumed that $\vb{v}_w = \vb{0}$.
+
+In EMTGv9, the ICRF frame and the true-of-date, central-body-centered, central-body-fixed (BCF) frame are related by a series of rotations, which create intermediate frames: Starting in BCF, a rotation about the $z$ axis by the angle $W$ produces the true-of-date, central-body-centered, central-body-inertial frame (BCI). A second rotation about the new $x$ axis by the angle $\left( \frac{\pi}{2} - \delta \right)$ followed by a third rotation about the new $z$ axis by $\left( \frac{\pi}{2} + \alpha \right)$ produces the ICRF frame. In equation form,
+
+\begin{align}
+	\vb{R}^{BCF \rightarrow BCI} &= \vb{R}_z (W) \\
+	\vb{R}^{BCI \rightarrow ICRF} &= \vb{R}_z \left(\frac{\pi}{2} + \alpha \right) \vb{R}_x \left( \frac{\pi}{2} - \delta \right) \\
+	\label{eq:rotmat_bcf2icrf}
+	\vb{R}^{BCF \rightarrow ICRF} &= \vb{R}_z \left(\frac{\pi}{2} + \alpha \right) \vb{R}_x \left( \frac{\pi}{2} - \delta \right) \vb{R}_z (W),
+\end{align}
+
+\noindent where $W$, $\alpha$, and $\delta$ are known functions of time:
+
+\begin{align}
+	W &= W_0 + \dot{W} \Delta t \\
+	\alpha &= \alpha_0 + \dot{\alpha} \Delta t \\
+	\delta &= \delta_0 + \dot{\delta} \Delta t
+\end{align}
+
+Note that, in EMTG:
+
+\begin{align}
+	\vb{R}_z (\theta) &=
+	\left[ \begin{array}{ccc}
+	\cos \theta & -\sin \theta & 0 \\
+	\sin \theta & \cos \theta & 0 \\
+	0 & 0 & 1
+	\end{array} \right] \\
+	\vb{R}_x (\theta) &=
+	\left[ \begin{array}{ccc}
+	1 & 0 & 0 \\
+	0 & \cos \theta & -\sin \theta \\
+	0 & \sin \theta & \cos \theta
+	\end{array} \right].
+\end{align}
+
+In order to evaluate Eq.~\eqref{eq:relative_velocity}, we need $\vb{r}$, $\vb{v}$, $\vb{\omega}$, and $\vb{v}_w$ to be expressed in the same frame. $\vb{r}$ and $\vb{v}$ are expressed by default in the ICRF frame. $\vb{\omega}$ can be expressed as the sum of the angular velocity vectors of the three rotations in Eq.~\eqref{eq:rotmat_bcf2icrf}.
+
+The angular velocity vectors are
+
+\begin{align}
+	\vb{\omega}_{BCF/BCI} &= \dot{W} \vbh{e}_{z, BCF} = \dot{W} \vbh{e}_{z, BCI} \\
+	\vb{\omega}_{BCI/D} &= \dot{\delta} \vbh{e}_{x, BCI} = \dot{\delta} \vbh{e}_{x, D} \\
+	\vb{\omega}_{D/ICRF} &= \dot{\alpha} \vbh{e}_{z, D} = \dot{\alpha} \vbh{e}_{z, ICRF}.
+\end{align}
+
+\noindent The notation $\vb{\omega}_{X/Y}$ means ``the angular velocity of the $X$ frame with respect to the $Y$ frame.'' The $D$ frame is an arbitrary name given to the frame created by the $\alpha$ rotation from ICRF. The $\vbh{e}$ are unit vectors.
+
+We choose to sum the vectors in the BCI frame. As a result, only $\vb{\omega}_{D/ICRF}$ needs to be transformed to a new frame:
+
+\begin{align}
+	\vb{\omega}_{D/ICRF, BCI} &= \dot{\alpha} \vb{R}^{D \rightarrow BCI} \vbh{e}_{z, D} \\
+	&= \dot{\alpha} \vb{R}_x \left( \delta - \frac{\pi}{2} \right) \vbh{e}_{z, D} \\
+	&=
+	\dot{\alpha} \left[ \begin{array}{ccc}
+	1 & 0 & 0 \\
+	0 & \cos \left( \delta - \frac{\pi}{2} \right) & -\sin \left( \delta - \frac{\pi}{2} \right) \\
+	0 & \sin \left( \delta - \frac{\pi}{2} \right) & \cos \left( \delta - \frac{\pi}{2} \right)
+	\end{array} \right]
+	\left[ \begin{array}{c}
+	0 \\
+	0 \\
+	1 \end{array} \right] \\
+	&=
+	\dot{\alpha} \left[ \begin{array}{c}
+	0 \\
+	-\sin \left( \delta - \frac{\pi}{2} \right) \\
+	\cos \left( \delta - \frac{\pi}{2} \right) \end{array} \right].
+\end{align}
+
+\noindent Note that $\vb{R}_x \left( \delta - \frac{pi}{2} \right)$ is used rather than $\vb{R}_x \left(\frac{\pi}{2} - \delta \right)$ because the transformation is going in the direction of ICRF toward BCF instead of from BCF toward ICRF.
+
+The final addition in BCI then yields
+
+\begin{align}
+	\vb{\omega}_{BCF/ICRF, BCI} &= \left[ \begin{array}{c}
+	\dot{\delta} \\
+	0 \\
+	0 \end{array} \right]
+	+
+	\left[ \begin{array}{c}
+	0 \\
+	0 \\
+	\dot{W} \end{array} \right]
+	+
+	\dot{\alpha} \left[ \begin{array}{c}
+	0 \\
+	-\sin \left( \delta - \frac{\pi}{2} \right) \\
+	\cos \left( \delta - \frac{\pi}{2} \right) \end{array} \right] \\
+	\label{eq:omega}
+	&=
+	\left[ \begin{array}{c}
+	\dot{\delta} \\
+	- \dot{\alpha} \sin \left( \delta - \frac{\pi}{2} \right) \\
+	\dot{\alpha} \cos \left( \delta - \frac{\pi}{2} \right) + \dot{W} \end{array} \right]
+\end{align}
+
+\noindent From here, previously described transformation methods are used to express $\vb{\omega}$ in the ICRF frame in order to perform the operations required to evaluate Eq.~\eqref{eq:relative_velocity}.
+
+
+%%%%%%%%%%%%%%%%%
+\section{Model Jacobian}
+\label{sec:model_jacobian}
+%%%%%%%%%%%%%%%%%
+
+Throughout this section, the chain rule is used to link derivatives. In many instances, the vector variable $\vb{x}$ is used as the final independent variable. The contents of $\vb{x}$ are arbitrary. Where necessary, derivatives with respect to true independent variables (e.g., spacecraft position, velocity, mass, time) are given once for brevity. 
+
+%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Drag Acceleration Jacobian}
+\label{sec:drag_acceleration_jacobian}
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The Jacobian of the drag acceleration is given by differentiating Eq.~\eqref{eq:drag_acceleration}. Under the assumption that $C_d$ and $A$ remain constant over a given interval in which the drag acceleration is active, the derivative is
+
+\begin{align}
+	\pd{\vb{a}}{\vb{x}} &= - \frac{1}{2} C_d A \pd{}{\vb{x}} \left( m^{-1} \rho v_r \vb{v}_r \right) \\
+	\label{eq:drag_jacobian_expanded}
+	&= - \frac{1}{2} C_d A \left[ \pd{m^{-1}}{\vb{x}} \rho v_r \vb{v}_r + m^{-1} \pd{\rho}{\vb{x}} v_r \vb{v}_r + m^{-1} \rho \pd{v_r}{\vb{x}} \vb{v}_r + m^{-1} \rho v_r \pd{\vb{v}_r}{\vb{x}} \right].
+\end{align}
+
+We now give expresssions for the individual derivatives present in Eq.~\eqref{eq:drag_jacobian_expanded}.
+
+\begin{align}
+	\pd{m^{-1}}{\vb{x}} &= -\frac{1}{m^2} \pd{m}{\vb{x}},
+\end{align}
+
+\noindent with
+
+\begin{align}
+	\pd{m}{\vb{r}} &= \vb{0}^T \\
+	\pd{m}{\vb{v}} &= \vb{0}^T \\
+	\pd{m}{m} &= 1 \\
+	\pd{m}{t} &= 0.
+\end{align}
+
+For the derivatives of density, see Section~\ref{sec:atmospheric_density_jacobian}.
+
+\begin{align}
+	\pd{v_r}{\vb{x}} &= \pd{v_r}{\vb{v}_r} \pd{\vb{v}_r}{\vb{x}} \\
+	&= \frac{\vb{v}_r^T}{v_r} \pd{\vb{v}_r}{\vb{x}}
+\end{align}
+
+\noindent. For the derivatives of $\vb{v}_r$, see Section~\ref{sec:relative_velocity_jacobian}.
+
+%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Atmospheric Density Jacobian}
+\label{sec:atmospheric_density_jacobian}
+%%%%%%%%%%%%%%%%%%%%%%%
+
+The only explicit dependency of the exponential density model is altitude. Altitude itself is a function of position and time, and its Jacobian is discussed in Section~\ref{sec:altitude_jacobian}. The derivatives of density with respect to altitude are
+
+\begin{align}
+	\pd{\rho (h)}{h} &= \begin{cases}
+	\frac{- \rho}{H_i'} \left[ 1 + \frac{h_i - h}{H_i'} \pd{H_i'}{h} \right], & h_i \leq h \leq h_i + \alpha \\
+	\frac{- \rho}{H_i'} \left[ 1 + \frac{h_{i+1} - h}{H_i'} \pd{H_i'}{h} \right], &h_{i+1} - \alpha \leq h \leq h_{i+1}
+	\end{cases}
+\end{align}
+
+\noindent where
+
+\begin{align}
+	\pd{H_i'}{h} &= \begin{cases}
+	\left( \frac{H_i - H_{i-1}}{2 \alpha} \right) \frac{\mathrm{d} w}{\mathrm{d \xi}}, & h_i \leq h \leq h_i + \alpha \\
+	\left( \frac{H_{i+1} - H_{i}}{2 \alpha} \right) \frac{\mathrm{d} w}{\mathrm{d \xi}}, & h_{i+1} - \alpha \leq h \leq h_{i+1} \\
+	0, & h_i + \alpha \leq h_{i+1} - \alpha
+	\end{cases}
+\end{align}
+
+The derivatives of density with respect to independent variables are then given by
+
+\begin{align}
+	\pd{\rho}{\vb{x}} &= \pd{\rho}{h} \pd{h}{\vb{x}},
+\end{align}
+
+\noindent where
+
+\begin{align}
+	\pd{h}{\vb{v}} &= \vb{0}^T \\
+	\pd{h}{m} &= 0.
+\end{align}
+
+\noindent The derivatives of altitude with respect to position and time are discussed in Section~\ref{sec:altitude_jacobian}.
+
+%%%%%%%%%%%%%%%%
+\subsubsection{Altitude Jacobian}
+\label{sec:altitude_jacobian}
+%%%%%%%%%%%%%%%%%
+
+As stated in Section~\ref{sec:atmospheric_density_jacobian},
+
+\begin{align}
+	\pd{h}{\vb{v}} &= \vb{0}^T \\
+	\pd{h}{m} &= 0.
+\end{align}
+
+\noindent The derivatives of altitude with respect to position and time are in general non-zero. The precise expressions depend on (1) the equations used to transform from true-of-date, central-body-centered, central-body-fixed (BCF) Cartesian position to bodydetic coordinates (i.e., latitude, longitude, and altitude) and (2) the equations used to model the relationship between the BCF frame and the central-body-centered, ICRF (ICRF) frame.
+
+For (1), the transformation in Section 1 of the document ``Boundary Condition for Entry Interface,'' which itself cites \cite{matlab_geocentric_to_geodetic}, is used to convert from BCF position to latitude, longitude, and altitude (LLA). This transformation is closed-form and assumes that the central body may be adequately modeled as an ellipsoid (i.e., that it may be completely described by its equatorial radius and flattening parameter). The derivatives are also available in closed-form, but I haven't typed them here because they exist as a long string of computations in code and nowhere else. Note that the derivatives are singular above the north or south pole of the central body, where longitude is undefined.
+
+For (2), it is assumed that the transformation between the ICRF frame and the BCF frame is an explicit function of time only, as discussed in Section~\ref{sec:relative_velocity}.
+
+In the end, we obtain
+
+\begin{align}
+	\pd{h}{\vb{x}} &= \pd{h}{\vb{r}_{BCF}} \pd{\vb{r}_{BCF}}{\vb{x}},
+\end{align}
+
+\noindent $\pd{h}{\vb{r}_{BCF}}$ is found by differentiating the transformations from \cite{matlab_geocentric_to_geodetic}. $\pd{\vb{r}_{BCF}}{\vb{x}}$ is found by relating $\vb{r}_{BCF}$ to the position state $\vb{r}$, which is in ICRF:
+
+\begin{align}
+	\vb{r}_{BCF} &= \vb{R}^{ICRF \rightarrow BCF} \vb{r},
+\end{align}
+
+\noindent where $\vb{R}^{ICRF \rightarrow BCF}$ is the transformation matrix from the ICRF frame to the BCF frame, and is dependent on time. So,
+
+\begin{align}
+	\pd{\vb{r}_{BCF}}{\vb{r}} &= \vb{R}^{ICRF \rightarrow BCF} \\
+	\pd{\vb{r}_{BCF}}{t} &= \vbd{R}^{ICRF \rightarrow BCF} \vb{r}.
+\end{align}
+
+\noindent The matrices $\vb{R}^{ICRF \rightarrow BCF}$ and $\vbd{R}^{ICRF \rightarrow BCF}$ are explicit functions of time available in EMTGv9.
+
+%%%%%%%%%%%%%%%%%%%
+\subsection{Relative Velocity Jacobian}
+\label{sec:relative_velocity_jacobian}
+%%%%%%%%%%%%%%%%%%%%
+
+Differentiating Eq.~\eqref{eq:relative_velocity} gives
+
+\begin{align}
+	\label{eq:relative_velocity_derivatives}
+	\pd{\vb{v}_r}{\vb{x}} &= \pd{\vb{v}}{\vb{x}} - \pd{}{\vb{x}} \left( \vb{\omega} \times \vb{r} \right) + \pd{\vb{v}_w}{\vb{x}}.
+\end{align}
+
+The first term of Eq.~\eqref{eq:relative_velocity_derivatives} is trivial:
+
+\begin{align}
+	\pd{\vb{v}}{\vb{r}} &= \vb{0} \\
+	\pd{\vb{v}}{\vb{v}} &= \vb{I} \\
+	\pd{\vb{v}}{m} &= \vb{0} \\
+	\pd{\vb{v}}{t} &= \vb{0}.
+\end{align}
+
+Currently, it is assumed that $\vb{v}_w = \vb{0}$, so its derivatives are also $\vb{0}$.
+
+The derivative of $\vb{\omega} \times \vb{r}$ requires more analysis. Differentiating the cross product gives
+
+\begin{align}
+	\label{eq:omega_cross_r_derivatives}
+	\pd{\left( \vb{\omega} \times \vb{r} \right)}{\vb{x}} &= 
+	\left[ \begin{array}{c}
+	\pd{\vb{\omega}_y}{\vb{x}} \vb{r}_z + \vb{\omega}_y \pd{\vb{r}_z}{\vb{x}} - \pd{\vb{\omega}_z}{\vb{x}} \vb{r}_y - \vb{\omega}_z \pd{\vb{r}_y}{\vb{x}} \\
+	\pd{\vb{\omega}_z}{\vb{x}} \vb{r}_x + \vb{\omega}_z \pd{\vb{r}_x}{\vb{x}} - \pd{\vb{\omega}_x}{\vb{x}} \vb{r}_z - \vb{\omega}_x \pd{\vb{r}_z}{\vb{x}} \\
+	\pd{\vb{\omega}_x}{\vb{x}} \vb{r}_y + \vb{\omega}_x \pd{\vb{r}_y}{\vb{x}} - \pd{\vb{\omega}_y}{\vb{x}} \vb{r}_x - \vb{\omega}_y \pd{\vb{r}_x}{\vb{x}}
+	\end{array} \right]
+\end{align}
+
+\noindent In Eq.~\eqref{eq:omega_cross_r_derivatives}, subscripts $x$, $y$, and $z$ represent components of the vectors. The derivatives of $\vb{r}$ are
+
+\begin{align}
+	\pd{\vb{r}}{\vb{r}} &= \vb{I} \\
+	\pd{\vb{r}}{\vb{v}} &= \vb{0} \\
+	\pd{\vb{r}}{m} &= \vb{0} \\
+	\pd{\vb{r}}{t} &= \vb{0}.
+\end{align}
+
+$\vb{\omega}$ is assumed to be a function of time only, so that
+
+\begin{align}
+	\pd{\vb{\omega}}{\vb{r}} &= \vb{0} \\
+	\pd{\vb{\omega}}{\vb{v}} &= \vb{0} \\
+	\pd{\vb{\omega}}{m} &= \vb{0}.
+\end{align}
+
+\noindent The time derivatives of $\vb{\omega}$ are obtained by differentiating Eq.~\eqref{eq:omega} with respect to time in the BCI frame, yielding
+
+\begin{align}
+	\frac{^{BCI} \mathrm{d} \vb{\omega}}{\mathrm{d} t} &= \left[ \begin{array}{c}
+	0 \\
+	- \dot{\alpha} \dot{\delta} \cos \left( \delta - \frac{\pi}{2} \right) \\
+	- \dot{\alpha} \dot{\delta} \sin \left( \delta -\frac{\pi}{2} \right) \end{array} \right]
+\end{align}
+
+\noindent This time derivative must be transformed to ICRF before inserting into Eq.~\eqref{eq:omega_cross_r_derivatives}, taking into account the time derivatives of the rotation matrix between the BCI frame and the ICRF frame. EMTGv9 routines exist to do this transformation.
+
+
+
+
+
+
+
+
+\bibliography{emtg_drag_bibliography}
+\bibliographystyle{plain}
+
+
+\end{document}

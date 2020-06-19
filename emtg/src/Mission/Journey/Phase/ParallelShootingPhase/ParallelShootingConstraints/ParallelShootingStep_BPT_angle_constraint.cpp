@@ -126,68 +126,41 @@ namespace EMTG
                 //Step 2: sparsity pattern
 
                 //Step 2.1: non-time variables that affect position
-                if (this->isDefinedRelativeToCentralBody //special case code for if the central body is the sun and the parallel shooting state representation is spherical
-                    && (this->myOptions->ParallelShootingStateRepresentation == StateRepresentation::SphericalAZFPA || this->myOptions->ParallelShootingStateRepresentation == StateRepresentation::SphericalRADEC))
+                std::vector<size_t>& ListOfVariablesAffectingCurrentStepLeftPosition = this->myStep->getListOfVariablesAffectingCurrentStepLeftPosition();
+
+                std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByVariable();
+                std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState = this->myStep->get_Derivatives_of_StateStepLeftInertial();//Xindex, stateIndex, derivative value
+
+                for (size_t varIndex = 0; varIndex < ListOfVariablesAffectingCurrentStepLeftPosition.size(); ++varIndex)
                 {
-                    //in this case we don't want to introduce a dependency of the thrust angle itself on radius, only RA and DEC
+                    size_t Xindex = ListOfVariablesAffectingCurrentStepLeftPosition[varIndex];
+                    std::vector<size_t> dIndex_constraint_wrt_StepLeftPositionVariable;
 
-                    //RA
-                    this->create_sparsity_entry(Fdescriptions->size() - 1,
-                        this->myStep->getXindex_RA(),
-                        this->Gindex_BPT_constraintMinimumAngle_wrt_RA);
+                    std::vector< std::tuple<size_t, size_t> > DerivativesOfCurrentStepLeftStateThisVariable = DerivativesOfCurrentStepLeftStateByVariable[varIndex];
 
+                    bool madeEntryFlag = false;
 
-                    this->create_sparsity_entry(Fdescriptions->size() - 1,
-                        this->myStep->getXindex_RA(),
-                        this->Gindex_BPT_constraintMaximumAngle_wrt_RA);
-
-                    //DEC
-                    this->create_sparsity_entry(Fdescriptions->size() - 1,
-                        this->myStep->getXindex_DEC(),
-                        this->Gindex_BPT_constraintMinimumAngle_wrt_DEC);
-                    
-                    this->create_sparsity_entry(Fdescriptions->size() - 1,
-                        this->myStep->getXindex_DEC(),
-                        this->Gindex_BPT_constraintMaximumAngle_wrt_DEC);
-                }
-                else //the generic case
-                {
-                    std::vector<size_t>& ListOfVariablesAffectingCurrentStepLeftPosition = this->myStep->getListOfVariablesAffectingCurrentStepLeftPosition();
-
-                    std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByVariable();
-                    std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState = this->myStep->get_Derivatives_of_StateStepLeftInertial();//Xindex, stateIndex, derivative value
-
-                    for (size_t varIndex = 0; varIndex < ListOfVariablesAffectingCurrentStepLeftPosition.size(); ++varIndex)
+                    for (std::tuple<size_t, size_t> thisDerivativeEntry : DerivativesOfCurrentStepLeftStateThisVariable)
                     {
-                        size_t Xindex = ListOfVariablesAffectingCurrentStepLeftPosition[varIndex];
-                        std::vector<size_t> dIndex_constraint_wrt_StepLeftPositionVariable;
+                        size_t stateIndex = std::get<0>(thisDerivativeEntry);
 
-                        std::vector< std::tuple<size_t, size_t> > DerivativesOfCurrentStepLeftStateThisVariable = DerivativesOfCurrentStepLeftStateByVariable[varIndex];
-
-                        bool madeEntryFlag = false;
-
-                        for (std::tuple<size_t, size_t> thisDerivativeEntry : DerivativesOfCurrentStepLeftStateThisVariable)
+                        if (stateIndex < 3)
                         {
-                            size_t stateIndex = std::get<0>(thisDerivativeEntry);
+                            size_t dIndex = std::get<1>(thisDerivativeEntry);
+                            dIndex_constraint_wrt_StepLeftPositionVariable.push_back(dIndex);
 
-                            if (stateIndex < 3)
+                            if (!madeEntryFlag)
                             {
-                                size_t dIndex = std::get<1>(thisDerivativeEntry);
-                                dIndex_constraint_wrt_StepLeftPositionVariable.push_back(dIndex);
+                                this->create_sparsity_entry(Fdescriptions->size() - 1,
+                                    Xindex,
+                                    this->Gindices_BPT_constraintMinimumAngle_wrt_StepLeftPosition);
 
-                                if (!madeEntryFlag)
-                                {
-                                    this->create_sparsity_entry(Fdescriptions->size() - 1,
-                                        Xindex,
-                                        this->Gindices_BPT_constraintMinimumAngle_wrt_StepLeftPosition);
-
-                                    madeEntryFlag = true;
-                                }
+                                madeEntryFlag = true;
                             }
                         }
-
-                        this->dIndex_MinimumAngle_constraint_wrt_StepLeftPosition.push_back(dIndex_constraint_wrt_StepLeftPositionVariable);
                     }
+
+                    this->dIndex_MinimumAngle_constraint_wrt_StepLeftPosition.push_back(dIndex_constraint_wrt_StepLeftPositionVariable);
                 }
 
                 //Step 2.2: time variables
@@ -223,59 +196,41 @@ namespace EMTG
                 //Step 2: sparsity pattern
 
                 //Step 2.1: non-time variables that affect state
-                if (this->isDefinedRelativeToCentralBody //special case code for if the central body is the sun and the parallel shooting state representation is spherical
-                    && (this->myOptions->ParallelShootingStateRepresentation == StateRepresentation::SphericalAZFPA || this->myOptions->ParallelShootingStateRepresentation == StateRepresentation::SphericalRADEC))
+                std::vector<size_t>& ListOfVariablesAffectingCurrentStepLeftPosition = this->myStep->getListOfVariablesAffectingCurrentStepLeftPosition();
+
+                std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByVariable();
+                std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState = this->myStep->get_Derivatives_of_StateStepLeftInertial();//Xindex, stateIndex, derivative value
+
+                for (size_t varIndex = 0; varIndex < ListOfVariablesAffectingCurrentStepLeftPosition.size(); ++varIndex)
                 {
-                    //in this case we don't want to introduce a dependency of the thrust angle itself on radius, only RA and DEC
+                    size_t Xindex = ListOfVariablesAffectingCurrentStepLeftPosition[varIndex];
+                    std::vector<size_t> dIndex_constraint_wrt_StepLeftPositionVariable;
 
-                    //RA
-                    this->create_sparsity_entry(Fdescriptions->size() - 1,
-                        this->myStep->getXindex_RA(),
-                        this->Gindex_BPT_constraintMinimumAngle_wrt_RA);
+                    std::vector< std::tuple<size_t, size_t> > DerivativesOfCurrentStepLeftStateThisVariable = DerivativesOfCurrentStepLeftStateByVariable[varIndex];
 
-                    //DEC
-                    this->create_sparsity_entry(Fdescriptions->size() - 1,
-                        this->myStep->getXindex_DEC(),
-                        this->Gindex_BPT_constraintMinimumAngle_wrt_DEC);
-                }
-                else //the generic case
-                {
-                    std::vector<size_t>& ListOfVariablesAffectingCurrentStepLeftPosition = this->myStep->getListOfVariablesAffectingCurrentStepLeftPosition();
+                    bool madeEntryFlag = false;
 
-                    std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByVariable();
-                    std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState = this->myStep->get_Derivatives_of_StateStepLeftInertial();//Xindex, stateIndex, derivative value
-
-                    for (size_t varIndex = 0; varIndex < ListOfVariablesAffectingCurrentStepLeftPosition.size(); ++varIndex)
+                    for (std::tuple<size_t, size_t> thisDerivativeEntry : DerivativesOfCurrentStepLeftStateThisVariable)
                     {
-                        size_t Xindex = ListOfVariablesAffectingCurrentStepLeftPosition[varIndex];
-                        std::vector<size_t> dIndex_constraint_wrt_StepLeftPositionVariable;
+                        size_t stateIndex = std::get<0>(thisDerivativeEntry);
 
-                        std::vector< std::tuple<size_t, size_t> > DerivativesOfCurrentStepLeftStateThisVariable = DerivativesOfCurrentStepLeftStateByVariable[varIndex];
-
-                        bool madeEntryFlag = false;
-
-                        for (std::tuple<size_t, size_t> thisDerivativeEntry : DerivativesOfCurrentStepLeftStateThisVariable)
+                        if (stateIndex < 3)
                         {
-                            size_t stateIndex = std::get<0>(thisDerivativeEntry);
+                            size_t dIndex = std::get<1>(thisDerivativeEntry);
+                            dIndex_constraint_wrt_StepLeftPositionVariable.push_back(dIndex);
 
-                            if (stateIndex < 3)
+                            if (!madeEntryFlag)
                             {
-                                size_t dIndex = std::get<1>(thisDerivativeEntry);
-                                dIndex_constraint_wrt_StepLeftPositionVariable.push_back(dIndex);
+                                this->create_sparsity_entry(Fdescriptions->size() - 1,
+                                    Xindex,
+                                    this->Gindices_BPT_constraintMaximumAngle_wrt_StepLeftPosition);
 
-                                if (!madeEntryFlag)
-                                {
-                                    this->create_sparsity_entry(Fdescriptions->size() - 1,
-                                        Xindex,
-                                        this->Gindices_BPT_constraintMaximumAngle_wrt_StepLeftPosition);
-
-                                    madeEntryFlag = true;
-                                }
+                                madeEntryFlag = true;
                             }
                         }
-
-                        this->dIndex_MaximumAngle_constraint_wrt_StepLeftPosition.push_back(dIndex_constraint_wrt_StepLeftPositionVariable);
                     }
+
+                    this->dIndex_MaximumAngle_constraint_wrt_StepLeftPosition.push_back(dIndex_constraint_wrt_StepLeftPositionVariable);
                 }
 
                 //Step 2.2: time variables
@@ -318,50 +273,30 @@ namespace EMTG
             //Step 1.2: get the position vector of the spacecraft relative to the body
             math::Matrix<doubleType>& SpacecraftState = this->myStep->get_StateStepLeftInertial();
             doubleType DistanceToReferenceBody;
-
-            if (this->isDefinedRelativeToCentralBody //special case code for if the central body is the sun and the parallel shooting state representation is spherical
-                && (this->myOptions->ParallelShootingStateRepresentation == StateRepresentation::SphericalAZFPA || this->myOptions->ParallelShootingStateRepresentation == StateRepresentation::SphericalRADEC))
+                        
+            doubleType body_state[12];
+            this->myBody->locate_body(
+                SpacecraftState(7),
+                body_state,
+                (needG),
+                *this->myOptions);
+            for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
             {
-                //in this case we don't want to introduce a dependency of the thrust angle itself on radius, only RA and DEC
-                DistanceToReferenceBody = X[this->myStep->getXindex_rMag()];
-                doubleType RA = X[this->myStep->getXindex_RA()];
-                doubleType DEC = X[this->myStep->getXindex_DEC()];
-                doubleType cosRA = cos(RA);
-                doubleType sinRA = sin(RA);
-                doubleType cosDEC = cos(DEC);
-                doubleType sinDEC = sin(DEC);
-
-                this->spacecraft_to_reference(0) = -cosRA * cosDEC;
-                this->spacecraft_to_reference(1) = -sinRA * cosDEC;
-                this->spacecraft_to_reference(2) = -sinDEC;
-
-                //Step 1.3: evaluate the angle between the vector to the reference and the control vector
-                this->cosAngleThrustVectorToSun = this->spacecraft_to_reference.dot(ControlVector) / ControlVector.norm();
+                this->spacecraft_to_reference(stateIndex) = -(SpacecraftState(stateIndex) - body_state[stateIndex]);
+                this->dspacecraft_to_reference_depoch(stateIndex) = -body_state[6 + stateIndex] _GETVALUE;
             }
-            else
-            {
-                doubleType body_state[12];
-                this->myBody->locate_body(
-                    SpacecraftState(7),
-                    body_state,
-                    (needG),
-                    *this->myOptions);
-                for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
-                {
-                    this->spacecraft_to_reference(stateIndex) = -(SpacecraftState(stateIndex) - body_state[stateIndex]);
-                    this->dspacecraft_to_reference_depoch = (stateIndex) = -body_state[6 + stateIndex] _GETVALUE;
-                }
 
-                DistanceToReferenceBody = this->spacecraft_to_reference.norm() / this->myUniverse->LU;
+            DistanceToReferenceBody = this->spacecraft_to_reference.norm();
+            doubleType r_AU = DistanceToReferenceBody / this->myUniverse->LU;
 
-                //Step 1.3: evaluate the angle between the vector to the reference and the control vector
-                this->cosAngleThrustVectorToSun = this->spacecraft_to_reference.dot(ControlVector) / this->spacecraft_to_reference.norm() / ControlVector.norm();
-            }
+            //Step 1.3: evaluate the angle between the vector to the reference and the control vector
+            this->cosAngleThrustVectorToSun = this->spacecraft_to_reference.dot(ControlVector) / this->spacecraft_to_reference.norm() / ControlVector.norm();
 
 
             //Step 1.4: minimum angle constraint
             // -inf <= cos(theta) - cos(min_angle) <= 0.0
             doubleType MinBoundary, MaxBoundary;
+
             if (this->ConstantMinimumAngle)
             {
                 MinBoundary = this->MinimumAngle_a;
@@ -369,7 +304,7 @@ namespace EMTG
             else
             {
                 MinBoundary = this->MinimumAngle_d + (this->MinimumAngle_a - this->MinimumAngle_d)
-                    / (1.0 + pow(DistanceToReferenceBody / this->MinimumAngle_c, this->MinimumAngle_b));
+                    / (1.0 + pow(r_AU / this->MinimumAngle_c, this->MinimumAngle_b));
             }
 
             F[Findex++] = this->cosAngleThrustVectorToSun - MinBoundary;
@@ -383,7 +318,7 @@ namespace EMTG
             else
             {
                 MaxBoundary = this->MaximumAngle_d + (this->MaximumAngle_a - this->MaximumAngle_d)
-                    / (1.0 + pow(DistanceToReferenceBody / this->MaximumAngle_c, this->MaximumAngle_b));
+                    / (1.0 + pow(r_AU / this->MaximumAngle_c, this->MaximumAngle_b));
             }
             F[Findex++] = this->cosAngleThrustVectorToSun - MaxBoundary;
             
@@ -401,7 +336,6 @@ namespace EMTG
 
                 double r = this->spacecraft_to_reference.norm() _GETVALUE;
                 double u = ControlVector.norm() _GETVALUE;
-                double r_AU = r / this->myUniverse->LU;
 
                 double dr_drx = rx / r;
                 double dr_dry = ry / r;
@@ -414,137 +348,86 @@ namespace EMTG
                 //first let's do the derivative of the actual thrust angle component, which is the same for both constraints
                 double dFdU[3];
 
-                if (this->isDefinedRelativeToCentralBody //special case code for if the central body is the sun and the parallel shooting state representation is spherical
-                    && (this->myOptions->ParallelShootingStateRepresentation == StateRepresentation::SphericalAZFPA || this->myOptions->ParallelShootingStateRepresentation == StateRepresentation::SphericalRADEC))
+                
+                double dFdR[6];
+
+                dFdR[0] = ux / (r*u) - (rx*ux + ry * uy + rz * uz)*dr_drx / (r * r * u);
+                dFdR[1] = uy / (r*u) - (rx*ux + ry * uy + rz * uz)*dr_dry / (r * r * u);
+                dFdR[2] = uz / (r*u) - (rx*ux + ry * uy + rz * uz)*dr_drz / (r * r * u);
+                dFdR[3] = 0.0;
+                dFdR[4] = 0.0;
+                dFdR[5] = 0.0;
+
+                dFdU[0] = rx / (r*u) - (rx*ux + ry * uy + rz * uz)*du_dux / (r * u * u);
+                dFdU[1] = ry / (r*u) - (rx*ux + ry * uy + rz * uz)*du_duy / (r * u * u);
+                dFdU[2] = rz / (r*u) - (rx*ux + ry * uy + rz * uz)*du_duz / (r * u * u);
+
+                //Step 2.1: non-time variables affecting spacecraft state
+                std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState = this->myStep->get_Derivatives_of_StateStepLeftInertial();//Xindex, stateIndex, derivative value
+
+                for (size_t varIndex = 0; varIndex < this->dIndex_MinimumAngle_constraint_wrt_StepLeftPosition.size(); ++varIndex)
                 {
-                    //in this case we don't want to introduce a dependency of the thrust angle itself on radius, only RA and DEC
-                    double RA = X[this->myStep->getXindex_RA()] _GETVALUE;
-                    double DEC = X[this->myStep->getXindex_DEC()] _GETVALUE;
-                    double cosRA = cos(RA);
-                    double sinRA = sin(RA);
-                    double cosDEC = cos(DEC);
-                    double sinDEC = sin(DEC);
+                    dConstraintPointState_dDecisionVariable.assign_zeros();
 
-                    double dFdRA =  (ux * sinRA * cosDEC - uy * cosDEC * cosRA) / u;
-                    double dFdDEC = (ux * sinDEC * cosRA + uy * sinDEC * sinRA - uz * cosDEC) / u;
-
-                    dFdU[0] = (ux * cosDEC * cosRA + uy * sinRA * cosDEC + uz * sinDEC) * du_dux / (u * u) - cosDEC * cosRA / u;
-                    dFdU[1] = (ux * cosDEC * cosRA + uy * sinRA * cosDEC + uz * sinDEC) * du_duy / (u * u) - sinRA * cosDEC / u;
-                    dFdU[2] = (ux * cosDEC * cosRA + uy * sinRA * cosDEC + uz * sinDEC) * du_duz / (u * u) - sinDEC / u;
-
-                    //Step 2.1: non-time variables affecting spacecraft state
+                    for (size_t dIndex : this->dIndex_MinimumAngle_constraint_wrt_StepLeftPosition[varIndex])
                     {
-                        size_t Gindex = this->Gindex_BPT_constraintMinimumAngle_wrt_RA;
-                        size_t Xindex = this->jGvar->operator[](Gindex);
+                        size_t stateIndex = std::get<1>(Derivatives_of_StepLeftState[dIndex]);
 
-                        G[Gindex] = this->X_scale_factors->operator[](Xindex) * dFdRA;
+                        dConstraintPointState_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StepLeftState[dIndex]);
                     }
 
-                    {
-                        size_t Gindex = this->Gindex_BPT_constraintMinimumAngle_wrt_DEC;
-                        size_t Xindex = this->jGvar->operator[](Gindex);
+                    //minimum angle constraint
+                    size_t Gindex = this->Gindices_BPT_constraintMinimumAngle_wrt_StepLeftPosition[varIndex];
+                    size_t Xindex = this->jGvar->operator[](Gindex);
 
-                        G[Gindex] = this->X_scale_factors->operator[](Xindex) * dFdDEC;
-                    }
+                    G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                        *   -(dFdR[0] * dConstraintPointState_dDecisionVariable(0)
+                            + dFdR[1] * dConstraintPointState_dDecisionVariable(1)
+                            + dFdR[2] * dConstraintPointState_dDecisionVariable(2));
 
-                    {
-                        size_t Gindex = this->Gindex_BPT_constraintMaximumAngle_wrt_RA;
-                        size_t Xindex = this->jGvar->operator[](Gindex);
+                    //maximum angle constraint
+                    Gindex = this->Gindices_BPT_constraintMaximumAngle_wrt_StepLeftPosition[varIndex];
+                    Xindex = this->jGvar->operator[](Gindex);
 
-                        G[Gindex] = this->X_scale_factors->operator[](Xindex) * dFdRA;
-                    }
+                    G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                        *   -(dFdR[0] * dConstraintPointState_dDecisionVariable(0)
+                            + dFdR[1] * dConstraintPointState_dDecisionVariable(1)
+                            + dFdR[2] * dConstraintPointState_dDecisionVariable(2));
+                }//end non-time derivatives
 
-                    {
-                        size_t Gindex = this->Gindex_BPT_constraintMaximumAngle_wrt_DEC;
-                        size_t Xindex = this->jGvar->operator[](Gindex);
+                //Step 2.2: time variables affecting spacecraft state
+                std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByTimeVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByTimeVariable();
+                std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState_wrt_Time = this->myStep->get_Derivatives_of_StateStepLeftInertial_wrt_Time();//Xindex, stateIndex, derivative value
 
-                        G[Gindex] = this->X_scale_factors->operator[](Xindex) * dFdDEC;
-                    }
-
-                    //Step 2.2: blank, because in this scenario time variables do not affect spacecraft state
-                }
-                else //generic case
+                for (size_t varIndex = 0; varIndex < DerivativesOfCurrentStepLeftStateByTimeVariable.size(); ++varIndex)
                 {
-                    double dFdR[6];
+                    dConstraintPointState_dDecisionVariable.assign_zeros();
 
-                    dFdR[0] = ux / (r*u) - (rx*ux + ry * uy + rz * uz)*dr_drx / (r * r * u);
-                    dFdR[1] = uy / (r*u) - (rx*ux + ry * uy + rz * uz)*dr_dry / (r * r * u);
-                    dFdR[2] = uz / (r*u) - (rx*ux + ry * uy + rz * uz)*dr_drz / (r * r * u);
-                    dFdR[3] = 0.0;
-                    dFdR[4] = 0.0;
-                    dFdR[5] = 0.0;
-
-                    dFdU[0] = rx / (r*u) - (rx*ux + ry * uy + rz * uz)*du_dux / (r * u * u);
-                    dFdU[1] = ry / (r*u) - (rx*ux + ry * uy + rz * uz)*du_duy / (r * u * u);
-                    dFdU[2] = rz / (r*u) - (rx*ux + ry * uy + rz * uz)*du_duz / (r * u * u);
-
-                    //Step 2.1: non-time variables affecting spacecraft state
-                    std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState = this->myStep->get_Derivatives_of_StateStepLeftInertial();//Xindex, stateIndex, derivative value
-
-                    for (size_t varIndex = 0; varIndex < this->dIndex_MinimumAngle_constraint_wrt_StepLeftPosition.size(); ++varIndex)
+                    for (size_t entryIndex = 0; entryIndex < DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex].size(); ++entryIndex)
                     {
-                        dConstraintPointState_dDecisionVariable.assign_zeros();
+                        size_t stateIndex = std::get<0>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
+                        size_t dIndex = std::get<1>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
 
-                        for (size_t dIndex : this->dIndex_MinimumAngle_constraint_wrt_StepLeftPosition[varIndex])
-                        {
-                            size_t stateIndex = std::get<1>(Derivatives_of_StepLeftState[dIndex]);
+                        dConstraintPointState_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StepLeftState_wrt_Time[dIndex]);
+                    }
 
-                            dConstraintPointState_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StepLeftState[dIndex]);
-                        }
+                    size_t Gindex = this->Gindices_BPT_constraintMinimumAngle_wrt_StepLeftTime[varIndex];
+                    size_t Xindex = this->jGvar->operator[](Gindex);
 
-                        //minimum angle constraint
-                        size_t Gindex = this->Gindices_BPT_constraintMinimumAngle_wrt_StepLeftPosition[varIndex];
-                        size_t Xindex = this->jGvar->operator[](Gindex);
+                    G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                        * -(dFdR[0] * dConstraintPointState_dDecisionVariable(0) - this->dspacecraft_to_reference_depoch(0)
+                            + dFdR[1] * dConstraintPointState_dDecisionVariable(1) - this->dspacecraft_to_reference_depoch(1)
+                            + dFdR[2] * dConstraintPointState_dDecisionVariable(2) - this->dspacecraft_to_reference_depoch(2));
 
-                        G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                            *   -(dFdR[0] * dConstraintPointState_dDecisionVariable(0)
-                                + dFdR[1] * dConstraintPointState_dDecisionVariable(1)
-                                + dFdR[2] * dConstraintPointState_dDecisionVariable(2));
+                    //maximum angle constraint
+                    Gindex = this->Gindices_BPT_constraintMaximumAngle_wrt_StepLeftTime[varIndex];
+                    Xindex = this->jGvar->operator[](Gindex);
 
-                        //maximum angle constraint
-                        Gindex = this->Gindices_BPT_constraintMaximumAngle_wrt_StepLeftPosition[varIndex];
-                        Xindex = this->jGvar->operator[](Gindex);
-
-                        G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                            *   -(dFdR[0] * dConstraintPointState_dDecisionVariable(0)
-                                + dFdR[1] * dConstraintPointState_dDecisionVariable(1)
-                                + dFdR[2] * dConstraintPointState_dDecisionVariable(2));
-                    }//end non-time derivatives
-
-                    //Step 2.2: time variables affecting spacecraft state
-                    std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByTimeVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByTimeVariable();
-                    std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState_wrt_Time = this->myStep->get_Derivatives_of_StateStepLeftInertial_wrt_Time();//Xindex, stateIndex, derivative value
-
-                    for (size_t varIndex = 0; varIndex < DerivativesOfCurrentStepLeftStateByTimeVariable.size(); ++varIndex)
-                    {
-                        dConstraintPointState_dDecisionVariable.assign_zeros();
-
-                        for (size_t entryIndex = 0; entryIndex < DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex].size(); ++entryIndex)
-                        {
-                            size_t stateIndex = std::get<0>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
-                            size_t dIndex = std::get<1>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
-
-                            dConstraintPointState_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StepLeftState_wrt_Time[dIndex]);
-                        }
-
-                        size_t Gindex = this->Gindices_BPT_constraintMinimumAngle_wrt_StepLeftTime[varIndex];
-                        size_t Xindex = this->jGvar->operator[](Gindex);
-
-                        G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                            * -(dFdR[0] * dConstraintPointState_dDecisionVariable(0) - this->dspacecraft_to_reference_depoch(0)
-                                + dFdR[1] * dConstraintPointState_dDecisionVariable(1) - this->dspacecraft_to_reference_depoch(1)
-                                + dFdR[2] * dConstraintPointState_dDecisionVariable(2) - this->dspacecraft_to_reference_depoch(2));
-
-                        //maximum angle constraint
-                        Gindex = this->Gindices_BPT_constraintMaximumAngle_wrt_StepLeftTime[varIndex];
-                        Xindex = this->jGvar->operator[](Gindex);
-
-                        G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                            * -(dFdR[0] * dConstraintPointState_dDecisionVariable(0) - this->dspacecraft_to_reference_depoch(0)
-                                + dFdR[1] * dConstraintPointState_dDecisionVariable(1) - this->dspacecraft_to_reference_depoch(1)
-                                + dFdR[2] * dConstraintPointState_dDecisionVariable(2) - this->dspacecraft_to_reference_depoch(2));
-                    }//end time derivatives
-                }//end generic case where sun is not central body and/or state representation is not spherical
+                    G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                        * -(dFdR[0] * dConstraintPointState_dDecisionVariable(0) - this->dspacecraft_to_reference_depoch(0)
+                            + dFdR[1] * dConstraintPointState_dDecisionVariable(1) - this->dspacecraft_to_reference_depoch(1)
+                            + dFdR[2] * dConstraintPointState_dDecisionVariable(2) - this->dspacecraft_to_reference_depoch(2));
+                }//end time derivatives
 
                 //Step 2.3: control
                 for (size_t controlIndex = 0; controlIndex < 3; ++controlIndex)
@@ -571,7 +454,7 @@ namespace EMTG
                     double b = this->MinimumAngle_b;
                     double c = this->MinimumAngle_c;
                     double d = this->MinimumAngle_d;
-                    double dMinBoundary_dr = b * pow(r_AU / c, b) * (a - d) / r_AU
+                    doubleType dMinBoundary_dr = b * pow(r_AU / c, b) * (a - d) / r_AU
                         / (pow(r_AU / c, b) + 1.0) / (pow(r_AU / c, b) + 1.0) / this->myUniverse->LU;
 
                     //Step 3.1: position
@@ -591,7 +474,7 @@ namespace EMTG
                         size_t Gindex = this->Gindices_BPT_constraintMinimumAngle_wrt_StepLeftPosition[varIndex];
                         size_t Xindex = this->jGvar->operator[](Gindex);
 
-                        G[Gindex] += this->X_scale_factors->operator[](Xindex) * -dMinBoundary_dr
+                        G[Gindex] += this->X_scale_factors->operator[](Xindex) * -dMinBoundary_dr _GETVALUE
                             * (rx / r * dConstraintPointState_dDecisionVariable(0)
                                 + ry / r * dConstraintPointState_dDecisionVariable(1)
                                 + rz / r * dConstraintPointState_dDecisionVariable(2));
@@ -616,7 +499,7 @@ namespace EMTG
                         size_t Gindex = this->Gindices_BPT_constraintMinimumAngle_wrt_StepLeftTime[varIndex];
                         size_t Xindex = this->jGvar->operator[](Gindex);
 
-                        G[Gindex] += this->X_scale_factors->operator[](Xindex) * -dMinBoundary_dr
+                        G[Gindex] += this->X_scale_factors->operator[](Xindex) * -dMinBoundary_dr _GETVALUE
                             * (rx / r * this->dspacecraft_to_reference_depoch(0)
                                 + ry / r * this->dspacecraft_to_reference_depoch(1)
                                 + rz / r * this->dspacecraft_to_reference_depoch(2));
@@ -630,7 +513,7 @@ namespace EMTG
                     double b = this->MaximumAngle_b;
                     double c = this->MaximumAngle_c;
                     double d = this->MaximumAngle_d;
-                    double dMinBoundary_dr = b * pow(r_AU / c, b) * (a - d) / r_AU
+                    doubleType dMaxBoundary_dr = b * pow(r_AU / c, b) * (a - d) / r_AU
                         / (pow(r_AU / c, b) + 1.0) / (pow(r_AU / c, b) + 1.0) / this->myUniverse->LU;
 
                     //Step 3.1: position
@@ -650,7 +533,7 @@ namespace EMTG
                         size_t Gindex = this->Gindices_BPT_constraintMaximumAngle_wrt_StepLeftPosition[varIndex];
                         size_t Xindex = this->jGvar->operator[](Gindex);
 
-                        G[Gindex] += this->X_scale_factors->operator[](Xindex) * -dMinBoundary_dr
+                        G[Gindex] += this->X_scale_factors->operator[](Xindex) * -dMaxBoundary_dr _GETVALUE
                             * (rx / r * dConstraintPointState_dDecisionVariable(0)
                                 + ry / r * dConstraintPointState_dDecisionVariable(1)
                                 + rz / r * dConstraintPointState_dDecisionVariable(2));
@@ -675,7 +558,7 @@ namespace EMTG
                         size_t Gindex = this->Gindices_BPT_constraintMaximumAngle_wrt_StepLeftTime[varIndex];
                         size_t Xindex = this->jGvar->operator[](Gindex);
 
-                        G[Gindex] += this->X_scale_factors->operator[](Xindex) * -dMinBoundary_dr
+                        G[Gindex] += this->X_scale_factors->operator[](Xindex) * -dMaxBoundary_dr _GETVALUE
                             * (rx / r * this->dspacecraft_to_reference_depoch(0)
                                 + ry / r * this->dspacecraft_to_reference_depoch(1)
                                 + rz / r * this->dspacecraft_to_reference_depoch(2));

@@ -48,7 +48,7 @@ namespace EMTG
                 missionoptions* myOptions,
                 const std::string& ConstraintDefinition);
 
-            ~MGAnDSMs_maneuver_epoch_constraint() {};
+            virtual ~MGAnDSMs_maneuver_epoch_constraint() {};
 
             std::vector<size_t> Gindex_wrt_BurnIndices;
             std::vector<size_t> Gindex_wrt_TimeVariables;

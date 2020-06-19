@@ -1,8 +1,8 @@
 //test driver for new missionoptions
 //Jacob Englander 1/9/2019
 
-#include "c:/emtg/OptionsOverhaul/missionoptions.h"
-#include "c:/emtg/OptionsOverhaul/journeyoptions.h"
+#include "missionoptions.h"
+#include "journeyoptions.h"
 
 #include <iostream>
 

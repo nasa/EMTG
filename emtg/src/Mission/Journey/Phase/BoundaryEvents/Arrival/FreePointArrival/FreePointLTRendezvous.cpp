@@ -44,9 +44,9 @@ namespace EMTG
         //******************************************calcbounds methods
 
         //calcbounds
-        void FreePointLTRendezvous::calcbounds()
+        void FreePointLTRendezvous::calcbounds(std::vector<size_t> timeVariables)
         {
-            this->calcbounds_event_left_side();
+            this->calcbounds_event_left_side(timeVariables);
 
             //no calcbounds_event_main because LT_rendezvous is trivial
 

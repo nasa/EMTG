@@ -62,7 +62,8 @@ namespace EMTG
             const std::vector<double>& RAbounds,
             const std::vector<double>& DECbounds,
             std::vector<double>& MassBounds,
-            const std::vector<double>& EpochBounds)
+            const std::vector<double>& EpochBounds,
+            std::vector<size_t> timeVariables)
         {
             //Step 1: calcbounds for the v-infinity, also in polar coordinates
             this->Xlowerbounds->push_back(vinf_max[0]);
@@ -96,14 +97,14 @@ namespace EMTG
             this->X_scale_factors->push_back(1.0);
 
             //Step 2: call the base class
-            this->EphemerisReferencedArrivalExterior::calcbounds_event_interface_state(RAbounds, DECbounds, MassBounds, EpochBounds);
+            this->EphemerisReferencedArrivalExterior::calcbounds_event_interface_state(RAbounds, DECbounds, MassBounds, EpochBounds, timeVariables);
         }//end calcbounds_event_interface_state()
 
 
-        void EphemerisReferencedArrivalWithVinfinityExterior::calcbounds_event_left_side()
+        void EphemerisReferencedArrivalWithVinfinityExterior::calcbounds_event_left_side(std::vector<size_t> timeVariables)
         {
             //base class
-            this->EphemerisReferencedArrivalExterior::calcbounds_event_left_side();
+            this->EphemerisReferencedArrivalExterior::calcbounds_event_left_side(timeVariables);
 
             //no specialized variables
         }//end calcbounds_event_left_side()

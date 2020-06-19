@@ -52,13 +52,13 @@ namespace EMTG
                 missionoptions* myOptions);
 
             //destructor
-            ~MGAnDSMs_phase();
+            virtual ~MGAnDSMs_phase();
 
             //clone
             virtual MGAnDSMs_phase* clone() const { return new MGAnDSMs_phase(*this); }
             
             //output
-            void output(std::ofstream& outputfile,
+            virtual void output(std::ofstream& outputfile,
                 size_t& eventcount);
 
             virtual void output_STMs();
@@ -66,7 +66,7 @@ namespace EMTG
             virtual void output_maneuver_and_target_spec(std::ofstream& maneuver_spec_file, std::ofstream& target_spec_file, bool& haveManeuverNeedTarget);
 
             //calcbounds
-            void setup_calcbounds(std::vector<double>* Xupperbounds,
+            virtual void setup_calcbounds(std::vector<double>* Xupperbounds,
                 std::vector<double>* Xlowerbounds,
                 std::vector<double>* X_scale_factors,
                 std::vector<double>* Fupperbounds,
@@ -82,12 +82,12 @@ namespace EMTG
                 std::vector<std::string>* Adescriptions,
                 std::vector<double>* A);
 
-            void calcbounds();
+            virtual void calcbounds();
 
-            void output_ephemeris(std::ofstream& outputfile, std::ofstream& acceleration_model_file);
+            virtual void output_ephemeris(std::ofstream& outputfile, std::ofstream& acceleration_model_file);
 
             //process goes in the specialized phase
-            void process_phase(const std::vector<doubleType>& X,
+            virtual void process_phase(const std::vector<doubleType>& X,
                 size_t& Xindex,
                 std::vector<doubleType>& F,
                 size_t& Findex,
@@ -96,11 +96,11 @@ namespace EMTG
 
         protected:
             //calcbounds
-            void calcbounds_phase_main();
+            virtual void calcbounds_phase_main();
 
-            void calcbounds_subphases();
+            virtual void calcbounds_subphases();
 
-            void calcbounds_match_point_constraints();
+            virtual void calcbounds_match_point_constraints();
 
             void calcbounds_burnindex_sum_constraint();
 
@@ -109,28 +109,28 @@ namespace EMTG
             void calcbounds_deltav_contribution();
 
             //process
-            void process_phase_main(const std::vector<doubleType>& X,
+            virtual void process_phase_main(const std::vector<doubleType>& X,
                 size_t& Xindex,
                 std::vector<doubleType>& F,
                 size_t& Findex,
                 std::vector<double>& G,
                 const bool& needG);
 
-            void process_forward_half_phase(const std::vector<doubleType>& X,
+            virtual void process_forward_half_phase(const std::vector<doubleType>& X,
                 size_t& Xindex,
                 std::vector<doubleType>& F,
                 size_t& Findex,
                 std::vector<double>& G,
                 const bool& needG);
 
-            void process_backward_half_phase(const std::vector<doubleType>& X,
+            virtual void process_backward_half_phase(const std::vector<doubleType>& X,
                 size_t& Xindex,
                 std::vector<doubleType>& F,
                 size_t& Findex,
                 std::vector<double>& G,
                 const bool& needG);
 
-            void process_match_point_constraints(const std::vector<doubleType>& X,
+            virtual void process_match_point_constraints(const std::vector<doubleType>& X,
                 size_t& Xindex,
                 std::vector<doubleType>& F,
                 size_t& Findex,
@@ -157,6 +157,9 @@ namespace EMTG
                 size_t& Findex,
                 std::vector<double>& G,
                 const bool& needG);
+
+            void output_phase_main(std::ofstream& outputfile,
+                size_t& eventcount);
 
             //fields
             boost::ptr_vector< Forward_MGAnDSMs_subphase > ForwardSubPhases;

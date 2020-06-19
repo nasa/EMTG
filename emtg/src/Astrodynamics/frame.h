@@ -134,6 +134,7 @@ namespace EMTG
             void construct_Topocentric_to_BCF_rotation(const doubleType& ETepoch, math::Matrix<doubleType> rBCF, const bool& GenerateDerivatives = false);
             void construct_Polar_to_BCF_rotation(const doubleType& ETepoch, const bool& GenerateDerivatives = false);
             void construct_SAM_to_J2000BCI_rotation(const doubleType& ETepoch, math::Matrix<doubleType> R_to_Sun, math::Matrix<doubleType> dR_to_Sun_dt, const bool& GenerateDerivatives = false);
+            void construct_ObjectReferenced_to_ICRF_rotation(const doubleType& ETepoch, math::Matrix<doubleType> referenceVector, math::Matrix<doubleType> dreferenceVector_dt, const bool& GenerateDerivatives = false);
 
             //get methods
             inline double get_alpha0() const { return this->alpha0; };
@@ -190,6 +191,11 @@ namespace EMTG
             inline math::Matrix<doubleType> get_R_from_J2000BCI_to_SAM() const {return this->R_from_J2000BCI_to_SAM; };
             inline math::Matrix<doubleType> get_dR_from_SAM_to_J2000BCI_dt() const {return this->dR_from_SAM_to_J2000BCI_dt; };
             inline math::Matrix<doubleType> get_dR_from_J2000BCI_to_SAM_dt() const { return this->dR_from_J2000BCI_to_SAM_dt; };
+
+            inline math::Matrix<doubleType> get_R_from_ObjectReferenced_to_ICRF() const { return this->R_from_ObjectReferenced_to_ICRF; };
+            inline math::Matrix<doubleType> get_R_from_ICRF_to_ObjectReferenced() const { return this->R_from_ICRF_to_ObjectReferenced; };
+            inline math::Matrix<doubleType> get_dR_from_ObjectReferenced_to_ICRF_dt() const { return this->dR_from_ObjectReferenced_to_ICRF_dt; };
+            inline math::Matrix<doubleType> get_dR_from_ICRF_to_ObjectReferenced_dt() const { return this->dR_from_ICRF_to_ObjectReferenced_dt; };
 
             math::Matrix<doubleType> get_R(const ReferenceFrame& OriginalReferenceFrame, const ReferenceFrame& RotatedReferenceFrame) const;
             math::Matrix<doubleType> get_dRdt(const ReferenceFrame& OriginalReferenceFrame, const ReferenceFrame& RotatedReferenceFrame) const;
@@ -266,6 +272,11 @@ namespace EMTG
             math::Matrix<doubleType> R_from_J2000BCI_to_SAM;
             math::Matrix<doubleType> dR_from_SAM_to_J2000BCI_dt;
             math::Matrix<doubleType> dR_from_J2000BCI_to_SAM_dt;
+
+            math::Matrix<doubleType> R_from_ObjectReferenced_to_ICRF;
+            math::Matrix<doubleType> R_from_ICRF_to_ObjectReferenced;
+            math::Matrix<doubleType> dR_from_ObjectReferenced_to_ICRF_dt;
+            math::Matrix<doubleType> dR_from_ICRF_to_ObjectReferenced_dt;
 
             math::Tensor<doubleType> dR_dreferenceVector;
 

@@ -69,15 +69,12 @@ namespace EMTG
             this->Fdescriptions->push_back(prefix + "maneuver epoch relative to previous event constraint");
 
             //sparsity pattern - derivatives with respect to phase flight time
-            for (size_t Xindex = this->Xdescriptions->size() - 1; Xindex > 0; --Xindex)
-            {
-                if (Xdescriptions->at(Xindex).find("time") < 1024)
-                {
-                    this->create_sparsity_entry(this->Fdescriptions->size() - 1,
-                        Xindex,
-                        this->Gindex_wrt_TimeVariables);
-                }
-            }
+            this->Xindex_PhaseFlightTime = this->mySubPhase->get_timeVariables().back();
+
+            this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                this->Xindex_PhaseFlightTime,
+                this->Gindex_wrt_TimeVariables);
+
             //derivatives with respect to burn index - only the CURRENT EVENT's burn index because that is the measurement between now and the next previous event
             std::vector<size_t>& Xindex_burnIndex = this->mySubPhase->getXindex_burnIndex();
             this->create_sparsity_entry(this->Fdescriptions->size() - 1,

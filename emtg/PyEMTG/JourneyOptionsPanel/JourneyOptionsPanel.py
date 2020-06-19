@@ -1,20 +1,20 @@
-# EMTG: Evolutionary Mission Trajectory Generator
-# An open-source global optimization tool for preliminary mission design
-# Provided by NASA Goddard Space Flight Center
+#EMTG: Evolutionary Mission Trajectory Generator
+#An open-source global optimization tool for preliminary mission design
+#Provided by NASA Goddard Space Flight Center
 #
-# Copyright (c) 2013 - 2020 United States Government as represented by the
-# Administrator of the National Aeronautics and Space Administration.
-# All Other Rights Reserved.
+#Copyright (c) 2014 - 2018 United States Government as represented by the
+#Administrator of the National Aeronautics and Space Administration.
+#All Other Rights Reserved.
 #
-# Licensed under the NASA Open Source License (the "License"); 
-# You may not use this file except in compliance with the License. 
-# You may obtain a copy of the License at:
-# https://opensource.org/licenses/NASA-1.3
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
-# express or implied.   See the License for the specific language
-# governing permissions and limitations under the License.
+#Licensed under the NASA Open Source License (the "License"); 
+#You may not use this file except in compliance with the License. 
+#You may obtain a copy of the License at:
+#https://opensource.org/licenses/NASA-1.3
+#Unless required by applicable law or agreed to in writing, software
+#distributed under the License is distributed on an "AS IS" BASIS,
+#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+#express or implied.   See the License for the specific language
+#governing permissions and limitations under the License.
 
 import wx
 import wx.adv
@@ -26,6 +26,8 @@ import Universe
 import BodyPicker
 import DepartureElementsPanel
 import ArrivalElementsPanel
+import ProbeArrivalElementsPanelToAEI
+import ProbeArrivalElementsPanelToEnd
 import JourneyStagingPanel
 
 import os
@@ -60,6 +62,9 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         phasetypes = ['MGALTS (not yet implemented)', 'FBLTS (not yet implemented)', 'MGALT', 'FBLT', 'PSBI', 'PSFB', 'MGAnDSMs', 'CoastPhase', 'SundmanCoastPhase']
         self.cmbPhaseType = wx.ComboBox(self, -1, choices=phasetypes, style=wx.CB_READONLY)
 
+        self.lblModelProbeSecondPhase = wx.StaticText(self, -1, "Model the probe's atmospheric flight phase?")
+        self.chkModelProbeSecondPhase = wx.CheckBox(self, -1)
+
         self.lbloverride_num_steps = wx.StaticText(self, -1, "Override journey number of time steps")
         self.chkoverride_num_steps = wx.CheckBox(self, -1)
         self.lblnumber_of_steps = wx.StaticText(self, -1, "Number of time steps")
@@ -74,7 +79,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.lblforce_unit_magnitude_control = wx.StaticText(self, -1, "Force 100% control in this journey?")
         self.cmbforce_unit_magnitude_control = wx.ComboBox(self, -1, choices=['up to unit magnitude', 'unit magnitude', 'zero magnitude'], style=wx.CB_READONLY)
         
-        self.lblforce_fixed_inertial_control = wx.StaticText(self, -1, "Force single intertial control vector across each phase?")
+        self.lblforce_fixed_inertial_control = wx.StaticText(self, -1, "Force single inertial control vector across each phase?")
         self.chkforce_fixed_inertial_control = wx.CheckBox(self, -1)
 
         self.lbljourney_central_body = wx.StaticText(self, -1, "Central body")
@@ -167,6 +172,12 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         departure_class_choices = ['0: Ephemeris-pegged', '1: Free point', '2: Ephemeris-referenced','3: Periapse']
         self.cmbdeparture_class = wx.ComboBox(self, -1, choices=departure_class_choices, style=wx.CB_READONLY)
 
+        self.lblPeriapseDeparture_altitude_bounds = wx.StaticText(self, -1, "Periapse departure altitude bounds (km)")
+        self.txtPeriapseDeparture_altitude_bounds_lower = wx.TextCtrl(self, -1, "PeriapseDeparture_altitude_bounds[0]")
+        self.txtPeriapseDeparture_altitude_bounds_upper = wx.TextCtrl(self, -1, "PeriapseDeparture_altitude_bounds[1]")
+        PeriapseDeparture_altitude_bounds_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        PeriapseDeparture_altitude_bounds_sizer.AddMany([self.txtPeriapseDeparture_altitude_bounds_lower, self.txtPeriapseDeparture_altitude_bounds_upper])
+
         self.lbldeparture_ellipsoid_axes = wx.StaticText(self, -1, "Departure reference ellipsoid axes")
         self.txtdeparture_ellipsoid_axes = wx.TextCtrl(self, -1, "departure_ellipsoid_axes", size=(300, -1))
         self.btndeparture_ellipsoid_axes = wx.Button(self, -1, "Default")
@@ -197,13 +208,31 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
                                         '3: rendezvous (no maneuver)','4: match final v-infinity vector (with chemical maneuver)',
                                         '5: match final v-infinity vector (no maneuver)','6: capture spiral', '7: momentum transfer']
         self.cmbarrival_type = wx.ComboBox(self, -1, choices=arrival_type_choices, style=wx.CB_READONLY)
+        
+        self.lblarrival_class = wx.StaticText(self, -1, "Journey arrival class")
+        arrival_class_choices = ['0: Ephemeris-pegged', '1: Free point', '2: Ephemeris-referenced','3: Periapse']
+        self.cmbarrival_class = wx.ComboBox(self, -1, choices=arrival_class_choices, style=wx.CB_READONLY)
+        
+        self.lblPeriapseArrival_altitude_bounds = wx.StaticText(self, -1, "Periapse arrival altitude bounds (km)")
+        self.txtPeriapseArrival_altitude_bounds_lower = wx.TextCtrl(self, -1, "PeriapseArrival_altitude_bounds[0]")
+        self.txtPeriapseArrival_altitude_bounds_upper = wx.TextCtrl(self, -1, "PeriapseArrival_altitude_bounds[1]")
+        PeriapseArrival_altitude_bounds_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        PeriapseArrival_altitude_bounds_sizer.AddMany([self.txtPeriapseArrival_altitude_bounds_lower, self.txtPeriapseArrival_altitude_bounds_upper])
 
         self.lblimpact_momentum_enhancement_factor = wx.StaticText(self, -1, "Impact momentum enhancement factor (beta)")
         self.txtimpact_momentum_enhancement_factor = wx.TextCtrl(self, -1, "impact_momentum_enhancement_factor")
 
-        self.lblarrival_class = wx.StaticText(self, -1, "Journey arrival class")
-        arrival_class_choices = ['0: Ephemeris-pegged', '1: Free point', '2: Ephemeris-referenced','3: Periapse']
-        self.cmbarrival_class = wx.ComboBox(self, -1, choices=arrival_class_choices, style=wx.CB_READONLY)
+        self.lblprobe_separation_impulse = wx.StaticText(self, -1, "Probe separation impulse (Ns)")
+        self.txtprobe_separation_impulse = wx.TextCtrl(self, -1, "probe_separation_impulse")
+
+        self.lblprobe_mass = wx.StaticText(self, -1, "Probe mass (kg)")
+        self.txtprobe_mass = wx.TextCtrl(self, -1, "probe_mass")
+
+        self.lblprobe_communication_distance_bounds = wx.StaticText(self, -1, "Probe communication distance bounds (km)")
+        self.txtprobe_communication_distance_boundsLower = wx.TextCtrl(self, -1, "probe_communication_distance_bounds[0]")
+        self.txtprobe_communication_distance_boundsUpper = wx.TextCtrl(self, -1, "probe_communication_distance_bounds[1]")
+        probe_communication_distance_bounds_box = wx.BoxSizer(wx.HORIZONTAL)
+        probe_communication_distance_bounds_box.AddMany([self.txtprobe_communication_distance_boundsLower, self.txtprobe_communication_distance_boundsUpper])
 
         self.lblephemeris_pegged_orbit_insertion_SMA = wx.StaticText(self, -1, "Insertion orbit SMA (km)")
         self.txtephemeris_pegged_orbit_insertion_SMA = wx.TextCtrl(self, -1, "Insertion orbit SMA (km)")
@@ -269,6 +298,9 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.lblfreeze_decision_variables = wx.StaticText(self, -1, "Freeze this journey's decision variables?")
         self.chkfreeze_decision_variables = wx.CheckBox(self, -1)
 
+        self.lblprint_this_journey_options_no_matter_what = wx.StaticText(self, -1, "Always print all of this journey's options?")
+        self.chkprint_this_journey_options_no_matter_what = wx.CheckBox(self, -1)
+
         self.lbloverride_integration_step_size = wx.StaticText(self, -1, "Override journey's integration step size?")
         self.chkoverride_integration_step_size = wx.CheckBox(self, -1)
         self.lblintegration_step_size = wx.StaticText(self, -1, "Integration step size (seconds)")
@@ -280,7 +312,18 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.txtCoastPhaseForwardIntegrationStepLength = wx.TextCtrl(self, -1, "CoastPhaseForwardIntegrationStepLength ")
         self.lblCoastPhaseBackwardIntegrationStepLength = wx.StaticText(self, -1, "Integration step size for the backward half-phase (seconds)")
         self.txtCoastPhaseBackwardIntegrationStepLength = wx.TextCtrl(self, -1, "CoastPhaseBackwardIntegrationStepLength")
-
+        self.lblProbeSeparationToAEI_MatchPointFraction = wx.StaticText(self, -1, "Where do you want to place the probe's match point before AEI? (fraction)")
+        self.lblProbeSeparationToAEI_ForwardIntegrationStepLength = wx.StaticText(self, -1, "Integration step size for the forward half of the probe's first sub-phase (seconds)")
+        self.lblProbeSeparationToAEI_BackwardIntegrationStepLength = wx.StaticText(self, -1, "Integration step size for the backward half of the probe's first sub-phase (seconds)")
+        self.lblProbeAEI_to_end_MatchPointFraction = wx.StaticText(self, -1, "Where do you want to place the probe's match point after AEI? (fraction)")
+        self.lblProbeAEI_to_end_ForwardIntegrationStepLength = wx.StaticText(self, -1, "Integration step size for the forward half of the probe's second sub-phase (seconds)")
+        self.lblProbeAEI_to_end_BackwardIntegrationStepLength = wx.StaticText(self, -1, "Integration step size for the backward half of the probe's second sub-phase (seconds)")
+        self.txtProbeSeparationToAEI_MatchPointFraction = wx.TextCtrl(self, -1, "ProbeSeparationToAEI_MatchPointFraction ")
+        self.txtProbeSeparationToAEI_ForwardIntegrationStepLength = wx.TextCtrl(self, -1, "ProbeSeparationToAEI_ForwardIntegrationStepLength ")
+        self.txtProbeSeparationToAEI_BackwardIntegrationStepLength = wx.TextCtrl(self, -1, "ProbeSeparationToAEI_BackwardIntegrationStepLength ")
+        self.txtProbeAEI_to_end_MatchPointFraction = wx.TextCtrl(self, -1, "ProbeAEI_to_end_MatchPointFraction ")
+        self.txtProbeAEI_to_end_ForwardIntegrationStepLength = wx.TextCtrl(self, -1, "ProbeAEI_to_end_ForwardIntegrationStepLength ")
+        self.txtProbeAEI_to_end_BackwardIntegrationStepLength = wx.TextCtrl(self, -1, "ProbeAEI_to_end_BackwardIntegrationStepLength ")
         
         self.lbloverride_PropagatorType = wx.StaticText(self, -1, "Override journey's propagator type?")
         self.chkoverride_PropagatorType = wx.CheckBox(self, -1)
@@ -295,14 +338,26 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         # enable drag
         self.lblEnableDrag = wx.StaticText(self, -1, "Enable aerodynamic drag?")
         self.chkEnableDrag = wx.CheckBox(self, -1)
+        self.lblperturb_drag_probe_separation_to_AEI = wx.StaticText(self, -1, "Enable aerodynamic drag on probe before AEI?")
+        self.chkperturb_drag_probe_separation_to_AEI = wx.CheckBox(self, -1)
+        self.lblperturb_drag_probe_AEI_to_end = wx.StaticText(self, -1, "Enable aerodynamic drag on probe after AEI?")
+        self.chkperturb_drag_probe_AEI_to_end = wx.CheckBox(self, -1)
 
         # drag area
         self.lblSpacecraftDragArea = wx.StaticText(self, -1, "Spacecraft drag area (m^2)")
         self.txtSpacecraftDragArea = wx.TextCtrl(self, -1, "spacecraftDragArea")
+        self.lblprobe_drag_area_probe_separation_to_AEI = wx.StaticText(self, -1, "Probe drag area prior to AEI (m^2)")
+        self.txtprobe_drag_area_probe_separation_to_AEI = wx.TextCtrl(self, -1, "probe_drag_area_probe_separation_to_AEI")
+        self.lblprobe_drag_area_probe_AEI_to_end = wx.StaticText(self, -1, "Probe drag area after AEI (m^2)")
+        self.txtprobe_drag_area_probe_AEI_to_end = wx.TextCtrl(self, -1, "probe_drag_area_probe_AEI_to_end")
 
         # drag coefficient
         self.lblSpacecraftDragCoefficient = wx.StaticText(self, -1, "Spacecraft drag coefficient")
         self.txtSpacecraftDragCoefficient = wx.TextCtrl(self, -1, "spacecraftDragCoefficient")
+        self.lblprobe_coefficient_of_drag_probe_separation_to_AEI = wx.StaticText(self, -1, "Probe drag coefficient prior to AEI")
+        self.txtprobe_coefficient_of_drag_probe_separation_to_AEI = wx.TextCtrl(self, -1, "probe_coefficient_of_drag_probe_separation_to_AEI")
+        self.lblprobe_coefficient_of_drag_probe_AEI_to_end = wx.StaticText(self, -1, "Probe drag coefficient after AEI")
+        self.txtprobe_coefficient_of_drag_probe_AEI_to_end = wx.TextCtrl(self, -1, "probe_coefficient_of_drag_probe_AEI_to_end")
 
         # density model
         self.lblAtmosphericDensityModel = wx.StaticText(self, -1, "Atmospheric density model")
@@ -321,7 +376,9 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         JourneyInformationGrid = wx.FlexGridSizer(100,2,5,5)
         JourneyInformationGrid.AddMany([self.lbljourney_name, self.txtjourney_name,
                                         self.lblPhaseType, self.cmbPhaseType,
+                                        self.lblModelProbeSecondPhase, self.chkModelProbeSecondPhase,
                                         self.lblfreeze_decision_variables, self.chkfreeze_decision_variables,
+                                        self.lblprint_this_journey_options_no_matter_what, self.chkprint_this_journey_options_no_matter_what,
                                         self.lbloverride_num_steps, self.chkoverride_num_steps,
                                         self.lblnumber_of_steps, self.txtnumber_of_steps,
                                         self.lblnum_interior_control_points, self.txtnum_interior_control_points,
@@ -347,6 +404,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
                                         self.lblforce_free_point_direct_insertion_along_velocity_vector, self.chkforce_free_point_direct_insertion_along_velocity_vector,
                                         self.lbldeparture_type, self.cmbdeparture_type,
                                         self.lbldeparture_class, self.cmbdeparture_class,
+                                        self.lblPeriapseDeparture_altitude_bounds, PeriapseDeparture_altitude_bounds_sizer,
                                         self.lbldeparture_ellipsoid_axes, departure_ellipsoid_sizer,
                                         self.lblzero_turn_flyby_distance, self.txtzero_turn_flyby_distance,
                                         self.lblforced_initial_coast, self.txtforced_initial_coast,
@@ -356,7 +414,11 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
                                         self.lblescape_spiral_final_radius, self.txtescape_spiral_final_radius,
                                         self.lblarrival_type, self.cmbarrival_type,
                                         self.lblarrival_class, self.cmbarrival_class,
+                                        self.lblPeriapseArrival_altitude_bounds, PeriapseArrival_altitude_bounds_sizer,
                                         self.lblimpact_momentum_enhancement_factor, self.txtimpact_momentum_enhancement_factor,
+                                        self.lblprobe_separation_impulse, self.txtprobe_separation_impulse,
+                                        self.lblprobe_mass, self.txtprobe_mass,
+                                        self.lblprobe_communication_distance_bounds, probe_communication_distance_bounds_box,
                                         self.lblephemeris_pegged_orbit_insertion_SMA, self.txtephemeris_pegged_orbit_insertion_SMA,
                                         self.lblephemeris_pegged_orbit_insertion_ECC, self.txtephemeris_pegged_orbit_insertion_ECC,
                                         self.lblarrival_ellipsoid_axes, arrival_ellipsoid_sizer,
@@ -379,9 +441,21 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
                                         self.lblCoastPhaseMatchPointFraction, self.txtCoastPhaseMatchPointFraction,
                                         self.lblCoastPhaseForwardIntegrationStepLength, self.txtCoastPhaseForwardIntegrationStepLength,
                                         self.lblCoastPhaseBackwardIntegrationStepLength, self.txtCoastPhaseBackwardIntegrationStepLength,
+                                        self.lblProbeSeparationToAEI_MatchPointFraction, self.txtProbeSeparationToAEI_MatchPointFraction,
+                                        self.lblProbeSeparationToAEI_ForwardIntegrationStepLength, self.txtProbeSeparationToAEI_ForwardIntegrationStepLength,
+                                        self.lblProbeSeparationToAEI_BackwardIntegrationStepLength, self.txtProbeSeparationToAEI_BackwardIntegrationStepLength,
+                                        self.lblProbeAEI_to_end_MatchPointFraction, self.txtProbeAEI_to_end_MatchPointFraction,
+                                        self.lblProbeAEI_to_end_ForwardIntegrationStepLength, self.txtProbeAEI_to_end_ForwardIntegrationStepLength,
+                                        self.lblProbeAEI_to_end_BackwardIntegrationStepLength, self.txtProbeAEI_to_end_BackwardIntegrationStepLength,
                                         self.lblEnableDrag, self.chkEnableDrag,
+                                        self.lblperturb_drag_probe_separation_to_AEI, self.chkperturb_drag_probe_separation_to_AEI,
+                                        self.lblperturb_drag_probe_AEI_to_end, self.chkperturb_drag_probe_AEI_to_end,
                                         self.lblSpacecraftDragArea, self.txtSpacecraftDragArea,
+                                        self.lblprobe_drag_area_probe_separation_to_AEI, self.txtprobe_drag_area_probe_separation_to_AEI,
+                                        self.lblprobe_drag_area_probe_AEI_to_end, self.txtprobe_drag_area_probe_AEI_to_end,
                                         self.lblSpacecraftDragCoefficient, self.txtSpacecraftDragCoefficient,
+                                        self.lblprobe_coefficient_of_drag_probe_separation_to_AEI, self.txtprobe_coefficient_of_drag_probe_separation_to_AEI,
+                                        self.lblprobe_coefficient_of_drag_probe_AEI_to_end, self.txtprobe_coefficient_of_drag_probe_AEI_to_end,
                                         self.lblAtmosphericDensityModel, self.cmbAtmosphericDensityModel,
                                         self.lblAtmosphericDensityModelDataFile, self.atmosphericDensityModelDataFileBox])
 
@@ -392,12 +466,14 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         #custom orbit elements
         self.DepartureElementsPanel = DepartureElementsPanel.DepartureElementsPanel(self, self.missionoptions)
         self.ArrivalElementsPanel = ArrivalElementsPanel.ArrivalElementsPanel(self, self.missionoptions)
+        self.ProbeArrivalElementsPanelToAEI = ProbeArrivalElementsPanelToAEI.ProbeArrivalElementsPanelToAEI(self, self.missionoptions)
+        self.ProbeArrivalElementsPanelToEnd = ProbeArrivalElementsPanelToEnd.ProbeArrivalElementsPanelToEnd(self, self.missionoptions)
         
         #staging
         self.StagingPanel = JourneyStagingPanel.JourneyStagingPanel(self, self.missionoptions)
 
         RightStacker = wx.BoxSizer(wx.VERTICAL)
-        RightStacker.AddMany([self.DepartureElementsPanel, self.ArrivalElementsPanel, self.StagingPanel])
+        RightStacker.AddMany([self.DepartureElementsPanel, self.ArrivalElementsPanel, self.ProbeArrivalElementsPanelToAEI, self.ProbeArrivalElementsPanelToEnd, self.StagingPanel])
 
         self.mainbox = wx.BoxSizer(wx.HORIZONTAL)
         self.mainbox.AddMany([JourneyInformationStacker, RightStacker])
@@ -413,6 +489,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
         self.txtjourney_name.Bind(wx.EVT_KILL_FOCUS,self.Changejourney_name)
         self.cmbPhaseType.Bind(wx.EVT_COMBOBOX, self.ChangePhaseType)
+        self.chkModelProbeSecondPhase.Bind(wx.EVT_CHECKBOX, self.ChangeModelProbeSecondPhase)
         self.chkoverride_num_steps.Bind(wx.EVT_CHECKBOX, self.Changeoverride_num_steps)
         self.txtnumber_of_steps.Bind(wx.EVT_KILL_FOCUS, self.Changenumber_of_steps)
         self.txtnum_interior_control_points.Bind(wx.EVT_KILL_FOCUS, self.Changenum_interior_control_points)
@@ -447,6 +524,8 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.chkforce_free_point_direct_insertion_along_velocity_vector.Bind(wx.EVT_CHECKBOX, self.Changeforce_free_point_direct_insertion_along_velocity_vector)
         self.cmbdeparture_type.Bind(wx.EVT_COMBOBOX,self.Changedeparture_type)
         self.cmbdeparture_class.Bind(wx.EVT_COMBOBOX,self.Changedeparture_class)
+        self.txtPeriapseDeparture_altitude_bounds_lower.Bind(wx.EVT_KILL_FOCUS, self.ChangePeriapseDeparture_altitude_bounds_lower)
+        self.txtPeriapseDeparture_altitude_bounds_upper.Bind(wx.EVT_KILL_FOCUS, self.ChangePeriapseDeparture_altitude_bounds_upper)
         self.txtdeparture_ellipsoid_axes.Bind(wx.EVT_KILL_FOCUS, self.Changedeparture_ellipsoid_axes)
         self.btndeparture_ellipsoid_axes.Bind(wx.EVT_BUTTON, self.ClickButtondeparture_ellipsoid_axes)
         self.txtzero_turn_flyby_distance.Bind(wx.EVT_KILL_FOCUS, self.Changezero_turn_flyby_distance)
@@ -460,6 +539,8 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.txtescape_spiral_final_radius.Bind(wx.EVT_KILL_FOCUS, self.Changeescape_spiral_final_radius)
         self.cmbarrival_type.Bind(wx.EVT_COMBOBOX,self.Changearrival_type)
         self.cmbarrival_class.Bind(wx.EVT_COMBOBOX,self.Changearrival_class)
+        self.txtPeriapseArrival_altitude_bounds_lower.Bind(wx.EVT_KILL_FOCUS, self.ChangePeriapseArrival_altitude_bounds_lower)
+        self.txtPeriapseArrival_altitude_bounds_upper.Bind(wx.EVT_KILL_FOCUS, self.ChangePeriapseArrival_altitude_bounds_upper)
         self.txtarrival_ellipsoid_axes.Bind(wx.EVT_KILL_FOCUS, self.Changearrival_ellipsoid_axes)
         self.btnarrival_ellipsoid_axes.Bind(wx.EVT_BUTTON, self.ClickButtonarrival_ellipsoid_axes)
         self.txtephemeris_pegged_orbit_insertion_SMA.Bind(wx.EVT_KILL_FOCUS, self.Changeephemeris_pegged_orbit_insertion_SMA)
@@ -473,6 +554,10 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.chkFreePointArrival_print_target_spec.Bind(wx.EVT_KILL_FOCUS, self.ChangeFreePointArrival_print_target_spec)
 
         self.txtimpact_momentum_enhancement_factor.Bind(wx.EVT_KILL_FOCUS, self.Changeimpact_momentum_enhancement_factor)
+        self.txtprobe_separation_impulse.Bind(wx.EVT_KILL_FOCUS, self.Changeprobe_separation_impulse)
+        self.txtprobe_mass.Bind(wx.EVT_KILL_FOCUS, self.Changeprobe_mass)
+        self.txtprobe_communication_distance_boundsLower.Bind(wx.EVT_KILL_FOCUS, self.Changeprobe_communication_distance_boundsLower)
+        self.txtprobe_communication_distance_boundsUpper.Bind(wx.EVT_KILL_FOCUS, self.Changeprobe_communication_distance_boundsUpper)
 
                 
         self.chkoverride_duty_cycle.Bind(wx.EVT_CHECKBOX, self.Changeoverride_duty_cycle)
@@ -487,6 +572,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.btnsequence.Bind(wx.EVT_BUTTON,self.Clicksequence)
         self.btnperturbation_bodies.Bind(wx.EVT_BUTTON, self.Clickperturbation_bodies)
         self.chkfreeze_decision_variables.Bind(wx.EVT_CHECKBOX, self.Changefreeze_decision_variables)
+        self.chkprint_this_journey_options_no_matter_what.Bind(wx.EVT_CHECKBOX, self.Changeprint_this_journey_options_no_matter_what)
 
         self.txtjourney_end_deltav.Bind(wx.EVT_KILL_FOCUS, self.Changejourney_end_deltav)
         self.txtjourney_end_TCM.Bind(wx.EVT_KILL_FOCUS, self.Changejourney_end_TCM)
@@ -501,14 +587,30 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.txtCoastPhaseMatchPointFraction.Bind(wx.EVT_KILL_FOCUS, self.ChangeCoastPhaseMatchPointFraction)
         self.txtCoastPhaseForwardIntegrationStepLength.Bind(wx.EVT_KILL_FOCUS, self.ChangeCoastPhaseForwardIntegrationStepLength)
         self.txtCoastPhaseBackwardIntegrationStepLength.Bind(wx.EVT_KILL_FOCUS, self.ChangeCoastPhaseBackwardIntegrationStepLength)
+        self.txtProbeSeparationToAEI_MatchPointFraction.Bind(wx.EVT_KILL_FOCUS, self.ChangeProbeSeparationToAEI_MatchPointFraction)
+        self.txtProbeSeparationToAEI_ForwardIntegrationStepLength.Bind(wx.EVT_KILL_FOCUS, self.ChangeProbeSeparationToAEI_ForwardIntegrationStepLength)
+        self.txtProbeSeparationToAEI_BackwardIntegrationStepLength.Bind(wx.EVT_KILL_FOCUS, self.ChangeProbeSeparationToAEI_BackwardIntegrationStepLength)
+        self.txtProbeAEI_to_end_MatchPointFraction.Bind(wx.EVT_KILL_FOCUS, self.ChangeProbeAEI_to_end_MatchPointFraction)
+        self.txtProbeAEI_to_end_ForwardIntegrationStepLength.Bind(wx.EVT_KILL_FOCUS, self.ChangeProbeAEI_to_end_ForwardIntegrationStepLength)
+        self.txtProbeAEI_to_end_BackwardIntegrationStepLength.Bind(wx.EVT_KILL_FOCUS, self.ChangeProbeAEI_to_end_BackwardIntegrationStepLength)
+
 
         ###############
         # drag bindings
         ###############
 
-        self.chkEnableDrag.Bind(wx.EVT_CHECKBOX, self.ChangeEnableDrag)
+        self.chkEnableDrag.Bind(wx.EVT_CHECKBOX, self.ChangeEnableDrag)        
+        self.chkperturb_drag_probe_separation_to_AEI.Bind(wx.EVT_CHECKBOX, self.Changeperturb_drag_probe_separation_to_AEI)
+        self.chkperturb_drag_probe_AEI_to_end.Bind(wx.EVT_CHECKBOX, self.Changeperturb_drag_probe_AEI_to_end)
+
         self.txtSpacecraftDragArea.Bind(wx.EVT_KILL_FOCUS, self.ChangeSpacecraftDragArea)
+        self.txtprobe_drag_area_probe_separation_to_AEI.Bind(wx.EVT_KILL_FOCUS, self.Changeprobe_drag_area_probe_separation_to_AEI)
+        self.txtprobe_drag_area_probe_AEI_to_end.Bind(wx.EVT_KILL_FOCUS, self.Changeprobe_drag_area_probe_AEI_to_end)
+
         self.txtSpacecraftDragCoefficient.Bind(wx.EVT_KILL_FOCUS, self.ChangeSpacecraftDragCoefficient)
+        self.txtprobe_coefficient_of_drag_probe_separation_to_AEI.Bind(wx.EVT_KILL_FOCUS, self.Changeprobe_coefficient_of_drag_probe_separation_to_AEI)
+        self.txtprobe_coefficient_of_drag_probe_AEI_to_end.Bind(wx.EVT_KILL_FOCUS, self.Changeprobe_coefficient_of_drag_probe_AEI_to_end)
+
         self.cmbAtmosphericDensityModel.Bind(wx.EVT_COMBOBOX, self.ChangeAtmosphericDensityModel)
         self.btnAtmosphericDensityModelDataFile.Bind(wx.EVT_BUTTON, self.ClickAtmosphericDensityModelDataFile)
         self.txtAtmosphericDensityModelDataFile.Bind(wx.EVT_KILL_FOCUS,self.ChangeAtmosphericDensityModelDataFile)
@@ -525,6 +627,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
         self.txtjourney_name.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].journey_name))        
         self.cmbPhaseType.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type)
+        self.chkModelProbeSecondPhase.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ModelProbeSecondPhase)
         self.chkoverride_num_steps.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].override_num_steps)
         self.txtnumber_of_steps.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].number_of_steps))
         self.txtnum_interior_control_points.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].num_interior_control_points))
@@ -565,6 +668,8 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.chkforce_free_point_direct_insertion_along_velocity_vector.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].force_free_point_direct_insertion_along_velocity_vector)
         self.cmbdeparture_type.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_type)
         self.cmbdeparture_class.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class)
+        self.txtPeriapseDeparture_altitude_bounds_lower.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].PeriapseDeparture_altitude_bounds[0]))
+        self.txtPeriapseDeparture_altitude_bounds_upper.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].PeriapseDeparture_altitude_bounds[1]))
         self.txtdeparture_ellipsoid_axes.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_ellipsoid_axes))
         self.txtzero_turn_flyby_distance.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].zero_turn_flyby_distance))
         self.txtforced_initial_coast.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].forced_initial_coast))
@@ -575,6 +680,8 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.txtescape_spiral_final_radius.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].escape_spiral_final_radius))
         self.cmbarrival_type.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_type)
         self.cmbarrival_class.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class)
+        self.txtPeriapseArrival_altitude_bounds_lower.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].PeriapseArrival_altitude_bounds[0]))
+        self.txtPeriapseArrival_altitude_bounds_upper.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].PeriapseArrival_altitude_bounds[1]))
         self.txtephemeris_pegged_orbit_insertion_SMA.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ephemeris_pegged_orbit_insertion_SMA))
         self.txtephemeris_pegged_orbit_insertion_ECC.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ephemeris_pegged_orbit_insertion_ECC))
         self.txtarrival_ellipsoid_axes.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_ellipsoid_axes))
@@ -587,12 +694,16 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.chkFreePointArrival_print_target_spec.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].FreePointArrival_print_target_spec)
  
         self.txtimpact_momentum_enhancement_factor.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].impact_momentum_enhancement_factor))
- 
+        self.txtprobe_separation_impulse.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_separation_impulse))
+        self.txtprobe_mass.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_mass))
+        self.txtprobe_communication_distance_boundsLower.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_communication_distance_bounds[0]))
+        self.txtprobe_communication_distance_boundsUpper.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_communication_distance_bounds[1]))
         
         self.txtsequence.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].sequence))
         self.chkperiapse_burns.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].enable_periapse_burns)
         self.txtperturbation_bodies.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].perturbation_bodies))
         self.chkfreeze_decision_variables.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].freeze_decision_variables)
+        self.chkprint_this_journey_options_no_matter_what.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].print_this_journey_options_no_matter_what)
         
         self.txtjourney_end_deltav.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].journey_end_deltav))
         self.txtjourney_end_TCM.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].journey_end_TCM))
@@ -606,13 +717,27 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.txtCoastPhaseMatchPointFraction.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].CoastPhaseMatchPointFraction))
         self.txtCoastPhaseForwardIntegrationStepLength.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].CoastPhaseForwardIntegrationStepLength))
         self.txtCoastPhaseBackwardIntegrationStepLength.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].CoastPhaseBackwardIntegrationStepLength))
+        self.txtProbeSeparationToAEI_MatchPointFraction.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeSeparationToAEI_MatchPointFraction))
+        self.txtProbeSeparationToAEI_ForwardIntegrationStepLength.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeSeparationToAEI_ForwardIntegrationStepLength))
+        self.txtProbeSeparationToAEI_BackwardIntegrationStepLength.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeSeparationToAEI_BackwardIntegrationStepLength))
+        self.txtProbeAEI_to_end_MatchPointFraction.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeAEI_to_end_MatchPointFraction))
+        self.txtProbeAEI_to_end_ForwardIntegrationStepLength.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeAEI_to_end_ForwardIntegrationStepLength))
+        self.txtProbeAEI_to_end_BackwardIntegrationStepLength.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeAEI_to_end_BackwardIntegrationStepLength))
+
 
         ##############
         # drag updates
         ##############
         self.chkEnableDrag.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].perturb_drag)
+        self.chkperturb_drag_probe_separation_to_AEI.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].perturb_drag_probe_separation_to_AEI)
+        self.chkperturb_drag_probe_AEI_to_end.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].perturb_drag_probe_AEI_to_end)
+        self.txtprobe_drag_area_probe_separation_to_AEI.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_drag_area_probe_separation_to_AEI))
+        self.txtprobe_drag_area_probe_AEI_to_end.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_drag_area_probe_AEI_to_end))
         self.txtSpacecraftDragArea.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].spacecraft_drag_area))
         self.txtSpacecraftDragCoefficient.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].coefficient_of_drag))
+        self.txtprobe_coefficient_of_drag_probe_separation_to_AEI.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_coefficient_of_drag_probe_separation_to_AEI))
+        self.txtprobe_coefficient_of_drag_probe_AEI_to_end.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_coefficient_of_drag_probe_AEI_to_end))
+        
         self.cmbAtmosphericDensityModel.SetSelection(
             self.atmosphericDensityModelChoices.index(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].AtmosphericDensityModelKey))
         #self.cmbAtmosphericDensityModel.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].AtmosphericDensityModelKey)
@@ -675,7 +800,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.chkforce_fixed_inertial_control.Show(False)
 
         #do we want to show number of impulses?
-        if self.missionoptions.mission_type == 6 or (self.missionoptions.mission_type == 9 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type == 6):
+        if self.missionoptions.mission_type in [6, 10] or (self.missionoptions.mission_type == 9 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [6, 10]):
             self.lblimpulses_per_phase.Show(True)
             self.txtimpulses_per_phase.Show(True)
         else:
@@ -766,6 +891,93 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         else:
             self.lblimpact_momentum_enhancement_factor.Show(False)
             self.txtimpact_momentum_enhancement_factor.Show(False)
+
+        #probe entry parameters
+        if self.missionoptions.mission_type in [10] or (self.missionoptions.mission_type == 9 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [10]):
+            self.lblprobe_separation_impulse.Show(True)
+            self.txtprobe_separation_impulse.Show(True)
+            self.lblprobe_mass.Show(True)
+            self.txtprobe_mass.Show(True)
+            self.lblprobe_communication_distance_bounds.Show(True)
+            self.txtprobe_communication_distance_boundsLower.Show(True)
+            self.txtprobe_communication_distance_boundsUpper.Show(True)
+            self.lblperturb_drag_probe_separation_to_AEI.Show(True)
+            self.chkperturb_drag_probe_separation_to_AEI.Show(True)
+            self.lblprobe_drag_area_probe_separation_to_AEI.Show(True)
+            self.txtprobe_drag_area_probe_separation_to_AEI.Show(True)
+            self.lblprobe_coefficient_of_drag_probe_separation_to_AEI.Show(True)
+            self.txtprobe_coefficient_of_drag_probe_separation_to_AEI.Show(True)
+            self.lblProbeSeparationToAEI_MatchPointFraction.Show(True)
+            self.lblProbeSeparationToAEI_ForwardIntegrationStepLength.Show(True)
+            self.lblProbeSeparationToAEI_BackwardIntegrationStepLength.Show(True)
+            self.txtProbeSeparationToAEI_MatchPointFraction.Show(True)
+            self.txtProbeSeparationToAEI_ForwardIntegrationStepLength.Show(True)
+            self.txtProbeSeparationToAEI_BackwardIntegrationStepLength.Show(True)
+            self.ProbeArrivalElementsPanelToAEI.Show(True)
+            self.ProbeArrivalElementsPanelToAEI.update()
+            if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ModelProbeSecondPhase:
+                self.lblperturb_drag_probe_AEI_to_end.Show(True)
+                self.chkperturb_drag_probe_AEI_to_end.Show(True)
+                self.lblprobe_drag_area_probe_AEI_to_end.Show(True)
+                self.txtprobe_drag_area_probe_AEI_to_end.Show(True)
+                self.lblprobe_coefficient_of_drag_probe_AEI_to_end.Show(True)
+                self.txtprobe_coefficient_of_drag_probe_AEI_to_end.Show(True)
+                self.lblProbeAEI_to_end_MatchPointFraction.Show(True)
+                self.lblProbeAEI_to_end_ForwardIntegrationStepLength.Show(True)
+                self.lblProbeAEI_to_end_BackwardIntegrationStepLength.Show(True)
+                self.txtProbeAEI_to_end_MatchPointFraction.Show(True)
+                self.txtProbeAEI_to_end_ForwardIntegrationStepLength.Show(True)
+                self.txtProbeAEI_to_end_BackwardIntegrationStepLength.Show(True)
+                self.ProbeArrivalElementsPanelToEnd.Show(True)
+                self.ProbeArrivalElementsPanelToEnd.update()
+            else:
+                self.lblperturb_drag_probe_AEI_to_end.Show(False)
+                self.chkperturb_drag_probe_AEI_to_end.Show(False)
+                self.lblprobe_drag_area_probe_AEI_to_end.Show(False)
+                self.txtprobe_drag_area_probe_AEI_to_end.Show(False)
+                self.lblprobe_coefficient_of_drag_probe_AEI_to_end.Show(False)
+                self.txtprobe_coefficient_of_drag_probe_AEI_to_end.Show(False)
+                self.lblProbeAEI_to_end_MatchPointFraction.Show(False)
+                self.lblProbeAEI_to_end_ForwardIntegrationStepLength.Show(False)
+                self.lblProbeAEI_to_end_BackwardIntegrationStepLength.Show(False)
+                self.txtProbeAEI_to_end_MatchPointFraction.Show(False)
+                self.txtProbeAEI_to_end_ForwardIntegrationStepLength.Show(False)
+                self.txtProbeAEI_to_end_BackwardIntegrationStepLength.Show(False)
+                self.ProbeArrivalElementsPanelToEnd.Show(False)
+        else:
+            self.lblprobe_separation_impulse.Show(False)
+            self.txtprobe_separation_impulse.Show(False)
+            self.lblprobe_mass.Show(False)
+            self.txtprobe_mass.Show(False)
+            self.lblprobe_communication_distance_bounds.Show(False)
+            self.txtprobe_communication_distance_boundsLower.Show(False)
+            self.txtprobe_communication_distance_boundsUpper.Show(False)
+            self.lblperturb_drag_probe_separation_to_AEI.Show(False)
+            self.chkperturb_drag_probe_separation_to_AEI.Show(False)
+            self.lblperturb_drag_probe_AEI_to_end.Show(False)
+            self.chkperturb_drag_probe_AEI_to_end.Show(False)
+            self.lblprobe_drag_area_probe_separation_to_AEI.Show(False)
+            self.txtprobe_drag_area_probe_separation_to_AEI.Show(False)
+            self.lblprobe_drag_area_probe_AEI_to_end.Show(False)
+            self.txtprobe_drag_area_probe_AEI_to_end.Show(False)
+            self.lblprobe_coefficient_of_drag_probe_separation_to_AEI.Show(False)
+            self.txtprobe_coefficient_of_drag_probe_separation_to_AEI.Show(False)
+            self.lblprobe_coefficient_of_drag_probe_AEI_to_end.Show(False)
+            self.txtprobe_coefficient_of_drag_probe_AEI_to_end.Show(False)
+            self.lblProbeSeparationToAEI_MatchPointFraction.Show(False)
+            self.lblProbeSeparationToAEI_ForwardIntegrationStepLength.Show(False)
+            self.lblProbeSeparationToAEI_BackwardIntegrationStepLength.Show(False)
+            self.lblProbeAEI_to_end_MatchPointFraction.Show(False)
+            self.lblProbeAEI_to_end_ForwardIntegrationStepLength.Show(False)
+            self.lblProbeAEI_to_end_BackwardIntegrationStepLength.Show(False)
+            self.txtProbeSeparationToAEI_MatchPointFraction.Show(False)
+            self.txtProbeSeparationToAEI_ForwardIntegrationStepLength.Show(False)
+            self.txtProbeSeparationToAEI_BackwardIntegrationStepLength.Show(False)
+            self.txtProbeAEI_to_end_MatchPointFraction.Show(False)
+            self.txtProbeAEI_to_end_ForwardIntegrationStepLength.Show(False)
+            self.txtProbeAEI_to_end_BackwardIntegrationStepLength.Show(False)
+            self.ProbeArrivalElementsPanelToAEI.Show(False)
+            self.ProbeArrivalElementsPanelToEnd.Show(False)
 
         #ephemeris pegged orbit insertion
         if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class == 0 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_type == 0:
@@ -949,7 +1161,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtmaximum_initial_mass.Show(False)
             self.lblmaximum_initial_mass.Show(False)
 
-        if self.missionoptions.mission_type in [1, 3, 5, 6, 7] or (self.missionoptions.mission_type == 9 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [1, 3, 5, 6, 7]):
+        if self.missionoptions.mission_type in [1, 3, 5, 6, 7, 10] or (self.missionoptions.mission_type == 9 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [1, 3, 5, 6, 7, 10]):
             self.lbloverride_PropagatorType.Show(True)
             self.chkoverride_PropagatorType.Show(True)
 
@@ -977,8 +1189,8 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.lblintegration_step_size.Show(False)
             self.txtintegration_step_size.Show(False)
         elif self.missionoptions.mission_type in [1, 3, 5, 8] \
-            or (self.missionoptions.mission_type in [6] and (self.missionoptions.propagatorType == 1 or self.missionoptions.Journeys[self.missionoptions.ActiveJourney].propagatorType == 1)) \
-            or (self.missionoptions.mission_type == 9 and (self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [1, 3, 5, 8] or (self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [6] and (self.missionoptions.propagatorType == 1 or self.missionoptions.Journeys[self.missionoptions.ActiveJourney].propagatorType == 1)))):
+            or (self.missionoptions.mission_type in [6, 10] and (self.missionoptions.propagatorType == 1 or self.missionoptions.Journeys[self.missionoptions.ActiveJourney].propagatorType == 1)) \
+            or (self.missionoptions.mission_type == 9 and (self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [1, 3, 5, 8] or (self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [6, 10] and (self.missionoptions.propagatorType == 1 or self.missionoptions.Journeys[self.missionoptions.ActiveJourney].propagatorType == 1)))):
             self.lbloverride_integration_step_size.Show(True)
             self.chkoverride_integration_step_size.Show(True)
             if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].override_integration_step_size:
@@ -992,12 +1204,22 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             else:
                 self.lblintegration_step_size.Show(False)
                 self.txtintegration_step_size.Show(False)
-            self.lblCoastPhaseMatchPointFraction.Show(False)
-            self.txtCoastPhaseMatchPointFraction.Show(False)
-            self.lblCoastPhaseForwardIntegrationStepLength.Show(False)
-            self.txtCoastPhaseForwardIntegrationStepLength.Show(False)
-            self.lblCoastPhaseBackwardIntegrationStepLength.Show(False)
-            self.txtCoastPhaseBackwardIntegrationStepLength.Show(False)
+
+            #ProbeEntryPhase needs the CoastPhase stuff, too
+            if self.missionoptions.mission_type in [10] or (self.missionoptions.mission_type == 9 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [10]):
+                self.lblCoastPhaseMatchPointFraction.Show(True)
+                self.txtCoastPhaseMatchPointFraction.Show(True)
+                self.lblCoastPhaseForwardIntegrationStepLength.Show(True)
+                self.txtCoastPhaseForwardIntegrationStepLength.Show(True)
+                self.lblCoastPhaseBackwardIntegrationStepLength.Show(True)
+                self.txtCoastPhaseBackwardIntegrationStepLength.Show(True)
+            else:#nobody else does
+                self.lblCoastPhaseMatchPointFraction.Show(False)
+                self.txtCoastPhaseMatchPointFraction.Show(False)
+                self.lblCoastPhaseForwardIntegrationStepLength.Show(False)
+                self.txtCoastPhaseForwardIntegrationStepLength.Show(False)
+                self.lblCoastPhaseBackwardIntegrationStepLength.Show(False)
+                self.txtCoastPhaseBackwardIntegrationStepLength.Show(False)
 
         else:
             self.lbloverride_integration_step_size.Show(False)
@@ -1029,6 +1251,25 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.lblarrival_ellipsoid_axes.Show(False)
             self.txtarrival_ellipsoid_axes.Show(False)
             self.btnarrival_ellipsoid_axes.Show(False)
+
+        #periapse boundary controls
+        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class == 3: #periapse
+            self.lblPeriapseDeparture_altitude_bounds.Show(True)
+            self.txtPeriapseDeparture_altitude_bounds_lower.Show(True)
+            self.txtPeriapseDeparture_altitude_bounds_upper.Show(True)
+        else:
+            self.lblPeriapseDeparture_altitude_bounds.Show(False)
+            self.txtPeriapseDeparture_altitude_bounds_lower.Show(False)
+            self.txtPeriapseDeparture_altitude_bounds_upper.Show(False)
+        
+        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class == 3: #periapse
+            self.lblPeriapseArrival_altitude_bounds.Show(True)
+            self.txtPeriapseArrival_altitude_bounds_lower.Show(True)
+            self.txtPeriapseArrival_altitude_bounds_upper.Show(True)
+        else:
+            self.lblPeriapseArrival_altitude_bounds.Show(False)
+            self.txtPeriapseArrival_altitude_bounds_lower.Show(False)
+            self.txtPeriapseArrival_altitude_bounds_upper.Show(False)
 
         #zero-turn flyby distance
         if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class == 0 \
@@ -1142,6 +1383,13 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.missionoptions.DisassembleMasterDecisionVector()
         self.missionoptions.ConvertDecisionVector()
         self.missionoptions.AssembleMasterDecisionVector()
+
+        self.update()
+
+    def ChangeModelProbeSecondPhase(self, e):
+        e.Skip()
+
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ModelProbeSecondPhase = int(self.chkModelProbeSecondPhase.GetValue())
 
         self.update()
 
@@ -1334,6 +1582,16 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class = self.cmbdeparture_class.GetSelection()
         self.parent.update()
 
+    def ChangePeriapseDeparture_altitude_bounds_lower(self, e):
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].PeriapseDeparture_altitude_bounds[0] = float(self.txtPeriapseDeparture_altitude_bounds_lower.GetValue())
+        self.parent.update()
+
+    def ChangePeriapseDeparture_altitude_bounds_upper(self, e):
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].PeriapseDeparture_altitude_bounds[1] = float(self.txtPeriapseDeparture_altitude_bounds_upper.GetValue())
+        self.parent.update()
+
     def Changedeparture_ellipsoid_axes(self, e):
         e.Skip()
         temp_axes = eval(self.txtdeparture_ellipsoid_axes.GetValue())
@@ -1403,6 +1661,16 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class = self.cmbarrival_class.GetSelection()
         self.parent.update()
 
+    def ChangePeriapseArrival_altitude_bounds_lower(self, e):
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].PeriapseArrival_altitude_bounds[0] = float(self.txtPeriapseArrival_altitude_bounds_lower.GetValue())
+        self.parent.update()
+
+    def ChangePeriapseArrival_altitude_bounds_upper(self, e):
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].PeriapseArrival_altitude_bounds[1] = float(self.txtPeriapseArrival_altitude_bounds_upper.GetValue())
+        self.parent.update()
+
     def Changearrival_ellipsoid_axes(self, e):
         e.Skip()
         temp_axes = eval(self.txtarrival_ellipsoid_axes.GetValue())
@@ -1444,6 +1712,22 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
     def Changeimpact_momentum_enhancement_factor(self, e):
         e.Skip()
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].impact_momentum_enhancement_factor = eval(self.txtimpact_momentum_enhancement_factor.GetValue())
+
+    def Changeprobe_separation_impulse(self, e):
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_separation_impulse = eval(self.txtprobe_separation_impulse.GetValue())
+
+    def Changeprobe_mass(self, e):
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_mass = eval(self.txtprobe_mass.GetValue())
+
+    def Changeprobe_communication_distance_boundsLower(self, e):
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_communication_distance_bounds[0] = eval(self.txtprobe_communication_distance_boundsLower.GetValue())
+        
+    def Changeprobe_communication_distance_boundsUpper(self, e):
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_communication_distance_bounds[1] = eval(self.txtprobe_communication_distance_boundsUpper.GetValue())
 
     def Changeephemeris_pegged_orbit_insertion_SMA(self, e):
         e.Skip()
@@ -1526,6 +1810,30 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
     def ChangeCoastPhaseBackwardIntegrationStepLength(self, e):
         e.Skip()
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].CoastPhaseBackwardIntegrationStepLength = eval(self.txtCoastPhaseBackwardIntegrationStepLength.GetValue())
+
+    def ChangeProbeSeparationToAEI_MatchPointFraction(self, e):
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeSeparationToAEI_MatchPointFraction = eval(self.txtProbeSeparationToAEI_MatchPointFraction.GetValue())
+
+    def ChangeProbeSeparationToAEI_ForwardIntegrationStepLength(self, e):
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeSeparationToAEI_ForwardIntegrationStepLength = eval(self.txtProbeSeparationToAEI_ForwardIntegrationStepLength.GetValue())
+
+    def ChangeProbeSeparationToAEI_BackwardIntegrationStepLength(self, e):
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeSeparationToAEI_BackwardIntegrationStepLength = eval(self.txtProbeSeparationToAEI_BackwardIntegrationStepLength.GetValue())
+
+    def ChangeProbeAEI_to_end_MatchPointFraction(self, e):
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeAEI_to_end_MatchPointFraction = eval(self.txtProbeAEI_to_end_MatchPointFraction.GetValue())
+
+    def ChangeProbeAEI_to_end_ForwardIntegrationStepLength(self, e):
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeAEI_to_end_ForwardIntegrationStepLength = eval(self.txtProbeAEI_to_end_ForwardIntegrationStepLength.GetValue())
+
+    def ChangeProbeAEI_to_end_BackwardIntegrationStepLength(self, e):
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeAEI_to_end_BackwardIntegrationStepLength = eval(self.txtProbeAEI_to_end_BackwardIntegrationStepLength.GetValue())
 
     def Changesequence(self, e):
         e.Skip()
@@ -1618,6 +1926,10 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].freeze_decision_variables = self.chkfreeze_decision_variables.GetValue()
         self.update()
 
+    def Changeprint_this_journey_options_no_matter_what(self, e):
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].print_this_journey_options_no_matter_what = self.chkprint_this_journey_options_no_matter_what.GetValue()
+        self.update()
+
     def Changejourney_end_deltav(self, e):
         e.Skip()
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].journey_end_deltav = eval(self.txtjourney_end_deltav.GetValue())
@@ -1639,10 +1951,38 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.update()
         return
 
+    def Changeperturb_drag_probe_separation_to_AEI(self, e):
+        # done
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].perturb_drag_probe_separation_to_AEI = int(self.chkperturb_drag_probe_separation_to_AEI.GetValue())
+        self.update()
+        return
+
+    def Changeperturb_drag_probe_AEI_to_end(self, e):
+        # done
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].perturb_drag_probe_AEI_to_end = int(self.chkperturb_drag_probe_AEI_to_end.GetValue())
+        self.update()
+        return
+
     def ChangeSpacecraftDragArea(self, e):
         # done
         e.Skip()
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].spacecraft_drag_area = eval(self.txtSpacecraftDragArea.GetValue())
+        self.update()
+        return
+    
+    def Changeprobe_drag_area_probe_separation_to_AEI(self, e):
+        # done
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_drag_area_probe_separation_to_AEI = eval(self.txtprobe_drag_area_probe_separation_to_AEI.GetValue())
+        self.update()
+        return
+
+    def Changeprobe_drag_area_probe_AEI_to_end(self, e):
+        # done
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_drag_area_probe_AEI_to_end = eval(self.txtprobe_drag_area_probe_AEI_to_end.GetValue())
         self.update()
         return
 
@@ -1650,6 +1990,20 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         # done
         e.Skip()
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].coefficient_of_drag = eval(self.txtSpacecraftDragCoefficient.GetValue())
+        self.update()
+        return
+
+    def Changeprobe_coefficient_of_drag_probe_separation_to_AEI(self, e):
+        # done
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_coefficient_of_drag_probe_separation_to_AEI = eval(self.txtprobe_coefficient_of_drag_probe_separation_to_AEI.GetValue())
+        self.update()
+        return
+
+    def Changeprobe_coefficient_of_drag_probe_AEI_to_end(self, e):
+        # done
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_coefficient_of_drag_probe_AEI_to_end = eval(self.txtprobe_coefficient_of_drag_probe_AEI_to_end.GetValue())
         self.update()
         return
 

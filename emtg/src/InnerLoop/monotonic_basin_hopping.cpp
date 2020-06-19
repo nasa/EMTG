@@ -24,6 +24,7 @@
 #include <sstream>
 #include <ctime>
 #include <algorithm>
+#include <math.h>
 
 #include "problem.h"
 #include "monotonic_basin_hopping.h"
@@ -431,7 +432,7 @@ namespace EMTG { namespace Solvers {
                     decision_variable_infeasibility);
 
                 this->Jincumbent = this->myProblem->F[0];
-                best_feasibility = normalized_feasibility;
+                best_feasibility = fmax(normalized_feasibility, decision_variable_infeasibility);
             }
         }
 
@@ -497,7 +498,7 @@ namespace EMTG { namespace Solvers {
             double feasibility, normalized_feasibility, distance_from_equality_filament, decision_variable_infeasibility;
             size_t worst_decision_variable;
 
-            this->myProblem->check_feasibility(this->X_incumbent,
+            this->myProblem->check_feasibility(Xunscaled,
                 this->myProblem->F,
                 worst_decision_variable,
                 worst_constraint,
@@ -532,12 +533,13 @@ namespace EMTG { namespace Solvers {
             bool isFeasible = false;
             if (this->myProblem->options.enable_NLP_chaperone)
             {
-                if (normalized_feasibility < myProblem->options.snopt_feasibility_tolerance)
+                if (normalized_feasibility < myProblem->options.snopt_feasibility_tolerance && decision_variable_infeasibility < myProblem->options.snopt_feasibility_tolerance)
                     isFeasible = true;
             }
             else
             {
-                if (normalized_feasibility < myProblem->options.snopt_feasibility_tolerance || this->mySNOPT->getInform() < 10)
+                if ((normalized_feasibility < myProblem->options.snopt_feasibility_tolerance && decision_variable_infeasibility < myProblem->options.snopt_feasibility_tolerance)
+                    || this->mySNOPT->getInform() < 10)
                     isFeasible = true;
             }
 
@@ -651,18 +653,19 @@ namespace EMTG { namespace Solvers {
             {
                 //if we have not yet found our first feasible point and the ACE feasible point finder is enabled
                 //then we should see if this point is "more feasible" than best one we have so far
-                if (normalized_feasibility < best_feasibility)
+                if (fmax(normalized_feasibility, decision_variable_infeasibility) < best_feasibility)
                 {
                     if (!myProblem->options.quiet_basinhopping)
                     {
-                        std::cout << "Acquired slightly less infeasible point with feasibility " << normalized_feasibility << std::endl;
+                        std::cout << "Acquired slightly less infeasible point with constraint feasibility " << normalized_feasibility << std::endl;
+                        std::cout << "and decision variable feasibility " << decision_variable_infeasibility << std::endl;
                         //std::std::cout << "Worst constraint is F[" << this->worst_constraint << "]: " << this->myProblem->Fdescriptions[this->worst_constraint] << std::endl;
                         //std::std::cout << "with abs(violation) " << feasibility << std::endl;
                     }
                     this->Jincumbent = ObjectiveFunctionValue;
                     this->X_incumbent = this->X_after_slide;
                     myProblem->Xopt = this->X_after_slide_unscaled; //we store the unscaled Xcurrent
-                    best_feasibility = normalized_feasibility;
+                    best_feasibility = fmax(normalized_feasibility, decision_variable_infeasibility);
                     this->X_most_feasible = this->X_after_slide_unscaled;
                     new_point = false;
 
@@ -678,9 +681,9 @@ namespace EMTG { namespace Solvers {
             {
                 ++this->number_of_failures_since_last_improvement;
 
-                if (normalized_feasibility < this->FeasibilityIncumbent)
+                if (fmax(normalized_feasibility, decision_variable_infeasibility) < this->FeasibilityIncumbent)
                 {
-                    this->FeasibilityIncumbent = normalized_feasibility;
+                    this->FeasibilityIncumbent = fmax(normalized_feasibility, decision_variable_infeasibility);
                     this->X_most_feasible = this->X_after_slide_unscaled;
                 }
             }

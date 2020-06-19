@@ -35,6 +35,7 @@
 #include "DepartAsEarlyAsPossibleObjective.h"
 #include "DepartAsLateAsPossibleObjective.h"
 #include "MinimizeChemicalFuelObjective.h"
+#include "MinimizeChemicalOxidizerObjective.h"
 #include "MinimizeElectricPropellantObjective.h"
 #include "MinimizeTotalPropellantObjective.h"
 #include "MinimizeWaypointTrackingErrorObjective.h"
@@ -148,6 +149,13 @@ namespace EMTG
             case ObjectiveFunctionType::MINIMIZE_CHEMICAL_FUEL:
             {
                 return new ObjectiveFunctions::MinimizeChemicalFuelObjective(Universe,
+                    mySpacecraft,
+                    myOptions,
+                    myMission);
+            }
+            case ObjectiveFunctionType::MINIMIZE_CHEMICAL_OXIDIZER:
+            {
+                return new ObjectiveFunctions::MinimizeChemicalOxidizerObjective(Universe,
                     mySpacecraft,
                     myOptions,
                     myMission);

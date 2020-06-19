@@ -160,7 +160,7 @@ namespace EMTG
                         {
                             size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
 
-                            //if this variable is not yet in the list of variables that affect the previous step's right state, add it to the list
+                            //if this variable is not yet in the list of variables that affect the current step's left state, add it to the list
                             if (std::find(this->ListOfVariablesAffectingCurrentStepLeftState.begin(), this->ListOfVariablesAffectingCurrentStepLeftState.end(), Xindex)
                                 == this->ListOfVariablesAffectingCurrentStepLeftState.end())
                             {
@@ -292,191 +292,20 @@ namespace EMTG
             }//end derivatives with respect to previous step right boundary
 
             //Step 5: derivatives with respect to current step left state
-            if (this->myOptions->ParallelShootingStateRepresentation == StateRepresentation::SphericalRADEC)
+            for (size_t encodedStateIndex : {0, 1, 2, 3, 4, 5})
             {
-                //r
+                for (size_t cartesianStateIndex : {0, 1, 2, 3, 4, 5})
                 {
-                    const size_t stateIndices[] = { 0, 1, 2 };
-                    for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                    {
-                        size_t stateIndex = stateIndices[entryIndex];
-                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_r[entryIndex];
+                    size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_StateElements[encodedStateIndex][cartesianStateIndex];
 
-                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
+                    size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
 
-                        this->create_sparsity_entry(this->Findices_left_match_point_constraints[stateIndex],
-                            Xindex,
-                            this->Gindices_StepLeftMatchPoint_wrt_r);
-                    }
+                    this->create_sparsity_entry(this->Findices_left_match_point_constraints[cartesianStateIndex],
+                        Xindex,
+                        this->Gindices_StepLeftMatchPoint_wrt_StepLeftEncodedState);
                 }
-                //RA
-                {
-                    const size_t stateIndices[] = { 0, 1 };
-                    for (size_t entryIndex = 0; entryIndex < 2; ++entryIndex)
-                    {
-                        size_t stateIndex = stateIndices[entryIndex];
-                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_RA[entryIndex];
+            }
 
-                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-
-                        this->create_sparsity_entry(this->Findices_left_match_point_constraints[stateIndex],
-                            Xindex,
-                            this->Gindices_StepLeftMatchPoint_wrt_RA);
-                    }
-                }
-                //DEC
-                {
-                    const size_t stateIndices[] = { 0, 1, 2 };
-                    for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                    {
-                        size_t stateIndex = stateIndices[entryIndex];
-                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_DEC[entryIndex];
-
-                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-
-                        this->create_sparsity_entry(this->Findices_left_match_point_constraints[stateIndex],
-                            Xindex,
-                            this->Gindices_StepLeftMatchPoint_wrt_DEC);
-                    }
-                }
-                //v
-                {
-                    const size_t stateIndices[] = { 3, 4, 5 };
-                    for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                    {
-                        size_t stateIndex = stateIndices[entryIndex];
-                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_v[entryIndex];
-
-                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-
-                        this->create_sparsity_entry(this->Findices_left_match_point_constraints[stateIndex],
-                            Xindex,
-                            this->Gindices_StepLeftMatchPoint_wrt_v);
-                    }
-                }
-                //vRA
-                {
-                    const size_t stateIndices[] = { 3, 4 };
-                    for (size_t entryIndex = 0; entryIndex < 2; ++entryIndex)
-                    {
-                        size_t stateIndex = stateIndices[entryIndex];
-                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_vRA[entryIndex];
-
-                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-
-                        this->create_sparsity_entry(this->Findices_left_match_point_constraints[stateIndex],
-                            Xindex,
-                            this->Gindices_StepLeftMatchPoint_wrt_vRA);
-                    }
-                }
-                //vDEC
-                {
-                    const size_t stateIndices[] = { 3, 4, 5 };
-                    for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                    {
-                        size_t stateIndex = stateIndices[entryIndex];
-                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_vDEC[entryIndex];
-
-                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-
-                        this->create_sparsity_entry(this->Findices_left_match_point_constraints[stateIndex],
-                            Xindex,
-                            this->Gindices_StepLeftMatchPoint_wrt_vDEC);
-                    }
-                }
-            }//end SphericalRADEC
-            if (this->myOptions->ParallelShootingStateRepresentation == StateRepresentation::SphericalAZFPA)
-            {//r
-                {
-                    const size_t stateIndices[] = { 0, 1, 2 };
-                    for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                    {
-                        size_t stateIndex = stateIndices[entryIndex];
-                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_r[entryIndex];
-
-                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-
-                        this->create_sparsity_entry(this->Findices_left_match_point_constraints[stateIndex],
-                            Xindex,
-                            this->Gindices_StepLeftMatchPoint_wrt_r);
-                    }
-                }
-                //RA
-                {
-                    const size_t stateIndices[] = { 0, 1, 3, 4 };
-                    for (size_t entryIndex = 0; entryIndex < 4; ++entryIndex)
-                    {
-                        size_t stateIndex = stateIndices[entryIndex];
-                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_RA[entryIndex];
-
-                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-
-                        this->create_sparsity_entry(this->Findices_left_match_point_constraints[stateIndex],
-                            Xindex,
-                            this->Gindices_StepLeftMatchPoint_wrt_RA);
-                    }
-                }
-                //DEC
-                {
-                    const size_t stateIndices[] = { 0, 1, 2, 3, 4, 5 };
-                    for (size_t entryIndex = 0; entryIndex < 6; ++entryIndex)
-                    {
-                        size_t stateIndex = stateIndices[entryIndex];
-                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_DEC[entryIndex];
-
-                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-
-                        this->create_sparsity_entry(this->Findices_left_match_point_constraints[stateIndex],
-                            Xindex,
-                            this->Gindices_StepLeftMatchPoint_wrt_DEC);
-                    }
-                }
-                //v
-                {
-                    const size_t stateIndices[] = { 3, 4, 5 };
-                    for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                    {
-                        size_t stateIndex = stateIndices[entryIndex];
-                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_v[entryIndex];
-
-                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-
-                        this->create_sparsity_entry(this->Findices_left_match_point_constraints[stateIndex],
-                            Xindex,
-                            this->Gindices_StepLeftMatchPoint_wrt_v);
-                    }
-                }
-                //AZ
-                {
-                    const size_t stateIndices[] = { 3, 4, 5 };
-                    for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                    {
-                        size_t stateIndex = stateIndices[entryIndex];
-                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_AZ[entryIndex];
-
-                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-
-                        this->create_sparsity_entry(this->Findices_left_match_point_constraints[stateIndex],
-                            Xindex,
-                            this->Gindices_StepLeftMatchPoint_wrt_AZ);
-                    }
-                }
-                //FPA
-                {
-                    const size_t stateIndices[] = { 3, 4, 5 };
-                    for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                    {
-                        size_t stateIndex = stateIndices[entryIndex];
-                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_FPA[entryIndex];
-
-                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-
-                        this->create_sparsity_entry(this->Findices_left_match_point_constraints[stateIndex],
-                            Xindex,
-                            this->Gindices_StepLeftMatchPoint_wrt_FPA);
-                    }
-                }
-            }//end SphericalAZFPA
             //mass
             this->create_sparsity_entry(this->Findices_left_match_point_constraints[6],
                 this->Xindex_mass,
@@ -515,206 +344,29 @@ namespace EMTG
             {
                 math::Matrix<double> dMatchState_dDecisionVariable(this->StateStepLeftInertial.get_n(), 1, 0.0);
 
-                //Step 2.1: with respect to the current step
-
-                if (this->myOptions->ParallelShootingStateRepresentation == StateRepresentation::SphericalRADEC)
+                //Step 2.1: with respect to the current step//first clear the entries
+                for (size_t& Gindex : this->Gindices_StepLeftMatchPoint_wrt_StepLeftEncodedState)
                 {
-                    //r
-                    {
-                        const size_t stateIndices[] = { 0, 1, 2 };
-                        for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                        {
-                            size_t stateIndex = stateIndices[entryIndex];
-                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_r[entryIndex];
+                    G[Gindex] = 0.0;
+                }
 
-                            size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-                            size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_r[entryIndex];
-
-                            G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                                * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
-                                * continuity_constraint_scale_factors(stateIndex);
-                        }
-                    }
-                    //RA
-                    {
-                        const size_t stateIndices[] = { 0, 1 };
-                        for (size_t entryIndex = 0; entryIndex < 2; ++entryIndex)
-                        {
-                            size_t stateIndex = stateIndices[entryIndex];
-                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_RA[entryIndex];
-
-                            size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-                            size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_RA[entryIndex];
-
-                            G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                                * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
-                                * continuity_constraint_scale_factors(stateIndex);
-                        }
-                    }
-                    //DEC
-                    {
-                        const size_t stateIndices[] = { 0, 1, 2 };
-                        for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                        {
-                            size_t stateIndex = stateIndices[entryIndex];
-                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_DEC[entryIndex];
-
-                            size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-                            size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_DEC[entryIndex];
-
-                            G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                                * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
-                                * continuity_constraint_scale_factors(stateIndex);
-                        }
-                    }
-                    //v
-                    {
-                        const size_t stateIndices[] = { 3, 4, 5 };
-                        for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                        {
-                            size_t stateIndex = stateIndices[entryIndex];
-                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_v[entryIndex];
-
-                            size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-                            size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_v[entryIndex];
-
-                            G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                                * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
-                                * continuity_constraint_scale_factors(stateIndex);
-                        }
-                    }
-                    //vRA
-                    {
-                        const size_t stateIndices[] = { 3, 4 };
-                        for (size_t entryIndex = 0; entryIndex < 2; ++entryIndex)
-                        {
-                            size_t stateIndex = stateIndices[entryIndex];
-                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_vRA[entryIndex];
-
-                            size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-                            size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_vRA[entryIndex];
-
-                            G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                                * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
-                                * continuity_constraint_scale_factors(stateIndex);
-                        }
-                    }
-                    //vDEC
-                    {
-                        const size_t stateIndices[] = { 3, 4, 5 };
-                        for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                        {
-                            size_t stateIndex = stateIndices[entryIndex];
-                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_vDEC[entryIndex];
-
-                            size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-                            size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_vDEC[entryIndex];
-
-                            G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                                * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
-                                * continuity_constraint_scale_factors(stateIndex);
-                        }
-                    }
-                }//endSphericalRADEC
-                else if (this->myOptions->ParallelShootingStateRepresentation == StateRepresentation::SphericalAZFPA)
+                //now populate them
+                for (size_t encodedStateIndex : {0, 1, 2, 3, 4, 5})
                 {
-                    //r
+                    for (size_t cartesianStateIndex : {0, 1, 2, 3, 4, 5})
                     {
-                        const size_t stateIndices[] = { 0, 1, 2 };
-                        for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                        {
-                            size_t stateIndex = stateIndices[entryIndex];
-                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_r[entryIndex];
+                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_StateElements[encodedStateIndex][cartesianStateIndex];
 
-                            size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-                            size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_r[entryIndex];
+                        size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_StepLeftEncodedState[dIndex];
 
-                            G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                                * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
-                                * continuity_constraint_scale_factors(stateIndex);
-                        }
+                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
+
+                        G[Gindex] += this->X_scale_factors->operator[](Xindex)
+                            * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
+                            * continuity_constraint_scale_factors(cartesianStateIndex);
                     }
-                    //RA
-                    {
-                        const size_t stateIndices[] = { 0, 1, 3, 4 };
-                        for (size_t entryIndex = 0; entryIndex < 4; ++entryIndex)
-                        {
-                            size_t stateIndex = stateIndices[entryIndex];
-                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_RA[entryIndex];
+                }
 
-                            size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-                            size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_RA[entryIndex];
-
-                            G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                                * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
-                                * continuity_constraint_scale_factors(stateIndex);
-                        }
-                    }
-                    //DEC
-                    {
-                        const size_t stateIndices[] = { 0, 1, 2, 3, 4, 5 };
-                        for (size_t entryIndex = 0; entryIndex < 6; ++entryIndex)
-                        {
-                            size_t stateIndex = stateIndices[entryIndex];
-                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_DEC[entryIndex];
-
-                            size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-                            size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_DEC[entryIndex];
-
-                            G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                                * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
-                                * continuity_constraint_scale_factors(stateIndex);
-                        }
-                    }
-                    //v
-                    {
-                        const size_t stateIndices[] = { 3, 4, 5 };
-                        for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                        {
-                            size_t stateIndex = stateIndices[entryIndex];
-                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_v[entryIndex];
-
-                            size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-                            size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_v[entryIndex];
-
-                            G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                                * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
-                                * continuity_constraint_scale_factors(stateIndex);
-                        }
-                    }
-                    //AZ
-                    {
-                        const size_t stateIndices[] = { 3, 4, 5 };
-                        for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                        {
-                            size_t stateIndex = stateIndices[entryIndex];
-                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_AZ[entryIndex];
-
-                            size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-                            size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_AZ[entryIndex];
-
-                            G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                                * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
-                                * continuity_constraint_scale_factors(stateIndex);
-                        }
-                    }
-                    //FPA
-                    {
-                        const size_t stateIndices[] = { 3, 4, 5 };
-                        for (size_t entryIndex = 0; entryIndex < 3; ++entryIndex)
-                        {
-                            size_t stateIndex = stateIndices[entryIndex];
-                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_FPA[entryIndex];
-
-                            size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
-                            size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_FPA[entryIndex];
-
-                            G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                                * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
-                                * continuity_constraint_scale_factors(stateIndex);
-                        }
-                    }
-                }//end SphericalAZFPA
                 //mass
                 {
                     size_t Gindex = this->Gindex_StepLeftMatchPoint_wrt_Mass;

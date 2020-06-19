@@ -558,62 +558,7 @@ namespace EMTG
 
 
             //Step 2: output the initial TCM if applicable
-            if (this->hasInitialTCM)
-            {
-                //Step 2.1: figure out spacecrafty things
-
-                //Step 2.1.1: where am I relative to the sun?
-                math::Matrix<doubleType> R_sc_Sun(3, 1, 0.0);
-                if (this->myUniverse->central_body_SPICE_ID == 10)
-                {
-                    R_sc_Sun = output_state.getSubMatrix1D(0, 2);
-                }
-                else
-                {
-                    //where is the central body relative to the sun?
-                    doubleType central_body_state_and_derivatives[12];
-                    this->myUniverse->locate_central_body(output_state(7),
-                        central_body_state_and_derivatives,
-                        *this->myOptions,
-                        false);
-
-                    math::Matrix<doubleType> R_CB_Sun(3, 1, 0.0);
-                    for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
-                    {
-                        R_CB_Sun(stateIndex) = central_body_state_and_derivatives[stateIndex];
-                    }
-
-                    R_sc_Sun = output_state.getSubMatrix1D(0, 2) + R_CB_Sun;
-                }
-                doubleType r_sc_sun_AU = R_sc_Sun.norm() / this->myOptions->AU;
-                this->mySpacecraft->computePowerState(r_sc_sun_AU, output_state(7));
-
-                doubleType power = this->mySpacecraft->getAvailablePower();
-                doubleType active_power = this->mySpacecraft->getEPActivePower();
-
-                phase::write_output_line(outputfile,//outputfile
-                    eventcount,//eventcount
-                    "TCM",//event_type
-                    "deep-space",//event_location
-                    0.0,// timestep_size,
-                    -1,//flyby_altitude,
-                    0,//BdotR
-                    0,//BdotT
-                    0,//angle1
-                    0,//angle2
-                    0,//C3
-                    this->state_after_initial_TCM,//state
-                    math::Matrix<doubleType>(3, 1, 0.0),//dV
-                    math::Matrix<doubleType>(3, 1, 0.0),//ThrustVector
-                    this->initial_TCM_magnitude,//dVmag
-                    0.0,//Thrust
-                    this->mySpacecraft->getMonopropIsp(),//Isp
-                    power,//AvailPower
-                    0.0,//mdot
-                    0,//number_of_active_engines
-                    active_power,
-                    "none");
-            }
+            this->output_initial_TCM(outputfile, eventcount);
 
             //Step 3: print the forward half phase
             //set the propagator temporarily to dump into the output state

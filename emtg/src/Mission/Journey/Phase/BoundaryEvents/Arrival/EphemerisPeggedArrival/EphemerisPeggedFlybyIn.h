@@ -51,7 +51,7 @@ namespace EMTG
                 const bool& needG);
 
             //calcbounds
-            void calcbounds();
+            void calcbounds(std::vector<size_t> timeVariables);
 
         protected:
             void calcbounds_virtual_deltav_constraint() {};//stub

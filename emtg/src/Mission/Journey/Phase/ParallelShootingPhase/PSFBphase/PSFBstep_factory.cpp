@@ -155,7 +155,7 @@ namespace EMTG
             }
             else
             {
-                throw std::invalid_argument("PSFBstep_factory: Unrecognized duty cycle type. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                throw std::invalid_argument("PSFBstep_factory: Unrecognized duty cycle type in journey " + std::to_string(journeyIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
             }
         }
     }//end namespace Phases

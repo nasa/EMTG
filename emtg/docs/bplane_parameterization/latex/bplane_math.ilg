@@ -1,0 +1,16 @@
+This is makeindex, version 2.15 [MiKTeX 2.9.7250 64-bit] (kpathsea + Thai support).
+Scanning style file C:/Users/nhatten/AppData/Local/Programs/MiKTeX 2.9/makeindex/nomencl/nomencl.ist........
+** Input style error (file = C:/Users/nhatten/AppData/Local/Programs/MiKTeX 2.9/makeindex/nomencl/nomencl.ist, line = 36):
+   -- Unknown specifier lethead_prefix.
+** Input style error (file = C:/Users/nhatten/AppData/Local/Programs/MiKTeX 2.9/makeindex/nomencl/nomencl.ist, line = 37):
+   -- Unknown specifier lethead_suffix.
+** Input style error (file = C:/Users/nhatten/AppData/Local/Programs/MiKTeX 2.9/makeindex/nomencl/nomencl.ist, line = 38):
+   -- Unknown specifier lethead_flag.
+....done (12 attributes redefined, 3 ignored).
+Scanning input file bplane_math.idx...done (0 entries accepted, 0 rejected).
+Scanning input file bplane_math.nlo....done (27 entries accepted, 0 rejected).
+Overall 2 files read (27 entries accepted, 0 rejected).
+Sorting entries....done (138 comparisons).
+Generating output file bplane_math.nls....done (32 lines written, 0 warnings).
+Output written in bplane_math.nls.
+Transcript written in bplane_math.ilg.

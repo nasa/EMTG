@@ -38,7 +38,7 @@ namespace EMTG
             // constructor
             SphericalHarmonicTerm(SpacecraftAccelerationModel * acceleration_model_in, body * my_body_in, CentralBodyGravityTerm * parent_gravity_term_in, const size_t & degree_in, const size_t & order_in);
 
-            ~SphericalHarmonicTerm();
+            virtual ~SphericalHarmonicTerm();
 
             // methods
             virtual void computeAccelerationTerm() override;

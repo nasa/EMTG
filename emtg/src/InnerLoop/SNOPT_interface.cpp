@@ -265,11 +265,13 @@ namespace EMTG
                 this->distance_from_equality_filament,
                 this->decision_vector_feasibility_metric);
 
+            double worst_feasibility = fmax(normalized_feasibility_metric, decision_vector_feasibility_metric);
+
             //adopt the incumbent if appropriate
             if (this->myOptions.get_enable_NLP_chaperone())
             {
                 this->unscaleX_NLP_incumbent();
-                if (this->normalized_feasibility_metric < this->myOptions.get_feasibility_tolerance()
+                if (worst_feasibility < this->myOptions.get_feasibility_tolerance()
                     && this->feasibility_metric_NLP_incumbent < this->myOptions.get_feasibility_tolerance())
                 {
                     // Both incumbent point and NLP exit point are feasible
@@ -287,7 +289,7 @@ namespace EMTG
                     }
                 }
                 //if the incumbent point is feasible but the exit point is not
-                else if (this->feasibility_metric_NLP_incumbent < this->normalized_feasibility_metric
+                else if (this->feasibility_metric_NLP_incumbent < worst_feasibility
                     && this->feasibility_metric_NLP_incumbent < this->myOptions.get_feasibility_tolerance())
                 {
                     this->X_unscaled = this->X_NLP_incumbent_unscaled;
@@ -296,7 +298,7 @@ namespace EMTG
 
                     std::cout << "NLP incumbent point was feasible and the exit point was not." << std::endl;
                 }
-                else if (this->feasibility_metric_NLP_incumbent < this->normalized_feasibility_metric)
+                else if (this->feasibility_metric_NLP_incumbent < worst_feasibility)
                 {
                     this->X_unscaled = this->X_NLP_incumbent_unscaled;
                     this->X_scaled = this->X_NLP_incumbent_scaled;
@@ -462,7 +464,7 @@ namespace EMTG
 
                 //if the current point is feasible and better than the incumbent
                 //raw pointer math for speed
-                if (f_current < self->myOptions.get_feasibility_tolerance()
+                if (fmax(f_current, decision_variable_feasibility_metric) < self->myOptions.get_feasibility_tolerance()
                     && self->feasibility_metric_NLP_incumbent < self->myOptions.get_feasibility_tolerance()
                     && decision_variable_feasibility_metric == 0.0)
                 {
@@ -471,7 +473,7 @@ namespace EMTG
                     {
                         // The current point is more optimal than the incumbent, so update the incumbent
                         self->J_NLP_incumbent = self->F.front();
-                        self->feasibility_metric_NLP_incumbent = f_current;
+                        self->feasibility_metric_NLP_incumbent = fmax(f_current, decision_variable_feasibility_metric);
 
                         self->X_NLP_incumbent_unscaled = self->X_unscaled;
                         self->X_NLP_incumbent_scaled = self->X_scaled;
@@ -492,16 +494,16 @@ namespace EMTG
 					}
                 }
                 //if the current point is more feasible than the incumbent
-                else if (f_current < self->feasibility_metric_NLP_incumbent)
+                else if (fmax(f_current, decision_variable_feasibility_metric) < self->feasibility_metric_NLP_incumbent)
                 {
                     self->J_NLP_incumbent = self->F.front();
-                    self->feasibility_metric_NLP_incumbent = f_current;
+                    self->feasibility_metric_NLP_incumbent = fmax(f_current, decision_variable_feasibility_metric);
 
                     self->X_NLP_incumbent_unscaled = self->X_unscaled;
                     self->X_NLP_incumbent_scaled = self->X_scaled;
                     self->F_NLP_incumbent = self->F;
 					
-					if (f_current < self->myOptions.get_feasibility_tolerance() && self->first_feasibility == false)
+					if (fmax(f_current, decision_variable_feasibility_metric) < self->myOptions.get_feasibility_tolerance() && self->first_feasibility == false)
 					{
 						self->first_feasibility = true;
 						self->myProblem->Xopt = self->X_NLP_incumbent_unscaled;

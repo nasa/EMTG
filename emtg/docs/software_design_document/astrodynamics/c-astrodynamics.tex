@@ -46,6 +46,8 @@ The \texttt{Frame} class handles transformations between EMTG's available refere
 	\item \textbf{RIC (radial-intrack-crosstrack)}: A frame defined by the position and velocity vectors of the central body relative to some other reference body. For example, OSIRIS-REx uses a RIC frame where the \texttt{x} axis is the vector from the Sun to Bennu $\mathbf{r}$, the \texttt{z} axis is the angular momentum vector of Bennu about the sun $\mathbf{h} = \mathbf{r} \times \mathbf{v}$, and the \texttt{y} axis completes the right-handed set, $\mathbf{h} \times \mathbf{v}$. (not yet implemented)
 	
 	\item \textbf{SAM (sun-angular momentum, also called sun-north)}: The $x$ axis points from the central body to a reference body (\textit{i.e.} the Sun). The $y$ axis is the cross product of the \texttt{J2000BCI} spin pole and the $x$ axis. The $z$ axis complete the right-handed set.
+	
+	\item \textbf{Object-Referenced}: The $x$ axis points from the central body to the reference body. The $y$ axis is the velocity vector of the reference body relative to the central body. The $z$ axis completes the right-handed set and is the angular momentum vector of the reference body with respect to the central body. When this frame is used with a free point boundary condition, the first and second entries in the journey's destination list define the reference body for the departure and arrival event, respectively.
 \end{itemize}
 
 At construction, the owning object passes in the three Euler rotation angles and their first-order derivatives ($\alpha_0, \dot{\alpha}, \delta_0, \dot{\delta}, W, \dot{W}$). The \texttt{initialize\_J2000()} method is called by the constructor and creates the rotation matrices between \texttt{ICRF} and \texttt{J2000\_BCI}. These rotations are immediately available. The time-dependent transformations not evaluated immediately because the epoch of interest is not yet known. Instead, they are evaluated when the owning object, or another method of the \texttt{frame} itself, calls the \texttt{construct\_rotation\_matrices()} method. The rotations can be constructed with or without derivative information, as needed.
@@ -53,6 +55,21 @@ At construction, the owning object passes in the three Euler rotation angles and
 The owning object may then perform the transformation either by calling \textit{get\_R()} and \texttt{get\_dRdt} and performing the transformation outside the frame class, or more safely, by calling the \texttt{rotate\_frame\_to\_frame()} method. The \texttt{rotate\_frame\_to\_frame()} method performs the transformation and returns both the transformed state and its derivatives.
 
 The \hl{\texttt{rotate\_frame\_to\_frame()} method will be the only safe way to transform to and from \texttt{Topocentric}, \texttt{Polar}, \texttt{J2000\_BCR}, and \texttt{TrueOfDate\_BCR} once they are fully implemented. We plan to force EMTG to use \texttt{rotate\_frame\_to\_frame()} everywhere, just to make sure.}
+
+\section{StateRepresentation}
+\label{sec:StateRepresentation}
+The \texttt{StateRepresentation} set of classes handle the transformation between state representations. EMTG's default state representation is Cartesian. However there are times in various parts of the program where the user might specify state in another representation. This most frequently happens in \texttt{ParallelShootingStep} and \texttt{FreePointBoundary} but could be used in other places as well.
+
+\texttt{StateRepresentationBase} is an abstract base class for state representation classes. A new derived class is written for every new state representation. These classes handle the transformation from Cartesian to the new state representation and back, and also compute the partial derivatives. It is up to the host class to put these partial derivatives into the Jacobian - \texttt{StateRepresentationBase} and its children just puts the math all in one place.
+
+EMTG currently implements the following state representations, each of which has its own derived class:
+\begin{itemize}
+	\item Cartesian
+	\item SphericalAZFPA
+	\item SphericalRADEC
+	\item Classical Orbit Elements (COE)
+	\item B-plane coordinates $\left\{v_\infty, RHA, DHA, b_{radius}, b_{theta}, TA\right\}$. A full math spec is available in the ``bplane\_math.pdf'' file in the EMTG repository. Note that the b-plane reference vector for \texttt{IncomingBplaneRepresentation} is the current reference frame\'s $\hat z$ vector. It is not possible to make the reference vector depend on the state as that would result in a circular definition of the Cartesian state as a function of the b-plane coordinates.
+\end{itemize}
 
 \section{B-plane}
 \label{sec:bplane}

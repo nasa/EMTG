@@ -453,6 +453,99 @@ namespace EMTG
 
         }//end construct_SAM_to_J2000BCI_rotation()
 
+        void frame::construct_ObjectReferenced_to_ICRF_rotation(const doubleType& ETepoch,
+            math::Matrix<doubleType> referenceVector,
+            math::Matrix<doubleType> dreferenceVector_dt,
+            const bool& GenerateDerivatives)
+        {
+            math::Matrix<doubleType> R = referenceVector.getSubMatrix1D(0, 2);
+            math::Matrix<doubleType> V = referenceVector.getSubMatrix1D(3, 5);
+            math::Matrix<doubleType> dRdt = dreferenceVector_dt.getSubMatrix1D(0, 2);
+            math::Matrix<doubleType> dVdt = dreferenceVector_dt.getSubMatrix1D(3, 5);
+            doubleType r = R.norm();
+            doubleType v = V.norm();
+            doubleType dr_dt = (R(0) * dRdt(0) + R(1) * dRdt(1) + R(2) * dRdt(2)) / r;
+            doubleType dv_dt = (V(0) * dVdt(0) + V(1) * dVdt(1) + V(2) * dVdt(2)) / v;
+            math::Matrix<doubleType> Rhat = R / r;
+            math::Matrix<doubleType> dRhat_dt = dRdt / r - R * dr_dt / r / r;
+            math::Matrix<doubleType> Vhat = V / v;
+            math::Matrix<doubleType> dVhat_dt = dVdt / v - V * dr_dt / v / v;
+            math::Matrix<doubleType> H = R.cross(V);
+            doubleType h = H.norm();
+            math::Matrix<doubleType> Hhat = H / h;
+
+            doubleType rx = referenceVector(0);
+            doubleType ry = referenceVector(1);
+            doubleType rz = referenceVector(2);
+            doubleType vx = referenceVector(3);
+            doubleType vy = referenceVector(4);
+            doubleType vz = referenceVector(5);
+            doubleType drx_dt = dreferenceVector_dt(0);
+            doubleType dry_dt = dreferenceVector_dt(1);
+            doubleType drz_dt = dreferenceVector_dt(2);
+            doubleType dvx_dt = dreferenceVector_dt(3);
+            doubleType dvy_dt = dreferenceVector_dt(4);
+            doubleType dvz_dt = dreferenceVector_dt(5);
+
+            math::Matrix<doubleType> Xhat = Rhat;
+            math::Matrix<doubleType> Yhat = Vhat;
+            math::Matrix<doubleType> Zhat = Hhat;
+
+            //rotation
+            this->R_from_ICRF_to_ObjectReferenced = math::Matrix<doubleType>(3, 3, 0.0);
+            this->R_from_ICRF_to_ObjectReferenced(0, 0) = Xhat(0);
+            this->R_from_ICRF_to_ObjectReferenced(0, 1) = Xhat(1);
+            this->R_from_ICRF_to_ObjectReferenced(0, 2) = Xhat(2);
+            this->R_from_ICRF_to_ObjectReferenced(1, 0) = Yhat(0);
+            this->R_from_ICRF_to_ObjectReferenced(1, 1) = Yhat(1);
+            this->R_from_ICRF_to_ObjectReferenced(1, 2) = Yhat(2);
+            this->R_from_ICRF_to_ObjectReferenced(2, 0) = Zhat(0);
+            this->R_from_ICRF_to_ObjectReferenced(2, 1) = Zhat(1);
+            this->R_from_ICRF_to_ObjectReferenced(2, 2) = Zhat(2);
+
+            this->R_from_ObjectReferenced_to_ICRF = this->R_from_ICRF_to_ObjectReferenced.transpose();
+
+            //time derivative
+            doubleType r3 = r * r * r;
+            doubleType v3 = v * v * v;
+
+            math::Matrix<doubleType> dZhat_dt = R.cross(dVdt) / h - Zhat / h * (R.cross(dVdt).dot(Zhat));
+
+            this->dR_from_ICRF_to_ObjectReferenced_dt = math::Matrix<doubleType>(3, 3, 0.0);
+            this->dR_from_ICRF_to_ObjectReferenced_dt(0, 0) = ((ry*ry + rz*rz) * drx_dt - rx * ry * dry_dt - rx * rz * drz_dt) / r3;
+            this->dR_from_ICRF_to_ObjectReferenced_dt(0, 1) = (-rx * ry * drx_dt + (rx*rx + rz*rz) * dry_dt - ry * rz * drz_dt) / r3;
+            this->dR_from_ICRF_to_ObjectReferenced_dt(0, 2) = (-rx * rz * drx_dt - ry * rz * dry_dt + (rx*rx + ry*ry) * drz_dt) / r3;
+            this->dR_from_ICRF_to_ObjectReferenced_dt(1, 0) = ((vy*vy + vz * vz) * dvx_dt - vx * vy * dvy_dt - vx * vz * dvz_dt) / v3;
+            this->dR_from_ICRF_to_ObjectReferenced_dt(1, 1) = (-vx * vy * dvx_dt + (vx*vx + vz * vz) * dvy_dt - vy * vz * dvz_dt) / v3;
+            this->dR_from_ICRF_to_ObjectReferenced_dt(1, 2) = (-vx * vz * dvx_dt - vy * vz * dvy_dt + (vx*vx + vy * vy) * dvz_dt) / v3;
+            this->dR_from_ICRF_to_ObjectReferenced_dt(2, 0) = dZhat_dt(0);
+            this->dR_from_ICRF_to_ObjectReferenced_dt(2, 1) = dZhat_dt(1);
+            this->dR_from_ICRF_to_ObjectReferenced_dt(2, 2) = dZhat_dt(2);
+
+            this->dR_from_ObjectReferenced_to_ICRF_dt = this->dR_from_ICRF_to_ObjectReferenced_dt.transpose();
+
+
+#ifdef AD_INSTRUMENTATION
+            std::ofstream out("tests/ObjectReferenced_time_derivatives.csv", std::ios::trunc);
+            out << "i, j, Analytical, Algorithmic, Absolute error, Relative error, an/al, al/an" << std::endl;
+            for (size_t i : {0, 1, 2})
+            {
+                for (size_t j : {0, 1, 2})
+                {
+                    double algorithmic = R_from_ICRF_to_ObjectReferenced(i, j).getDerivative(7) / 13713.35828;
+                    double analytical = dR_from_ICRF_to_ObjectReferenced_dt(i, j)_GETVALUE;
+                    double abserror = analytical - algorithmic;
+                    double relerror = abserror / algorithmic;
+                    double an_al = analytical / algorithmic;
+                    double al_an = algorithmic / analytical;
+                    out << i << "," << j << "," << analytical << "," << algorithmic << "," << abserror << "," << relerror << "," << an_al << "," << al_an << std::endl;
+                }
+            }
+            out.close();
+#endif
+
+        }//end construct_ObjectReferenced_to_ICRF_rotation()
+
         //construct rotation frames for J2000
         void frame::construct_rotation_matrices_J2000(const bool& GenerateDerivatives)
         {
@@ -506,6 +599,10 @@ namespace EMTG
                 else if (RotatedReferenceFrame == ReferenceFrame::SAM)
                 {
                     R = this->R_from_J2000BCI_to_SAM * this->R_from_ICRF_to_J2000BCI;
+                }
+                else if (RotatedReferenceFrame == ReferenceFrame::ObjectReferenced)
+                {
+                    R = this->R_from_ICRF_to_ObjectReferenced;
                 }
             }
             else if (OriginalReferenceFrame == EMTG::ReferenceFrame::TrueOfDate_BCI)
@@ -582,6 +679,10 @@ namespace EMTG
             {
                 R = this->get_R(ReferenceFrame::J2000_BCI, RotatedReferenceFrame) * this->R_from_SAM_to_J2000BCI;
             }
+            else if (OriginalReferenceFrame == ReferenceFrame::ObjectReferenced)
+            {
+                R = this->get_R(ReferenceFrame::ICRF, RotatedReferenceFrame) * this->R_from_ObjectReferenced_to_ICRF;
+            }
 
             return R;
         }//end get_R()
@@ -626,6 +727,10 @@ namespace EMTG
                 else if (RotatedReferenceFrame == ReferenceFrame::SAM)
                 {
                     Rdot = this->dR_from_J2000BCI_to_SAM_dt * this->R_from_ICRF_to_J2000BCI;
+                }
+                else if (RotatedReferenceFrame == ReferenceFrame::ObjectReferenced)
+                {
+                    Rdot = this->dR_from_ICRF_to_ObjectReferenced_dt;
                 }
             }
             else if (OriginalReferenceFrame == EMTG::ReferenceFrame::TrueOfDate_BCI)
@@ -704,6 +809,10 @@ namespace EMTG
             {
                 Rdot = this->get_R(ReferenceFrame::J2000_BCI, RotatedReferenceFrame) * this->dR_from_SAM_to_J2000BCI_dt;
             }
+            else if (OriginalReferenceFrame == ReferenceFrame::ObjectReferenced)
+            {
+                Rdot = this->get_R(ReferenceFrame::ICRF, RotatedReferenceFrame) * this->dR_from_ObjectReferenced_to_ICRF_dt;
+            }
 
             return Rdot;
         }//end get_dRdt()
@@ -747,15 +856,23 @@ namespace EMTG
                 Rstate = R * state;
                 if (GenerateDerivatives)
                 {
-                    dRstate_dt = R * dstate_dt + (Rdot + this->dR_dreferenceVector.bullet2_vector(dreferenceVector_dt)) * state;
-                    dRstate_dreferenceVector = this->dR_dreferenceVector.bullet2_vector(state);
-                    if (state == referenceVector)
+                    if (OriginalReferenceFrame == ReferenceFrame::ObjectReferenced || RotatedReferenceFrame == ReferenceFrame::ObjectReferenced)
                     {
-                        dRstate_dstate = R + dRstate_dreferenceVector;
+                        dRstate_dt = R * dstate_dt + Rdot * state;
+                        dRstate_dstate = R;
                     }
                     else
                     {
-                        dRstate_dstate = R;
+                        dRstate_dt = R * dstate_dt + (Rdot + this->dR_dreferenceVector.bullet2_vector(dreferenceVector_dt)) * state;
+                        dRstate_dreferenceVector = this->dR_dreferenceVector.bullet2_vector(state);
+                        if (state == referenceVector)
+                        {
+                            dRstate_dstate = R + dRstate_dreferenceVector;
+                        }
+                        else
+                        {
+                            dRstate_dstate = R;
+                        }
                     }
                 }
 
@@ -789,6 +906,8 @@ namespace EMTG
                 this->construct_Polar_to_BCF_rotation(ReferenceEpochJD, GenerateDerivatives);
             if (OriginalReferenceFrame == ReferenceFrame::SAM || RotatedReferenceFrame == ReferenceFrame::SAM)
                 this->construct_SAM_to_J2000BCI_rotation(ReferenceEpochJD, referenceVector, dreferenceVector_dt, GenerateDerivatives);
+            if (OriginalReferenceFrame == ReferenceFrame::ObjectReferenced || RotatedReferenceFrame == ReferenceFrame::ObjectReferenced)
+                this->construct_ObjectReferenced_to_ICRF_rotation(ReferenceEpochJD, referenceVector, dreferenceVector_dt, GenerateDerivatives);
 
             this->rotate_frame_to_frame( OriginalReferenceFrame,
                                          state,

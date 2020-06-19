@@ -74,16 +74,14 @@ namespace EMTG
             this->Fupperbounds->push_back(0.0);
             this->Fdescriptions->push_back(prefix + "maneuver epoch constraint");
 
-            //sparsity pattern - derivatives with respect to time variables
-            for (size_t Xindex = 0; Xindex < this->Xdescriptions->size(); ++Xindex)
+            //sparsity pattern - derivatives with respect to time variables. We'll take these from the phase's arrival event
+            //because it includes phase flight time
+            std::vector<size_t> timeVariables = this->mySubPhase->get_timeVariables();
+            for (size_t Xindex : timeVariables)
             {
-                if (Xdescriptions->at(Xindex).find("epoch") < 1024
-                    || Xdescriptions->at(Xindex).find("time") < 1024)
-                {
-                    this->create_sparsity_entry(this->Fdescriptions->size() - 1,
-                        Xindex,
-                        this->Gindex_wrt_TimeVariables);
-                }
+                this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                    Xindex,
+                    this->Gindex_wrt_TimeVariables);
             }
 
             //derivatives with respect to burn index variables

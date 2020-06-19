@@ -1,0 +1,18 @@
+\begin{thenomenclature} 
+
+ \nomgroup{A}
+
+  \item [{$\vb{r}$}]\begingroup Position vector\nomeqref {0}
+		\nompageref{1}
+  \item [{$\vb{x}_A}]\begingroup Arbitrary vector $\vb{x}$ expressed in coordinates of the $A$ frame.\nomeqref {0}
+		\nompageref{1}
+  \item [{$^{A} \left[ \ddt{\vb{x}} \right]$}]\begingroup Time derivative of vector $\vb{x}$ with respect to the $A$ reference frame\nomeqref {0}
+		\nompageref{1}
+  \item [{$^{B} \vb{\omega}^{A}$}]\begingroup Angular velocity vector of frame $B$ with respect to frame $A$\nomeqref {0}
+		\nompageref{1}
+  \item [{BCF}]\begingroup Body-centered, body-fixed reference frame; rotates with central body, but is not necessarily aligned with the principal axes of the ellipsoid\nomeqref {0}
+		\nompageref{1}
+  \item [{BCI}]\begingroup Body-centered inertial reference frame; does not rotate with the central body\nomeqref {0}
+		\nompageref{1}
+
+\end{thenomenclature}

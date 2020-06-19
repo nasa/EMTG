@@ -24,7 +24,7 @@ namespace EMTG
     namespace BoundaryEvents
     {
         PeriapseBoundary::PeriapseBoundary() :
-            BoundaryEventBase::BoundaryEventBase()
+            FreePointBoundary::FreePointBoundary()
         {}
 
         PeriapseBoundary::PeriapseBoundary(const std::string& name,
@@ -33,7 +33,8 @@ namespace EMTG
             size_t& stageIndex,
             Astrodynamics::universe* Universe,
             HardwareModels::Spacecraft* mySpacecraft,
-            missionoptions* myOptions)
+            missionoptions* myOptions) :
+            PeriapseBoundary()
 
         {
             this->initialize(name,
@@ -53,8 +54,38 @@ namespace EMTG
             HardwareModels::Spacecraft* mySpacecraft,
             missionoptions* myOptions)
         {
+            //periapse states don't get propagated
+            this->AllowStateToPropagate = false;
+
+            //periapse boundary states are always encoded in ICRF
+            this->myEncodedReferenceFrame = ReferenceFrame::ICRF;
+
+            //do we need the rdotv constraint?
+            if (this->myStateRepresentationEnum == StateRepresentation::IncomingBplane
+                || this->myStateRepresentationEnum == StateRepresentation::OutgoingBplane
+                || this->myStateRepresentationEnum == StateRepresentation::COE
+                || this->myStateRepresentationEnum == StateRepresentation::SphericalAZFPA)
+            {
+                this->need_rdotv_constraint = false;
+            }
+            else
+            {
+                this->need_rdotv_constraint = true;
+            }
+
+            //do we need the distance constraint?
+            if (this->myStateRepresentationEnum == StateRepresentation::SphericalAZFPA
+                || this->myStateRepresentationEnum == StateRepresentation::SphericalRADEC)
+            {
+                this->need_distance_constraint = false;
+            }
+            else
+            {
+                this->need_distance_constraint = true;
+            }
+
             //base class
-            this->BoundaryEventBase::initialize(name,
+            this->FreePointBoundary::initialize(name,
                 journeyIndex,
                 phaseIndex,
                 stageIndex,
@@ -69,209 +100,209 @@ namespace EMTG
         //******************************************calcbounds methods
         void PeriapseBoundary::calcbounds_event_left_side(const std::vector<double>& RadiusBounds,
                                                           const std::vector<double>& VelocityMagnitudeBounds,
-                                                          const std::vector<double>& MassBounds)
+                                                          std::vector<size_t> timeVariables)
         {
-
-            //Step 1: set the current stage
-            this->mySpacecraft->setActiveStage(this->stageIndex);
-
-            if (this->myOptions->PeriapseBoundaryStateRepresentation == StateRepresentation::SphericalRADEC)
+            //Step 0: what should the state bounds be?
+            std::vector< std::tuple<double, double> > stateBounds; //in degrees because FreePointBoundary converts
+            switch (this->myStateRepresentationEnum)
             {
-                //Step 2: position variables
-                //Step 2.1: radius
-                Xlowerbounds->push_back(RadiusBounds[0]);
-                Xupperbounds->push_back(RadiusBounds[1]);
-                X_scale_factors->push_back(this->myUniverse->central_body.radius);
-                Xdescriptions->push_back(prefix + "event left state r");
-                this->Xindex_rMag = this->Xdescriptions->size() - 1;
-                for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
+                case StateRepresentation::SphericalRADEC:
                 {
-                    this->Derivatives_of_StateBeforeEvent.push_back(std::make_tuple(this->Xdescriptions->size() - 1, stateIndex, 1.0));
-                    this->dIndex_periapse_state_wrt_r.push_back(this->Derivatives_of_StateBeforeEvent.size() - 1);
-                }
+                    //radius
+                    stateBounds.push_back({ RadiusBounds[0], RadiusBounds[1] });
+                    //RA
+                    stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
+                    //DEC
+                    stateBounds.push_back({ -90, 90.0 });
+                    //velocity magnitude
+                    stateBounds.push_back({ VelocityMagnitudeBounds[0], VelocityMagnitudeBounds[1] });
+                    //vRA
+                    stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
+                    //vDEC
+                    stateBounds.push_back({ -90.0, 90.0 });
 
-                //Step 2.2: RA
-                this->Xlowerbounds->push_back(-8.0 * math::PI);
-                this->Xupperbounds->push_back(8.0 * math::PI);
-                this->X_scale_factors->push_back(1.0);
-                this->Xdescriptions->push_back(this->prefix + "event left state RA");
-                this->Xindex_RA = this->Xdescriptions->size() - 1;
-                //affects x, y
-                for (size_t stateIndex = 0; stateIndex < 2; ++stateIndex)
-                {
-                    this->Derivatives_of_StateBeforeEvent.push_back(std::make_tuple(this->Xdescriptions->size() - 1, stateIndex, 1.0));
-                    this->dIndex_periapse_state_wrt_RA.push_back(this->Derivatives_of_StateBeforeEvent.size() - 1);
+                    break;
                 }
+                case StateRepresentation::SphericalAZFPA:
+                {
+                    //radius
+                    stateBounds.push_back({ RadiusBounds[0], RadiusBounds[1] });
+                    //RA
+                    stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
+                    //DEC
+                    stateBounds.push_back({ -90, 90.0 });
+                    //velocity magnitude
+                    stateBounds.push_back({ VelocityMagnitudeBounds[0], VelocityMagnitudeBounds[1] });
+                    //AZ
+                    stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
+                    //FPA
+                    stateBounds.push_back({ 90.0 - math::SMALL, 90.0 + math::SMALL });
 
-                //Step 2.3: DEC
-                this->Xlowerbounds->push_back(-0.5 * math::PI);
-                this->Xupperbounds->push_back(0.5 * math::PI);
-                this->X_scale_factors->push_back(1.0);
-                this->Xdescriptions->push_back(this->prefix + "event left state DEC");
-                this->Xindex_DEC = this->Xdescriptions->size() - 1;
-                for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
-                {
-                    this->Derivatives_of_StateBeforeEvent.push_back(std::make_tuple(this->Xdescriptions->size() - 1, stateIndex, 1.0));
-                    this->dIndex_periapse_state_wrt_DEC.push_back(this->Derivatives_of_StateBeforeEvent.size() - 1);
+                    break;
                 }
+                case StateRepresentation::Cartesian:
+                {
+                    //x
+                    stateBounds.push_back({ -RadiusBounds[1], RadiusBounds[1] });
+                    //y
+                    stateBounds.push_back({ -RadiusBounds[1], RadiusBounds[1] });
+                    //z
+                    stateBounds.push_back({ -RadiusBounds[1], RadiusBounds[1] });
+                    //vx
+                    stateBounds.push_back({ -VelocityMagnitudeBounds[1], VelocityMagnitudeBounds[1] });
+                    //vy
+                    stateBounds.push_back({ -VelocityMagnitudeBounds[1], VelocityMagnitudeBounds[1] });
+                    //vz
+                    stateBounds.push_back({ -VelocityMagnitudeBounds[1], VelocityMagnitudeBounds[1] });
 
-                //Step 3: velocity variables
-                //Step 3.1: v
-                this->Xlowerbounds->push_back(VelocityMagnitudeBounds[0]);
-                this->Xupperbounds->push_back(VelocityMagnitudeBounds[1]);
-                this->X_scale_factors->push_back(this->myUniverse->LU / this->myUniverse->TU);
-                this->Xdescriptions->push_back(this->prefix + "event left state v");
-                this->Xindex_vMag = this->Xdescriptions->size() - 1;
-                for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
-                {
-                    this->Derivatives_of_StateBeforeEvent.push_back(std::make_tuple(this->Xdescriptions->size() - 1, stateIndex + 3, 1.0));
-                    this->dIndex_periapse_state_wrt_v.push_back(this->Derivatives_of_StateBeforeEvent.size() - 1);
+                    break;
                 }
+                case StateRepresentation::COE:
+                {
+                    //SMA
+                    stateBounds.push_back({ -RadiusBounds[1], RadiusBounds[1] });
+                    //ECC
+                    stateBounds.push_back({ math::SMALL, 10.0 });
+                    //INC
+                    stateBounds.push_back({ -180.0, 180.0 });
+                    //RAAN
+                    stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
+                    //AOP
+                    stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
+                    //TA
+                    stateBounds.push_back({ -math::SMALL, math::PIover2 });
 
-                //Step 3.2: velocity RA
-                this->Xlowerbounds->push_back(-8.0 * math::PI);
-                this->Xupperbounds->push_back(8.0 * math::PI);
-                this->X_scale_factors->push_back(1.0);
-                this->Xdescriptions->push_back(this->prefix + "event left state vRA");
-                this->Xindex_vRA = this->Xdescriptions->size() - 1;
-                for (size_t stateIndex = 0; stateIndex < 2; ++stateIndex)
-                {
-                    this->Derivatives_of_StateBeforeEvent.push_back(std::make_tuple(this->Xdescriptions->size() - 1, stateIndex + 3, 1.0));
-                    this->dIndex_periapse_state_wrt_vRA.push_back(this->Derivatives_of_StateBeforeEvent.size() - 1);
+                    break;
                 }
+                case StateRepresentation::MEE:
+                {
+                    //P
+                    stateBounds.push_back({ 0.0, RadiusBounds[1] });
+                    //F
+                    stateBounds.push_back({ -10.0, 10.0 });
+                    //G
+                    stateBounds.push_back({ -10.0, 10.0 });
+                    //H
+                    stateBounds.push_back({ -10.0, 10.0 });
+                    //K
+                    stateBounds.push_back({ -10.0, 10.0 });
+                    //L
+                    stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
+                                       
+                    break;
+                }
+                case StateRepresentation::IncomingBplane:
+                {
+                    //VINF
+                    stateBounds.push_back({ VelocityMagnitudeBounds[0], VelocityMagnitudeBounds[1] });
+                    //RHA
+                    stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
+                    //DHA
+                    stateBounds.push_back({ -90.0, 90.0 });
+                    //BRADIUS
+                    stateBounds.push_back({ math::SMALL, this->myUniverse->r_SOI });
+                    //BTHETA
+                    stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
+                    //TA
+                    stateBounds.push_back({ -math::SMALL, math::SMALL });
 
-                //Step 3.3: velocity DEC
-                this->Xlowerbounds->push_back(-math::PI / 2.0 - math::SMALL);
-                this->Xupperbounds->push_back(math::PI / 2.0 + math::SMALL);
-                this->X_scale_factors->push_back(1.0);
-                this->Xdescriptions->push_back(this->prefix + "event left state vDEC");
-                this->Xindex_vDEC = this->Xdescriptions->size() - 1;
-                for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
-                {
-                    this->Derivatives_of_StateBeforeEvent.push_back(std::make_tuple(this->Xdescriptions->size() - 1, stateIndex + 3, 1.0));
-                    this->dIndex_periapse_state_wrt_vDEC.push_back(this->Derivatives_of_StateBeforeEvent.size() - 1);
+                    break;
                 }
-            }//end SphericalRADEC
-            else if (this->myOptions->PeriapseBoundaryStateRepresentation == StateRepresentation::SphericalAZFPA)
-            {
-                //Step 2: position variables
-                //Step 2.1: radius
-                Xlowerbounds->push_back(RadiusBounds[0]);
-                Xupperbounds->push_back(RadiusBounds[1]);
-                X_scale_factors->push_back(this->myUniverse->central_body.radius);
-                Xdescriptions->push_back(prefix + "event left state r");
-                this->Xindex_rMag = this->Xdescriptions->size() - 1;
-                for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
+                case StateRepresentation::OutgoingBplane:
                 {
-                    this->Derivatives_of_StateBeforeEvent.push_back(std::make_tuple(this->Xdescriptions->size() - 1, stateIndex, 1.0));
-                    this->dIndex_periapse_state_wrt_r.push_back(this->Derivatives_of_StateBeforeEvent.size() - 1);
-                }
+                    //VINF
+                    stateBounds.push_back({ VelocityMagnitudeBounds[0], VelocityMagnitudeBounds[1] });
+                    //RHA
+                    stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
+                    //DHA
+                    stateBounds.push_back({ -90.0, 90.0 });
+                    //BRADIUS
+                    stateBounds.push_back({ math::SMALL, this->myUniverse->r_SOI });
+                    //BTHETA
+                    stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
+                    //TA
+                    stateBounds.push_back({ -math::SMALL, math::SMALL });
 
-                //Step 2.2: RA
-                this->Xlowerbounds->push_back(-8.0 * math::PI);
-                this->Xupperbounds->push_back(8.0 * math::PI);
-                this->X_scale_factors->push_back(1.0);
-                this->Xdescriptions->push_back(this->prefix + "event left state RA");
-                this->Xindex_RA = this->Xdescriptions->size() - 1;
-                //affects x, y, xdot, ydot but not z, zdot 
-                for (size_t stateIndex = 0; stateIndex < 2; ++stateIndex)
-                {
-                    this->Derivatives_of_StateBeforeEvent.push_back(std::make_tuple(this->Xdescriptions->size() - 1, stateIndex, 1.0));
-                    this->dIndex_periapse_state_wrt_RA.push_back(this->Derivatives_of_StateBeforeEvent.size() - 1);
+                    break;
                 }
-                for (size_t stateIndex = 3; stateIndex < 5; ++stateIndex)
-                {
-                    this->Derivatives_of_StateBeforeEvent.push_back(std::make_tuple(this->Xdescriptions->size() - 1, stateIndex, 1.0));
-                    this->dIndex_periapse_state_wrt_RA.push_back(this->Derivatives_of_StateBeforeEvent.size() - 1);
-                }
+                default:
+                    throw std::invalid_argument("PeriapseBoundary does not recognize state representation " + std::to_string(this->myStateRepresentationEnum) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__) + ".");
+            }
+            //mass
+            stateBounds.push_back({ math::SMALL, this->myJourneyOptions->maximum_mass });
 
-                //Step 2.3: DEC
-                this->Xlowerbounds->push_back(-0.5 * math::PI);
-                this->Xupperbounds->push_back(0.5 * math::PI);
-                this->X_scale_factors->push_back(1.0);
-                this->Xdescriptions->push_back(this->prefix + "event left state DEC");
-                this->Xindex_DEC = this->Xdescriptions->size() - 1;
-                for (size_t stateIndex = 0; stateIndex < 6; ++stateIndex)
-                {
-                    this->Derivatives_of_StateBeforeEvent.push_back(std::make_tuple(this->Xdescriptions->size() - 1, stateIndex, 1.0));
-                    this->dIndex_periapse_state_wrt_DEC.push_back(this->Derivatives_of_StateBeforeEvent.size() - 1);
-                }
+            //Step 1: set state bounds by calling FreePointBoundary
+            this->FreePointBoundary::calcbounds_event_left_side(stateBounds, timeVariables);
 
-                //Step 3: velocity variables
-                //Step 3.1: v
-                this->Xlowerbounds->push_back(VelocityMagnitudeBounds[0]);
-                this->Xupperbounds->push_back(VelocityMagnitudeBounds[1]);
-                this->X_scale_factors->push_back(this->myUniverse->LU / this->myUniverse->TU);
-                this->Xdescriptions->push_back(this->prefix + "event left state v");
-                this->Xindex_vMag = this->Xdescriptions->size() - 1;
-                for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
-                {
-                    this->Derivatives_of_StateBeforeEvent.push_back(std::make_tuple(this->Xdescriptions->size() - 1, stateIndex + 3, 1.0));
-                    this->dIndex_periapse_state_wrt_v.push_back(this->Derivatives_of_StateBeforeEvent.size() - 1);
-                }
-
-                //Step 3.2: velocity AZ
-                this->Xlowerbounds->push_back(-8.0 * math::PI);
-                this->Xupperbounds->push_back(8.0 * math::PI);
-                this->X_scale_factors->push_back(1.0);
-                this->Xdescriptions->push_back(this->prefix + "event left state AZ");
-                this->Xindex_AZ = this->Xdescriptions->size() - 1;
-                for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
-                {
-                    this->Derivatives_of_StateBeforeEvent.push_back(std::make_tuple(this->Xdescriptions->size() - 1, stateIndex + 3, 1.0));
-                    this->dIndex_periapse_state_wrt_AZ.push_back(this->Derivatives_of_StateBeforeEvent.size() - 1);
-                }
-
-                //Step 3.3: velocity FPA
-                this->Xlowerbounds->push_back(math::PI / 2.0 - math::SMALL);
-                this->Xupperbounds->push_back(math::PI / 2.0 + math::SMALL);
-                this->X_scale_factors->push_back(1.0);
-                this->Xdescriptions->push_back(this->prefix + "event left state FPA");
-                this->Xindex_FPA = this->Xdescriptions->size() - 1;
-                for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
-                {
-                    this->Derivatives_of_StateBeforeEvent.push_back(std::make_tuple(this->Xdescriptions->size() - 1, stateIndex + 3, 1.0));
-                    this->dIndex_periapse_state_wrt_FPA.push_back(this->Derivatives_of_StateBeforeEvent.size() - 1);
-                }
-            }//end SphericalAZFPA
-
-            //Step 4: mass variable
-            this->Xlowerbounds->push_back(MassBounds[0]);
-            this->Xupperbounds->push_back(MassBounds[1]);
-            this->X_scale_factors->push_back(1.0 / this->myUniverse->continuity_constraint_scale_factors(6));
-            this->Xdescriptions->push_back(this->prefix + "event left state mass");
-            this->Xindex_mass = this->Xdescriptions->size() - 1;
-            this->Derivatives_of_StateBeforeEvent.push_back(std::make_tuple(this->Xindex_mass, 6, 1.0));
-            this->dIndex_mass_wrt_encodedMass = this->Derivatives_of_StateBeforeEvent.size() - 1;
-
-            //Step 5: r dot v = 0 constraint
-            if (this->myOptions->PeriapseBoundaryStateRepresentation == StateRepresentation::SphericalRADEC)
+            //Step 2: r dot v = 0 constraint. This is not needed for state representations that encode true anomaly or flight path angle
+            if (this->need_rdotv_constraint)
             {
                 this->Flowerbounds->push_back(-1.0e-13);
                 this->Fupperbounds->push_back(1.0e-13);
                 this->Fdescriptions->push_back(this->prefix + "periapse is an apse");
 
-                this->create_sparsity_entry(this->Fdescriptions->size() - 1,
-                    this->Xindex_RA,
-                    this->Gindex_rdotv_wrt_RA);
-                this->create_sparsity_entry(this->Fdescriptions->size() - 1,
-                    this->Xindex_DEC,
-                    this->Gindex_rdotv_wrt_DEC);
-                this->create_sparsity_entry(this->Fdescriptions->size() - 1,
-                    this->Xindex_vRA,
-                    this->Gindex_rdotv_wrt_vRA);
-                this->create_sparsity_entry(this->Fdescriptions->size() - 1,
-                    this->Xindex_vDEC,
-                    this->Gindex_rdotv_wrt_vDEC);
+                //for the purpose of solver robustness, we have several different versions of this constraint for different state representations
+                if (this->myStateRepresentationEnum == StateRepresentation::SphericalRADEC)
+                {
+                    //in order, derivatives wrt RA, DEC, vRA, vDEC
+                    for (size_t stateIndex : {1, 2, 4, 5})
+                    {
+                        this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                            this->Xindex_encoded_state[stateIndex],
+                            this->Gindices_rdotv);
+                    }
+                }//end derivatives for rdotv constraint, SphericalRADEC
+                else //the generic case
+                {
+                    for (size_t dIndex = 0; dIndex < this->Derivatives_of_StateBeforeEvent.size(); ++dIndex)
+                    {
+                        std::tuple<size_t, size_t, double>& derivativeEntry = this->Derivatives_of_StateBeforeEvent[dIndex];
+
+                        size_t stateIndex = std::get<1>(derivativeEntry);
+
+                        if (stateIndex < 6) //6-state
+                        {
+                            size_t Xindex = std::get<0>(derivativeEntry);
+                            this->dIndices_rdotv.push_back(dIndex);
+
+                            this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                                Xindex,
+                                this->Gindices_rdotv);
+                        }
+                    }
+                }//end derivatives for rdotv constraint, generic case
             }//end RdotV constraint
 
-            this->calculate_dependencies_left_epoch();
+            //Step 3: distance from central body constraint. This is not needed for state representations that encode distance from central body
+            if (this->need_distance_constraint)
+            {
+                this->Flowerbounds->push_back(this->periapseDistanceBounds[0] / this->myUniverse->LU);
+                this->Fupperbounds->push_back(this->periapseDistanceBounds[1] / this->myUniverse->LU);
+                this->Fdescriptions->push_back(this->prefix + "distance from central body");
+
+                for (size_t dIndex = 0; dIndex < this->Derivatives_of_StateBeforeEvent.size(); ++dIndex)
+                {
+                    std::tuple<size_t, size_t, double>& derivativeEntry = this->Derivatives_of_StateBeforeEvent[dIndex];
+
+                    size_t stateIndex = std::get<1>(derivativeEntry);
+
+                    if (stateIndex < 3) //position
+                    {
+                        size_t Xindex = std::get<0>(derivativeEntry);
+                        this->dIndices_distance_constraint.push_back(dIndex);
+
+                        this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                            Xindex,
+                            this->Gindices_distance_constraint);
+                    }
+                }//end derivatives for distance constraint
+            }//end distance constraint
         }//end calcbounds_left_side()
 
         void PeriapseBoundary::calcbounds_event_right_side()
         {
-            this->Derivatives_of_StateAfterEvent = this->Derivatives_of_StateBeforeEvent;
-            this->Derivatives_of_StateAfterEvent_wrt_Time = this->Derivatives_of_StateBeforeEvent_wrt_Time;
+            //base class
+            this->FreePointBoundary::calcbounds_event_right_side();
         }//end calcbounds_right_side()
 
         //******************************************process methods
@@ -283,191 +314,141 @@ namespace EMTG
             std::vector<double>& G,
             const bool& needG)
         {
+            //Step 1: the state vector itself is handled by the base class
+            this->FreePointBoundary::process_event_left_side(X, Xindex, F, Findex, G, needG);
 
-            if (this->myOptions->PeriapseBoundaryStateRepresentation == StateRepresentation::SphericalRADEC)
+            //Step 2: rdotv constraint
+            if (this->need_rdotv_constraint)
             {
-                //Step 1: extract the thingies
-                doubleType r = X[Xindex++];
-                doubleType RA = X[Xindex++];
-                doubleType DEC = X[Xindex++];
-                doubleType v = X[Xindex++];
-                doubleType vRA = X[Xindex++];
-                doubleType vDEC = X[Xindex++];
-                this->state_before_event(6) = X[Xindex++];
+                //for the purpose of solver robustness, we have several different versions of this constraint for different state representations
+                if (this->myStateRepresentationEnum == StateRepresentation::SphericalRADEC)
+                {
+                    const doubleType& RA = X[this->Xindex_encoded_state[1]];
+                    const doubleType& DEC = X[this->Xindex_encoded_state[2]];
+                    const doubleType& vRA = X[this->Xindex_encoded_state[4]];
+                    const doubleType& vDEC = X[this->Xindex_encoded_state[5]];
 
-                //Step 2: convert to cartesian
-                doubleType cosRA = cos(RA);
-                doubleType sinRA = sin(RA);
-                doubleType cosDEC = cos(DEC);
-                doubleType sinDEC = sin(DEC);
-                doubleType cosvRA = cos(vRA);
-                doubleType sinvRA = sin(vRA);
-                doubleType cosvDEC = cos(vDEC);
-                doubleType sinvDEC = sin(vDEC);
+                    doubleType cosRA = cos(RA);
+                    doubleType sinRA = sin(RA);
+                    doubleType cosDEC = cos(DEC);
+                    doubleType sinDEC = sin(DEC);
+                    doubleType cosvRA = cos(vRA);
+                    doubleType sinvRA = sin(vRA);
+                    doubleType cosvDEC = cos(vDEC);
+                    doubleType sinvDEC = sin(vDEC);
 
-                this->state_before_event(0) = r * cosRA * cosDEC;
-                this->state_before_event(1) = r * sinRA * cosDEC;
-                this->state_before_event(2) = r * sinDEC;
-                this->state_before_event(3) = v * cosvRA * cosvDEC;
-                this->state_before_event(4) = v * sinvRA * cosvDEC;
-                this->state_before_event(5) = v * sinvDEC;
+                    doubleType rdotv = sinDEC * sinvDEC + cosDEC * cosRA*cosvDEC*cosvRA + cosDEC * sinRA*cosvDEC*sinvRA;
+                    F[Findex++] = rdotv;
 
-                //Step 3: apply r dot v = 0 constraint
-                doubleType rdotv = sinDEC * sinvDEC + cosDEC * cosRA*cosvDEC*cosvRA + cosDEC * sinRA*cosvDEC*sinvRA;
-                F[Findex++] = rdotv;
+                    if (needG)
+                    {
+                        //r dot v constraint
+                        double drdotv_dRA = (cosDEC*cosRA*cosvDEC*sinvRA - cosDEC * sinRA*cosvDEC*cosvRA) _GETVALUE;
+                        double drdotv_dDEC = -(cosRA*sinDEC*cosvDEC*cosvRA - cosDEC * sinvDEC + sinDEC * sinRA*cosvDEC*sinvRA)_GETVALUE;
+                        double drdotv_dvRA = -(cosDEC*cosRA*cosvDEC*sinvRA - cosDEC * sinRA*cosvDEC*cosvRA) _GETVALUE;
+                        double drdotv_dvDEC = -(cosDEC*cosRA*cosvRA*sinvDEC - sinDEC * cosvDEC + cosDEC * sinRA*sinvDEC*sinvRA) _GETVALUE;
 
-                //Step 4: derivatives
+                        G[this->Gindices_rdotv[0]] = this->X_scale_factors->operator[](this->Xindex_encoded_state[1]) * drdotv_dRA;
+                        G[this->Gindices_rdotv[1]] = this->X_scale_factors->operator[](this->Xindex_encoded_state[2]) * drdotv_dDEC;
+                        G[this->Gindices_rdotv[2]] = this->X_scale_factors->operator[](this->Xindex_encoded_state[4]) * drdotv_dvRA;
+                        G[this->Gindices_rdotv[3]] = this->X_scale_factors->operator[](this->Xindex_encoded_state[5]) * drdotv_dvDEC;
+                    }//end derivatives, SphericalRADEC
+                }//end rdotv constraint, SphericalRADEC
+                else
+                {
+                    doubleType rdotv = this->state_before_event.getSubMatrix1D(0, 2).dot(this->state_before_event.getSubMatrix1D(3, 5));
+
+                    F[Findex++] = rdotv / this->myUniverse->LU / this->myUniverse->LU * this->myUniverse->TU;
+
+                    if (needG)
+                    {
+                        //first zero out the derivatives
+                        for (size_t Gindex : this->Gindices_rdotv)
+                        {
+                            G[Gindex] = 0.0;
+                        }
+
+                        //now assign the entries
+                        for (size_t entryIndex = 0; entryIndex < this->dIndices_rdotv.size(); ++entryIndex)
+                        {
+                            size_t dIndex = this->dIndices_rdotv[entryIndex];
+
+                            std::tuple<size_t, size_t, double>& derivativeEntry = this->Derivatives_of_StateBeforeEvent[dIndex];
+
+                            size_t stateIndex = std::get<1>(derivativeEntry);
+
+                            size_t Xindex = std::get<0>(derivativeEntry);
+
+                            size_t Gindex = this->Gindices_rdotv[entryIndex];
+
+                            if (stateIndex < 3) //position
+                            {
+                                //cartesian component
+                                double drdotv_dCartesianState = this->state_before_event(stateIndex + 3) _GETVALUE;
+
+                                //chain to the actual state representation
+                                double TheDerivative = drdotv_dCartesianState * std::get<2>(this->Derivatives_of_StateBeforeEvent[dIndex]);
+
+                                //assign
+                                G[Gindex] += this->X_scale_factors->operator[](Xindex)
+                                    * TheDerivative
+                                    / this->myUniverse->LU / this->myUniverse->LU * this->myUniverse->TU;
+                            }
+                            else //velocity
+                            {
+                                double drdotv_dCartesianState = this->state_before_event(stateIndex - 3) _GETVALUE;
+
+                                //chain to the actual state representation
+                                double TheDerivative = drdotv_dCartesianState * std::get<2>(this->Derivatives_of_StateBeforeEvent[dIndex]);
+
+                                //assign
+                                G[Gindex] += this->X_scale_factors->operator[](Xindex)
+                                    * TheDerivative
+                                    / this->myUniverse->LU / this->myUniverse->LU * this->myUniverse->TU;
+                            }
+                        }
+                    }//end derivatives
+                }//end generic case
+            }//end rdotv constraint
+
+            //Step 3: periapse distance constraint
+            if (this->need_distance_constraint)
+            {
+                doubleType distance = this->state_before_event.getSubMatrix1D(0, 2).norm();
+
+                F[Findex++] = distance / this->myUniverse->LU;
+
                 if (needG)
                 {
-                    double dx_dr = (cosRA * cosDEC)_GETVALUE;
-                    double dy_dr = (sinRA * cosDEC)_GETVALUE;
-                    double dz_dr = sinDEC _GETVALUE;
+                    //first zero out the derivatives
+                    for (size_t Gindex : this->Gindices_distance_constraint)
+                    {
+                        G[Gindex] = 0.0;
+                    }
 
-                    double dx_dRA = (-r * cosDEC * sinRA) _GETVALUE;
-                    double dy_dRA = (r * cosDEC * cosRA) _GETVALUE;
+                    //now assign the entries
+                    for (size_t entryIndex = 0; entryIndex < this->dIndices_distance_constraint.size(); ++entryIndex)
+                    {
+                        size_t dIndex = this->dIndices_distance_constraint[entryIndex];
 
-                    double dx_dDEC = (-r * cosRA*sinDEC)_GETVALUE;
-                    double dy_dDEC = (-r*sinDEC*sinRA)_GETVALUE;
-                    double dz_dDEC = (r*cosDEC)_GETVALUE;
+                        std::tuple<size_t, size_t, double>& derivativeEntry = this->Derivatives_of_StateBeforeEvent[dIndex];
 
-                    double dxdot_dv = (cosvRA * cosvDEC)_GETVALUE;
-                    double dydot_dv = (sinvRA * cosvDEC)_GETVALUE;
-                    double dzdot_dv = sinvDEC _GETVALUE;
+                        size_t stateIndex = std::get<1>(derivativeEntry);
 
-                    double dxdot_dvRA = (-v * cosvDEC * sinvRA) _GETVALUE;
-                    double dydot_dvRA = (v * cosvDEC * cosvRA) _GETVALUE;
+                        size_t Xindex = std::get<0>(derivativeEntry);
 
-                    double dxdot_dvDEC = (-v * cosvRA*sinvDEC)_GETVALUE;
-                    double dydot_dvDEC = (-v * sinvDEC*sinvRA)_GETVALUE;
-                    double dzdot_dvDEC = (v*cosvDEC)_GETVALUE;
+                        size_t Gindex = this->Gindices_distance_constraint[entryIndex];
 
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_r[0]]) = dx_dr;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_r[1]]) = dy_dr;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_r[2]]) = dz_dr;
+                        double TheDerivative = (this->state_before_event(stateIndex) / distance)_GETVALUE * std::get<2>(this->Derivatives_of_StateBeforeEvent[dIndex]);
 
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_RA[0]]) = dx_dRA;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_RA[1]]) = dy_dRA;
+                        G[Gindex] += this->X_scale_factors->operator[](Xindex)
+                            * TheDerivative
+                            / this->myUniverse->LU;
+                    }//end loop over derivative indices
+                }//end derivatives
+            }//end distance constraint
 
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_DEC[0]]) = dx_dDEC;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_DEC[1]]) = dy_dDEC;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_DEC[2]]) = dz_dDEC;
-
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_v[0]]) = dxdot_dv;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_v[1]]) = dydot_dv;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_v[2]]) = dzdot_dv;
-
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_vRA[0]]) = dxdot_dvRA;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_vRA[1]]) = dydot_dvRA;
-
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_vDEC[0]]) = dxdot_dvDEC;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_vDEC[1]]) = dydot_dvDEC;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_vDEC[2]]) = dzdot_dvDEC;
-
-                    //r dot v constraint
-                    double drdotv_dRA = (cosDEC*cosRA*cosvDEC*sinvRA - cosDEC*sinRA*cosvDEC*cosvRA) _GETVALUE;
-                    double drdotv_dDEC = -(cosRA*sinDEC*cosvDEC*cosvRA - cosDEC*sinvDEC + sinDEC*sinRA*cosvDEC*sinvRA)_GETVALUE;
-                    double drdotv_dvRA = -(cosDEC*cosRA*cosvDEC*sinvRA - cosDEC*sinRA*cosvDEC*cosvRA) _GETVALUE;
-                    double drdotv_dvDEC = -(cosDEC*cosRA*cosvRA*sinvDEC - sinDEC*cosvDEC + cosDEC*sinRA*sinvDEC*sinvRA) _GETVALUE;
-
-                    G[this->Gindex_rdotv_wrt_RA] = this->X_scale_factors->operator[](this->Xindex_RA) * drdotv_dRA;
-                    G[this->Gindex_rdotv_wrt_DEC] = this->X_scale_factors->operator[](this->Xindex_DEC) * drdotv_dDEC;
-                    G[this->Gindex_rdotv_wrt_vRA] = this->X_scale_factors->operator[](this->Xindex_vRA) * drdotv_dvRA;
-                    G[this->Gindex_rdotv_wrt_vDEC] = this->X_scale_factors->operator[](this->Xindex_vDEC) * drdotv_dvDEC;
-                }
-            }//end SphericalRADEC
-            else if (this->myOptions->PeriapseBoundaryStateRepresentation == StateRepresentation::SphericalAZFPA)
-            {
-                //Step 1: extract the thingies
-                doubleType r = X[Xindex++];
-                doubleType RA = X[Xindex++];
-                doubleType DEC = X[Xindex++];
-                doubleType v = X[Xindex++];
-                doubleType AZ = X[Xindex++];
-                doubleType FPA = X[Xindex++];
-                this->state_before_event(6) = X[Xindex++];
-
-                //Step 2: convert to cartesian
-                doubleType cosRA = cos(RA);
-                doubleType sinRA = sin(RA);
-                doubleType cosDEC = cos(DEC);
-                doubleType sinDEC = sin(DEC);
-                doubleType cosAZ = cos(AZ);
-                doubleType sinAZ = sin(AZ);
-                doubleType cosFPA = cos(FPA);
-                doubleType sinFPA = sin(FPA);
-
-                this->state_before_event(0) = r * cosRA * cosDEC;
-                this->state_before_event(1) = r * sinRA * cosDEC;
-                this->state_before_event(2) = r * sinDEC;
-                this->state_before_event(3) = -v * (sinFPA*(sinAZ*sinRA + cosAZ * cosRA*sinDEC) - cosFPA * cosDEC*cosRA);
-                this->state_before_event(4) = v * (sinFPA*(cosRA*sinAZ - cosAZ * sinDEC*sinRA) + cosFPA * cosDEC*sinRA);
-                this->state_before_event(5) = v * (cosFPA*sinDEC + cosDEC * cosAZ*sinFPA);
-
-                //Step 3: derivatives
-                if (needG)
-                {
-                    double dx_dr = (cosRA * cosDEC)_GETVALUE;
-                    double dy_dr = (sinRA * cosDEC)_GETVALUE;
-                    double dz_dr = sinDEC _GETVALUE;
-
-                    double dx_dRA = (-r * cosDEC * sinRA) _GETVALUE;
-                    double dy_dRA = (r * cosDEC * cosRA) _GETVALUE;
-
-                    double dx_dDEC = (-r * cosRA*sinDEC)_GETVALUE;
-                    double dy_dDEC = (-r * sinDEC*sinRA)_GETVALUE;
-                    double dz_dDEC = (r*cosDEC)_GETVALUE;
-
-                    double dxdot_dRA = (-v * (sinFPA*(cosRA*sinAZ - cosAZ * sinDEC*sinRA) + cosFPA * cosDEC*sinRA)) _GETVALUE;
-                    double dydot_dRA = (-v * (sinFPA*(sinAZ*sinRA + cosAZ * cosRA*sinDEC) - cosFPA * cosDEC*cosRA)) _GETVALUE;
-
-                    double dxdot_dDEC = (-v * cosRA*(cosFPA*sinDEC + cosDEC * cosAZ*sinFPA)) _GETVALUE;
-                    double dydot_dDEC = (-v * sinRA*(cosFPA*sinDEC + cosDEC * cosAZ*sinFPA)) _GETVALUE;
-                    double dzdot_dDEC = (v*(cosFPA*cosDEC - cosAZ * sinFPA*sinDEC)) _GETVALUE;
-
-                    double dxdot_dv = (-(sinFPA*(sinAZ*sinRA + cosAZ * cosRA*sinDEC) - cosFPA * cosDEC*cosRA))_GETVALUE;
-                    double dydot_dv = ((sinFPA*(cosRA*sinAZ - cosAZ * sinDEC*sinRA) + cosFPA * cosDEC*sinRA))_GETVALUE;
-                    double dzdot_dv = ((cosFPA*sinDEC + cosDEC * cosAZ*sinFPA))_GETVALUE;
-
-                    double dxdot_dFPA = (-v * (cosFPA*(sinAZ*sinRA + cosAZ * cosRA*sinDEC) + cosDEC * sinFPA*cosRA)) _GETVALUE;
-                    double dydot_dFPA = (v*(cosFPA*(cosRA*sinAZ - cosAZ * sinDEC*sinRA) - cosDEC * sinFPA*sinRA)) _GETVALUE;
-                    double dzdot_dFPA = (v*cosFPA*cosDEC*cosAZ - v * sinFPA*sinDEC) _GETVALUE;
-
-                    double dxdot_dAZ = (-v * sinFPA*(cosAZ*sinRA - cosRA * sinDEC*sinAZ)) _GETVALUE;
-                    double dydot_dAZ = (v*sinFPA*(cosAZ*cosRA + sinDEC * sinAZ*sinRA)) _GETVALUE;
-                    double dzdot_dAZ = (-v * cosDEC*sinFPA*sinAZ) _GETVALUE;
-
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_r[0]]) = dx_dr;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_r[1]]) = dy_dr;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_r[2]]) = dz_dr;
-
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_RA[0]]) = dx_dRA;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_RA[1]]) = dy_dRA;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_RA[2]]) = dxdot_dRA;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_RA[3]]) = dydot_dRA;
-
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_DEC[0]]) = dx_dDEC;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_DEC[1]]) = dy_dDEC;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_DEC[2]]) = dz_dDEC;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_DEC[3]]) = dxdot_dDEC;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_DEC[4]]) = dydot_dDEC;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_DEC[5]]) = dzdot_dDEC;
-
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_v[0]]) = dxdot_dv;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_v[1]]) = dydot_dv;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_v[2]]) = dzdot_dv;
-
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_AZ[0]]) = dxdot_dAZ;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_AZ[1]]) = dydot_dAZ;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_AZ[2]]) = dzdot_dAZ;
-
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_FPA[0]]) = dxdot_dFPA;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_FPA[1]]) = dydot_dFPA;
-                    std::get<2>(this->Derivatives_of_StateBeforeEvent[this->dIndex_periapse_state_wrt_FPA[2]]) = dzdot_dFPA;
-                }
-            }//end SphericalAZFPA
-
-
-            //set the boundary state, which we need for printing
+            //Step 4: set the boundary state, which we need for printing
             this->boundary_state.shallow_copy(this->state_before_event);
         }//end process_event_left_side()
 
@@ -479,15 +460,8 @@ namespace EMTG
             std::vector<double>& G,
             const bool& needG)
         {
-            this->state_after_event.shallow_copy(this->state_before_event);
-            
-            for (size_t dIndex = 0; dIndex < this->Derivatives_of_StateBeforeEvent.size(); ++dIndex)
-                this->Derivatives_of_StateAfterEvent[dIndex] = this->Derivatives_of_StateBeforeEvent[dIndex];
-
-            for (size_t dIndex = 0; dIndex < this->Derivatives_of_StateBeforeEvent_wrt_Time.size(); ++dIndex)
-                this->Derivatives_of_StateAfterEvent_wrt_Time[dIndex] = this->Derivatives_of_StateBeforeEvent_wrt_Time[dIndex];
-
-            this->EventRightEpoch = this->EventLeftEpoch;
+            //handled by the base class
+            this->FreePointBoundary::process_event_right_side(X, Xindex, F, Findex, G, needG);
         }//end process_event_right_side
 
     }//end namespace BoundaryEvents

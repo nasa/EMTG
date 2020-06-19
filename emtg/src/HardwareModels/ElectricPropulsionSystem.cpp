@@ -371,7 +371,7 @@ namespace EMTG
                 }
                 default:
                 {
-                    throw std::invalid_argument("ElectricPropulsionSystem::computeThrusterPerformance() Invalid SpacecraftThrusterMode " + std::to_string(this->myPropulsionSystemOptions.getThrusterMode()) + " for 1D thruster model. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                    throw std::invalid_argument("ElectricPropulsionSystem::computeThrusterPerformance() Invalid SpacecraftThrusterMode " + SpacecraftThrusterModeStrings[this->myPropulsionSystemOptions.getThrusterMode()] + " for 1D thruster model. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
                 }
             }//end switch
 

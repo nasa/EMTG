@@ -44,7 +44,7 @@ namespace EMTG
                 EphemerisPeggedArrivalWithVinfinity* PreviousPhaseArrivalEvent);
 
         protected:
-            void calcbounds_event_left_side();
+            void calcbounds_event_left_side(std::vector<size_t> timeVariables);
 
             virtual void calcbounds_event_main(const std::vector< std::tuple<double, double> >& vinfBounds);
 

@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28010.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "OptionsOverhaul", "OptionsOverhaul.pyproj", "{6852C12C-84F4-43C0-AA81-1815060FB99B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6852C12C-84F4-43C0-AA81-1815060FB99B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6852C12C-84F4-43C0-AA81-1815060FB99B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7611F757-CC8E-4428-8E0C-3BC475F7ED8F}
+	EndGlobalSection
+EndGlobal

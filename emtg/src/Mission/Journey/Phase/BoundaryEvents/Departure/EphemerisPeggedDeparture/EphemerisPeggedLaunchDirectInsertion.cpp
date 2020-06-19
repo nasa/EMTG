@@ -83,12 +83,12 @@ namespace EMTG
         //******************************************calcbounds methods
 
         //calcbounds
-        void EphemerisPeggedLaunchDirectInsertion::calcbounds()
+        void EphemerisPeggedLaunchDirectInsertion::calcbounds(std::vector<size_t> timeVariables)
         {
             //we have to have this line because LaunchOrDirectInsertion does not call the base calcbounds_event_left_side()
             this->X_index_of_first_decision_variable_in_this_event = this->Xdescriptions->size();
 
-            this->calcbounds_event_left_side();
+            this->calcbounds_event_left_side(timeVariables);
 
             //this->calcbounds_event_main(); nothing really happens here
 
@@ -107,7 +107,7 @@ namespace EMTG
             this->calcbounds_specialized_constraints();
         }//end calcbounds()
 
-        void EphemerisPeggedLaunchDirectInsertion::calcbounds_event_left_side()
+        void EphemerisPeggedLaunchDirectInsertion::calcbounds_event_left_side(std::vector<size_t> timeVariables)
         {
             //Step 1: encode epoch/wait time and mass
             //if this is the first phase of the mission, encode an epoch
@@ -117,6 +117,7 @@ namespace EMTG
                 this->Xupperbounds->push_back(fmin(this->myOptions->launch_window_open_date + this->myOptions->Journeys.front().wait_time_bounds[1], this->myBody->getEphemerisWindowClose()));
                 this->X_scale_factors->push_back(1.0 / this->myUniverse->continuity_constraint_scale_factors(7));
                 this->Xdescriptions->push_back(prefix + "event left state epoch");
+                timeVariables.insert(timeVariables.begin(), this->Xdescriptions->size() - 1);
 
                 if (this->encodeInitialMass)
                 {
@@ -174,7 +175,7 @@ namespace EMTG
             }
 
             //Step 2: call calcbounds_left_epoch() and set up time derivatives
-            this->calculate_dependencies_left_epoch();
+            this->calculate_dependencies_left_epoch(timeVariables);
 
             //all state variables except mass in an EphemerisPeggedBoundary event have a derivative with respect to epoch
             //we'll put in a dummy derivative of 0.0 for now, and later, when the event is processed, we'll do it right
@@ -474,7 +475,7 @@ namespace EMTG
                 }
                 else if (this->myJourneyOptions->fixed_starting_mass_increment > math::SMALL)
                 {
-                    throw std::invalid_argument(this->prefix + " fixed startin mass increment is a positive number. You can't add mass right after launch, so it needs to be a negative number.");
+                    throw std::invalid_argument(this->prefix + " fixed starting mass increment is a positive number. You can't add mass right after launch, so it needs to be a negative number.");
                 }
             }
             else

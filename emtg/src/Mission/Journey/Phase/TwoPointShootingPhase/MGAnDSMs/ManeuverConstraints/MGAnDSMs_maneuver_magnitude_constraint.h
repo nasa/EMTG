@@ -53,7 +53,7 @@ namespace EMTG
             //clone
             virtual MGAnDSMs_maneuver_magnitude_constraint* clone() const { return new MGAnDSMs_maneuver_magnitude_constraint(*this); }
 
-            ~MGAnDSMs_maneuver_magnitude_constraint() {};
+            virtual ~MGAnDSMs_maneuver_magnitude_constraint() {};
 
             //calcbounds goes in the specialized phase
             virtual void calcbounds();

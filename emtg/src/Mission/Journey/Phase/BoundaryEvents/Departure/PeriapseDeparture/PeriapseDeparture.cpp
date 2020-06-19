@@ -17,6 +17,7 @@
 // governing permissions and limitations under the License.
 
 #include "PeriapseDeparture.h"
+#include "StateRepresentationFactory.h"
 
 namespace EMTG
 {
@@ -50,6 +51,22 @@ namespace EMTG
                                 missionoptions* myOptions,
                                 ArrivalEvent* PreviousPhaseArrivalEvent)
         {
+
+            //set this boundary's state representation
+            this->myStateRepresentationEnum = myOptions->PeriapseBoundaryStateRepresentation;
+
+            //periapse arrival cannot use IncomingBplane
+            if (this->myStateRepresentationEnum == StateRepresentation::IncomingBplane)
+            {
+                std::cout << "In Journey " << this->journeyIndex << "'s departure event, the state representation is set to "
+                    << StateRepresentationStrings[this->myStateRepresentationEnum == StateRepresentation::IncomingBplane]
+                    << ". PeriapseArrival automatically switches this to "
+                    << StateRepresentationStrings[this->myStateRepresentationEnum == StateRepresentation::OutgoingBplane] << std::endl;
+                this->myStateRepresentationEnum = StateRepresentation::OutgoingBplane;
+            }
+
+            this->myStateRepresentation = Astrodynamics::CreateStateRepresentation(this->myStateRepresentationEnum, Universe->mu);
+
             this->PeriapseBoundary::initialize(name,
                                                 journeyIndex,
                                                 phaseIndex,
@@ -66,12 +83,17 @@ namespace EMTG
                                              mySpacecraft,
                                              myOptions,
                                              PreviousPhaseArrivalEvent);
+
+            //set periapse distance bounds
+            this->periapseDistanceBounds[0] = this->myJourneyOptions->PeriapseDeparture_altitude_bounds[0] + this->myUniverse->central_body_radius;
+            this->periapseDistanceBounds[1] = this->myJourneyOptions->PeriapseDeparture_altitude_bounds[1] + this->myUniverse->central_body_radius;
         }//end initialize()
                                
         
         //******************************************calcbounds methods
         void PeriapseDeparture::calcbounds_event_left_side(const std::vector<double>& RadiusBounds,
-                                                           const std::vector<double>& VelocityMagnitudeBounds)
+                                                           const std::vector<double>& VelocityMagnitudeBounds,
+                                                           std::vector<size_t> timeVariables)
         {
             //Step 1: mass bounds
             std::vector<double> MassBounds;            
@@ -88,12 +110,14 @@ namespace EMTG
             //Step 2: delegate
             this->calcbounds_event_left_side(RadiusBounds, 
                 VelocityMagnitudeBounds,
-                MassBounds);
+                MassBounds,
+                timeVariables);
         }//end calcbounds_event_left_side()
 
         void PeriapseDeparture::calcbounds_event_left_side(const std::vector<double>& RadiusBounds,
                                                            const std::vector<double>& VelocityMagnitudeBounds,
-                                                           const std::vector<double>& MassBounds)
+                                                           const std::vector<double>& MassBounds,
+                                                           std::vector<size_t> timeVariables)
         {
             //Step 1: epoch bounds
             if (this->isFirstEventInMission)
@@ -102,6 +126,7 @@ namespace EMTG
                 this->Xupperbounds->push_back(this->myOptions->launch_window_open_date + this->myOptions->Journeys.front().wait_time_bounds[1]);
                 this->X_scale_factors->push_back(1.0 / this->myUniverse->continuity_constraint_scale_factors(7));
                 this->Xdescriptions->push_back(prefix + "event left state epoch");
+                timeVariables.insert(timeVariables.begin(), this->Xdescriptions->size() - 1);
             }
 
             //Step 2: base departure class
@@ -110,7 +135,7 @@ namespace EMTG
             //Step 3: base boundary class
             this->PeriapseBoundary::calcbounds_event_left_side(RadiusBounds,
                 VelocityMagnitudeBounds,
-                MassBounds);
+                timeVariables);
                        
             //mass multipliers
             this->calcbounds_mass_multipliers();

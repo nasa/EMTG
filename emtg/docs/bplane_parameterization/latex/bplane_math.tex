@@ -1,0 +1,717 @@
+\documentclass[]{article}
+\usepackage{nomencl}
+\usepackage{hyperref}
+\hypersetup{pdffitwindow=true,
+	pdfpagemode=UseThumbs,
+	breaklinks=true,
+	colorlinks=true,
+	linkcolor=black,
+	citecolor=black,
+	filecolor=black,
+	urlcolor=black}
+
+\usepackage{verbatim}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}%
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{subfigure}
+\usepackage[makeroom]{cancel}
+\usepackage{indentfirst}
+\usepackage{color}
+\usepackage{bm}
+\usepackage{mathtools}
+
+\usepackage{rotating}
+\usepackage{comment}
+\usepackage{here}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{pdfpages}
+\usepackage{float}
+\usepackage[section]{placeins}
+
+\usepackage{array}
+
+% quotes
+\newcommand{\quotes}[1]{``#1''}
+
+% vectors and such
+\newcommand{\vb}[1]{\bm{#1}} % bold
+\newcommand{\vbd}[1]{\dot{\bm{#1}}} % dot
+\newcommand{\vbdd}[1]{\ddot{\bm{#1}}} % double dot
+\newcommand{\vbh}[1]{\hat{\bm{#1}}} % hat
+\newcommand{\vbt}[1]{\tilde{\bm{#1}}} % tilde
+\newcommand{\vbth}[1]{\hat{\tilde{\bm{#1}}}} % tilde hat
+\newcommand{\ddt}[1]{\frac{\mathrm{d} #1}{\mathrm{d} t}} % time derivative
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}} % partial derivative
+\newcommand{\crossmat}[1]{\left\{ {#1} \right\}^{\times}} % crossmat
+\newcommand{\xb}[0]{\vb{x}_b}
+\newcommand{\xc}[0]{\vb{x}_c}
+
+\makenomenclature
+\makeindex
+
+%opening
+\title{Conversions Between Cartesian and B-Plane States}
+\author{Noble Hatten}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+	This document describes conversions between Cartesian and B-Plane state variables. Transformations in both directions and associated Jacobians are given. Primary emphasis is given to transformations for the ``incoming'' velocity case. Later, the changes required to adapt the equations to the ``outgoing'' velocity case are given.
+
+\end{abstract}
+
+\tableofcontents
+
+\printnomenclature
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{State Representations}
+\label{sec:state_reps}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\nomenclature{$\vb{P}$}{Shorthand for $\vb{h} \times \vb{e}$}
+
+\subsection{Cartesian State}
+
+The Cartesian state consists of the position and velocity vector of the spacecraft in an assumed inertial reference frame whose origin is the spacecraft's flyby body:
+
+\nomenclature{$\vb{x}_c$}{Cartesian state vector}
+\nomenclature{$\vb{r}$}{Position vector}
+\nomenclature{$\vb{v}$}{Velocity vector}
+
+\begin{align}
+\label{eq:xc}
+	\vb{x}_c &= \left( \begin{array}{c}
+	\vb{r} \\
+	\vb{v} \\
+	\end{array} \right)_{6 \times 1}.
+\end{align}
+
+\subsection{B-Plane State}
+
+The B-Plane state is given by the vector
+
+\nomenclature{$v_{\infty}$}{Magnitude of velocity at infinity}
+\nomenclature{$\alpha$}{Right ascension of hyperbolic asymptote}
+\nomenclature{$\delta$}{Declination of hyperbolic asymptote}
+\nomenclature{$b$}{Magnitude of $\vb{B}$ vector (sometimes called $\Delta$)}
+\nomenclature{$\theta$}{B-Plane clock angle}
+\nomenclature{$\nu$}{True anomaly}
+
+\begin{align}
+\label{eq:xb}
+\vb{x}_b &= \left( \begin{array}{c}
+v_{\infty} \\
+\alpha \\
+\delta \\
+b \\
+\theta \\
+\nu
+\end{array} \right)_{6 \times 1}.
+\end{align}
+
+\noindent Full definition of the B-Plane state requires setting a reference vector (frequently some inertial $\vb{k}$). In this document, the reference vector is denoted $\vb{\phi}$ and left undefined further.
+
+\nomenclature{$\vb{i}$, $\vb{j}$, $\vb{k}$}{Unit vectors}
+\nomenclature{$\vb{\phi}$}{B-Plane reference vector}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Cartesian State to B-Plane State Transformation}
+\label{sec:cartesian2bplane}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+First, define standard convenience variables:
+
+\begin{align}
+	\vb{e} &= \frac{1}{\mu} \left[ \left( v^2 - \frac{\mu}{r} \right) \vb{r} - \left( \vb{r}^T \vb{v} \right) \vb{v} \right] \\
+	\vb{h} &= \vb{r} \times \vb{v} \\
+	\vb{P} &= \vb{h} \times \vb{e}.
+\end{align}
+
+\nomenclature{$\vb{x}$; $\vbh{x}$; $x$}{Arbitrary vector; its unit vector; its magnitude}
+\nomenclature{$\mu$}{Gravitational parameter of flyby body}
+\nomenclature{$\vb{e}$}{Eccentricity vector}
+\nomenclature{$\vb{h}$}{Angular momentum vector}
+
+\noindent Then, $\vbh{S}$, in the direction of the incoming asymptote (i.e., $\vb{v}_{\infty, in}$) is given by
+
+\begin{align}
+	\label{eq:shat_in}
+	\vbh{S} &= \frac{1}{e} \vbh{e} + \sqrt{1 - \frac{1}{e^2}} \vbh{P}.
+\end{align}
+
+\nomenclature{$\vbh{S}$}{Unit vector in direction of incoming asymptote}
+\nomenclature{$\vb{v}_{\infty, in}$}{Incoming velocity vector at infinity}
+
+\noindent Additional variables are defined by
+
+\begin{align}
+	\vbh{T} &= \frac{\vbh{S} \times \vb{\phi}}{|| \vbh{S} \times \vb{\phi} ||} \\
+	\vbh{R} &= \frac{\vbh{S} \times \vb{T}}{|| \vbh{S} \times \vb{T} ||} \\
+	\label{eq:bhat_in}
+	\vbh{B} &= \frac{\vbh{S} \times \vb{h}}{|| \vbh{S} \times \vb{h} ||} \\
+	\vb{B} &= b \left[ \sqrt{1 - \frac{1}{e^2}} \vbh{e} - \frac{1}{e} \vbh{P} \right] \\
+	b &= \frac{h^2}{\mu \sqrt{e^2 - 1}}.
+\end{align}
+
+\nomenclature{$\vbh{R}$}{B-Plane R unit vector}
+\nomenclature{$\vbh{T}$}{B-Plane T unit vector}
+\nomenclature{$\vb{B}$}{B-Plane B vector}
+
+\noindent Then, the B-Plane dot products are
+
+\begin{align}
+	B_T &= \vb{B}^T \vbh{T} \\
+	B_R &= \vb{B}^T \vbh{R}.
+\end{align}
+
+\nomenclature{$B_R$}{$\vb{B}^T \vbh{R}$}
+\nomenclature{$B_T$}{$\vb{B}^T \vbh{T}$}
+
+\noindent The B-Plane clock angle is given by
+
+\begin{align}
+	\theta &= \mathrm{atan2} \left(B_R, B_T \right).
+\end{align}
+
+\noindent The magnitude of the velocity at infinity is
+
+\begin{align}
+	v_{\infty} &= \sqrt{v^2 - \frac{2 \mu}{r}}.
+\end{align}
+
+\noindent The radius of periapsis is
+
+\begin{align}
+	r_p &= \frac{\mu \left( e - 1 \right)}{v_{\infty}^2}.
+\end{align}
+
+\nomenclature{$r_p$}{Periapsis radius}
+
+\noindent The right ascension and declination of the incoming asymptote are given by
+
+\begin{align}
+	\alpha &= \mathrm{atan2} \left( S_y, S_x \right) \\
+	\delta &= \mathrm{asin} \left( \frac{S_z}{S} \right) \\
+	&= \mathrm{asin} \left( S_z \right).
+\end{align}
+
+\nomenclature{$x$, $y$, $z$}{As subscripts: represent components of 3D vector}
+
+\noindent True anomaly is given by the angle between $e$ and $r$:
+
+\begin{align}
+\label{eq:TA_from_xc}
+	\nu &= \mathrm{atan2} \left( || \vb{e} \times \vb{r} ||, \vb{e}^T \vb{r} \right),
+\end{align}
+
+\noindent with the quadrant check:
+
+\begin{align}
+	\text{if } \vb{r}^T \vb{v} &< 0: \quad \nu \leftarrow 2 \pi - \nu.
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Cartesian State to B-Plane State Transformation Jacobian}
+\label{sec:cartesian2bplanejac}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Derivatives of Position Vector}
+
+\begin{align}
+\pd{\vb{r}}{\xc} &= \left[ \begin{array}{cccccc}
+1 & 0 & 0 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 & 0 & 0 \\
+0 & 0 & 1 & 0 & 0 & 0
+\end{array} \right]
+\end{align}
+
+\subsection{Derivatives of Velocity Vector}
+
+\begin{align}
+\pd{\vb{v}}{\xc} &= \left[ \begin{array}{cccccc}
+0 & 0 & 0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 0 & 1 & 0 \\
+0 & 0 & 0 & 0 & 0 & 1
+\end{array} \right]
+\end{align}
+
+\subsection{Derivatives of Right Ascension of Velocity at Infinity}
+
+\begin{align}
+	\pd{\alpha}{\vbh{S}} &= \left[ -\frac{\hat{S}_y}{\hat{S}_x^2 + \hat{S}_y^2} \quad \frac{\hat{S}_x}{\hat{S}_x^2 + \hat{S}_y^2} \quad  0 \right] \\
+	\pd{\alpha}{\xc} &= \pd{\alpha}{\vbh{S}} \pd{\vbh{S}}{\xc}
+\end{align}
+
+\subsection{Derivatives of Declination of Velocity at Infinity}
+
+\begin{align}
+\pd{\delta}{\vbh{S}} &= \left[ 0 \quad 0 \quad \frac{1}{\sqrt{1 - \hat{S}_z^2}} \right] \\
+\pd{\delta}{\xc} &= \pd{\delta}{\vbh{S}} \pd{\vbh{S}}{\xc}
+\end{align}
+
+\subsection{Derivatives of Velocity at Infinity Magnitude}
+
+\begin{align}
+	\pd{v_{\infty}}{\xc} &= \frac{1}{2} \left( v^2 - \frac{2 \mu}{r} \right)^{-\frac{1}{2}} \left( 2 \vb{v}^T \pd{\vb{v}}{\xc} + \frac{2 \mu}{r^3} \vb{r}^T \pd{\vb{r}}{\xc} \right)
+\end{align}
+
+\subsection{Derivatives of Periapsis Radius}
+
+\begin{align}
+	\pd{r_p}{\xc} &= \mu \left[ \vbh{e}^T \pd{\vb{e}}{\xc} v_{\infty}^{-2} - 2 \left( e - 1 \right) v_{\infty}^{-3} \pd{v_{\infty}}{\xc} \right]
+\end{align}
+
+\subsection{Derivatives of B-Plane Clock Angle}
+
+\begin{align}
+	\pd{\theta}{\xc} &= \frac{B_T}{B_R^2 + B_T^2} \pd{B_R}{\xc} - \frac{B_R}{B_R^2 + B_T^2} \pd{B_T}{\xc}
+\end{align}
+
+\subsection{Derivatives of $B_T$}
+
+\begin{align}
+	\pd{B_T}{\xc} &= \vbh{T}^T \pd{\vb{B}}{\xc} + \vb{B}^T \pd{\vbh{T}}{\xc}
+\end{align}
+
+\subsection{Derivatives of $B_R$}
+
+\begin{align}
+\pd{B_R}{\xc} &= \vbh{R}^T \pd{\vb{B}}{\xc} + \vb{B}^T \pd{\vbh{R}}{\xc}
+\end{align}
+
+\subsection{Derivatives of $B$ Vector Magnitude}
+
+\begin{align}
+	\vb{\xi}_1 &\triangleq - \left( e^2 - 1 \right)^{-\frac{3}{2}} \vb{e}^T \pd{\vb{e}}{\xc} \\
+	\vb{\xi}_2 &\triangleq 2 \vb{h}^T \pd{\vb{h}}{\xc} \\
+	\pd{b}{\xc} &= \frac{1}{\mu} \left[ h^2 \vb{\xi}_1 + \left( e^2 - 1 \right)^{-\frac{1}{2}} \vb{\xi}_2 \right]
+\end{align}
+
+\subsection{Derivatives of $B$ Vector}
+
+\begin{align}
+	\pd{\vb{B}}{\xc} &= \vbh{B} \pd{b}{\xc} + b \pd{\vbh{B}}{\xc}
+\end{align}
+
+\subsection{Derivatives of $B$ Unit Vector}
+\label{sec:cartesian2bplanejac_bunit}
+
+\begin{align}
+	\pd{\vbh{P}}{\xc} &= \frac{1}{P} \left( \vb{I} - \frac{1}{P^2} \vb{P} \vb{P}^T \right) \pd{\vb{P}}{\xc} \\
+	\pd{\vbh{e}}{\xc} &= \frac{1}{e} \left( \vb{I} - \frac{1}{e^2} \vb{e} \vb{e}^T \right) \pd{\vb{e}}{\xc} \\
+	\zeta_1 &\triangleq \sqrt{1 - \frac{1}{e^2}} \\
+	\pd{\zeta_1}{\xc} &= \frac{1}{e^3} \left( 1 - \frac{1}{e^2} \right)^{-\frac{1}{2}} \vbh{e}^T \pd{\vb{e}}{\xc} \\
+	\vb{\zeta}_2 &\triangleq -\frac{1}{e^2} \vbh{e}^T \pd{\vb{e}}{\xc} \\
+	\vb{\xi}_1 &\triangleq \zeta_1 \pd{\vbh{e}}{\xc} \\
+	\vb{\xi}_2 &\triangleq \vbh{e} \pd{\zeta_1}{\xc} \\
+	\vb{\xi}_3 &\triangleq -\frac{1}{e} \pd{\vbh{P}}{\xc} \\
+	\vb{\xi}_4 &\triangleq - \vbh{P} \vb{\zeta}_2 \\
+	\label{eq:d_bunit_d_xc_in}
+	\pd{\vbh{B}}{\xc} &= \vb{\xi}_1 + \vb{\xi}_2 + \vb{\xi}_3 + \vb{\xi}_4
+\end{align}
+
+\subsection{Derivatives of $R$ Unit Vector}
+
+\begin{align}
+	\vb{R} &\triangleq \vbh{S} \times \vb{T} \\
+	\pd{\vb{R}}{\xc} &= -\crossmat{\vb{T}} \pd{\vbh{S}}{\xc} + \crossmat{\vbh{S}} \pd{\vb{T}}{\xc} \\
+	\pd{\vbh{R}}{\xc} &= \frac{1}{R} \left( \vb{I} - \frac{1}{R^2} \vb{R} \vb{R}^T \right) \pd{\vb{R}}{\xc}
+\end{align}
+
+\subsection{Derivatives of $T$ Unit Vector}
+
+\begin{align}
+\vb{T} &\triangleq \vbh{S} \times \vb{\phi} \\
+\pd{\vb{T}}{\xc} &= -\crossmat{\vb{\phi}} \pd{\vbh{S}}{\xc} + \crossmat{\vbh{S}} \pd{\vb{\phi}}{\xc} \\
+\pd{\vbh{T}}{\xc} &= \frac{1}{T} \left( \vb{I} - \frac{1}{T^2} \vb{T} \vb{T}^T \right) \pd{\vb{T}}{\xc}
+\end{align}
+
+
+\subsection{Derivatives of $S$ Unit Vector}
+\label{sec:cartesian2bplanejac_sunit}
+
+\begin{align}
+	\pd{\vbh{P}}{\xc} &= \frac{1}{P} \left( \vb{I} - \frac{1}{P^2} \vb{P} \vb{P}^T \right) \pd{\vb{P}}{\xc} \\
+	\zeta_1 &\triangleq \sqrt{1 - \frac{1}{e^2}} \\
+	\pd{\zeta_1}{\xc} &= \frac{1}{e^3} \left( 1 - \frac{1}{e^2} \right)^{-\frac{1}{2}} \vbh{e}^T \pd{\vb{e}}{\xc} \\
+	\vb{\xi}_1 &\triangleq - \frac{1}{e^2} \vbh{e} \vbh{e}^T \pd{\vb{e}}{\xc} \\
+	\vb{\xi}_2 &\triangleq \frac{1}{e} \pd{\vbh{e}}{\xc} \\
+	\vb{\xi}_3 &\triangleq \vbh{P} \pd{\zeta_1}{\xc} \\
+	\vb{\xi}_4 &\triangleq \zeta_1 \pd{\vbh{P}}{\xc} \\
+	\label{eq:d_sunit_d_xc_in}
+	\pd{\vbh{S}}{\xc} &= \vb{\xi}_1 + \vb{\xi}_2 + \vb{\xi}_3 + \vb{\xi}_4
+\end{align}
+
+\subsection{Derivatives of Angular Momentum Vector}
+
+\begin{align}
+	\pd{\vb{h}}{\xc} &= \left[ -\crossmat{\vb{v}} \quad \crossmat{\vb{r}} \right]
+\end{align}
+
+\subsection{Derivatives of $P$ Vector}
+
+\begin{align}
+\pd{\vb{P}}{\xc} &= - \crossmat{\vb{e}} \pd{\vb{h}}{\xc} + \crossmat{\vb{h}} \pd{\vb{e}}{\xc}
+\end{align}
+
+\subsection{Derivatives of Eccentricity Vector}
+
+\begin{align}
+\vb{\zeta}_1 &\triangleq \vb{r}^T \pd{\vb{v}}{\xc} + \vb{v}^T \pd{\vb{r}}{\xc} \\
+\pd{r}{\vb{r}} &= \frac{\vb{r}^T}{r} \\
+\pd{v}{\vb{v}} &= \frac{\vb{v}^T}{v} \\
+\vb{\xi}_1 &\triangleq \vb{r} \left( 2 v \pd{v}{\vb{v}} \pd{\vb{v}}{\xc} + \frac{\mu}{r^2} \pd{r}{\vb{r}} \pd{\vb{r}}{\xc} \right) + \left( v^2 - \frac{\mu}{r} \right) \pd{\vb{r}}{\xc} \\
+\vb{\xi}_2 &\triangleq \vb{v} \vb{\zeta}_1 + \left( \vb{r}^T \vb{v} \right) \pd{\vb{v}}{\xc}  \\
+\pd{\vb{e}}{\xc} &= \frac{1}{\mu} \left( \vb{\xi}_1 - \vb{\xi}_2 \right)
+\end{align}
+
+\subsection{Derivatives of True Anomaly}
+
+The derivatives of true anomaly with respect to the Cartesian state are obtained by differentiating Eq.~\eqref{eq:TA_from_xc}.
+
+\begin{align}
+	\pd{\left( \vb{e} \times \vb{r} \right)}{\vb{e}} &= - \left\{ \vb{r} \right\}^{\times} \\
+	\pd{\left( \vb{e} \times \vb{r} \right)}{\vb{r}} &= \left\{ \vb{e} \right\}^{\times} \\
+	\pd{\left( \vb{e} \times \vb{r} \right)}{\xc} &= \pd{\left( \vb{e} \times \vb{r} \right)}{\vb{e}} \pd{\vb{e}}{\xc} + \pd{\left( \vb{e} \times \vb{r} \right)}{\vb{r}} \pd{\vb{r}}{\xc} \\
+	\xi_1 &\triangleq || \vb{e} \times \vb{r} || \\
+	\xi_2 &\triangleq \vb{e}^T \vb{r} \\ 
+	\pd{\xi_1}{\xc} &= \frac{1}{\xi_1} \left( \vb{e} \times \vb{r} \right)^T \pd{\left( \vb{e} \times \vb{r} \right)}{\xc} \\
+	\pd{\xi_2}{\xc} &= \vb{e}^T \pd{\vb{r}}{\xc} + \vb{r}^T \pd{\vb{e}}{\xc} \\
+	\pd{\nu}{\xi_1} &= \frac{\xi_2}{\xi_1^2 + \xi_2^2} \\
+	\pd{\nu}{\xi_2} &= - \frac{\xi_1}{\xi_1^2 + \xi_2^2} \\
+	\pd{\nu}{\xc} &= \pd{\nu}{\xi_1} \pd{\xi_1}{\xc} + \pd{\nu}{\xi_2} \pd{\xi_2}{\xc}
+\end{align}
+
+Like with the calculation of true anomaly itself, a quadrant check is required at the end of the derivatives calculations:
+
+\begin{align}
+	\text{if } \vb{r}^T \vb{v} &< 0: \quad \pd{\nu}{\xc} \leftarrow - \pd{\nu}{\xc}
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{B-Plane State to Cartesian State Transformation}
+\label{sec:bplane2cartesian}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The transformation from B-Plane state to Cartesian state is accomplished by expressing the Cartesian state as a function of $\vb{e}$, $\vb{h}$, and $\nu$:
+
+\begin{align}
+	\vb{r} &= \frac{h^2}{\mu \left( 1 + e \cos{\nu} \right)} \left[ \vbh{e} \cos{\nu} + \vbh{P} \sin{\nu} \right] \\
+	\vb{v} &= - \frac{\mu}{h} \left[ \vbh{e} \sin{\nu} - \left( e + \cos{\nu} \right) \vbh{P} \right].
+\end{align}
+
+\noindent True anomaly $\nu$ is known because it is a member of $\vb{x}_b$. The rest of the elements needed to calculate the Cartesian state are given by:
+
+\begin{align}
+	e &= \sqrt{1 + \frac{v_{\infty}^4 b^2}{\mu^2}} \\
+	h &= v_{\infty} b \\
+	\vb{v}_{\infty} &= v_{\infty} \left[ \begin{array}{c}
+	\cos{\delta} \cos{\alpha} \\
+	\cos{\delta} \sin{\alpha} \\
+	\sin{\delta}
+	\end{array} \right] \\
+	B_R &= \vb{B}^T \vbh{R} = b \sin{\theta} \\
+	B_T &= \vb{B}^T \vbh{T} = b \cos{\theta} \\
+	\vbh{S} &= \vbh{v}_{\infty} \\
+	\vbh{T} &= \frac{\vbh{S} \times \vb{\phi}}{||\vbh{S} \times \vb{\phi}||} \\
+	\vbh{R} &= \frac{\vbh{S} \times \vbh{T}}{||\vbh{S} \times \vbh{T}||} \\
+	\vb{B} &= B_R \vbh{R} + B_T \vbh{T} \\
+	\vbh{h} &= \frac{\vb{B} \times \vbh{S}}{||\vb{B} \times \vbh{S}||} \\
+	\vb{h} &= h \vbh{h} \\
+	\nu_{\infty, in} &= - \mathrm{acos} \left( - \frac{1}{e} \right) \\
+	\label{eq:ehat_in}
+	\vbh{e} &= \frac{\vbh{S} \cos \left(\pi - \nu_{\infty, in} \right) - \vbh{B} \sin \left(\pi - \nu_{\infty, in} \right)}{||\vbh{S} \cos \left(\pi - \nu_{\infty, in} \right) - \vbh{B} \sin \left(\pi - \nu_{\infty, in} \right)||} \\
+	\vb{e} &= e \vbh{e}
+\end{align}
+
+\nomenclature{$\nu_{\infty}$}{True anomaly at infinity}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{B-Plane State to Cartesian State Transformation Jacobian}
+\label{sec:bplane2cartesianjac}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Derivatives of Magnitude of $B$ Vector}
+
+\begin{align}
+	\pd{b}{\xb} &= \left[ 0 \quad 0 \quad 0 \quad 1 \quad 0 \quad 0 \right]
+\end{align}
+
+\subsection{Derivatives of B-Plane Clock Angle}
+
+\begin{align}
+	\pd{\theta}{\xb} &= \left[ 0 \quad 0 \quad 0 \quad 0 \quad 1 \quad 0 \right]
+\end{align}
+
+\subsection{Derivatives of True Anomaly}
+
+With $\vb{x}_b$ defined as in Eq.~\eqref{eq:xb}, the derivatives of true anomaly are
+
+\begin{align}
+	\pd{\nu}{\vb{x}_b} &= \left[ 0 \quad 0 \quad \ 0 \quad 0 \quad 0 \quad 1 \right]
+\end{align}
+
+\subsection{Derivatives of Eccentricity Vector}
+
+\begin{align}
+	\pd{\vb{e}}{\xb} &= \vbh{e} \pd{e}{\xb} + e \pd{\vbh{e}}{\xb}
+\end{align}
+
+\subsection{Derivatives of Eccentricity Magnitude}
+
+\begin{align}
+	\pd{e}{\xb} &= \frac{1}{2} \left( 1 + \frac{v_{\infty}^4 b^2}{\mu^2} \right)^{-\frac{1}{2}} \left[ \frac{4 v_{\infty}^3 b^2}{\mu^2} \quad 0 \quad 0 \quad \frac{2 v_{\infty}^4 b}{\mu^2} \quad 0 \quad 0 \right]
+\end{align}
+
+\subsection{Derivatives of Angular Momentum Vector}
+
+\begin{align}
+\pd{\vb{h}}{\xb} &= \vbh{h} \pd{h}{\xb} + h \pd{\vbh{h}}{\xb}
+\end{align}
+
+\subsection{Derivatives of Angular Momentum Magnitude}
+
+\begin{align}
+	\pd{h}{\xb} &= \left[ b \quad 0 \quad 0 \quad v_{\infty} \quad 0 \quad 0 \right]
+\end{align}
+
+\subsection{Derivatives of Angular Momentum Unit Vector}
+
+\begin{align}
+	\vb{\gamma} &\triangleq \vb{B} \times \vbh{S} \\
+	\pd{\vbh{h}}{\xb} &= \left( -\frac{1}{\gamma^3} \vb{\gamma} \vb{\gamma}^T + \frac{1}{\gamma} \vb{I} \right) \left( -\crossmat{\vbh{S}} \pd{\vb{B}}{\xb} + \crossmat{\vb{B}} \pd{\vbh{S}}{\xb} \right)
+\end{align}
+
+\nomenclature{$\vb{I}$}{Identity matrix}
+
+\subsection{Derivatives of $S$ Unit Vector}
+
+\begin{align}
+	\pd{\vbh{S}}{\xb} &= \left[ \begin{array}{cccccc}
+	0 & -\cos{\delta} \sin{\alpha} & -\sin{\delta} \cos{\alpha} & 0 & 0 & 0 \\
+	0 & \cos{\delta} \cos{\alpha} & -\sin{\delta} \sin{\alpha} & 0 & 0 & 0 \\
+	0 & 0 & \cos{\delta} & 0 & 0 & 0
+	\end{array} \right]
+\end{align}
+
+\subsection{Derivatives of $B$ Vector}
+
+\begin{align}
+	\pd{\sin{\nu}}{\xb} &= \left[ 0 \quad 0 \quad 0 \quad 0 \quad \cos{\theta} \quad 0 \right] \\
+	\pd{\cos{\nu}}{\xb} &= \left[ 0 \quad 0 \quad 0 \quad 0 \quad 0 -\sin{\theta} \quad 0 \right] \\
+	\pd{\vb{B}}{\xb} &= \sin{\theta} \vbh{R} \pd{b}{\xb} + b \vbh{R} \pd{\sin{\theta}}{\xb} + b \sin{\theta} \pd{\vbh{R}}{\xb} + \cos{\theta} \vbh{T} \pd{b}{\xb} + b \vbh{T} \pd{\cos{\theta}}{\xb} + b \cos{\theta} \pd{\vbh{T}}{\xb}
+\end{align}
+
+\subsection{Derivatives of $T$ Unit Vector}
+
+The derivatives of $\vbh{T}$ cannot be fully defined until the reference vector $\vb{\phi}$ is chosen. In this section, the derivatives are left in terms of the derivatives of $\vb{\phi}$.
+
+\begin{align}
+	\vb{T} &\triangleq \vbh{S} \times \vb{\phi} \\
+	\pd{\vb{T}}{\xb} &= -\crossmat{\vb{\phi}} \pd{\vbh{S}}{\xb} + \crossmat{\vbh{S}} \pd{\vb{\phi}}{\xb} \\
+	\vb{\xi}_2 &\triangleq -\frac{1}{T^3} \left( \vb{T}^T \pd{\vb{T}}{\xb} \right)^T \\
+	\pd{\vbh{T}}{\xb} &= \frac{1}{T} \pd{\vb{T}}{\xb} + \vb{T} \vb{\xi}_2^T
+\end{align}
+
+\subsection{Derivatives of $R$ Unit Vector}
+
+\begin{align}
+	\vb{R} &\triangleq \vbh{S} \times \vbh{T} \\
+	\pd{\vb{R}}{\xb} &= -\crossmat{\vbh{T}} \pd{\vbh{S}}{\xb} + \crossmat{\vbh{S}} \pd{\vbh{T}}{\xb} \\
+	\vb{\xi}_2 &\triangleq -\frac{1}{R^3} \left( \vb{R}^T \pd{\vb{R}}{\xb} \right)^T \\
+	\pd{\vbh{R}}{\xb} &= \frac{1}{R} \pd{\vb{R}}{\xb} + \vb{R} \vb{\xi}_2^T
+\end{align}
+
+\subsection{Derivatives of Eccentricity Unit Vector}
+
+\begin{align}
+	\beta &\triangleq \pi - \nu_{\infty,in} \\
+	c_\beta &\triangleq \cos \beta \\
+	s_\beta &\triangleq \sin \beta \\
+	\pd{c_\beta}{\xb} &= s_\beta \pd{\nu_{\infty,in}}{\xb} \\
+	\pd{s_\beta}{\xb} &= -c_\beta \pd{\nu_{\infty,in}}{\xb} \\
+	\vb{\xi}_1 &\triangleq c_\beta \vbh{S} - s_\beta \vbh{B} \\
+	\pd{\vbh{B}}{\xb} &= \pd{\vbh{B}}{\vb{B}} \pd{\vb{B}}{\xb} \\
+	\pd{\vbh{B}}{\vb{B}} &= \frac{1}{B} \left( \vb{I} - \frac{1}{B^2} \vb{B} \vb{B}^T \right) \\
+	\pd{\vb{\xi}_1}{\xb} &= \pd{\vbh{S}}{\xb} c_\beta + \vbh{S} \pd{c_\beta}{\xb}  - \pd{\vbh{B}}{\xb} s_\beta - \vbh{B} \pd{s_\beta}{\xb}  \\
+	\vb{\xi}_2 &\triangleq -\frac{1}{\xi_1^3} \vb{x}_1^T \pd{\vb{\xi}_1}{\xb} \\
+	\label{eq:d_ehat_in_d_xb}
+	\pd{\vbh{e}}{\xb} &= \frac{1}{\xi_1} \pd{\vb{\xi}_1}{\xb} + \vb{\xi}_1 \vb{\xi}_2
+\end{align}
+
+
+
+\subsection{Derivatives of Incoming True Anomaly at Infinity}
+
+\begin{align}
+	\label{eq:d_nuinf_in_d_xb}
+	\pd{\nu_{\infty,in}}{\xb} &= \frac{1}{e \sqrt{e^2 - 1}} \pd{e}{\xb}
+\end{align}
+
+\subsection{Derivatives of Position Vector}
+
+The final derivatives of the position vector utilize the derivatives of $\vb{h}$, $\vb{e}$, and $\nu$:
+
+\begin{align}
+\pd{\vb{r}}{\xb} &= \pd{\vb{r}}{\vb{h}} \pd{\vb{h}}{\xb} + \pd{\vb{r}}{\vb{e}} \pd{\vb{e}}{\xb} + \pd{\vb{r}}{\nu} \pd{\nu}{\xb}
+\end{align}
+
+\subsubsection{Derivatives of Position Vector with Respect to Angular Momentum Vector}
+
+\begin{align}
+	\xi_1 &\triangleq 2 \cos{\nu} \vbh{e} \vb{h}^T \\
+	\xi_2 &\triangleq \frac{\sin{\nu}}{P} \left[ 2 \vb{P} \vb{h}^T + h^2 \left( -\vb{I} + \frac{1}{P^2} \vb{P} \vb{P}^T \right) \left\{ \vb{e} \right\}^{\times} \right] \\
+	\pd{\vb{r}}{\vb{h}} &= \frac{1}{\mu \left(1 + e \cos \nu \right)} \left( \xi_1 + \xi_2 \right)
+\end{align}
+
+\subsubsection{Derivatives of Position Vector with Respect to Eccentricity Vector}
+
+\begin{align}
+	\xi_1 &\triangleq  \left[ \vbh{e} \cos{\nu} + \vbh{P} \sin{\nu} \right] \left[\vbh{e}^T \frac{-\cos{\nu}}{\left( 1 + e \cos{\nu} \right)^2} \right] \\
+	\xi_2 &\triangleq \frac{1}{1 + e \cos{\nu}} \left[ \frac{\cos{\nu}}{e} \left( \vb{I} - \frac{1}{e^2} \vb{e} \vb{e}^T \right) + \frac{\sin{\nu}}{P} \left( \vb{I} - \frac{1}{P^2} \vb{P} \vb{P}^T \right) \crossmat{\vb{h}} \right] \\
+	\pd{\vb{r}}{\vb{e}} &= \frac{h^2}{\mu} \left( \xi_1 + \xi_2 \right)
+\end{align}
+
+\subsubsection{Derivatives of Position Vector with Respect to True Anomaly}
+
+\begin{align}
+	\xi_1 &\triangleq \frac{e \sin{\nu}}{\left(1 + e \cos{\nu} \right)^2} \left( \vbh{e} \cos{\nu} + \vbh{P} \sin{\nu} \right) \\
+	\xi_2 &\triangleq \frac{1}{1 + e \cos{\nu}} \left( -\vbh{e} \sin{\nu} + \vbh{P} \cos{\nu} \right) \\
+	\pd{\vb{r}}{\nu} &= \frac{h^2}{\mu} \left( \xi_1 + \xi_2 \right)
+\end{align}
+
+\subsection{Derivatives of Velocity Vector}
+
+The final derivatives of the velocity vector utilize the derivatives of $\vb{h}$, $\vb{e}$, and $\nu$:
+
+\begin{align}
+\pd{\vb{v}}{\xb} &= \pd{\vb{v}}{\vb{h}} \pd{\vb{h}}{\xb} + \pd{\vb{v}}{\vb{e}} \pd{\vb{e}}{\xb} + \pd{\vb{v}}{\nu} \pd{\nu}{\xb}
+\end{align}
+
+\subsubsection{Derivatives of Velocity Vector with Respect to Angular Momentum Vector}
+
+\begin{align}
+\xi_1 &\triangleq -\frac{1}{h^3} \left[ \vbh{e} \sin{\nu} - \left( e + \cos{\nu} \right) \vbh{P} \right] \vb{h}^T \\
+\xi_2 &\triangleq -\frac{e + \cos{\nu}}{h P} \left[ -\crossmat{\vb{e}} + \frac{1}{P^2} \vb{P} \vb{P}^T \crossmat{\vb{e}} \right] \\
+\pd{\vb{v}}{\vb{h}} &= -\mu \left( \xi_1 + \xi_2 \right)
+\end{align}
+
+\subsubsection{Derivatives of Velocity Vector with Respect to Eccentricity Vector}
+
+\begin{align}
+\xi_1 &\triangleq \frac{\sin{\nu}}{e} \left( \vb{I} - \frac{1}{e^2} \vb{e} \vb{e}^T \right) \\
+\xi_{21} &\triangleq \vbh{P}\vbh{e}^T \\
+\xi_{22} &\triangleq \left( e + \cos{\nu} \right) \left( \frac{1}{P} \right) \left[ \crossmat{\vb{h}} - \frac{1}{P^2} \vb{P} \vb{P}^T \crossmat{\vb{h}} \right]  \\
+\xi_2 &\triangleq -\left( \xi_{21} + \xi_{22} \right) \\
+\pd{\vb{v}}{\vb{e}} &= -\frac{\mu}{h} \left( \xi_1 + \xi_2 \right)
+\end{align}
+
+\subsubsection{Derivatives of Velocity Vector with Respect to True Anomaly}
+
+\begin{align}
+\xi_1 &\triangleq \cos{\nu} \vbh{e} \\
+\xi_2 &\triangleq \sin{\nu} \vbh{P} \\
+\pd{\vb{v}}{\nu} &= -\frac{\mu}{h} \left( \xi_1 + \xi_2 \right)
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Outgoing Transformations}
+\label{sec:outgoing_transformations}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Cartesian State to B-Plane State Transformation}
+\label{sec:cartesian2bplane_outgoing}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+For the Cartesian state to B-Plane transformation, the substantive change is that the vector $\vbh{S}$ -- which is aligned with the hyperbolic asymptote -- changes from being parallel to the incoming asymptote to being parallel to the outgoing asymptote. Consequently, Eq.~\eqref{eq:shat_in} becomes
+
+\begin{align}
+	\label{eq:shat_out}
+	\vbh{S} &= -\frac{1}{e} \vbh{e} + \sqrt{1 - \frac{1}{e^2}} \vbh{P}
+\end{align}
+
+All subsequent calculations proceed as described in Section~\ref{sec:cartesian2bplane} using the expression for $\vbh{S}$ given in Eq.~\eqref{eq:shat_out} with the exception of Eq.~\eqref{eq:bhat_in}, which becomes
+
+\begin{align}
+	\vbh{B} &= \frac{1}{e} \vbh{P} + \sqrt{1 - \frac{1}{e^2}} \vbh{e}
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Cartesian State to B-Plane State Transformation Jacobian}
+\label{sec:cartesian2bplanejac_outgoing}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Changes to the Cartesian state to B-Plane state transformation Jacobian relative to the expressions presented in Section~\ref{sec:cartesian2bplanejac} arise due to the changes presented in Section~\ref{sec:cartesian2bplane_outgoing}. Specifically, Eq.~\eqref{eq:d_sunit_d_xc_in} becomes
+
+\begin{align}
+	\pd{\vbh{S}}{\xc} &= -\vb{\xi}_1 - \vb{\xi}_2 + \vb{\xi}_3 + \vb{\xi}_4
+\end{align}
+
+\noindent using the variable definitions of Section~\ref{sec:cartesian2bplanejac_sunit}, overridden where applicable by Section~\ref{sec:cartesian2bplane_outgoing}.
+
+Additionally, Eq.~\eqref{eq:d_bunit_d_xc_in} becomes
+
+\begin{align}
+	\pd{\vbh{B}}{\xc} &= \vb{\xi}_1 + \vb{\xi}_2 - \vb{\xi}_3 - \vb{\xi}_4
+\end{align}
+
+\noindent using the variable definitions of Section~\ref{sec:cartesian2bplanejac_bunit}, overridden where applicable by Section~\ref{sec:cartesian2bplane_outgoing}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{B-Plane State to Cartesian State Transformation}
+\label{sec:bplane2cartesian_outgoing}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+For the B-Plane state to Cartesian state transformation, the true anomaly at infinity is calculated for the outgoing asymptote rather than for the incoming asymptote:
+
+\begin{align}
+	\nu_{\infty, out} &= \mathrm{acos} \left(-\frac{1}{e} \right)
+\end{align}
+
+\noindent $\nu_{\infty, out}$ then replaces $\nu_{\infty, in}$ in Eq.~\eqref{eq:ehat_in}, which becomes
+
+\begin{align}
+	\vbh{e} &= \vbh{B} \sin \left( \nu_{\infty, out} \right) + \vbh{S} \cos \left( \nu_{\infty, out} \right)
+\end{align}
+
+All other equations of Section~\ref{sec:bplane2cartesian} still hold with the important note that $\alpha$ and $\delta$ must be interpreted as the right ascension and declination, respectively, of the outgoing asymptote. (For the incoming B-Plane transformation, $\alpha$ and $\delta$ are the right ascension and declination, respectively, of the incoming asymptote.)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{B-Plane State to Cartesian State Transformation Jacobian}
+\label{sec:bplane2cartesianjac_outgoing}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Changes to the Cartesian state to B-Plane state transformation Jacobian relative to the expressions presented in Section~\ref{sec:bplane2cartesianjac} arise due to the changes presented in Section~\ref{sec:bplane2cartesian_outgoing}. Specifically, Eq.~\eqref{eq:d_nuinf_in_d_xb} becomes
+
+\begin{align}
+	\pd{\nu_{\infty, out}}{\xb} &= - \frac{1}{e \sqrt{e^2 - 1}} \pd{e}{\xb} 
+\end{align}
+
+Additionally, Eq.~\eqref{eq:d_ehat_in_d_xb} becomes
+
+\begin{align}
+	\pd{\vbh{e}}{\xb} &= \pd{\vbh{S}}{\xb} \cos \left( \nu_{\infty, out} \right) + \vbh{S} \pd{\cos \left( \nu_{\infty, out} \right)}{\xb}  + \pd{\vbh{B}}{\xb} \sin \left( \nu_{\infty, out} \right) + \vbh{B} \pd{\sin \left( \nu_{\infty, out} \right)}{\xb}
+\end{align}
+
+\noindent with
+
+\begin{align}
+	\pd{\cos \left( \nu_{\infty, out} \right)}{\xb} &= - \sin \left( \nu_{\infty, out} \right) \pd{\nu_{\infty, out}}{\xb} \\
+	\pd{\sin \left( \nu_{\infty, out} \right)}{\xb} &= \cos \left( \nu_{\infty, out} \right) \pd{\nu_{\infty, out}}{\xb}
+\end{align}
+
+\noindent The expressions for $\pd{\vbh{S}}{\xb}$ and $\pd{\vbh{B}}{\xb}$ do not change from those presented in Section~\ref{sec:bplane2cartesianjac}.
+
+%\bibliography{}
+%\bibliographystyle{plain}
+
+\end{document}

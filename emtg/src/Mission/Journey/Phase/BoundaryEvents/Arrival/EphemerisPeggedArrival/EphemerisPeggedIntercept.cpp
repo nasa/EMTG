@@ -44,10 +44,10 @@ namespace EMTG
         //******************************************calcbounds methods
 
         //calcbounds
-        void EphemerisPeggedIntercept::calcbounds()
+        void EphemerisPeggedIntercept::calcbounds(std::vector<size_t> timeVariables)
         {
 
-            this->calcbounds_event_left_side();
+            this->calcbounds_event_left_side(timeVariables);
 
             this->calcbounds_event_main();
 

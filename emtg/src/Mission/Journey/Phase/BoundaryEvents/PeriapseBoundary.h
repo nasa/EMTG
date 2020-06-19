@@ -19,13 +19,13 @@
 
 #pragma once
 
-#include "BoundaryEventBase.h"
+#include "FreePointBoundary.h"
 
 namespace EMTG
 {
     namespace BoundaryEvents
     {
-        class PeriapseBoundary : virtual public BoundaryEventBase
+        class PeriapseBoundary : virtual public FreePointBoundary
         {
         public:
             //default constructor
@@ -52,8 +52,8 @@ namespace EMTG
         protected:
             //these go in the specialized event
             virtual void calcbounds_event_left_side(const std::vector<double>& RadiusBounds,
-                const std::vector<double>& VelocityMagnitudeBounds,
-                const std::vector<double>& MassBounds);
+                                                    const std::vector<double>& VelocityMagnitudeBounds,
+                                                    std::vector<size_t> timeVariables);
 
             virtual void calcbounds_event_right_side() = 0;
 
@@ -72,33 +72,15 @@ namespace EMTG
                 const bool& needG) = 0;
 
             //fields
+            double periapseDistanceBounds[2];
 
-            size_t dIndex_mass_wrt_mass;
-            size_t Xindex_rMag;
-            size_t Xindex_RA;
-            size_t Xindex_DEC;
-            size_t Xindex_vMag;
-            size_t Xindex_vRA;
-            size_t Xindex_vDEC;
-            size_t Xindex_AZ;
-            size_t Xindex_FPA;
-            size_t Xindex_mass;
+            bool need_rdotv_constraint;
+            bool need_distance_constraint;
 
-            std::vector<size_t> dIndex_periapse_state_wrt_r;//x, y, z
-            std::vector<size_t> dIndex_periapse_state_wrt_RA;//x, y, xdot, zdot
-            std::vector<size_t> dIndex_periapse_state_wrt_DEC;//x, y, z, xdot, ydot, zdot
-            std::vector<size_t> dIndex_periapse_state_wrt_v;//xdot, ydot, zdot
-            std::vector<size_t> dIndex_periapse_state_wrt_vRA;//xdot, ydot, zdot
-            std::vector<size_t> dIndex_periapse_state_wrt_vDEC;//xdot, ydot, zdot
-            std::vector<size_t> dIndex_periapse_state_wrt_AZ;//xdot, ydot, zdot
-            std::vector<size_t> dIndex_periapse_state_wrt_FPA;//xdot, ydot, zdot
-
-            size_t Gindex_rdotv_wrt_RA;
-            size_t Gindex_rdotv_wrt_DEC;
-            size_t Gindex_rdotv_wrt_vRA;
-            size_t Gindex_rdotv_wrt_vDEC;
-            size_t Gindex_rdotv_wrt_AZ;
-            size_t Gindex_rdotv_wrt_FPA;
+            std::vector<size_t> Gindices_rdotv;
+            std::vector<size_t> dIndices_rdotv;
+            std::vector<size_t> Gindices_distance_constraint;
+            std::vector<size_t> dIndices_distance_constraint;
         };//end class PeriapseBoundary
 
     }//end namespace BoundaryEvents

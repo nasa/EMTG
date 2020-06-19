@@ -122,7 +122,7 @@ namespace EMTG
                         decision_variable_infeasibility);
 
                     std::cout << "J = " << this->F[0] << std::endl;
-                    if (normalized_feasibility > options.snopt_feasibility_tolerance && decision_variable_infeasibility == 0.0)
+                    if (normalized_feasibility > options.snopt_feasibility_tolerance || decision_variable_infeasibility > options.snopt_feasibility_tolerance)
                     {
                         this->what_the_heck_am_I_called(SolutionOutputType::FAILURE);
                         std::cout << "Acquired infeasible point ";
@@ -137,13 +137,13 @@ namespace EMTG
                     std::cout << "Worst constraint is F[" << worst_constraint << "]: " << this->Fdescriptions[worst_constraint] << std::endl;
                     std::cout << "with violation " << feasibility << std::endl;
 
-                    if (decision_variable_infeasibility == 0.0)
+                    if (decision_variable_infeasibility < options.snopt_feasibility_tolerance)
                     {
-                        std::cout << "Decision variable is feasible." << std::endl;
+                        std::cout << "Decision vector is feasible." << std::endl;
                     }
                     else
                     {
-                        std::cout << "Decision variable is infeasible." << std::endl;
+                        std::cout << "Decision vector is infeasible." << std::endl;
                         std::cout << "Worst decision variable is X[" << worst_decision_variable << "]: " << this->Xdescriptions[worst_decision_variable] << std::endl;
                         std::cout << "with violation " << decision_variable_infeasibility << std::endl;
                     }
@@ -299,7 +299,7 @@ namespace EMTG
                         decision_variable_infeasibility);
 
                     std::cout << "J = " << this->F[0] << std::endl;
-                    if (normalized_feasibility > options.snopt_feasibility_tolerance && decision_variable_infeasibility == 0.0)
+                    if (normalized_feasibility > options.snopt_feasibility_tolerance || decision_variable_infeasibility > options.snopt_feasibility_tolerance)
                     {
                         this->what_the_heck_am_I_called(SolutionOutputType::FAILURE);
                         std::cout << "Acquired infeasible point ";
@@ -314,13 +314,13 @@ namespace EMTG
                     std::cout << "Worst constraint is F[" << worst_constraint << "]: " << this->Fdescriptions[worst_constraint] << std::endl;
                     std::cout << "with violation " << feasibility << std::endl;
 
-                    if (decision_variable_infeasibility == 0.0)
+                    if (decision_variable_infeasibility < options.snopt_feasibility_tolerance)
                     {
-                        std::cout << "Decision variable is feasible." << std::endl;
+                        std::cout << "Decision vector is feasible." << std::endl;
                     }
                     else
                     {
-                        std::cout << "Decision variable is infeasible." << std::endl;
+                        std::cout << "Decision vector is infeasible." << std::endl;
                         std::cout << "Worst decision variable is X[" << worst_decision_variable << "]: " << this->Xdescriptions[worst_decision_variable] << std::endl;
                         std::cout << "with violation " << decision_variable_infeasibility << std::endl;
                     }
@@ -456,17 +456,17 @@ namespace EMTG
             }
             else if (X[Xindex] > Xupperbounds[Xindex]) //exceed upper bound
             {
-                if (X[Xindex] - Xupperbounds[Xindex] > fabs(max_constraint_violation))
+                if ((X[Xindex] - Xupperbounds[Xindex]) / this->X_scale_factors[Xindex] > fabs(decision_variable_infeasibility))
                 {
-                    decision_variable_infeasibility = fabs((X[Xindex]) _GETVALUE - Xupperbounds[Xindex]);
+                    decision_variable_infeasibility = fabs((X[Xindex]) _GETVALUE - Xupperbounds[Xindex]) / this->X_scale_factors[Xindex];
                     worst_decision_variable = Xindex;
                 }
             }
             else if (X[Xindex] < Xlowerbounds[Xindex]) //smaller than lower bound
             {
-                if (Xlowerbounds[Xindex] - X[Xindex] > fabs(max_constraint_violation))
+                if ((Xlowerbounds[Xindex] - X[Xindex]) / this->X_scale_factors[Xindex] > fabs(decision_variable_infeasibility))
                 {
-                    decision_variable_infeasibility = fabs((X[Xindex]) _GETVALUE - Xlowerbounds[Xindex]);
+                    decision_variable_infeasibility = fabs((X[Xindex]) _GETVALUE - Xlowerbounds[Xindex]) / this->X_scale_factors[Xindex];
                     worst_decision_variable = Xindex;
                 }
             }

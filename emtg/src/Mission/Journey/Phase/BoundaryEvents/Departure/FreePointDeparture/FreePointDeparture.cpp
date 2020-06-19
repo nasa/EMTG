@@ -17,6 +17,7 @@
 // governing permissions and limitations under the License.
 
 #include "FreePointDeparture.h"
+#include "StateRepresentationFactory.h"
 
 namespace EMTG
 {
@@ -74,16 +75,29 @@ namespace EMTG
                                              myOptions,
                                              PreviousPhaseArrivalEvent);
 
-            this->myStateRepresentation = this->myJourneyOptions->departure_elements_state_representation;
+            this->myStateRepresentationEnum = this->myJourneyOptions->departure_elements_state_representation;
+
+            //create the state representation
+            this->myStateRepresentation = Astrodynamics::CreateStateRepresentation(this->myStateRepresentationEnum, this->myUniverse->mu);
                                              
             this->myEncodedReferenceFrame = this->myJourneyOptions->departure_elements_frame;
 
             this->ReferenceEpoch = this->myJourneyOptions->departure_elements_reference_epoch;
+
+            //are we using an object-referenced frame? If so, let's make a body
+            if (this->myEncodedReferenceFrame == ReferenceFrame::ObjectReferenced)
+            {
+                if (this->myOptions->Journeys[journeyIndex].destination_list[0] < 1)
+                {
+                    throw std::invalid_argument(this->name + " reference body must be set to a body in the universe. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                }
+                else
+                    this->myBody = &myUniverse->bodies[this->myOptions->Journeys[journeyIndex].destination_list[0] - 1];
+            }
         }//end initialize()
-                               
         
         //******************************************calcbounds methods
-        void FreePointDeparture::calcbounds_event_left_side()
+        void FreePointDeparture::calcbounds_event_left_side(std::vector<size_t> timeVariables)
         {
             this->X_index_of_first_decision_variable_in_this_event = this->Xdescriptions->size();
 
@@ -120,7 +134,7 @@ namespace EMTG
 
             //Step 3: base free point boundary
             if (this->isFirstEventInMission)
-                FreePointBoundary::calcbounds_event_left_side(StateBounds);
+                FreePointBoundary::calcbounds_event_left_side(StateBounds, timeVariables);
             else
             {//if this is not the first event in the mission, then we need to extract the state from the previous event - all except mass
                 //Step 3.1: set the current stage
@@ -195,7 +209,7 @@ namespace EMTG
                 this->calcbounds_left_mass_continuity_constraint();
 
                 //Step 3.6: epoch
-                this->calculate_dependencies_left_epoch();
+                this->calculate_dependencies_left_epoch(timeVariables);
                                 
                 //Step 3.7: if we allow the initial state to propagate then we have an additional set of derivatives of all of the states with respect to wait time
                 if (this->AllowStateToPropagate && !this->isFirstEventInMission)
@@ -260,35 +274,31 @@ namespace EMTG
 
                 //Step 2.5: propagate, if appropriate
                 doubleType PropagationTime = this->EventWaitTime + 1.0e-13;
-                if (this->AllowStateToPropagate)
-                {
-                    this->total_number_of_states_to_integrate = needG
-                        ? 10 + 13 * 13
+                if (this->AllowStateToPropagate)
+                {
+                    this->total_number_of_states_to_integrate = needG
+                        ? 10 + 13 * 13
                         : 10;
-
-                    //Step 2.5.1: copy the state to a temporary vector
-                    this->StateBeforeEventBeforePropagation.shallow_copy(this->state_before_event, 8);
-                    this->StateBeforeEventBeforePropagation(7) = 0.0;
-                    
-                    //epoch needs to *not* include wait time
-                    for (size_t listIndex = 0; listIndex < this->Xindices_EventLeftEpoch.size() - 1; ++listIndex)
-                    {
-                        this->StateBeforeEventBeforePropagation(7) += X[this->Xindices_EventLeftEpoch[listIndex]];
+                    //Step 2.5.1: copy the state to a temporary vector
+                    this->StateBeforeEventBeforePropagation.shallow_copy(this->state_before_event, 8);
+                    this->StateBeforeEventBeforePropagation(7) = 0.0;                    
+                    //epoch needs to *not* include wait time
+                    for (size_t listIndex = 0; listIndex < this->Xindices_EventLeftEpoch.size() - 1; ++listIndex)
+                    {
+                        this->StateBeforeEventBeforePropagation(7) += X[this->Xindices_EventLeftEpoch[listIndex]];
                     }
-
-                    //Step 2.5.2: then we need to propagate
-                    this->dPropagatedStatedIndependentVariable.assign_zeros();
-                    this->myPropagator->setCurrentEpoch(this->StateBeforeEventBeforePropagation(7));
-                    this->myPropagator->setIndexOfEpochInStateVec(7);
-                    this->myPropagator->setCurrentIndependentVariable(this->StateBeforeEventBeforePropagation(7));
-                    this->myPropagator->propagate(PropagationTime, needG);
+                    //Step 2.5.2: then we need to propagate
+                    this->dPropagatedStatedIndependentVariable.assign_zeros();
+                    this->myPropagator->setCurrentEpoch(this->StateBeforeEventBeforePropagation(7));
+                    this->myPropagator->setIndexOfEpochInStateVec(7);
+                    this->myPropagator->setCurrentIndependentVariable(this->StateBeforeEventBeforePropagation(7));
+                    this->myPropagator->propagate(PropagationTime, needG);
                     this->state_before_event(7) = this->EventLeftEpoch;
-
-                    if (this->myPropagatorType == PropagatorType::IntegratedPropagator)
-                    {
-                        this->state_before_event(8) = 0.0; //chemical fuel - we're not actually moving the spacecraft, we're redefining a boundary point. So tankage does not change.
-                        this->state_before_event(9) = 0.0; //chemical oxidizer
-                    }
+                    if (this->myPropagatorType == PropagatorType::IntegratedPropagator)
+                    {
+                        this->state_before_event(8) = 0.0; //chemical fuel - we're not actually moving the spacecraft, we're redefining a boundary point. So tankage does not change.
+                        this->state_before_event(9) = 0.0; //chemical oxidizer
+                    }
                 }
 
                 //Step 2.6 derivatives of position and velocity
@@ -311,13 +321,19 @@ namespace EMTG
                             {
                                 size_t dIndex = this->dIndex_StateBeforeEvent_wrt_DecisionVariables[departureStateIndex][varIndex];
                                 std::get<2>(this->Derivatives_of_StateBeforeEvent[dIndex]) = 0.0;
+                                size_t Xindex = std::get<0>(this->Derivatives_of_StateBeforeEvent[dIndex]);
 
                                 //with respect to decision variables affecting the previous event's arrival state
                                 for (size_t arrivalStateIndex = 0; arrivalStateIndex < 6; ++arrivalStateIndex)
                                 {
-                                    size_t dIndex_previousEvent = this->dIndex_StateAfterPreviousEvent_wrt_DecisionVariables[arrivalStateIndex][varIndex];
-
-                                    std::get<2>(this->Derivatives_of_StateBeforeEvent[dIndex]) += this->STM(departureStateIndex, arrivalStateIndex) * std::get<2>(PreviousEvent_Derivatives_of_StateAfterEvent[dIndex_previousEvent]);
+                                    for (size_t arrivalVarIndex = 0; arrivalVarIndex < this->dIndex_StateAfterPreviousEvent_wrt_DecisionVariables[arrivalStateIndex].size(); ++arrivalVarIndex)
+                                    {
+                                        size_t dIndex_previousEvent = this->dIndex_StateAfterPreviousEvent_wrt_DecisionVariables[arrivalStateIndex][arrivalVarIndex];
+                                        if (Xindex == std::get<0>(PreviousEvent_Derivatives_of_StateAfterEvent[dIndex_previousEvent]))
+                                        {
+                                            std::get<2>(this->Derivatives_of_StateBeforeEvent[dIndex]) += this->STM(departureStateIndex, arrivalStateIndex) * std::get<2>(PreviousEvent_Derivatives_of_StateAfterEvent[dIndex_previousEvent]);
+                                        }
+                                    }
                                 }
                             }
 
@@ -334,18 +350,25 @@ namespace EMTG
                             {
                                 size_t dIndex = this->dIndex_StateBeforeEvent_wrt_DecisionVariables_wrt_Time[departureStateIndex][varIndex];
                                 std::get<2>(this->Derivatives_of_StateBeforeEvent_wrt_Time[dIndex]) = 0.0;
+                                size_t Xindex = std::get<0>(this->Derivatives_of_StateBeforeEvent_wrt_Time[dIndex]);
 
+                                //with respect to decision variables affecting the previous event's arrival state
                                 for (size_t arrivalStateIndex = 0; arrivalStateIndex < 6; ++arrivalStateIndex)
                                 {
-                                    size_t dIndex_previousEvent = this->dIndex_StateAfterPreviousEvent_wrt_DecisionVariables_wrt_Time[arrivalStateIndex][varIndex];
-
-                                    std::get<2>(this->Derivatives_of_StateBeforeEvent_wrt_Time[dIndex]) += this->STM(departureStateIndex, arrivalStateIndex) * std::get<2>(PreviousEvent_Derivatives_of_StateAfterEvent_wrt_Time[dIndex_previousEvent]);
+                                    for (size_t arrivalVarIndex = 0; arrivalVarIndex < this->dIndex_StateAfterPreviousEvent_wrt_DecisionVariables_wrt_Time[arrivalStateIndex].size(); ++arrivalVarIndex)
+                                    {
+                                        size_t dIndex_previousEvent = this->dIndex_StateAfterPreviousEvent_wrt_DecisionVariables_wrt_Time[arrivalStateIndex][arrivalVarIndex];
+                                        if (Xindex == std::get<0>(PreviousEvent_Derivatives_of_StateAfterEvent[dIndex_previousEvent]))
+                                        {
+                                            std::get<2>(this->Derivatives_of_StateBeforeEvent_wrt_Time[dIndex]) += this->STM(departureStateIndex, arrivalStateIndex) * std::get<2>(PreviousEvent_Derivatives_of_StateAfterEvent_wrt_Time[dIndex_previousEvent]);
+                                        }
+                                    }
                                 }
                             }
 
                             //wait time
-                            if (this->myPropagatorType == PropagatorType::KeplerPropagator)
-                                std::get<2>(this->Derivatives_of_StateBeforeEvent_wrt_Time[this->dIndex_StateBeforeEvent_wrt_DecisionVariables_wrt_Time[departureStateIndex].back()]) = (PropagationTime >= 0.0 ? 1.0 : -1.0) * this->dPropagatedStatedIndependentVariable(departureStateIndex);
+                            if (this->myPropagatorType == PropagatorType::KeplerPropagator)
+                                std::get<2>(this->Derivatives_of_StateBeforeEvent_wrt_Time[this->dIndex_StateBeforeEvent_wrt_DecisionVariables_wrt_Time[departureStateIndex].back()]) = (PropagationTime >= 0.0 ? 1.0 : -1.0) * this->dPropagatedStatedIndependentVariable(departureStateIndex);
                             else
                                 std::get<2>(this->Derivatives_of_StateBeforeEvent_wrt_Time[this->dIndex_StateBeforeEvent_wrt_DecisionVariables_wrt_Time[departureStateIndex].back()]) = this->STM(departureStateIndex, 13);
                         }//end loop over current stateIndex

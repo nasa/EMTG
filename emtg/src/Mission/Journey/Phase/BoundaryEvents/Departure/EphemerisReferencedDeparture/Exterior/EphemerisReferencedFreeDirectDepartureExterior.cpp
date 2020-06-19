@@ -48,7 +48,7 @@ namespace EMTG
         //******************************************calcbounds methods
 
         //calcbounds
-        void EphemerisReferencedFreeDirectDepartureExterior::calcbounds()
+        void EphemerisReferencedFreeDirectDepartureExterior::calcbounds(std::vector<size_t> timeVariables)
         {
             std::vector<double> RAbounds({ -2880.0, 2880.0 });
             std::vector<double> DECbounds({ -90.0, 90.0 });
@@ -84,9 +84,9 @@ namespace EMTG
                 EpochBounds[1] = this->myBody->getEphemerisWindowClose();
             }
 
-            this->calcbounds_event_interface_state(RAbounds, DECbounds, MassBounds, EpochBounds);
+            this->calcbounds_event_interface_state(RAbounds, DECbounds, MassBounds, EpochBounds, timeVariables);
 
-            this->calcbounds_event_left_side();
+            this->calcbounds_event_left_side(timeVariables);
 
             //no calcbounds_event_main because free direct departure is trivial
 
@@ -98,16 +98,17 @@ namespace EMTG
         void EphemerisReferencedFreeDirectDepartureExterior::calcbounds_event_interface_state(const std::vector<double>& RAbounds,
             const std::vector<double>& DECbounds,
             std::vector<double>& MassBounds,
-            const std::vector<double>& EpochBounds)
+            const std::vector<double>& EpochBounds,
+            std::vector<size_t> timeVariables)
         {
-            this->EphemerisReferencedDepartureExterior::calcbounds_event_interface_state(RAbounds, DECbounds, MassBounds, EpochBounds);
+            this->EphemerisReferencedDepartureExterior::calcbounds_event_interface_state(RAbounds, DECbounds, MassBounds, EpochBounds, timeVariables);
         }//end calcbounds_event_interface_state()
 
 
-        void EphemerisReferencedFreeDirectDepartureExterior::calcbounds_event_left_side()
+        void EphemerisReferencedFreeDirectDepartureExterior::calcbounds_event_left_side(std::vector<size_t> timeVariables)
         {
             //base class
-            this->EphemerisReferencedDepartureExterior::calcbounds_event_left_side();
+            this->EphemerisReferencedDepartureExterior::calcbounds_event_left_side(timeVariables);
 
             //no specialized variables
         }//end calcbounds_event_left_side()

@@ -61,7 +61,7 @@ namespace EMTG
 
             for (size_t k = 0; k < this->gravitational_harmonic_terms.size(); ++k)
             {
-                this->gravitational_harmonic_terms[k]->computeAccelerationTerm();
+                this->gravitational_harmonic_terms[k].computeAccelerationTerm();
             }
 
         }//end computeAccelerationTerm()
@@ -74,7 +74,7 @@ namespace EMTG
 
             for (size_t k = 0; k < this->gravitational_harmonic_terms.size(); ++k)
             {
-                this->gravitational_harmonic_terms[k]->computeAccelerationTerm(generate_derivatives);
+                this->gravitational_harmonic_terms[k].computeAccelerationTerm(generate_derivatives);
             }
         } // end computeAccelerationTerm()
 
@@ -100,7 +100,7 @@ namespace EMTG
             // now request that all harmonic terms report their acceleration instrumentation
             for (size_t k = 0; k < this->gravitational_harmonic_terms.size(); ++k)
             {
-                this->gravitational_harmonic_terms[k]->populateInstrumentationFile(acceleration_model_file);
+                this->gravitational_harmonic_terms[k].populateInstrumentationFile(acceleration_model_file);
             }
         }
 

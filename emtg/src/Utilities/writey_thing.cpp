@@ -355,7 +355,7 @@ namespace EMTG
             outputfile.width(14); outputfile << "LV-supplied";
             outputfile.width(3); outputfile << " | ";
         }
-        else if (event_type == "departure")
+        else if (event_type == "departure" || event_type == "separation")
         {
             outputfile.width(14); outputfile << "-";
             outputfile.width(3); outputfile << " | ";

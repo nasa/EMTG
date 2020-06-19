@@ -52,6 +52,8 @@ namespace EMTG
                                     missionoptions* myOptions,
                                     ArrivalEvent* PreviousPhaseArrivalEvent);
 
+            virtual void construct_boundary_constraints(std::vector<std::string> givenConstraints = {});
+
             //destructor
             virtual ~DepartureEvent() {};
 
@@ -63,6 +65,7 @@ namespace EMTG
             virtual void output_periapse_state(size_t& flybyIndex, std::ofstream& outputfile) {};
 
             inline doubleType getInitialMassIncrement() const { return this->initial_mass_increment; }
+            inline bool getHasWaitTime() const { return this->hasWaitTime; }
 
             virtual void output_ephemeris(std::ofstream& outputfile);
 
@@ -71,10 +74,10 @@ namespace EMTG
 
         protected:
 
-            virtual void construct_boundary_constraints();
-
             //method to calculate event left side
-            virtual void calcbounds_event_left_side() = 0;
+            virtual void calcbounds_event_left_side(std::vector<size_t> timeVariables) = 0;
+
+            virtual void calcbounds_event_left_side(); //does the wait time
 
             void calcbounds_mass_multipliers();
 

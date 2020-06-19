@@ -316,12 +316,14 @@ namespace EMTG
 
         void MGAnDSMs_phase::calcbounds_subphases()
         {
-            //subphases
+            //subphases - give them the arrival event's time variables because they all depend on previous times plus phase flight time
+            std::vector<size_t> timeVariables = this->myArrivalEvent->get_Xindices_EventRightEpoch();
+
             for (size_t forwardSubPhaseIndex = 0; forwardSubPhaseIndex < this->numberOfForwardSubphases; ++forwardSubPhaseIndex)
-                this->ForwardSubPhases[forwardSubPhaseIndex].calcbounds();
+                this->ForwardSubPhases[forwardSubPhaseIndex].calcbounds(timeVariables);
 
             for (size_t backwardSubPhaseIndex = 0; backwardSubPhaseIndex < this->numberOfBackwardSubphases; ++backwardSubPhaseIndex)
-                this->BackwardSubPhases[backwardSubPhaseIndex].calcbounds();
+                this->BackwardSubPhases[backwardSubPhaseIndex].calcbounds(timeVariables);
 
             //maneuver constraints
             for (size_t forwardSubPhaseIndex = 0; forwardSubPhaseIndex < this->numberOfForwardSubphases; ++forwardSubPhaseIndex)
@@ -1027,128 +1029,13 @@ namespace EMTG
             this->myDepartureEvent->output(outputfile, this->LaunchDate _GETVALUE, eventcount);
             this->mySpacecraft->setActiveStage(this->stageIndex);
 
-
             //Step 2: output the initial TCM if applicable
-            if (this->hasInitialTCM)
-            {
-                math::Matrix<doubleType> R_sc_Sun(3, 1, 0.0);
-                if (this->myUniverse->central_body_SPICE_ID == 10)
-                {
-                    R_sc_Sun = this->state_after_initial_TCM.getSubMatrix1D(0, 2);
-                }
-                else
-                {
-                    //where is the central body relative to the sun?
-                    doubleType central_body_state_and_derivatives[12];
-                    this->myUniverse->locate_central_body(this->state_after_initial_TCM(7),
-                        central_body_state_and_derivatives,
-                        *this->myOptions,
-                        false);
+            this->output_initial_TCM(outputfile, eventcount);
 
-                    math::Matrix<doubleType> R_CB_Sun(3, 1, 0.0);
-                    for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
-                    {
-                        R_CB_Sun(stateIndex) = central_body_state_and_derivatives[stateIndex];
-                    }
+            //Step 3: output the main part of the phase
+            this->output_phase_main(outputfile, eventcount);
 
-                    R_sc_Sun = this->state_after_initial_TCM.getSubMatrix1D(0, 2) + R_CB_Sun;
-                }
-                doubleType r_sc_sun_AU = R_sc_Sun.norm() / this->myOptions->AU;
-                this->mySpacecraft->computePowerState(r_sc_sun_AU, this->state_after_initial_TCM(7));
-
-                doubleType power = this->mySpacecraft->getAvailablePower();
-                doubleType active_power = this->mySpacecraft->getEPActivePower();
-
-                phase::write_output_line(outputfile,//outputfile
-                    eventcount,//eventcount
-                    "TCM",//event_type
-                    "deep-space",//event_location
-                    0.0,// timestep_size,
-                    -1,//flyby_altitude,
-                    0,//BdotR
-                    0,//BdotT
-                    0,//angle1
-                    0,//angle2
-                    0,//C3
-                    this->state_after_initial_TCM,//state
-                    math::Matrix<doubleType>(3, 1, 0.0),//dV
-                    math::Matrix<doubleType>(3, 1, 0.0),//ThrustVector
-                    this->initial_TCM_magnitude,//dVmag
-                    0.0,//Thrust
-                    this->mySpacecraft->getMonopropIsp(),//Isp
-                    power,//AvailPower
-                    0.0,//mdot
-                    0,//number_of_active_engines
-                    active_power,
-                    "none");//active_power)
-            }
-
-            //Step 3: print the forward subphases
-            for (size_t subPhaseIndex = 0; subPhaseIndex < this->numberOfForwardSubphases; ++subPhaseIndex)
-            {
-                this->ForwardSubPhases[subPhaseIndex].output(outputfile, eventcount);
-            }
-
-            math::Matrix<doubleType> R_sc_Sun(3, 1, 0.0);
-            if (this->myUniverse->central_body_SPICE_ID == 10)
-            {
-                R_sc_Sun = this->match_point_state_minus.getSubMatrix1D(0, 2);
-            }
-            else
-            {
-                //where is the central body relative to the sun?
-                doubleType central_body_state_and_derivatives[12];
-                this->myUniverse->locate_central_body(this->match_point_state_minus(7),
-                    central_body_state_and_derivatives,
-                    *this->myOptions,
-                    false);
-
-                math::Matrix<doubleType> R_CB_Sun(3, 1, 0.0);
-                for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
-                {
-                    R_CB_Sun(stateIndex) = central_body_state_and_derivatives[stateIndex];
-                }
-
-                R_sc_Sun = this->match_point_state_minus.getSubMatrix1D(0, 2) + R_CB_Sun;
-            }
-            doubleType r_sc_sun_AU = R_sc_Sun.norm() / this->myOptions->AU;
-            this->mySpacecraft->computePowerState(r_sc_sun_AU, this->match_point_state_minus(7));
-
-            doubleType power = this->mySpacecraft->getAvailablePower();
-            doubleType active_power = this->mySpacecraft->getEPActivePower();
-
-            //Step 4: print the match point
-            phase::write_output_line(outputfile,//outputfile
-                eventcount,//eventcount
-                "match_point",//event_type
-                "deep-space",//event_location
-                0.0,// timestep_size,
-                -1,//flyby_altitude,
-                0,//BdotR
-                0,//BdotT
-                0,//angle1
-                0,//angle2
-                0,//C3
-                this->match_point_state_minus,//state
-                math::Matrix<doubleType>(3, 1, 0.0),//dV
-                math::Matrix<doubleType>(3, 1, 0.0),//ThrustVector
-                0.0,//dVmag
-                0.0,//Thrust
-                0.0,//Isp
-                power,//AvailPower
-                0.0,//mdot
-                0,//number_of_active_engines
-                active_power,
-                "none");//active_power)
-
-            //Step 5: print the backward subphases
-            for (size_t subPhaseIndex = 0; subPhaseIndex < this->numberOfBackwardSubphases; ++subPhaseIndex)
-            {
-                size_t backSubPhaseIndex = this->numberOfBackwardSubphases - subPhaseIndex - 1;
-                this->BackwardSubPhases[backSubPhaseIndex].output(outputfile, eventcount);
-            }
-
-            //Step 6: print the arrival event
+            //Step 4: print the arrival event
             this->myArrivalEvent->output(outputfile, this->LaunchDate _GETVALUE, eventcount);
         }
 
@@ -1236,5 +1123,73 @@ namespace EMTG
             this->myArrivalEvent->output_maneuver_and_target_spec(maneuver_spec_file, target_spec_file, haveManeuverNeedTarget);
         }//end output_maneuver_and_target_spec()
 
+        void MGAnDSMs_phase::output_phase_main(std::ofstream& outputfile,
+            size_t& eventcount)
+        {
+            //Step 1: print the forward subphases
+            for (size_t subPhaseIndex = 0; subPhaseIndex < this->numberOfForwardSubphases; ++subPhaseIndex)
+            {
+                this->ForwardSubPhases[subPhaseIndex].output(outputfile, eventcount);
+            }
+
+            //Step 2: output match point
+            math::Matrix<doubleType> R_sc_Sun(3, 1, 0.0);
+            if (this->myUniverse->central_body_SPICE_ID == 10)
+            {
+                R_sc_Sun = this->match_point_state_minus.getSubMatrix1D(0, 2);
+            }
+            else
+            {
+                //where is the central body relative to the sun?
+                doubleType central_body_state_and_derivatives[12];
+                this->myUniverse->locate_central_body(this->match_point_state_minus(7),
+                    central_body_state_and_derivatives,
+                    *this->myOptions,
+                    false);
+
+                math::Matrix<doubleType> R_CB_Sun(3, 1, 0.0);
+                for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
+                {
+                    R_CB_Sun(stateIndex) = central_body_state_and_derivatives[stateIndex];
+                }
+
+                R_sc_Sun = this->match_point_state_minus.getSubMatrix1D(0, 2) + R_CB_Sun;
+            }
+            doubleType r_sc_sun_AU = R_sc_Sun.norm() / this->myOptions->AU;
+            this->mySpacecraft->computePowerState(r_sc_sun_AU, this->match_point_state_minus(7));
+
+            doubleType power = this->mySpacecraft->getAvailablePower();
+            doubleType active_power = this->mySpacecraft->getEPActivePower();
+
+            phase::write_output_line(outputfile,//outputfile
+                eventcount,//eventcount
+                "match_point",//event_type
+                "deep-space",//event_location
+                0.0,// timestep_size,
+                -1,//flyby_altitude,
+                0,//BdotR
+                0,//BdotT
+                0,//angle1
+                0,//angle2
+                0,//C3
+                this->match_point_state_minus,//state
+                math::Matrix<doubleType>(3, 1, 0.0),//dV
+                math::Matrix<doubleType>(3, 1, 0.0),//ThrustVector
+                0.0,//dVmag
+                0.0,//Thrust
+                0.0,//Isp
+                power,//AvailPower
+                0.0,//mdot
+                0,//number_of_active_engines
+                active_power,
+                "none");//active_power)
+
+            //Step 3: print the backward subphases
+            for (size_t subPhaseIndex = 0; subPhaseIndex < this->numberOfBackwardSubphases; ++subPhaseIndex)
+            {
+                size_t backSubPhaseIndex = this->numberOfBackwardSubphases - subPhaseIndex - 1;
+                this->BackwardSubPhases[backSubPhaseIndex].output(outputfile, eventcount);
+            }
+        }//end output_phase_main()
     }//end namespace Phases
 }//end namespace EMTG

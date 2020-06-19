@@ -41,7 +41,7 @@ namespace EMTG
             //does the first departure event have an impulse? If not, we need to throw an error
             if (!this->myDepartureEvent->get_hasManeuver())
             {
-                throw std::invalid_argument(this->name + " only works if the first departure event in your mission has a maneuver and therefore has an initial impulse. Right now the only boundary types that do this are 'EphemerisPeggedLaunchDirectInsertion,' 'FreePointDirectInsertion,' and 'PeriapseLaunchOrImpulsiveDeparture.' You have apparently not selected one of those.");
+                throw std::invalid_argument(this->name + " only works if the first departure event in your mission has a maneuver and therefore has an initial impulse. Right now the only boundary types that do this are 'EphemerisPeggedLaunchDirectInsertion,' 'FreePointDirectInsertion,' and 'PeriapseLaunch.' You have apparently not selected one of those.");
             }
         }//end constructor
 

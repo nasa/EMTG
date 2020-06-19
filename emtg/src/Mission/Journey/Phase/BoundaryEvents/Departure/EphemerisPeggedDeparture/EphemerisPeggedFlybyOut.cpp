@@ -50,10 +50,10 @@ namespace EMTG
 
         //******************************************calcbounds methods
         void EphemerisPeggedFlybyOut::
-            calcbounds_event_left_side()
+            calcbounds_event_left_side(std::vector<size_t> timeVariables)
         {
             //Step 1: calcbounds on the left epoch
-            this->calculate_dependencies_left_epoch();
+            this->calculate_dependencies_left_epoch(timeVariables);
 
             //Step 2: track the Xindex of the first variable in the event
             this->X_index_of_first_decision_variable_in_this_event = this->Xdescriptions->size();

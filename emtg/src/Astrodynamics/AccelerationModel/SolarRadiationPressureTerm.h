@@ -36,7 +36,7 @@ namespace EMTG
             //constructor
             SolarRadiationPressureTerm(SpacecraftAccelerationModel * acceleration_model_in);
 
-            ~SolarRadiationPressureTerm();
+            virtual ~SolarRadiationPressureTerm();
 
             //methods
             virtual void computeAccelerationTerm() override;

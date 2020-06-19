@@ -46,9 +46,9 @@ namespace EMTG
         //******************************************calcbounds methods
 
         //calcbounds
-        void EphemerisPeggedZeroTurnFlyby::calcbounds()
+        void EphemerisPeggedZeroTurnFlyby::calcbounds(std::vector<size_t> timeVariables)
         {
-            this->calcbounds_event_left_side();
+            this->calcbounds_event_left_side(timeVariables);
 
             //create bounds for the v-infinity
             double vinf_max = this->myUniverse->LU / this->myUniverse->TU;

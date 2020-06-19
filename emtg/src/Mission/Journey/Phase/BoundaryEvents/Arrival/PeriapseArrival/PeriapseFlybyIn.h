@@ -51,10 +51,10 @@ namespace EMTG
                 const bool& needG);
 
             //calcbounds
-            void calcbounds();
+            void calcbounds(std::vector<size_t> timeVariables);
 
         private:
-            void calcbounds_event_left_side(); //free point periapse has its own way of calculating the left-side bounds
+            void calcbounds_event_left_side(std::vector<size_t> timeVariables); //free point periapse has its own way of calculating the left-side bounds
 
             void calcbounds_event_main() {};//doesn't need to do anything - just a stub
 

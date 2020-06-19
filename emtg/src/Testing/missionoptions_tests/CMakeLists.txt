@@ -4,16 +4,13 @@ set(missionoptions_test_executable_files   ${missionoptions_test_executable_file
 set(missionoptions_test_source      ${missionoptions_test_source}
                                     ${CMAKE_CURRENT_SOURCE_DIR}/../../Utilities/file_utilities.h
                                     ${CMAKE_CURRENT_SOURCE_DIR}/../../Utilities/file_utilities.cpp
-                                    ${CMAKE_CURRENT_SOURCE_DIR}/../../../OptionsOverhaul/missionoptions.h
-                                    ${CMAKE_CURRENT_SOURCE_DIR}/../../../OptionsOverhaul/missionoptions.cpp
-                                    ${CMAKE_CURRENT_SOURCE_DIR}/../../../OptionsOverhaul/journeyoptions.h
-                                    ${CMAKE_CURRENT_SOURCE_DIR}/../../../OptionsOverhaul/journeyoptions.cpp)
+                                    ${CMAKE_CURRENT_SOURCE_DIR}/../../core/missionoptions.h
+                                    ${CMAKE_CURRENT_SOURCE_DIR}/../../core/missionoptions.cpp
+                                    ${CMAKE_CURRENT_SOURCE_DIR}/../../core/journeyoptions.h
+                                    ${CMAKE_CURRENT_SOURCE_DIR}/../../core/journeyoptions.cpp)
 
 source_group("Executable" FILES ${missionoptions_test_executable_files} ${missionoptions_test_source})
 
-
-
-include_directories(../../../OptionsOverhaul)
 
 link_directories(${PROJECT_BINARY_DIR}/src/Testing/${CMAKE_CFG_INTDIR})
 

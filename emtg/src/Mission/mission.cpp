@@ -218,28 +218,32 @@ namespace EMTG
                 synodic_periods);
         }
 
-        //one final constraint, if applicable, for total time bounds
+        //one final constraint, if applicable, for total time bounds. Plus we need to collect all the time variables so that we can write out the mission flight time
+        std::vector<size_t> timeVariables = this->getJourney(this->options.number_of_journeys - 1)->getLastPhase()->getArrivalEvent()->get_Xindices_EventRightEpoch();
+        for (size_t Xindex : timeVariables)
+        {
+            if (!(Xdescriptions[Xindex].find("epoch") < 1024))//we want to exclude launch epoch, which is the only thing called "epoch"
+            {
+                this->timeconstraints_X_indices.push_back(Xindex);
+            }
+        }
+
         if (this->options.global_timebounded)
         {
             this->Flowerbounds.push_back(options.total_flight_time_bounds[0] / options.total_flight_time_bounds[1]);
             this->Fupperbounds.push_back(1.0);
             this->Fdescriptions.push_back("Mission flight time bounds");
 
-            //has derivatives with respect to all "time" variables in the mission
-            for (size_t Xindex = 0; Xindex < Xdescriptions.size(); ++Xindex)
+            //has derivatives with respect to all "time" variables in the mission. Note that we've already removed the launch epoch in the previous step
+            for (size_t Xindex : this->timeconstraints_X_indices)
             {
-                if (Xdescriptions[Xindex].find("time") < 1024)
-                {
-                    iGfun.push_back(Fdescriptions.size() - 1);
-                    jGvar.push_back(Xindex);
-                    Gdescriptions.push_back("Derivative of " + Fdescriptions.back()
-                        + " F[" + std::to_string(iGfun.back()) + "] with respect to X["
-                        + std::to_string(jGvar.back()) + "]: " + Xdescriptions[Xindex]);
+                iGfun.push_back(Fdescriptions.size() - 1);
+                jGvar.push_back(Xindex);
+                Gdescriptions.push_back("Derivative of " + Fdescriptions.back()
+                    + " F[" + std::to_string(iGfun.back()) + "] with respect to X["
+                    + std::to_string(jGvar.back()) + "]: " + Xdescriptions[Xindex]);
                     
-                    //A.push_back(this->X_scale_factors[Xindex] / this->options.total_flight_time_bounds[1]);
-                    this->timeconstraints_X_indices.push_back(Xindex);
-                    this->timeconstraints_G_indices.push_back(Gdescriptions.size() - 1);
-                }
+                this->timeconstraints_G_indices.push_back(Gdescriptions.size() - 1);
             }
         }//end total flight time constraint
         
@@ -1009,7 +1013,7 @@ namespace EMTG
         double feasibility, normalized_feasibility, distance_from_equality_filament, decision_variable_infeasibility;
         size_t worst_constraint, worst_decision_variable;
 
-        this->check_feasibility(this->X,
+        this->check_feasibility(this->Xopt,
             this->F,
             worst_decision_variable,
             worst_constraint,
@@ -1394,17 +1398,9 @@ namespace EMTG
                 size_t size_of_step_block = 0;
                 size_t number_of_interior_control_points_in_guess = 0;
                 size_t num_controls = 3;
-				bool initial_guess_parallel_shooting_state_representation_mismatch = false;
+
                 for (size_t stepIndex = 0; stepIndex < step_block_initial_guess.size(); ++stepIndex)
                 {
-					if (std::get<0>(step_block_initial_guess[stepIndex]).find("AZ") < 1024 && this->options.ParallelShootingStateRepresentation == StateRepresentation::SphericalRADEC)
-					{
-						initial_guess_parallel_shooting_state_representation_mismatch = true;
-					}
-					else if (std::get<0>(step_block_initial_guess[stepIndex]).find("vRA") < 1024 && this->options.ParallelShootingStateRepresentation == StateRepresentation::SphericalAZFPA)
-					{
-						initial_guess_parallel_shooting_state_representation_mismatch = true;
-					}
                     if (std::get<0>(step_block_initial_guess[stepIndex]).find("Step0") < 1024)
                     {
                         ++size_of_step_block;
@@ -1439,9 +1435,6 @@ namespace EMTG
                 size_t journeyIndex = std::stoi(prefix.substr(1, prefix.find_first_of("p")));
                 if (journeyIndex > this->number_of_journeys - 1)
                     break;
-				
-				if (initial_guess_parallel_shooting_state_representation_mismatch)
-					std::cout<<"Incorrect state reprentation for initial guess for journey: "<< journeyIndex <<std::endl;
 
                 size_t num_steps = this->options.Journeys[journeyIndex].override_num_steps
                     ? this->options.Journeys[journeyIndex].number_of_steps
@@ -1456,14 +1449,7 @@ namespace EMTG
                     //construct a data table of all control values
                     //we will do this by looping through the old vector and extracting the control values
                     //if this is a parallel shooting mission then we will also extract the state values - maybe we want to worry about that later, or even have the individual phases do it?
-                    std::vector< std::pair<double, double> > Old_r;
-                    std::vector< std::pair<double, double> > Old_RA;
-                    std::vector< std::pair<double, double> > Old_DEC;
-                    std::vector< std::pair<double, double> > Old_v;
-                    std::vector< std::pair<double, double> > Old_AZ;
-                    std::vector< std::pair<double, double> > Old_FPA;
-                    std::vector< std::pair<double, double> > Old_vRA;
-                    std::vector< std::pair<double, double> > Old_vDEC;
+                    std::vector< std::vector< std::pair<double, double> > > Old_6state(6);
                     std::vector< std::pair<double, double> > Old_mass;
                     std::vector< std::pair<double, double> > Old_chemfuel;
                     std::vector< std::pair<double, double> > Old_electricpropellant;
@@ -1476,35 +1462,15 @@ namespace EMTG
 
                     size_t oldStepBlockIndex = 0;
                     //then each step
-                    double oldRA = 0.0;
-                    double oldvRA = 0.0;
                     for (int step = 0; step < number_of_guess_steps; ++step)
                     {
                         size_t interior_control_substep = 0;
-                        Old_r.push_back(std::make_pair((double)step / number_of_guess_steps, std::get<1>(step_block_initial_guess[oldStepBlockIndex++])));
-                        double RA = std::get<1>(step_block_initial_guess[oldStepBlockIndex++]);
-                        double DEC = std::get<1>(step_block_initial_guess[oldStepBlockIndex++]);
-                        while (RA < oldRA)
-                            RA += math::TwoPI;
-                        oldRA = RA;
-                        Old_RA.push_back(std::make_pair((double)step / number_of_guess_steps, RA));
-                        Old_DEC.push_back(std::make_pair((double)step / number_of_guess_steps, DEC));
 
-                        Old_v.push_back(std::make_pair((double)step / number_of_guess_steps, std::get<1>(step_block_initial_guess[oldStepBlockIndex++])));
-                        if (this->options.ParallelShootingStateRepresentation == StateRepresentation::SphericalAZFPA)
+                        for (size_t stateIndex : {0, 1, 2, 3, 4, 5})
                         {
-                            Old_AZ.push_back(std::make_pair((double)step / number_of_guess_steps, std::get<1>(step_block_initial_guess[oldStepBlockIndex++])));
-                            Old_FPA.push_back(std::make_pair((double)step / number_of_guess_steps, std::get<1>(step_block_initial_guess[oldStepBlockIndex++])));
+                            Old_6state[stateIndex].push_back({ (double)step / number_of_guess_steps, std::get<1>(step_block_initial_guess[oldStepBlockIndex++]) });
                         }
-                        else if (this->options.ParallelShootingStateRepresentation == StateRepresentation::SphericalRADEC)
-                        {
-                            double vRA = std::get<1>(step_block_initial_guess[oldStepBlockIndex++]);
-                            while (vRA < oldvRA)
-                                vRA += math::TwoPI;
-                            oldvRA = vRA;
-                            Old_vRA.push_back(std::make_pair((double)step / number_of_guess_steps, vRA));
-                            Old_vDEC.push_back(std::make_pair((double)step / number_of_guess_steps, std::get<1>(step_block_initial_guess[oldStepBlockIndex++])));
-                        }
+
                         Old_mass.push_back(std::make_pair((double)step / number_of_guess_steps, std::get<1>(step_block_initial_guess[oldStepBlockIndex++])));
                         Old_chemfuel.push_back(std::make_pair((double)step / number_of_guess_steps, std::get<1>(step_block_initial_guess[oldStepBlockIndex++])));
                         Old_electricpropellant.push_back(std::make_pair((double)step / number_of_guess_steps, std::get<1>(step_block_initial_guess[oldStepBlockIndex++])));
@@ -1522,28 +1488,18 @@ namespace EMTG
 
                     //and finally the right-hand side
                     size_t offset = size_of_step_block;
-                    Old_r.push_back(std::make_pair(1.0, std::get<1>(step_block_initial_guess[oldStepBlockIndex - offset--])));
-                    double RA = std::get<1>(step_block_initial_guess[oldStepBlockIndex - offset--]);
-                    while (RA < oldRA)
-                        RA += math::TwoPI;
-                    oldRA = RA;
-                    Old_RA.push_back(std::make_pair(1.0, RA));
-                    Old_DEC.push_back(std::make_pair(1.0, std::get<1>(step_block_initial_guess[oldStepBlockIndex - offset--])));
-                    Old_v.push_back(std::make_pair(1.0, std::get<1>(step_block_initial_guess[oldStepBlockIndex - offset--])));
-                    if (this->options.ParallelShootingStateRepresentation == StateRepresentation::SphericalAZFPA)
+
+                    std::vector<std::string> stateNames(6);
+                    for (size_t stateIndex : {0, 1, 2, 3, 4, 5})
                     {
-                        Old_AZ.push_back(std::make_pair(1.0, std::get<1>(step_block_initial_guess[oldStepBlockIndex - offset--])));
-                        Old_FPA.push_back(std::make_pair(1.0, std::get<1>(step_block_initial_guess[oldStepBlockIndex - offset--])));
+                        std::vector<std::string> stateNameCell;
+                        boost::split(stateNameCell, std::get<0>(step_block_initial_guess[oldStepBlockIndex - offset]), boost::is_any_of(":"), boost::token_compress_on);
+
+                        stateNames[stateIndex] = stateNameCell.back();
+
+                        Old_6state[stateIndex].push_back({ 1.0, std::get<1>(step_block_initial_guess[oldStepBlockIndex - offset--]) });
                     }
-                    else if (this->options.ParallelShootingStateRepresentation == StateRepresentation::SphericalRADEC)
-                    {
-                        double vRA = std::get<1>(step_block_initial_guess[oldStepBlockIndex - offset--]);
-                        while (vRA < oldvRA)
-                            vRA += math::TwoPI;
-                        oldvRA = vRA;
-                        Old_vRA.push_back(std::make_pair(1.0, vRA));
-                        Old_vDEC.push_back(std::make_pair(1.0, std::get<1>(step_block_initial_guess[oldStepBlockIndex - offset--])));
-                    }
+
                     Old_mass.push_back(std::make_pair(1.0, std::get<1>(step_block_initial_guess[oldStepBlockIndex - offset--])));
                     Old_chemfuel.push_back(std::make_pair(1.0, std::get<1>(step_block_initial_guess[oldStepBlockIndex - offset--])));
                     Old_electricpropellant.push_back(std::make_pair(1.0, std::get<1>(step_block_initial_guess[oldStepBlockIndex - offset--])));
@@ -1554,16 +1510,61 @@ namespace EMTG
 
                     if (num_controls == 4)
                         Oldu_command.push_back(std::make_pair(1.0, std::get<1>(step_block_initial_guess[oldStepBlockIndex - offset--])));
+                    
+                    //which variables need to be wrapped around the clock?
+                    std::vector<size_t> wrapIndices;
+                    switch (this->options.ParallelShootingStateRepresentation)
+                    {
+                        case StateRepresentation::COE:
+                            {
+                                wrapIndices = { 3, 4, 5};
+                                break;
+                            }
+                        case StateRepresentation::SphericalAZFPA:
+                        {
+                            wrapIndices = { 1, 4 };
+                            break;
+                        }
+                        case StateRepresentation::SphericalRADEC:
+                        {
+                            wrapIndices = { 1, 4 };
+                            break;
+                        }
+                        case StateRepresentation::MEE:
+                        {
+                            wrapIndices = { 5 };
+                            break;
+                        }
+                    }
+
+                    //now UNWRAP all wrapped elements so that the interpolator works properly
+                    for (size_t wrapIndex : wrapIndices) //loop over wrapped variables
+                    {
+                        for (size_t timeStep = 1; timeStep < Old_6state[wrapIndex].size(); ++timeStep)
+                        {
+                            //if the state variable at this time step is more than 2*pi larger than the previous time step
+                            //checking for 2*pi is not sufficient because the difference can become less than that due to propagation. So we use a 10% fudge factor.
+                            while (std::get<1>(Old_6state[wrapIndex][timeStep]) > std::get<1>(Old_6state[wrapIndex][timeStep - 1]) + math::TwoPI * 0.9)
+                            {
+                                std::get<1>(Old_6state[wrapIndex][timeStep]) -= math::TwoPI;
+                            }
+
+                            //if the state variable at this itme step is more than 2*pi less than the previous time step
+                            //checking for 2*pi is not sufficient because the difference can become less than that due to propagation. So we use a 10% fudge factor.
+                            while (std::get<1>(Old_6state[wrapIndex][timeStep]) < std::get<1>(Old_6state[wrapIndex][timeStep - 1]) - math::TwoPI * 0.9)
+                            {
+                                std::get<1>(Old_6state[wrapIndex][timeStep]) += math::TwoPI;
+                            }
+                        }
+                    }
 
                     //interpolate the data tables to fill in the new control vector
-                    math::interpolator r_interpolator(Old_r);
-                    math::interpolator RA_interpolator(Old_RA);
-                    math::interpolator DEC_interpolator(Old_DEC);
-                    math::interpolator v_interpolator(Old_v);
-                    math::interpolator AZ_interpolator(Old_AZ);
-                    math::interpolator FPA_interpolator(Old_FPA);
-                    math::interpolator vRA_interpolator(Old_vRA);
-                    math::interpolator vDEC_interpolator(Old_vDEC);
+                    math::interpolator state0_interpolator(Old_6state[0]);
+                    math::interpolator state1_interpolator(Old_6state[1]);
+                    math::interpolator state2_interpolator(Old_6state[2]);
+                    math::interpolator state3_interpolator(Old_6state[3]);
+                    math::interpolator state4_interpolator(Old_6state[4]);
+                    math::interpolator state5_interpolator(Old_6state[5]);
                     math::interpolator mass_interpolator(Old_mass);
                     math::interpolator chemfuel_interpolator(Old_chemfuel);
                     math::interpolator electricpropellant_interpolator(Old_electricpropellant);
@@ -1577,26 +1578,28 @@ namespace EMTG
                         double current_normalized_integration_variable = (step + 0.5) / num_steps;
                         std::stringstream stepstream;
                         stepstream << step;
-                        //interpolate and encode the control vector
-                        new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ": left state r", r_interpolator.interpolate(current_normalized_integration_variable) });
-                        new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ": left state RA", RA_interpolator.interpolate(current_normalized_integration_variable) });
-                        new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ": left state DEC", DEC_interpolator.interpolate(current_normalized_integration_variable) });
-                        new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ": left state v", v_interpolator.interpolate(current_normalized_integration_variable) });
                         
-                        if (this->options.ParallelShootingStateRepresentation == StateRepresentation::SphericalAZFPA)
+                        //interpolate and control the state vector
+                        new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ":" + stateNames[0], state0_interpolator.interpolate(current_normalized_integration_variable) });
+                        new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ":" + stateNames[1], state1_interpolator.interpolate(current_normalized_integration_variable) });
+                        new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ":" + stateNames[2], state2_interpolator.interpolate(current_normalized_integration_variable) });
+                        new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ":" + stateNames[3], state3_interpolator.interpolate(current_normalized_integration_variable) });
+                        new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ":" + stateNames[4], state4_interpolator.interpolate(current_normalized_integration_variable) });
+                        new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ":" + stateNames[5], state5_interpolator.interpolate(current_normalized_integration_variable) });
+
+                        //now re-wrap to (0, 2*pi)
+                        for (size_t wrapIndex : wrapIndices)
                         {
-                            new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ": left state AZ", AZ_interpolator.interpolate(current_normalized_integration_variable) });
-                            new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ": left state FPA", FPA_interpolator.interpolate(current_normalized_integration_variable) });
+                            double value = std::get<1>(new_step_block_initial_guess[new_step_block_initial_guess.size() - 6 + wrapIndex]);
+
+                            std::get<1>(new_step_block_initial_guess[new_step_block_initial_guess.size() - 6 + wrapIndex]) = fmod(value, math::TwoPI);
                         }
-                        else if (this->options.ParallelShootingStateRepresentation == StateRepresentation::SphericalRADEC)
-                        {
-                            new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ": left state vRA", vRA_interpolator.interpolate(current_normalized_integration_variable) });
-                            new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ": left state vDEC", vDEC_interpolator.interpolate(current_normalized_integration_variable) });
-                        }
+
                         new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ": left state mass", mass_interpolator.interpolate(current_normalized_integration_variable) });
                         new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ": virtual chemical fuel", chemfuel_interpolator.interpolate(current_normalized_integration_variable) });
                         new_step_block_initial_guess.push_back({ prefix + "_Step" + std::to_string(step) + ": virtual electric propellant", electricpropellant_interpolator.interpolate(current_normalized_integration_variable) });
 
+                        //interpolate and encode the control vector
                         for (size_t subStepIndex = 0; subStepIndex < this->options.Journeys[journeyIndex].num_interior_control_points; ++subStepIndex)
                         {
                             double current_substep_normalized_integration_variable = (step + ((double)subStepIndex + 0.5 / this->options.Journeys[journeyIndex].num_interior_control_points)) / num_steps;

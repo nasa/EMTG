@@ -1,5 +1,6 @@
 add_subdirectory(AccelerationModel)
 add_subdirectory(EquationsOfMotion)
+add_subdirectory(StateRepresentation)
 
 set(ASTRODYNAMICS_HEADERS  ${ASTRODYNAMICS_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/body.h
                                                     ${CMAKE_CURRENT_SOURCE_DIR}/CentralBody.h
@@ -10,8 +11,6 @@ set(ASTRODYNAMICS_HEADERS  ${ASTRODYNAMICS_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/
                                                     ${CMAKE_CURRENT_SOURCE_DIR}/atmosphere.h
                                                     ${CMAKE_CURRENT_SOURCE_DIR}/ExponentialAtmosphere.h
                                                     ${CMAKE_CURRENT_SOURCE_DIR}/BodydeticConversions.h
-                                                    #${CMAKE_CURRENT_SOURCE_DIR}/Metaverse.h
-                                                    #${CMAKE_CURRENT_SOURCE_DIR}/MetaverseFactory.h
                                                     )
 																	  
 set(ASTRODYNAMICS_SOURCE  ${ASTRODYNAMICS_SOURCE} ${CMAKE_CURRENT_SOURCE_DIR}/universe.cpp
@@ -22,13 +21,17 @@ set(ASTRODYNAMICS_SOURCE  ${ASTRODYNAMICS_SOURCE} ${CMAKE_CURRENT_SOURCE_DIR}/un
                                                   ${CMAKE_CURRENT_SOURCE_DIR}/atmosphere.cpp
                                                   ${CMAKE_CURRENT_SOURCE_DIR}/ExponentialAtmosphere.cpp
                                                   ${CMAKE_CURRENT_SOURCE_DIR}/BodydeticConversions.cpp
-                                                  #${CMAKE_CURRENT_SOURCE_DIR}/Metaverse.cpp
-                                                  #${CMAKE_CURRENT_SOURCE_DIR}/MetaverseFactory.cpp
                                                   )
+                                                  
+# add the proprietary engine models if you have them
+if(HAS_BUILT_IN_THRUSTERS)
+    set(ASTRODYNAMICS_HEADERS  ${ASTRODYNAMICS_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/engine_model.h)
+endif()
     
 set(ASTRODYNAMICS_FILES ${ASTRODYNAMICS_FILES} ${ASTRODYNAMICS_HEADERS} 
                                                ${ASTRODYNAMICS_SOURCE} 
                                                ${ACCELERATION_MODEL_FILES} 
+                                               ${STATEREPRESENTATION_FILES}
                                                ${EOM_FILES} PARENT_SCOPE)
 
 # FBLT forward half-phase fixed-step files

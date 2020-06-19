@@ -46,14 +46,88 @@ namespace EMTG
 
         template<class T> inline T asinh(const T& x) {    return log (x+sqrt(1+x*x));}
 
-        template<class T> inline T safe_acos(const T& x)
+        inline doubleType safe_acos(const doubleType& x)
         {
+#ifdef AD_INSTRUMENTATION
+            //preserve the derivative information in acos even when we clip the argument
+            if (x > 1.0)
+            {
+                doubleType x_prime = x;
+                x_prime.setValue(1.0 - SMALL);
+
+                return acos(x_prime);
+            }
+            else if (x < -1.0)
+            {
+                doubleType x_prime = x;
+                x_prime.setValue(-1.0 + SMALL);
+
+                return acos(x_prime);
+        }
+            else
+            {
+                return acos(x);
+            }
+#else
             return x > 1.0 ? 0.0 : (x < -1.0 ? PI : acos(x));
+#endif
         }
 
-        template<class T> inline T safe_asin(const T& x)
+        template<class T> inline T fmod(const T& x, const double& modArgument)
         {
+            if (x > 0.0)
+            {
+                T temp = x;
+
+                while (temp > modArgument)
+                {
+                    temp -= modArgument;
+                }
+
+                return temp;
+            }
+            else if (x < 0.0)
+            {
+                T temp = x;
+
+                while (temp < 0.0)
+                {
+                    temp += modArgument;
+                }
+
+                return temp;
+            }
+            else
+            {
+                return x;
+            }
+        }
+
+        inline doubleType safe_asin(const doubleType& x)
+        {
+#ifdef AD_INSTRUMENTATION
+            //preserve the derivative information in acos even when we clip the argument
+            if (x > 1.0)
+            {
+                doubleType x_prime = x;
+                x_prime.setValue(1.0 - SMALL);
+
+                return asin(x_prime);
+            }
+            else if (x < -1.0)
+            {
+                doubleType x_prime = x;
+                x_prime.setValue(-1.0 + SMALL);
+
+                return asin(x_prime);
+            }
+            else
+            {
+                return asin(x);
+            }
+#else
             return x > 1.0 ? -PIover2 : (x < -1.0 ? PIover2 : asin(x));
+#endif
         }
 
         template<class T> inline T norm(const std::vector<T>& A)

@@ -361,10 +361,10 @@ namespace EMTG
 
             //Step 1: initial coast
             this->InitialCoastPropagatorObject.propagate(this->InitialCoastDuration + this->ForwardPropagationStepTimes[0], needG);
-            this->spacecraft_state_event_minus.front()(6) = this->state_at_beginning_of_phase(6);
-            this->spacecraft_state_event_minus.front()(7) = this->state_at_beginning_of_phase(7) + this->InitialCoastDuration + this->ForwardPropagationStepTimes[0];
-            this->spacecraft_state_event_minus.front()(8) = this->state_at_beginning_of_phase(8);
-            this->spacecraft_state_event_minus.front()(9) = this->state_at_beginning_of_phase(9);
+            this->spacecraft_state_event_minus.front()(6) = this->state_after_initial_TCM(6);
+            this->spacecraft_state_event_minus.front()(7) = this->state_after_initial_TCM(7) + this->InitialCoastDuration + this->ForwardPropagationStepTimes[0];
+            this->spacecraft_state_event_minus.front()(8) = this->state_after_initial_TCM(8);
+            this->spacecraft_state_event_minus.front()(9) = this->state_after_initial_TCM(9);
 
             //Step 2: loop over forward steps
             for (size_t step = 0; step < this->num_timesteps / 2; ++step)
@@ -1043,62 +1043,7 @@ namespace EMTG
             this->mySpacecraft->setActiveStage(this->stageIndex);
 
             //Step 2: output the initial TCM if applicable
-            if (this->hasInitialTCM)
-            {
-                //Step 2.1: figure out spacecrafty things
-
-                //Step 2.1.1: where am I relative to the sun?
-                math::Matrix<doubleType> R_sc_Sun(3, 1, 0.0);
-                if (this->myUniverse->central_body_SPICE_ID == 10)
-                {
-                    R_sc_Sun = output_state.getSubMatrix1D(0, 2);
-                }
-                else
-                {
-                    //where is the central body relative to the sun?
-                    doubleType central_body_state_and_derivatives[12];
-                    this->myUniverse->locate_central_body(output_state(7),
-                        central_body_state_and_derivatives,
-                        *this->myOptions,
-                        false);
-
-                    math::Matrix<doubleType> R_CB_Sun(3, 1, 0.0);
-                    for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
-                    {
-                        R_CB_Sun(stateIndex) = central_body_state_and_derivatives[stateIndex];
-                    }
-
-                    R_sc_Sun = output_state.getSubMatrix1D(0, 2) + R_CB_Sun;
-                }
-                doubleType r_sc_sun_AU = R_sc_Sun.norm() / this->myOptions->AU;
-                this->mySpacecraft->computePowerState(r_sc_sun_AU, output_state(7));
-
-                doubleType power = this->mySpacecraft->getAvailablePower();
-                doubleType active_power = this->mySpacecraft->getEPActivePower();
-
-                phase::write_output_line(outputfile,//outputfile
-                    eventcount,//eventcount
-                    "TCM",//event_type
-                    "deep-space",//event_location
-                    0.0,// timestep_size,
-                    -1,//flyby_altitude,
-                    0,//BdotR
-                    0,//BdotT
-                    0,//angle1
-                    0,//angle2
-                    0,//C3
-                    this->state_after_initial_TCM,//state
-                    math::Matrix<doubleType>(3, 1, 0.0),//dV
-                    math::Matrix<doubleType>(3, 1, 0.0),//ThrustVector
-                    this->initial_TCM_magnitude,//dVmag
-                    0.0,//Thrust
-                    this->mySpacecraft->getMonopropIsp(),//Isp
-                    power,//AvailPower
-                    0.0,//mdot
-                    0,//number_of_active_engines
-                    active_power,
-                    "none");
-            }
+            this->output_initial_TCM(outputfile, eventcount);
 
             //Step 3: output the state at the middle of the initial coast, if applicable
             if (this->hasInitialCoast)

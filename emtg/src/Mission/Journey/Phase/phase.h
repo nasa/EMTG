@@ -74,7 +74,10 @@ namespace EMTG
 
             //output
             virtual void output(std::ofstream& outputfile,
-                size_t& eventcount) = 0;
+                size_t& eventcount) = 0; 
+            
+            void output_initial_TCM(std::ofstream& outputfile,
+                size_t& eventcount);
             
             virtual void output_ephemeris(std::ofstream& outputfile, std::ofstream & acceleration_model_file) = 0;
 
@@ -205,6 +208,7 @@ namespace EMTG
             HardwareModels::Spacecraft* mySpacecraft;
             HardwareModels::LaunchVehicle* myLaunchVehicle;
             JourneyOptions* myJourneyOptions;
+            BoundaryEvents::ArrivalEvent* PreviousPhaseArrivalEvent;
             size_t X_index_of_first_decision_variable_in_this_phase;
             size_t F_index_of_first_constraint_in_this_phase;
             std::vector<std::string> stateVectorNames;
@@ -291,6 +295,8 @@ namespace EMTG
             //output
             math::Matrix<doubleType> output_state;
             math::Matrix<doubleType> temp_state;
+            doubleType output_power;
+            doubleType output_active_power;
         };
         
         inline phase * new_clone(phase const & other)

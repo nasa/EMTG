@@ -33,6 +33,8 @@
 #include "ParallelShootingStepDistanceConstraint.h"
 #include "ParallelShootingStep_maneuver_constraint.h"
 
+#include "StateRepresentation.h"
+
 #include "sparsey_thing.h"
 #include "writey_thing.h"
 
@@ -78,6 +80,9 @@ namespace EMTG
                 HardwareModels::Spacecraft* mySpacecraft,
                 missionoptions* myOptions);
 
+            //destructor
+            virtual ~ParallelShootingStep();
+
             //clone
             virtual ParallelShootingStep* clone() const = 0;
 
@@ -97,9 +102,6 @@ namespace EMTG
                 std::vector<size_t>* jAvar,
                 std::vector<std::string>* Adescriptions,
                 std::vector<double>* A);
-
-            //destructor
-            virtual ~ParallelShootingStep() {};
 
             //output
             virtual void output(std::ofstream& outputfile,
@@ -141,9 +143,6 @@ namespace EMTG
 
             inline std::vector<size_t>& getXindices_control(const size_t& subStepIndex) { return this->Xindices_control[subStepIndex]; }
             inline math::Matrix<doubleType>& getControlVector(const size_t& subStepIndex) { return this->ControlVector[subStepIndex]; }
-            inline size_t& getXindex_rMag() { return this->Xindex_rMag; }
-            inline size_t& getXindex_RA() { return this->Xindex_RA; }
-            inline size_t& getXindex_DEC() { return this->Xindex_DEC; }
 
         protected:
             //configure propagator
@@ -167,8 +166,6 @@ namespace EMTG
             void calcbounds_maneuver_constraints();
 
             virtual void calcbounds_deltav_contribution() {}; //empty for now
-
-            virtual void calcbounds_waypoint_tracking();
 
             //process
             virtual void process_epoch_time(const std::vector<doubleType>& X,
@@ -233,13 +230,6 @@ namespace EMTG
                 size_t& Findex,
                 std::vector<double>& G,
                 const bool& needG) {};//empty for now
-            
-            virtual void process_waypoint_tracking(const std::vector<doubleType>& X,
-                size_t& Xindex,
-                std::vector<doubleType>& F,
-                size_t& Findex,
-                std::vector<double>& G,
-                const bool& needG);
 
             void process_derivative_tuples(const std::vector<doubleType>& X,
                 size_t& Xindex,
@@ -266,6 +256,7 @@ namespace EMTG
 
             //internal states
             math::Matrix<doubleType> StateStepLeftInertial;
+            math::Matrix<doubleType> StateStepLeftEncoded;
             std::vector < math::Matrix<doubleType> > StateAfterSubStepInertial;
             math::Matrix<doubleType> StateStepRightInertial;
             std::vector<std::string> stateNames;
@@ -287,20 +278,15 @@ namespace EMTG
             std::vector< std::vector< std::tuple<size_t, size_t> > > DerivativesOfCurrentStepLeftStateByTimeVariable; //[varIndex][entryIndex]{stateIndex, dIndex}
 
             std::vector<size_t> ListOfVariablesAffectingPreviousStepRightState;
-            std::vector< std::vector< std::tuple<size_t, size_t> > > DerivativesOfPreviousStepRightStateByVariable; //[varIndex][entryIndex]{stateIndex, dIndex}
-            std::vector< std::vector<size_t> > Gindices_LeftMatchPoint_wrt_PreviousStepRightState; //[varIndex][entryIndex]
+            std::vector< std::vector< std::tuple<size_t, size_t> > > DerivativesOfPreviousStepRightStateByVariable; //[varIndex][entryIndex]{stateIndex, dIndex}            
+            std::vector< std::vector<size_t> > Gindices_LeftMatchPoint6state_wrt_PreviousStepRightState; //[varIndex][entryIndex/stateIndex]
+            std::vector< std::vector<size_t> > Gindices_LeftMatchPointMassConstraints_wrt_PreviousStepRightState; //[varIndex][entryIndex]
+
             std::vector<size_t> ListOfTimeVariablesAffectingPreviousStepRightState;
             std::vector< std::vector< std::tuple<size_t, size_t> > > DerivativesOfPreviousStepRightStateByTimeVariable; //[varIndex][entryIndex]{stateIndex, dIndex}
-            std::vector< std::vector<size_t> > Gindices_LeftMatchPoint_wrt_PreviousStepRightStateTime; //[varIndex][entryIndex]
+            std::vector< std::vector<size_t> > Gindices_LeftMatchPoint6state_wrt_PreviousStepRightStateTime; //[varIndex][entryIndex/stateIndex]
+            std::vector< std::vector<size_t> > Gindices_LeftMatchPointMassConstraints_wrt_PreviousStepRightStateTime; //[varIndex][entryIndex]
 
-            std::vector<size_t> Gindices_StepLeftMatchPoint_wrt_r;
-            std::vector<size_t> Gindices_StepLeftMatchPoint_wrt_RA;
-            std::vector<size_t> Gindices_StepLeftMatchPoint_wrt_DEC;
-            std::vector<size_t> Gindices_StepLeftMatchPoint_wrt_v;
-            std::vector<size_t> Gindices_StepLeftMatchPoint_wrt_vRA;
-            std::vector<size_t> Gindices_StepLeftMatchPoint_wrt_vDEC;
-            std::vector<size_t> Gindices_StepLeftMatchPoint_wrt_AZ;
-            std::vector<size_t> Gindices_StepLeftMatchPoint_wrt_FPA;
             size_t Gindex_StepLeftMatchPoint_wrt_Mass;
 
             //right state derivatives
@@ -359,34 +345,33 @@ namespace EMTG
             //maneuver constraints
             boost::ptr_vector<ParallelShootingStep_maneuver_constraint> myManeuverConstraints;
 
+            //state representation
+            Astrodynamics::StateRepresentationBase* myStateRepresentation;
+            std::vector<bool> encodedStateIsAngle;
+            std::vector< std::tuple<std::string, double, double, double, bool> > statesToRepresent; //state name, lower bound, upper bound, scale factor, isAngle
+
+            //scaling
+            math::Matrix<double> continuity_constraint_scale_factors;
+
             //indices
             std::vector<size_t> Xindices_EventLeftEpoch;
             std::vector< std::vector<size_t> > Xindices_control; //substep, control index
 
-            size_t Xindex_rMag;
-            size_t Xindex_RA;
-            size_t Xindex_DEC;
-            size_t Xindex_vMag;
-            size_t Xindex_vRA;
-            size_t Xindex_vDEC;
-            size_t Xindex_AZ;
-            size_t Xindex_FPA;
             size_t Xindex_mass;
             size_t Xindex_chemical_fuel;
             size_t Xindex_electric_propellant;
             size_t Xindex_PhaseFlightTime;
 
+            std::vector<size_t> Xindex_state_elements; //for example {x, y, z, vx, vy, vz} or {r, RA, DEC, v, vRA, vDEC}
+
+            std::vector<size_t> Gindices_StepLeftMatchPoint_wrt_StepLeftEncodedState;
+
             size_t dIndex_mass_wrt_mass;
             size_t dIndex_chemicalFuel_wrt_chemicalFuel;
             size_t dIndex_electricPropellant_wrt_electricPropellant;
-            std::vector<size_t> dIndex_StateStepLeftInertial_wrt_r;//x, y, z
-            std::vector<size_t> dIndex_StateStepLeftInertial_wrt_RA;//x, y
-            std::vector<size_t> dIndex_StateStepLeftInertial_wrt_DEC;//x, y, z
-            std::vector<size_t> dIndex_StateStepLeftInertial_wrt_v;//xdot, ydot, zdot
-            std::vector<size_t> dIndex_StateStepLeftInertial_wrt_vRA;//xdot, ydot 
-            std::vector<size_t> dIndex_StateStepLeftInertial_wrt_vDEC;//xdot, ydot, zdot
-            std::vector<size_t> dIndex_StateStepLeftInertial_wrt_AZ;//xdot, ydot, zdot 
-            std::vector<size_t> dIndex_StateStepLeftInertial_wrt_FPA;//xdot, ydot, zdot 
+
+            std::vector< std::vector<size_t> > dIndex_StateStepLeftInertial_wrt_StateElements;
+
             std::vector< std::vector<size_t> > dIndex_StateStepRightInertial_wrt_LeftStateVariables;//right stateIndex, variable
             std::vector< std::vector<size_t> > dIndex_StateStepRightInertial_wrt_PreviousTimeVariables;//right stateIndex, variable
             std::vector<size_t> dIndex_StateStepRightInertial_wrt_PhaseFlightTime;
@@ -395,25 +380,6 @@ namespace EMTG
             std::vector< std::vector<size_t> > TruthTable_StateStepRightInertial_wrt_StateStepLeftInertial;
             std::vector<size_t> TruthTable_StateStepRightInertial_wrt_Control;
             std::vector<size_t> TruthTable_StateStepRightInertial_wrt_PhaseFlightTime;
-            
-            //waypoint tracking
-            math::Matrix<doubleType> WaypointError;
-            math::Matrix<doubleType> CovarianceInverse;
-            math::Matrix<double> CovarianceInverseDouble;
-            math::Matrix<double> dCovarianceInverse_depoch;
-            doubleType mahalanobis_distance;
-            doubleType virtual_mahalanobis_distance;
-            size_t Gindex_virtual_mahalanobis_distance_wrt_virtual_mahalanobis_distance;
-            std::vector<size_t> Gindex_virtual_mahalanobis_distance_wrt_Time;
-            size_t Gindex_virtual_mahalanobis_distance_wrt_rMag;
-            size_t Gindex_virtual_mahalanobis_distance_wrt_RA;
-            size_t Gindex_virtual_mahalanobis_distance_wrt_DEC;
-            size_t Gindex_virtual_mahalanobis_distance_wrt_vMag;
-            size_t Gindex_virtual_mahalanobis_distance_wrt_vRA;
-            size_t Gindex_virtual_mahalanobis_distance_wrt_vDEC;
-            size_t Gindex_virtual_mahalanobis_distance_wrt_AZ;
-            size_t Gindex_virtual_mahalanobis_distance_wrt_FPA;
-            size_t Gindex_virtual_mahalanobis_distance_wrt_mass;
         };
 
         inline ParallelShootingStep * new_clone(ParallelShootingStep const & other)

@@ -60,10 +60,10 @@ namespace EMTG
                                const bool& needG);
 
             //calcbounds
-            void calcbounds();
+            void calcbounds(std::vector<size_t> timeVariables);
 
         private:
-            void calcbounds_event_left_side();
+            void calcbounds_event_left_side(std::vector<size_t> timeVariables);
 
             void calcbounds_event_main() {}; //stub - all of the interesting stuff happens in calcbounds_event_left_side()
 

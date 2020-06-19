@@ -1,0 +1,19 @@
+This is makeindex, version 2.15 [MiKTeX 2.9.6730 64-bit] (kpathsea + Thai support).
+Scanning style file C:/Users/nhatten/AppData/Local/Programs/MiKTeX 2.9/makeindex/nomencl/nomencl.ist.......
+** Input style error (file = C:/Users/nhatten/AppData/Local/Programs/MiKTeX 2.9/makeindex/nomencl/nomencl.ist, line = 70):
+   -- Unknown specifier lethead_prefix.
+** Input style error (file = C:/Users/nhatten/AppData/Local/Programs/MiKTeX 2.9/makeindex/nomencl/nomencl.ist, line = 71):
+   -- Unknown specifier lethead_suffix.
+** Input style error (file = C:/Users/nhatten/AppData/Local/Programs/MiKTeX 2.9/makeindex/nomencl/nomencl.ist, line = 72):
+   -- Unknown specifier lethead_flag.
+...done (10 attributes redefined, 3 ignored).
+Scanning input file ellipsoid_interface.idx...done (0 entries accepted, 0 rejected).
+Scanning input file ellipsoid_interface.nlo....
+!! Input index error (file = ellipsoid_interface.nlo, line = 21):
+   -- Extra `|' at position 10 of first argument.
+done (22 entries accepted, 1 rejected).
+Overall 2 files read (22 entries accepted, 1 rejected).
+Sorting entries....done (94 comparisons).
+Generating output file ellipsoid_interface.nls....done (50 lines written, 0 warnings).
+Output written in ellipsoid_interface.nls.
+Transcript written in ellipsoid_interface.ilg.

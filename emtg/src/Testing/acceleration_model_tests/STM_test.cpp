@@ -307,7 +307,7 @@ int main(int argc, char* argv[])
 				// need to choose the correct kind of atmosphere to create based on journey option
 				if (options.Journeys[j].AtmosphericDensityModelKey == "Exponential")
 				{
-					TheUniverse[j].TheAtmosphere = new EMTG::Astrodynamics::ExponentialAtmosphere(j, options.Journeys[j].AtmosphericDensityModelDataFile, options);
+                    TheUniverse[j].TheAtmosphere = std::make_shared<EMTG::Astrodynamics::ExponentialAtmosphere>(j, options.Journeys[j].AtmosphericDensityModelDataFile, options);
 				}
 				else
 				{
@@ -318,7 +318,7 @@ int main(int argc, char* argv[])
 			else
 			{
 				// we are not calculating drag, so just build a placeholder atmosphere that does nothing
-				TheUniverse[j].TheAtmosphere = new EMTG::Astrodynamics::ExponentialAtmosphere();
+				//TheUniverse[j].TheAtmosphere = new EMTG::Astrodynamics::ExponentialAtmosphere();
 			}
 		}
 		catch (std::exception &myError)

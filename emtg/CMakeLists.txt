@@ -4,16 +4,8 @@ cmake_minimum_required(VERSION 3.8)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_SOURCE_DIR})
 include(EMTG-Config.cmake)
 
-if (${EMTG_MPI})
-    add_definitions(-DEMTG_MPI)
-    message(STATUS "Activating MPI with compiler: ${CMAKE_CXX_COMPILER}")
-endif()
-
 #identify the project
 project(EMTG)
-
-# If the NavLab system Boost is compiled with is gcc 4.6.x or older, we need this
-#add_definitions(-D_GLIBCXX_USE_CXX11_ABI=0)
 
 link_directories(${PROJECT_SOURCE_DIR}/Release)
 link_directories(${PROJECT_SOURCE_DIR}/Debug)
@@ -50,15 +42,14 @@ endif(NOT IS_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 
 #compiler-time Define-level options  for EMTG
-option(QUIET_SNOPT "If you have a special build of SNOPT, this will silence it completely." OFF)
+option(QUIET_SNOPT "Makes SNOPT not print things." OFF)
 option(SAFE_SNOPT "Trap things that could blow up SNOPT" ON)
 option(SNOPT72 "Set SNOPT 7.2" OFF)
 option(SNOPT75 "Use SNOPT 7.5" OFF)
 option(SNOPT76 "Use SNOPT 7.6" ON)
-option(SNOPT_MINGW_DLL "Use SNOPT built with MINGW in Windows" OFF)
+option(SNOPT_MINGW_DLL "Use SNOPT built with MINGW in Windows" ON)
 option(DEBUG_CHECK_VARIABLES_AND_CONSTRAINTS_IN_USER_FUNCTION "Check decision and objective/constraint vectors for NaN and inf" OFF)
-option(FAST_EMTG_MATRIX "Enable fast EMTG matrix class (dangerous!)" ON)
-option(PROPRIETARY_POWER_MODEL "Enable proprietary power model" OFF)
+option(FAST_EMTG_MATRIX "Enable fast EMTG matrix class (removes bounds checking)" ON)
 option(SPLINE_EPHEM "Enable SplineEphem" ON)
 option(BUILD_EMTG_TESTBED "Build the EMTG testing framework" OFF)
 option(BUILD_PROPULATOR "Build the Propulator" OFF)
@@ -70,6 +61,11 @@ if (MSVC)
 else()
     option(BACKGROUND_MODE "This suppresses 'press any key to continue' at the end of an EMTG run" ON)
 endif()
+
+#switches for files that open source users don't have access to
+option(HAS_PROBEENTRYPHASE "Build with ProbeEntryPhase?" OFF)
+option(HAS_BUILT_IN_THRUSTERS "Build with built-in thruster library?" OFF)
+mark_as_advanced(FORCE HAS_PROBEENTRYPHASE HAS_BUILT_IN_THRUSTERS BUILD_EMTG_TESTBED BUILD_PROPULATOR BUILD_PYHARDWARE SPLINE_EPHEM DEBUG_CHECK_VARIABLES_AND_CONSTRAINTS_IN_USER_FUNCTION FAST_EMTG_MATRIX)
 
 set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build in Debug or Release mode")
 set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS Debug Release)
@@ -116,12 +112,14 @@ if(FAST_EMTG_MATRIX)
     add_definitions(-DFAST_EMTG_MATRIX)
 endif(FAST_EMTG_MATRIX)
 
-if(PROPRIETARY_POWER_MODEL)
-    add_definitions(-DPROPRIETARY_POWER_MODEL)
-    set(EMTG_LIBRARIES ${EMTG_LIBRARIES} PROPRIETARY_POWER_MODEL) 
-    include_directories("${PROPRIETARY_POWER_MODEL_PATH}")
-    link_directories("${PROPRIETARY_POWER_MODEL_PATH}")
-endif(PROPRIETARY_POWER_MODEL)
+
+if(HAS_PROBEENTRYPHASE)
+    add_definitions(-DHAS_PROBEENTRYPHASE)
+endif(HAS_PROBEENTRYPHASE)
+
+if(HAS_BUILT_IN_THRUSTERS)
+    add_definitions(-DHAS_BUILT_IN_THRUSTERS)
+endif(HAS_BUILT_IN_THRUSTERS)
 
 if(SPLINE_EPHEM)
     add_definitions(-DSPLINE_EPHEM)
@@ -281,12 +279,8 @@ if(MSVC)
 	Set(Boost_NAMESPACE libboost)
 endif(MSVC)
 
-# if we are on Windows, do not require that MPI be present
-if (${EMTG_MPI})
-    find_package(Boost 1.41 COMPONENTS mpi filesystem system serialization REQUIRED)
-else()
-    find_package(Boost 1.41 COMPONENTS filesystem system serialization REQUIRED)
-endif()
+find_package(Boost 1.60 COMPONENTS filesystem system serialization REQUIRED)
+
 include_directories(${Boost_INCLUDE_DIRS})
 link_directories(${Boost_LIBRARY_DIRS})
 

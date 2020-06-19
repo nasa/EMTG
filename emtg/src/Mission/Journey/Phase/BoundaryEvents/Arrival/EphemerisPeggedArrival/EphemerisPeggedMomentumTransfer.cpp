@@ -50,9 +50,9 @@ namespace EMTG
         //******************************************calcbounds methods
 
         //calcbounds
-        void EphemerisPeggedMomentumTransfer::calcbounds()
+        void EphemerisPeggedMomentumTransfer::calcbounds(std::vector<size_t> timeVariables)
         {
-            this->calcbounds_event_left_side();
+            this->calcbounds_event_left_side(timeVariables);
 
             this->calcbounds_event_main();
 

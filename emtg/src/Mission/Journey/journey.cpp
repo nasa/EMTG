@@ -21,6 +21,8 @@
 
 #include <iostream>
 #include <fstream>
+#include <algorithm>
+#include <iterator>
 
 //#include "MGALTS_phase.h"
 #include "MGALTphase.h"
@@ -30,6 +32,10 @@
 #include "MGAnDSMs_phase.h"
 #include "CoastPhase.h"
 #include "SundmanCoastPhase.h"
+
+#ifdef HAS_PROBEENTRYPHASE
+#include "ProbeEntryPhase.h"
+#endif
 
 #include "journey.h"
 #include "missionoptions.h"
@@ -78,7 +84,7 @@ namespace EMTG
 
         //create the phases
 
-        this->phase_type_codes = std::vector<std::string>({ "MGALTS", "FBLTS", "MGALT", "FBLT", "PSBI",  "PSFB", "MGAnDSMs", "CoastPhase", "SundmanCoastPhase" });
+        this->phase_type_codes = std::vector<std::string>({ "MGALTS", "FBLTS", "MGALT", "FBLT", "PSBI",  "PSFB", "MGAnDSMs", "CoastPhase", "SundmanCoastPhase", "VARIABLE_PHASE_TYPE", "ProbeEntryPhase" });
 
         this->number_of_phases = this->myJourneyOptions->number_of_phases;
 
@@ -213,6 +219,24 @@ namespace EMTG
                         this->myOptions));
                     break;
                 }
+                case EMTG::PhaseType::ProbeEntryPhase:
+                {
+                    //this phase is a ProbeEntryPhase
+#ifdef HAS_PROBEENTRYPHASE
+                    this->phases.push_back(new Phases::ProbeEntryPhase(PhaseName,
+                        this->journeyIndex,
+                        phaseIndex,
+                        stageIndex,
+                        previousPhase,
+                        this->myUniverse,
+                        this->mySpacecraft,
+                        this->myLaunchVehicle,
+                        this->myOptions));
+#else
+                    throw std::invalid_argument("The ProbeEntryPhase phase type is not included in this version of EMTG. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+#endif
+                    break;
+                }
                 case EMTG::PhaseType::VARIABLE_PHASE_TYPE:
                 {
                     //Variable phase type
@@ -220,11 +244,6 @@ namespace EMTG
                     break;
                 }
             }
-        }
-
-        if (this->number_of_phases > 10)
-        {
-            std::cout << "You have created a journey with more than 10 phases. Unexpected behavior may occur. To fix, give Jacob lots of FTE." << std::endl;
         }
     }//end Journey constructor
 
@@ -302,39 +321,33 @@ namespace EMTG
 
             if (this->journeyIndex == 0)//if this constraint is applied to the first journey, it's special because there are no preceding time entries to search
             {
-                for (size_t Xindex = 0; Xindex < this->Xdescriptions->size(); ++Xindex)
-                {
-                    if (this->Xdescriptions->at(Xindex).find("epoch") < 1024)
-                    {
-                        this->create_sparsity_entry(this->Fdescriptions->size() - 1,
-                            Xindex,
-                            this->departure_date_constraint_G_indices);
-                        break;
-                    }
-                }
+                //launch epoch is the first entry in the first phase's departure event's time vector
+                size_t Xindex = this->phases.front().getDepartureEvent()->get_Xindices_EventLeftEpoch().front();
+                this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                    Xindex,
+                    this->departure_date_constraint_G_indices);
             }
             else
             {
-                for (size_t Xindex = 0; Xindex < this->first_X_entry_in_journey; ++Xindex)
+                //we need all time variables from the previous journeys
+                std::vector<size_t> timeVariables = this->PreviousJourney->getLastPhase()->getArrivalEvent()->get_Xindices_EventRightEpoch();
+                for (size_t Xindex : timeVariables)
                 {
-                    if (this->Xdescriptions->at(Xindex).find("epoch") < 1024 || this->Xdescriptions->at(Xindex).find("time") < 1024)
-                    {
-                        this->create_sparsity_entry(this->Fdescriptions->size() - 1,
-                            Xindex,
-                            this->departure_date_constraint_G_indices);
-                    }
+                    this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                        Xindex,
+                        this->departure_date_constraint_G_indices);
                 }
 
                 //we also need the current journey wait time if applicable
-                for (size_t Xindex = this->first_X_entry_in_journey; Xindex < Xdescriptions.size(); ++Xindex)
+                if (this->phases.front().getDepartureEvent()->getHasWaitTime())
                 {
-                    if (Xdescriptions[Xindex].find("wait time") < 1024)
-                    {
-                        this->create_sparsity_entry(this->Fdescriptions->size() - 1,
-                            Xindex,
-                            this->departure_date_constraint_G_indices);
-                        break;
-                    }
+                    //wait time is the first entry in the first phase's departure event's time vector
+                    size_t Xindex = this->phases.front().getDepartureEvent()->get_Xindices_EventLeftEpoch().front();
+
+                    this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                        Xindex,
+                        this->departure_date_constraint_G_indices);
+
                 }
             }
         }//end bounded departure date
@@ -346,11 +359,37 @@ namespace EMTG
             this->Fupperbounds->push_back(0.0);
             this->Fdescriptions->push_back(prefix + "journey flight time bounds");
 
-            //has derivatives with respect to all "time" variables
-            size_t startIndex = this->myJourneyOptions->timebounded == 1 ? this->first_X_entry_in_journey : 0;
-            for (size_t Xindex = startIndex; Xindex < this->Xdescriptions->size(); ++Xindex)
+            if (this->myJourneyOptions->timebounded == 3)
             {
-                if (this->Xdescriptions->at(Xindex).find("time") < 1024)
+                //all time variables to the end of this journey - the final phase's arrival event's right side time vector
+                //but NOT the launch epoch. Which means not the first variable, what ever it is.
+                std::vector<size_t> timeVariables = this->phases.back().getArrivalEvent()->get_Xindices_EventRightEpoch();
+                timeVariables.erase(timeVariables.begin());
+                for (size_t Xindex : timeVariables)
+                {
+                    this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                        Xindex,
+                        this->timeconstraints_G_indices);
+                }
+            }
+            else //this->myJourneyOptions->timebounded == 1
+            {
+                //this is trickier. We're going to take the first event's and the last event's time vectors and then keep only the things that are unique
+                std::vector<size_t> left_timeVariables = this->phases.front().getDepartureEvent()->get_Xindices_EventLeftEpoch();
+                std::vector<size_t> right_timeVariables = this->phases.back().getArrivalEvent()->get_Xindices_EventRightEpoch();
+
+                std::vector<size_t> timeVariables;
+
+                //using std::set_symmetric_difference because it's cool - have to sort everything first (should be pre-sorted but let's be safe)
+                std::sort(left_timeVariables.begin(), left_timeVariables.end());
+                std::sort(right_timeVariables.begin(), right_timeVariables.end());
+
+                std::set_symmetric_difference(
+                    left_timeVariables.begin(), left_timeVariables.end(),
+                    right_timeVariables.begin(), right_timeVariables.end(),
+                    std::back_inserter(timeVariables));
+
+                for (size_t Xindex : timeVariables)
                 {
                     this->create_sparsity_entry(this->Fdescriptions->size() - 1,
                         Xindex,
@@ -364,15 +403,13 @@ namespace EMTG
             this->Fupperbounds->push_back(0.0);
             this->Fdescriptions->push_back(prefix + "journey arrival date bounds");
 
-            //has derivatives with respect to time and launch epoch
-            for (size_t Xindex = 0; Xindex < this->Xdescriptions->size(); ++Xindex)
+            //all time variables to the end of this journey - the final phase's arrival event's right side time vector
+            std::vector<size_t> timeVariables = this->phases.back().getArrivalEvent()->get_Xindices_EventRightEpoch();
+            for (size_t Xindex : timeVariables)
             {
-                if (this->Xdescriptions->at(Xindex).find("epoch") < 1024 || this->Xdescriptions->at(Xindex).find("time") < 1024)
-                {
-                    this->create_sparsity_entry(this->Fdescriptions->size() - 1,
-                        Xindex,
-                        this->timeconstraints_G_indices);
-                }
+                this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                    Xindex,
+                    this->timeconstraints_G_indices);
             }
         }//end bounded arrival date
     }//end Journey::calcbounds()
@@ -527,10 +564,12 @@ namespace EMTG
             }
         }
 
-        if (this->myOptions->mission_type == MGALT
-            || this->myOptions->mission_type == FBLT 
-            || this->myOptions->mission_type == MGALTS 
-            || this->myOptions->mission_type == FBLTS)
+        if (this->myJourneyOptions->phase_type == PhaseType::MGALT
+            || this->myJourneyOptions->phase_type == PhaseType::FBLT
+            || this->myJourneyOptions->phase_type == PhaseType::MGALTS
+            || this->myJourneyOptions->phase_type == PhaseType::FBLTS
+            || this->myJourneyOptions->phase_type == PhaseType::PSFB
+            || this->myJourneyOptions->phase_type == PhaseType::PSBI)
             outputfile << "Thruster duty cycle: " << (this->myJourneyOptions->override_duty_cycle ? this->myJourneyOptions->duty_cycle : this->myOptions->engine_duty_cycle) << std::endl;
         outputfile << std::endl;
 

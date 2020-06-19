@@ -51,7 +51,7 @@ namespace EMTG
                                     missionoptions* myOptions);
 
             //destructor
-            ~EphemerisReferencedArrival() {};
+            virtual ~EphemerisReferencedArrival() {};
 
 
             //output - this is a stub, as per the maneuver and target spec for boundary events design document. Some future boundary event may override it.
@@ -62,7 +62,7 @@ namespace EMTG
 
             //method to calculate event left side
 
-            virtual void calcbounds_event_left_side();
+            virtual void calcbounds_event_left_side(std::vector<size_t> timeVariables);
 
             virtual void calcbounds_specialized_constraints();
 

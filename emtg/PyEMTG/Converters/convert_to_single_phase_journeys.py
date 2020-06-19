@@ -154,6 +154,10 @@ def convert_to_single_phase_journeys(originalOptions):
             #Step 2.10: attach the new journey to the mission
             newOptions.Journeys.append(copy.deepcopy(newJourney))
                 
+    #get rid of the mission-level forced coasts since they are now captured at the journey level in the new options object
+    newOptions.forced_post_flyby_coast = 0.0
+    newOptions.forced_pre_flyby_coast = 0.0
+    newOptions.forced_post_launch_coast = 0.0
 
     #set the number of journeys
     newOptions.number_of_journeys = len(newOptions.Journeys)

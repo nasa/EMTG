@@ -76,6 +76,9 @@ namespace EMTG
                                 const double& launchdate,
                                 size_t& eventcount) = 0;
 
+            //method to construct boundary constraints - gets implemented by arrival and departure. This is public so that we can fire it from other places
+            virtual void construct_boundary_constraints(std::vector<std::string> givenConstraints = {}) = 0;
+
             //!method to write a line in the .ephemeris file, containing user-defined fields
             virtual void output_ephemeris(std::ofstream& outputfile);
 
@@ -108,6 +111,7 @@ namespace EMTG
             inline size_t get_stageIndex() const { return this->stageIndex; }
             inline doubleType getC3() const { return this->C3; }
             inline const std::vector<size_t>& get_Xindices_EventLeftEpoch() const { return this->Xindices_EventLeftEpoch; }
+            inline const std::vector<size_t>& get_Xindices_EventRightEpoch() const { return this->Xindices_EventRightEpoch; }
             inline const bool& get_hasElectricManeuver() const { return this->hasElectricManeuver; }
             inline const bool& get_hasBipropManeuver() const { return this->hasBipropManeuver; }
             inline const bool& get_hasMonopropManeuver() const { return this->hasMonopropManeuver; }
@@ -123,6 +127,7 @@ namespace EMTG
             //set
             void setName(const std::string& name) { this->name = name; }
 			void setComputeOrbitElements(const bool & flag) { this->compute_orbit_elements = flag; }
+            void setJourneyOptionsPointer(JourneyOptions* myJourneyOptions) { this->myJourneyOptions = myJourneyOptions; }
 
             //!method to add an orbit element reference frame to this boundary event.
             /*!
@@ -168,7 +173,7 @@ namespace EMTG
                 std::vector<double>* A);
 
             //!abstract prototype for the derived class's calcbounds() method.
-            virtual void calcbounds() = 0;
+            virtual void calcbounds(std::vector<size_t> timeVariables) = 0;
 
             //!abstract prototype for the derived class's process_event() method
             virtual void process_event(const std::vector<doubleType>& X,
@@ -186,10 +191,10 @@ namespace EMTG
 
         protected:
             //!abstract prototype of calcbounds_event_left_side()
-            virtual void calcbounds_event_left_side() = 0;
+            virtual void calcbounds_event_left_side(std::vector<size_t> timeVariables) = 0;
 
             //!method to find all of the time variables that precede this event and put their Xindex into a helper array. That way we can easily compute the epoch at the start of the event.
-            void calculate_dependencies_left_epoch();
+            void calculate_dependencies_left_epoch(std::vector<size_t> timeVariables);
 
             //!abstract prototype of calcbounds_event_right_side()
             virtual void calcbounds_event_right_side() = 0;
@@ -287,6 +292,7 @@ namespace EMTG
             doubleType EventRightEpoch;
             bool EventHasTimeWidth;
             std::vector<size_t> Xindices_EventLeftEpoch;
+            std::vector<size_t> Xindices_EventRightEpoch;
             
             //states
             std::vector<std::string> stateNames;

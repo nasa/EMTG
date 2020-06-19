@@ -53,7 +53,7 @@
 #include "EphemerisReferencedArrival/Interior/EphemerisReferencedLTRendezvousInterior.h"
 #include "EphemerisReferencedArrival/Interior/EphemerisReferencedInterceptInterior.h"
 
-#include "PeriapseDeparture/PeriapseLaunchOrImpulsiveDeparture.h"
+#include "PeriapseDeparture/PeriapseLaunch.h"
 
 #include "PeriapseArrival/PeriapseFlybyIn.h"
 
@@ -177,7 +177,7 @@ namespace EMTG
 
 
             //create departure event
-            BoundaryEvents::ArrivalEvent* PreviousPhaseArrivalEvent = this->isFirstPhaseInMission ? 
+            this->PreviousPhaseArrivalEvent = this->isFirstPhaseInMission ? 
                 NULL
                 :
                 previousPhase->getArrivalEvent();
@@ -294,7 +294,7 @@ namespace EMTG
 								dynamic_cast<BoundaryEvents::EphemerisPeggedArrivalWithVinfinity*>(PreviousPhaseArrivalEvent));
                             break;
                         default:
-                            throw std::invalid_argument("Undefined ephemeris pegged departure type, j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ".Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                            throw std::invalid_argument("Undefined ephemeris pegged departure type '" + DepartureTypeStrings[this->myJourneyOptions->departure_type] + "', j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ".Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
                     }//end switch/case on boundary types
                 }//end ephemeris pegged departures
                 else if (this->myJourneyOptions->departure_class == BoundaryClass::FreePoint)
@@ -323,7 +323,7 @@ namespace EMTG
                                 PreviousPhaseArrivalEvent);
                             break;
                         default:
-                            throw std::invalid_argument("Undefined free point departure type, j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                            throw std::invalid_argument("Undefined free point departure type '" + DepartureTypeStrings[this->myJourneyOptions->departure_type] + "', j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
                     }
                 }
                 else if (this->myJourneyOptions->departure_class == BoundaryClass::EphemerisReferenced)
@@ -343,7 +343,7 @@ namespace EMTG
                                 PreviousPhaseArrivalEvent);
                             break;
                         default:
-                            throw std::invalid_argument("Undefined ephemeris-referenced departure type, j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                            throw std::invalid_argument("Undefined ephemeris-referenced departure type '" + DepartureTypeStrings[this->myJourneyOptions->departure_type] + "', j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
                         }
                     }
                     else //central body or body in the universe
@@ -361,7 +361,7 @@ namespace EMTG
                                 PreviousPhaseArrivalEvent);
                             break;
                         default:
-                            throw std::invalid_argument("Undefined ephemeris-referenced departure type, j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                            throw std::invalid_argument("Undefined ephemeris-referenced departure type '" + DepartureTypeStrings[this->myJourneyOptions->departure_type] + "', j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
                         }
                     }
                 }//end ephemeris_referenced
@@ -370,7 +370,7 @@ namespace EMTG
                 switch (this->myJourneyOptions->departure_type)
                 {
                     case LAUNCH_OR_DIRECT_INSERTION:
-                        this->myDepartureEvent = new BoundaryEvents::PeriapseLaunchOrImpulsiveDeparture(name + "PeriapseLaunchOrImpulsiveDeparture",
+                        this->myDepartureEvent = new BoundaryEvents::PeriapseLaunch(name + "PeriapseLaunch",
                             this->journeyIndex,
                             this->phaseIndex,
                             stageIndex,
@@ -381,7 +381,7 @@ namespace EMTG
                             PreviousPhaseArrivalEvent);
                         break;
                     default:
-                        std::invalid_argument("Undefined periapse departure type, j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex));
+                        std::invalid_argument("Undefined periapse departure type '" + DepartureTypeStrings[this->myJourneyOptions->departure_type] + "', j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex));
                 }//end switch
                 }//end periapse arrivals
             }//end first phase in journey departures
@@ -474,7 +474,7 @@ namespace EMTG
                                 this->myOptions);
                             break;
                         default:
-                            throw std::invalid_argument("Undefined free point arrival type, j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                            throw std::invalid_argument("Undefined free point arrival type '" + ArrivalTypeStrings[this->myJourneyOptions->arrival_type] + "', j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
                     }
                 }//end free point arrivals
                 else if (this->myJourneyOptions->arrival_class == BoundaryClass::EphemerisPegged)
@@ -550,7 +550,7 @@ namespace EMTG
                             break;
                         }
                         default:
-                            throw std::invalid_argument("Undefined ephemeris pegged arrival type, j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                            throw std::invalid_argument("Undefined ephemeris pegged arrival type '" + ArrivalTypeStrings[this->myJourneyOptions->arrival_type] + "', j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
                     }
                 }//end ephemeris pegged arrivals
                 else if (this->myJourneyOptions->arrival_class == BoundaryClass::EphemerisReferenced)
@@ -597,7 +597,7 @@ namespace EMTG
                                 throw std::invalid_argument("EphemerisReferencedLTMatchVinfInterior not implemented. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
                                 break;
                             default:
-                                throw std::invalid_argument("Undefined ephemeris pegged arrival type, j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                                throw std::invalid_argument("Undefined ephemeris referenced interior arrival type '" + ArrivalTypeStrings[this->myJourneyOptions->arrival_type] + "', j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
                         }//end switch
                     }
                     else //exterior arrival
@@ -642,7 +642,7 @@ namespace EMTG
                                 throw std::invalid_argument("EphemerisReferencedLTMatchVinfExterior not implemented. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
                                 break;
                             default:
-                                throw std::invalid_argument("Undefined ephemeris pegged arrival type, j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                                throw std::invalid_argument("Undefined ephemeris referenced exterior arrival type '" + ArrivalTypeStrings[this->myJourneyOptions->arrival_type] + "', j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
                         }//end switch
                     }//end exterior ephemeris-referenced arrivals
                 }//end ephemeris referenced arrivals
@@ -660,7 +660,7 @@ namespace EMTG
                                 this->myOptions);
                             break;
                         default:
-                            throw std::invalid_argument("Undefined periapse arrival type, j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                            throw std::invalid_argument("Undefined periapse arrival type '" + ArrivalTypeStrings[this->myJourneyOptions->arrival_type] + "', j" + std::to_string(this->journeyIndex) + "p" + std::to_string(this->phaseIndex) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
                     }//end switch
                 }//end periapse arrivals
                 
@@ -951,8 +951,16 @@ namespace EMTG
 
         void phase::calcbounds_phase_left_boundary()
         {
-
-            this->myDepartureEvent->calcbounds();
+            if (this->isFirstPhaseInMission)
+            {
+                //there are no pre-existing time variables, so pass in an empty vector
+                this->myDepartureEvent->calcbounds(std::vector<size_t> {});
+            }
+            else
+            {
+                //there are pre-existing time variables in the previous phase's arrival event
+                this->myDepartureEvent->calcbounds(this->PreviousPhaseArrivalEvent->get_Xindices_EventRightEpoch());
+            }
 
             this->X_index_of_first_decision_variable_in_this_phase = this->Xdescriptions->size();
             this->F_index_of_first_constraint_in_this_phase = this->Fdescriptions->size();
@@ -999,7 +1007,11 @@ namespace EMTG
 
         void phase::calcbounds_phase_right_boundary()
         {
-            this->myArrivalEvent->calcbounds();
+            std::vector<size_t> Departure_Xindices_Epoch = this->myDepartureEvent->get_Xindices_EventRightEpoch();
+
+            Departure_Xindices_Epoch.push_back(this->Xindex_PhaseFlightTime);
+
+            this->myArrivalEvent->calcbounds(Departure_Xindices_Epoch);
         }//end calcbounds_phase_right_boundary()
         
         //******************************************process methods
@@ -1103,5 +1115,67 @@ namespace EMTG
             this->PhaseTotalDeterministicDeltav = 0.0;
             this->PhaseTotalStatisticalDeltav = 0.0;
         }//end reset_phase()
+
+        //***************************************************common output segments
+        void phase::output_initial_TCM(std::ofstream& outputfile,
+            size_t& eventcount)
+        {
+            //where are we?
+            math::Matrix<doubleType> R_sc_Sun(3, 1, 0.0);
+            if (this->myUniverse->central_body_SPICE_ID == 10)
+            {
+                R_sc_Sun = this->state_after_initial_TCM.getSubMatrix1D(0, 2);
+            }
+            else
+            {
+                //where is the central body relative to the sun?
+                doubleType central_body_state_and_derivatives[12];
+                this->myUniverse->locate_central_body(this->state_after_initial_TCM(7),
+                    central_body_state_and_derivatives,
+                    *this->myOptions,
+                    false);
+
+                math::Matrix<doubleType> R_CB_Sun(3, 1, 0.0);
+                for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
+                {
+                    R_CB_Sun(stateIndex) = central_body_state_and_derivatives[stateIndex];
+                }
+
+                R_sc_Sun = this->state_after_initial_TCM.getSubMatrix1D(0, 2) + R_CB_Sun;
+            }
+
+            //what are the available and active power?
+            doubleType r_sc_sun_AU = R_sc_Sun.norm() / this->myOptions->AU;
+            this->mySpacecraft->computePowerState(r_sc_sun_AU, this->state_after_initial_TCM(7));
+
+            this->output_power = this->mySpacecraft->getAvailablePower();
+            this->output_active_power = this->mySpacecraft->getEPActivePower();
+
+            if (this->hasInitialTCM)
+            {
+                phase::write_output_line(outputfile,//outputfile
+                    eventcount,//eventcount
+                    "TCM",//event_type
+                    "deep-space",//event_location
+                    0.0,// timestep_size,
+                    -1,//flyby_altitude,
+                    0,//BdotR
+                    0,//BdotT
+                    0,//angle1
+                    0,//angle2
+                    0,//C3
+                    this->state_after_initial_TCM,//state
+                    math::Matrix<doubleType>(3, 1, 0.0),//dV
+                    math::Matrix<doubleType>(3, 1, 0.0),//ThrustVector
+                    this->initial_TCM_magnitude,//dVmag
+                    0.0,//Thrust
+                    this->mySpacecraft->getMonopropIsp(),//Isp
+                    this->output_power,//AvailPower
+                    0.0,//mdot
+                    0,//number_of_active_engines
+                    this->output_active_power,
+                    "none");//active_power)
+            }
+        }//end output_initial_TCM()
     }//end namespace Phases
 }//end namespace EMTG

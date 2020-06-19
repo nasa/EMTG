@@ -66,6 +66,9 @@ namespace EMTG
             void setThrottleLogic(const EMTG::ThrottleLogic& throttlelogic) { this->myThrottleLogic = throttlelogic; }
             void setThrottleSharpness(const double& sharpness) { this->ThrottleSharpness = sharpness; }
 			void setElectricPropulsionSystemOptions(const PropulsionSystemOptions& myElectricPropulsionSystemOptions) {this->myElectricPropulsionSystemOptions = myElectricPropulsionSystemOptions; }
+            void setChemicalPropulsionSystemOptions(const PropulsionSystemOptions& myChemicalPropulsionSystemOptions) { this->myChemicalPropulsionSystemOptions = myChemicalPropulsionSystemOptions; }
+            void setPowerSystemOptions(const PowerSystemOptions& myPowerSystemOptions) { this->myPowerSystemOptions = myPowerSystemOptions; }
+
 
             std::string getName() const { return this->name; };
             double getBaseDryMass() const { return this->BaseDryMass; }

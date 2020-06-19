@@ -43,7 +43,7 @@ namespace EMTG
                 size_t& eventcount);
 
             //calcbounds
-            void calcbounds();
+            void calcbounds(std::vector<size_t> timeVariables);
 
             //process
             void process_event(const std::vector<doubleType>& X,

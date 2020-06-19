@@ -102,7 +102,40 @@ namespace EMTG
         this->spacecraft_drag_area = 70;
         this->coefficient_of_drag = 2.2;
         this->AtmosphericDensityModelKey = "Exponential";
-        this->AtmosphericDensityModelDataFile = "c:/Utilities/DoesNotExist.emtg_densityopt";
+        this->AtmosphericDensityModelDataFile = "DoesNotExist.emtg_densityopt";
+        this->probe_separation_impulse = 1;
+        this->probe_mass = 100.0;
+        this->Probe_AEI_elements_vary_flag = std::vector<bool>({ 0, 0, 0, 0, 0, 0}); 
+        this->Probe_AEI_elements = std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}); 
+        this->Probe_AEI_elements_bounds = std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}); 
+        this->Probe_AEI_elements_reference_epoch = 51544.5 * 86400.0;
+        this->Probe_AEI_elements_state_representation = (StateRepresentation) 0;
+        this->Probe_AEI_elements_frame = (ReferenceFrame) 0;
+        this->Probe_End_elements_vary_flag = std::vector<bool>({ 0, 0, 0, 0, 0, 0}); 
+        this->Probe_End_elements = std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}); 
+        this->Probe_End_elements_bounds = std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}); 
+        this->Probe_End_elements_reference_epoch = 51544.5 * 86400.0;
+        this->Probe_End_elements_state_representation = (StateRepresentation) 0;
+        this->Probe_End_elements_frame = (ReferenceFrame) 0;
+        this->ModelProbeSecondPhase = (bool) 0;
+        this->AllowJourneyProbeAEIToPropagate = (bool) 0;
+        this->AllowJourneyProbeEndToPropagate = (bool) 0;
+        this->probe_communication_distance_bounds = std::vector<double>({ 2000.0, 10000.0}); 
+        this->perturb_drag_probe_separation_to_AEI = (bool) 0;
+        this->perturb_drag_probe_AEI_to_end = (bool) 0;
+        this->probe_drag_area_probe_separation_to_AEI = 70;
+        this->probe_drag_area_probe_AEI_to_end = 70;
+        this->probe_coefficient_of_drag_probe_separation_to_AEI = 2.2;
+        this->probe_coefficient_of_drag_probe_AEI_to_end = 2.2;
+        this->probe_AEI_velocity = std::vector<double>({ 0.0, 20.0, 0.0}); 
+        this->probe_end_velocity = std::vector<double>({ 0.0, 20.0, 0.0}); 
+        this->ProbeSeparationToAEI_MatchPointFraction = 0.5;
+        this->ProbeSeparationToAEI_ForwardIntegrationStepLength = 86400;
+        this->ProbeSeparationToAEI_BackwardIntegrationStepLength = 86400;
+        this->ProbeAEI_to_end_MatchPointFraction = 0.5;
+        this->ProbeAEI_to_end_ForwardIntegrationStepLength = 86400;
+        this->ProbeAEI_to_end_BackwardIntegrationStepLength = 86400;
+        this->print_this_journey_options_no_matter_what = (bool) 0;
         
         this->number_of_phases = this->sequence.size() + 1;
         this->maximum_mass = 1000.0;
@@ -113,7 +146,7 @@ namespace EMTG
         this->sequence_lowerBound = 1;
         this->sequence_upperBound = INT_MAX;
         this->phase_type_lowerBound = (PhaseType) 0;
-        this->phase_type_upperBound = (PhaseType) 8;
+        this->phase_type_upperBound = (PhaseType) 10;
         this->impulses_per_phase_lowerBound = 0;
         this->impulses_per_phase_upperBound = SIZE_MAX;
         this->force_unit_magnitude_control_lowerBound = (ControlMagnitudeType) 0;
@@ -143,7 +176,7 @@ namespace EMTG
         this->journey_end_TCM_lowerBound = 0;
         this->journey_end_TCM_upperBound = math::LARGE;
         this->timebounded_lowerBound = 0;
-        this->timebounded_upperBound = 2;
+        this->timebounded_upperBound = 3;
         this->departure_date_bounds_lowerBound = 0 * 86400.0;
         this->departure_date_bounds_upperBound = math::LARGE * 86400.0;
         this->wait_time_bounds_lowerBound = -math::LARGE * 86400.0;
@@ -163,9 +196,9 @@ namespace EMTG
         this->departure_elements_reference_epoch_lowerBound = 0 * 86400.0;
         this->departure_elements_reference_epoch_upperBound = math::LARGE * 86400.0;
         this->departure_elements_state_representation_lowerBound = (StateRepresentation) 0;
-        this->departure_elements_state_representation_upperBound = (StateRepresentation) 3;
+        this->departure_elements_state_representation_upperBound = (StateRepresentation) 6;
         this->departure_elements_frame_lowerBound = (ReferenceFrame) 0;
-        this->departure_elements_frame_upperBound = (ReferenceFrame) 8;
+        this->departure_elements_frame_upperBound = (ReferenceFrame) 9;
         this->maximum_starting_mass_increment_lowerBound = -math::LARGE;
         this->maximum_starting_mass_increment_upperBound = math::LARGE;
         this->minimum_starting_mass_increment_lowerBound = -math::LARGE;
@@ -189,9 +222,9 @@ namespace EMTG
         this->arrival_elements_reference_epoch_lowerBound = 0 * 86400.0;
         this->arrival_elements_reference_epoch_upperBound = math::LARGE * 86400.0;
         this->arrival_elements_state_representation_lowerBound = (StateRepresentation) 0;
-        this->arrival_elements_state_representation_upperBound = (StateRepresentation) 3;
+        this->arrival_elements_state_representation_upperBound = (StateRepresentation) 6;
         this->arrival_elements_frame_lowerBound = (ReferenceFrame) 0;
-        this->arrival_elements_frame_upperBound = (ReferenceFrame) 8;
+        this->arrival_elements_frame_upperBound = (ReferenceFrame) 9;
         this->final_velocity_lowerBound = 0;
         this->final_velocity_upperBound = math::LARGE;
         this->forced_terminal_coast_lowerBound = 0 * 86400.0;
@@ -224,12 +257,62 @@ namespace EMTG
         this->ephemeris_pegged_orbit_insertion_SMA_upperBound = math::LARGE;
         this->ephemeris_pegged_orbit_insertion_ECC_lowerBound = 0;
         this->ephemeris_pegged_orbit_insertion_ECC_upperBound = math::LARGE;
-        this->impact_momentum_enhancement_factor_lowerBound = 0;
+        this->impact_momentum_enhancement_factor_lowerBound = 0.0;
         this->impact_momentum_enhancement_factor_upperBound = math::LARGE;
         this->spacecraft_drag_area_lowerBound = 0;
         this->spacecraft_drag_area_upperBound = math::LARGE;
         this->coefficient_of_drag_lowerBound = 0;
         this->coefficient_of_drag_upperBound = math::LARGE;
+        this->probe_separation_impulse_lowerBound = 0;
+        this->probe_separation_impulse_upperBound = math::LARGE;
+        this->probe_mass_lowerBound = 1e-13;
+        this->probe_mass_upperBound = math::LARGE;
+        this->Probe_AEI_elements_lowerBound = -math::LARGE;
+        this->Probe_AEI_elements_upperBound = math::LARGE;
+        this->Probe_AEI_elements_bounds_lowerBound = -math::LARGE;
+        this->Probe_AEI_elements_bounds_upperBound = math::LARGE;
+        this->Probe_AEI_elements_reference_epoch_lowerBound = 0 * 86400.0;
+        this->Probe_AEI_elements_reference_epoch_upperBound = math::LARGE * 86400.0;
+        this->Probe_AEI_elements_state_representation_lowerBound = (StateRepresentation) 0;
+        this->Probe_AEI_elements_state_representation_upperBound = (StateRepresentation) 3;
+        this->Probe_AEI_elements_frame_lowerBound = (ReferenceFrame) 0;
+        this->Probe_AEI_elements_frame_upperBound = (ReferenceFrame) 8;
+        this->Probe_End_elements_lowerBound = -math::LARGE;
+        this->Probe_End_elements_upperBound = math::LARGE;
+        this->Probe_End_elements_bounds_lowerBound = -math::LARGE;
+        this->Probe_End_elements_bounds_upperBound = math::LARGE;
+        this->Probe_End_elements_reference_epoch_lowerBound = 0 * 86400.0;
+        this->Probe_End_elements_reference_epoch_upperBound = math::LARGE * 86400.0;
+        this->Probe_End_elements_state_representation_lowerBound = (StateRepresentation) 0;
+        this->Probe_End_elements_state_representation_upperBound = (StateRepresentation) 3;
+        this->Probe_End_elements_frame_lowerBound = (ReferenceFrame) 0;
+        this->Probe_End_elements_frame_upperBound = (ReferenceFrame) 8;
+        this->probe_communication_distance_bounds_lowerBound = 0.0;
+        this->probe_communication_distance_bounds_upperBound = math::LARGE;
+        this->probe_drag_area_probe_separation_to_AEI_lowerBound = 0;
+        this->probe_drag_area_probe_separation_to_AEI_upperBound = math::LARGE;
+        this->probe_drag_area_probe_AEI_to_end_lowerBound = 0;
+        this->probe_drag_area_probe_AEI_to_end_upperBound = math::LARGE;
+        this->probe_coefficient_of_drag_probe_separation_to_AEI_lowerBound = 0;
+        this->probe_coefficient_of_drag_probe_separation_to_AEI_upperBound = math::LARGE;
+        this->probe_coefficient_of_drag_probe_AEI_to_end_lowerBound = 0;
+        this->probe_coefficient_of_drag_probe_AEI_to_end_upperBound = math::LARGE;
+        this->probe_AEI_velocity_lowerBound = 0;
+        this->probe_AEI_velocity_upperBound = math::LARGE;
+        this->probe_end_velocity_lowerBound = 0;
+        this->probe_end_velocity_upperBound = math::LARGE;
+        this->ProbeSeparationToAEI_MatchPointFraction_lowerBound = 0;
+        this->ProbeSeparationToAEI_MatchPointFraction_upperBound = 1;
+        this->ProbeSeparationToAEI_ForwardIntegrationStepLength_lowerBound = 0;
+        this->ProbeSeparationToAEI_ForwardIntegrationStepLength_upperBound = 1000000;
+        this->ProbeSeparationToAEI_BackwardIntegrationStepLength_lowerBound = 0;
+        this->ProbeSeparationToAEI_BackwardIntegrationStepLength_upperBound = 1000000;
+        this->ProbeAEI_to_end_MatchPointFraction_lowerBound = 0;
+        this->ProbeAEI_to_end_MatchPointFraction_upperBound = 1;
+        this->ProbeAEI_to_end_ForwardIntegrationStepLength_lowerBound = 0;
+        this->ProbeAEI_to_end_ForwardIntegrationStepLength_upperBound = 1000000;
+        this->ProbeAEI_to_end_BackwardIntegrationStepLength_lowerBound = 0;
+        this->ProbeAEI_to_end_BackwardIntegrationStepLength_upperBound = 1000000;
     }//end constructor
     
     JourneyOptions::JourneyOptions(std::string optionsfilename) : JourneyOptions()
@@ -1315,6 +1398,423 @@ namespace EMTG
             this->AtmosphericDensityModelDataFile = linecell[1];
             return;
         }
+        if (linecell[0] == "probe_separation_impulse")
+        {
+            this->probe_separation_impulse = std::stod(linecell[1]);
+            
+            //bounds check
+            if (this->probe_separation_impulse < this->probe_separation_impulse_lowerBound || this->probe_separation_impulse > this->probe_separation_impulse_upperBound)
+            {
+                throw std::out_of_range("Input option probe_separation_impulse is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->probe_separation_impulse) + ", bounds are [" + std::to_string(this->probe_separation_impulse_lowerBound) + ", " + std::to_string(this->probe_separation_impulse_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "probe_mass")
+        {
+            this->probe_mass = std::stod(linecell[1]);
+            
+            //bounds check
+            if (this->probe_mass < this->probe_mass_lowerBound || this->probe_mass > this->probe_mass_upperBound)
+            {
+                throw std::out_of_range("Input option probe_mass is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->probe_mass) + ", bounds are [" + std::to_string(this->probe_mass_lowerBound) + ", " + std::to_string(this->probe_mass_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "Probe_AEI_elements_vary_flag")
+        {
+            if (linecell.size() - 1 != 6)
+            {
+                throw std::invalid_argument("Input option Probe_AEI_elements_vary_flag has been passed " + std::to_string(linecell.size() - 1) + " arguments but requires 6 arguments.");
+            }
+            
+            this->Probe_AEI_elements_vary_flag.clear();
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+                this->Probe_AEI_elements_vary_flag.push_back((bool) std::stoi(linecell[entryIndex + 1]));
+            }
+            return;
+        }
+        if (linecell[0] == "Probe_AEI_elements")
+        {
+            if (linecell.size() - 1 != 6)
+            {
+                throw std::invalid_argument("Input option Probe_AEI_elements has been passed " + std::to_string(linecell.size() - 1) + " arguments but requires 6 arguments.");
+            }
+            
+            this->Probe_AEI_elements.clear();
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+                this->Probe_AEI_elements.push_back(std::stod(linecell[entryIndex + 1]));
+            }
+            
+            //bounds check
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+               if (this->Probe_AEI_elements[entryIndex] < this->Probe_AEI_elements_lowerBound || this->Probe_AEI_elements[entryIndex] > this->Probe_AEI_elements_upperBound)
+               {
+                   throw std::out_of_range("Input option Probe_AEI_elements[" + std::to_string(entryIndex) + "] is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->Probe_AEI_elements[entryIndex]) + ", bounds are [" + std::to_string(this->Probe_AEI_elements_lowerBound) + ", " + std::to_string(this->Probe_AEI_elements_upperBound) + "].");
+               }
+            }
+            return;
+        }
+        if (linecell[0] == "Probe_AEI_elements_bounds")
+        {
+            if (linecell.size() - 1 != 12)
+            {
+                throw std::invalid_argument("Input option Probe_AEI_elements_bounds has been passed " + std::to_string(linecell.size() - 1) + " arguments but requires 12 arguments.");
+            }
+            
+            this->Probe_AEI_elements_bounds.clear();
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+                this->Probe_AEI_elements_bounds.push_back(std::stod(linecell[entryIndex + 1]));
+            }
+            
+            //bounds check
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+               if (this->Probe_AEI_elements_bounds[entryIndex] < this->Probe_AEI_elements_bounds_lowerBound || this->Probe_AEI_elements_bounds[entryIndex] > this->Probe_AEI_elements_bounds_upperBound)
+               {
+                   throw std::out_of_range("Input option Probe_AEI_elements_bounds[" + std::to_string(entryIndex) + "] is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->Probe_AEI_elements_bounds[entryIndex]) + ", bounds are [" + std::to_string(this->Probe_AEI_elements_bounds_lowerBound) + ", " + std::to_string(this->Probe_AEI_elements_bounds_upperBound) + "].");
+               }
+            }
+            return;
+        }
+        if (linecell[0] == "Probe_AEI_elements_reference_epoch")
+        {
+            this->Probe_AEI_elements_reference_epoch = std::stod(linecell[1]) * 86400.0;
+            
+            //bounds check
+            if (this->Probe_AEI_elements_reference_epoch < this->Probe_AEI_elements_reference_epoch_lowerBound || this->Probe_AEI_elements_reference_epoch > this->Probe_AEI_elements_reference_epoch_upperBound)
+            {
+                throw std::out_of_range("Input option Probe_AEI_elements_reference_epoch is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->Probe_AEI_elements_reference_epoch) + ", bounds are [" + std::to_string(this->Probe_AEI_elements_reference_epoch_lowerBound) + ", " + std::to_string(this->Probe_AEI_elements_reference_epoch_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "Probe_AEI_elements_state_representation")
+        {
+            this->Probe_AEI_elements_state_representation = (StateRepresentation) std::stoi(linecell[1]);
+            
+            //bounds check
+            if (this->Probe_AEI_elements_state_representation < this->Probe_AEI_elements_state_representation_lowerBound || this->Probe_AEI_elements_state_representation > this->Probe_AEI_elements_state_representation_upperBound)
+            {
+                throw std::out_of_range("Input option Probe_AEI_elements_state_representation is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->Probe_AEI_elements_state_representation) + ", bounds are [" + std::to_string(this->Probe_AEI_elements_state_representation_lowerBound) + ", " + std::to_string(this->Probe_AEI_elements_state_representation_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "Probe_AEI_elements_frame")
+        {
+            this->Probe_AEI_elements_frame = (ReferenceFrame) std::stoi(linecell[1]);
+            
+            //bounds check
+            if (this->Probe_AEI_elements_frame < this->Probe_AEI_elements_frame_lowerBound || this->Probe_AEI_elements_frame > this->Probe_AEI_elements_frame_upperBound)
+            {
+                throw std::out_of_range("Input option Probe_AEI_elements_frame is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->Probe_AEI_elements_frame) + ", bounds are [" + std::to_string(this->Probe_AEI_elements_frame_lowerBound) + ", " + std::to_string(this->Probe_AEI_elements_frame_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "Probe_End_elements_vary_flag")
+        {
+            if (linecell.size() - 1 != 6)
+            {
+                throw std::invalid_argument("Input option Probe_End_elements_vary_flag has been passed " + std::to_string(linecell.size() - 1) + " arguments but requires 6 arguments.");
+            }
+            
+            this->Probe_End_elements_vary_flag.clear();
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+                this->Probe_End_elements_vary_flag.push_back((bool) std::stoi(linecell[entryIndex + 1]));
+            }
+            return;
+        }
+        if (linecell[0] == "Probe_End_elements")
+        {
+            if (linecell.size() - 1 != 6)
+            {
+                throw std::invalid_argument("Input option Probe_End_elements has been passed " + std::to_string(linecell.size() - 1) + " arguments but requires 6 arguments.");
+            }
+            
+            this->Probe_End_elements.clear();
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+                this->Probe_End_elements.push_back(std::stod(linecell[entryIndex + 1]));
+            }
+            
+            //bounds check
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+               if (this->Probe_End_elements[entryIndex] < this->Probe_End_elements_lowerBound || this->Probe_End_elements[entryIndex] > this->Probe_End_elements_upperBound)
+               {
+                   throw std::out_of_range("Input option Probe_End_elements[" + std::to_string(entryIndex) + "] is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->Probe_End_elements[entryIndex]) + ", bounds are [" + std::to_string(this->Probe_End_elements_lowerBound) + ", " + std::to_string(this->Probe_End_elements_upperBound) + "].");
+               }
+            }
+            return;
+        }
+        if (linecell[0] == "Probe_End_elements_bounds")
+        {
+            if (linecell.size() - 1 != 12)
+            {
+                throw std::invalid_argument("Input option Probe_End_elements_bounds has been passed " + std::to_string(linecell.size() - 1) + " arguments but requires 12 arguments.");
+            }
+            
+            this->Probe_End_elements_bounds.clear();
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+                this->Probe_End_elements_bounds.push_back(std::stod(linecell[entryIndex + 1]));
+            }
+            
+            //bounds check
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+               if (this->Probe_End_elements_bounds[entryIndex] < this->Probe_End_elements_bounds_lowerBound || this->Probe_End_elements_bounds[entryIndex] > this->Probe_End_elements_bounds_upperBound)
+               {
+                   throw std::out_of_range("Input option Probe_End_elements_bounds[" + std::to_string(entryIndex) + "] is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->Probe_End_elements_bounds[entryIndex]) + ", bounds are [" + std::to_string(this->Probe_End_elements_bounds_lowerBound) + ", " + std::to_string(this->Probe_End_elements_bounds_upperBound) + "].");
+               }
+            }
+            return;
+        }
+        if (linecell[0] == "Probe_End_elements_reference_epoch")
+        {
+            this->Probe_End_elements_reference_epoch = std::stod(linecell[1]) * 86400.0;
+            
+            //bounds check
+            if (this->Probe_End_elements_reference_epoch < this->Probe_End_elements_reference_epoch_lowerBound || this->Probe_End_elements_reference_epoch > this->Probe_End_elements_reference_epoch_upperBound)
+            {
+                throw std::out_of_range("Input option Probe_End_elements_reference_epoch is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->Probe_End_elements_reference_epoch) + ", bounds are [" + std::to_string(this->Probe_End_elements_reference_epoch_lowerBound) + ", " + std::to_string(this->Probe_End_elements_reference_epoch_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "Probe_End_elements_state_representation")
+        {
+            this->Probe_End_elements_state_representation = (StateRepresentation) std::stoi(linecell[1]);
+            
+            //bounds check
+            if (this->Probe_End_elements_state_representation < this->Probe_End_elements_state_representation_lowerBound || this->Probe_End_elements_state_representation > this->Probe_End_elements_state_representation_upperBound)
+            {
+                throw std::out_of_range("Input option Probe_End_elements_state_representation is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->Probe_End_elements_state_representation) + ", bounds are [" + std::to_string(this->Probe_End_elements_state_representation_lowerBound) + ", " + std::to_string(this->Probe_End_elements_state_representation_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "Probe_End_elements_frame")
+        {
+            this->Probe_End_elements_frame = (ReferenceFrame) std::stoi(linecell[1]);
+            
+            //bounds check
+            if (this->Probe_End_elements_frame < this->Probe_End_elements_frame_lowerBound || this->Probe_End_elements_frame > this->Probe_End_elements_frame_upperBound)
+            {
+                throw std::out_of_range("Input option Probe_End_elements_frame is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->Probe_End_elements_frame) + ", bounds are [" + std::to_string(this->Probe_End_elements_frame_lowerBound) + ", " + std::to_string(this->Probe_End_elements_frame_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "ModelProbeSecondPhase")
+        {
+            this->ModelProbeSecondPhase = (bool) std::stoi(linecell[1]);
+            return;
+        }
+        if (linecell[0] == "AllowJourneyProbeAEIToPropagate")
+        {
+            this->AllowJourneyProbeAEIToPropagate = (bool) std::stoi(linecell[1]);
+            return;
+        }
+        if (linecell[0] == "AllowJourneyProbeEndToPropagate")
+        {
+            this->AllowJourneyProbeEndToPropagate = (bool) std::stoi(linecell[1]);
+            return;
+        }
+        if (linecell[0] == "probe_communication_distance_bounds")
+        {
+            if (linecell.size() - 1 != 2)
+            {
+                throw std::invalid_argument("Input option probe_communication_distance_bounds has been passed " + std::to_string(linecell.size() - 1) + " arguments but requires 2 arguments.");
+            }
+            
+            this->probe_communication_distance_bounds.clear();
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+                this->probe_communication_distance_bounds.push_back(std::stod(linecell[entryIndex + 1]));
+            }
+            
+            //bounds check
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+               if (this->probe_communication_distance_bounds[entryIndex] < this->probe_communication_distance_bounds_lowerBound || this->probe_communication_distance_bounds[entryIndex] > this->probe_communication_distance_bounds_upperBound)
+               {
+                   throw std::out_of_range("Input option probe_communication_distance_bounds[" + std::to_string(entryIndex) + "] is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->probe_communication_distance_bounds[entryIndex]) + ", bounds are [" + std::to_string(this->probe_communication_distance_bounds_lowerBound) + ", " + std::to_string(this->probe_communication_distance_bounds_upperBound) + "].");
+               }
+            }
+            return;
+        }
+        if (linecell[0] == "perturb_drag_probe_separation_to_AEI")
+        {
+            this->perturb_drag_probe_separation_to_AEI = (bool) std::stoi(linecell[1]);
+            return;
+        }
+        if (linecell[0] == "perturb_drag_probe_AEI_to_end")
+        {
+            this->perturb_drag_probe_AEI_to_end = (bool) std::stoi(linecell[1]);
+            return;
+        }
+        if (linecell[0] == "probe_drag_area_probe_separation_to_AEI")
+        {
+            this->probe_drag_area_probe_separation_to_AEI = std::stod(linecell[1]);
+            
+            //bounds check
+            if (this->probe_drag_area_probe_separation_to_AEI < this->probe_drag_area_probe_separation_to_AEI_lowerBound || this->probe_drag_area_probe_separation_to_AEI > this->probe_drag_area_probe_separation_to_AEI_upperBound)
+            {
+                throw std::out_of_range("Input option probe_drag_area_probe_separation_to_AEI is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->probe_drag_area_probe_separation_to_AEI) + ", bounds are [" + std::to_string(this->probe_drag_area_probe_separation_to_AEI_lowerBound) + ", " + std::to_string(this->probe_drag_area_probe_separation_to_AEI_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "probe_drag_area_probe_AEI_to_end")
+        {
+            this->probe_drag_area_probe_AEI_to_end = std::stod(linecell[1]);
+            
+            //bounds check
+            if (this->probe_drag_area_probe_AEI_to_end < this->probe_drag_area_probe_AEI_to_end_lowerBound || this->probe_drag_area_probe_AEI_to_end > this->probe_drag_area_probe_AEI_to_end_upperBound)
+            {
+                throw std::out_of_range("Input option probe_drag_area_probe_AEI_to_end is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->probe_drag_area_probe_AEI_to_end) + ", bounds are [" + std::to_string(this->probe_drag_area_probe_AEI_to_end_lowerBound) + ", " + std::to_string(this->probe_drag_area_probe_AEI_to_end_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "probe_coefficient_of_drag_probe_separation_to_AEI")
+        {
+            this->probe_coefficient_of_drag_probe_separation_to_AEI = std::stod(linecell[1]);
+            
+            //bounds check
+            if (this->probe_coefficient_of_drag_probe_separation_to_AEI < this->probe_coefficient_of_drag_probe_separation_to_AEI_lowerBound || this->probe_coefficient_of_drag_probe_separation_to_AEI > this->probe_coefficient_of_drag_probe_separation_to_AEI_upperBound)
+            {
+                throw std::out_of_range("Input option probe_coefficient_of_drag_probe_separation_to_AEI is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->probe_coefficient_of_drag_probe_separation_to_AEI) + ", bounds are [" + std::to_string(this->probe_coefficient_of_drag_probe_separation_to_AEI_lowerBound) + ", " + std::to_string(this->probe_coefficient_of_drag_probe_separation_to_AEI_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "probe_coefficient_of_drag_probe_AEI_to_end")
+        {
+            this->probe_coefficient_of_drag_probe_AEI_to_end = std::stod(linecell[1]);
+            
+            //bounds check
+            if (this->probe_coefficient_of_drag_probe_AEI_to_end < this->probe_coefficient_of_drag_probe_AEI_to_end_lowerBound || this->probe_coefficient_of_drag_probe_AEI_to_end > this->probe_coefficient_of_drag_probe_AEI_to_end_upperBound)
+            {
+                throw std::out_of_range("Input option probe_coefficient_of_drag_probe_AEI_to_end is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->probe_coefficient_of_drag_probe_AEI_to_end) + ", bounds are [" + std::to_string(this->probe_coefficient_of_drag_probe_AEI_to_end_lowerBound) + ", " + std::to_string(this->probe_coefficient_of_drag_probe_AEI_to_end_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "probe_AEI_velocity")
+        {
+            if (linecell.size() - 1 != 3)
+            {
+                throw std::invalid_argument("Input option probe_AEI_velocity has been passed " + std::to_string(linecell.size() - 1) + " arguments but requires 3 arguments.");
+            }
+            
+            this->probe_AEI_velocity.clear();
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+                this->probe_AEI_velocity.push_back(std::stod(linecell[entryIndex + 1]));
+            }
+            
+            //bounds check
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+               if (this->probe_AEI_velocity[entryIndex] < this->probe_AEI_velocity_lowerBound || this->probe_AEI_velocity[entryIndex] > this->probe_AEI_velocity_upperBound)
+               {
+                   throw std::out_of_range("Input option probe_AEI_velocity[" + std::to_string(entryIndex) + "] is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->probe_AEI_velocity[entryIndex]) + ", bounds are [" + std::to_string(this->probe_AEI_velocity_lowerBound) + ", " + std::to_string(this->probe_AEI_velocity_upperBound) + "].");
+               }
+            }
+            return;
+        }
+        if (linecell[0] == "probe_end_velocity")
+        {
+            if (linecell.size() - 1 != 3)
+            {
+                throw std::invalid_argument("Input option probe_end_velocity has been passed " + std::to_string(linecell.size() - 1) + " arguments but requires 3 arguments.");
+            }
+            
+            this->probe_end_velocity.clear();
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+                this->probe_end_velocity.push_back(std::stod(linecell[entryIndex + 1]));
+            }
+            
+            //bounds check
+            for (size_t entryIndex = 0; entryIndex < linecell.size() - 1; ++entryIndex)
+            {
+               if (this->probe_end_velocity[entryIndex] < this->probe_end_velocity_lowerBound || this->probe_end_velocity[entryIndex] > this->probe_end_velocity_upperBound)
+               {
+                   throw std::out_of_range("Input option probe_end_velocity[" + std::to_string(entryIndex) + "] is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->probe_end_velocity[entryIndex]) + ", bounds are [" + std::to_string(this->probe_end_velocity_lowerBound) + ", " + std::to_string(this->probe_end_velocity_upperBound) + "].");
+               }
+            }
+            return;
+        }
+        if (linecell[0] == "ProbeSeparationToAEI_MatchPointFraction")
+        {
+            this->ProbeSeparationToAEI_MatchPointFraction = std::stod(linecell[1]);
+            
+            //bounds check
+            if (this->ProbeSeparationToAEI_MatchPointFraction < this->ProbeSeparationToAEI_MatchPointFraction_lowerBound || this->ProbeSeparationToAEI_MatchPointFraction > this->ProbeSeparationToAEI_MatchPointFraction_upperBound)
+            {
+                throw std::out_of_range("Input option ProbeSeparationToAEI_MatchPointFraction is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->ProbeSeparationToAEI_MatchPointFraction) + ", bounds are [" + std::to_string(this->ProbeSeparationToAEI_MatchPointFraction_lowerBound) + ", " + std::to_string(this->ProbeSeparationToAEI_MatchPointFraction_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "ProbeSeparationToAEI_ForwardIntegrationStepLength")
+        {
+            this->ProbeSeparationToAEI_ForwardIntegrationStepLength = std::stod(linecell[1]);
+            
+            //bounds check
+            if (this->ProbeSeparationToAEI_ForwardIntegrationStepLength < this->ProbeSeparationToAEI_ForwardIntegrationStepLength_lowerBound || this->ProbeSeparationToAEI_ForwardIntegrationStepLength > this->ProbeSeparationToAEI_ForwardIntegrationStepLength_upperBound)
+            {
+                throw std::out_of_range("Input option ProbeSeparationToAEI_ForwardIntegrationStepLength is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->ProbeSeparationToAEI_ForwardIntegrationStepLength) + ", bounds are [" + std::to_string(this->ProbeSeparationToAEI_ForwardIntegrationStepLength_lowerBound) + ", " + std::to_string(this->ProbeSeparationToAEI_ForwardIntegrationStepLength_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "ProbeSeparationToAEI_BackwardIntegrationStepLength")
+        {
+            this->ProbeSeparationToAEI_BackwardIntegrationStepLength = std::stod(linecell[1]);
+            
+            //bounds check
+            if (this->ProbeSeparationToAEI_BackwardIntegrationStepLength < this->ProbeSeparationToAEI_BackwardIntegrationStepLength_lowerBound || this->ProbeSeparationToAEI_BackwardIntegrationStepLength > this->ProbeSeparationToAEI_BackwardIntegrationStepLength_upperBound)
+            {
+                throw std::out_of_range("Input option ProbeSeparationToAEI_BackwardIntegrationStepLength is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->ProbeSeparationToAEI_BackwardIntegrationStepLength) + ", bounds are [" + std::to_string(this->ProbeSeparationToAEI_BackwardIntegrationStepLength_lowerBound) + ", " + std::to_string(this->ProbeSeparationToAEI_BackwardIntegrationStepLength_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "ProbeAEI_to_end_MatchPointFraction")
+        {
+            this->ProbeAEI_to_end_MatchPointFraction = std::stod(linecell[1]);
+            
+            //bounds check
+            if (this->ProbeAEI_to_end_MatchPointFraction < this->ProbeAEI_to_end_MatchPointFraction_lowerBound || this->ProbeAEI_to_end_MatchPointFraction > this->ProbeAEI_to_end_MatchPointFraction_upperBound)
+            {
+                throw std::out_of_range("Input option ProbeAEI_to_end_MatchPointFraction is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->ProbeAEI_to_end_MatchPointFraction) + ", bounds are [" + std::to_string(this->ProbeAEI_to_end_MatchPointFraction_lowerBound) + ", " + std::to_string(this->ProbeAEI_to_end_MatchPointFraction_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "ProbeAEI_to_end_ForwardIntegrationStepLength")
+        {
+            this->ProbeAEI_to_end_ForwardIntegrationStepLength = std::stod(linecell[1]);
+            
+            //bounds check
+            if (this->ProbeAEI_to_end_ForwardIntegrationStepLength < this->ProbeAEI_to_end_ForwardIntegrationStepLength_lowerBound || this->ProbeAEI_to_end_ForwardIntegrationStepLength > this->ProbeAEI_to_end_ForwardIntegrationStepLength_upperBound)
+            {
+                throw std::out_of_range("Input option ProbeAEI_to_end_ForwardIntegrationStepLength is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->ProbeAEI_to_end_ForwardIntegrationStepLength) + ", bounds are [" + std::to_string(this->ProbeAEI_to_end_ForwardIntegrationStepLength_lowerBound) + ", " + std::to_string(this->ProbeAEI_to_end_ForwardIntegrationStepLength_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "ProbeAEI_to_end_BackwardIntegrationStepLength")
+        {
+            this->ProbeAEI_to_end_BackwardIntegrationStepLength = std::stod(linecell[1]);
+            
+            //bounds check
+            if (this->ProbeAEI_to_end_BackwardIntegrationStepLength < this->ProbeAEI_to_end_BackwardIntegrationStepLength_lowerBound || this->ProbeAEI_to_end_BackwardIntegrationStepLength > this->ProbeAEI_to_end_BackwardIntegrationStepLength_upperBound)
+            {
+                throw std::out_of_range("Input option ProbeAEI_to_end_BackwardIntegrationStepLength is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->ProbeAEI_to_end_BackwardIntegrationStepLength) + ", bounds are [" + std::to_string(this->ProbeAEI_to_end_BackwardIntegrationStepLength_lowerBound) + ", " + std::to_string(this->ProbeAEI_to_end_BackwardIntegrationStepLength_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "print_this_journey_options_no_matter_what")
+        {
+            this->print_this_journey_options_no_matter_what = (bool) std::stoi(linecell[1]);
+            return;
+        }
         
         //specialized maneuver constraints(epoch and magnitude)
         if (linecell[0] == "BEGIN_MANEUVER_CONSTRAINT_BLOCK")
@@ -1414,19 +1914,19 @@ namespace EMTG
         
         optionsFileStream << "BEGIN_JOURNEY" << std::endl;
         
-        if (this->journey_name != "default" || writeAll)
+        if (this->journey_name != "default" || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Journey name" << std::endl;
             optionsFileStream << "journey_name " << this->journey_name << std::endl;
         }
     
-        if (this->journey_central_body != "Sun" || writeAll)
+        if (this->journey_central_body != "Sun" || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Journey central body name" << std::endl;
             optionsFileStream << "journey_central_body " << this->journey_central_body << std::endl;
         }
     
-        if (this->destination_list != std::vector<int>({ 3, 4}) || writeAll)
+        if (this->destination_list != std::vector<int>({ 3, 4}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#destination list, as indices from the Universe file" << std::endl;
             optionsFileStream << "destination_list";
@@ -1441,85 +1941,85 @@ namespace EMTG
             optionsFileStream << " " << entry;
         optionsFileStream << std::endl;
         
-        if (this->phase_type != 2 || writeAll)
+        if (this->phase_type != 2 || writeAll || this->print_this_journey_options_no_matter_what)
         {
-            optionsFileStream << "#phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase" << std::endl;
+            optionsFileStream << "#phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable (do not use)\n#10 ProbeEntryPhase" << std::endl;
             optionsFileStream << "phase_type " << this->phase_type << std::endl;
         }
     
-        if (this->impulses_per_phase != 1 || writeAll)
+        if (this->impulses_per_phase != 1 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#impulses per phase" << std::endl;
             optionsFileStream << "impulses_per_phase " << this->impulses_per_phase << std::endl;
         }
     
-        if (this->force_unit_magnitude_control != 0 || writeAll)
+        if (this->force_unit_magnitude_control != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Force unit magnitude control?\n#0: free control magnitude\n#1: force unit magnitude\n#2: force zero magnitude" << std::endl;
             optionsFileStream << "force_unit_magnitude_control " << this->force_unit_magnitude_control << std::endl;
         }
     
-        if (this->force_fixed_inertial_control != 0 || writeAll)
+        if (this->force_fixed_inertial_control != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Force fixed inertial control? All control vectors in a phase must be identical if this is selected." << std::endl;
             optionsFileStream << "force_fixed_inertial_control " << this->force_fixed_inertial_control << std::endl;
         }
     
-        if (this->override_num_steps != 0 || writeAll)
+        if (this->override_num_steps != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Override this journey's number of steps?" << std::endl;
             optionsFileStream << "override_num_steps " << this->override_num_steps << std::endl;
         }
     
-        if (this->number_of_steps != 20 || writeAll)
+        if (this->number_of_steps != 20 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Number of time steps for this journey, if overriden" << std::endl;
             optionsFileStream << "number_of_steps " << this->number_of_steps << std::endl;
         }
     
-        if (this->override_duty_cycle != 0 || writeAll)
+        if (this->override_duty_cycle != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Journey override global duty cycle" << std::endl;
             optionsFileStream << "override_duty_cycle " << this->override_duty_cycle << std::endl;
         }
     
-        if (this->duty_cycle != 1 || writeAll)
+        if (this->duty_cycle != 1 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Journey duty cycle" << std::endl;
             optionsFileStream << "duty_cycle " << this->duty_cycle << std::endl;
         }
     
-        if (this->override_PropagatorType != 0 || writeAll)
+        if (this->override_PropagatorType != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#override propagator type?" << std::endl;
             optionsFileStream << "override_PropagatorType " << this->override_PropagatorType << std::endl;
         }
     
-        if (this->propagatorType != 1 || writeAll)
+        if (this->propagatorType != 1 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#propagator type" << std::endl;
             optionsFileStream << "propagatorType " << this->propagatorType << std::endl;
         }
     
-        if (this->override_integration_step_size != 0 || writeAll)
+        if (this->override_integration_step_size != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Override global integration step size?" << std::endl;
             optionsFileStream << "override_integration_step_size " << this->override_integration_step_size << std::endl;
         }
     
-        if (this->integration_step_size != 86400 || writeAll)
+        if (this->integration_step_size != 86400 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#integration step size (s)" << std::endl;
             optionsFileStream << "integration_step_size " << this->integration_step_size << std::endl;
         }
     
-        if (this->override_flyby_altitude_bounds != 0 || writeAll)
+        if (this->override_flyby_altitude_bounds != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Override journey flyby altitude?" << std::endl;
             optionsFileStream << "override_flyby_altitude_bounds " << this->override_flyby_altitude_bounds << std::endl;
         }
     
-        if (this->flyby_altitude_bounds != std::vector<double>({ 300.0, 1000000.0}) || writeAll)
+        if (this->flyby_altitude_bounds != std::vector<double>({ 300.0, 1000000.0}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Lower and upper bound on journey flyby altitude (only applies to the departure flyby, if there is one)" << std::endl;
             optionsFileStream << "flyby_altitude_bounds";
@@ -1528,13 +2028,13 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->PeriapseArrival_override_altitude != 0 || writeAll)
+        if (this->PeriapseArrival_override_altitude != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Override journey flyby altitude?" << std::endl;
             optionsFileStream << "PeriapseArrival_override_altitude " << this->PeriapseArrival_override_altitude << std::endl;
         }
     
-        if (this->PeriapseArrival_altitude_bounds != std::vector<double>({ 300.0, 1000000.0}) || writeAll)
+        if (this->PeriapseArrival_altitude_bounds != std::vector<double>({ 300.0, 1000000.0}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Lower and upper bound on journey flyby altitude (km)" << std::endl;
             optionsFileStream << "PeriapseArrival_altitude_bounds";
@@ -1543,7 +2043,7 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->PeriapseDeparture_altitude_bounds != std::vector<double>({ 185.0, 185.0}) || writeAll)
+        if (this->PeriapseDeparture_altitude_bounds != std::vector<double>({ 185.0, 185.0}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#PeriapseDeparture altitude bounds (in km)" << std::endl;
             optionsFileStream << "PeriapseDeparture_altitude_bounds";
@@ -1552,55 +2052,55 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->num_interior_control_points != 1 || writeAll)
+        if (this->num_interior_control_points != 1 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#number of interior control points for parallel shooting phase types" << std::endl;
             optionsFileStream << "num_interior_control_points " << this->num_interior_control_points << std::endl;
         }
     
-        if (this->CoastPhaseMatchPointFraction != 0.5 || writeAll)
+        if (this->CoastPhaseMatchPointFraction != 0.5 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#coast phase match point fraction" << std::endl;
             optionsFileStream << "CoastPhaseMatchPointFraction " << this->CoastPhaseMatchPointFraction << std::endl;
         }
     
-        if (this->CoastPhaseForwardIntegrationStepLength != 86400 || writeAll)
+        if (this->CoastPhaseForwardIntegrationStepLength != 86400 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#coast phase forward integration step length (seconds)" << std::endl;
             optionsFileStream << "CoastPhaseForwardIntegrationStepLength " << this->CoastPhaseForwardIntegrationStepLength << std::endl;
         }
     
-        if (this->CoastPhaseBackwardIntegrationStepLength != 86400 || writeAll)
+        if (this->CoastPhaseBackwardIntegrationStepLength != 86400 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#coast phase backward integration step length (seconds)" << std::endl;
             optionsFileStream << "CoastPhaseBackwardIntegrationStepLength " << this->CoastPhaseBackwardIntegrationStepLength << std::endl;
         }
     
-        if (this->journey_end_TCM != 0 || writeAll)
+        if (this->journey_end_TCM != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Journey-end TCM magnitude (km/s)" << std::endl;
             optionsFileStream << "journey_end_TCM " << this->journey_end_TCM << std::endl;
         }
     
-        if (this->enable_periapse_burns != 0 || writeAll)
+        if (this->enable_periapse_burns != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Enable periapse burns in ephemeris pegged flybys?" << std::endl;
             optionsFileStream << "enable_periapse_burns " << this->enable_periapse_burns << std::endl;
         }
     
-        if (this->bounded_departure_date != 0 || writeAll)
+        if (this->bounded_departure_date != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Bound the departure epoch?" << std::endl;
             optionsFileStream << "bounded_departure_date " << this->bounded_departure_date << std::endl;
         }
     
-        if (this->timebounded != 0 || writeAll)
+        if (this->timebounded != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#does the journey have time bounds?\n#0: unbounded\n#1: bounded flight time\n#2: bounded arrival date\n#3: bounded aggregate flight time" << std::endl;
             optionsFileStream << "timebounded " << this->timebounded << std::endl;
         }
     
-        if (this->departure_date_bounds != std::vector<double>({ 0.0 * 86400.0, 0.0 * 86400.0}) || writeAll)
+        if (this->departure_date_bounds != std::vector<double>({ 0.0 * 86400.0, 0.0 * 86400.0}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Journey departure epoch bounds (MJD, two entries)" << std::endl;
             optionsFileStream << "departure_date_bounds";
@@ -1609,7 +2109,7 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->wait_time_bounds != std::vector<double>({ 0.0 * 86400.0, 1000.0 * 86400.0}) || writeAll)
+        if (this->wait_time_bounds != std::vector<double>({ 0.0 * 86400.0, 1000.0 * 86400.0}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Journey wait time bounds (days)" << std::endl;
             optionsFileStream << "wait_time_bounds";
@@ -1618,7 +2118,7 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->flight_time_bounds != std::vector<double>({ 0.0 * 86400.0, 0.0 * 86400.0}) || writeAll)
+        if (this->flight_time_bounds != std::vector<double>({ 0.0 * 86400.0, 0.0 * 86400.0}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Journey flight time bounds (days)" << std::endl;
             optionsFileStream << "flight_time_bounds";
@@ -1627,7 +2127,7 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->arrival_date_bounds != std::vector<double>({ 51544.5 * 86400.0, 60000.0 * 86400.0}) || writeAll)
+        if (this->arrival_date_bounds != std::vector<double>({ 51544.5 * 86400.0, 60000.0 * 86400.0}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Journey arrival date bounds (MJD, two entries)" << std::endl;
             optionsFileStream << "arrival_date_bounds";
@@ -1636,13 +2136,13 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->departure_type != 0 || writeAll)
+        if (this->departure_type != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#journey departure type\n#0: launch or direct insertion\n#1: depart from parking orbit (you can use this one in place of a launch vehicle model, and the departure burn will be done with the EDS motor)\n#2: free direct departure, i.e. do not burn to get the departure v_infinity (used for when operations about a small body are not modeled but the departure velocity is known)\n#3: flyby (only valid for successive journeys)\n#4: flyby with fixed v-infinity-out (only valid for successive journeys)\n#5: spiral-out from circular orbit (low-thrust missions only)\n#6: zero-turn flyby (for small bodies)" << std::endl;
             optionsFileStream << "departure_type " << this->departure_type << std::endl;
         }
     
-        if (this->initial_impulse_bounds != std::vector<double>({ 0.0, 6.97}) || writeAll)
+        if (this->initial_impulse_bounds != std::vector<double>({ 0.0, 6.97}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#what are the bounds on the initial impulse for each journey in km/s\\\n#you can set a very high upper bound if you are using a launchy vehicle model - the optimizer will find the correct value" << std::endl;
             optionsFileStream << "initial_impulse_bounds";
@@ -1651,13 +2151,13 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->force_free_point_direct_insertion_along_velocity_vector != 0 || writeAll)
+        if (this->force_free_point_direct_insertion_along_velocity_vector != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Force free point direct insertion burn to be along the inertial velocity vector?" << std::endl;
             optionsFileStream << "force_free_point_direct_insertion_along_velocity_vector " << this->force_free_point_direct_insertion_along_velocity_vector << std::endl;
         }
     
-        if (this->departure_elements_vary_flag != std::vector<bool>({ 0, 0, 0, 0, 0, 0}) || writeAll)
+        if (this->departure_elements_vary_flag != std::vector<bool>({ 0, 0, 0, 0, 0, 0}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#one entry for each element" << std::endl;
             optionsFileStream << "departure_elements_vary_flag";
@@ -1666,7 +2166,7 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->departure_elements != std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}) || writeAll)
+        if (this->departure_elements != std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#cartesian state or SMA, ECC, INC, RAAN, AOP, TA" << std::endl;
             optionsFileStream << "departure_elements";
@@ -1675,7 +2175,7 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->departure_elements_bounds != std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}) || writeAll)
+        if (this->departure_elements_bounds != std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#bounds on elements or state components, two entries for each element" << std::endl;
             optionsFileStream << "departure_elements_bounds";
@@ -1684,79 +2184,79 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->departure_elements_reference_epoch != 51544.5 * 86400.0 || writeAll)
+        if (this->departure_elements_reference_epoch != 51544.5 * 86400.0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Reference epoch (MJD) for journey departure elements" << std::endl;
             optionsFileStream << "departure_elements_reference_epoch " << this->departure_elements_reference_epoch / 86400.0 << std::endl;
         }
     
-        if (this->departure_elements_state_representation != 0 || writeAll)
+        if (this->departure_elements_state_representation != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
-            optionsFileStream << "#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)" << std::endl;
+            optionsFileStream << "#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)" << std::endl;
             optionsFileStream << "departure_elements_state_representation " << this->departure_elements_state_representation << std::endl;
         }
     
-        if (this->departure_elements_frame != 0 || writeAll)
+        if (this->departure_elements_frame != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
-            optionsFileStream << "#reference frame for journey departure elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)" << std::endl;
+            optionsFileStream << "#reference frame for journey departure elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)" << std::endl;
             optionsFileStream << "departure_elements_frame " << this->departure_elements_frame << std::endl;
         }
     
-        if (this->AllowJourneyFreePointDepartureToPropagate != 0 || writeAll)
+        if (this->AllowJourneyFreePointDepartureToPropagate != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Allow journey departure free point boundary to propagate (otherwise it is a fixed waypoint)" << std::endl;
             optionsFileStream << "AllowJourneyFreePointDepartureToPropagate " << this->AllowJourneyFreePointDepartureToPropagate << std::endl;
         }
     
-        if (this->maximum_starting_mass_increment != 0 || writeAll)
+        if (this->maximum_starting_mass_increment != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#upper bound on starting mass increment (negative number indicates mass drop) [kg]" << std::endl;
             optionsFileStream << "maximum_starting_mass_increment " << this->maximum_starting_mass_increment << std::endl;
         }
     
-        if (this->minimum_starting_mass_increment != 0 || writeAll)
+        if (this->minimum_starting_mass_increment != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#lower bound on starting mass increment (negative number indicates mass drop) [kg]" << std::endl;
             optionsFileStream << "minimum_starting_mass_increment " << this->minimum_starting_mass_increment << std::endl;
         }
     
-        if (this->fixed_starting_mass_increment != 0 || writeAll)
+        if (this->fixed_starting_mass_increment != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#starting mass increment (negative number indicates mass drop) [kg]" << std::endl;
             optionsFileStream << "fixed_starting_mass_increment " << this->fixed_starting_mass_increment << std::endl;
         }
     
-        if (this->fixed_ending_mass_increment != 0 || writeAll)
+        if (this->fixed_ending_mass_increment != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#ending mass increment (negative number indicates mass drop) [kg]" << std::endl;
             optionsFileStream << "fixed_ending_mass_increment " << this->fixed_ending_mass_increment << std::endl;
         }
     
-        if (this->variable_mass_increment != 0 || writeAll)
+        if (this->variable_mass_increment != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Vary initial mass increment?" << std::endl;
             optionsFileStream << "variable_mass_increment " << this->variable_mass_increment << std::endl;
         }
     
-        if (this->constrain_initial_mass != 0 || writeAll)
+        if (this->constrain_initial_mass != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Constrain initial mass?" << std::endl;
             optionsFileStream << "constrain_initial_mass " << this->constrain_initial_mass << std::endl;
         }
     
-        if (this->maximum_initial_mass != 0 || writeAll)
+        if (this->maximum_initial_mass != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#If initial mass for this journey is constrained, enter the constraint value here." << std::endl;
             optionsFileStream << "maximum_initial_mass " << this->maximum_initial_mass << std::endl;
         }
     
-        if (this->departure_class != 0 || writeAll)
+        if (this->departure_class != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#journey departure boundary class\n#0: Ephemeris-pegged (default EMTG)\n#1: Free point\n#2: Ephemeris-referenced\n#3: Periapse" << std::endl;
             optionsFileStream << "departure_class " << this->departure_class << std::endl;
         }
     
-        if (this->departure_ellipsoid_axes != std::vector<double>({ 1e-08, 1e-08, 1e-08}) || writeAll)
+        if (this->departure_ellipsoid_axes != std::vector<double>({ 1e-08, 1e-08, 1e-08}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#journey departure ellipsoid axes (3)" << std::endl;
             optionsFileStream << "departure_ellipsoid_axes";
@@ -1765,13 +2265,13 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->arrival_type != 3 || writeAll)
+        if (this->arrival_type != 3 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#journey arrival type\n#0: insertion into parking orbit (use chemical Isp)\n#1: rendezvous (use chemical Isp)\n#2: intercept with bounded V_infinity\n#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)\n#4: match final v-infinity vector\n#5: match final v-infinity vector (low-thrust)\n#6: capture spiral\n#7: momentum transfer (kinetic impactor)" << std::endl;
             optionsFileStream << "arrival_type " << this->arrival_type << std::endl;
         }
     
-        if (this->arrival_elements_vary_flag != std::vector<bool>({ 0, 0, 0, 0, 0, 0}) || writeAll)
+        if (this->arrival_elements_vary_flag != std::vector<bool>({ 0, 0, 0, 0, 0, 0}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#one entry for each element" << std::endl;
             optionsFileStream << "arrival_elements_vary_flag";
@@ -1780,7 +2280,7 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->arrival_elements != std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}) || writeAll)
+        if (this->arrival_elements != std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#cartesian state or SMA, ECC, INC, RAAN, AOP, TA" << std::endl;
             optionsFileStream << "arrival_elements";
@@ -1789,7 +2289,7 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->arrival_elements_bounds != std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}) || writeAll)
+        if (this->arrival_elements_bounds != std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#bounds on elements or state components, two entries for each element" << std::endl;
             optionsFileStream << "arrival_elements_bounds";
@@ -1798,31 +2298,31 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->arrival_elements_reference_epoch != 51544.5 * 86400.0 || writeAll)
+        if (this->arrival_elements_reference_epoch != 51544.5 * 86400.0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Reference epoch (MJD) for journey arrival elements" << std::endl;
             optionsFileStream << "arrival_elements_reference_epoch " << this->arrival_elements_reference_epoch / 86400.0 << std::endl;
         }
     
-        if (this->arrival_elements_state_representation != 0 || writeAll)
+        if (this->arrival_elements_state_representation != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
-            optionsFileStream << "#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)" << std::endl;
+            optionsFileStream << "#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)" << std::endl;
             optionsFileStream << "arrival_elements_state_representation " << this->arrival_elements_state_representation << std::endl;
         }
     
-        if (this->arrival_elements_frame != 0 || writeAll)
+        if (this->arrival_elements_frame != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
-            optionsFileStream << "#reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)" << std::endl;
+            optionsFileStream << "#reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)" << std::endl;
             optionsFileStream << "arrival_elements_frame " << this->arrival_elements_frame << std::endl;
         }
     
-        if (this->AllowJourneyFreePointArrivalToPropagate != 0 || writeAll)
+        if (this->AllowJourneyFreePointArrivalToPropagate != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Allow journey arrival free point boundary to propagate (otherwise it is a fixed waypoint)" << std::endl;
             optionsFileStream << "AllowJourneyFreePointArrivalToPropagate " << this->AllowJourneyFreePointArrivalToPropagate << std::endl;
         }
     
-        if (this->final_velocity != std::vector<double>({ 0.0, 20.0, 0.0}) || writeAll)
+        if (this->final_velocity != std::vector<double>({ 0.0, 20.0, 0.0}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Bounds on this journey's final velocity (in km/s)" << std::endl;
             optionsFileStream << "final_velocity";
@@ -1831,25 +2331,25 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->forced_terminal_coast != 0 * 86400.0 || writeAll)
+        if (this->forced_terminal_coast != 0 * 86400.0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Journey forced terminal coast (in days)" << std::endl;
             optionsFileStream << "forced_terminal_coast " << this->forced_terminal_coast / 86400.0 << std::endl;
         }
     
-        if (this->forced_initial_coast != 0 * 86400.0 || writeAll)
+        if (this->forced_initial_coast != 0 * 86400.0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Journey forced initial coast (in days)" << std::endl;
             optionsFileStream << "forced_initial_coast " << this->forced_initial_coast / 86400.0 << std::endl;
         }
     
-        if (this->arrival_class != 0 || writeAll)
+        if (this->arrival_class != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#journey arrival boundary class\n#0: Ephemeris-pegged (default EMTG)\n#1: Free point\n#2: Ephemeris-referenced\n#3: Periapse" << std::endl;
             optionsFileStream << "arrival_class " << this->arrival_class << std::endl;
         }
     
-        if (this->arrival_ellipsoid_axes != std::vector<double>({ 1e-08, 1e-08, 1e-08}) || writeAll)
+        if (this->arrival_ellipsoid_axes != std::vector<double>({ 1e-08, 1e-08, 1e-08}) || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#journey arrival ellipsoid axes (3)" << std::endl;
             optionsFileStream << "arrival_ellipsoid_axes";
@@ -1858,55 +2358,55 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->zero_turn_flyby_distance != 1000 || writeAll)
+        if (this->zero_turn_flyby_distance != 1000 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#encounter distance (from center of object) for a zero-turn flyby (km)" << std::endl;
             optionsFileStream << "zero_turn_flyby_distance " << this->zero_turn_flyby_distance << std::endl;
         }
     
-        if (this->terminal_intercept_flyby_distance != 1000 || writeAll)
+        if (this->terminal_intercept_flyby_distance != 1000 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#encounter distance (from center of object) for an ephemeris-pegged intercept (km)" << std::endl;
             optionsFileStream << "terminal_intercept_flyby_distance " << this->terminal_intercept_flyby_distance << std::endl;
         }
     
-        if (this->escape_spiral_starting_radius != 6678 || writeAll)
+        if (this->escape_spiral_starting_radius != 6678 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Starting orbital radius for an Edelbaum escape spiral (km)" << std::endl;
             optionsFileStream << "escape_spiral_starting_radius " << this->escape_spiral_starting_radius << std::endl;
         }
     
-        if (this->escape_spiral_final_radius != 6678 || writeAll)
+        if (this->escape_spiral_final_radius != 6678 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Final orbit radius for an Edelbaum capture spiral (km)" << std::endl;
             optionsFileStream << "escape_spiral_final_radius " << this->escape_spiral_final_radius << std::endl;
         }
     
-        if (this->capture_spiral_final_radius != 6678 || writeAll)
+        if (this->capture_spiral_final_radius != 6678 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Final orbit radius for an Edelbaum capture spiral (km)" << std::endl;
             optionsFileStream << "capture_spiral_final_radius " << this->capture_spiral_final_radius << std::endl;
         }
     
-        if (this->capture_spiral_starting_radius != 6678 || writeAll)
+        if (this->capture_spiral_starting_radius != 6678 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Starting orbital radius for an Edelbaum capture spiral (km)" << std::endl;
             optionsFileStream << "capture_spiral_starting_radius " << this->capture_spiral_starting_radius << std::endl;
         }
     
-        if (this->FreePointArrival_print_target_spec != 1 || writeAll)
+        if (this->FreePointArrival_print_target_spec != 1 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Print a target spec for free point arrival at the end of this journey?" << std::endl;
             optionsFileStream << "FreePointArrival_print_target_spec " << this->FreePointArrival_print_target_spec << std::endl;
         }
     
-        if (this->journey_end_deltav != 0 || writeAll)
+        if (this->journey_end_deltav != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Journey-end delta-v (km/s)" << std::endl;
             optionsFileStream << "journey_end_deltav " << this->journey_end_deltav << std::endl;
         }
     
-        if (this->journey_end_propulsion_system != 0 || writeAll)
+        if (this->journey_end_propulsion_system != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Propulsion system for journey-end maneuver\n#0: Monoprop chemical\n#1: Biprop chemical\n#2: Electric" << std::endl;
             optionsFileStream << "journey_end_propulsion_system " << this->journey_end_propulsion_system << std::endl;
@@ -1918,76 +2418,301 @@ namespace EMTG
             optionsFileStream << " " << entry;
         optionsFileStream << std::endl;
         
-        if (this->stage_after_departure != 0 || writeAll)
+        if (this->stage_after_departure != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Stage after departure?" << std::endl;
             optionsFileStream << "stage_after_departure " << this->stage_after_departure << std::endl;
         }
     
-        if (this->stage_before_arrival != 0 || writeAll)
+        if (this->stage_before_arrival != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Stage before arrival?" << std::endl;
             optionsFileStream << "stage_before_arrival " << this->stage_before_arrival << std::endl;
         }
     
-        if (this->stage_after_arrival != 0 || writeAll)
+        if (this->stage_after_arrival != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Stage after arrival?" << std::endl;
             optionsFileStream << "stage_after_arrival " << this->stage_after_arrival << std::endl;
         }
     
-        if (this->freeze_decision_variables != 0 || writeAll)
+        if (this->freeze_decision_variables != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Freeze this journey's decision variables?" << std::endl;
             optionsFileStream << "freeze_decision_variables " << this->freeze_decision_variables << std::endl;
         }
     
-        if (this->ephemeris_pegged_orbit_insertion_SMA != 6678 || writeAll)
+        if (this->ephemeris_pegged_orbit_insertion_SMA != 6678 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#SMA (in km) for ephemeris pegged orbit insertion" << std::endl;
             optionsFileStream << "ephemeris_pegged_orbit_insertion_SMA " << this->ephemeris_pegged_orbit_insertion_SMA << std::endl;
         }
     
-        if (this->ephemeris_pegged_orbit_insertion_ECC != 0 || writeAll)
+        if (this->ephemeris_pegged_orbit_insertion_ECC != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#ECC for ephemeris pegged orbit insertion" << std::endl;
             optionsFileStream << "ephemeris_pegged_orbit_insertion_ECC " << this->ephemeris_pegged_orbit_insertion_ECC << std::endl;
         }
     
-        if (this->impact_momentum_enhancement_factor != 1 || writeAll)
+        if (this->impact_momentum_enhancement_factor != 1 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Impact momentum enhancement factor for planetary defense (also called beta)" << std::endl;
             optionsFileStream << "impact_momentum_enhancement_factor " << this->impact_momentum_enhancement_factor << std::endl;
         }
     
-        if (this->perturb_drag != 0 || writeAll)
+        if (this->perturb_drag != 0 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Aerodynamic drag?" << std::endl;
             optionsFileStream << "perturb_drag " << this->perturb_drag << std::endl;
         }
     
-        if (this->spacecraft_drag_area != 70 || writeAll)
+        if (this->spacecraft_drag_area != 70 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#spacecraft area (for aerodynamic drag, in m^2)" << std::endl;
             optionsFileStream << "spacecraft_drag_area " << this->spacecraft_drag_area << std::endl;
         }
     
-        if (this->coefficient_of_drag != 2.2 || writeAll)
+        if (this->coefficient_of_drag != 2.2 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#coefficient of drag, i.e. Cd (unitless)" << std::endl;
             optionsFileStream << "coefficient_of_drag " << this->coefficient_of_drag << std::endl;
         }
     
-        if (this->AtmosphericDensityModelKey != "Exponential" || writeAll)
+        if (this->AtmosphericDensityModelKey != "Exponential" || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Atmospheric density model" << std::endl;
             optionsFileStream << "AtmosphericDensityModelKey " << this->AtmosphericDensityModelKey << std::endl;
         }
     
-        if (this->AtmosphericDensityModelDataFile != "c:/Utilities/DoesNotExist.emtg_densityopt" || writeAll)
+        if (this->AtmosphericDensityModelDataFile != "DoesNotExist.emtg_densityopt" || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#File defining atmospheric density model" << std::endl;
             optionsFileStream << "AtmosphericDensityModelDataFile " << this->AtmosphericDensityModelDataFile << std::endl;
+        }
+    
+        if (this->probe_separation_impulse != 1 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#Probe separation impulse (Ns)" << std::endl;
+            optionsFileStream << "probe_separation_impulse " << this->probe_separation_impulse << std::endl;
+        }
+    
+        if (this->probe_mass != 100.0 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#Probe mass (kg)" << std::endl;
+            optionsFileStream << "probe_mass " << this->probe_mass << std::endl;
+        }
+    
+        if (this->Probe_AEI_elements_vary_flag != std::vector<bool>({ 0, 0, 0, 0, 0, 0}) || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#one entry for each element" << std::endl;
+            optionsFileStream << "Probe_AEI_elements_vary_flag";
+            for (bool entry : this->Probe_AEI_elements_vary_flag)
+                optionsFileStream << " " << entry;
+            optionsFileStream << std::endl;
+        }
+        
+        if (this->Probe_AEI_elements != std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}) || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#cartesian state or SMA, ECC, INC, RAAN, AOP, TA" << std::endl;
+            optionsFileStream << "Probe_AEI_elements";
+            for (double entry : this->Probe_AEI_elements)
+                optionsFileStream << " " << entry;
+            optionsFileStream << std::endl;
+        }
+        
+        if (this->Probe_AEI_elements_bounds != std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}) || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#bounds on elements or state components, two entries for each element" << std::endl;
+            optionsFileStream << "Probe_AEI_elements_bounds";
+            for (double entry : this->Probe_AEI_elements_bounds)
+                optionsFileStream << " " << entry;
+            optionsFileStream << std::endl;
+        }
+        
+        if (this->Probe_AEI_elements_reference_epoch != 51544.5 * 86400.0 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#Reference epoch (MJD) for journey probe arrival elements" << std::endl;
+            optionsFileStream << "Probe_AEI_elements_reference_epoch " << this->Probe_AEI_elements_reference_epoch / 86400.0 << std::endl;
+        }
+    
+        if (this->Probe_AEI_elements_state_representation != 0 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#probe arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)" << std::endl;
+            optionsFileStream << "Probe_AEI_elements_state_representation " << this->Probe_AEI_elements_state_representation << std::endl;
+        }
+    
+        if (this->Probe_AEI_elements_frame != 0 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)" << std::endl;
+            optionsFileStream << "Probe_AEI_elements_frame " << this->Probe_AEI_elements_frame << std::endl;
+        }
+    
+        if (this->Probe_End_elements_vary_flag != std::vector<bool>({ 0, 0, 0, 0, 0, 0}) || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#one entry for each element" << std::endl;
+            optionsFileStream << "Probe_End_elements_vary_flag";
+            for (bool entry : this->Probe_End_elements_vary_flag)
+                optionsFileStream << " " << entry;
+            optionsFileStream << std::endl;
+        }
+        
+        if (this->Probe_End_elements != std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}) || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#cartesian state or SMA, ECC, INC, RAAN, AOP, TA" << std::endl;
+            optionsFileStream << "Probe_End_elements";
+            for (double entry : this->Probe_End_elements)
+                optionsFileStream << " " << entry;
+            optionsFileStream << std::endl;
+        }
+        
+        if (this->Probe_End_elements_bounds != std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}) || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#bounds on elements or state components, two entries for each element" << std::endl;
+            optionsFileStream << "Probe_End_elements_bounds";
+            for (double entry : this->Probe_End_elements_bounds)
+                optionsFileStream << " " << entry;
+            optionsFileStream << std::endl;
+        }
+        
+        if (this->Probe_End_elements_reference_epoch != 51544.5 * 86400.0 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#Reference epoch (MJD) for journey probe arrival elements" << std::endl;
+            optionsFileStream << "Probe_End_elements_reference_epoch " << this->Probe_End_elements_reference_epoch / 86400.0 << std::endl;
+        }
+    
+        if (this->Probe_End_elements_state_representation != 0 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#probe arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)" << std::endl;
+            optionsFileStream << "Probe_End_elements_state_representation " << this->Probe_End_elements_state_representation << std::endl;
+        }
+    
+        if (this->Probe_End_elements_frame != 0 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)" << std::endl;
+            optionsFileStream << "Probe_End_elements_frame " << this->Probe_End_elements_frame << std::endl;
+        }
+    
+        if (this->ModelProbeSecondPhase != 0 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "# or just final approach?" << std::endl;
+            optionsFileStream << "ModelProbeSecondPhase " << this->ModelProbeSecondPhase << std::endl;
+        }
+    
+        if (this->AllowJourneyProbeAEIToPropagate != 0 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#Allow probe AEI free point boundary to propagate (otherwise it is a fixed waypoint)" << std::endl;
+            optionsFileStream << "AllowJourneyProbeAEIToPropagate " << this->AllowJourneyProbeAEIToPropagate << std::endl;
+        }
+    
+        if (this->AllowJourneyProbeEndToPropagate != 0 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#Allow probe end free point boundary to propagate (otherwise it is a fixed waypoint)" << std::endl;
+            optionsFileStream << "AllowJourneyProbeEndToPropagate " << this->AllowJourneyProbeEndToPropagate << std::endl;
+        }
+    
+        if (this->probe_communication_distance_bounds != std::vector<double>({ 2000.0, 10000.0}) || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#Probe-spacecraft communication distance constraint (km)" << std::endl;
+            optionsFileStream << "probe_communication_distance_bounds";
+            for (double entry : this->probe_communication_distance_bounds)
+                optionsFileStream << " " << entry;
+            optionsFileStream << std::endl;
+        }
+        
+        if (this->perturb_drag_probe_separation_to_AEI != 0 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#Aerodynamic drag on probe from separation to AEI?" << std::endl;
+            optionsFileStream << "perturb_drag_probe_separation_to_AEI " << this->perturb_drag_probe_separation_to_AEI << std::endl;
+        }
+    
+        if (this->perturb_drag_probe_AEI_to_end != 0 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#Aerodynamic drag on probe from AEI to end of probe mission?" << std::endl;
+            optionsFileStream << "perturb_drag_probe_AEI_to_end " << this->perturb_drag_probe_AEI_to_end << std::endl;
+        }
+    
+        if (this->probe_drag_area_probe_separation_to_AEI != 70 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#probe area prior to AEI (for aerodynamic drag, in m^2)" << std::endl;
+            optionsFileStream << "probe_drag_area_probe_separation_to_AEI " << this->probe_drag_area_probe_separation_to_AEI << std::endl;
+        }
+    
+        if (this->probe_drag_area_probe_AEI_to_end != 70 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#probe area after AEI (for aerodynamic drag, in m^2)" << std::endl;
+            optionsFileStream << "probe_drag_area_probe_AEI_to_end " << this->probe_drag_area_probe_AEI_to_end << std::endl;
+        }
+    
+        if (this->probe_coefficient_of_drag_probe_separation_to_AEI != 2.2 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#probe coefficient of drag prior to AEI, i.e. Cd (unitless)" << std::endl;
+            optionsFileStream << "probe_coefficient_of_drag_probe_separation_to_AEI " << this->probe_coefficient_of_drag_probe_separation_to_AEI << std::endl;
+        }
+    
+        if (this->probe_coefficient_of_drag_probe_AEI_to_end != 2.2 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#probe coefficient of drag after AEI, i.e. Cd (unitless)" << std::endl;
+            optionsFileStream << "probe_coefficient_of_drag_probe_AEI_to_end " << this->probe_coefficient_of_drag_probe_AEI_to_end << std::endl;
+        }
+    
+        if (this->probe_AEI_velocity != std::vector<double>({ 0.0, 20.0, 0.0}) || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#Bounds on the probe's final velocity at AEI (in km/s)" << std::endl;
+            optionsFileStream << "probe_AEI_velocity";
+            for (double entry : this->probe_AEI_velocity)
+                optionsFileStream << " " << entry;
+            optionsFileStream << std::endl;
+        }
+        
+        if (this->probe_end_velocity != std::vector<double>({ 0.0, 20.0, 0.0}) || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#Bounds on the probe's final velocity at end of mission (in km/s)" << std::endl;
+            optionsFileStream << "probe_end_velocity";
+            for (double entry : this->probe_end_velocity)
+                optionsFileStream << " " << entry;
+            optionsFileStream << std::endl;
+        }
+        
+        if (this->ProbeSeparationToAEI_MatchPointFraction != 0.5 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#probe separation to AEI match point fraction" << std::endl;
+            optionsFileStream << "ProbeSeparationToAEI_MatchPointFraction " << this->ProbeSeparationToAEI_MatchPointFraction << std::endl;
+        }
+    
+        if (this->ProbeSeparationToAEI_ForwardIntegrationStepLength != 86400 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#probe separation to AEI forward integration step length (seconds)" << std::endl;
+            optionsFileStream << "ProbeSeparationToAEI_ForwardIntegrationStepLength " << this->ProbeSeparationToAEI_ForwardIntegrationStepLength << std::endl;
+        }
+    
+        if (this->ProbeSeparationToAEI_BackwardIntegrationStepLength != 86400 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#probe separation to AEI backward integration step length (seconds)" << std::endl;
+            optionsFileStream << "ProbeSeparationToAEI_BackwardIntegrationStepLength " << this->ProbeSeparationToAEI_BackwardIntegrationStepLength << std::endl;
+        }
+    
+        if (this->ProbeAEI_to_end_MatchPointFraction != 0.5 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#probe AEI to end match point fraction" << std::endl;
+            optionsFileStream << "ProbeAEI_to_end_MatchPointFraction " << this->ProbeAEI_to_end_MatchPointFraction << std::endl;
+        }
+    
+        if (this->ProbeAEI_to_end_ForwardIntegrationStepLength != 86400 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#probe AEI to end forward integration step length (seconds)" << std::endl;
+            optionsFileStream << "ProbeAEI_to_end_ForwardIntegrationStepLength " << this->ProbeAEI_to_end_ForwardIntegrationStepLength << std::endl;
+        }
+    
+        if (this->ProbeAEI_to_end_BackwardIntegrationStepLength != 86400 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#probe AEI to end backward integration step length (seconds)" << std::endl;
+            optionsFileStream << "ProbeAEI_to_end_BackwardIntegrationStepLength " << this->ProbeAEI_to_end_BackwardIntegrationStepLength << std::endl;
+        }
+    
+        if (this->print_this_journey_options_no_matter_what != 0 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#Always print this journey's options to the .emtgopt file?" << std::endl;
+            optionsFileStream << "print_this_journey_options_no_matter_what " << this->print_this_journey_options_no_matter_what << std::endl;
         }
     
         optionsFileStream << std::endl;

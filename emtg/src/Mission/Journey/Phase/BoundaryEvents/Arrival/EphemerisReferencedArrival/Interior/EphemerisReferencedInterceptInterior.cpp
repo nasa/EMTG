@@ -44,7 +44,7 @@ namespace EMTG
         //******************************************calcbounds methods
 
         //calcbounds
-        void EphemerisReferencedInterceptInterior::calcbounds()
+        void EphemerisReferencedInterceptInterior::calcbounds(std::vector<size_t> timeVariables)
         {
             std::vector<double> RAbounds({ -2880.0, 2880.0 });
             std::vector<double> DECbounds({ -90.0, 90.0 });
@@ -68,9 +68,10 @@ namespace EMTG
                 RAbounds, 
                 DECbounds,
                 MassBounds, 
-                EpochBounds);
+                EpochBounds,
+                timeVariables);
 
-            this->calcbounds_event_left_side();
+            this->calcbounds_event_left_side(timeVariables);
             this->calcbounds_event_right_side();
 
             if (this->hasTCM)

@@ -44,9 +44,9 @@ namespace EMTG
         //******************************************calcbounds methods
 
         //calcbounds
-        void PeriapseFlybyIn::calcbounds()
+        void PeriapseFlybyIn::calcbounds(std::vector<size_t> timeVariables)
         {
-            this->calcbounds_event_left_side();
+            this->calcbounds_event_left_side(timeVariables);
 
             //no calcbounds_event_main because PeriapseFlybyIn is trivial
 
@@ -55,7 +55,7 @@ namespace EMTG
             this->calcbounds_specialized_constraints();
         }//end calcbounds()
 
-        void PeriapseFlybyIn::calcbounds_event_left_side()
+        void PeriapseFlybyIn::calcbounds_event_left_side(std::vector<size_t> timeVariables)
         {
             this->X_index_of_first_decision_variable_in_this_event = this->Xdescriptions->size();
 
@@ -80,10 +80,10 @@ namespace EMTG
             std::vector<double> RadiusBounds({ minRadius, maxRadius });
 
             //Step 3: v
-            std::vector<double> VelocityMagnitudeBounds({ sqrt(this->myUniverse->central_body.mu / maxRadius), 20.0 * sqrt(this->myUniverse->central_body.mu / minRadius) });
+            std::vector<double> VelocityMagnitudeBounds({ this->myJourneyOptions->final_velocity[0], this->myJourneyOptions->final_velocity[1] });
             
             //Step 4: base class
-            this->PeriapseArrival::calcbounds_event_left_side(RadiusBounds, VelocityMagnitudeBounds);
+            this->PeriapseArrival::calcbounds_event_left_side(RadiusBounds, VelocityMagnitudeBounds, timeVariables);
         }//end calcbounds_left_side()
 
         void PeriapseFlybyIn::calcbounds_event_right_side()

@@ -53,7 +53,7 @@ namespace EMTG
                 const bool& needG);
 
             //calcbounds
-            void calcbounds();
+            void calcbounds(std::vector<size_t> timeVariables);
 
             //output
             void output_maneuver_and_target_spec(std::ofstream& maneuver_spec_file, std::ofstream& target_spec_file, bool& haveManeuverNeedTarget);

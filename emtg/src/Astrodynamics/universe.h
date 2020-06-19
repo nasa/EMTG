@@ -129,7 +129,7 @@ namespace EMTG
             math::Matrix<double> COE_scale_factors;
 
 			//boost::ptr_vector<EMTG::Astrodynamics::atmosphere> TheAtmosphere;
-			atmosphere * TheAtmosphere;
+			std::shared_ptr<atmosphere> TheAtmosphere;
 
 
 

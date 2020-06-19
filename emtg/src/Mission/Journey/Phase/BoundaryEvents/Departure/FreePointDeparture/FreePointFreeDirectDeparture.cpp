@@ -45,9 +45,9 @@ namespace EMTG
         //******************************************calcbounds methods
 
         //calcbounds
-        void FreePointFreeDirectDeparture::calcbounds()
+        void FreePointFreeDirectDeparture::calcbounds(std::vector<size_t> timeVariables)
         {
-            this->calcbounds_event_left_side();
+            this->calcbounds_event_left_side(timeVariables);
 
             //no calcbounds_event_main because FreePointFreeDirectDeparture is trivial
 

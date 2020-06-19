@@ -20,6 +20,7 @@
 
 #include "BoundaryEventBase.h"
 #include "PropagatorBase.h"
+#include "StateRepresentation.h"
 
 #include "IntegrationScheme.h"
 #include "TimeDomainSpacecraftEOM.h"
@@ -59,7 +60,7 @@ namespace EMTG
             //calcbounds
 
         protected:
-            virtual void calcbounds_event_left_side(const std::vector< std::tuple<double, double> >& StateBounds);
+            virtual void calcbounds_event_left_side(const std::vector< std::tuple<double, double> >& StateBounds, std::vector<size_t> timeVariables);
             virtual void calcbounds_event_right_side() = 0;
 
             virtual void process_event_left_side(const std::vector<doubleType>& X,
@@ -94,7 +95,9 @@ namespace EMTG
             size_t total_number_of_states_to_integrate;
 
             //states
-            StateRepresentation myStateRepresentation;
+            StateRepresentation myStateRepresentationEnum;
+            Astrodynamics::StateRepresentationBase* myStateRepresentation;
+            std::vector<bool> encodedStateIsAngle;
             math::Matrix<doubleType> StateBeforeEventEncoded;
             std::vector<size_t> Xindex_encoded_state;
             ReferenceFrame myEncodedReferenceFrame;
@@ -114,7 +117,7 @@ namespace EMTG
                                                                                    //  the (i=0,5, j=7) column is dense, and otherwise zeros 
             math::Matrix<doubleType> dStateBeforeEvent_dStateBeforeEventICRF;//upper 6x6 is rotation matrix, (6,6) and (7,7) are 1,
                                                                                    //(i=0,5, j=7) column is derivatives of rotated state wrt epoch
-
+                                                                                               
             //state rotation matrix 8 x 8
             math::Matrix<doubleType> R_from_local_to_ICRF;
             math::Matrix<doubleType> dR_from_local_to_ICRF_dt;

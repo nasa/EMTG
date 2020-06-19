@@ -16,6 +16,7 @@ set(OBJECTIVE_FUNCTIONS_HEADERS  ${OBJECTIVE_FUNCTIONS_HEADERS}
                                  ${CMAKE_CURRENT_SOURCE_DIR}/MaximizeLog10DryMassObjective.h
                                  ${CMAKE_CURRENT_SOURCE_DIR}/MaximizeLogeDryMassObjective.h
                                  ${CMAKE_CURRENT_SOURCE_DIR}/MinimizeChemicalFuelObjective.h
+                                 ${CMAKE_CURRENT_SOURCE_DIR}/MinimizeChemicalOxidizerObjective.h
                                  ${CMAKE_CURRENT_SOURCE_DIR}/MinimizeElectricPropellantObjective.h
                                  ${CMAKE_CURRENT_SOURCE_DIR}/MinimizeTotalPropellantObjective.h
                                  ${CMAKE_CURRENT_SOURCE_DIR}/MinimizeInitialImpulseObjective.h
@@ -39,6 +40,7 @@ set(OBJECTIVE_FUNCTIONS_SOURCE  ${OBJECTIVE_FUNCTIONS_SOURCE}
                                 ${CMAKE_CURRENT_SOURCE_DIR}/MaximizeLog10DryMassObjective.cpp
                                 ${CMAKE_CURRENT_SOURCE_DIR}/MaximizeLogeDryMassObjective.cpp
                                 ${CMAKE_CURRENT_SOURCE_DIR}/MinimizeChemicalFuelObjective.cpp
+                                ${CMAKE_CURRENT_SOURCE_DIR}/MinimizeChemicalOxidizerObjective.cpp
                                 ${CMAKE_CURRENT_SOURCE_DIR}/MinimizeElectricPropellantObjective.cpp
                                 ${CMAKE_CURRENT_SOURCE_DIR}/MinimizeTotalPropellantObjective.cpp
                                 ${CMAKE_CURRENT_SOURCE_DIR}/MinimizeInitialImpulseObjective.cpp

@@ -38,7 +38,7 @@ namespace EMTG
 			//constructor
 			AerodynamicDragTerm(SpacecraftAccelerationModel * acceleration_model_in);
 
-			~AerodynamicDragTerm();
+			virtual ~AerodynamicDragTerm();
 
 			//methods
 			virtual void computeAccelerationTerm();

@@ -161,7 +161,7 @@ void testRotation(EMTG::ReferenceFrame InputFrame,
                   EMTG::math::Matrix<doubleType> referenceVector)
 {
     //vector of frame names
-    std::vector<std::string> ReferenceFrameNames({ "ICRF", "J2000_BCI", "J2000_BCF", "TrueOfDate_BCI", "TrueOfDate_BCF", "PrincipleAxes", "Topocentric", "Polar" });
+    std::vector<std::string> ReferenceFrameNames({ "ICRF", "J2000_BCI", "J2000_BCF", "TrueOfDate_BCI", "TrueOfDate_BCF", "PrincipleAxes", "Topocentric", "Polar", "SAM", "ObjectRefereneced" });
 
     //vector of state names
     std::vector<std::string> statenames({ "x", "y", "z", "vx", "vy","vz","t" });

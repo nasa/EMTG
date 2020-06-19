@@ -88,7 +88,7 @@ namespace EMTG
             }
             else
             {
-                throw std::invalid_argument("PowerSystem::invalid Spacecraft_Power_Supply_Type " + std::to_string(this->MyPowerSystemOptions.getPowerSupplyType()) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                throw std::invalid_argument("PowerSystem::invalid Spacecraft_Power_Supply_Type " + SpacecraftPowerSupplyCurveTypeStrings[this->MyPowerSystemOptions.getPowerSupplyType()] + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
             }
 
             //time component
@@ -129,7 +129,7 @@ namespace EMTG
             }
             else
             {
-                throw std::invalid_argument("PowerSystem::invalid Spacecraft_Bus_Power_Type " + std::to_string(this->MyPowerSystemOptions.getBusPowerType()) + ".Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                throw std::invalid_argument("PowerSystem::invalid Spacecraft_Bus_Power_Type " + SpacecraftBusPowerTypeStrings[this->MyPowerSystemOptions.getBusPowerType()] + ".Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
             }
 
             //apply power margin

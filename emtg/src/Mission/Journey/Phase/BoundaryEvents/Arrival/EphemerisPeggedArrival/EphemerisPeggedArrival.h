@@ -52,14 +52,14 @@ namespace EMTG
                 missionoptions* myOptions);
 
             //destructor
-            ~EphemerisPeggedArrival() {};
+            virtual ~EphemerisPeggedArrival() {};
 
             //output
             virtual void output_maneuver_and_target_spec(std::ofstream& maneuver_spec_file, std::ofstream& target_spec_file, bool& haveManeuverNeedTarget);
 
         protected:
             
-            virtual void calcbounds_event_left_side();
+            virtual void calcbounds_event_left_side(std::vector<size_t> timeVariables);
 
             virtual void calcbounds_event_right_side();
 

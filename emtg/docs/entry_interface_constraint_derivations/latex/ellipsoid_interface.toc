@@ -1,0 +1,44 @@
+\contentsline {section}{\numberline {1}Reference Frames}{3}{section.1}
+\contentsline {subsection}{\numberline {1.1}Body-centered, Body-fixed Frame}{3}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Body-centered, Principal-axes Frame}{4}{subsection.1.2}
+\contentsline {subsection}{\numberline {1.3}Body-centered Inertial Frame}{4}{subsection.1.3}
+\contentsline {subsubsection}{\numberline {1.3.1}Derivatives}{4}{subsubsection.1.3.1}
+\contentsline {subsection}{\numberline {1.4}Topocentric Frame}{5}{subsection.1.4}
+\contentsline {subsection}{\numberline {1.5}Polar Frame}{5}{subsection.1.5}
+\contentsline {section}{\numberline {2}Ellipsoid}{6}{section.2}
+\contentsline {subsection}{\numberline {2.1}Derivatives}{7}{subsection.2.1}
+\contentsline {section}{\numberline {3}Bodycentric Latitude}{8}{section.3}
+\contentsline {subsection}{\numberline {3.1}Derivatives}{8}{subsection.3.1}
+\contentsline {section}{\numberline {4}Bodydetic Latitude}{9}{section.4}
+\contentsline {subsection}{\numberline {4.1}Derivatives}{9}{subsection.4.1}
+\contentsline {section}{\numberline {5}Bodycentric Longitude}{10}{section.5}
+\contentsline {subsection}{\numberline {5.1}Derivatives}{10}{subsection.5.1}
+\contentsline {section}{\numberline {6}Bodydetic Longitude}{10}{section.6}
+\contentsline {subsection}{\numberline {6.1}Derivatives}{11}{subsection.6.1}
+\contentsline {section}{\numberline {7}Velocity Magnitude}{13}{section.7}
+\contentsline {subsection}{\numberline {7.1}Derivatives}{14}{subsection.7.1}
+\contentsline {subsubsection}{\numberline {7.1.1}Velocity in BCF Frame}{14}{subsubsection.7.1.1}
+\contentsline {subsubsection}{\numberline {7.1.2}Velocity in BCI Frame}{14}{subsubsection.7.1.2}
+\contentsline {section}{\numberline {8}Heading Angle}{15}{section.8}
+\contentsline {subsection}{\numberline {8.1}Topocentric Heading Angle Using Velocity with Respect to BCF Frame}{16}{subsection.8.1}
+\contentsline {subsubsection}{\numberline {8.1.1}Derivatives}{16}{subsubsection.8.1.1}
+\contentsline {subsection}{\numberline {8.2}Topocentric Heading Angle Using Velocity with Respect to BCI Frame}{18}{subsection.8.2}
+\contentsline {subsubsection}{\numberline {8.2.1}Derivatives}{18}{subsubsection.8.2.1}
+\contentsline {subsection}{\numberline {8.3}Polar Heading Angle Using Velocity with Respect to BCF Frame}{19}{subsection.8.3}
+\contentsline {subsubsection}{\numberline {8.3.1}Derivatives}{19}{subsubsection.8.3.1}
+\contentsline {subsection}{\numberline {8.4}Polar Heading Angle Using Velocity with Respect to BCI Frame}{20}{subsection.8.4}
+\contentsline {subsubsection}{\numberline {8.4.1}Derivatives}{20}{subsubsection.8.4.1}
+\contentsline {section}{\numberline {9}Flight Path Angle}{21}{section.9}
+\contentsline {subsection}{\numberline {9.1}Velocity Relative to BCF Frame}{21}{subsection.9.1}
+\contentsline {subsubsection}{\numberline {9.1.1}Derivatives}{22}{subsubsection.9.1.1}
+\contentsline {subsection}{\numberline {9.2}Velocity Relative to BCI Frame}{22}{subsection.9.2}
+\contentsline {subsubsection}{\numberline {9.2.1}Derivatives}{23}{subsubsection.9.2.1}
+\contentsline {section}{\numberline {10}Utility Math}{23}{section.10}
+\contentsline {subsection}{\numberline {10.1}atan2}{23}{subsection.10.1}
+\contentsline {subsection}{\numberline {10.2}Magnitude of Vector}{24}{subsection.10.2}
+\contentsline {subsection}{\numberline {10.3}Skew-symmetric Cross Matrix}{24}{subsection.10.3}
+\contentsline {subsection}{\numberline {10.4}Angle Between Two Vectors}{24}{subsection.10.4}
+\contentsline {subsection}{\numberline {10.5}Unit Vector}{24}{subsection.10.5}
+\contentsline {subsection}{\numberline {10.6}Three-dimensional Tensors}{24}{subsection.10.6}
+\contentsline {subsubsection}{\numberline {10.6.1}Derivative of Matrix with Respect to Vector}{24}{subsubsection.10.6.1}
+\contentsline {subsubsection}{\numberline {10.6.2}Tensor Multiplication with Vector}{25}{subsubsection.10.6.2}

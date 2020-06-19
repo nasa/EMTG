@@ -47,7 +47,7 @@ namespace EMTG
                 missionoptions* myOptions);
 
             //destructor
-            ~MGALTphase();
+            virtual ~MGALTphase();
 
             //clone
             virtual MGALTphase* clone() const { return new MGALTphase(*this); }

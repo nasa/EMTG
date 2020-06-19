@@ -13,7 +13,9 @@ set(mission_test_executable_files   ${mission_test_executable_files}
 									${CMAKE_CURRENT_SOURCE_DIR}/MIRAGE_verification.h
                                     ${CMAKE_CURRENT_SOURCE_DIR}/MIRAGE_verification.cpp
                                     ${CMAKE_CURRENT_SOURCE_DIR}/frame_testbed.h
-                                    ${CMAKE_CURRENT_SOURCE_DIR}/frame_testbed.cpp)
+                                    ${CMAKE_CURRENT_SOURCE_DIR}/frame_testbed.cpp
+                                    ${CMAKE_CURRENT_SOURCE_DIR}/StateRepresentation_testbed.h
+                                    ${CMAKE_CURRENT_SOURCE_DIR}/StateRepresentation_testbed.cpp)
 
 source_group("Executable" FILES ${mission_test_executable_files})
 
@@ -29,7 +31,8 @@ include_directories(Astrodynamics
                     Utilities)
 
 include_directories(Astrodynamics/AccelerationModel
-                    Astrodynamics/EquationsOfMotion)
+                    Astrodynamics/EquationsOfMotion
+                    Astrodynamics/StateRepresentation)
 include_directories(Mission 
                     Mission/Journey 
                     Mission/Journey/Phase 

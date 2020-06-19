@@ -63,6 +63,11 @@ namespace EMTG {
                 }
                 return output;
             }
-        }
-    }
-}
+        }//end convert_number_to_formatted_string()
+
+        bool string_contains_substring(const std::string& myString, const std::string& mySubString)
+        {
+            return (myString.find(mySubString) < 1024);
+        }//end string_contains_substring()
+    }//end namespace string_utilities
+}//end namespace EMTG

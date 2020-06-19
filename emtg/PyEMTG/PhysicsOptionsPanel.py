@@ -1,20 +1,20 @@
-# EMTG: Evolutionary Mission Trajectory Generator
-# An open-source global optimization tool for preliminary mission design
-# Provided by NASA Goddard Space Flight Center
+#EMTG: Evolutionary Mission Trajectory Generator
+#An open-source global optimization tool for preliminary mission design
+#Provided by NASA Goddard Space Flight Center
 #
-# Copyright (c) 2013 - 2020 United States Government as represented by the
-# Administrator of the National Aeronautics and Space Administration.
-# All Other Rights Reserved.
+#Copyright (c) 2014 - 2018 United States Government as represented by the
+#Administrator of the National Aeronautics and Space Administration.
+#All Other Rights Reserved.
 #
-# Licensed under the NASA Open Source License (the "License"); 
-# You may not use this file except in compliance with the License. 
-# You may obtain a copy of the License at:
-# https://opensource.org/licenses/NASA-1.3
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
-# express or implied.   See the License for the specific language
-# governing permissions and limitations under the License.
+#Licensed under the NASA Open Source License (the "License"); 
+#You may not use this file except in compliance with the License. 
+#You may obtain a copy of the License at:
+#https://opensource.org/licenses/NASA-1.3
+#Unless required by applicable law or agreed to in writing, software
+#distributed under the License is distributed on an "AS IS" BASIS,
+#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+#express or implied.   See the License for the specific language
+#governing permissions and limitations under the License.
 
 import wx
 import wx.adv
@@ -163,14 +163,17 @@ class PhysicsOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         vboxspiral = wx.BoxSizer(wx.VERTICAL)
         vboxspiral.AddMany([lblBottomTitle, spiralgrid])
 
-        StateRepresentationgrid = wx.GridSizer(2,2,5,5)
-        StateRepresentationChoices = ['Cartesian', 'SphericalRADEC', 'SphericalAZFPA']
+        StateRepresentationgrid = wx.GridSizer(3,2,5,5)
+        StateRepresentationChoices = ['Cartesian', 'SphericalRADEC', 'SphericalAZFPA', 'COE', 'MEE', "IncomingBplane", "OutgoingBplane"]
         self.lblPeriapseBoundaryStateRepresentation = wx.StaticText(self, -1, "PeriapseBoundary state representation")
         self.cmbPeriapseBoundaryStateRepresentation = wx.ComboBox(self, -1, choices=StateRepresentationChoices, style=wx.CB_READONLY)
-        self.lblParallelShootingStateRepresentation = wx.StaticText(self, -1, "PSFB state representation")
-        self.cmbParallelShootingStateRepresentation = wx.ComboBox(self, -1, choices=StateRepresentationChoices, style=wx.CB_READONLY)
+        self.lblParallelShootingStateRepresentation = wx.StaticText(self, -1, "Parallel shooting decision variable state representation")
+        self.cmbParallelShootingStateRepresentation = wx.ComboBox(self, -1, choices=StateRepresentationChoices[0:5], style=wx.CB_READONLY) #parallel shooting can't use the asymptotic coordinate sets
+        self.lblParallelShootingConstraintStateRepresentation = wx.StaticText(self, -1, "Parallel shooting constraint state representation")
+        self.cmbParallelShootingConstraintStateRepresentation = wx.ComboBox(self, -1, choices=['Cartesian','same as encoded state representation'], style=wx.CB_READONLY)
         StateRepresentationgrid.AddMany([self.lblPeriapseBoundaryStateRepresentation, self.cmbPeriapseBoundaryStateRepresentation,
-                                         self.lblParallelShootingStateRepresentation, self.cmbParallelShootingStateRepresentation])
+                                         self.lblParallelShootingStateRepresentation, self.cmbParallelShootingStateRepresentation,
+                                         self.lblParallelShootingConstraintStateRepresentation, self.cmbParallelShootingConstraintStateRepresentation])
         lblStateRepresentationBottomTitle = wx.StaticText(self, -1, "State Representation settings")
         lblStateRepresentationBottomTitle.SetFont(font)
         vboxStateRepresentation = wx.BoxSizer(wx.VERTICAL)
@@ -213,6 +216,7 @@ class PhysicsOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.txtintegration_time_step_size.Bind(wx.EVT_KILL_FOCUS, self.Changeintegration_time_step_size)
         self.cmbPeriapseBoundaryStateRepresentation.Bind(wx.EVT_COMBOBOX, self.ChangePeriapseBoundaryStateRepresentation)
         self.cmbParallelShootingStateRepresentation.Bind(wx.EVT_COMBOBOX, self.ChangeParallelShootingStateRepresentation)
+        self.cmbParallelShootingConstraintStateRepresentation.Bind(wx.EVT_COMBOBOX, self.ChangeParallelShootingConstraintStateRepresentation)
 
     def update(self):
 
@@ -244,6 +248,7 @@ class PhysicsOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.txtintegration_time_step_size.SetValue(str(self.missionoptions.integration_time_step_size))
         self.cmbPeriapseBoundaryStateRepresentation.SetSelection(self.missionoptions.PeriapseBoundaryStateRepresentation)
         self.cmbParallelShootingStateRepresentation.SetSelection(self.missionoptions.ParallelShootingStateRepresentation)
+        self.cmbParallelShootingConstraintStateRepresentation.SetSelection(self.missionoptions.ParallelShootingConstraintStateRepresentation)
 
         #if SplineEphem is active, show the SplineEphem controls
         if self.missionoptions.ephemeris_source == 2:
@@ -446,4 +451,9 @@ class PhysicsOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.missionoptions.DisassembleMasterDecisionVector()
         self.missionoptions.ConvertDecisionVector()
         self.missionoptions.AssembleMasterDecisionVector()
+        e.Skip()
+
+    def ChangeParallelShootingConstraintStateRepresentation(self, e):
+        self.missionoptions.ParallelShootingConstraintStateRepresentation = self.cmbParallelShootingConstraintStateRepresentation.GetSelection()
+        self.parent.update()
         e.Skip()

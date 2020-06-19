@@ -201,8 +201,10 @@ namespace EMTG
         }//end configure_propagator()
 
          //************************************calcbounds methods
-        void Backward_MGAnDSMs_subphase::calcbounds()
+        void Backward_MGAnDSMs_subphase::calcbounds(std::vector<size_t>& timeVariables)
         {
+            this->timeVariables = timeVariables;
+
             this->First_X_entry_this_subphase = this->Xdescriptions->size();
 
             this->configure_propagator();

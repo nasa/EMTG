@@ -33,7 +33,7 @@ namespace EMTG
         {
         public:
             //default constructor
-            FreePointDeparture();
+            FreePointDeparture() {};
 
             //specialized constructor
             FreePointDeparture(const std::string& name,
@@ -55,7 +55,7 @@ namespace EMTG
                                     ArrivalEvent* PreviousPhaseArrivalEvent);
 
             //destructor
-            ~FreePointDeparture() {};
+            virtual ~FreePointDeparture() {};
 
             //output
             virtual void output(std::ofstream& outputfile,
@@ -69,7 +69,7 @@ namespace EMTG
 
             //method to calculate event left side
 
-            virtual void calcbounds_event_left_side();
+            virtual void calcbounds_event_left_side(std::vector<size_t> timeVariables);
 
             virtual void calcbounds_event_right_side();
 

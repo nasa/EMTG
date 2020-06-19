@@ -1,0 +1,7 @@
+\nomenclatureentry{aBCF@[{BCF}]\begingroup Body-centered, body-fixed reference frame; rotates with central body, but is not necessarily aligned with the principal axes of the ellipsoid\nomeqref {0}|nompageref}{2}
+\nomenclatureentry{aBCI@[{BCI}]\begingroup Body-centered inertial reference frame; does not rotate with the central body\nomeqref {0}|nompageref}{2}
+\nomenclatureentry{a$^{B} \vb{\omega}^{A}$@[{$^{B} \vb{\omega}^{A}$}]\begingroup Angular velocity vector of frame $B$ with respect to frame $A$\nomeqref {0}|nompageref}{2}
+\nomenclatureentry{a$^{A} \left[ \ddt{\vb{x}} \right]$@[{$^{A} \left[ \ddt{\vb{x}} \right]$}]\begingroup Time derivative of vector $\vb{x}$ with respect to the $A$ reference frame\nomeqref {0}|nompageref}{2}
+\nomenclatureentry{a$|\vb{x}| = x$@[{$|\vb{x}| = x$}]\begingroup 2 norm of vector $\vb{x}$\nomeqref {0}|nompageref}{2}
+\nomenclatureentry{a$\vb{r}$@[{$\vb{r}$}]\begingroup Position vector\nomeqref {0}|nompageref}{2}
+\nomenclatureentry{a$\vb{x}_A$@[{$\vb{x}_A$}]\begingroup Arbitrary vector $\vb{x}$ expressed in coordinates of the $A$ frame.\nomeqref {0}|nompageref}{2}

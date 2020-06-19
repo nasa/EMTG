@@ -62,7 +62,7 @@ namespace EMTG
 
         //calcbounds methods
 
-        void EphemerisPeggedBoundary::calcbounds_event_left_side(const std::vector<double>& MassBounds, const std::vector<double>& EpochBounds)
+        void EphemerisPeggedBoundary::calcbounds_event_left_side(const std::vector<double>& MassBounds, const std::vector<double>& EpochBounds, std::vector<size_t> timeVariables)
         {
             //Step 1: mass variable
             this->Xlowerbounds->push_back(MassBounds[0]);
@@ -81,9 +81,10 @@ namespace EMTG
                 this->Xupperbounds->push_back(EpochBounds[1]);
                 this->X_scale_factors->push_back(1.0 / this->myUniverse->continuity_constraint_scale_factors(7));
                 this->Xdescriptions->push_back(prefix + "event left state epoch");
+                timeVariables.insert(timeVariables.begin(), this->Xdescriptions->size() - 1);
             }
 
-            this->calculate_dependencies_left_epoch();
+            this->calculate_dependencies_left_epoch(timeVariables);
 
             //all state variables except mass in an EphemerisPeggedBoundary event have a derivative with respect to epoch
             //we'll put in a dummy derivative of 0.0 for now, and later, when the event is processed, we'll do it right
@@ -100,6 +101,8 @@ namespace EMTG
         {
             this->Derivatives_of_StateAfterEvent = this->Derivatives_of_StateBeforeEvent;
             this->Derivatives_of_StateAfterEvent_wrt_Time = this->Derivatives_of_StateBeforeEvent_wrt_Time;
+
+            this->Xindices_EventRightEpoch = this->Xindices_EventLeftEpoch;
         }//end calcbounds_event_right_side
 
         //process methods

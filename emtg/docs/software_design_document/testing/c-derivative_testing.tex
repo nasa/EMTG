@@ -1,5 +1,5 @@
 \chapter{Derivative Testbed}
-\label{chap:testing}
+\label{chap:derivative_testing}
 
 One of the most challenging aspects of creating an optimization tool is the need to code, test, and maintain analytical derivatives of each of the objective functions and constraints with respect to the decision variables. This testing is often done with finite differencing or by creating stand-alone testbeds that use algorithmic differentiation or complex step differentiation via operator overloading. Neither of these methods is reliable because the former is subject to finite differencing rounding and truncation error and the latter introduces a risk of human error when re-coding a derivative from the stand-alone testbed to the main program code.
 

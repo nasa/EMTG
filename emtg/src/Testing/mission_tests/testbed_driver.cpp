@@ -63,6 +63,7 @@
 #include "mathTestbed.h"
 #include "frame_testbed.h"
 #include "MIRAGE_verification.h"
+#include "StateRepresentation_testbed.h"
 
 int main(int argc, char* argv[])
 {
@@ -180,12 +181,14 @@ int main(int argc, char* argv[])
 		{
 			try
 			{
-				if (options.Journeys[j].perturb_drag == 1)
+				if (options.Journeys[j].perturb_drag ||
+                    (options.Journeys[j].phase_type == EMTG::PhaseType::ProbeEntryPhase && (options.Journeys[j].perturb_drag_probe_AEI_to_end || options.Journeys[j].perturb_drag_probe_separation_to_AEI))
+                    )
 				{
 					// need to choose the correct kind of atmosphere to create based on journey option
 					if (options.Journeys[j].AtmosphericDensityModelKey == "Exponential")
 					{
-						TheUniverse[j].TheAtmosphere = new EMTG::Astrodynamics::ExponentialAtmosphere(j, options.Journeys[j].AtmosphericDensityModelDataFile, options);
+                        TheUniverse[j].TheAtmosphere = std::make_shared<EMTG::Astrodynamics::ExponentialAtmosphere>(j, options.Journeys[j].AtmosphericDensityModelDataFile, options);
 					}
 					else
 					{
@@ -196,7 +199,7 @@ int main(int argc, char* argv[])
 				else
 				{
 					// we are not calculating drag, so just build a placeholder atmosphere that does nothing
-					TheUniverse[j].TheAtmosphere = new EMTG::Astrodynamics::ExponentialAtmosphere();
+					//TheUniverse[j].TheAtmosphere = new EMTG::Astrodynamics::ExponentialAtmosphere();
 				}
 			}
 			catch (std::exception &myError)
@@ -442,6 +445,9 @@ int main(int argc, char* argv[])
 
         //phase testbed
         //phaseTestbed(options, TheUniverse, mySpacecraft, myLaunchVehicle, RNG, UniformDouble);
+
+        //state representation testbed
+        //StateRepresentation_testbed(options, TheUniverse, RNG, UniformDouble);
 
         //mission testbed
         missionTestbed(options, TheUniverse, mySpacecraft, myLaunchVehicle, RNG, UniformDouble);

@@ -54,7 +54,7 @@ namespace EMTG
 
         protected:
             //these go in the specialized event
-            virtual void calcbounds_event_left_side(const std::vector<double>& MassBounds, const std::vector<double>& EpochBounds);
+            virtual void calcbounds_event_left_side(const std::vector<double>& MassBounds, const std::vector<double>& EpochBounds, std::vector<size_t> timeVariables = {});
             virtual void calcbounds_event_right_side() = 0;
 
             virtual void process_event_left_side(const std::vector<doubleType>& X,

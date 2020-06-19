@@ -48,7 +48,8 @@ namespace EMTG
 		// load data from file
 		void ExponentialAtmosphere::load_atmosphere_data(const size_t& j, const std::string & atmospherefile, const missionoptions& options)
 		{
-			std::ifstream inputfile(atmospherefile.c_str());
+            std::string file_to_open = options.universe_folder + "/atmosphere_files/" + atmospherefile;
+			std::ifstream inputfile(file_to_open.c_str());
 			int linenumber = 0;
 			std::string choice;
 			std::string peek;
@@ -56,7 +57,7 @@ namespace EMTG
 
 			if (!inputfile.is_open())
 			{
-				throw std::invalid_argument("Failure to read " + atmospherefile + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+				throw std::invalid_argument("Failure to read " + file_to_open + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
 			}
 
 			while (!inputfile.eof())
@@ -237,6 +238,9 @@ namespace EMTG
 					if (h >= this->altitudes[i] && h < this->altitudes[i+1])
 						return i;
 				}
+
+                // this just gets rid of a "not all paths return a value" compiler warning and potential crash. This line should never be reached.
+                return 0;
 			}
 		}
 

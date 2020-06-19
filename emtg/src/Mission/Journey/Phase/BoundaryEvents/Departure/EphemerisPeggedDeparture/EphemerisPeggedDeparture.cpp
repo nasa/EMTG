@@ -91,7 +91,7 @@ namespace EMTG
        }//end initialize()
         
         //******************************************calcbounds methods
-        void EphemerisPeggedDeparture::calcbounds_event_left_side()
+        void EphemerisPeggedDeparture::calcbounds_event_left_side(std::vector<size_t> timeVariables)
         {
             this->X_index_of_first_decision_variable_in_this_event = this->Xdescriptions->size();
 
@@ -130,11 +130,11 @@ namespace EMTG
                 EpochBounds[1] = this->myBody->getEphemerisWindowClose();
             }
 
-            //Step 2: base departure class
+            //Step 2: base departure class - creates the wait time if applicable
             DepartureEvent::calcbounds_event_left_side();
 
             //Step 3: base ephemeris pegged boundary
-            EphemerisPeggedBoundary::calcbounds_event_left_side(MassBounds, EpochBounds);
+            EphemerisPeggedBoundary::calcbounds_event_left_side(MassBounds, EpochBounds, timeVariables);
 
             //Step 4: mass continuity
             if (this->hasWaitTime)

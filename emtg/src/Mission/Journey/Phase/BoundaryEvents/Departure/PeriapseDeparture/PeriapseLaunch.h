@@ -26,17 +26,26 @@ namespace EMTG
 {
     namespace BoundaryEvents
     {
-        class PeriapseLaunchOrImpulsiveDeparture : public PeriapseDeparture
+        class PeriapseLaunch : public PeriapseDeparture
         {
         public:
             //specialized constructor
-            PeriapseLaunchOrImpulsiveDeparture(const std::string& name,
+            PeriapseLaunch(const std::string& name,
                 const size_t& journeyIndex,
                 const size_t& phaseIndex,
                 size_t& stageIndex,
                 Astrodynamics::universe* Universe,
                 HardwareModels::Spacecraft* mySpacecraft,
                 HardwareModels::LaunchVehicle* myLaunchVehicle,
+                missionoptions* myOptions,
+                ArrivalEvent* PreviousPhaseArrivalEvent);
+
+            virtual void initialize(const std::string& name,
+                const size_t& journeyIndex,
+                const size_t& phaseIndex,
+                size_t& stageIndex,
+                Astrodynamics::universe* Universe,
+                HardwareModels::Spacecraft* mySpacecraft,
                 missionoptions* myOptions,
                 ArrivalEvent* PreviousPhaseArrivalEvent);
 
@@ -49,7 +58,7 @@ namespace EMTG
 
             math::Matrix<doubleType> get_periapse_state() { return math::Matrix<doubleType>(6, 1, 0.0); };//TODO: eventually I might use this to derive a periapse state?
 
-            inline size_t getXindex_of_initial_impulse() const { return this->Xindex_PeriapseManeuver; }
+            inline size_t getXindex_of_initial_impulse() const { return this->Xindex_vinfinity_magnitude; }
 
             //process
             void process_event(const std::vector<doubleType>& X,
@@ -60,14 +69,14 @@ namespace EMTG
                                const bool& needG);
 
             //calcbounds
-            void calcbounds();
+            void calcbounds(std::vector<size_t> timeVariables);
 
         private:
-            void calcbounds_event_left_side();
+            void calcbounds_event_left_side(std::vector<size_t> timeVariables);
 
             void calcbounds_event_main() {}; //stub - all of the interesting stuff happens in calcbounds_event_left_side()
 
-            void calcbounds_virtual_propellant_constraints(); 
+            void calcbounds_virtual_propellant_constraints() {}; //stub, no propellant
             
             void calcbounds_deltav_contribution();
 
@@ -90,7 +99,7 @@ namespace EMTG
                 std::vector<doubleType>& F,
                 size_t& Findex,
                 std::vector<double>& G,
-                const bool& needG); //stub - all of the interesting stuff happens in process_event_left_side()
+                const bool& needG) {};  //stub, no propellant
 
             void process_deltav_contribution(const std::vector<doubleType>& X,
                 size_t& Xindex,
@@ -104,49 +113,20 @@ namespace EMTG
 
             //fields
             bool useLV;
-            doubleType PeriapseManeuverMagnitude;
+            size_t Xindex_vinfinity_magnitude;
             doubleType C3;
             doubleType RLA;
             doubleType DLA;
-            math::Matrix<doubleType> Vunit;
-            size_t Xindex_PeriapseManeuver;
-            size_t dIndex_PeriapseManeuver_vx;
-            size_t dIndex_PeriapseManeuver_vy;
-            size_t dIndex_PeriapseManeuver_vz;
-            size_t dIndex_PeriapseManeuver_mass;
-            size_t dIndex_InitialVelocityMagnitude_mass;
 
             //LV constraint
             size_t Gindex_LVmassConstraint_encodedMass;
-            size_t Gindex_LVmassConstraint_periapseManeuver;
-            size_t Gindex_LVmassConstraint_initialOrbitVelocity;
-            size_t Gindex_LVmassConstraint_initialOrbitRadius;
-
-            //inclination
-            size_t Gindex_cosINC_rMAG;
-            size_t Gindex_cosINC_RA;
-            size_t Gindex_cosINC_DEC;
-            size_t Gindex_cosINC_vMAG;
-            size_t Gindex_cosINC_AZ;
-            size_t Gindex_cosINC_FPA;
-            size_t Gindex_cosINC_vRA;
-            size_t Gindex_cosINC_vDEC;
+            size_t Gindex_LVmassConstraint_vinfinity_magnitude;
 
             //derivative entries
-            double dm_dPeriapseVelocity;
-            double dm_dParkingOrbitRadius;
-
             //delta-v
             size_t Gindex_dDeltav_dVinfinity;
+            double dm_dvinf;
             
-            //propellant
-            size_t Gindices_dVirtualChemicalFuel_dLeftMass;
-            size_t Gindices_dVirtualChemicalFuel_dVinfinity;
-            size_t Gindices_dVirtualChemicalOxidizer_dLeftMass;
-            size_t Gindices_dVirtualChemicalOxidizer_dVinfinity;
-
-            double dChemicalFuel_dVinfinity;
-            double dChemicalOxidizer_dVinfinity;
         };
     }//end namespace BoundaryEvents
 }//end namespace EMTG

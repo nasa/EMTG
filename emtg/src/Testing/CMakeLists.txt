@@ -85,6 +85,10 @@ if (TESTBED_LIBRARY)
                         Mission/Journey/Phase/BoundaryEvents/SpecializedBoundaryConstraints/OrbitElementsConstraints
                         Mission/Journey/Phase/BoundaryEvents/SpecializedBoundaryConstraints/BoundaryAngleConstraints
                         Mission/ObjectiveFunctions)
+    
+    if(HAS_PROBEENTRYPHASE)
+        include_directories(Mission/Journey/Phase/TwoPointShootingPhase/MGAnDSMs/ProbeEntryPhase)
+    endif()
 
     set(TESTBED_FILES ${TESTBED_FILES} ${ASTRODYNAMICS_FILES}
                                        ${CORE_FILES}

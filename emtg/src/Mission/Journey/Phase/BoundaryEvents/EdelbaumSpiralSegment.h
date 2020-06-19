@@ -92,6 +92,7 @@ namespace EMTG
             void set_deltav(const double& deltav) { this->deltav = deltav; }
             doubleType get_mass_after_segment() const { return this->mass_after_segment; }
             size_t get_Xindex_mass_after_segment() const { return this->Xindex_mass_after_segment; }
+            size_t get_Xindex_spiralSegmentTime() const { return this->Xindex_SpiralSegmentTime; }
 
         protected:
             void calculate_dependencies_epoch_time();

@@ -160,15 +160,12 @@ namespace EMTG
                 //derivatives with respect to time variables that affect reference body position
                 if (!this->refIsCentralBody)
                 {
-                    for (size_t Xindex = 0; Xindex < this->Xdescriptions->size(); ++Xindex)
+                    std::vector<size_t> timeVariables = this->myBoundaryEvent->get_Xindices_EventRightEpoch();
+                    for (size_t Xindex : timeVariables)
                     {
-                        if (Xdescriptions->at(Xindex).find("epoch") < 1024
-                            || Xdescriptions->at(Xindex).find("time") < 1024)
-                        {
-                            this->create_sparsity_entry(this->Fdescriptions->size() - 1,
-                                Xindex,
-                                this->Gindex_constraint_wrt_time_variables);
-                        }
+                        this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                            Xindex,
+                            this->Gindex_constraint_wrt_time_variables);
                     }
                 }
             }//end calcbounds()

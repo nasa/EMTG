@@ -1,0 +1,23 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2047
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "emtg_interface_constraint_derivations", "emtg_interface_constraint_derivations\emtg_interface_constraint_derivations.pyproj", "{E98F0BA3-6E13-42A1-9749-D9DF100A1B6A}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E98F0BA3-6E13-42A1-9749-D9DF100A1B6A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E98F0BA3-6E13-42A1-9749-D9DF100A1B6A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9AD2FA6A-A21F-4007-BDD1-9200BDD4722F}
+	EndGlobalSection
+EndGlobal

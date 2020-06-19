@@ -46,7 +46,7 @@ namespace EMTG
                 HardwareModels::LaunchVehicle* myLaunchVehicle,
                 missionoptions* myOptions);
 
-            ~SundmanCoastPhase() {};
+            virtual ~SundmanCoastPhase() {};
 
             virtual void initialize();
 

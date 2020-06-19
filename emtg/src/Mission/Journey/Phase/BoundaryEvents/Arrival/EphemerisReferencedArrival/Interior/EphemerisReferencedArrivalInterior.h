@@ -41,7 +41,7 @@ namespace EMTG
                            missionoptions* myOptions);
 
             //destructor
-            ~EphemerisReferencedArrivalInterior() {};
+            virtual ~EphemerisReferencedArrivalInterior() {};
 
             void initialize(const std::string& name,
                 const size_t& journeyIndex,
@@ -55,7 +55,7 @@ namespace EMTG
 
             //method to calculate event left side
 
-            virtual void calcbounds_event_left_side();
+            virtual void calcbounds_event_left_side(std::vector<size_t> timeVariables);
 
             virtual void calcbounds_event_right_side();
 

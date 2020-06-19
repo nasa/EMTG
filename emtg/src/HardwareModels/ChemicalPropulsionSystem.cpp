@@ -119,7 +119,7 @@ namespace EMTG
             }
             else
             {
-                throw std::invalid_argument("Invalid thruster type for chemical maneuver. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__)); 
+                throw std::invalid_argument("Invalid thruster type " + PropulsionSystemChoiceStrings[ThrusterType] + " for chemical maneuver. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__)); 
             }
         }
     }//end namespace HardwareModels

@@ -37,7 +37,7 @@ namespace EMTG
         std::string journey_central_body;//Journey central body name
         std::vector<int> destination_list;//destination list, as indices from the Universe file
         std::vector<int> sequence;//flyby sequence, as indices from the Universe file
-        PhaseType phase_type;//phase type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase
+        PhaseType phase_type;//mission type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase, #9: variable (do not use), #10: ProbeEntryPhase
         size_t impulses_per_phase;//impulses per phase
         ControlMagnitudeType force_unit_magnitude_control;//Force unit magnitude control?,#0: free control magnitude,#1: force unit magnitude,#2: force zero magnitude
         bool force_fixed_inertial_control;//Force fixed inertial control? All control vectors in a phase must be identical if this is selected.
@@ -73,8 +73,8 @@ namespace EMTG
         std::vector<double> departure_elements;//cartesian state or SMA, ECC, INC, RAAN, AOP, TA
         std::vector<double> departure_elements_bounds;//bounds on elements or state components, two entries for each element
         double departure_elements_reference_epoch;//MJD
-        StateRepresentation departure_elements_state_representation;//departure free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)
-        ReferenceFrame departure_elements_frame;//reference frame for journey departure elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)
+        StateRepresentation departure_elements_state_representation;//departure free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+        ReferenceFrame departure_elements_frame;//reference frame for journey departure elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)
         bool AllowJourneyFreePointDepartureToPropagate;//Allow journey departure free point boundary to propagate (otherwise it is a fixed waypoint)
         double maximum_starting_mass_increment;//negative number indicates mass drop
         double minimum_starting_mass_increment;//negative number indicates mass drop
@@ -90,8 +90,8 @@ namespace EMTG
         std::vector<double> arrival_elements;//cartesian state or SMA, ECC, INC, RAAN, AOP, TA
         std::vector<double> arrival_elements_bounds;//bounds on elements or state components, two entries for each element
         double arrival_elements_reference_epoch;//MJD
-        StateRepresentation arrival_elements_state_representation;//arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)
-        ReferenceFrame arrival_elements_frame;//reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)
+        StateRepresentation arrival_elements_state_representation;//arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+        ReferenceFrame arrival_elements_frame;//reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)
         bool AllowJourneyFreePointArrivalToPropagate;//Allow journey arrival free point boundary to propagate (otherwise it is a fixed waypoint)
         std::vector<double> final_velocity;//Bounds on this journey's final velocity (in km/s)
         double forced_terminal_coast;//Journey forced terminal coast (in days)
@@ -120,6 +120,39 @@ namespace EMTG
         double coefficient_of_drag;//coefficient of drag, i.e. Cd (unitless)
         std::string AtmosphericDensityModelKey;//Atmospheric density model
         std::string AtmosphericDensityModelDataFile;//File defining atmospheric density model
+        double probe_separation_impulse;//Probe separation impulse (Ns)
+        double probe_mass;//Probe mass (kg)
+        std::vector<bool> Probe_AEI_elements_vary_flag;//one entry for each element
+        std::vector<double> Probe_AEI_elements;//cartesian state or SMA, ECC, INC, RAAN, AOP, TA
+        std::vector<double> Probe_AEI_elements_bounds;//bounds on elements or state components, two entries for each element
+        double Probe_AEI_elements_reference_epoch;//MJD
+        StateRepresentation Probe_AEI_elements_state_representation;//probe arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)
+        ReferenceFrame Probe_AEI_elements_frame;//reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)
+        std::vector<bool> Probe_End_elements_vary_flag;//one entry for each element
+        std::vector<double> Probe_End_elements;//cartesian state or SMA, ECC, INC, RAAN, AOP, TA
+        std::vector<double> Probe_End_elements_bounds;//bounds on elements or state components, two entries for each element
+        double Probe_End_elements_reference_epoch;//MJD
+        StateRepresentation Probe_End_elements_state_representation;//probe arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)
+        ReferenceFrame Probe_End_elements_frame;//reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)
+        bool ModelProbeSecondPhase;//Model the probe's descent phase
+        bool AllowJourneyProbeAEIToPropagate;//Allow probe AEI free point boundary to propagate (otherwise it is a fixed waypoint)
+        bool AllowJourneyProbeEndToPropagate;//Allow probe end free point boundary to propagate (otherwise it is a fixed waypoint)
+        std::vector<double> probe_communication_distance_bounds;//Probe-spacecraft communication distance constraint (km)
+        bool perturb_drag_probe_separation_to_AEI;//Aerodynamic drag on probe from separation to AEI?
+        bool perturb_drag_probe_AEI_to_end;//Aerodynamic drag on probe from AEI to end of probe mission?
+        double probe_drag_area_probe_separation_to_AEI;//probe area prior to AEI (for aerodynamic drag, in m^2)
+        double probe_drag_area_probe_AEI_to_end;//probe area after AEI (for aerodynamic drag, in m^2)
+        double probe_coefficient_of_drag_probe_separation_to_AEI;//probe coefficient of drag prior to AEI, i.e. Cd (unitless)
+        double probe_coefficient_of_drag_probe_AEI_to_end;//probe coefficient of drag after AEI, i.e. Cd (unitless)
+        std::vector<double> probe_AEI_velocity;//Bounds on the probe's final velocity at AEI (in km/s)
+        std::vector<double> probe_end_velocity;//Bounds on the probe's final velocity at end of mission (in km/s)
+        double ProbeSeparationToAEI_MatchPointFraction;//probe separation to AEI match point fraction
+        double ProbeSeparationToAEI_ForwardIntegrationStepLength;//probe separation to AEI forward integration step length (seconds)
+        double ProbeSeparationToAEI_BackwardIntegrationStepLength;//probe separation to AEI backward integration step length (seconds)
+        double ProbeAEI_to_end_MatchPointFraction;//probe AEI to end match point fraction
+        double ProbeAEI_to_end_ForwardIntegrationStepLength;//probe AEI to end forward integration step length (seconds)
+        double ProbeAEI_to_end_BackwardIntegrationStepLength;//probe AEI to end backward integration step length (seconds)
+        bool print_this_journey_options_no_matter_what;//Always print this journey's options to the .emtgopt file?
         
         //Constraints
         std::vector<std::string> ManeuverConstraintDefinitions;
@@ -253,6 +286,56 @@ namespace EMTG
         double spacecraft_drag_area_upperBound;
         double coefficient_of_drag_lowerBound;
         double coefficient_of_drag_upperBound;
+        double probe_separation_impulse_lowerBound;
+        double probe_separation_impulse_upperBound;
+        double probe_mass_lowerBound;
+        double probe_mass_upperBound;
+        double Probe_AEI_elements_lowerBound;
+        double Probe_AEI_elements_upperBound;
+        double Probe_AEI_elements_bounds_lowerBound;
+        double Probe_AEI_elements_bounds_upperBound;
+        double Probe_AEI_elements_reference_epoch_lowerBound;
+        double Probe_AEI_elements_reference_epoch_upperBound;
+        StateRepresentation Probe_AEI_elements_state_representation_lowerBound;
+        StateRepresentation Probe_AEI_elements_state_representation_upperBound;
+        ReferenceFrame Probe_AEI_elements_frame_lowerBound;
+        ReferenceFrame Probe_AEI_elements_frame_upperBound;
+        double Probe_End_elements_lowerBound;
+        double Probe_End_elements_upperBound;
+        double Probe_End_elements_bounds_lowerBound;
+        double Probe_End_elements_bounds_upperBound;
+        double Probe_End_elements_reference_epoch_lowerBound;
+        double Probe_End_elements_reference_epoch_upperBound;
+        StateRepresentation Probe_End_elements_state_representation_lowerBound;
+        StateRepresentation Probe_End_elements_state_representation_upperBound;
+        ReferenceFrame Probe_End_elements_frame_lowerBound;
+        ReferenceFrame Probe_End_elements_frame_upperBound;
+        double probe_communication_distance_bounds_lowerBound;
+        double probe_communication_distance_bounds_upperBound;
+        double probe_drag_area_probe_separation_to_AEI_lowerBound;
+        double probe_drag_area_probe_separation_to_AEI_upperBound;
+        double probe_drag_area_probe_AEI_to_end_lowerBound;
+        double probe_drag_area_probe_AEI_to_end_upperBound;
+        double probe_coefficient_of_drag_probe_separation_to_AEI_lowerBound;
+        double probe_coefficient_of_drag_probe_separation_to_AEI_upperBound;
+        double probe_coefficient_of_drag_probe_AEI_to_end_lowerBound;
+        double probe_coefficient_of_drag_probe_AEI_to_end_upperBound;
+        double probe_AEI_velocity_lowerBound;
+        double probe_AEI_velocity_upperBound;
+        double probe_end_velocity_lowerBound;
+        double probe_end_velocity_upperBound;
+        double ProbeSeparationToAEI_MatchPointFraction_lowerBound;
+        double ProbeSeparationToAEI_MatchPointFraction_upperBound;
+        double ProbeSeparationToAEI_ForwardIntegrationStepLength_lowerBound;
+        double ProbeSeparationToAEI_ForwardIntegrationStepLength_upperBound;
+        double ProbeSeparationToAEI_BackwardIntegrationStepLength_lowerBound;
+        double ProbeSeparationToAEI_BackwardIntegrationStepLength_upperBound;
+        double ProbeAEI_to_end_MatchPointFraction_lowerBound;
+        double ProbeAEI_to_end_MatchPointFraction_upperBound;
+        double ProbeAEI_to_end_ForwardIntegrationStepLength_lowerBound;
+        double ProbeAEI_to_end_ForwardIntegrationStepLength_upperBound;
+        double ProbeAEI_to_end_BackwardIntegrationStepLength_lowerBound;
+        double ProbeAEI_to_end_BackwardIntegrationStepLength_upperBound;
         
     }; //end class journeyoptions
 

@@ -52,7 +52,7 @@ namespace EMTG
             //clone
             virtual MGAnDSMs_maneuver_cone_angle_exclusion_constraint* clone() const { return new MGAnDSMs_maneuver_cone_angle_exclusion_constraint(*this); }
 
-            ~MGAnDSMs_maneuver_cone_angle_exclusion_constraint() {};
+            virtual ~MGAnDSMs_maneuver_cone_angle_exclusion_constraint() {};
 
             //calcbounds goes in the specialized phase
             virtual void calcbounds();

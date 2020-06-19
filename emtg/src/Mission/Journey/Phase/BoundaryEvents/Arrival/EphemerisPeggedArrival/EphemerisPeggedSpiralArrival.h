@@ -57,7 +57,7 @@ namespace EMTG
                 std::vector<std::string>* Adescriptions,
                 std::vector<double>* A);
 
-            void calcbounds();
+            void calcbounds(std::vector<size_t> timeVariables);
 
             void process_event(const std::vector<doubleType>& X,
                 size_t& Xindex,

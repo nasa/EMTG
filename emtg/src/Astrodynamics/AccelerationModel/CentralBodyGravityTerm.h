@@ -21,6 +21,8 @@
 #ifndef CENTRAL_BODY_GRAVITY_TERM_H
 #define CENTRAL_BODY_GRAVITY_TERM_H
 
+#include "boost/ptr_container/ptr_vector.hpp"
+
 #include "SpacecraftAccelerationModel.h"
 #include "AccelerationModelTerm.h"
 #include "body.h"
@@ -52,7 +54,7 @@ namespace EMTG
             
         protected:
             // fields
-            std::vector< SphericalHarmonicTerm * > gravitational_harmonic_terms;
+            boost::ptr_vector< SphericalHarmonicTerm > gravitational_harmonic_terms;
 
         };
     }

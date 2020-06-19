@@ -108,15 +108,12 @@ namespace EMTG
                 }
 
                 //derivatives with respect to time variables that affect current epoch
-                for (size_t Xindex = 0; Xindex < this->Xdescriptions->size(); ++Xindex)
+                std::vector<size_t> timeVariables = this->myBoundaryEvent->get_Xindices_EventRightEpoch();
+                for (size_t Xindex : timeVariables)
                 {
-                    if (Xdescriptions->at(Xindex).find("epoch") < 1024
-                        || Xdescriptions->at(Xindex).find("time") < 1024)
-                    {
-                        this->create_sparsity_entry(this->Fdescriptions->size() - 1,
-                            Xindex,
-                            this->Gindex_constraint_wrt_time_variables);
-                    }
+                    this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                        Xindex,
+                        this->Gindex_constraint_wrt_time_variables);
                 }
             }//end calcbounds()
 
@@ -139,7 +136,7 @@ namespace EMTG
 
                 //Step 3: compute VFPA
                 doubleType rdotv_ConstraintFrame = this->PositionBeforeEventConstraintFrame.dot(this->VelocityBeforeEventConstraintFrame);
-                doubleType cosVFPA = rdotv_ConstraintFrame / this->PositionBeforeEventConstraintFrame.norm() / this->VelocityBeforeEventConstraintFrame.norm();
+                doubleType cosVFPA = rdotv_ConstraintFrame / (this->PositionBeforeEventConstraintFrame.norm() / this->VelocityBeforeEventConstraintFrame.norm() + math::SMALL);
                 this->VFPA = math::safe_acos(cosVFPA);
 
                 F[Findex++] = cosVFPA;

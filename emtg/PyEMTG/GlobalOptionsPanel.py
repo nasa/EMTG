@@ -1,20 +1,20 @@
-# EMTG: Evolutionary Mission Trajectory Generator
-# An open-source global optimization tool for preliminary mission design
-# Provided by NASA Goddard Space Flight Center
+#EMTG: Evolutionary Mission Trajectory Generator
+#An open-source global optimization tool for preliminary mission design
+#Provided by NASA Goddard Space Flight Center
 #
-# Copyright (c) 2013 - 2020 United States Government as represented by the
-# Administrator of the National Aeronautics and Space Administration.
-# All Other Rights Reserved.
+#Copyright (c) 2014 - 2018 United States Government as represented by the
+#Administrator of the National Aeronautics and Space Administration.
+#All Other Rights Reserved.
 #
-# Licensed under the NASA Open Source License (the "License"); 
-# You may not use this file except in compliance with the License. 
-# You may obtain a copy of the License at:
-# https://opensource.org/licenses/NASA-1.3
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
-# express or implied.   See the License for the specific language
-# governing permissions and limitations under the License.
+#Licensed under the NASA Open Source License (the "License"); 
+#You may not use this file except in compliance with the License. 
+#You may obtain a copy of the License at:
+#https://opensource.org/licenses/NASA-1.3
+#Unless required by applicable law or agreed to in writing, software
+#distributed under the License is distributed on an "AS IS" BASIS,
+#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+#express or implied.   See the License for the specific language
+#governing permissions and limitations under the License.
 
 import wx
 import wx.adv
@@ -94,17 +94,17 @@ class GlobalOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         #constraint fields
         constraintgrid = wx.FlexGridSizer(20, 2, 5, 5)
 
-        self.lblDLA_bounds = wx.StaticText(self, -1, "DLA bounds (degrees)")
-        self.txtDLA_bounds_lower = wx.TextCtrl(self, -1, "DLA_bounds[0]")
-        self.txtDLA_bounds_upper = wx.TextCtrl(self, -1, "DLA_bounds[1]")
-        DLAbox = wx.BoxSizer(wx.HORIZONTAL)
-        DLAbox.AddMany([self.txtDLA_bounds_lower, self.txtDLA_bounds_upper])
-
         self.lblRLA_bounds = wx.StaticText(self, -1, "RLA bounds (degrees)")
         self.txtRLA_bounds_lower = wx.TextCtrl(self, -1, "RLA_bounds[0]")
         self.txtRLA_bounds_upper = wx.TextCtrl(self, -1, "RLA_bounds[1]")
         RLAbox = wx.BoxSizer(wx.HORIZONTAL)
         RLAbox.AddMany([self.txtRLA_bounds_lower, self.txtRLA_bounds_upper])
+
+        self.lblDLA_bounds = wx.StaticText(self, -1, "DLA bounds (degrees)")
+        self.txtDLA_bounds_lower = wx.TextCtrl(self, -1, "DLA_bounds[0]")
+        self.txtDLA_bounds_upper = wx.TextCtrl(self, -1, "DLA_bounds[1]")
+        DLAbox = wx.BoxSizer(wx.HORIZONTAL)
+        DLAbox.AddMany([self.txtDLA_bounds_lower, self.txtDLA_bounds_upper])
 
         self.lblglobal_timebounded = wx.StaticText(self, -1, "Enable mission time bounds")
         self.chkglobal_timebounded = wx.CheckBox(self, -1)

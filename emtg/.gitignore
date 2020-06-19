@@ -113,3 +113,9 @@ docs/software_design_document/EMTG_software_design_document\.lof
 *.lot
 
 EMTG-Config\.cmake
+
+testatron/tests/Errors/
+testatron/HardwareModels/server.throttleOUTPUT
+
+docs/user_documentation/EMTG_user_documentation.synctex.gz
+testatron/testout.txt

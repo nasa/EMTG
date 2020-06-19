@@ -58,7 +58,7 @@ namespace EMTG
                 const size_t& numStatesToPropagate,
                 const size_t& numMatchConstraints);
 
-            ~CoastPhase();
+            virtual ~CoastPhase();
 
             virtual void initialize();
 

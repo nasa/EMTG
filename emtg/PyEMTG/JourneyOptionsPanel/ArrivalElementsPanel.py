@@ -1,20 +1,20 @@
-# EMTG: Evolutionary Mission Trajectory Generator
-# An open-source global optimization tool for preliminary mission design
-# Provided by NASA Goddard Space Flight Center
+#EMTG: Evolutionary Mission Trajectory Generator
+#An open-source global optimization tool for preliminary mission design
+#Provided by NASA Goddard Space Flight Center
 #
-# Copyright (c) 2013 - 2020 United States Government as represented by the
-# Administrator of the National Aeronautics and Space Administration.
-# All Other Rights Reserved.
+#Copyright (c) 2014 - 2018 United States Government as represented by the
+#Administrator of the National Aeronautics and Space Administration.
+#All Other Rights Reserved.
 #
-# Licensed under the NASA Open Source License (the "License"); 
-# You may not use this file except in compliance with the License. 
-# You may obtain a copy of the License at:
-# https://opensource.org/licenses/NASA-1.3
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
-# express or implied.   See the License for the specific language
-# governing permissions and limitations under the License.
+#Licensed under the NASA Open Source License (the "License"); 
+#You may not use this file except in compliance with the License. 
+#You may obtain a copy of the License at:
+#https://opensource.org/licenses/NASA-1.3
+#Unless required by applicable law or agreed to in writing, software
+#distributed under the License is distributed on an "AS IS" BASIS,
+#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+#express or implied.   See the License for the specific language
+#governing permissions and limitations under the License.
 
 import OrbitElementsPanel
 
@@ -108,12 +108,40 @@ class ArrivalElementsPanel(OrbitElementsPanel.OrbitElementsPanel):
             self.lblRAAN.SetLabel("vx (km/s)")
             self.lblAOP.SetLabel("vy (km/s)")
             self.lblMA.SetLabel("vz (km/s)")
+        elif self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_elements_state_representation == 1:
+            self.lblSMA.SetLabel("r (km)")
+            self.lblECC.SetLabel("RA (degrees)")
+            self.lblINC.SetLabel("DEC (degrees)")
+            self.lblRAAN.SetLabel("v (km/s)")
+            self.lblAOP.SetLabel("vRA (degrees)")
+            self.lblMA.SetLabel("vDEC (degrees)")
+        elif self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_elements_state_representation == 2:
+            self.lblSMA.SetLabel("r (km)")
+            self.lblECC.SetLabel("RA (degrees)")
+            self.lblINC.SetLabel("DEC (degrees)")
+            self.lblRAAN.SetLabel("v (km/s)")
+            self.lblAOP.SetLabel("AZ (degrees)")
+            self.lblMA.SetLabel("FPA (degrees)")
         elif self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_elements_state_representation == 3:
             self.lblSMA.SetLabel("SMA (km)")
             self.lblECC.SetLabel("ECC")
             self.lblINC.SetLabel("INC (degrees)")
             self.lblRAAN.SetLabel("RAAN (degrees)")
             self.lblAOP.SetLabel("AOP (degrees)")
+            self.lblMA.SetLabel("TA (degrees)")
+        elif self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_elements_state_representation == 4:
+            self.lblSMA.SetLabel("P (km)")
+            self.lblECC.SetLabel("F")
+            self.lblINC.SetLabel("G")
+            self.lblRAAN.SetLabel("H")
+            self.lblAOP.SetLabel("K")
+            self.lblMA.SetLabel("L (degrees)")
+        elif self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_elements_state_representation in [5, 6]:
+            self.lblSMA.SetLabel("vinf (km/s)")
+            self.lblECC.SetLabel("RHA (degrees)")
+            self.lblINC.SetLabel("DHA (degrees)")
+            self.lblRAAN.SetLabel("bradius (km)")
+            self.lblAOP.SetLabel("btheta (degrees)")
             self.lblMA.SetLabel("TA (degrees)")
 
         if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_elements_vary_flag[0] == 0:
@@ -179,6 +207,10 @@ class ArrivalElementsPanel(OrbitElementsPanel.OrbitElementsPanel):
     def Changearrival_elements_representation(self, e):
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_elements_state_representation = self.cmbelements_representation.GetSelection()
         self.update()
+        self.missionoptions.DisassembleMasterDecisionVector()
+        self.missionoptions.ConvertDecisionVector()
+        self.missionoptions.AssembleMasterDecisionVector()
+        e.Skip()
 
     def Changearrival_elements_frame(self, e):
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_elements_frame = self.cmbelements_frame.GetSelection()

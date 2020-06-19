@@ -84,10 +84,6 @@ namespace EMTG
             this->calcbounds_distance_constraints();
 
             this->calcbounds_maneuver_constraints();
-
-            if (this->myOptions->objective_type == ObjectiveFunctionType::MINIMIZE_WAYPOINT_TRACKING_ERROR
-                && this->myOptions->objective_journey == this->journeyIndex)
-                this->calcbounds_waypoint_tracking();
         }//end calcbounds_step
 
          //master process
@@ -113,10 +109,6 @@ namespace EMTG
             this->process_distance_constraints(X, Xindex, F, Findex, G, needG);
 
             this->process_maneuver_constraints(X, Xindex, F, Findex, G, needG);
-
-            if (this->myOptions->objective_type == ObjectiveFunctionType::MINIMIZE_WAYPOINT_TRACKING_ERROR
-                && this->myOptions->objective_journey == this->journeyIndex)
-                this->process_waypoint_tracking(X, Xindex, F, Findex, G, needG);
 
             if (needG)
                 this->process_derivative_tuples(X, Xindex, F, Findex, G, needG);

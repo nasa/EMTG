@@ -147,6 +147,81 @@ The decision variables and constraints necessary to define an \ac{MGAnDSMs} phas
 
 Each impulse/propagate pair in a \texttt{MGAnDSMs} phase is called a \texttt{MGAnDSMs\_subphase}. \texttt{MGAnDSMs\_subphase} is also the named of an abstract base class with two derived classes, \texttt{Forward\_MGAnDSMs\_subphase} and \texttt{Backward\_MGAnDSMs\_subphase}. These two derived classes handle the actual computation of the maneuvers and propagation of the trajectory in the forward and backward sides of the phase, respectively. The parent \texttt{MGAnDSMs} owns vectors of \texttt{Forward\_MGAnDSMs\_subphase} and \texttt{Backward\_MGAnDSMs\_subphase} objects, and is responsible for assembling the half-phase transition matrices by chaining the individual subphase state transition matrices.
 
+
+\section{Probe Entry Phase}
+\label{sec:ProbeEntryPhase}
+\texttt{ProbeEntryPhase} is a special phase type that tracks not only the trajectory of the spacecraft, but also that of an entry probe that separates from the spacecraft and continues first to contact with the atmosphere of the Universe's central body, and then all the way to a surface target or parachute open state. \texttt{ProbeEntryPhase} derives from  \texttt{MGAnDSMs} base class. The phase's \texttt{DepartureEvent} and \texttt{ArrivalEvent}, along with all other methods and fields inherited from the base \texttt{MGAnDSMs}, correspond to the main spacecraft. \texttt{ProbeEntryPhase} contains a separate \texttt{ArrivalEvent} for the probe. The probe's \texttt{ArrivalEvent}s and second-subphase \texttt{DepartureEvent} do not interact with the rest of the problem, only with the parent \texttt{ProbeEntryPhase}. A diagram of \texttt{ProbeEntryPhase} is given in Figure \ref{fig:ProbeEntryPhase}.
+
+\begin{figure}[ht]
+	\centering
+	\includegraphics[width=0.7\textwidth]{../../../graphics/ProbeEntryPhase_zoom.pdf}
+	\caption{\label{fig:ProbeEntryPhase} The ProbeEntryPhase transcription.}
+\end{figure}
+
+The phase's \texttt{DepartureEvent} is the epoch of separation between the probe and spacecraft. Both vehicles' velocity vectors are modified by a separation impulse $I_{sep}$, which is a user-defined constant. The mass of the probe is subtracted from the mass of the spacecraft at separation. Note that in the equations below, $\mathbf{x}_{vehicle}$ is a 6-vector of inertial position and velocity.
+
+\begin{align}
+\mathbf{x}_{probe,t_s^-} &= \mathbf{x}_{s/c,t_s^-}\\
+m_{s/c} &= m_{stack} - m_{probe}\\
+\mathbf{x}_{probe,t_s^+} &= \mathbf{x}_{probe,t_s^-} + \left[\mathbf{0}_{3,1} \: \mathbf{I}_{sep}/m_{probe}\right]^T\\
+\mathbf{x}_{s/c,t_s^+} &= \mathbf{x}_{s/c,t_s^-} + \left[\mathbf{0}_{3,1} \: \mathbf{I}_{sep}/m_{s/c}\right]^T\\
+\end{align}
+%
+where $t_s^-$ is $\epsilon$ before separation, and $t_s^+$ is $\epsilon$ after separation. $\mathbf{I}_{sep}$ is a unit vector in the direction of the probe's velocity vector at entry. The three components of $\mathbf{I}_{sep}$ are expressed as decision variables, with a set of constraints to ensure that the direction matches the inertial velocity of the probe at the \textit{end} of the phase. The decision variables encode a velocity vector, which is then unitized to create $\mathbf{I}_{sep}$.
+
+After separation, the probe and spacecraft are propagated separately but for the same time of flight inherited from the base \texttt{MGAnDSMs} phase. Both vehicles are propagated forward from the separation point and backward from their respective \texttt{ArrivalEvent} states. However this propagation occurs in different ways as described below.
+
+The probe does not perform any maneuvers after separation. It is therefore propagated forward and backward to a match point whose location as a fraction of the phase time of flight is a user-defined constant. In practice the match point will be near the right-hand side so that very small time steps can be used when the probe is near the planet. This is the same approach as used in \texttt{CoastPhase} (Section \ref{subsec:CoastPhase}). The probe's right-hand boundary is currently planned as a FreePointIntercept, to which we will attach \ac{EMTG}'s standard \ac{EDL} constraints and sun zenith-angle constraints. Match-point constraints are enforced on the probe's position, velocity, and mass. The mass tracking may not be strictly necessary because the probe's mass does not evolve in time. However, we are stuck enforcing this constraint because the probe's \texttt{ArrivalEvent} is going to create a mass variable whether we like it or not and we have to tie it to something so that the \ac{NLP} solver is stable. The match point constraints are:
+
+\begin{align}
+x_{probe,mp}^+ &= x_{probe,mp}^-\\
+y_{probe,mp}^+ &= x_{probe,mp}^-\\
+z_{probe,mp}^+ &= x_{probe,mp}^-\\
+\dot x_{probe,mp}^+ &= \dot x_{probe,mp}^-\\
+\dot y_{probe,mp}^+ &= \dot y_{probe,mp}^-\\
+\dot z_{probe,mp}^+ &= \dot z_{probe,mp}^-\\	
+m_{probe,mp}^+ &= m_{probe,mp}^-	
+\end{align}
+
+After arriving at its first waypoint, usually constrained by the user to represent atmosphere entry, the probe proceeds through a second coast subphase that is identical to the first but with a different terminal condition. Unlike the first subphase, this second coast subphase requires its own flight time decision variable. In order to prevent the rest of \ac{EMTG} from adding it to the running count of flight time variables, the probe's second subphase flight time is stored in the list of variables as ``ProbeFlightThyme.'' Kyle Hughes would like to remind everybody that (A) thyme is delicious and (B) the name was his idea.
+
+The spacecraft performs one maneuver, the divert, after separation. The spacecraft's match point is attached to the divert maneuver and can move in time just as in an \texttt{MGAnDSMs} phase (Section \ref{subsec:MGAnDSMs}). The forward and backward propagation times are given by:
+
+\begin{align}
+\Delta t_{s/c,forward} &= \eta_1 TOF\\
+\Delta t_{s/c,backward} &= \eta_2 TOF
+\end{align}
+%
+where $\eta_1$ and $\eta_2$ are burn index variables subject to the constraint,
+
+\begin{align}
+\eta_1 + \eta_2 = 1.0
+\end{align}
+
+The components of the divert maneuver are encoded as $\Delta v_{divert,x}$, $\Delta v_{divert,y}$, and $\Delta v_{divert,z}$, and are included in the match point constraint just as in \texttt{MGAnDSMs}.
+
+\begin{align}
+x_{s/c,mp}^+ &= x_{s/c,mp}^-\\
+y_{s/c,mp}^+ &= x_{s/c,mp}^-\\
+z_{s/c,mp}^+ &= x_{s/c,mp}^-\\
+\dot x_{s/c,mp}^+ &= \dot x_{s/c,mp}^- + \Delta v_{divert,x}\\
+\dot y_{s/c,mp}^+ &= \dot y_{s/c,mp}^- + \Delta v_{divert,y}\\
+\dot z_{s/c,mp}^+ &= \dot z_{s/c,mp}^- + \Delta v_{divert,z}\\	
+m_{s/c,mp}^+ &= m_{s/c,mp}^- - \Delta m_{fuel} - \Delta m_{oxidizer}
+\end{align}
+%
+where $\Delta m_{fuel}$ and $\Delta m_{oxidizer}$ are computed as in Section \ref{subsec:MGAnDSMs}. As in Section \ref{subsec:MGAnDSMs}, a set of virtual propellant tank constraints and variables are also included.
+
+Finally, a constraint is enforced on the distance between the probe and the spacecraft on the right-hand side of the phase. This constraint represents the need to maintain reasonably high-bandwidth communication between an entry probe and its carrier spacecraft. The constraint is enforced on the state at the end of the probe's trajectory and the state at the end of the spacecraft's trajectory:
+
+\begin{align}
+r_{probe\_to\_s/c} \leq r_{probe\_to\_s/c, max}
+\end{align}
+
+Since \texttt{ProbeEntryPhase} is derived from \texttt{MGAnDSMs} with a single maneuver, \texttt{ProbeEntryPhase} has no unique decision variables except for those defining the separation impulse and ``ProbeFlightThyme.'' All other variables that describe the spacecraft and probe are handled either by \texttt{MGAnDSMs} or by the phase \texttt{DepartureEvent} or the spacecraft or probe's respective \texttt{ArrivalEvent} and \texttt{DepartureEvent} objects, each of which behaves exactly as they do elsewhere in \ac{EMTG}.
+
+Special care is taken to handle boundary constraints in \texttt{ProbeEntryPhase}. Any constraints on the arrival event that are specified with the standard \ac{EMTG} syntax are applied to the \textit{spacecraft\'s} \texttt{ArrivalEvent}. Any constraints suffixed by ``\texttt{\_probe\_AEI}'' are applied to the \textit{probe\'s} first subphase \texttt{ArrivalEvent}, and any constraints suffixed by ``\texttt{\_probe\_end}'' are applied to the probe\'s second subphase \texttt{ArrivalEvent}.
+
 \subsubsection{MGAnDSMs maneuver constraints}
 \label{subsubsec:MGAnDSMs_maneuver_constraints}
 
@@ -269,5 +344,6 @@ The base \texttt{ParallelShootingStep} class contains vectors of \texttt{Paralle
 \texttt{ParallelShootingStep\_maneuver\_constraint} is an abstract base class that is designed so that a developer may easily write derived classes to constraint maneuver magnitude, direction, etc. As of this writing (12/27/2019), there is only one such derived constraint, the Body-Probe-Thrust (BPT) angle constraint. This constraint is described in detail in the scripted constraints document. Maneuver constraints are the primary reason to use \ac{PSFB} and \ac{PSBI} instead of \ac{FBLT} and \ac{MGALT}. Maneuver constraints are very difficult to pose in a two-point shooting transcription but very easy in a parallel shooting transcription because the state vector at the left-hand side of each segment is encoded into the decision vector and no chaining is necessary.
 
 \texttt{ParallelShootingStep\_maneuver\_constraint} objects are constructed by the \texttt{ParallelShootingStep\_maneuver\_constraint\_factory}.
+
 	
 \endinput

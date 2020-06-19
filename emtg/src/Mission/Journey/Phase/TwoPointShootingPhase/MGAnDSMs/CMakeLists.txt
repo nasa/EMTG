@@ -1,5 +1,9 @@
 add_subdirectory(ManeuverConstraints)
 
+if(HAS_PROBEENTRYPHASE)
+    add_subdirectory(ProbeEntryPhase)
+endif()
+
 set(MGANDSMS_HEADERS ${MGANDSMS_HEADERS} 
                      ${CMAKE_CURRENT_SOURCE_DIR}/MGAnDSMs_phase.h
                      ${CMAKE_CURRENT_SOURCE_DIR}/MGAnDSMs_subphase.h
@@ -14,4 +18,5 @@ set(MGANDSMS_SOURCE ${MGANDSMS_SOURCE}
 
 set(MGANDSMS_FILES ${MGANDSMS_FILES} 
                    ${MGANDSMS_HEADERS} 
-                   ${MGANDSMS_SOURCE} PARENT_SCOPE)
+                   ${MGANDSMS_SOURCE}
+                   ${PROBE_ENTRY_PHASE_FILES} PARENT_SCOPE)

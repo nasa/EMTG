@@ -95,10 +95,10 @@ namespace EMTG
         }//end initialize()
         
         //******************************************calcbounds methods
-        void EphemerisReferencedArrivalExterior::calcbounds_event_left_side()
+        void EphemerisReferencedArrivalExterior::calcbounds_event_left_side(std::vector<size_t> timeVariables)
         {
             //Step 1: base EphemerisReferencedArrival::calcbounds_event_left_side()
-            this->EphemerisReferencedArrival::calcbounds_event_left_side();
+            this->EphemerisReferencedArrival::calcbounds_event_left_side(timeVariables);
 
             //Step 2: additional derivative with respect to time
             for (size_t varIndex = 0; varIndex < this->Xindices_EventLeftEpoch.size(); ++varIndex)
@@ -122,6 +122,8 @@ namespace EMTG
 
             this->Derivatives_of_StateAfterEvent = this->Derivatives_of_state_on_interface_cartesian;
             this->Derivatives_of_StateAfterEvent_wrt_Time = this->Derivatives_of_state_on_interface_cartesian_wrt_Time;
+
+            this->Xindices_EventRightEpoch = this->Xindices_EventLeftEpoch;
         }//end calcbounds_event_right_side
 
         //**************************************process functions

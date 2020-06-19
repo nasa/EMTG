@@ -66,7 +66,7 @@ namespace EMTG
         std::vector<double> total_flight_time_bounds;//flight time bounds (days)
         std::vector<double> DLA_bounds;//DLA in degrees
         std::vector<double> RLA_bounds;//RLA in degrees
-        PhaseType mission_type;//mission type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase, #9: variable phase type
+        PhaseType mission_type;//mission type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase, #9: variable phase type, #10: ProbeEntryPhase
         int NLP_solver_type;//NLP solver type,#0: SNOPT,#1: WORHP
         NLPMode NLP_solver_mode;//NLP solver mode,#0: find feasible point only,#1: find optimal solution,#2: satisfy equality constraints
         bool quiet_NLP;//Quiet NLP solver?
@@ -180,8 +180,9 @@ namespace EMTG
         double forced_post_flyby_coast;//Forced post-flyby coast, in days
         std::string waypoint_file_path;//Path to waypoint file
         std::string covariance_file_path;//Path to covariance file
-        StateRepresentation ParallelShootingStateRepresentation;//state representation for parallel shooting (Cartesian, SphericalRADEC, SphericalAZFPA)
-        StateRepresentation PeriapseBoundaryStateRepresentation;//state representation for periapse boundary conditions (Cartesian, SphericalRADEC, SphericalAZFPA)
+        StateRepresentation ParallelShootingStateRepresentation;//state representation for parallel shooting (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE)
+        StateRepresentation PeriapseBoundaryStateRepresentation;//state representation for periapse boundary conditions (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+        ConstraintStateRepresentation ParallelShootingConstraintStateRepresentation;//state representation for parallel shooting constraints (Cartesian or same as encoded states)
         bool print_only_non_default_options;//Write only options that are *not* default into the .emtgopt file?
         ReferenceFrame output_file_frame;//reference frame for output file (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar)
         bool override_default_output_file_name;//Override default output file name?
@@ -390,6 +391,8 @@ namespace EMTG
         StateRepresentation ParallelShootingStateRepresentation_upperBound;
         StateRepresentation PeriapseBoundaryStateRepresentation_lowerBound;
         StateRepresentation PeriapseBoundaryStateRepresentation_upperBound;
+        ConstraintStateRepresentation ParallelShootingConstraintStateRepresentation_lowerBound;
+        ConstraintStateRepresentation ParallelShootingConstraintStateRepresentation_upperBound;
         ReferenceFrame output_file_frame_lowerBound;
         ReferenceFrame output_file_frame_upperBound;
         double post_mission_wait_time_lowerBound;

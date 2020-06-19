@@ -83,14 +83,6 @@ namespace EMTG
             std::vector< std::vector<size_t> > dIndex_MaximumAngle_constraint_wrt_StepLeftPosition; //varIndex, dIndex
 
             doubleType cosAngleThrustVectorToSun;
-
-
-            //special case code for if the central body is the sun and the parallel shooting state representation is spherical
-            //in this case we don't want to introduce a dependency of the thrust angle itself on radius, only RA and DEC
-            size_t Gindex_BPT_constraintMinimumAngle_wrt_RA;
-            size_t Gindex_BPT_constraintMinimumAngle_wrt_DEC;
-            size_t Gindex_BPT_constraintMaximumAngle_wrt_RA;
-            size_t Gindex_BPT_constraintMaximumAngle_wrt_DEC;
         };
     }//close namespace Phases
 }//close namespace EMTG

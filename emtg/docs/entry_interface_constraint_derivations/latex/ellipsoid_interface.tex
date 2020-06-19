@@ -1,0 +1,1247 @@
+\documentclass[]{article}
+\usepackage{nomencl}
+\usepackage{hyperref}
+\hypersetup{pdffitwindow=true,
+	pdfpagemode=UseThumbs,
+	breaklinks=true,
+	colorlinks=true,
+	linkcolor=black,
+	citecolor=black,
+	filecolor=black,
+	urlcolor=black}
+
+\usepackage{verbatim}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}%
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{subfigure}
+\usepackage[makeroom]{cancel}
+\usepackage{indentfirst}
+\usepackage{color}
+\usepackage{bm}
+\usepackage{mathtools}
+
+\usepackage{rotating}
+\usepackage{comment}
+\usepackage{here}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{pdfpages}
+\usepackage{float}
+\usepackage[section]{placeins}
+
+\usepackage{array}
+
+% quotes
+\newcommand{\quotes}[1]{``#1''}
+
+% vectors and such
+\newcommand{\vb}[1]{\bm{#1}} % bold
+\newcommand{\vbd}[1]{\dot{\bm{#1}}} % dot
+\newcommand{\vbdd}[1]{\ddot{\bm{#1}}} % double dot
+\newcommand{\vbh}[1]{\hat{\bm{#1}}} % hat
+\newcommand{\vbt}[1]{\tilde{\bm{#1}}} % tilde
+\newcommand{\vbth}[1]{\hat{\tilde{\bm{#1}}}} % tilde hat
+\newcommand{\ddt}[1]{\frac{\mathrm{d} #1}{\mathrm{d} t}} % time derivative
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}} % partial derivative
+\newcommand{\crossmat}[1]{\left\{ {#1} \right\}^{\times}} % crossmat
+
+\makenomenclature
+\makeindex
+
+%opening
+\title{Ellipsoid Interface Constraints for EMTGv9}
+\author{Noble Hatten}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+	This document describes the constraint relations (and associated derivatives) for entry/exit interface with an ellipsoid. Constraints considered are bodycentric latitude, longitude, heading angle, flight path angle, and velocity magnitude. Derivatives are desired with respect to a decision variable consisting of time and the state at the interface in the body-centered, body-fixed reference frame. 
+
+\end{abstract}
+
+\tableofcontents
+
+\printnomenclature
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Reference Frames}
+\label{sec:frames}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\nomenclature{BCF}{Body-centered, body-fixed reference frame; rotates with central body, but is not necessarily aligned with the principal axes of the ellipsoid}
+\nomenclature{PA}{Body-centered, body-fixed reference frame aligned with the principal axes of the ellipsoid; rotates with central body}
+\nomenclature{BCI}{Body-centered inertial reference frame; does not rotate with the central body}
+\nomenclature{$T$}{Topocentric south-east-up frame}
+\nomenclature{$P$}{Polar south-east-up frame}
+
+Several reference frames are used to derive these equations.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Body-centered, Body-fixed Frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The body-centered, body-fixed (BCF) frame has its origin at the centroid of the ellipsoid and rotates with the central body. However, the BCF frame is not necessarily aligned with the principal axes of the ellipsoid.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Body-centered, Principal-axes Frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The body-centered, principal-axes (PA) frame has its origin at the centroid of the ellipsoid and rotates with the central body. Its axes are aligned with the principal axes of the ellipse such that $\vbh{x}$ aligns with the semimajor axis, $\vbh{y}$ aligns with the semiminor axis, and $\vbh{z}$ aligns with the semiintermediate axis.
+
+The PA frame is related to the BCF frame by a 3-1-3 Euler angle sequence such that
+
+\begin{align}
+	\vb{r}_{PA} &= \vb{R}^{BCF \rightarrow PA} \vb{r}_{BCF} \\
+	\vb{R}^{BCF \rightarrow PA} &= \vb{R}^{F'' \rightarrow PA} \vb{R}^{F' \rightarrow F''} \vb{R}^{BCF \rightarrow F'} \\
+	\vb{R}^{BCF \rightarrow F'} &= \left[ \begin{array}{ccc}
+	\cos \theta_1 & \sin \theta_1 & 0 \\
+	-\sin \theta_1 & \cos \theta_1 & 0 \\
+	0 & 0 & 1
+	\end{array} \right] \\
+	\vb{R}^{F' \rightarrow F''} &= \left[ \begin{array}{ccc}
+	1 & 0 & 0 \\
+	0 & \cos \theta_2 & \sin \theta_2 \\
+	0 & -\sin \theta_2 & \cos \theta_2
+	\end{array} \right] \\
+	\vb{R}^{F'' \rightarrow PA} &= \left[ \begin{array}{ccc}
+	\cos \theta_3 & \sin \theta_3 & 0 \\
+	-\sin \theta_3 & \cos \theta_3 & 0 \\
+	0 & 0 & 1
+	\end{array} \right] \\
+	\label{eq:r_bcf2pa}
+	\vb{R}^{BCF \rightarrow PA} &= \left[ \begin{array}{ccc}
+	-S_{\theta_1} S_{\theta_3} C_{\theta_2} + C_{\theta_1} C_{\theta_3} & S_{\theta_3} C_{\theta_1} C_{\theta_2} + S_{\theta_1} C_{\theta_3} & S_{\theta_2} S_{\theta_3} \\
+	-S_{\theta_1} C_{\theta_2} C_{\theta_3} - S_{\theta_3} C_{\theta_1} & C_{\theta_1} C_{\theta_2} C_{\theta_3} - S_{\theta_1} S_{\theta_3} & S_{\theta_2} C_{\theta_3} \\
+	S_{\theta_1} S_{\theta_2} & -S_{\theta_2} C_{\theta_1} & C_{\theta_2}
+	\end{array} \right]
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Body-centered Inertial Frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The body-centered inertial (BCI) frame has its origin at the centroid of the ellipsoid and does not rotate with the central body. The BCF frame is assumed to be related to the BCI frame by a rotation about their common $\vbh{z}$ axis by an angle $w$.
+
+\begin{align}
+	\vb{r}_{BCF} &= \vb{R}^{BCI \rightarrow BCF} \vb{r}_{BCI} \\
+	\vb{R}^{BCI \rightarrow BCF} &= \left[ \begin{array}{ccc}
+	\cos w & \sin w & 0 \\
+	-\sin w & \cos w & 0 \\
+	0 & 0 & 1
+	\end{array} \right]
+\end{align}
+
+\nomenclature{$w$}{Rotation angle about the $\vbh{z}$ axis relating the BCI and BCF frames.}
+\nomenclature{$\vbh{x}$, $\vbh{y}$, $\vbh{z}$}{Unit vectors defining a coordinate frame}
+\nomenclature{$\vbh{x}$}{Unit vector in direction of arbitrary vector $\vb{x}$}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Derivatives}
+\label{sec:r_bci2bcf_derivatives}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The angle $w$ depends only on time, so the partial derivatives of $\vb{R}^{BCI \rightarrow BCF}$ with respect to $\vb{r}_{BCF}$ and $^{BCF} \vb{v}_{BCF}$ are zero. The derivative with respect to time is
+
+\begin{align}
+	\label{eq:r_bci2bcf_derivatives}
+	\pd{\vb{R}^{BCI \rightarrow BCF}}{t} &= \pd{\vb{R}^{BCI \rightarrow BCF}}{w} \ddt{w} \\
+	&= \left[ \begin{array}{ccc}
+	-\sin w & \cos w & 0 \\
+	-\cos w & -\sin w & 0 \\
+	0 & 0 & 0
+	\end{array} \right] \ddt{w}
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Topocentric Frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\nomenclature{$_T \vb{S}_{BCF}, _T \vb{E}_{BCF}, \vb{n}_{BCF}$}{Unit vectors of topocentric frame, expressed in BCF coordinates}
+
+The topocentric frame is a south-east-up frame centered as the ellipsoidal interface. The up vector is the outward normal of the ellipsoid. (See Section~\ref{sec:ellipsoid}.) The east vector is defined to be tangent to the ellipsoid and point in a direction of constant $z$ in the BCF frame:
+
+\begin{align}
+	_T \vb{E}_{BCF} &= \vbh{k}_{BCF} \times \left[ \vb{R}^{PA \rightarrow BCF} \pd{\vb{n}_{PA}}{\vb{r}_{PA}} \vb{R}^{BCF \rightarrow PA} \vb{r}_{BCF} \right] \\
+	_T \vbh{E}_{BCF} &= \frac{_T \vb{E}_{BCF}}{_T E}
+\end{align}
+
+\noindent (See Eq.~\ref{eq:dnpa_drpa}.) The south vector completes the right-handed system: $\vbh{S} = \vbh{E} \times \vbh{n}$. Note that, based on this definition, the $_T \vbh{S} \vbh{n}$ plane does not necessarily contain the north or south pole.
+
+The rotation matrix is
+
+\begin{align}
+	\vb{R}^{BCF \rightarrow T} &= \left[ \begin{array}{c}
+	_T \vbh{S}_{BCF}^T \\
+	_T \vbh{E}_{BCF}^T \\
+	\vbh{n}_{BCF}^T
+	\end{array} \right]
+\end{align}
+
+When defining a topocentric frame for a triaxial ellipsoid using STK, these unit vectors are the unit vectors that are returned.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Polar Frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\nomenclature{$_P \vb{S}_{BCF}, _P \vb{E}_{BCF}, \vb{n}_{BCF}$}{Unit vectors of polar frame, expressed in BCF coordinates}
+
+The polar frame is a south-east-up frame centered as the ellipsoidal interface. The up vector is the outward normal of the ellipsoid. (See Section~\ref{sec:ellipsoid}.) The east vector is tangent to the ellipsoid but does not necessarily point in a direction of constant $z$ in the BCF frame. The $_P \vbh{S} \vbh{n}$ plane does contain the north and south pole.
+
+\begin{align}
+	\vbt{E}_{BCF} &= \vbh{k}_{BCF} \times \vb{r}_{BCF} \\
+	\vbth{E}_{BCF} &= \frac{\vbt{E}_{BCF}}{\tilde{E}} \\
+	_P \vb{S}_{BCF} &= \vbt{E}_{BCF} \times \vb{n}_{BCF} \\
+	_P \vbh{S}_{BCF} &= \frac{_P \vb{S}_{BCF}}{_P {S}} \\
+	_P \vb{E}_{BCF} &= \vb{n}_{BCF} \times _P \vb{S}_{BCF} \\
+	_P \vbh{E}_{BCF} &= \frac{_P \vb{E}_{BCF}}{_P {E}}
+\end{align}
+
+The rotation matrix is
+
+\begin{align}
+\vb{R}^{BCF \rightarrow T} &= \left[ \begin{array}{c}
+_T \vbh{S}_{BCF}^T \\
+_T \vbh{E}_{BCF}^T \\
+\vbh{n}_{BCF}^T
+\end{array} \right]
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Ellipsoid}
+\label{sec:ellipsoid}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+An ellipsoid is defined by the equation
+
+\begin{align}
+	\frac{r_{x, PA}^2}{a^2} + \frac{r_{y, PA}^2}{b^2} + \frac{r_{z, PA}^2}{c^2} &= 1.
+\end{align}
+
+\nomenclature{$a$, $b$, $c$}{The lengths of the semimajor, semiminor, and semiintermediate axes of the ellipsoid}
+\nomenclature{$\vb{x}_A$}{Vector expressed in $A$ frame coordinates}
+\nomenclature{$\vb{r}$}{Position vector}
+\nomenclature{$^A \left[ \vb{v} \right]$}{Velocity vector with respect to $A$ frame}
+
+\noindent The vector normal to the surface of the ellipsoid is found by taking the (transpose of the) gradient of the equation of the ellipsoid:
+
+\begin{align}
+	\vb{n}_{PA} &= \left[ 2 \frac{r_{x, PA}}{a^2} \quad 2 \frac{r_{y, PA}}{b^2} \quad 2 \frac{r_{z, PA}}{c^2} \right]^T.
+\end{align}
+
+Define the auxiliary matrix
+
+\begin{align}
+	\vb{\epsilon} &= \left[ \begin{array}{ccc}
+	1/a^2 & 0 & 0 \\
+	0 & 1/b^2 & 0 \\
+	0 & 0 & 1/c^2 \end{array} \right].
+\end{align}
+
+Then $\vb{n}_{PA}$ can also be written as
+
+\begin{align}
+\vb{n}_{PA} &= 2 \vb{\epsilon} \vb{r}_{PA}
+\end{align}
+
+The normal vector can be expressed in terms of the BCF frame by expressing the PA position vector as a function of the BCF position vector.
+
+\begin{align}
+	\label{eq:npa_as_f_of_rbcf}
+	\vb{n}_{PA} &= 2 \vb{\epsilon} \vb{R}^{BCF \rightarrow PA} \vb{r}_{BCF}.
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Derivatives}
+\label{sec:ellipsoid_derivatives}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{align}
+	\label{eq:dnpa_drpa}
+	\pd{\vb{n}_{PA}}{\vb{r}_{PA}} &= \left[ \begin{array}{ccc}
+	\frac{2}{a^2} & 0 & 0 \\
+	0 & \frac{2}{b^2} & 0 \\
+	0 & 0 & \frac{2}{c^2} \end{array} \right] \\
+	&= 2 \vb{\epsilon}
+\end{align}
+
+We wish to have the derivative with respect to the BCF frame. For position,
+
+\begin{align}
+	\pd{\vb{n}_{BCF}}{\vb{r}_{BCF}} &= \pd{\vb{n}_{BCF}}{\vb{r}_{PA}} \pd{\vb{r}_{PA}}{\vb{r}_{BCF}}
+\end{align}
+
+where
+
+\begin{align}
+	\pd{\vb{r}_{PA}}{\vb{r}_{BCF}} &= \vb{R}^{BCF \rightarrow PA}
+\end{align}
+
+and
+
+\begin{align}
+	 \pd{\vb{n}_{BCF}}{\vb{r}_{PA}} &= \frac{\partial}{\partial \vb{r}_{PA}} \left[ \vb{R}^{PA \rightarrow BCF} \vb{n}_{PA} \right] \\
+	 &= \vb{R}^{PA \rightarrow BCF} \pd{\vb{n}_{PA}}{\vb{r}_{PA}}
+\end{align}
+
+where $\pd{\vb{n}_{PA}}{\vb{r}_{PA}}$ is given by Eq.~\eqref{eq:dnpa_drpa}. $\frac{\partial}{\partial \vb{r}_{PA}} \left[ \vb{R}^{PA \rightarrow BCF} \right]$ is zero because the orientation of the PA and BCF frames is independent of the position of entry interface.
+
+The vector normal to the ellipsoid is independent of the velocity of the spacecraft at the interface, so
+
+\begin{align}
+	\pd{\vb{n}_{BCF}}{\left[ ^{BCF} \vb{v}_{BCF} \right]} &= \vb{0}
+\end{align}
+
+The PA and BCF frames are related through the Euler angles $\theta_1, \theta_2, \theta_3$ as described in Section~\ref{sec:frames}. If these angles are changing in time, then $\vb{R}^{PA \rightarrow BCF}$ has nonzero time derivatives:
+
+\begin{align}
+	\pd{\vb{n}_{PA}}{t} &= 2 \vb{\epsilon} \pd{\vb{R}^{PA \rightarrow BCF}}{t} \vb{r}_{BCF} \\
+	\pd{\vb{n}_{BCF}}{t} &= \frac{\partial}{\partial t} \left[ \vb{R}^{PA \rightarrow BCF} \right] \vb{n}_{PA} \\
+	&= \frac{\partial}{\partial \theta_1} \left[ \vb{R}^{PA \rightarrow BCF} \right] \ddt{\theta_1} + \frac{\partial}{\partial \theta_2} \left[ \vb{R}^{PA \rightarrow BCF} \right] \ddt{\theta_2} + \frac{\partial}{\partial \theta_3} \left[ \vb{R}^{PA \rightarrow BCF} \right] \ddt{\theta_3}
+\end{align}
+
+where the derivatives of the rotation matrices with respect to the angles can be obtained from Eq.~\eqref{eq:r_bcf2pa}.
+
+%\begin{align}
+%	\frac{\partial}{\partial \theta_1} \left[ \vb{R}^{BCF \rightarrow PA} \right] &= \left[ \begin{array}{ccc}
+%	-C_{\theta_1} S_{\theta_3} C_{\theta_2} - S_{\theta_1} C_{\theta_3} & -C_{\theta_1} C_{\theta_2} C_{\theta_3} + S_{\theta_3} S_{\theta_1} & C_{\theta_1} S_{\theta_2} \\
+%	-S_{\theta_3} S_{\theta_1} C_{\theta_2} + C_{\theta_1} C_{\theta_3} & -S_{\theta_1} C_{\theta_2} C_{\theta_3} - C_{\theta_1} S_{\theta_3} & S_{\theta_2} S_{\theta_1} \\
+%	0 & 0 & 0
+%	\end{array} \right] \\
+%	\frac{\partial}{\partial \theta_2} \left[ \vb{R}^{BCF \rightarrow PA} \right] &= \left[ \begin{array}{ccc}
+%	S_{\theta_1} S_{\theta_3} C_{\theta_2} & S_{\theta_1} S_{\theta_2} C_{\theta_3} & S_{\theta_1} C_{\theta_2} \\
+%	-S_{\theta_3} C_{\theta_1} S_{\theta_2} & -C_{\theta_1} S_{\theta_2} C_{\theta_3} & -C_{\theta_2} C_{\theta_1} \\
+%	C_{\theta_2} S_{\theta_3} & C_{\theta_2} C_{\theta_3} & -S_{\theta_2}
+%	\end{array} \right] \\
+%	\frac{\partial}{\partial \theta_3} \left[ \vb{R}^{BCF \rightarrow PA} \right] &= \left[ \begin{array}{ccc}
+%	-S_{\theta_1} C_{\theta_3} C_{\theta_2} - C_{\theta_1} S_{\theta_3} & S_{\theta_1} C_{\theta_2} S_{\theta_3} - C_{\theta_3} C_{\theta_1} & 0 \\
+%	C_{\theta_3} C_{\theta_1} C_{\theta_2} - S_{\theta_1} S_{\theta_3} & -C_{\theta_1} C_{\theta_2} S_{\theta_3} - S_{\theta_1} C_{\theta_3} & 0 \\
+%	S_{\theta_2} C_{\theta_3} & -S_{\theta_2} S_{\theta_3} & 0
+%	\end{array} \right]
+%\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bodycentric Latitude}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\nomenclature{$\phi$}{Bodycentric latitude in BCF}
+
+The bodycentric latitude is calculated as angle between the BCF $xy$ plane and the interface position vector (in BCF):\footnote{Note that body\emph{centric} is emphasized to differentiate between it and body\emph{detic}.}
+
+\begin{align}
+	\phi &= \mathrm{atan2} \left[ r_{z, BCF}, r_{xy, BCF} \right] \\
+	&= \mathrm{atan2} \left[ r_{z, BCF}, \left( r_{x, BCF} \cos \lambda + r_{y, BCF} \sin \lambda \right) \right]
+\end{align}
+
+\subsection{Derivatives}
+
+Let
+
+\begin{align}
+	\phi_x &= r_{x, BCF} \cos \lambda + r_{y, BCF} \sin \lambda \\
+	\phi_y &= r_{z, BCF}.
+\end{align}
+
+Then
+
+\begin{align}
+	\pd{\phi}{\vb{r}_{BCF}} &= \pd{\phi}{\phi_x} \pd{\phi_x}{\vb{r}_{BCF}} + \pd{\phi}{\phi_y} \pd{\phi_y}{\vb{r}_{BCF}}.
+\end{align}
+
+where
+
+\begin{align}
+	\pd{\phi_x}{r_{x, BCF}} &= \cos \lambda + r_{x, BCF} \pd{\cos \lambda}{r_{x, BCF}} + r_{y, BCF} \pd{\sin \lambda}{r_{x, BCF}} \\
+	\pd{\phi_x}{r_{y, BCF}} &= r_{x, BCF} \pd{\cos \lambda}{r_{y, BCF}} + \sin \lambda + r_{y, BCF} \pd{\sin \lambda}{r_{y, BCF}} \\
+	\pd{\phi_y}{\vb{r}_{BCF}} &= \left[ 0 \quad 0 \quad 1 \right]
+\end{align}
+
+where
+
+\begin{align}
+	\pd{\cos \lambda}{\vb{r}_{BCF}} &= \pd{\cos \lambda}{\lambda} \pd{\lambda}{\vb{r}_{BCF}} \\
+	&= -\sin \lambda \pd{\lambda}{\vb{r}_{BCF}}
+\end{align}
+
+where $\pd{\lambda}{r_{x, BCF}}$ is given in Eq.~\eqref{eq:dlondr}. Additionally,
+
+\begin{align}
+	\pd{\sin \lambda}{\vb{r}_{BCF}} &= \pd{\sin \lambda}{\lambda} \pd{\lambda}{\vb{r}_{BCF}} \\
+	&= \cos \lambda \pd{\lambda}{\vb{r}_{BCF}}
+\end{align}
+
+The latitude is independent of the velocity, so
+
+\begin{align}
+\Aboxed{\pd{\phi}{\vb{v}_{BCF}} &= \vb{0}^T}.
+\end{align}
+
+The latitude is independent of time, so 
+
+\begin{align}
+\Aboxed{\pd{\phi}{t} &= 0}.
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bodydetic Latitude}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\nomenclature{$\phi'$}{Bodydetic latitude in BCF}
+
+The bodydetic latitude is calculated as the angle between the ellipsoid normal vector and the equatorial plane. This angle may be calculated as the complement of the angle betweeen the normal vector and the $\vb{k}_{BCF}$ vector. Using Eq.~\eqref{eq:angle_between_2_vectors},
+
+\begin{align}
+	\phi' &= \frac{\pi}{2} - \mathrm{atan2} \left[ || \vb{k}_{BCF} \times \vb{n}_{BCF} ||, \vb{k}_{BCF}^T \vb{n}_{BCF} \right]
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Derivatives}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$\phi'$ has no velocity dependence, so
+
+\begin{align}
+\pd{\phi'}{^{BCF} \vb{v}_{BCF}} &= \vb{0}^T
+\end{align}
+
+For position and time, we have, from the derivative of atan2:
+
+\begin{align}
+	\pd{\phi'}{\vb{x}} &= - \left[ \pd{\phi'}{|| \vbh{k} \times \vb{n}_{BCF} ||} \pd{|| \vbh{k} \times \vb{n}_{BCF} ||}{\vb{x}} + \pd{\phi'}{\vbh{k}^T \vb{n}_{BCF}} \pd{\vbh{k}^T \vb{n}_{BCF}}{\vb{x}} \right] \\
+	\pd{\phi'}{|| \vbh{k} \times \vb{n}_{BCF} ||} &= \frac{\vbh{k}^T \vb{n}_{BCF}}{|| \vbh{k} \times \vb{n}_{BCF} ||^2 + \left( \vbh{k}^T \vb{n}_{BCF} \right)^2} \\
+	\pd{\phi'}{\vbh{k}^T \vb{n}_{BCF}} &= - \frac{|| \vbh{k} \times \vb{n}_{BCF} ||}{|| \vbh{k} \times \vb{n}_{BCF} ||^2 + \left( \vbh{k}^T \vb{n}_{BCF} \right)^2} \\
+	\pd{|| \vbh{k} \times \vb{n}_{BCF} ||}{\vb{x}} &= \frac{\left( \vbh{k}_{BCF} \times \vb{n}_{BCF} \right)^T}{|| \vbh{k} \times \vb{n}_{BCF} ||} \crossmat{\vbh{k}_{BCF}} \pd{\vb{n}_{BCF}}{\vb{x}} \\
+	\pd{\vbh{k}^T \vb{n}_{BCF}}{\vb{x}} &= \vbh{k}_{BCF}^T \pd{\vb{n}_{BCF}}{\vb{x}}
+\end{align}
+
+The derivatives of $\vb{n}_{BCF}$ are given in Section~\ref{sec:ellipsoid_derivatives}.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bodycentric Longitude}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\nomenclature{$\lambda$}{Bodycentric longitude in BCF}
+
+The bodycentric longitude is calculated as the angle in the BCF $xy$ plane from the BCF $x$ axis to the interface position vector:
+
+\begin{align}
+	\lambda &= \mathrm{atan2} \left(r_{y, BCF}, r_{x, BCF} \right).
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Derivatives}
+\label{sec:lat_bodycentric_derivs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The derivative of longitude with respect to position is
+
+\begin{align}
+	\label{eq:dlondr}
+	\Aboxed{\pd{\lambda}{\vb{r}_{BCF}} &= \left[ -\frac{r_{y, BCF}}{r_{x, BCF}^2 + r_{y, BCF}^2} \quad \frac{r_{x, BCF}}{r_{x, BCF}^2 + r_{y, BCF}^2} \quad 0 \right]}.
+\end{align}
+
+The longitude is independent of the velocity, so
+
+\begin{align}
+	\Aboxed{\pd{\lambda}{\vb{v}_{BCF}} &= \vb{0}^T}.
+\end{align}
+
+The longitude is independent of time, so 
+
+\begin{align}
+	\Aboxed{\pd{\lambda}{t} &= 0}.
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Bodydetic Longitude}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\nomenclature{$\lambda'$}{Bodydetic longitude in BCF}
+
+Bodydetic longitude is calculated as the angle between the BCF $x$ axis (i.e., $\vb{i}_{BCF}$) and the vector normal to the surface of the ellipsoid at the projection of $\vb{r}$ into the BCF $xy$ plane. Let
+
+\begin{align}
+	\vb{r}_{proj_{xy},BCF} &= \sqrt{r_{x, BCF}^2 + r_{y, BCF}^2} \left[ \begin{array}{c}
+	\cos \lambda \\
+	\sin \lambda \\
+	0 \end{array} \right].
+\end{align}
+
+Then, transforming $\vb{r}_{proj_{xy}}$ into the PA frame gives
+
+\begin{align}
+	\vb{r}_{proj_{xy}, PA} &= \vb{R}^{BCF \rightarrow PA} \vb{r}_{proj_{xy},BCF}.
+\end{align}
+
+The normal vector itself is calculated in the PA frame using the equation of an ellipsoid:
+
+\begin{align}
+	\vb{n}_{proj_{xy}, PA} &= 2 \vb{\epsilon} \vb{r}_{proj_{xy}, PA}.
+\end{align}
+
+Transforming back to the BCF frame:
+
+\begin{align}
+	\vb{n}_{proj_{xy}, BCF} &= \vb{R}^{PA \rightarrow BCF} \vb{n}_{proj_{xy}, PA}
+\end{align}
+
+The geodetic longitude angle calculation is then
+
+\begin{align}
+	\lambda' &= \mathrm{atan2} \left[ || \vb{n}_{proj_{xy}, BCF} \times \vb{i}_{BCF} ||, \vb{n}_{proj_{xy}, BCF}^T \vb{i}_{BCF} \right]
+\end{align}
+
+Because $\lambda' \in [0, 2\pi)$, a quadrant check is required:
+
+\begin{align}
+	\lambda' &= 2 \pi - \lambda' \quad \mathrm{if} \quad \vb{n}_{proj_{xy},BCF}^T \vb{j}_{BCF} < 0
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Derivatives}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+$\lambda'$ has no velocity dependence, so
+
+\begin{align}
+\pd{\lambda'}{^{BCF} \vb{v}_{BCF}} &= \vb{0}^T
+\end{align}
+
+For position and time, we have, from the derivative of atan2:
+
+\begin{align}
+\pd{\lambda'}{\vb{x}} &= \left[ \pd{\lambda'}{|| \vb{n}_{proj_{xy},BCF} \times \vbh{i}_{BCF} ||} \pd{|| \vb{n}_{proj_{xy},BCF} \times \vbh{i}_{BCF} ||}{\vb{x}} + \pd{\lambda'}{\vbh{i}^T \vb{n}_{proj_{xy},BCF}} \pd{\vbh{i}^T \vb{n}_{proj_{xy},BCF}}{\vb{x}} \right] \\
+\pd{\lambda'}{|| \vb{n}_{proj_{xy},BCF} \times \vbh{i}_{BCF} ||} &= \frac{\vbh{i}^T \vb{n}_{proj_{xy},BCF}}{|| \vb{n}_{proj_{xy},BCF} \times \vbh{i}_{BCF} ||^2 + \left( \vbh{k}^T \vb{n}_{BCF} \right)^2} \\
+\pd{\lambda'}{\vbh{i}^T \vb{n}_{proj_{xy},BCF}} &= - \frac{|| \vb{n}_{proj_{xy},BCF} \times \vbh{i}_{BCF} ||}{|| \vb{n}_{proj_{xy},BCF} \times \vbh{i}_{BCF} ||^2 + \left( \vbh{i}^T \vb{n}_{proj_{xy},BCF} \right)^2} \\
+\pd{|| \vb{n}_{proj_{xy},BCF} \times \vbh{i}_{BCF} ||}{\vb{x}} &= -\frac{\left( \vb{n}_{proj_{xy},BCF} \times \vbh{i}_{BCF} \right)^T}{|| \vb{n}_{proj_{xy},BCF} \times \vbh{i}_{BCF} ||} \crossmat{\vbh{i}_{BCF}} \pd{\vb{n}_{proj_{xy},BCF}}{\vb{x}} \\
+\pd{\vbh{i}^T \vb{n}_{proj_{xy},BCF}}{\vb{x}} &= \vbh{i}_{BCF}^T \pd{\vb{n}_{proj_{xy},BCF}}{\vb{x}}
+\end{align}
+
+Then, the derivatives of $\vb{n}_{proj_{xy},BCF}$ are:
+
+\begin{align}
+	\pd{\vb{n}_{proj_{xy},BCF}}{\vb{x}} &= \pd{}{\vb{x}} \left[ \vb{R}^{PA \rightarrow BCF} \vb{n}_{proj_{xy}, PA} \right] \\
+	&= 2 \pd{}{\vb{x}} \left[ \vb{R}^{PA \rightarrow BCF} \epsilon \vb{r}_{proj_{xy}, PA} \right] \\
+	&= 2 \pd{}{\vb{x}} \left[ \vb{R}^{PA \rightarrow BCF} \epsilon \vb{R}^{BCF \rightarrow PA} \vb{r}_{proj_{xy}, BCF} \right] \\
+	&= 2 \pd{}{\vb{x}} \left[ \vb{R}^{PA \rightarrow BCF} \epsilon \vb{R}^{BCF \rightarrow PA} \left( r_{x, BCF}^2 + r_{y, BCF}^2 \right)^{1/2} \left[ \begin{array}{c} \cos \lambda \\ \sin \lambda \\ 0 \end{array} \right] \right] \\
+	&= 2 \left[ \pd{\vb{R}^{PA \rightarrow BCF}}{\vb{x}} \epsilon \vb{R}^{BCF \rightarrow PA} \left( r_{x, BCF}^2 + r_{y, BCF}^2 \right)^{1/2} \left[ \begin{array}{c} \cos \lambda \\ \sin \lambda \\ 0 \end{array} \right] \right] + \nonumber \\
+	&+ 2 \left[ \vb{R}^{PA \rightarrow BCF} \epsilon \pd{\vb{R}^{BCF \rightarrow PA}}{\vb{x}} \left( r_{x, BCF}^2 + r_{y, BCF}^2 \right)^{1/2} \left[ \begin{array}{c} \cos \lambda \\ \sin \lambda \\ 0 \end{array} \right] \right] + \nonumber \\
+	&+ 2 \left[ \vb{R}^{PA \rightarrow BCF} \epsilon \vb{R}^{BCF \rightarrow PA} \pd{\left[ \left( r_{x, BCF}^2 + r_{y, BCF}^2 \right)^{1/2} \right]}{\vb{x}} \left[ \begin{array}{c} \cos \lambda \\ \sin \lambda \\ 0 \end{array} \right] \right] + \nonumber \\
+	&+ 2 \left[ \vb{R}^{PA \rightarrow BCF} \epsilon \vb{R}^{BCF \rightarrow PA} \left( r_{x, BCF}^2 + r_{y, BCF}^2 \right)^{1/2} \pd{}{\vb{x}} \left[ \begin{array}{c} \cos \lambda \\ \sin \lambda \\ 0 \end{array} \right] \right]  
+\end{align}
+
+The derivatives of $\vb{R}^{BCF \rightarrow PA}$ and $\vb{R}^{PA \rightarrow BCF}$ with respect to the $\theta_i$ are given in Section~\ref{sec:ellipsoid_derivatives}. The $\theta_i$ are functions of time only with constant derivatives, so
+
+\begin{align}
+	\pd{\vb{R}^{PA \rightarrow BCF}}{t} &= \sum_{i=1}^3 \pd{\vb{R}^{PA \rightarrow BCF}}{\theta_i} \ddt{\theta_i}
+\end{align}
+
+The other intermediate derivatives are:
+
+\begin{align}
+	\pd{\left( r_{x, BCF}^2 + r_{y, BCF}^2 \right)^{1/2}}{\vb{r}_{BCF}} &= \frac{1}{\left( r_{x, BCF}^2 + r_{y, BCF}^2 \right)^{1/2}} \left[ \begin{array}{ccc} r_{x, BCF} & r_{y, BCF} & 0 \end{array} \right] \\
+	\pd{\left( r_{x, BCF}^2 + r_{y, BCF}^2 \right)^{1/2}}{^{BCF} \vb{v}_{BCF}} &= \vb{0}^T \\
+	\pd{\left( r_{x, BCF}^2 + r_{y, BCF}^2 \right)^{1/2}}{t} &= 0 \\
+	\pd{}{\vb{x}} \left[ \begin{array}{c} \sin \lambda \\ \cos \lambda \\ 0 \end{array} \right] &= \left[ \begin{array}{c} -\sin \lambda \\ \cos \lambda \\ 0 \end{array} \right] \pd{\lambda}{\vb{x}}
+\end{align}
+
+$\pd{\lambda}{\vb{x}}$ is given in Section~\ref{sec:lat_bodycentric_derivs}.
+
+Aside: Note that derivatives may be simplified somewhat because:
+
+\begin{align}
+	\pd{\vb{r}_{proj_{xy}, BCF}}{t} &= \vb{0} \\
+	\pd{\vb{r}_{proj_{xy}, BCF}}{\vb{r}_{BCF}} &= \left[ \begin{array}{ccc} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & 0 \end{array} \right]
+\end{align}
+
+The derivatives can switch sign because of the quadrant check:
+
+\begin{align}
+	\pd{\lambda'}{\vb{x}} &= -\pd{\lambda'}{\vb{x}} \quad \mathrm{if} \quad \vb{n}_{proj_{xy},BCF}^T \vb{j}_{BCF} < 0
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Velocity Magnitude}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The velocity magnitude is calculated as the 2 norm of the velocity vector: $v = \left( \vb{v}^T \vb{v} \right)^{1/2}$. There are two velocities of interest: the velocity with respect to the BCF frame and the velocity with respect to the BCI frame. The two velocities are related via
+
+\begin{align}
+\label{eq:transport_v}
+^{BCI} \left[ \ddt{\vb{r}} \right] &= ^{BCF} \left[ \ddt{\vb{r}} \right] + ^{BCF} \vb{\omega}^{BCI} \times \vb{r}
+\end{align}
+
+The frame in which the quantities in Eq.~\eqref{eq:transport_v} are written does not matter as long as all quantities are written in the same frame.
+
+\nomenclature{$^{B} \vb{\omega}^{A}$}{Angular velocity vector of frame $B$ with respect to frame $A$}
+\nomenclature{$^{A} \left[ \ddt{\vb{x}} \right]$}{Time derivative of vector $\vb{x}$ with respect to the $A$ reference frame}
+\nomenclature{$|\vb{x}| = x$}{2 norm of vector $\vb{x}$}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Derivatives}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Velocity in BCF Frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Given a velocity with respect to the BCF frame, the derivatives are simple because the decision variables are also in the BCF frame.
+
+\begin{align}
+	\Aboxed{\pd{\left[ ^{BCF} v_{BCF} \right]}{\vb{r}_{BCF}} &= \vb{0}^T} \\
+	\Aboxed{\pd{\left[ ^{BCF} v_{BCF} \right]}{\left[ ^{BCF} \vb{v}_{BCF} \right]} &= \frac{^{BCF} \vb{v}_{BCF}^T}{v_{BCF}}} \\
+	\Aboxed{\pd{\left[ ^{BCF} v_{BCF} \right]}{t} &= 0}
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Velocity in BCI Frame}
+\label{sec:v_bci}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Given a velocity with respect to the BCI frame, the velocity must be expressed instead with respect to the BCF frame using Eq.~\eqref{eq:transport_v}, then differentiated with respect to the BCF state.
+
+\begin{align}
+	\pd{\left[ ^{BCI} v_{BCF} \right]}{\vb{r}_{BCF}} &= \pd{\left[ ^{BCI} v_{BCF} \right]}{\left[ ^{BCI} \vb{v}_{BCF} \right]} \pd{\left[ ^{BCI} \vb{v}_{BCF} \right]}{\vb{r}_{BCF}} \\
+	&= \frac{^{BCI} \vb{v}_{BCF}^T}{^{BCI} v_{BCF}} \pd{\left[ ^{BCI} \vb{v}_{BCF} \right]}{\vb{r}_{BCF}}
+\end{align}
+
+Similarly for the velocity and time derivatives:
+
+\begin{align}
+	\pd{\left[ ^{BCI} v_{BCF} \right]}{\left[\vb{v}_{BCF} \right]} &= \frac{^{BCI} \vb{v}_{BCF}^T}{^{BCI} v_{BCF}} \pd{\left[ ^{BCI} \vb{v}_{BCF} \right]}{\vb{v}_{BCF}} \\
+	\pd{\left[ ^{BCI} v_{BCF} \right]}{t} &=  \frac{^{BCI} \vb{v}_{BCF}^T}{^{BCI} v_{BCF}} \pd{\left[ ^{BCI} \vb{v}_{BCF} \right]}{t} \\
+\end{align}
+
+The intermediate derivatives are:
+
+\begin{align}
+	\pd{\left[ ^{BCI} \vb{v}_{BCF} \right]}{\vb{r}_{BCF}} &= \left\{ ^{BCF} \vb{\omega}^{BCI} \right\}^{\times} \\
+	\pd{\left[ ^{BCI} \vb{v}_{BCF} \right]}{\vb{v}_{BCF}} &= \vb{I} \\
+	\pd{\left[ ^{BCI} \vb{v}_{BCF} \right]}{t} &= {\color{red} \pd{\left\{ ^{BCF} \vb{\omega}^{BCI} \right\}^{\times}}{t}} \vb{r}_{BCF}
+\end{align}
+
+where the skew-symmetric cross matrix $\left\{ ^{BCF} \vb{\omega}^{BCI} \right\}^{\times}$ is given by Eq.~\eqref{eq:omega_cross}.
+
+The derivative with respect to time is not currently written completely because it depends on the time derivative of $^{BCF} \vb{\omega}^{BCI}$, whose form I don't know yet.
+
+If $\left[^{BCI} v_{BCI} \right]$ is known instead of $\left[^{BCI} v_{BCF} \right]$, then a coordinate transformation is also required:
+
+\begin{align}
+	\pd{ \left[^{BCI} v_{BCI} \right] }{\vb{r}_{BCF}} &= \pd{\left[ ^{BCI} v_{BCI} \right]}{\left[ ^{BCI} \vb{v}_{BCI} \right]} \pd{\left[ ^{BCI} \vb{v}_{BCI} \right]}{\left[ ^{BCI} \vb{v}_{BCF} \right]} \pd{\left[ ^{BCI} \vb{v}_{BCF} \right]}{\vb{r}_{BCF}} \\
+	&= \frac{^{BCI} \vb{v}_{BCI}^T}{^{BCI} v_{BCI}} \vb{R}^{BCF \rightarrow BCI} 
+	\pd{\left[ ^{BCI} \vb{v}_{BCF} \right]}{\vb{r}_{BCF}} \\
+	&= \frac{^{BCI} \vb{v}_{BCI}^T}{^{BCI} v_{BCI}} \vb{R}^{BCF \rightarrow BCI}
+	\left\{ ^{BCF} \vb{\omega}^{BCI} \right\}^{\times}
+\end{align}
+
+Similarly,
+
+\begin{align}
+	\pd{ \left[^{BCI} v_{BCI} \right] }{\vb{v}_{BCF}} &= \pd{\left[ ^{BCI} v_{BCI} \right]}{\left[ ^{BCI} \vb{v}_{BCI} \right]} \pd{\left[ ^{BCI} \vb{v}_{BCI} \right]}{\left[ ^{BCI} \vb{v}_{BCF} \right]} \pd{\left[ ^{BCI} \vb{v}_{BCF} \right]}{\vb{v}_{BCF}} \\
+	&= \frac{^{BCI} \vb{v}_{BCI}^T}{^{BCI} v_{BCI}} \vb{R}^{BCF \rightarrow BCI}
+	\pd{\left[ ^{BCI} \vb{v}_{BCF} \right]}{ \left[ ^{BCF} \vb{v}_{BCF} \right]} \\
+	&= \frac{^{BCI} \vb{v}_{BCI}^T}{^{BCI} v_{BCI}} \vb{R}^{BCF \rightarrow BCI}
+	\vb{I} \\
+	&= \frac{^{BCI} \vb{v}_{BCI}^T}{^{BCI} v_{BCI}} \vb{R}^{BCF \rightarrow BCI}
+\end{align}
+
+and
+
+\begin{align}
+	\pd{ \left[^{BCI} v_{BCI} \right] }{t} &= \pd{\left[ ^{BCI} v_{BCI} \right]}{\left[ ^{BCI} \vb{v}_{BCI} \right]} \pd{\left[ ^{BCI} \vb{v}_{BCI} \right]}{\left[ ^{BCI} \vb{v}_{BCF} \right]} \pd{\left[ ^{BCI} \vb{v}_{BCF} \right]}{t} \\
+	&= \frac{^{BCI} \vb{v}_{BCI}^T}{^{BCI} v_{BCI}} \vb{R}^{BCF \rightarrow BCI}
+	\pd{\left[ ^{BCI} \vb{v}_{BCF} \right]}{t} \\
+	&= \frac{^{BCI} \vb{v}_{BCI}^T}{^{BCI} v_{BCI}} \vb{R}^{BCF \rightarrow BCI} 
+	\pd{\left\{ ^{BCF} \vb{\omega}^{BCI} \right\}^{\times}}{t} \vb{r}_{BCF} \\
+	&= \frac{^{BCI} \vb{v}_{BCI}^T}{^{BCI} v_{BCI}} \vb{R}^{BCF \rightarrow BCI} {\color{red} \pd{\left\{ ^{BCF} \vb{\omega}^{BCI} \right\}^{\times}}{t}} \vb{r}_{BCF}
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Heading Angle}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\nomenclature{$\mathcal{H}$}{Heading angle}
+	
+The heading angle may take on one of several values depending on reference frame choices. In all cases, the heading angle is measured with $\mathcal{H} = 0$ corresponding to a definition of south and measured positively toward a definition of east.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Topocentric Heading Angle Using Velocity with Respect to BCF Frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+For this definition,
+
+\begin{align}
+	\mathcal{H} &= \mathrm{atan2} \left( ^{BCF} {v}_{y, T}, ^{BCF} v_{x, T} \right),
+\end{align}
+
+\noindent where
+
+\begin{align}
+	^{BCF} \vb{v}_{T} &= \vb{R}^{BCF \rightarrow T} \left[ ^{BCF} \vb{v}_{BCF} \right]
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Derivatives}
+\label{sec:heading_topo_bcf_derivatives}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Chain rule:
+
+\begin{align}
+	\pd{\mathcal{H}}{\vb{x}} &= \pd{\mathcal{H}}{^{BCF} v_{y, T}} \pd{^{BCF} v_{y, T}}{\vb{x}} + \pd{\mathcal{H}}{^{BCF} v_{x, T}} \pd{^{BCF} v_{x, T}}{\vb{x}}  
+\end{align}
+
+Derivatives of $\mathrm{atan2}$:
+
+\begin{align}
+	\pd{\mathcal{H}}{^{BCF} {v}_{y, T}} &= \frac{^{BCF} v_{x, T}}{^{BCF} v_{x, T}^2 + ^{BCF} v_{y, T}^2} \\
+	\pd{\mathcal{H}}{^{BCF} {v}_{x, T}} &= - \frac{^{BCF} v_{y, T}}{^{BCF} v_{x, T}^2 + ^{BCF} v_{y, T}^2}
+\end{align}
+
+Next, get derivatives of the velocity vector in the T frame because we need two components of it.
+
+\begin{align}
+	\label{eq:v_topo_wrt_bcf_derivative}
+	\pd{^{BCF} \vb{v}_T}{\vb{x}} &= \pd{\vb{R}^{BCF \rightarrow T}}{\vb{x}} \left[ ^{BCF} \vb{v}_{BCF} \right] + \vb{R}^{BCF \rightarrow T} \pd{^{BCF} \vb{v}_{BCF}}{\vb{x}} \\
+	\pd{^{BCF} \vb{v}_{BCF}}{\vb{x}} &= \left[ \begin{array}{ccc}
+		\vb{0}_{3 \times 3} & \vb{I}_{3 \times 3} & \vb{0}_{3 \times 1} \end{array} \right] \\
+	\label{eq:R_bcf2t_derivative}
+	\pd{\vb{R}^{BCF \rightarrow T}}{\vb{x}} &= \pd{}{\vb{x}} \left[ \begin{array}{c}
+	_T \vbh{S}_{BCF}^T \\
+	_T \vbh{E}_{BCF}^T \\
+	\vbh{n}_{BCF}^T
+	\end{array} \right]
+\end{align}
+
+\noindent (Recall that $\vbh{n}_{BCF} = _T \vbh{U}_{BCF}^T$.) $\partial \vbh{n}_{BCF} / \partial \vb{x}$ is given in Section~\ref{sec:ellipsoid_derivatives}. East and south need to be derived, though.
+
+\begin{align}
+	\pd{_T \vb{E}_{BCF}}{\vb{x}} &= \pd{}{\vb{x}} \left[ 2 \left\{ \vbh{k}_{BCF} \right\}^{\times} \vb{R}^{PA \rightarrow BCF} \vb{\epsilon} \vb{R}^{BCF \rightarrow PA} \vb{r}_{BCF} \right]
+\end{align}
+
+The elements $\left\{ \vbh{k}_{BCF} \right\}^{\times}$ and $\vb{\epsilon}$ are constant with respect to the decision vector and their derivatives with respect to the decision vector are zero. Thus,
+
+\begin{align}
+\label{eq:d_east_dx_topo_bcf}
+	\pd{_T \vb{E}_{BCF}}{\vb{x}} &= 2 \left\{ \vbh{k}_{BCF} \right\}^{\times} \\
+	& \left\{ \left[ \pd{}{\vb{x}} \vb{R}^{PA \rightarrow BCF} \vb{\epsilon} \vb{R}^{BCF \rightarrow PA} +\vb{R}^{PA \rightarrow BCF} \epsilon \pd{}{\vb{x}} \vb{R}^{BCF \rightarrow PA} \right] \vb{r}_{BCF} + \vb{R}^{PA \rightarrow BCF} \vb{\epsilon} \vb{R}^{BCF \rightarrow PA} \pd{\vb{r}_{BCF}}{\vb{x}} \right\}
+\end{align}
+
+The individual derivatives are:
+
+\begin{align}
+	\pd{\vb{r}_{BCF}}{\vb{x}} &= \left[ \begin{array}{ccc} \vb{I}_{3 \times 3} & \vb{0}_{3 \times 3} & \vb{0}_{3 \times 1} \end{array} \right] \\
+	\pd{}{\vb{r}_{BCF}} \vb{R}^{PA \rightarrow BCF} &= \vb{0} \\
+	\pd{}{^{BCF} \vb{v}_{BCF}} \vb{R}^{PA \rightarrow BCF} &= \vb{0} \\
+	\pd{}{t} \vb{R}^{PA \rightarrow BCF} &= \pd{}{\theta_1} \left[ \vb{R}^{PA \rightarrow BCF} \right] \ddt{\theta_1} + \pd{}{\theta_2} \left[ \vb{R}^{PA \rightarrow BCF} \right] \ddt{\theta_2} + \pd{}{\theta_3} \left[ \vb{R}^{PA \rightarrow BCF} \right] \ddt{\theta_3}
+\end{align}
+
+Note that $\vb{R}^{BCF \rightarrow PA} = \left[ \vb{R}^{PA \rightarrow BCF} \right]^T$, so the derivatives are also transposes of one another.
+
+The derivative of the unit vector $_T \vbh{E}_{BCF}$ is then calculated using Eq.~\eqref{eq:unit_vector_derivative} and
+
+\begin{align}
+\pd{_T \vbh{E}_{BCF}}{\vb{x}} &= \pd{_T \vbh{E}_{BCF}}{_T \vb{E}_{BCF}} \pd{_T \vb{E}_{BCF}}{\vb{x}}.
+\end{align}
+
+For the south unit vector,
+
+\begin{align}
+	\pd{_T \vbh{S}_{BCF}}{\vb{x}} &= \pd{_T \vbh{S}_{BCF}}{_T \vb{S}_{BCF}} \pd{_T \vb{S}_{BCF}}{\vb{x}}.
+\end{align}
+
+The unit vector derivative is calculated using Eq.~\eqref{eq:unit_vector_derivative}. The derivative of the non-unitized south vector is
+
+\begin{align}
+	\pd{_T \vb{S}_{BCF}}{\vb{x}} &= \pd{}{\vb{x}} \left[ \left\{ _T \vb{E}_{BCF} \right\}^{\times} \vb{n}_{BCF} \right] \\
+	&= \pd{}{\vb{x}} \left[ \left\{ _T \vb{E}_{BCF} \right\}^{\times} \right] \vb{n}_{BCF} + \left\{ _T \vb{E}_{BCF} \right\}^{\times} \pd{\vb{n}_{BCF}}{\vb{x}}
+\end{align}
+
+$\pd{\vb{n}_{BCF}}{\vb{x}}$ is given in Section~\ref{sec:ellipsoid_derivatives}. $\pd{}{\vb{x}} \left[ \left\{ _T \vb{E}_{BCF} \right\}^{\times} \right]$ is calculated using components of $\pd{_T \vb{E}_{BCF}}{\vb{x}}$, which is given by Eq.~\eqref{eq:d_east_dx_topo_bcf}:
+
+\begin{align}
+	\pd{}{\vb{x}} \left[ \left\{ _T \vb{E}_{BCF} \right\}^{\times} \right] &= \left[ \begin{array}{ccc} 
+	0 & - \pd{}{\vb{x}} \left[ _T \vb{E}_{z, BCF} \right] & \pd{}{\vb{x}} \left[ _T \vb{E}_{y, BCF} \right] \\
+	\pd{}{\vb{x}} \left[ _T \vb{E}_{z, BCF} \right] & 0 & - \pd{}{\vb{x}} \left[ _T \vb{E}_{x, BCF} \right] \\
+	- \pd{}{\vb{x}} \left[ _T \vb{E}_{y, BCF} \right] & \pd{}{\vb{x}} \left[ _T \vb{E}_{x, BCF} \right] & 0 \end{array} \right]
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Topocentric Heading Angle Using Velocity with Respect to BCI Frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+For this definition,
+
+\begin{align}
+\mathcal{H} &= \mathrm{atan2} \left( ^{BCI} {v}_{y, T}, ^{BCI} {v}_{x, T} \right).
+\end{align}
+
+\noindent where
+
+\begin{align}
+	^{BCI} \vb{v}_T &= \vb{R}^{BCF \rightarrow T} \left[ ^{BCI} \vb{v}_{BCF} \right] \\
+	&= \vb{R}^{BCF \rightarrow T} \vb{R}^{BCI \rightarrow BCF} \left[ ^{BCI} \vb{v}_{BCI} \right]
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Derivatives}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Chain rule:
+
+\begin{align}
+\pd{\mathcal{H}}{\vb{x}} &= \pd{\mathcal{H}}{^{BCI} v_{y, T}} \pd{^{BCI} v_{y, T}}{\vb{x}} + \pd{\mathcal{H}}{^{BCI} v_{x, T}} \pd{^{BCI} v_{x, T}}{\vb{x}}  
+\end{align}
+
+Derivatives of $\mathrm{atan2}$:
+
+\begin{align}
+\pd{\mathcal{H}}{^{BCI} {v}_{y, T}} &= \frac{^{BCI} v_{x, T}}{^{BCI} v_{x, T}^2 + ^{BCI} v_{y, T}^2} \\
+\pd{\mathcal{H}}{^{BCI} {v}_{x, T}} &= - \frac{^{BCI} v_{y, T}}{^{BCI} v_{x, T}^2 + ^{BCI} v_{y, T}^2}
+\end{align}
+
+Next, get derivatives of the velocity vector in the T frame because we need two components of it.
+
+\begin{align}
+\label{eq:v_topo_wrt_bci_derivative}
+\pd{^{BCI} \vb{v}_T}{\vb{x}} &= \pd{\vb{R}^{BCF \rightarrow T}}{\vb{x}} \left[ ^{BCI} \vb{v}_{BCF} \right] + \vb{R}^{BCF \rightarrow T} \pd{^{BCI} \vb{v}_{BCF}}{\vb{x}} \\
+&= \pd{\vb{R}^{BCF \rightarrow T}}{\vb{x}} \vb{R}^{BCI \rightarrow BCF} \left[ ^{BCI} \vb{v}_{BCI} \right] + \vb{R}^{BCF \rightarrow T} \pd{\vb{R}^{BCI \rightarrow BCF}}{\vb{x}} \left[ ^{BCI} \vb{v}_{BCI} \right] + \vb{R}^{BCF \rightarrow T} \vb{R}^{BCI \rightarrow BCF} \pd{^{BCI} \vb{v}_{BCI}}{\vb{x}}
+\end{align}
+
+\noindent $\pd{\vb{R}^{BCF \rightarrow T}}{\vb{x}}$ is given in Section~\ref{sec:heading_topo_bcf_derivatives}. $\pd{^{BCI} \vb{v}_{BCF}}{\vb{x}}$ and $\pd{^{BCI} \vb{v}_{BCI}}{\vb{x}}$ are given in Section~\ref{sec:v_bci}. $\pd{\vb{R}^{BCI \rightarrow BCF}}{\vb{x}}$ is given in Section~\ref{sec:r_bci2bcf_derivatives}. Thus, all the intermediate derivatives are already known.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Polar Heading Angle Using Velocity with Respect to BCF Frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+For this definition,
+
+\begin{align}
+\mathcal{H} &= \mathrm{atan2} \left( ^{BCF} {v}_{y, P}, ^{BCF} {v}_{x, P} \right).
+\end{align}
+
+\noindent where
+
+\begin{align}
+	^{BCF} \vb{v}_P &= \vb{R}^{BCF \rightarrow P} \left[ ^{BCF} \vb{v}_{BCF} \right]
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Derivatives}
+\label{sec:heading_polar_bcf_derivatives}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Chain rule:
+
+\begin{align}
+\pd{\mathcal{H}}{\vb{x}} &= \pd{\mathcal{H}}{^{BCF} v_{y, P}} \pd{^{BCF} v_{y, P}}{\vb{x}} + \pd{\mathcal{H}}{^{BCF} v_{x, P}} \pd{^{BCF} v_{x, P}}{\vb{x}}  
+\end{align}
+
+Derivatives of $\mathrm{atan2}$:
+
+\begin{align}
+\pd{\mathcal{H}}{^{BCF} {v}_{y, P}} &= \frac{^{BCF} v_{x, P}}{^{BCF} v_{x, P}^2 + ^{BCF} v_{y, P}^2} \\
+\pd{\mathcal{H}}{^{BCF} {v}_{x, P}} &= - \frac{^{BCF} v_{y, P}}{^{BCF} v_{x, P}^2 + ^{BCF} v_{y, P}^2}
+\end{align}
+
+Next, get derivatives of the velocity vector in the P frame because we need two components of it.
+
+\begin{align}
+\label{eq:v_polar_wrt_bcf_derivative}
+\pd{^{BCF} \vb{v}_P}{\vb{x}} &= \pd{\vb{R}^{BCF \rightarrow P}}{\vb{x}} \left[ ^{BCF} \vb{v}_{BCF} \right] + \vb{R}^{BCF \rightarrow P} \pd{^{BCF} \vb{v}_{BCF}}{\vb{x}} \\
+\pd{^{BCF} \vb{v}_{BCF}}{\vb{x}} &= \left[ \begin{array}{ccc}
+\vb{0}_{3 \times 3} & \vb{I}_{3 \times 3} & \vb{0}_{3 \times 1} \end{array} \right] \\
+\label{eq:R_bcf2p_derivative}
+\pd{\vb{R}^{BCF \rightarrow P}}{\vb{x}} &= \pd{}{\vb{x}} \left[ \begin{array}{c}
+_P \vbh{S}_{BCF}^T \\
+_P \vbh{E}_{BCF}^T \\
+\vbh{n}_{BCF}^T
+\end{array} \right]
+\end{align}
+
+\noindent (Recall that $\vbh{n}_{BCF} = _P \vbh{U}_{BCF}^T$.) $\partial \vbh{n}_{BCF} / \partial \vb{x}$ is given in Section~\ref{sec:ellipsoid_derivatives}. East and south need to be derived, though. Start with ``pseudo-east.''
+
+\begin{align}
+\pd{\vbt{E}_{BCF}}{\vb{x}} &= \pd{}{\vb{x}} \left[ \left\{ \vbh{k}_{BCF} \right\}^{\times} \vb{r}_{BCF} \right] \\
+\label{eq:pseudo_east_derivative}
+&= \pd{\left\{ \vbh{k}_{BCF} \right\}^{\times}}{\vb{x}} \vb{r}_{BCF} + \left\{ \vbh{k}_{BCF} \right\}^{\times} \pd{\vb{r}_{BCF}}{\vb{x}}
+\end{align}
+
+\noindent The derivatives of $\left\{ \vbh{k}_{BCF} \right\}^{\times}$ are zero. $\pd{\vb{r}_{BCF}}{\vb{x}}$ is
+
+\begin{align}
+	\pd{\vb{r}_{BCF}}{\vb{x}} &= \left[ \begin{array}{ccc} \vb{I}_{3 \times 3} & \vb{0}_{3 \times 3} & \vb{0}_{3 \times 1} \end{array} \right]
+\end{align}
+
+For south:
+
+\begin{align}
+	\pd{_P \vb{S}_{BCF}}{\vb{x}} &= \pd{}{\vb{x}} \left[ \left\{ \vbt{E}_{BCF} \right\}^{\times} \vb{n}_{BCF} \right] \\
+	\label{eq:south_polar_derivative}
+	&= \pd{\left\{ \vbt{E}_{BCF} \right\}^{\times}}{\vb{x}} \vb{n}_{BCF} + \left\{ \vbt{E}_{BCF} \right\}^{\times} \pd{\vb{n}_{BCF}}{\vb{x}}
+\end{align}
+
+$\pd{\vb{n}_{BCF}}{\vb{x}}$ is given in Section~\ref{sec:ellipsoid_derivatives}. $\pd{\left\{ \vbt{E}_{BCF} \right\}^{\times}}{\vb{x}}$ is made up of components of $\pd{\vbt{E}_{BCF}}{\vb{x}}$, given in Eq.~\eqref{eq:pseudo_east_derivative}. It is noted that the derivative of a matrix with respect to a vector gives a three-dimensional tensor. (See Section~\ref{sec:tensor_math}.)
+
+For east:
+
+\begin{align}
+	\pd{_P \vb{E}_{BCF}}{\vb{x}} &= \pd{}{\vb{x}} \left[ \left\{ \vb{n}_{BCF} \right\}^{\times} _P \vb{S}_{BCF} \right] \\
+	&= \pd{\left\{ \vb{n}_{BCF} \right\}^{\times}}{\vb{x}} _P \vb{S}_{BCF} + \left\{ \vb{n}_{BCF} \right\}^{\times} \pd{_P \vb{S}_{BCF}}{\vb{x}}
+\end{align}
+
+\noindent $\pd{_P \vb{S}_{BCF}}{\vb{x}}$ is given in Eq.~\eqref{eq:south_polar_derivative}. $\pd{\left\{ \vb{n}_{BCF} \right\}^{\times}}{\vb{x}}$ is a 3D tensor derived from elements of $\pd{\vb{n}_{BCF}}{\vb{x}}$. (See Sections~\ref{sec:ellipsoid_derivatives} and~\ref{sec:tensor_math}.)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Polar Heading Angle Using Velocity with Respect to BCI Frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+For this definition,
+
+\begin{align}
+\mathcal{H} &= \mathrm{atan2} \left( ^{BCI} {v}_{y, P}, ^{BCI} {v}_{x, P} \right).
+\end{align}
+
+\noindent where
+
+\begin{align}
+^{BCI} \vb{v}_P &= \vb{R}^{BCF \rightarrow P} \left[ ^{BCI} \vb{v}_{BCF} \right] \\
+&= \vb{R}^{BCF \rightarrow P} \vb{R}^{BCI \rightarrow BCF} \left[ ^{BCI} \vb{v}_{BCI} \right]
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Derivatives}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Chain rule:
+
+\begin{align}
+\pd{\mathcal{H}}{\vb{x}} &= \pd{\mathcal{H}}{^{BCI} v_{y, P}} \pd{^{BCI} v_{y, P}}{\vb{x}} + \pd{\mathcal{H}}{^{BCI} v_{x, P}} \pd{^{BCI} v_{x, P}}{\vb{x}}  
+\end{align}
+
+Derivatives of $\mathrm{atan2}$:
+
+\begin{align}
+\pd{\mathcal{H}}{^{BCI} {v}_{y, P}} &= \frac{^{BCI} v_{x, P}}{^{BCI} v_{x, P}^2 + ^{BCI} v_{y, P}^2} \\
+\pd{\mathcal{H}}{^{BCI} {v}_{x, P}} &= - \frac{^{BCI} v_{y, P}}{^{BCI} v_{x, P}^2 + ^{BCI} v_{y, P}^2}
+\end{align}
+
+Next, get derivatives of the velocity vector in the P frame because we need two components of it.
+
+\begin{align}
+\label{eq:v_polar_wrt_bci_derivative}
+\pd{^{BCI} \vb{v}_P}{\vb{x}} &= \pd{\vb{R}^{BCF \rightarrow P}}{\vb{x}} \left[ ^{BCI} \vb{v}_{BCF} \right] + \vb{R}^{BCF \rightarrow P} \pd{^{BCI} \vb{v}_{BCF}}{\vb{x}} \\
+&= \pd{\vb{R}^{BCF \rightarrow P}}{\vb{x}} \vb{R}^{BCI \rightarrow BCF} \left[ ^{BCI} \vb{v}_{BCI} \right] + \vb{R}^{BCF \rightarrow P} \pd{\vb{R}^{BCI \rightarrow BCF}}{\vb{x}} \left[ ^{BCI} \vb{v}_{BCI} \right] + \vb{R}^{BCF \rightarrow P} \vb{R}^{BCI \rightarrow BCF} \pd{^{BCI} \vb{v}_{BCI}}{\vb{x}}
+\end{align}
+
+\noindent $\pd{\vb{R}^{BCF \rightarrow P}}{\vb{x}}$ is given in Section~\ref{sec:heading_polar_bcf_derivatives}. $\pd{^{BCI} \vb{v}_{BCF}}{\vb{x}}$ and $\pd{^{BCI} \vb{v}_{BCI}}{\vb{x}}$ are given in Section~\ref{sec:v_bci}. $\pd{\vb{R}^{BCI \rightarrow BCF}}{\vb{x}}$ is given in Section~\ref{sec:r_bci2bcf_derivatives}. Thus, all the intermediate derivatives are already known.
+
+
+%\subsection{Old Stuff}
+
+%The heading angle $\mathcal{H}$ is dependent on two angles, $\xi_1$ and $\xi_2$.
+
+%\begin{align}
+%\xi_1 &= \mathrm{atan2} \left( r_{y, BCF}, r_{x, BCF} \right)
+%\end{align}
+
+%Thus, $\xi_1$ is trivially known, given $\vb{r}_{BCF}$.
+
+%$\xi_2$ is defined as
+
+%\begin{align}
+%\xi_2 &= \mathrm{atan2} \left( n_{x, F_1}, n_{z, F_1} \right)
+%\end{align}
+
+%The $F_1$ frame is related to the BCF frame by
+
+%\begin{align}
+%\vb{R}^{BCF \rightarrow F_1} &= \left[ \begin{array}{ccc}
+%\cos \xi_1 & \sin \xi_1 & 0 \\
+%-\sin \xi_1 & \cos \xi_1 & 0 \\
+%0 & 0 & 1
+%\end{array} \right]
+%\end{align}
+
+%As discussed in Section~\ref{sec:ellipsoid}, $\vb{n}_{PA}$ may be computed if $\vb{r}_{PA}$ is known. However, $\vb{r}_{PA}$ is generally not known as a decision variable and must be calculated from $\vb{r}_{BCF}$ (Eq.~\eqref{eq:npa_as_f_of_rbcf}). Then,
+
+%\begin{align}
+%\vb{n}_{F_1} &= \vb{R}^{BCF \rightarrow F_1} \vb{R}^{PA \rightarrow BCF} \vb{n}_{PA},
+%\end{align}
+
+%so $\xi_2$ may be calculated.
+
+%\subsection{Heading Angle (Velocity with Respect to BCI Frame)}
+%\label{sec:heading_bci}
+
+%The heading angle is defined as
+
+%\begin{align}
+%\mathcal{H} &= \mathrm{atan2} \left( ^{BCI} v_{y, F_2}, ^{BCI} v_{x, F_2} \right).
+%\end{align}
+
+%The $F_2$ frame corresponds to the double-prime frame in Kyle Hughes' thesis and is related to the $F_1$ frame by
+
+%\begin{align}
+%\vb{R}^{F_1 \rightarrow F_2} &= \left[ \begin{array}{ccc}
+%\cos \xi_2 & 0 & -\sin \xi_2 \\
+%0 & 1 & 0 \\
+%\sin \xi_2 & 0 & \cos \xi_2
+%\end{array} \right]
+%\end{align}
+
+%Expressing the BCI velocity in the $F_2$ frame gives
+
+%\begin{align}
+%^{BCI} \vb{v}_{F_2} &= \vb{R}^{F_1 \rightarrow F_2} \vb{R}^{BCF \rightarrow F_1} \left[ ^{BCI} \vb{v}_{BCF} \right],
+%\end{align}
+
+%which allows $\mathcal{H}$ to be calculated.
+
+%\subsubsection{Derivatives}
+
+%\subsection{Heading Angle (Velocity with Respect to BCF Frame)}
+%\label{sec:heading_bcf}
+
+%The heading angle is defined as
+
+%\begin{align}
+%\mathcal{H} &= \mathrm{atan2} \left( ^{BCF} v_{y, F_2}, ^{BCF} v_{x, F_2} \right).
+%\end{align}
+
+%Expressing the BCF velocity in the $F_2$ frame gives
+
+%\begin{align}
+%^{BCF} \vb{v}_{F_2} &= \vb{R}^{F_1 \rightarrow F_2} \vb{R}^{BCF \rightarrow F_1} \left[ ^{BCF} \vb{v}_{BCF} \right],
+%\end{align}
+
+%which allows $\mathcal{H}$ to be calculated.
+
+%\subsubsection{Derivatives}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Flight Path Angle}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\nomenclature{$\gamma$}{Flight path angle}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Velocity Relative to BCF Frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The flight path angle $\gamma$ is defined as
+
+\begin{align}
+	\gamma &= \mathrm{asin} \left( \frac{^{BCF} v_{z, T}}{^{BCF} v} \right) \\
+	&= \mathrm{atan2} \left[ ^{BCF} v_{z, T}, \left( ^{BCF} v_{x,T}^2 + ^{BCF} v_{y, T}^2 \right)^{1/2} \right],
+\end{align}
+
+\noindent where
+
+\begin{align}
+^{BCF} \vb{v}_{T} &= \vb{R}^{BCF \rightarrow T} \left[ ^{BCF} \vb{v}_{BCF} \right]
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Derivatives}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The first level of the chain rule is performed using the derivative of $\mathrm{atan2}$. (See Section~\ref{sec:atan2}.)
+
+\begin{align}
+	\pd{\gamma}{\vb{x}} &= \pd{\gamma}{^{BCF} v_{z, T}} \pd{^{BCF} v_{z, T}}{\vb{x}} + \pd{\gamma}{ \left( ^{BCF} v_{x, T}^2 + ^{BCF} v_{y, T}^2 \right)^{1/2}} \pd{\left( ^{BCF} v_{x, T}^2 + ^{BCF} v_{y, T}^2 \right)^{1/2}}{\vb{x}} \\
+	\pd{\gamma}{^{BCF} v_{z, T}} &= \frac{\left( ^{BCF} v_{x, T}^2 + ^{BCF} v_{y, T}^2 \right)^{1/2}}{^{BCF} v^2} \\
+	\pd{\gamma}{ \left( ^{BCF} v_{x, T}^2 + ^{BCF} v_{y, T}^2 \right)^{1/2}} &= -\frac{^{BCF} v_{z, T}}{^{BCF} v^2}
+\end{align}
+
+$\pd{^{BCF} \vb{v}_T}{\vb{x}}$ is given in Eq.~\eqref{eq:v_topo_wrt_bcf_derivative}. Here, we just need to combine the components.
+
+\begin{align}
+	\pd{^{BCF} v_{z, T}}{\vb{x}} &= \pd{^{BCF} v_{z, T}}{^{BCF} \vb{v}_T} \pd{^{BCF} \vb{v}_{T}}{\vb{x}} \\
+	\pd{\left( ^{BCF} v_{x, T}^2 + ^{BCF} v_{y, T}^2 \right)^{1/2}}{\vb{x}} &= \pd{\left( ^{BCF} v_{x, T}^2 + ^{BCF} v_{y, T}^2 \right)^{1/2}}{^{BCF} \vb{v}_T} \pd{^{BCF} \vb{v}_{T}}{\vb{x}} \\
+	\pd{^{BCF} v_{z, T}}{^{BCF} \vb{v}_T} &= \left[ \begin{array}{ccc} 0 & 0 & 1 \end{array} \right] \\
+	\pd{\left( ^{BCF} v_{x, T}^2 + ^{BCF} v_{y, T}^2 \right)^{1/2}}{^{BCF} \vb{v}_T} &= \frac{1}{\left( ^{BCF} v_{x, T}^2 + ^{BCF} v_{y, T}^2 \right)^{1/2}} \left[ \begin{array}{ccc} ^{BCF} v_{x, T} & ^{BCF} v_{y, T} & 0 \end{array} \right]
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Velocity Relative to BCI Frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The flight path angle $\gamma$ is defined as
+
+\begin{align}
+\gamma &= \mathrm{asin} \left( \frac{^{BCI} v_{z, T}}{^{BCI} v} \right) \\
+&= \mathrm{atan2} \left[ ^{BCI} v_{z, T}, \left( ^{BCI} v_{x,T}^2 + ^{BCI} v_{y, T}^2 \right)^{1/2} \right],
+\end{align}
+
+\noindent where
+
+\begin{align}
+^{BCI} \vb{v}_{T} &= \vb{R}^{BCI \rightarrow T} \left[ ^{BCI} \vb{v}_{BCI} \right] \\
+\vb{R}^{BCI \rightarrow T} &= \vb{R}^{BCF \rightarrow T} \vb{R}^{BCI \rightarrow BCF} \left[^{BCI} \vb{v}_{BCI} \right]
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Derivatives}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The first level of the chain rule is performed using the derivative of $\mathrm{atan2}$. (See Section~\ref{sec:atan2}.)
+
+\begin{align}
+\pd{\gamma}{\vb{x}} &= \pd{\gamma}{^{BCI} v_{z, T}} \pd{^{BCI} v_{z, T}}{\vb{x}} + \pd{\gamma}{ \left( ^{BCI} v_{x, T}^2 + ^{BCI} v_{y, T}^2 \right)^{1/2}} \pd{\left( ^{BCI} v_{x, T}^2 + ^{BCI} v_{y, T}^2 \right)^{1/2}}{\vb{x}} \\
+\pd{\gamma}{^{BCI} v_{z, T}} &= \frac{\left( ^{BCI} v_{x, T}^2 + ^{BCI} v_{y, T}^2 \right)^{1/2}}{^{BCI} v^2} \\
+\pd{\gamma}{ \left( ^{BCI} v_{x, T}^2 + ^{BCI} v_{y, T}^2 \right)^{1/2}} &= -\frac{^{BCI} v_{z, T}}{^{BCI} v^2}
+\end{align}
+
+For derivatives of the BCI velocity, we use the chain rule and the derivative of the BCF velocity, which we already have (Eq.~\eqref{eq:v_topo_wrt_bcf_derivative}).
+
+\begin{align}
+	\pd{^{BCI} \vb{v}_T}{\vb{x}} &= \pd{}{\vb{x}} \left\{ \vb{R}^{BCF \rightarrow T} \vb{R}^{BCI \rightarrow BCF} \left[^{BCI} \vb{v}_{BCI} \right] \right\} \\
+	&= \left\{ \pd{\vb{R}^{BCF \rightarrow T}}{\vb{x}} \vb{R}^{BCI \rightarrow BCF} + \vb{R}^{BCF \rightarrow T} \pd{\vb{R}^{BCI \rightarrow BCF}}{\vb{x}} \right\} \left[ ^{BCI} \vb{v}_{BCI} \right] +  \vb{R}^{BCF \rightarrow T} \vb{R}^{BCI \rightarrow BCF} \pd{\left[^{BCI} \vb{v}_{BCI} \right]}{\vb{x}}
+\end{align}
+
+The term $\pd{\vb{R}^{BCF \rightarrow T}}{\vb{x}}$ is given by Eq.~\eqref{eq:R_bcf2t_derivative}. The term $\pd{\left[^{BCI} \vb{v}_{BCI} \right]}{\vb{x}}$ is obtained from Section~\ref{sec:v_bci}. The term $\pd{\vb{R}^{BCI \rightarrow BCF}}{t}$ is obtained from Eq.~\eqref{eq:r_bci2bcf_derivatives}. (All other elements of $\pd{\vb{R}^{BCI \rightarrow BCF}}{\vb{x}}$ are zero.)
+
+%\subsection{Old Stuff}
+%
+%The flight path angle $\gamma$ is defined as
+
+%\begin{align}
+%\gamma &= \mathrm{atan2} \left( v_{z,F_3}, v_{x,F_3} \right)
+%\end{align}
+
+%The $F_3$ frame corresponds to the triple-prime frame in Kyle Hughes' thesis and is related to the $F_2$ frame by
+
+%\begin{align}
+%\vb{R}^{F_2 \rightarrow F_3} &= \left[ \begin{array}{ccc}
+%\cos \mathcal{H} & \sin \mathcal{H} & 0 \\
+%-\sin \mathcal{H} & \cos \mathcal{H} & 0 \\
+%0 & 0 & 1
+%\end{array} \right]
+%\end{align}
+
+%Thus, $\gamma$ is easily calculated once $\mathcal{H}$ is known.
+
+%\subsection{Flight Path Angle (Velocity with Respect to BCI Frame)}
+
+%Use Section~\ref{sec:heading_bci} to calculate $\mathcal{H}$.
+
+%\subsubsection{Derivatives}
+
+%\subsection{Flight Path Angle (Velocity with Respect to BCF Frame)}
+
+%Use Section~\ref{sec:heading_bcf} to calculate $\mathcal{H}$.
+
+%\subsubsection{Derivatives}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Utility Math}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{atan2}
+\label{sec:atan2}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Let $\alpha = \mathrm{atan2} \left( \alpha_y, \alpha_x \right)$ be the atan2 function. Then
+
+\begin{align}
+	\label{eq:datan2dx}
+	\pd{\alpha}{\alpha_x} &= - \frac{\alpha_y}{\alpha_x^2 + \alpha_y^2} \\
+	\label{eq:datan2dy}
+	\pd{\alpha}{\alpha_y} &= \frac{\alpha_x}{\alpha_x^2 + \alpha_y^2}
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Magnitude of Vector}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{align}
+	\pd{x}{\vb{x}} &= \frac{\vb{x}^T}{x}
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Skew-symmetric Cross Matrix}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{align}
+	\label{eq:omega_cross}
+	\left\{\vb{\omega} \right\}^{\times} &= \left[ \begin{array}{ccc}
+	0 & -\omega_z & \omega_y \\
+	\omega_z & 0 & -\omega_x \\
+	-\omega_y & \omega_x & 0
+	\end{array} \right]
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Angle Between Two Vectors}
+\label{sec:angle_between_2_vectors}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The angle $\alpha$ between any two vectors $\vb{x}_{3 \times 1}$ and $\vb{y}_{3 \times 1}$ expressed in the same reference frame may be calculated as:
+
+\begin{align}
+	\label{eq:angle_between_2_vectors}
+	\alpha &= \mathrm{atan2} \left[ || \vb{x} \times \vb{y} ||, \vb{x}^T \vb{y} \right]
+\end{align}
+
+Note that $\alpha \in [0, \pi]$. (I.e., the angle is not ``directional'' in the sense that $\alpha$ is always the shortest angle between the two vectors.)
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Unit Vector}
+\label{sec:unit_vector}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+A unit vector is defined by
+
+\begin{align}
+	\vbh{x} &= \frac{\vb{x}}{x},
+\end{align}
+
+\noindent where $x = \left(\vb{x}^T \vb{x} \right)^{1/2}$. The derivative of a unit vector with respect to the vector itself is
+
+\begin{align}
+	\label{eq:unit_vector_derivative}
+	\pd{\vbh{x}}{\vb{x}} &= \frac{1}{x} \left( \vb{I} - \frac{1}{x^2} \vb{x} \vb{x}^T \right),
+\end{align}
+
+\noindent where $\vb{I}$ is an appropriately sized identity matrix.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Three-dimensional Tensors}
+\label{sec:tensor_math}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Derivative of Matrix with Respect to Vector}
+\label{sec:matrix_derivative_wrt_vector}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The derivative of a matrix $\vb{M}_{m \times n}$ w.r.t. a vector $\vb{v}_{p \times 1}$ is defined for the purposes of this work as a three-dimensional tensor $\vb{T}$:
+
+\begin{align}
+	\vb{T} (i, j, k) &= \pd{\vb{M} (i, j)}{\vb{v} (k)}, \quad i \in [1, m], \quad j \in [1, n], \quad k \in [1,p] 
+\end{align}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Tensor Multiplication with Vector}
+\label{sec:tensor_times_vector}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The product of tensor $\vb{T}_{n \times n \times n}$ and vector $\vb{v}_{n \times 1}$ is an $n \times n$ matrix:
+
+\begin{align}
+	\left[ \vb{T} \bullet_2 \vb{v} \right] (i, j) &\triangleq \sum_{p=1}^n \vb{T} (i, p, j) \vb{v} (p)
+\end{align}
+
+
+%\bibliography{}
+%\bibliographystyle{plain}
+
+\end{document}

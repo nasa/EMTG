@@ -1,0 +1,27 @@
+\nomenclatureentry{a$\vb{P}$@[{$\vb{P}$}]\begingroup Shorthand for $\vb{h} \times \vb{e}$\nomeqref {0}|nompageref}{4}
+\nomenclatureentry{a$\vb{x}_c$@[{$\vb{x}_c$}]\begingroup Cartesian state vector\nomeqref {0}|nompageref}{4}
+\nomenclatureentry{a$\vb{r}$@[{$\vb{r}$}]\begingroup Position vector\nomeqref {0}|nompageref}{4}
+\nomenclatureentry{a$\vb{v}$@[{$\vb{v}$}]\begingroup Velocity vector\nomeqref {0}|nompageref}{4}
+\nomenclatureentry{a$v_{\infty}$@[{$v_{\infty}$}]\begingroup Magnitude of velocity at infinity\nomeqref {1}|nompageref}{4}
+\nomenclatureentry{a$\alpha$@[{$\alpha$}]\begingroup Right ascension of hyperbolic asymptote\nomeqref {1}|nompageref}{4}
+\nomenclatureentry{a$\delta$@[{$\delta$}]\begingroup Declination of hyperbolic asymptote\nomeqref {1}|nompageref}{4}
+\nomenclatureentry{a$b$@[{$b$}]\begingroup Magnitude of $\vb{B}$ vector (sometimes called $\Delta$)\nomeqref {1}|nompageref}{4}
+\nomenclatureentry{a$\theta$@[{$\theta$}]\begingroup B-Plane clock angle\nomeqref {1}|nompageref}{4}
+\nomenclatureentry{a$\nu$@[{$\nu$}]\begingroup True anomaly\nomeqref {1}|nompageref}{4}
+\nomenclatureentry{a$\vb{i}$, $\vb{j}$, $\vb{k}$@[{$\vb{i}$, $\vb{j}$, $\vb{k}$}]\begingroup Unit vectors\nomeqref {2}|nompageref}{4}
+\nomenclatureentry{a$\vb{\phi}$@[{$\vb{\phi}$}]\begingroup B-Plane reference vector\nomeqref {2}|nompageref}{4}
+\nomenclatureentry{a$\vb{x}$; $\vbh{x}$; $x$@[{$\vb{x}$; $\vbh{x}$; $x$}]\begingroup Arbitrary vector; its unit vector; its magnitude\nomeqref {5}|nompageref}{4}
+\nomenclatureentry{a$\mu$@[{$\mu$}]\begingroup Gravitational parameter of flyby body\nomeqref {5}|nompageref}{4}
+\nomenclatureentry{a$\vb{e}$@[{$\vb{e}$}]\begingroup Eccentricity vector\nomeqref {5}|nompageref}{4}
+\nomenclatureentry{a$\vb{h}$@[{$\vb{h}$}]\begingroup Angular momentum vector\nomeqref {5}|nompageref}{4}
+\nomenclatureentry{a$\vbh{S}$@[{$\vbh{S}$}]\begingroup Unit vector in direction of incoming asymptote\nomeqref {6}|nompageref}{4}
+\nomenclatureentry{a$\vb{v}_{\infty, in}$@[{$\vb{v}_{\infty, in}$}]\begingroup Incoming velocity vector at infinity\nomeqref {6}|nompageref}{4}
+\nomenclatureentry{a$\vbh{R}$@[{$\vbh{R}$}]\begingroup B-Plane R unit vector\nomeqref {11}|nompageref}{5}
+\nomenclatureentry{a$\vbh{T}$@[{$\vbh{T}$}]\begingroup B-Plane T unit vector\nomeqref {11}|nompageref}{5}
+\nomenclatureentry{a$\vb{B}$@[{$\vb{B}$}]\begingroup B-Plane B vector\nomeqref {11}|nompageref}{5}
+\nomenclatureentry{a$B_R$@[{$B_R$}]\begingroup $\vb{B}^T \vbh{R}$\nomeqref {13}|nompageref}{5}
+\nomenclatureentry{a$B_T$@[{$B_T$}]\begingroup $\vb{B}^T \vbh{T}$\nomeqref {13}|nompageref}{5}
+\nomenclatureentry{a$r_p$@[{$r_p$}]\begingroup Periapsis radius\nomeqref {16}|nompageref}{5}
+\nomenclatureentry{a$x$, $y$, $z$@[{$x$, $y$, $z$}]\begingroup As subscripts: represent components of 3D vector\nomeqref {19}|nompageref}{5}
+\nomenclatureentry{a$\nu_{\infty}$@[{$\nu_{\infty}$}]\begingroup True anomaly at infinity\nomeqref {95}|nompageref}{12}
+\nomenclatureentry{a$\vb{I}$@[{$\vb{I}$}]\begingroup Identity matrix\nomeqref {104}|nompageref}{13}

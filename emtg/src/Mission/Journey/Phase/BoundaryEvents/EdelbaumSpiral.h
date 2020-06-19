@@ -74,7 +74,7 @@ namespace EMTG
             //segments
             void initialize_spiral_segments();
             
-            void calcbounds();
+            void calcbounds(std::vector<size_t> Xindices_leftEpoch);
 
             void process_spiral(const std::vector<doubleType>& X,
                 size_t& Xindex,
@@ -94,13 +94,12 @@ namespace EMTG
             inline double getTotalDeltav() const { return this->TotalDeltav; }
             inline double getDirection() const { return this->Direction; }
             inline math::Matrix<doubleType> getStateAfterSpiral() const { return this->state_after_spiral; }
+            std::vector<size_t> get_Xindices_SpiralEndEpoch() const { return this->Xindices_SpiralEndEpoch; }
 
             inline std::vector< std::tuple<size_t, size_t, double> >& get_Derivatives_of_StateAfterSpiral() { return this->Derivatives_of_StateAfterSpiral; }
             inline std::vector< std::tuple<size_t, size_t, double> >& get_Derivatives_of_StateAfterSpiral_wrt_Time() { return this->Derivatives_of_StateAfterSpiral_wrt_Time; }
 
         protected:
-            void calculate_dependencies_spiral_end_epoch();
-
             virtual void process_spiral_end_epoch(const std::vector<doubleType>& X,
                 size_t& Xindex,
                 std::vector<doubleType>& F,

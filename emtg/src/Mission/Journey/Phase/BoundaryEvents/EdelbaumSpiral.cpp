@@ -144,14 +144,14 @@ namespace EMTG
         }//end setup_calcbounds()
 
 
-        void EdelbaumSpiral::calcbounds()
+        void EdelbaumSpiral::calcbounds(std::vector<size_t> Xindices_leftEpoch)
         {
+            this->Xindices_SpiralEndEpoch = Xindices_leftEpoch;
             for (size_t segmentIndex = 0; segmentIndex < this->myOptions->spiral_segments; ++segmentIndex)
             {
                 this->SpiralSegments[segmentIndex].calcbounds();
+                this->Xindices_SpiralEndEpoch.push_back(this->SpiralSegments[segmentIndex].get_Xindex_spiralSegmentTime());
             }
-
-            this->calculate_dependencies_spiral_end_epoch();
 
             //set up the vectors of derivatives
             //mass has a derivative with respect to final segment's mass after segment
@@ -170,19 +170,6 @@ namespace EMTG
                 this->Derivatives_of_StateAfterSpiral_wrt_Time.push_back({ Xindex_SpiralEndEpoch, 7, 1.0 });
             }
         }//end EdelbaumSpiral()
-
-        void EdelbaumSpiral::calculate_dependencies_spiral_end_epoch()
-        {
-            //the the right-hand epoch of the spiral depends on all epoch and time variables before it *including* the spiral segment times
-            for (size_t Xindex = 0; Xindex < this->Xdescriptions->size(); ++Xindex)
-            {
-                if (this->Xdescriptions->at(Xindex).find("epoch") < 1024
-                    || this->Xdescriptions->at(Xindex).find("time") < 1024)
-                {
-                    this->Xindices_SpiralEndEpoch.push_back(Xindex);
-                }
-            }
-        }//end calculate_dependencies_spiral_end_epoch
 
         void EdelbaumSpiral::process_spiral(const std::vector<doubleType>& X,
             size_t& Xindex,

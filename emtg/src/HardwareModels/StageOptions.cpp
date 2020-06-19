@@ -72,6 +72,10 @@ namespace EMTG
             this->myPowerSystemOptions = PowerSystemOptionsInput;
             this->myElectricPropulsionSystemOptions = ElectricPropulsionSystemOptionsInput;
             this->myChemicalPropulsionSystemOptions = ChemicalPropulsionSystemOptionsInput;
+
+            this->myPowerSystemOptionsName = this->myPowerSystemOptions.getName();
+            this->myElectricPropulsionSystemOptionsName = this->myElectricPropulsionSystemOptions.getName();
+            this->myChemicalPropulsionSystemOptionsName = this->myChemicalPropulsionSystemOptions.getName();
         };
 
         //file i/o

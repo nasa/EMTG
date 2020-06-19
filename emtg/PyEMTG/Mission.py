@@ -1,21 +1,3 @@
-# EMTG: Evolutionary Mission Trajectory Generator
-# An open-source global optimization tool for preliminary mission design
-# Provided by NASA Goddard Space Flight Center
-#
-# Copyright (c) 2013 - 2020 United States Government as represented by the
-# Administrator of the National Aeronautics and Space Administration.
-# All Other Rights Reserved.
-#
-# Licensed under the NASA Open Source License (the "License"); 
-# You may not use this file except in compliance with the License. 
-# You may obtain a copy of the License at:
-# https://opensource.org/licenses/NASA-1.3
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
-# express or implied.   See the License for the specific language
-# governing permissions and limitations under the License.
-
 import Journey
 import MissionEvent
 import ThrottleTable
@@ -1163,6 +1145,16 @@ class Mission(object):
         TableFile.close()
         
     def Comparatron(self,baseline_path,csv_file_name=None,full_output=False,tolerance_dict={},default_tolerance=1e-15):
+        '''
+        NOTE FOR JACOB:
+        The lines commented out near the end of the script (starting at line 1250)
+        I left in because they may be useful if you decide you do not want the 
+        entire dataframe showing up in the failFile. If you want to change this, 
+        remove the "output.to_csv(outputdir + '/failed_tests.csv', mode='a', index=False)" 
+        line from testatron.py (line ___) and go back to writing the separate 
+        output file in this script. Whatever aspects of comparison you want to 
+        write to the failFile can be returned to the driver as comp_return in this script.
+        '''
         #Compare just constraint and decision vectors
         import pandas as pd
         #baseline_path is the file location of the emtg case to compare against. This is the only required argument.
@@ -1176,17 +1168,21 @@ class Mission(object):
         comparison = pd.DataFrame(columns=['Output Name','Baseline Value','New Value','Error','Match'])
         #This comparison df is what is written to the csv output file. The Output Name corresponds to the attribute name within the Mission, Journey, or Mission Event objects. Error is the absolute error 
         
+        #can I test the current mission? did it actually load anything? if not, return
+        if not hasattr(self, 'Journeys'):
+            return False, comparison
+
         if csv_file_name==None:
             csv_file_name = self.mission_name + '_comparison.csv'
         
         #Make sure the number of journeys and mission events are the same between both cases
         if len(baseline.Journeys) != len(self.Journeys):
             pd.DataFrame(columns=['Journey Mismatch!']).to_csv(csv_file_name,index=False)
-            return False
+            return False, comparison
         for i in range(len(baseline.Journeys)): 
             if len(baseline.Journeys[i].missionevents) != len(self.Journeys[i].missionevents):
                 pd.DataFrame(columns=['Journey ' + str(i) + ' Mission Events Mismatch']).to_csv(csv_file_name,index=False)
-                return False
+                return False, comparison
         
         #Check that all attributes agree between self and the baseline case. Any disagreements are added to the end of the csv output file
         all_baseline_attributes = ['Mission.'+a for a in dir(baseline)] + ['Journey.'+a for a in dir(baseline.Journeys[0])] + ['MissionEvent.'+a for a in dir(baseline.Journeys[0].missionevents[0])]
@@ -1206,6 +1202,16 @@ class Mission(object):
             finaldf = df.loc[(df != correct_difference).any(axis=1)]
             finaldf = finaldf.transpose()
             finaldf = finaldf.loc[(finaldf != correct_difference).any(axis=1)]
+            return finaldf
+        
+        #The following function unpacks lists of lists
+        def unpackLists(df):
+            finaldf=df.copy()
+            for col in finaldf.columns:
+                if isinstance(finaldf[col][0], list): #checks if the seris is populated by lists
+                    for i in range(0, finaldf[col].count()):
+                        finaldf[col+str(i)]=pd.Series(finaldf[col][i])
+                    finaldf=finaldf.drop([col],axis=1)
             return finaldf
         
         #Store all relevant mission values and find the values that are not in agreement
@@ -1295,15 +1301,18 @@ class Mission(object):
         if len(attributes_only_in_new) != 0:
             comparison = comparison.append({'Output Name':'Attributes only in New','New Value':attributes_only_in_new,'Match':False},ignore_index=True)
         
+        #pdb.set_trace()
+        
         #Return a value of True if the missions are in complete agreement
         if len(comparison.loc[comparison['Match']==False]) == 0 and attr_check == 0:
-            return True
+            return True, comparison;
         else:
+#            comp_return=list(comparison.loc[comparison['Match']==False]['Output Name'])
             if full_output: #if full_output=True, save all values present in comparison to a csv
                 comparison = comparison[['Output Name','Baseline Value','New Value','Error','Tolerance','Match']]
                 comparison.to_csv(csv_file_name,index=False)
-                return False
+                return False, comparison;
             else: #if full_output=False, save only values that are not within the tolerance to a csv
                 comparison = comparison[['Output Name','Baseline Value','New Value','Error','Tolerance','Match']]
                 comparison.loc[comparison['Match']==False].to_csv(csv_file_name,index=False)
-                return False
+                return False, comparison;

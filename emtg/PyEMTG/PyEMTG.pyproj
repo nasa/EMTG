@@ -30,6 +30,8 @@
     <Compile Include="auto_boost_python.py" />
     <Compile Include="Body.py" />
     <Compile Include="BodyPicker.py" />
+    <Compile Include="BPlane2PosVel.py" />
+    <Compile Include="BPlane2PosVelOut.py" />
     <Compile Include="BubbleOptions.py" />
     <Compile Include="bulletproof.py" />
     <Compile Include="clusterize.py" />
@@ -43,9 +45,11 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Converters\Convert_emtgopt_v1_to_v2.py" />
+    <Compile Include="Converters\convert_to_single_phase_journeys.py" />
     <Compile Include="Converters\Convert_TwoPointShootingLowThrust_to_PSFB.py" />
     <Compile Include="Converters\MGAnDSMs_HiFi_to_LowFi_Flybys.py" />
     <Compile Include="Converters\PSFB_converter_driver.py" />
+    <Compile Include="Converters\rephase_to_discrete_thrust_and_coast_arcs.py" />
     <Compile Include="EOM.py" />
     <Compile Include="GlobalOptionsPanel.py" />
     <Compile Include="GMAT_mission_renderer\GMR_Driver.py">
@@ -66,8 +70,11 @@
     <Compile Include="JourneyOptionsPanel\JourneyOptionsPanel.py" />
     <Compile Include="JourneyOptionsPanel\JourneyStagingPanel.py" />
     <Compile Include="JourneyOptionsPanel\OrbitElementsPanel.py" />
+    <Compile Include="JourneyOptionsPanel\ProbeArrivalElementsPanelToAEI.py" />
+    <Compile Include="JourneyOptionsPanel\ProbeArrivalElementsPanelToEnd.py" />
     <Compile Include="JourneyOptionsV1.py" />
     <Compile Include="kepler.py" />
+    <Compile Include="mathUtilities.py" />
     <Compile Include="Mission.py" />
     <Compile Include="MissionEvent.py" />
     <Compile Include="MissionOptions.py" />
@@ -112,6 +119,8 @@
     <Compile Include="PEATSA\Util.py" />
     <Compile Include="PhysicsOptionsPanel.py" />
     <Compile Include="PlotOptions.py" />
+    <Compile Include="posVel2BPlane.py" />
+    <Compile Include="posVel2BPlaneOut.py" />
     <Compile Include="PyEMTG.py" />
     <Compile Include="PyEMTG_interface.py" />
     <Compile Include="PyGMATscripter\PyGMAT2Darray.py" />
@@ -157,6 +166,7 @@
     <Compile Include="ReportGenerators\BodyDistanceReport.py" />
     <Compile Include="ReportGenerators\DistanceToBodiesGenerator.py" />
     <Compile Include="ReportGenerators\EMTG_ephemeris_reader.py" />
+    <Compile Include="ReportGenerators\make_many_bsps.py" />
     <Compile Include="ReportGenerators\ManeuverFileGenerator.py" />
     <Compile Include="ReportGenerators\MonteCarloTestDriver.py" />
     <Compile Include="ReportGenerators\PSFBthrustHistoryTable.py" />
@@ -179,6 +189,7 @@
     <Compile Include="SpacecraftOptionsPanel\SpacecraftOptionsPanel.py" />
     <Compile Include="SpacecraftOptionsPanel\TankPanel.py" />
     <Compile Include="SpiceyPy_Utilities\SpiceyPy_Utilities.py" />
+    <Compile Include="StateConverter.py" />
     <Compile Include="test_PyMissionOptions.py" />
     <Compile Include="ThrottleTable.py" />
     <Compile Include="Universe.py" />

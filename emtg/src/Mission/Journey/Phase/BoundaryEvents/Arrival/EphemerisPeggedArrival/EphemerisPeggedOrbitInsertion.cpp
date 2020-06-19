@@ -47,14 +47,14 @@ namespace EMTG
         //******************************************calcbounds methods
 
         //calcbounds
-        void EphemerisPeggedOrbitInsertion::calcbounds()
+        void EphemerisPeggedOrbitInsertion::calcbounds(std::vector<size_t> timeVariables)
         {
             //create bounds for the v-infinity
             double vinf_max = this->myUniverse->LU / this->myUniverse->TU;
 
             std::vector< std::tuple<double, double> > vinfBounds = std::vector< std::tuple<double, double> >(3, std::make_tuple(-vinf_max, vinf_max));
 
-            this->calcbounds_event_left_side();
+            this->calcbounds_event_left_side(timeVariables);
 
             this->calcbounds_event_main(vinfBounds);
 

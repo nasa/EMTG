@@ -103,9 +103,9 @@ namespace EMTG
         this->throttle_sharpness = 100;
         this->throttle_logic_mode = (ThrottleLogic) 1;
         this->spacecraft_power_coefficients = std::vector<double>({ 0, 0, 0}); 
-        this->engine_input_thrust_coefficients = std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}); 
-        this->engine_input_mass_flow_rate_coefficients = std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}); 
-        this->engine_input_power_bounds = std::vector<double>({ 0.0, 5.0}); 
+        this->engine_input_thrust_coefficients = std::vector<double>({ 26.337459, -51.694393, 90.486509, -36.720293, 5.145602, 0.0, 0.0}); 
+        this->engine_input_mass_flow_rate_coefficients = std::vector<double>({ 2.506, -5.3568, 6.2539, -2.5372, 0.36985, 0.0, 0.0}); 
+        this->engine_input_power_bounds = std::vector<double>({ 0.525, 2.6}); 
         this->user_defined_engine_efficiency = 0.7;
         this->spacecraft_power_model_type = (SpacecraftBusPowerType) 0;
         this->TCM_Isp = 200;
@@ -151,6 +151,7 @@ namespace EMTG
         this->covariance_file_path = "./shampoo_bottle.ephemeris";
         this->ParallelShootingStateRepresentation = (StateRepresentation) 1;
         this->PeriapseBoundaryStateRepresentation = (StateRepresentation) 1;
+        this->ParallelShootingConstraintStateRepresentation = (ConstraintStateRepresentation) 0;
         this->print_only_non_default_options = (bool) 1;
         this->output_file_frame = (ReferenceFrame) 1;
         this->override_default_output_file_name = (bool) 0;
@@ -200,7 +201,7 @@ namespace EMTG
         this->RLA_bounds_lowerBound = -math::LARGE;
         this->RLA_bounds_upperBound = math::LARGE;
         this->mission_type_lowerBound = (PhaseType) 0;
-        this->mission_type_upperBound = (PhaseType) 9;
+        this->mission_type_upperBound = (PhaseType) 10;
         this->NLP_solver_type_lowerBound = 0;
         this->NLP_solver_type_upperBound = 1;
         this->NLP_solver_mode_lowerBound = (NLPMode) 0;
@@ -354,9 +355,11 @@ namespace EMTG
         this->forced_post_flyby_coast_lowerBound = 0 * 86400.0;
         this->forced_post_flyby_coast_upperBound = math::LARGE * 86400.0;
         this->ParallelShootingStateRepresentation_lowerBound = (StateRepresentation) 0;
-        this->ParallelShootingStateRepresentation_upperBound = (StateRepresentation) 2;
+        this->ParallelShootingStateRepresentation_upperBound = (StateRepresentation) 4;
         this->PeriapseBoundaryStateRepresentation_lowerBound = (StateRepresentation) 0;
-        this->PeriapseBoundaryStateRepresentation_upperBound = (StateRepresentation) 2;
+        this->PeriapseBoundaryStateRepresentation_upperBound = (StateRepresentation) 6;
+        this->ParallelShootingConstraintStateRepresentation_lowerBound = (ConstraintStateRepresentation) 0;
+        this->ParallelShootingConstraintStateRepresentation_upperBound = (ConstraintStateRepresentation) 1;
         this->output_file_frame_lowerBound = (ReferenceFrame) 0;
         this->output_file_frame_upperBound = (ReferenceFrame) 7;
         this->post_mission_wait_time_lowerBound = 0;
@@ -1675,6 +1678,17 @@ namespace EMTG
             }
             return;
         }
+        if (linecell[0] == "ParallelShootingConstraintStateRepresentation")
+        {
+            this->ParallelShootingConstraintStateRepresentation = (ConstraintStateRepresentation) std::stoi(linecell[1]);
+            
+            //bounds check
+            if (this->ParallelShootingConstraintStateRepresentation < this->ParallelShootingConstraintStateRepresentation_lowerBound || this->ParallelShootingConstraintStateRepresentation > this->ParallelShootingConstraintStateRepresentation_upperBound)
+            {
+                throw std::out_of_range("Input option ParallelShootingConstraintStateRepresentation is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->ParallelShootingConstraintStateRepresentation) + ", bounds are [" + std::to_string(this->ParallelShootingConstraintStateRepresentation_lowerBound) + ", " + std::to_string(this->ParallelShootingConstraintStateRepresentation_upperBound) + "].");
+            }
+            return;
+        }
         if (linecell[0] == "print_only_non_default_options")
         {
             this->print_only_non_default_options = (bool) std::stoi(linecell[1]);
@@ -1911,7 +1925,7 @@ namespace EMTG
     
         if (this->objective_type != 2 || writeAll)
         {
-            optionsFileStream << "#objective function type\n#0: minimum deltaV\n#1: minimum time\n#2: maximum final mass\n#3: maximize initial mass\n#4: depart as late as possible in the window\n#5: depart as early as possible in the window\n#6: maximize orbit energy\n#7: minimize launch mass\n#8: arrive as early as possible\n#9: arrive as late as possible\n#10: minimum propellant (not the same as #2)\n#11: maximum dry/wet ratio\n#12: maximum arrival kinetic energy\n#13: minimum BOL power\n#14: maximize log_10(final mass)\n#15: maximum log_e(final mass)\n#16: maximum dry mass margin\n#17: maximum dry mass\n#18: maximum log_10(dry mass)\n#19: maximum log_e(dry mass)\n#20: minimize chemical fuel\n#21: minimize chemical oxidizer\n#22: minimize electric propellant\n#23: minimize total propellant\n#24: minimize waypoint tracking error\n#25: minimize initial impulse magnitude\n#26: maximize distance from central body" << std::endl;
+            optionsFileStream << "#objective function type\n#0: minimum deltaV\n#1: minimum time\n#2: maximum final mass\n#3: maximize initial mass\n#4: depart as late as possible in the window\n#5: depart as early as possible in the window\n#6: maximize orbit energy\n#7: minimize launch mass\n#8: arrive as early as possible\n#9: arrive as late as possible\n#10: <PLACEHOLDER FOR FUTURE OBJECTIVE FUNCTIONS>\n#11: maximum dry/wet ratio\n#12: maximum arrival kinetic energy\n#13: minimum BOL power\n#14: maximize log_10(final mass)\n#15: maximum log_e(final mass)\n#16: maximum dry mass margin\n#17: maximum dry mass\n#18: maximum log_10(dry mass)\n#19: maximum log_e(dry mass)\n#20: minimize chemical fuel\n#21: minimize chemical oxidizer\n#22: minimize electric propellant\n#23: minimize total propellant\n#24: minimize waypoint tracking error\n#25: minimize initial impulse magnitude\n#26: maximize distance from central body" << std::endl;
             optionsFileStream << "objective_type " << this->objective_type << std::endl;
         }
     
@@ -1968,7 +1982,7 @@ namespace EMTG
         
         if (this->mission_type != 2 || writeAll)
         {
-            optionsFileStream << "#phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable phase type" << std::endl;
+            optionsFileStream << "#phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable phase type\n#10: ProbeEntryPhase" << std::endl;
             optionsFileStream << "mission_type " << this->mission_type << std::endl;
         }
     
@@ -2284,7 +2298,7 @@ namespace EMTG
             optionsFileStream << "LV_adapter_mass " << this->LV_adapter_mass << std::endl;
         }
     
-        if (this->engine_type != 6 || writeAll)
+        if (this->engine_type != 5 || writeAll)
         {
             optionsFileStream << "#low-thrust engine type\n#0: fixed thrust/Isp\n#1: constant Isp, efficiency, EMTG computes input power\n#2: choice of power model, constant efficiency, EMTG chooses Isp\n#3: choice of power model, constant efficiency and Isp\n#4: continuously-varying specific impulse\n#5: custom thrust and mass flow rate polynomial\n#6: NSTAR\n#7: XIPS-25\n#8: BPT-4000 High-Isp\n#9: BPT-4000 High-Thrust\n#10: BPT-4000 Ex-High-Isp\n#11: NEXT high-Isp v9\n#12: VASIMR (argon, using analytical model)\n#13: Hall Thruster (Xenon, using analytical model)\n#14: NEXT high-ISP v10\n#15: NEXT high-thrust v10\n#16: BPT-4000 MALTO\n#17: NEXIS Cardiff 8-15-201\n#18: H6MS Cardiff 8-15-2013\n#19: BHT20K Cardiff 8-16-2013\n#20: Aerojet HiVHAC EM\n#21: 13 kW STMD Hall high-Isp (not available in open-source)\n#22: 13 kW STMD Hall high-thrust (not available in open-source)\n#23: NEXT TT11 High-Thrust\n#24: NEXT TT11 High-Isp\n#25: NEXT TT11 Expanded Throttle Table\n#26: 13 kW STMD Hall high-Isp 10-1-2014 (not available in open-source)\n#27: 13 kW STMD Hall medium-thrust 10-1-2014 (not available in open-source)\n#28: 13 kW STMD Hall high-thrust 10-1-2014 (not available in open-source)\n#29: 2D Throttle table\n#30: 1D Throttle table high-thrust\n#31: 1D Throttle table high-Isp\n#32: 2D polynomial fit" << std::endl;
             optionsFileStream << "engine_type " << this->engine_type << std::endl;
@@ -2380,7 +2394,7 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->engine_input_thrust_coefficients != std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}) || writeAll)
+        if (this->engine_input_thrust_coefficients != std::vector<double>({ 26.337459, -51.694393, 90.486509, -36.720293, 5.145602, 0.0, 0.0}) || writeAll)
         {
             optionsFileStream << "#thrust polynomial coefficients" << std::endl;
             optionsFileStream << "engine_input_thrust_coefficients";
@@ -2389,7 +2403,7 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->engine_input_mass_flow_rate_coefficients != std::vector<double>({ 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}) || writeAll)
+        if (this->engine_input_mass_flow_rate_coefficients != std::vector<double>({ 2.506, -5.3568, 6.2539, -2.5372, 0.36985, 0.0, 0.0}) || writeAll)
         {
             optionsFileStream << "#mass flow rate polynomial coefficients" << std::endl;
             optionsFileStream << "engine_input_mass_flow_rate_coefficients";
@@ -2398,7 +2412,7 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->engine_input_power_bounds != std::vector<double>({ 0.0, 5.0}) || writeAll)
+        if (this->engine_input_power_bounds != std::vector<double>({ 0.525, 2.6}) || writeAll)
         {
             optionsFileStream << "#thruster input power bounds (kW)" << std::endl;
             optionsFileStream << "engine_input_power_bounds";
@@ -2670,14 +2684,20 @@ namespace EMTG
     
         if (this->ParallelShootingStateRepresentation != 1 || writeAll)
         {
-            optionsFileStream << "#state representation for parallel shooting (Cartesian, SphericalRADEC, SphericalAZFPA)" << std::endl;
+            optionsFileStream << "#state representation for parallel shooting (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE)" << std::endl;
             optionsFileStream << "ParallelShootingStateRepresentation " << this->ParallelShootingStateRepresentation << std::endl;
         }
     
         if (this->PeriapseBoundaryStateRepresentation != 1 || writeAll)
         {
-            optionsFileStream << "#state representation for periapse boundary conditions (Cartesian, SphericalRADEC, SphericalAZFPA)" << std::endl;
+            optionsFileStream << "#state representation for periapse boundary conditions (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)" << std::endl;
             optionsFileStream << "PeriapseBoundaryStateRepresentation " << this->PeriapseBoundaryStateRepresentation << std::endl;
+        }
+    
+        if (this->ParallelShootingConstraintStateRepresentation != 0 || writeAll)
+        {
+            optionsFileStream << "#state representation for parallel shooting constraints (Cartesian or same as encoded states)" << std::endl;
+            optionsFileStream << "ParallelShootingConstraintStateRepresentation " << this->ParallelShootingConstraintStateRepresentation << std::endl;
         }
     
         if (this->print_only_non_default_options != 1 || writeAll)

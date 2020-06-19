@@ -79,14 +79,29 @@ namespace EMTG
             this->construct_boundary_constraints();
         }//end initialize()
         
-        void DepartureEvent::construct_boundary_constraints()
+        void DepartureEvent::construct_boundary_constraints(std::vector<std::string> givenConstraints)
         {
             //first construct this event's tag
             std::string Tag = "p" + std::to_string(this->phaseIndex)
                 + "_departure";
 
+            //clear the current constraint vector
+            this->mySpecializedConstraints.clear();
+
+            //are we adding constraints from journeyOptions or from an input vector?
+            std::vector<std::string>* constraintsToAdd;
+
+            if (!givenConstraints.empty())
+            {
+                constraintsToAdd = &givenConstraints;
+            }
+            else
+            {
+                constraintsToAdd = &this->myJourneyOptions->BoundaryConstraintDefinitions;
+            }
+
             //now, loop over constraints to see if they are relevant
-            for (std::string& constraint : this->myJourneyOptions->BoundaryConstraintDefinitions)
+            for (std::string& constraint : *constraintsToAdd)
             {
                 if (constraint.find("#") != 0) //don't create a constraint if it is commented out
                 {
@@ -128,6 +143,7 @@ namespace EMTG
                 Xupperbounds->push_back(this->myJourneyOptions->wait_time_bounds[1]);
                 this->X_scale_factors->push_back(1.0 / this->myUniverse->continuity_constraint_scale_factors(7));
                 this->Xdescriptions->push_back(prefix + "wait time");
+                this->Xindices_EventLeftEpoch.push_back(this->Xdescriptions->size() - 1);
             }
         }//end calcbounds_event_left_side()
 

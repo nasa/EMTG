@@ -22,6 +22,10 @@
 #include "StageOptions.h"
 #include "SpacecraftOptions.h"
 
+#ifdef HAS_BUILT_IN_THRUSTERS
+    #include "engine_model.h"
+#endif
+
 
 namespace EMTG
 {
@@ -82,8 +86,19 @@ namespace EMTG
 
                 for (size_t stageIndex = 0; stageIndex < mySpacecraftOptions.getNumberOfStages(); ++stageIndex)
 				{
-                    mySpacecraftOptions.getStageOptions(stageIndex).getPowerSystemOptions().setPowerMargin(options.power_margin);
-                    mySpacecraftOptions.getStageOptions(stageIndex).getPowerSystemOptions().setPowerSystemDecayRefEpoch(options.power_system_decay_reference_epoch);
+                    //have to make a new StageOptions and assign it
+                    //make a new power system options
+                    StageOptions myStage(mySpacecraftOptions.getStageOptions(stageIndex));
+                    PowerSystemOptions myPowerSystemOptions(myStage.getPowerSystemOptions());
+                                        
+                    myPowerSystemOptions.setPowerMargin(options.power_margin);
+                    myPowerSystemOptions.setPowerSystemDecayRefEpoch(options.power_system_decay_reference_epoch);
+
+                    //put it on a copy of the stage
+                    myStage.setPowerSystemOptions(myPowerSystemOptions);
+
+                    //overwrite the old stage
+                    mySpacecraftOptions.setStageOptions(stageIndex, myStage);
 				}
 
                 if (options.constrain_dry_mass)
@@ -145,11 +160,11 @@ namespace EMTG
                         myElectricPropulsionSystemOptions.setThrusterMode(EMTG::SpacecraftThrusterMode::ConstantThrustIsp);
                         break;
                     case 1:
-                        myElectricPropulsionSystemOptions.setThrusterMode(EMTG::SpacecraftThrusterMode::FixedEfficiencyCSI);
+                        throw std::invalid_argument("User has selected engine_type 1: \"constant Isp, efficiency, EMTG chooses input power\". This engine type is not currently implemented. Halting program.");
                         break;
                     case 2:
                         myElectricPropulsionSystemOptions.setThrusterMode(EMTG::SpacecraftThrusterMode::FixedEfficiencyVSI);
-                        throw std::invalid_argument("User has selected engine_type 2: \"choice of power model, constant effic1iency, EMTG chooses Isp\". This engine type is not currently implemented. Halting program.");
+                        throw std::invalid_argument("User has selected engine_type 2: \"choice of power model, constant efficiency, EMTG chooses Isp\". This engine type is not currently implemented. Halting program.");
                         break;
                     case 3:
                         myElectricPropulsionSystemOptions.setThrusterMode(EMTG::SpacecraftThrusterMode::FixedEfficiencyCSI);
@@ -166,6 +181,7 @@ namespace EMTG
                         break;
                     case 29:
                         myElectricPropulsionSystemOptions.setThrusterMode(EMTG::SpacecraftThrusterMode::Stepped2D);
+                        throw std::invalid_argument("User has selected engine_type 29: \"2D stepped model\". This engine type is not currently implemented in the phase transcriptions, although the spacecraft model does have it. Halting program.");
                         break;
                     case 30:
                         myElectricPropulsionSystemOptions.setThrusterMode(EMTG::SpacecraftThrusterMode::SteppedHThrust1D);
@@ -175,10 +191,29 @@ namespace EMTG
                         break;
                     case 32:
                         myElectricPropulsionSystemOptions.setThrusterMode(EMTG::SpacecraftThrusterMode::Poly2D);
+                        throw std::invalid_argument("User has selected engine_type 32: \"2D polynomial\". This engine type is not currently implemented in the phase transcriptions, although the spacecraft model does have it. Halting program.");
                         break;
-                    default:
+                    default: //built-in thruster model
+
+#ifdef HAS_BUILT_IN_THRUSTERS
                         //recover coefficients from hard-coded models, but remember that the coefficients were in the reverse order back then
-                        throw std::invalid_argument("Hard-coded thrusters are not available in the open-source version.");
+                        myElectricPropulsionSystemOptions.setThrusterMode(EMTG::SpacecraftThrusterMode::Poly1D);
+
+                        EMTG::Astrodynamics::get_thruster_coefficients_from_library(options,
+                            temp_minP,
+                            temp_maxP,
+                            temp_thrust_coefficients[0], temp_thrust_coefficients[1], temp_thrust_coefficients[2], temp_thrust_coefficients[3], temp_thrust_coefficients[4], temp_thrust_coefficients[5], temp_thrust_coefficients[6],
+                            temp_mass_flow_coefficients[0], temp_mass_flow_coefficients[1], temp_mass_flow_coefficients[2], temp_mass_flow_coefficients[3], temp_mass_flow_coefficients[4], temp_mass_flow_coefficients[5], temp_mass_flow_coefficients[6]);
+
+                        myElectricPropulsionSystemOptions.setThrustCoefficients(temp_thrust_coefficients);
+                        myElectricPropulsionSystemOptions.setMassFlowCoefficients(temp_mass_flow_coefficients);
+
+                        myElectricPropulsionSystemOptions.setPmin(temp_minP);
+                        myElectricPropulsionSystemOptions.setPmax(temp_maxP);
+#else //HAS_BUILT_IN_THRUSTERS
+                        throw std::invalid_argument("User has selected engine_type " + std::to_string(options.engine_type) + ". This thruster model is not included with your version of EMTG. You will have to construct a propulsion model file for it based on publicly available data. Halting program.");
+#endif //HAS_BUILT_IN_THRUSTERS
+
                         break;
                 }
 

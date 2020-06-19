@@ -47,6 +47,9 @@ namespace EMTG
                 HardwareModels::Spacecraft* mySpacecraft,
                 missionoptions* myOptions);
 
+            void construct_journey_boundary_constraints();
+            virtual void construct_boundary_constraints(std::vector<std::string> givenConstraints = {});
+
             virtual ~ArrivalEvent() {};
 
             virtual void output_mass_increment(std::ofstream& outputfile);
@@ -59,7 +62,6 @@ namespace EMTG
             inline math::Matrix<doubleType>& get_state_after_event_raw() { return this->state_after_event_raw; }
 
         protected:
-            virtual void construct_boundary_constraints();
 
             virtual void calcbounds_event_right_side() = 0;
 

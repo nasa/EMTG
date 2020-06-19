@@ -44,7 +44,7 @@ namespace EMTG
         //******************************************calcbounds methods
 
         //calcbounds
-        void EphemerisReferencedLTRendezvousInterior::calcbounds()
+        void EphemerisReferencedLTRendezvousInterior::calcbounds(std::vector<size_t> timeVariables)
         {
             std::vector<double> RAbounds({ -2880.0, 2880.0 });
             std::vector<double> DECbounds({ -90.0, 90.0 });
@@ -64,9 +64,9 @@ namespace EMTG
                 EpochBounds[1] = this->myBody->getEphemerisWindowClose();
             }
 
-            this->calcbounds_event_interface_state(RAbounds, DECbounds, MassBounds, EpochBounds);
+            this->calcbounds_event_interface_state(RAbounds, DECbounds, MassBounds, EpochBounds, timeVariables);
 
-            this->calcbounds_event_left_side();
+            this->calcbounds_event_left_side(timeVariables);
 
             //no calcbounds_event_main because LT_rendezvous is trivial
 
@@ -78,16 +78,17 @@ namespace EMTG
         void EphemerisReferencedLTRendezvousInterior::calcbounds_event_interface_state(const std::vector<double>& RAbounds,
             const std::vector<double>& DECbounds,
             std::vector<double>& MassBounds,
-            const std::vector<double>& EpochBounds)
+            const std::vector<double>& EpochBounds,
+            std::vector<size_t> timeVariables)
         {
-            this->EphemerisReferencedArrivalInterior::calcbounds_event_interface_state(RAbounds, DECbounds, MassBounds, EpochBounds);
+            this->EphemerisReferencedArrivalInterior::calcbounds_event_interface_state(RAbounds, DECbounds, MassBounds, EpochBounds, timeVariables);
         }//end calcbounds_event_interface_state()
 
 
-        void EphemerisReferencedLTRendezvousInterior::calcbounds_event_left_side()
+        void EphemerisReferencedLTRendezvousInterior::calcbounds_event_left_side(std::vector<size_t> timeVariables)
         {
             //base class
-            this->EphemerisReferencedArrivalInterior::calcbounds_event_left_side();
+            this->EphemerisReferencedArrivalInterior::calcbounds_event_left_side(timeVariables);
 
             //no specialized variables
         }//end calcbounds_event_left_side()

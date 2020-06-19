@@ -42,7 +42,7 @@ namespace EMTG {
                               std::vector<std::string>* Xdescriptions);
 
             // destructor
-            ~AccelerationModel();
+            virtual ~AccelerationModel();
 
             inline void setEpoch(const doubleType & epoch_in) { this->current_epoch = epoch_in; 
                                                                 this->current_epoch_JD = (this->current_epoch / 86400.0 + 2400000.5);}

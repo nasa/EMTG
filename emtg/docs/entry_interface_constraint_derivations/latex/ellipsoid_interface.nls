@@ -1,0 +1,50 @@
+\begin{thenomenclature} 
+
+ \nomgroup{A}
+
+  \item [{$\gamma$}]\begingroup Flight path angle\nomeqref {159}
+		\nompageref{21}
+  \item [{$\lambda$}]\begingroup Bodycentric longitude in BCF\nomeqref {56}
+		\nompageref{10}
+  \item [{$\lambda'$}]\begingroup Bodydetic longitude in BCF\nomeqref {60}
+		\nompageref{10}
+  \item [{$\mathcal{H}$}]\begingroup Heading angle\nomeqref {108}
+		\nompageref{15}
+  \item [{$\phi$}]\begingroup Bodycentric latitude in BCF\nomeqref {35}
+		\nompageref{8}
+  \item [{$\phi'$}]\begingroup Bodydetic latitude in BCF\nomeqref {49}
+		\nompageref{9}
+  \item [{$\vbh{x}$}]\begingroup Unit vector in direction of arbitrary vector $\vb{x}$\nomeqref {8}
+		\nompageref{4}
+  \item [{$\vbh{x}$, $\vbh{y}$, $\vbh{z}$}]\begingroup Unit vectors defining a coordinate frame\nomeqref {8}
+		\nompageref{4}
+  \item [{$\vb{r}$}]\begingroup Position vector\nomeqref {21}
+		\nompageref{6}
+  \item [{$\vb{x}_A$}]\begingroup Vector expressed in $A$ frame coordinates\nomeqref {21}
+		\nompageref{6}
+  \item [{$^A \left[ \vb{v} \right]$}]\begingroup Velocity vector with respect to $A$ frame\nomeqref {21}
+		\nompageref{6}
+  \item [{$^{A} \left[ \ddt{\vb{x}} \right]$}]\begingroup Time derivative of vector $\vb{x}$ with respect to the $A$ reference frame\nomeqref {86}
+		\nompageref{13}
+  \item [{$^{B} \vb{\omega}^{A}$}]\begingroup Angular velocity vector of frame $B$ with respect to frame $A$\nomeqref {86}
+		\nompageref{13}
+  \item [{$_P \vb{S}_{BCF}, _P \vb{E}_{BCF}, \vb{n}_{BCF}$}]\begingroup Unit vectors of polar frame, expressed in BCF coordinates\nomeqref {13}
+		\nompageref{5}
+  \item [{$_T \vb{S}_{BCF}, _T \vb{E}_{BCF}, \vb{n}_{BCF}$}]\begingroup Unit vectors of topocentric frame, expressed in BCF coordinates\nomeqref {10}
+		\nompageref{5}
+  \item [{$a$, $b$, $c$}]\begingroup The lengths of the semimajor, semiminor, and semiintermediate axes of the ellipsoid\nomeqref {21}
+		\nompageref{6}
+  \item [{$P$}]\begingroup Polar south-east-up frame\nomeqref {0}
+		\nompageref{3}
+  \item [{$T$}]\begingroup Topocentric south-east-up frame\nomeqref {0}
+		\nompageref{3}
+  \item [{$w$}]\begingroup Rotation angle about the $\vbh{z}$ axis relating the BCI and BCF frames.\nomeqref {8}
+		\nompageref{4}
+  \item [{BCF}]\begingroup Body-centered, body-fixed reference frame; rotates with central body, but is not necessarily aligned with the principal axes of the ellipsoid\nomeqref {0}
+		\nompageref{3}
+  \item [{BCI}]\begingroup Body-centered inertial reference frame; does not rotate with the central body\nomeqref {0}
+		\nompageref{3}
+  \item [{PA}]\begingroup Body-centered, body-fixed reference frame aligned with the principal axes of the ellipsoid; rotates with central body\nomeqref {0}
+		\nompageref{3}
+
+\end{thenomenclature}

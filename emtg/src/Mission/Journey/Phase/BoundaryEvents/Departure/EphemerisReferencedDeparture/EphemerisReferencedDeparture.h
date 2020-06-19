@@ -56,7 +56,7 @@ namespace EMTG
                 ArrivalEvent* PreviousPhaseArrivalEvent);
 
             //destructor
-            ~EphemerisReferencedDeparture() {};
+            virtual ~EphemerisReferencedDeparture() {};
 
             //output
             virtual void output(std::ofstream& outputfile,
@@ -70,7 +70,7 @@ namespace EMTG
 
             //method to calculate event left side
 
-            virtual void calcbounds_event_left_side();
+            virtual void calcbounds_event_left_side(std::vector<size_t> timeVariables);
 
             //virtual void calcbounds_event_right_side();
 

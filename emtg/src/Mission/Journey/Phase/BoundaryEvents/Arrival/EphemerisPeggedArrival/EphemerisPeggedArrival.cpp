@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2014 - 2017 United States Government as represented by the
+// Copyright (c) 2013 - 2020 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -81,7 +81,7 @@ namespace EMTG
         }//end initialize()
         
         //******************************************calcbounds methods
-        void EphemerisPeggedArrival::calcbounds_event_left_side()
+        void EphemerisPeggedArrival::calcbounds_event_left_side(std::vector<size_t> timeVariables)
         {
             this->X_index_of_first_decision_variable_in_this_event = this->Xdescriptions->size();
 
@@ -104,7 +104,7 @@ namespace EMTG
             }
 
             //Step 2: base ephemeris pegged boundary
-            EphemerisPeggedBoundary::calcbounds_event_left_side(MassBounds, EpochBounds);
+            EphemerisPeggedBoundary::calcbounds_event_left_side(MassBounds, EpochBounds, timeVariables);
         }//end calcbounds_event_left_side()
 
         void EphemerisPeggedArrival::calcbounds_event_right_side()

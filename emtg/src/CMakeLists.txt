@@ -32,7 +32,8 @@ include_directories(Astrodynamics
                     Scalatron)
 
 include_directories(Astrodynamics/AccelerationModel
-                    Astrodynamics/EquationsOfMotion)
+                    Astrodynamics/EquationsOfMotion
+                    Astrodynamics/StateRepresentation)
 include_directories(Mission 
                     Mission/Journey 
                     Mission/Journey/Phase 
@@ -44,6 +45,7 @@ include_directories(Mission
                     Mission/Journey/Phase/TwoPointShootingPhase/TwoPointShootingLowThrustPhase/MGALT/MGALTS
                     Mission/Journey/Phase/TwoPointShootingPhase/MGAnDSMs
                     Mission/Journey/Phase/TwoPointShootingPhase/MGAnDSMs/ManeuverConstraints
+                    Mission/Journey/Phase/TwoPointShootingPhase/MGAnDSMs/ProbeEntryPhase
                     Mission/Journey/Phase/TwoPointShootingPhase/CoastPhase
                     Mission/Journey/Phase/TwoPointShootingPhase/CoastPhase/SundmanCoastPhase
                     Mission/Journey/Phase/ParallelShootingPhase

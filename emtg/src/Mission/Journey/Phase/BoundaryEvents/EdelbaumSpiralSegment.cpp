@@ -262,15 +262,8 @@ namespace EMTG
 
         void EdelbaumSpiralSegment::calculate_dependencies_epoch_time()
         {
-            //the left epoch of this event depends on all epoch and time variables before it
-            for (size_t Xindex = 0; Xindex < this->Xdescriptions->size(); ++Xindex)
-            {
-                if (this->Xdescriptions->at(Xindex).find("epoch") < 1024
-                    || this->Xdescriptions->at(Xindex).find("time") < 1024)
-                {
-                    this->Xindices_EventLeftEpoch.push_back(Xindex);
-                }
-            }
+            //the left epoch of this event depends on whatever time variables the parent spiral currently has stored
+            this->Xindices_EventLeftEpoch = this->mySpiral->get_Xindices_SpiralEndEpoch();
         }//end calculate_dependencies_left_epoch
 
         void EdelbaumSpiralSegment::process(const std::vector<doubleType>& X,

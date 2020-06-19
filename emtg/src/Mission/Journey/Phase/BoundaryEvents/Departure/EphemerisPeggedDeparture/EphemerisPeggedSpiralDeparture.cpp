@@ -127,9 +127,9 @@ namespace EMTG
                 A);
         }
 
-        void EphemerisPeggedSpiralDeparture::calcbounds()
+        void EphemerisPeggedSpiralDeparture::calcbounds(std::vector<size_t> timeVariables)
         {
-            this->calcbounds_event_left_side();
+            this->calcbounds_event_left_side(timeVariables);
 
             this->calcbounds_event_main();
 
@@ -140,7 +140,7 @@ namespace EMTG
 
         void EphemerisPeggedSpiralDeparture::calcbounds_event_main()
         {
-            this->mySpiral->calcbounds();
+            this->mySpiral->calcbounds(this->Xindices_EventLeftEpoch);
         }//end calcbounds_event_main()
 
         void EphemerisPeggedSpiralDeparture::calcbounds_event_right_side()
@@ -151,6 +151,9 @@ namespace EMTG
             //but the derivatives of state after event actually come from the spiral
             this->Derivatives_of_StateAfterEvent = this->mySpiral->get_Derivatives_of_StateAfterSpiral();
             this->Derivatives_of_StateAfterEvent_wrt_Time = this->mySpiral->get_Derivatives_of_StateAfterSpiral_wrt_Time();
+                       
+            //store the Xindices of the right epoch
+            this->Xindices_EventRightEpoch = this->mySpiral->get_Xindices_SpiralEndEpoch();
         }//end calcbounds_event_right_side
 
         void EphemerisPeggedSpiralDeparture::process_event(const std::vector<doubleType>& X,

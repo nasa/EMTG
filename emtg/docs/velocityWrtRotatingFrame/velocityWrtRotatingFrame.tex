@@ -1,0 +1,207 @@
+\documentclass[]{article}
+\usepackage{nomencl}
+\usepackage{hyperref}
+\hypersetup{pdffitwindow=true,
+	pdfpagemode=UseThumbs,
+	breaklinks=true,
+	colorlinks=true,
+	linkcolor=black,
+	citecolor=black,
+	filecolor=black,
+	urlcolor=black}
+
+\usepackage{verbatim}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}%
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{subfigure}
+\usepackage[makeroom]{cancel}
+\usepackage{indentfirst}
+\usepackage{color}
+\usepackage{bm}
+\usepackage{mathtools}
+
+\usepackage{rotating}
+\usepackage{comment}
+\usepackage{here}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{pdfpages}
+\usepackage{float}
+\usepackage[section]{placeins}
+
+\usepackage{array}
+
+% quotes
+\newcommand{\quotes}[1]{``#1''}
+
+% vectors and such
+\newcommand{\vb}[1]{\bm{#1}} % bold
+\newcommand{\vbd}[1]{\dot{\bm{#1}}} % dot
+\newcommand{\vbdd}[1]{\ddot{\bm{#1}}} % double dot
+\newcommand{\vbh}[1]{\hat{\bm{#1}}} % hat
+\newcommand{\vbt}[1]{\tilde{\bm{#1}}} % tilde
+\newcommand{\vbth}[1]{\hat{\tilde{\bm{#1}}}} % tilde hat
+\newcommand{\ddt}[1]{\frac{\mathrm{d} #1}{\mathrm{d} t}} % time derivative
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}} % partial derivative
+\newcommand{\crossmat}[1]{\left\{ {#1} \right\}^{\times}} % crossmat
+
+\makenomenclature
+\makeindex
+
+%opening
+\title{Velocity with Respect to a Rotating Frame for EMTGv9}
+\author{Noble Hatten}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+	This document describes the transformation of a Cartesian velocity vector between two frames, one inertial and one rotating.
+
+\end{abstract}
+
+\tableofcontents
+
+\printnomenclature
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Reference Frames}
+\label{sec:frames}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\nomenclature{BCF}{Body-centered, body-fixed reference frame; rotates with central body, but is not necessarily aligned with the principal axes of the ellipsoid}
+\nomenclature{BCI}{Body-centered inertial reference frame; does not rotate with the central body}
+\nomenclature{$^{B} \vb{\omega}^{A}$}{Angular velocity vector of frame $B$ with respect to frame $A$}
+\nomenclature{$^{A} \left[ \ddt{\vb{x}} \right]$}{Time derivative of vector $\vb{x}$ with respect to the $A$ reference frame}
+\nomenclature{$|\vb{x}| = x$}{2 norm of vector $\vb{x}$}
+\nomenclature{$\vb{r}$}{Position vector}
+\nomenclature{$\vb{x}_A$}{Arbitrary vector $\vb{x}$ expressed in coordinates of the $A$ frame.}
+
+The two frames of interest will be referenced as the body-centered inertial (BCI) and body-centered, body-fixed (BCF) frames. The axes of the BCI frame are assumed to be inertially fixed. The axes of the BCF frame are NOT assumed to be inertially fixed. For now, the BCI and BCF frames are assumed to share a common origin, but the complexity of the expressions does not increase enormously if the origins are not coincident, as long as the relationship between the states of the origins is known.
+
+It is assumed that the relationship between the BCI and BCF frames is an explicit function of time and time only.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{State in BCI Frame}
+\label{sec:bci_state}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The position of the spacecraft expressed in coordinates of the BCI frame is $\vb{r}_{BCI}$. The velocity of the spacecraft with respect to the BCI frame and expressed in coordinates of the BCI frame is $^{BCI} \left[ \ddt{\vb{r}} \right]_{BCI}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{State in BCF Frame}
+\label{sec:bcf_state}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The position of the spacecraft expressed in coordinates of the BCF frame is $\vb{r}_{BCF}$. The velocity of the spacecraft with respect to the BCF frame and expressed in coordinates of the BCI frame is $^{BCF} \left[ \ddt{\vb{r}} \right]_{BCI}$. The velocity of the spacecraft with respect to the BCF frame and expressed in coordinates of the BCF frame is $^{BCF} \left[ \ddt{\vb{r}} \right]_{BCF}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{State Transformations Between BCI and BCF Frames}
+\label{sec:state_transformations}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+To transform from a velocity with respect to one frame to a velocity with respect to another frame, the angular velocity vector relating the two frame is required.
+
+\begin{align}
+\label{eq:transport_v}
+^{BCI} \left[ \ddt{\vb{r}} \right]_A &= ^{BCF} \left[ \ddt{\vb{r}} \right]_A + ^{BCF} \vb{\omega}_A^{BCI} \times \vb{r}_A
+\end{align}
+
+\noindent for arbitrary reference frame $A$. Eq.~\eqref{eq:transport_v} holds regardless of the frame in which the vectors are expressed, as long as all vectors are expressed in the same frame. Note that $^{BCF} \vb{\omega}_A^{BCI} = - ^{BCI} \vb{\omega}_A^{BCF}$
+
+To express a vector in one frame using coordinates of a different frame, the transformation matrix between the two frames is used. For example:
+
+\begin{align}
+\vb{r}_{BCI} &= \vb{R}^{BCF \rightarrow BCI} \vb{r}_{BCF} \\
+^{BCF} \left[ \ddt{\vb{r}} \right]_{BCF} &= \vb{R}^{BCI \rightarrow BCF} \left\{^{BCF} \left[ \ddt{\vb{r}} \right]_{BCI} \right\}
+\end{align}
+
+Note that $\vb{R}^{BCI \rightarrow BCF} = \left[ \vb{R}^{BCF \rightarrow BCI} \right]^T$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Derivatives of State Transformations Between BCI and BCF Frames}
+\label{sec:state_transformation_derivs}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{BCI to BCF}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The full transformation of a velocity vector with respect to the BCI frame, expressed in BCI coordinates, to a velocity vector with respect to the BCF frame, expressed in BCF coordinates, is given by:
+
+\begin{align}
+\label{eq:vbci2vbcf}
+^{BCF} \left[ \ddt{\vb{r}} \right]_{BCI} &= ^{BCI} \left[ \ddt{\vb{r}} \right]_{BCI} + ^{BCI} \vb{\omega}_{BCI}^{BCF} \times \vb{r}_{BCI} \\
+\label{eq:rotatebci2bcf}
+^{BCF} \left[ \ddt{\vb{r}} \right]_{BCF} &= \vb{R}^{BCI \rightarrow BCF} \left\{^{BCF} \left[ \ddt{\vb{r}} \right]_{BCI} \right\}
+\end{align}
+
+The derivatives of Eq.~\eqref{eq:vbci2vbcf} with respect to the BCI state and time are:
+
+\begin{align}
+\pd{\left[ ^{BCF} \left[ \ddt{\vb{r}} \right]_{BCI} \right]}{\vb{r}_{BCI}} &= \left\{ ^{BCI} \vb{\omega}^{BCF} \right\}^{\times} \\
+\pd{\left[ ^{BCF} \left[ \ddt{\vb{r}} \right]_{BCI} \right]}{^{BCI} \left[ \ddt{\vb{r}} \right]_{BCI}} &= \vb{I} \\
+\pd{\left[ ^{BCF} \left[ \ddt{\vb{r}} \right]_{BCI} \right]}{t} &= { \pd{\left\{ ^{BCI} \vb{\omega}^{BCF} \right\}^{\times}}{t}} \vb{r}_{BCI}
+\end{align}
+
+These expressions are then plugged into the derivatives of Eq.~\eqref{eq:rotatebci2bcf} to obtain the complete derivatives.
+
+\begin{align}
+\pd{^{BCF} \left[ \ddt{\vb{r}} \right]_{BCF}}{\vb{r}_{BCI}} &= \vb{R}^{BCI \rightarrow BCF} \pd{\left[ ^{BCF} \left[ \ddt{\vb{r}} \right]_{BCI} \right]}{\vb{r}_{BCI}} \\
+\pd{^{BCF} \left[ \ddt{\vb{r}} \right]_{BCF}}{^{BCI} \left[ \ddt{\vb{r}} \right]_{BCI}} &= \vb{R}^{BCI \rightarrow BCF} \pd{\left[ ^{BCF} \left[ \ddt{\vb{r}} \right]_{BCI} \right]}{^{BCI} \left[ \ddt{\vb{r}} \right]_{BCI}} \\
+\pd{^{BCF} \left[ \ddt{\vb{r}} \right]_{BCF}}{t} &= \pd{\vb{R}^{BCI \rightarrow BCF}}{t} ^{BCF} \left[ \ddt{\vb{r}} \right]_{BCI} + \vb{R}^{BCI \rightarrow BCF} \pd{\left[ ^{BCF} \left[ \ddt{\vb{r}} \right]_{BCI} \right]}{t}
+\end{align}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{BCF to BCI}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The full transformation of a velocity vector with respect to the BCF frame, expressed in BCF coordinates, to a velocity vector with respect to the BCI frame, expressed in BCI coordinates, is given by:
+
+\begin{align}
+\label{eq:vbcf2vbci}
+^{BCI} \left[ \ddt{\vb{r}} \right]_{BCF} &= ^{BCF} \left[ \ddt{\vb{r}} \right]_{BCF} + ^{BCF} \vb{\omega}_{BCF}^{BCI} \times \vb{r}_{BCF} \\
+\label{eq:rotatebcf2bci}
+^{BCI} \left[ \ddt{\vb{r}} \right]_{BCI} &= \vb{R}^{BCF \rightarrow BCI} \left\{^{BCI} \left[ \ddt{\vb{r}} \right]_{BCF} \right\}
+\end{align}
+
+The derivatives of Eq.~\eqref{eq:vbcf2vbci} with respect to the BCF state and time are:
+
+\begin{align}
+\pd{\left[ ^{BCI} \left[ \ddt{\vb{r}} \right]_{BCF} \right]}{\vb{r}_{BCF}} &= \left\{ ^{BCF} \vb{\omega}^{BCI} \right\}^{\times} \\
+\pd{\left[ ^{BCI} \left[ \ddt{\vb{r}} \right]_{BCF} \right]}{^{BCF} \left[ \ddt{\vb{r}} \right]_{BCF}} &= \vb{I} \\
+\pd{\left[ ^{BCI} \left[ \ddt{\vb{r}} \right]_{BCF} \right]}{t} &= { \pd{\left\{ ^{BCF} \vb{\omega}^{BCI} \right\}^{\times}}{t}} \vb{r}_{BCF}
+\end{align}
+
+These expressions are then plugged into the derivatives of Eq.~\eqref{eq:rotatebcf2bci} to obtain the complete derivatives.
+
+\begin{align}
+\pd{^{BCI} \left[ \ddt{\vb{r}} \right]_{BCI}}{\vb{r}_{BCF}} &= \vb{R}^{BCF \rightarrow BCI} \pd{\left[ ^{BCI} \left[ \ddt{\vb{r}} \right]_{BCF} \right]}{\vb{r}_{BCF}} \\
+\pd{^{BCI} \left[ \ddt{\vb{r}} \right]_{BCI}}{^{BCF} \left[ \ddt{\vb{r}} \right]_{BCF}} &= \vb{R}^{BCF \rightarrow BCI} \pd{\left[ ^{BCI} \left[ \ddt{\vb{r}} \right]_{BCF} \right]}{^{BCF} \left[ \ddt{\vb{r}} \right]_{BCF}} \\
+\pd{^{BCI} \left[ \ddt{\vb{r}} \right]_{BCI}}{t} &= \pd{\vb{R}^{BCF \rightarrow BCI}}{t} ^{BCI} \left[ \ddt{\vb{r}} \right]_{BCF} + \vb{R}^{BCF \rightarrow BCI} \pd{\left[ ^{BCI} \left[ \ddt{\vb{r}} \right]_{BCF} \right]}{t}
+\end{align}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Utility Math}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Skew-symmetric Cross Matrix}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{align}
+\label{eq:omega_cross}
+\left\{\vb{\omega} \right\}^{\times} &= \left[ \begin{array}{ccc}
+0 & -\omega_z & \omega_y \\
+\omega_z & 0 & -\omega_x \\
+-\omega_y & \omega_x & 0
+\end{array} \right]
+\end{align}
+
+\end{document}

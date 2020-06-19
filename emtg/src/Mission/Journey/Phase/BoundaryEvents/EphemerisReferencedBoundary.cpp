@@ -67,7 +67,8 @@ namespace EMTG
         void EphemerisReferencedBoundary::calcbounds_event_interface_state(const std::vector<double>& RAbounds,
             const std::vector<double>& DECbounds, 
             std::vector<double>& MassBounds, 
-            const std::vector<double>& EpochBounds)
+            const std::vector<double>& EpochBounds,
+            std::vector<size_t>& timeVariables)
         {
             //Step 1: What is the first decision variable in this event?
             for (int Xindex = this->Xdescriptions->size() - 1; Xindex >= 0; --Xindex)
@@ -119,17 +120,15 @@ namespace EMTG
                 this->Xupperbounds->push_back(EpochBounds[1]);
                 this->X_scale_factors->push_back(1.0 / this->myUniverse->continuity_constraint_scale_factors(7));
                 this->Xdescriptions->push_back(this->prefix + "event left state epoch");
+                this->Xindices_EventLeftEpoch.push_back(this->Xdescriptions->size() - 1);
+                this->Derivatives_of_state_on_interface_cartesian_wrt_Time.push_back({ this->Xdescriptions->size() - 1, 7, 1.0 });
             }
 
             //the epoch of the interface state depends on all previous epochs - this is stored slightly differently compared to other boundary types
-            for (size_t Xindex = 0; Xindex < this->Xdescriptions->size(); ++Xindex)
+            for (size_t Xindex : timeVariables)
             {
-                if (Xdescriptions->at(Xindex).find("epoch") < 1024
-                    || Xdescriptions->at(Xindex).find("time") < 1024)
-                {
-                    this->Xindices_EventLeftEpoch.push_back(Xindex);
-                    this->Derivatives_of_state_on_interface_cartesian_wrt_Time.push_back({ Xindex, 7, 1.0 });
-                }
+                this->Xindices_EventLeftEpoch.push_back(Xindex);
+                this->Derivatives_of_state_on_interface_cartesian_wrt_Time.push_back({ Xindex, 7, 1.0 });
             }
         }//end calcbounds_event_left_side
 

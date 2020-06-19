@@ -18,6 +18,7 @@
 
 #include "PeriapseArrival.h"
 #include "bplane.h"
+#include "StateRepresentationFactory.h"
 
 namespace EMTG
 {
@@ -48,6 +49,22 @@ namespace EMTG
             HardwareModels::Spacecraft* mySpacecraft,
             missionoptions* myOptions)
         {
+
+            //set this boundary's state representation
+            this->myStateRepresentationEnum = myOptions->PeriapseBoundaryStateRepresentation;
+
+            //periapse arrival cannot use IncomingBplane
+            if (this->myStateRepresentationEnum == StateRepresentation::OutgoingBplane)
+            {
+                std::cout << "In Journey " << this->journeyIndex << "'s arrival event, the state representation is set to "
+                    << StateRepresentationStrings[this->myStateRepresentationEnum == StateRepresentation::OutgoingBplane]
+                    << ". PeriapseArrival automatically switches this to "
+                    << StateRepresentationStrings[this->myStateRepresentationEnum == StateRepresentation::IncomingBplane] << std::endl;
+                this->myStateRepresentationEnum = StateRepresentation::IncomingBplane;
+            }
+
+            this->myStateRepresentation = Astrodynamics::CreateStateRepresentation(this->myStateRepresentationEnum, Universe->mu);
+
             this->PeriapseBoundary::initialize(name,
                 journeyIndex,
                 phaseIndex,
@@ -63,17 +80,32 @@ namespace EMTG
                 Universe,
                 mySpacecraft,
                 myOptions);
+
+            //set periapse distance bounds
+
+            if (this->myJourneyOptions->PeriapseArrival_override_altitude)
+            {
+                this->periapseDistanceBounds[0] = this->myUniverse->central_body.radius + this->myJourneyOptions->PeriapseArrival_altitude_bounds[0];
+                this->periapseDistanceBounds[1] = this->myUniverse->central_body.radius + this->myJourneyOptions->PeriapseArrival_altitude_bounds[1];
+            }
+            else
+            {
+                this->periapseDistanceBounds[0] = this->myUniverse->central_body.radius + this->myUniverse->central_body.minimum_safe_flyby_altitude;
+                if (this->myUniverse->central_body.mass < 1.0e+25)
+                    this->periapseDistanceBounds[1] = 10.0 * this->myUniverse->central_body.radius;
+                else
+                    this->periapseDistanceBounds[1] = 300.0 * this->myUniverse->central_body.radius;
+            }
         }//end initialize()
         
         //******************************************calcbounds methods
         void PeriapseArrival::calcbounds_event_left_side(const std::vector<double>& RadiusBounds,
-                                                         const std::vector<double>& VelocityMagnitudeBounds)
-        {
-            std::vector<double> MassBounds({ 1.0e-13, this->myJourneyOptions->maximum_mass });
-            
+                                                         const std::vector<double>& VelocityMagnitudeBounds,
+                                                         std::vector<size_t> timeVariables)
+        {            
             this->PeriapseBoundary::calcbounds_event_left_side(RadiusBounds,
                 VelocityMagnitudeBounds,
-                MassBounds);
+                timeVariables);
         }//end calcbounds_event_left_side()
 
         void PeriapseArrival::calcbounds_event_right_side()

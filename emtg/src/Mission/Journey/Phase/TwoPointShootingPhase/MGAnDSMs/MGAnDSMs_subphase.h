@@ -66,7 +66,7 @@ namespace EMTG
             virtual MGAnDSMs_subphase* clone() const = 0;
 
             //propagator
-            ~MGAnDSMs_subphase();
+            virtual ~MGAnDSMs_subphase();
 
             //output
             virtual void output(std::ofstream& outputfile,
@@ -77,7 +77,7 @@ namespace EMTG
             virtual void output_maneuver_and_target_spec(std::ofstream& maneuver_spec_file, std::ofstream& target_spec_file, bool& haveManeuverNeedTarget) = 0;
 
             //calcbounds goes in the specialized phase
-            virtual void calcbounds() = 0;
+            virtual void calcbounds(std::vector<size_t>& timeVariables) = 0;
 
             void calcbounds_maneuver_constraints();
 
@@ -121,6 +121,7 @@ namespace EMTG
             inline void set_SPTM(math::Matrix<double>& SPTM) { this->SPTM_pointer = &SPTM; }
             inline void set_dPropagatedStatedIndependentVariable(math::Matrix<double>& dPropagatedStatedIndependentVariable_pointer) { this->dPropagatedStatedIndependentVariable_pointer = &dPropagatedStatedIndependentVariable_pointer; }
             inline void set_PhaseFlightTime(doubleType& PhaseFlightTime) { this->PhaseFlightTime_pointer = &PhaseFlightTime; }
+            inline void set_timeVariables(std::vector<size_t>& timeVariables) { this->timeVariables = timeVariables; }
             inline doubleType getDSMmagnitude() const { return this->DSM_magnitude; }
             inline doubleType getTCMmagnitude() const { return this->TCM_magnitude; }
             inline std::string getName() const { return this->name; }
@@ -132,7 +133,9 @@ namespace EMTG
             inline size_t getFirst_X_entry_this_subphase() const { return this->First_X_entry_this_subphase; }
             inline bool getBordersMatchPoint() const { return this->BordersMatchPoint; }
             virtual bool getBordersBoundary() const = 0;
+            inline std::vector<size_t> get_timeVariables() { return this->timeVariables; }
             inline MGAnDSMs_subphase* get_previousSubphase() { return this->previousSubPhase; }
+            inline MGAnDSMs_phase* get_myPhase() { return this->myPhase; }
 
             inline math::Matrix<double> get_dFuel_dDSMcomponents() const { return this->dFuel_dDSMcomponents; }
             inline math::Matrix<double> get_dOxidizer_dDSMcomponents() const { return this->dOxidizer_dDSMcomponents; }
@@ -198,6 +201,9 @@ namespace EMTG
             //internal states
             math::Matrix<doubleType> StateAfterPropagationBeforeDSM;
             math::Matrix<doubleType> StateAfterDSMBeforeTCM;
+
+            //time
+            std::vector<size_t> timeVariables;
 
             //propagator
             bool isKeplerian;

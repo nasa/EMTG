@@ -64,41 +64,8 @@
 #include "SplineEphem_universe.h"
 #endif
 
-//GSAD-instrumentation is OFF
-
-#ifdef EMTG_MPI
-#include <boost/mpi/environment.hpp>
-#include <boost/mpi/communicator.hpp>
-#endif
-
-#ifdef _STONEAGECplusplus
-#include <execinfo.h>
-#include <signal.h>
-void handler(int sig) {
-  void *array[30];
-  size_t size;
-
-  // get void*'s for all entries on the stack
-  size = backtrace(array, 30);
-
-  // print out all the frames to stderr
-  fprintf(stderr, "Error: signal %d:\n", sig);
-  backtrace_symbols_fd(array, size, STDERR_FILENO);
-  exit(1);
-}
-#endif
-
 int main(int argc, char* argv[]) 
 {
-    //delete the fort if present
-#ifndef _STONEAGECplusplus
-    ::boost::filesystem::path fort(L"fort.1"); 
-    ::boost::filesystem::remove(fort);
-#else
-    signal(SIGSEGV, handler);
-#endif
-
-
     std::cout << "program starting" << std::endl;
 
     try
@@ -119,20 +86,7 @@ int main(int argc, char* argv[])
         EMTG::HardwareModels::LaunchVehicleOptions myLaunchVehicleOptions = EMTG::HardwareModels::CreateLaunchVehicleOptions(options);
         EMTG::HardwareModels::SpacecraftOptions mySpacecraftOptions = EMTG::HardwareModels::CreateSpacecraftOptions(options);
 
-
-        //if we are running in parallel, start MPI
-#ifdef EMTG_MPI
-        boost::mpi::environment MPIEnvironment(argc, argv, true);
-        boost::mpi::communicator MPIWorld;
-#endif
-
-
         //create a working directory for the problem
-        //only the head node should do this, then broadcast the folder name to everyone else
-        //*****************************************************************
-#ifdef EMTG_MPI
-        if (MPIWorld.rank() == 0)
-#endif
         {
             std::string root_directory, mission_subfolder;
 
@@ -168,12 +122,7 @@ int main(int argc, char* argv[])
             //print the options file to the new directory
             options.write(options.working_directory + "//" + options.mission_name + ".emtgopt", !options.print_only_non_default_options);
             mySpacecraftOptions.write_output_file(options.working_directory + "//" + options.mission_name + ".emtg_spacecraftopt");
-        } //end working directory creation and options file printing for head node
-
-        //broadcast the working directory to the other nodes
-#ifdef EMTG_MPI
-        boost::mpi::broadcast(MPIWorld, options.working_directory, 0);
-#endif
+        } //end working directory creation and options file printing
 
 
         //load all ephemeris data if using SPICE
@@ -252,12 +201,14 @@ int main(int argc, char* argv[])
 		{
 			try
 			{
-				if (options.Journeys[j].perturb_drag == 1)
+				if (options.Journeys[j].perturb_drag || 
+                    (options.Journeys[j].phase_type == EMTG::PhaseType::ProbeEntryPhase && (options.Journeys[j].perturb_drag_probe_AEI_to_end || options.Journeys[j].perturb_drag_probe_separation_to_AEI))
+                    )
 				{
 					// need to choose the correct kind of atmosphere to create based on journey option
 					if (options.Journeys[j].AtmosphericDensityModelKey == "Exponential")
 					{
-						TheUniverse[j].TheAtmosphere = new EMTG::Astrodynamics::ExponentialAtmosphere(j, options.Journeys[j].AtmosphericDensityModelDataFile, options);
+						TheUniverse[j].TheAtmosphere = std::make_shared<EMTG::Astrodynamics::ExponentialAtmosphere>(j, options.Journeys[j].AtmosphericDensityModelDataFile, options);
 					}
 					else
 					{
@@ -268,7 +219,7 @@ int main(int argc, char* argv[])
 				else
 				{
 					// we are not calculating drag, so just build a placeholder atmosphere that does nothing
-					TheUniverse[j].TheAtmosphere = new EMTG::Astrodynamics::ExponentialAtmosphere();
+                    //TheUniverse[j].TheAtmosphere = atmospheres.back();
 				}
 			}
 			catch (std::exception &myError)

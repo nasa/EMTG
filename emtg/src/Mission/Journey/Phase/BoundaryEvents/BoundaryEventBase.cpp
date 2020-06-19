@@ -164,18 +164,12 @@ namespace EMTG
                         A);
             }//end setup_calcbounds()
             
-            void BoundaryEventBase::calculate_dependencies_left_epoch()
+            void BoundaryEventBase::calculate_dependencies_left_epoch(std::vector<size_t> timeVariables)
             {
-                //the left epoch of this event depends on all epoch and time variables before it
-                //said derivative is 1.0
-                for (size_t Xindex = 0; Xindex < this->Xdescriptions->size(); ++Xindex)
+                for (size_t Xindex : timeVariables)
                 {
-                    if (Xdescriptions->at(Xindex).find("epoch") < 1024
-                        || Xdescriptions->at(Xindex).find("time") < 1024)
-                    {
-                        this->Xindices_EventLeftEpoch.push_back(Xindex);
-                        this->Derivatives_of_StateBeforeEvent_wrt_Time.push_back({ Xindex, 7, 1.0 });
-                    }
+                    this->Xindices_EventLeftEpoch.push_back(Xindex);
+                    this->Derivatives_of_StateBeforeEvent_wrt_Time.push_back({ Xindex, 7, 1.0 });
                 }
             }//end calculate_dependencies_left_epoch
 

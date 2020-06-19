@@ -26,5 +26,7 @@ namespace EMTG {
     namespace string_utilities {
 
         std::string convert_number_to_formatted_string(const double& number, int expSize);
+
+        bool string_contains_substring(const std::string& myString, const std::string& mySubString);
     }
 }

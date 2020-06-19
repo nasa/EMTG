@@ -32,7 +32,7 @@ namespace EMTG
         {
         public:
             //default constructor
-            PeriapseDeparture();
+            PeriapseDeparture() {};
 
             //specialized constructor
             PeriapseDeparture(const std::string& name,
@@ -54,7 +54,7 @@ namespace EMTG
                                     ArrivalEvent* PreviousPhaseArrivalEvent);
 
             //destructor
-            ~PeriapseDeparture() {};
+            virtual ~PeriapseDeparture() {};
 
             //output
             virtual void output(std::ofstream& outputfile,
@@ -66,11 +66,13 @@ namespace EMTG
             //method to calculate event left side
 
             virtual void calcbounds_event_left_side(const std::vector<double>& RadiusBounds,
-                                                    const std::vector<double>& VelocityMagnitudeBounds);
+                                                    const std::vector<double>& VelocityMagnitudeBounds,
+                                                    std::vector<size_t> timeVariables);
             
             virtual void calcbounds_event_left_side(const std::vector<double>& RadiusBounds,
                                                     const std::vector<double>& VelocityMagnitudeBounds,
-                                                    const std::vector<double>& MassBounds);
+                                                    const std::vector<double>& MassBounds,
+                                                    std::vector<size_t> timeVariables);
 
             virtual void calcbounds_event_right_side();
 

@@ -70,7 +70,7 @@ namespace EMTG
 
 
         //******************************************calcbounds methods
-        void EphemerisReferencedDeparture::calcbounds_event_left_side()
+        void EphemerisReferencedDeparture::calcbounds_event_left_side(std::vector<size_t> timeVariables)
         {
 
             //in an EphemerisReferencedArrival, the left side of the event is the interface state. Additional time derivatives may be necessary depending on whether the event is Interior or Exterior

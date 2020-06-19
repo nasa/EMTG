@@ -47,7 +47,7 @@
 #include "EphemerisReferencedArrival/Interior/EphemerisReferencedLTRendezvousInterior.h"
 #include "EphemerisReferencedArrival/Interior/EphemerisReferencedInterceptInterior.h"
 
-#include "PeriapseDeparture/PeriapseLaunchOrImpulsiveDeparture.h"
+#include "PeriapseDeparture/PeriapseLaunch.h"
 
 #include "PeriapseArrival/PeriapseFlybyIn.h"
 
@@ -116,14 +116,14 @@ void eventTestbed(EMTG::missionoptions& options,
 
 
     //call calcbounds
-    myEphemerisPeggedSpiralDeparture.calcbounds();
+    myEphemerisPeggedSpiralDeparture.calcbounds(std::vector<size_t>({}));
 
     ////----------------------------------Periapse Launch event
     ////name the event
-    //boundaryname = phaseName + "PeriapseLaunchOrImpulsiveDeparture";
+    //boundaryname = phaseName + "PeriapseLaunch";
 
     ////create the event
-    //EMTG::BoundaryEvents::PeriapseLaunchOrImpulsiveDeparture myPeriapseLaunchOrImpulsiveDeparture(boundaryname,//name
+    //EMTG::BoundaryEvents::PeriapseLaunch myPeriapseLaunch(boundaryname,//name
     //    0,//journeyIndex
     //    0,//phaseIndex
     //    stageIndex,//stageIndex
@@ -134,7 +134,7 @@ void eventTestbed(EMTG::missionoptions& options,
     //    NULL);//previous phase arrival event
 
     //          //setup bounds pointers
-    //myPeriapseLaunchOrImpulsiveDeparture.setup_calcbounds(&Xupperbounds,
+    //myPeriapseLaunch.setup_calcbounds(&Xupperbounds,
     //    &Xlowerbounds,
     //    &X_scale_factors,
     //    &Fupperbounds,
@@ -151,7 +151,7 @@ void eventTestbed(EMTG::missionoptions& options,
 
 
     ////call calcbounds
-    //myPeriapseLaunchOrImpulsiveDeparture.calcbounds();
+    //myPeriapseLaunch.calcbounds();
 
   //  //----------------------------------Periapse flyby in event
   //  //name the event
@@ -475,16 +475,16 @@ void eventTestbed(EMTG::missionoptions& options,
     derivative_container1.insert(derivative_container1.end(), derivative_container2.begin(), derivative_container2.end());
     dStateAfterEvent_dX.push_back(derivative_container1);
 
-    /*myPeriapseLaunchOrImpulsiveDeparture.process_event(X, Xindex, F, Findex, G, true);
-    eventNames.push_back(myPeriapseLaunchOrImpulsiveDeparture.getName());
-    StateBeforeEvent.push_back(myPeriapseLaunchOrImpulsiveDeparture.get_state_before_event());
-    derivative_container1 = myPeriapseLaunchOrImpulsiveDeparture.get_Derivatives_of_StateBeforeEvent();
-    derivative_container2 = myPeriapseLaunchOrImpulsiveDeparture.get_Derivatives_of_StateBeforeEvent_wrt_Time();
+    /*myPeriapseLaunch.process_event(X, Xindex, F, Findex, G, true);
+    eventNames.push_back(myPeriapseLaunch.getName());
+    StateBeforeEvent.push_back(myPeriapseLaunch.get_state_before_event());
+    derivative_container1 = myPeriapseLaunch.get_Derivatives_of_StateBeforeEvent();
+    derivative_container2 = myPeriapseLaunch.get_Derivatives_of_StateBeforeEvent_wrt_Time();
     derivative_container1.insert(derivative_container1.end(), derivative_container2.begin(), derivative_container2.end());
     dStateBeforeEvent_dX.push_back(derivative_container1);
-    StateAfterEvent.push_back(myPeriapseLaunchOrImpulsiveDeparture.get_state_after_event());
-    derivative_container1 = myPeriapseLaunchOrImpulsiveDeparture.get_Derivatives_of_StateAfterEvent();
-    derivative_container2 = myPeriapseLaunchOrImpulsiveDeparture.get_Derivatives_of_StateAfterEvent_wrt_Time();
+    StateAfterEvent.push_back(myPeriapseLaunch.get_state_after_event());
+    derivative_container1 = myPeriapseLaunch.get_Derivatives_of_StateAfterEvent();
+    derivative_container2 = myPeriapseLaunch.get_Derivatives_of_StateAfterEvent_wrt_Time();
     derivative_container1.insert(derivative_container1.end(), derivative_container2.begin(), derivative_container2.end());
     dStateAfterEvent_dX.push_back(derivative_container1);*/
 
@@ -831,9 +831,9 @@ void eventTestbed(EMTG::missionoptions& options,
     myEphemerisPeggedSpiralDeparture.output(outputcheck, options.launch_window_open_date, eventcount);
     outputcheck << std::endl;
 /*
-    outputcheck << "Testing " << myPeriapseLaunchOrImpulsiveDeparture.getName() << std::endl;
+    outputcheck << "Testing " << myPeriapseLaunch.getName() << std::endl;
     outputcheck << std::endl;
-    myPeriapseLaunchOrImpulsiveDeparture.output(outputcheck, options.launch_window_open_date, eventcount);
+    myPeriapseLaunch.output(outputcheck, options.launch_window_open_date, eventcount);
     outputcheck << std::endl;*/
 
     /*outputcheck << "Testing " << myPeriapseFlybyIn.getName() << std::endl;

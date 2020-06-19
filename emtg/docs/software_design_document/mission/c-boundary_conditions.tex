@@ -392,27 +392,29 @@ The departure maneuver is modeled as an impulsive burn using the spacecraft's th
 \section{PeriapseBoundary}
 \label{sec:periapseboundary}
 
-\texttt{PeriapseBoundary} is an abstract base class for all boundary events that happen at periapse of the spacecraft's orbit about the central body. \hl{In the current implementation, PeriapseBoundary only guarantees that the spacecraft be at \textit{an} apse, not necessarily the right one. In practice this has never been a concern, but we could fix it some day.}
+\texttt{PeriapseBoundary} is an abstract base class for all boundary events that happen at periapse of the spacecraft's orbit about the central body. \hl{In the current implementation, PeriapseBoundary only guarantees that the spacecraft be at \textit{an} apse, not necessarily the right one. In practice this has never been a concern, but we could fix it some day. Note that if a state representation that includes true anomaly (COE, IncomingBplane, or OutgoingBplane) is chosen, then a periapse is guaranteed.}
 
-\texttt{PeriapseBoundary} encodes three variables for position and three for velocity. Position is encoded a radius, a right ascension, and a declination in the \ac{ICRF}. The user defines the bounds on the radius.
+\texttt{PeriapseBoundary} is a wrapper on top of \texttt{FreePointBoundary}. Unlike in \texttt{FreePointBoundary}, the user does not set bounds on each state variable. Rather, these are computed automatically.
 
-There are two options for encoding velocity, controlled by a user-defined switch. The velocity can be encoded either as magnitude, right ascension, and declination (\texttt{SphericalRADEC}), or as magnitude, azimuth, and flight path angle (\texttt{SphericalAZFPA}). The \texttt{SphericalAZFPA} representation implicitly guarantees that the spacecraft is at an apse, \textit{i.e.} $\mathbf{r} \bullet \mathbf{v} = 0$. The \texttt{SphericalRADEC} does not guarantee $\mathbf{r} \bullet \mathbf{v} = 0$, and so if this representation is selected then \texttt{PeriapseBoundary} imposes an explicit constraint.
+\texttt{PeriapseBoundary} automatically imposes two constraints:
+\begin{enumerate}
+	\item If the chosen state representation does not directly encode distance (\texttt{SphericalAZFPA} and \texttt{SphericalRADEC} do this), then a distance constraint is imposed. The bounds for the distance constraints are drawn from the user-specified arrival or departure altitude bounds, as appropriate.
+	\item If the chosen state representation does not directly encode true anomaly or flight path angle, then a constraint is imposed to guarantee $\mathbf{r} \bullet \mathbf{v} = 0$.
+\end{enumerate}
 
 \subsection{PeriapseDeparture}
 \label{subsec:PeriapseDeparture}
 
 \texttt{PeriapseDeparture} derives from both \texttt{PeriapseBoundary} and \texttt{DepartureEvent}, and is an abstract base class for several boundary classes as defined below.
 
+If the user has defined \texttt{IncomingBplane} as the periapse boundary state representation, then \texttt{PeriapseBoundary} will switch it to \texttt{OutgoingBplane} for the purpose of this departure event only.
+
 \subsection{PeriapseLaunchOrImpulsiveDeparture}
 \label{subsec:PeriapseLaunchOrImpulsiveDeparture}
 
-\texttt{PeriapseLaunchOrImpulsiveDeparture} represents the case of a spacecraft departing from periapse of an orbit about the central body by means of an impulse. At the user's discretion, this impulse can either be provided by the spacecraft's thrusters or by a launch vehicle. The departure maneuver is assumed to occur along the spacecraft's velocity vector. \texttt{PeriapseLaunchOrImpulsiveDeparture} adds one variable to describe the size of the maneuver.
+\texttt{PeriapseLaunchOrImpulsiveDeparture} represents the case of a spacecraft departing from periapse of an orbit about the central body by means of a launch model. \texttt{PeriapseLaunchOrImpulsiveDeparture} \textit{always} uses the \texttt{OutgoingBplane} state representation regardless of the user's choice of state representation. The bounds on the boundary event's \ac{DHA} are set to conform to the user-specified bounds on \ac{DLA}. Also, \texttt{PeriapseLaunchOrImpulsiveDeparture} is only permitted to be the first event of the mission.
 
-If a launch vehicle model is used, then the resulting periapse velocity is converted into a $C_3$ and passed to the launch vehicle code (Section \ref{sec:LaunchVehicle}) to determine the maximum allowable mass. The encoded mass of the vehicle is then either constrained to match the launch vehicle capability (if \texttt{allow\_initial\_mass\_to\_vary} is false), or to be less than or equal to the launch vehicle capability (if \texttt{allow\_initial\_mass\_to\_vary} is true).
-
-If a launch vehicle model is not used, then the initial mass is either fixed at the user-defined \texttt{maximum\_mass} (if \texttt{allow\_initial\_mass\_to\_vary} is false), or to be less than or equal to \texttt{maximum\_mass} (if \texttt{allow\_initial\_mass\_to\_vary} is true). The departure maneuver is performed using the spacecraft's thrusters as described in Section \ref{sec:ChemicalPropulsionSystem}.
-
-If the \texttt{PeriapseLaunchOrImpulsiveDeparture} is the first event in the mission, then \texttt{PeriapseLaunchOrImpulsiveDeparture} adds a constraint on the inclination of the initial orbit such that it matches the bounds on the \ac{DLA} as imposed by the user.
+The $C_3$ and passed to the launch vehicle code (Section \ref{sec:LaunchVehicle}) to determine the maximum allowable mass. The encoded mass of the vehicle is then either constrained to match the launch vehicle capability (if \texttt{allow\_initial\_mass\_to\_vary} is false), or to be less than or equal to the launch vehicle capability (if \texttt{allow\_initial\_mass\_to\_vary} is true).
 
 This boundary event is most commonly used to describe, in reasonably high fidelity, the departure of a spacecraft from a parking orbit during launch. The \ac{RA} and \ac{DEC} entries in the .emtg summary line for \texttt{PeriapseLaunchOrImpulsiveDeparture} represent the \ac{RLA} and \ac{DLA}, \textit{not} the \ac{RA} and \ac{DEC} of the departure impulse.
 
@@ -420,6 +422,8 @@ This boundary event is most commonly used to describe, in reasonably high fideli
 \label{subsec:PeriapseArrival}
 
 \texttt{PeriapseArrival} derives from both \texttt{PeriapseBoundary} and \texttt{ArrivalEvent}, and is an abstract base class for several boundary classes as defined below.
+
+If the user has defined \texttt{OutgoingBplane} as the periapse boundary state representation, then \texttt{PeriapseBoundary} will switch it to \texttt{IncomingBplane} for the purpose of this departure event only.
 
 \subsection{PeriapseFlybyIn}
 \label{subsubsec:PeriapseFlybyIn}

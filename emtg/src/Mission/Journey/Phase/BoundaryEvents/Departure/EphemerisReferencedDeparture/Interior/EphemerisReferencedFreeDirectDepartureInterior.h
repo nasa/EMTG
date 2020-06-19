@@ -52,13 +52,14 @@ namespace EMTG
                 const bool& needG);
 
             //calcbounds
-            void calcbounds();
+            void calcbounds(std::vector<size_t> timeVariables);
 
         private:
             void calcbounds_event_interface_state(const std::vector<double>& RAbounds,
                 const std::vector<double>& DECbounds,
                 std::vector<double>& MassBounds,
-                const std::vector<double>& EpochBounds);
+                const std::vector<double>& EpochBounds,
+                std::vector<size_t> timeVariables);
 
             void process_event_interface_state(const std::vector<doubleType>& X,
                 size_t& Xindex,
@@ -67,7 +68,7 @@ namespace EMTG
                 std::vector<double>& G,
                 const bool& needG);
 
-            void calcbounds_event_left_side();
+            void calcbounds_event_left_side(std::vector<size_t> timeVariables);
 
             void calcbounds_event_main() {};//doesn't need to do anything - just a stub
 

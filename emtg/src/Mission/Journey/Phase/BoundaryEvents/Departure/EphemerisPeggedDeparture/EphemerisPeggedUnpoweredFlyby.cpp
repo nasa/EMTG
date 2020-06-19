@@ -44,9 +44,9 @@ namespace EMTG
         //******************************************calcbounds methods
 
         //calcbounds
-        void EphemerisPeggedUnpoweredFlyby::calcbounds()
+        void EphemerisPeggedUnpoweredFlyby::calcbounds(std::vector<size_t> timeVariables)
         {
-            this->calcbounds_event_left_side();
+            this->calcbounds_event_left_side(timeVariables);
 
             //create bounds for the v-infinity
             double vinf_max = fmax(this->myUniverse->LU / this->myUniverse->TU, this->PreviousPhaseArrivalEvent->get_Vinfinity_upperbound());
@@ -201,7 +201,7 @@ namespace EMTG
                 double V0dotV0 = this->Vinfinity_in.dot(Vinfinity_in) _GETVALUE;
 
                 double term1 = VfdotV0 / sqrt(VfdotVf * V0dotV0);
-                double acos_term1_over2 = 0.5 * math::safe_acos(term1);
+                double acos_term1_over2 = 0.5 * math::safe_acos(term1)_GETVALUE;
 
                 double mu = this->myBody->mu;
 
