@@ -67,6 +67,58 @@ class DestinationPicker(wx.Dialog):
 
         self.Close()
 
+class SingleDestinationPicker(wx.Dialog):
+    #fields
+    universe = []
+    destination = 0
+
+    def __init__(self, parent, id, universe, destination):
+
+        wx.Dialog.__init__(self, parent, id)
+        self.SetTitle("Destination Picker")
+
+        self.universe = universe
+
+        self.lblDestination = wx.StaticText(self, -1, "Location")
+        self.DestinationPicker = wx.ListBox(self, -1, choices=self.universe.destination_menu, size=(300,-1), style=wx.LB_SINGLE)
+
+        self.btnOK = wx.Button(self, -1, "OK")
+        self.btnCancel = wx.Button(self, -1, "Cancel")
+
+        maingrid = wx.FlexGridSizer(4, 1, 5, 5)
+        
+        maingrid.AddMany([self.lblDestination,
+                          self.DestinationPicker,
+                          self.btnOK,
+                          self.btnCancel])
+
+        self.SetSizerAndFit(maingrid)
+
+        destination += 1
+
+        self.destination = destination
+        self.DestinationPicker.SetSelection(destination)
+
+        font = self.GetFont()
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
+        self.lblDestination.SetFont(font)
+
+        self.btnOK.Bind(wx.EVT_BUTTON, self.ClickOK)
+        self.btnCancel.Bind(wx.EVT_BUTTON, self.ClickCancel)
+
+    def ClickOK(self, e):
+        self.destination = self.DestinationPicker.GetSelection()
+        
+        self.destination -= 1
+
+
+        self.Close()
+
+    def ClickCancel(self, e):
+        self.destination -= 1
+
+        self.Close()
+
 
 class SequencePicker(wx.Dialog):
     #fields

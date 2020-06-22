@@ -214,7 +214,7 @@ class ArrivalElementsPanel(OrbitElementsPanel.OrbitElementsPanel):
 
     def Changearrival_elements_frame(self, e):
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_elements_frame = self.cmbelements_frame.GetSelection()
-        self.update()
+        self.parent.update()
 
     def Changearrival_elements_reference_epoch(self, e):
         e.Skip()

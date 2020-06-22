@@ -213,7 +213,7 @@ class DepartureElementsPanel(OrbitElementsPanel.OrbitElementsPanel):
     
     def Changedeparture_elements_frame(self, e):
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_elements_frame = self.cmbelements_frame.GetSelection()
-        self.update()
+        self.parent.update()
 
     def Changedeparture_elements_reference_epoch(self, e):
         e.Skip()

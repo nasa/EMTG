@@ -191,9 +191,9 @@ class phaseBlock(object):
             newJourney.trialX.append(['p0' + self.phaseType + 'FreePointLTRendezvous: event left state x', rotR[0]])
             newJourney.trialX.append(['p0' + self.phaseType + 'FreePointLTRendezvous: event left state y', rotR[1]])
             newJourney.trialX.append(['p0' + self.phaseType + 'FreePointLTRendezvous: event left state z', rotR[2]])
-            newJourney.trialX.append(['p0' + self.phaseType + 'FreePointLTRendezvous: event left state xdot', rotV[0]])
-            newJourney.trialX.append(['p0' + self.phaseType + 'FreePointLTRendezvous: event left state ydot', rotV[1]])
-            newJourney.trialX.append(['p0' + self.phaseType + 'FreePointLTRendezvous: event left state zdot', rotV[2]])
+            newJourney.trialX.append(['p0' + self.phaseType + 'FreePointLTRendezvous: event left state vx', rotV[0]])
+            newJourney.trialX.append(['p0' + self.phaseType + 'FreePointLTRendezvous: event left state vy', rotV[1]])
+            newJourney.trialX.append(['p0' + self.phaseType + 'FreePointLTRendezvous: event left state vz', rotV[2]])
             newJourney.trialX.append(['p0' + self.phaseType + 'FreePointLTRendezvous: event left state mass', self.endMass])
         
     

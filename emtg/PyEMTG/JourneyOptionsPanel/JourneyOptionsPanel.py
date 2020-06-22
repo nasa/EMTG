@@ -90,13 +90,27 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         journey_central_body_box.AddSpacer(5)
         journey_central_body_box.Add(self.btnjourney_central_body)
 
-        self.lbldestination_list = wx.StaticText(self, -1, "Destination list")
-        self.txtdestination_list = wx.TextCtrl(self, -1, "destination_list")
-        self.btndestination_list = wx.Button(self, -1, "...")
-        destination_list_box = wx.BoxSizer(wx.HORIZONTAL)
-        destination_list_box.Add(self.txtdestination_list)
-        destination_list_box.AddSpacer(5)
-        destination_list_box.Add(self.btndestination_list)
+        self.lblstart_destination = wx.StaticText(self, -1, "Start location")
+        self.txtstart_destination = wx.TextCtrl(self, -1, "destination_list")
+        self.btnstart_destination = wx.Button(self, -1, "...")
+        self.lblstart_destination_name = wx.StaticText(self, -1, "start location name")
+        start_destination_list_box = wx.BoxSizer(wx.HORIZONTAL)
+        start_destination_list_box.Add(self.txtstart_destination)
+        start_destination_list_box.AddSpacer(5)
+        start_destination_list_box.Add(self.btnstart_destination)
+        start_destination_list_box.AddSpacer(5)
+        start_destination_list_box.Add(self.lblstart_destination_name)
+
+        self.lblfinal_destination = wx.StaticText(self, -1, "Final location")
+        self.txtfinal_destination = wx.TextCtrl(self, -1, "destination_list")
+        self.btnfinal_destination = wx.Button(self, -1, "...")
+        self.lblfinal_destination_name = wx.StaticText(self, -1, "final location name")
+        final_destination_list_box = wx.BoxSizer(wx.HORIZONTAL)
+        final_destination_list_box.Add(self.txtfinal_destination)
+        final_destination_list_box.AddSpacer(5)
+        final_destination_list_box.Add(self.btnfinal_destination)
+        final_destination_list_box.AddSpacer(5)
+        final_destination_list_box.Add(self.lblfinal_destination_name)
         
         self.lblfixed_ending_mass_increment = wx.StaticText(self, -1, "Fixed ending mass increment (kg)")
         self.txtfixed_ending_mass_increment = wx.TextCtrl(self, -1, "fixed_ending_mass_increment")
@@ -386,7 +400,8 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
                                         self.lblforce_unit_magnitude_control, self.cmbforce_unit_magnitude_control,
                                         self.lblforce_fixed_inertial_control, self.chkforce_fixed_inertial_control,
                                         self.lbljourney_central_body, journey_central_body_box,
-                                        self.lbldestination_list, destination_list_box,
+                                        self.lblstart_destination, start_destination_list_box,
+                                        self.lblfinal_destination, final_destination_list_box,
                                         self.lblfixed_starting_mass_increment, self.txtfixed_starting_mass_increment,
                                         self.lblminimum_starting_mass_increment, self.txtminimum_starting_mass_increment,
                                         self.lblmaximum_starting_mass_increment, self.txtmaximum_starting_mass_increment,
@@ -497,7 +512,8 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.cmbforce_unit_magnitude_control.Bind(wx.EVT_COMBOBOX, self.Changeforce_unit_magnitude_control)
         self.chkforce_fixed_inertial_control.Bind(wx.EVT_CHECKBOX, self.Changeforce_fixed_inertial_control)
         self.txtjourney_central_body.Bind(wx.EVT_KILL_FOCUS,self.Changejourney_central_body)
-        self.txtdestination_list.Bind(wx.EVT_KILL_FOCUS,self.Changedestination_list)
+        self.txtstart_destination.Bind(wx.EVT_KILL_FOCUS,self.Changestart_destination)
+        self.txtfinal_destination.Bind(wx.EVT_KILL_FOCUS,self.Changefinal_destination)
         self.txtfixed_ending_mass_increment.Bind(wx.EVT_KILL_FOCUS,self.Changefixed_ending_mass_increment)
         self.txtfixed_starting_mass_increment.Bind(wx.EVT_KILL_FOCUS,self.Changefixed_starting_mass_increment)
         self.txtminimum_starting_mass_increment.Bind(wx.EVT_KILL_FOCUS,self.Changeminimum_starting_mass_increment)
@@ -567,7 +583,8 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.chkperiapse_burns.Bind(wx.EVT_CHECKBOX,self.Changeperiapse_burns)
         self.txtperturbation_bodies.Bind(wx.EVT_KILL_FOCUS,self.Changeperturbation_bodies)
         
-        self.btndestination_list.Bind(wx.EVT_BUTTON,self.Clickdestination_list)
+        self.btnstart_destination.Bind(wx.EVT_BUTTON,self.Clickstart_destination)
+        self.btnfinal_destination.Bind(wx.EVT_BUTTON,self.Clickfinal_destination)
         self.btnjourney_central_body.Bind(wx.EVT_BUTTON,self.Clickjourney_central_body)
         self.btnsequence.Bind(wx.EVT_BUTTON,self.Clicksequence)
         self.btnperturbation_bodies.Bind(wx.EVT_BUTTON, self.Clickperturbation_bodies)
@@ -635,7 +652,8 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.cmbforce_unit_magnitude_control.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].force_unit_magnitude_control)
         self.chkforce_fixed_inertial_control.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].force_fixed_inertial_control)
         self.txtjourney_central_body.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].journey_central_body))
-        self.txtdestination_list.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list))
+        self.txtstart_destination.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[0]))
+        self.txtfinal_destination.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[1]))
         self.txtfixed_starting_mass_increment.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].fixed_starting_mass_increment))
         self.txtminimum_starting_mass_increment.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].minimum_starting_mass_increment))
         self.txtmaximum_starting_mass_increment.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].maximum_starting_mass_increment))
@@ -723,6 +741,15 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.txtProbeAEI_to_end_MatchPointFraction.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeAEI_to_end_MatchPointFraction))
         self.txtProbeAEI_to_end_ForwardIntegrationStepLength.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeAEI_to_end_ForwardIntegrationStepLength))
         self.txtProbeAEI_to_end_BackwardIntegrationStepLength.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeAEI_to_end_BackwardIntegrationStepLength))
+
+        try:
+            universeFile = self.missionoptions.universe_folder + "\\" + self.missionoptions.Journeys[self.missionoptions.ActiveJourney].journey_central_body + ".emtg_universe"
+            self.universe = Universe.Universe(universeFile)
+            
+            self.lblstart_destination_name.SetLabel(self.universe.bodies[self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[0] - 1].name)
+            self.lblfinal_destination_name.SetLabel(self.universe.bodies[self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[1] - 1].name)
+        except:
+            print('Could not find universe file', universeFile)
 
 
         ##############
@@ -866,7 +893,8 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.departureDateUpperCalendar.Show(True)
 
         #enable or disable the orbit elements selection boxes as appropriate
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class == 1:
+        #don't show the departure elements box if we are a later journey. We just pull the state and epoch from the previous journey anyway so these boxes don't do anything
+        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class == 1 and self.missionoptions.ActiveJourney == 0:
             #enable departure orbit elements box
             self.DepartureElementsPanel.Show(True)
             self.DepartureElementsPanel.update()
@@ -884,6 +912,46 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.lblFreePointArrival_print_target_spec.Show(False)
             self.chkFreePointArrival_print_target_spec.Show(False)
 
+        #destination list
+        #show for ephemeris pegged, ephemeris referenced, or free point boundary in object referenced frame. Otherwise hide
+        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class in [0, 2] \
+            or self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class == 1 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_elements_frame == 9:
+            self.lblstart_destination.Show(True)
+            self.txtstart_destination.Show(True)
+            self.btnstart_destination.Show(True)
+            self.lblstart_destination_name.Show(True)
+
+            #if object referenced, change the name of the option
+            if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class == 1 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_elements_frame == 9:
+                self.lblstart_destination.SetLabel('Departure frame reference body')
+            else:
+                self.lblstart_destination.SetLabel('Start location')
+        else:
+            self.lblstart_destination.Show(False)
+            self.txtstart_destination.Show(False)
+            self.btnstart_destination.Show(False)
+            self.lblstart_destination_name.Show(False)
+
+        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class in [0, 2] \
+            or self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class == 1 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_elements_frame == 9:
+            self.lblfinal_destination.Show(True)
+            self.txtfinal_destination.Show(True)
+            self.btnfinal_destination.Show(True)
+            self.lblfinal_destination_name.Show(True)
+
+            #if object referenced, change the name of the option
+            if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class == 1 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_elements_frame == 9:
+                self.lblfinal_destination.SetLabel('Arrival frame reference body')
+            else:
+                self.lblfinal_destination.SetLabel('Final location')
+        else:
+            self.lblfinal_destination.Show(False)
+            self.txtfinal_destination.Show(False)
+            self.btnfinal_destination.Show(False)
+            self.lblfinal_destination_name.Show(False)
+
+
+
         #impact momentum enhancement factor
         if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class == 0 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_type == 7:
             self.lblimpact_momentum_enhancement_factor.Show(True)
@@ -894,6 +962,8 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
         #probe entry parameters
         if self.missionoptions.mission_type in [10] or (self.missionoptions.mission_type == 9 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [10]):
+            self.lblModelProbeSecondPhase.Show(True)
+            self.chkModelProbeSecondPhase.Show(True)
             self.lblprobe_separation_impulse.Show(True)
             self.txtprobe_separation_impulse.Show(True)
             self.lblprobe_mass.Show(True)
@@ -945,6 +1015,8 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
                 self.txtProbeAEI_to_end_BackwardIntegrationStepLength.Show(False)
                 self.ProbeArrivalElementsPanelToEnd.Show(False)
         else:
+            self.lblModelProbeSecondPhase.Show(False)
+            self.chkModelProbeSecondPhase.Show(False)
             self.lblprobe_separation_impulse.Show(False)
             self.txtprobe_separation_impulse.Show(False)
             self.lblprobe_mass.Show(False)
@@ -1427,9 +1499,14 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         e.Skip()
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].journey_central_body = self.txtjourney_central_body.GetValue()
 
-    def Changedestination_list(self, e):
+    def Changestart_destination(self, e):
         e.Skip()
-        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list = eval(self.txtdestination_list.GetValue())
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[0] = eval(self.txtstart_destination.GetValue())
+        self.parent.update()
+
+    def Changefinal_destination(self, e):
+        e.Skip()
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[1] = eval(self.txtfinal_destination.GetValue())
         self.parent.update()
 
     def Changefixed_ending_mass_increment(self, e):
@@ -1850,18 +1927,30 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].perturbation_bodies = eval(self.txtperturbation_bodies.GetValue())
         self.update()
 
-    def Clickdestination_list(self, e):
+    def Clickstart_destination(self, e):
         #call dialog to choose destination list
         self.universe = Universe.Universe(self.missionoptions.universe_folder + "\\" + self.missionoptions.Journeys[self.missionoptions.ActiveJourney].journey_central_body + ".emtg_universe")
-        dlg = BodyPicker.DestinationPicker(self, -1,
+        dlg = BodyPicker.SingleDestinationPicker(self, -1,
                                            self.universe,
-                                           self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[0],
+                                           self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[0])
+
+        dlg.ShowModal()
+
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[0] = dlg.destination
+
+        dlg.Destroy()
+        self.update()
+
+    def Clickfinal_destination(self, e):
+        #call dialog to choose destination list
+        self.universe = Universe.Universe(self.missionoptions.universe_folder + "\\" + self.missionoptions.Journeys[self.missionoptions.ActiveJourney].journey_central_body + ".emtg_universe")
+        dlg = BodyPicker.SingleDestinationPicker(self, -1,
+                                           self.universe,
                                            self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[1])
 
         dlg.ShowModal()
 
-        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[0] = dlg.destination1
-        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[1] = dlg.destination2
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[1] = dlg.destination
 
         dlg.Destroy()
         self.update()
