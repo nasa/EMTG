@@ -201,6 +201,7 @@ class Journey(object):
 
     def GenerateJourneyDataPlot(self, DataAxesLeft, DataAxesRight, PlotOptions, firstpass):
         import math
+        import astropy
         #generate a vector of dates
         date_string_vector = []
         for event in self.missionevents:
@@ -245,12 +246,23 @@ class Journey(object):
             shortDateVector = []
 
             for event in self.missionevents:
+                epoch = astropy.time.Time(event.JulianDate, format='jd', scale='tdb')
                 if event.EventType in ['SFthrust', 'SSFthrust', 'FBLTSthrust', 'FBLTthrust', 'PSBIthrust', 'PSFBthrust']:
                     Thrustvector.append(math.sqrt(event.Thrust[0]**2 + event.Thrust[1]**2 + event.Thrust[2]**2) * 10.0)
-                    shortDateVector.append(datetime.datetime.strptime(event.GregorianDate,'%m/%d/%Y').date())
+                    shortDateVector.append((epoch - event.TimestepLength / 2).datetime)
+                    Thrustvector.append(math.sqrt(event.Thrust[0]**2 + event.Thrust[1]**2 + event.Thrust[2]**2) * 10.0)
+                    shortDateVector.append((epoch + event.TimestepLength / 2).datetime)
                 elif event.EventType == 'LT_spiral':
                     Thrustvector.append(event.AvailableThrust * self.thruster_duty_cycle*10.0)
-                    shortDateVector.append(datetime.datetime.strptime(event.GregorianDate,'%m/%d/%Y').date())
+                    shortDateVector.append((epoch - event.TimestepLength / 2).datetime)
+                    Thrustvector.append(event.AvailableThrust * self.thruster_duty_cycle*10.0)
+                    shortDateVector.append((epoch + event.TimestepLength / 2).datetime)
+                elif event.EventType != 'match_point':
+                    Thrustvector.append(0.0)
+                    shortDateVector.append((epoch - event.TimestepLength / 2).datetime)
+                    Thrustvector.append(0.0)
+                    shortDateVector.append((epoch + event.TimestepLength / 2).datetime)
+
 
             if firstpass:
                 DataAxesLeft.plot(shortDateVector, Thrustvector, c='r', lw=2, ls='--', label='Applied thrust (0.1 N)')
@@ -263,9 +275,17 @@ class Journey(object):
             shortDateVector = []
 
             for event in self.missionevents:
+                epoch = astropy.time.Time(event.JulianDate, format='jd', scale='tdb')
                 if event.EventType in ['SFthrust', 'SSFthrust', 'FBLTSthrust', 'FBLTthrust', 'PSBIthrust', 'PSFBthrust', 'LT_spiral']:
                     Ispvector.append(event.Isp / 1000.0)
-                    shortDateVector.append(datetime.datetime.strptime(event.GregorianDate,'%m/%d/%Y').date())
+                    shortDateVector.append((epoch - event.TimestepLength / 2).datetime)
+                    Ispvector.append(event.Isp / 1000.0)
+                    shortDateVector.append((epoch + event.TimestepLength / 2).datetime)
+                elif event.EventType != 'match_point':
+                    Ispvector.append(0.0)
+                    shortDateVector.append((epoch - event.TimestepLength / 2).datetime)
+                    Ispvector.append(0.0)
+                    shortDateVector.append((epoch + event.TimestepLength / 2).datetime)
 
             if firstpass:
                 DataAxesLeft.plot(shortDateVector, Ispvector, 'dodgerblue', lw=4, ls='-.', label='Isp (1000 s)')
@@ -278,9 +298,17 @@ class Journey(object):
             shortDateVector = []
 
             for event in self.missionevents:
+                epoch = astropy.time.Time(event.JulianDate, format='jd', scale='tdb')
                 if event.EventType in ['SFthrust', 'SSFthrust', 'FBLTSthrust', 'FBLTthrust', 'PSBIthrust', 'PSFBthrust', 'LT_spiral']:
                     Mdotvector.append(event.MassFlowRate * 1.0e6)
-                    shortDateVector.append(datetime.datetime.strptime(event.GregorianDate,'%m/%d/%Y').date())
+                    shortDateVector.append((epoch - event.TimestepLength / 2).datetime)
+                    Mdotvector.append(event.MassFlowRate * 1.0e6)
+                    shortDateVector.append((epoch + event.TimestepLength / 2).datetime)
+                elif event.EventType != 'match_point':
+                    Mdotvector.append(0.0)
+                    shortDateVector.append((epoch - event.TimestepLength / 2).datetime)
+                    Mdotvector.append(0.0)
+                    shortDateVector.append((epoch + event.TimestepLength / 2).datetime)
 
             if firstpass:
                 DataAxesLeft.plot(shortDateVector, Mdotvector, c='brown', lw=2, ls='-', label='Mass flow rate (mg/s)')
@@ -293,9 +321,18 @@ class Journey(object):
             shortDateVector = []
 
             for event in self.missionevents:
+                epoch = astropy.time.Time(event.JulianDate, format='jd', scale='tdb')
                 if event.EventType in ['SFthrust', 'SSFthrust', 'FBLTSthrust', 'FBLTthrust', 'PSBIthrust', 'PSFBthrust', 'LT_spiral']:
                     Efficiencyvector.append(event.AvailableThrust * event.Isp * 9.80665 / (2000 * event.ActivePower))
-                    shortDateVector.append(datetime.datetime.strptime(event.GregorianDate,'%m/%d/%Y').date())
+                    shortDateVector.append((epoch - event.TimestepLength / 2).datetime)
+                    Efficiencyvector.append(event.AvailableThrust * event.Isp * 9.80665 / (2000 * event.ActivePower))
+                    shortDateVector.append((epoch + event.TimestepLength / 2).datetime)
+                elif event.EventType != 'match_point':
+                    Efficiencyvector.append(0.0)
+                    shortDateVector.append((epoch - event.TimestepLength / 2).datetime)
+                    Efficiencyvector.append(0.0)
+                    shortDateVector.append((epoch + event.TimestepLength / 2).datetime)
+
 
             if firstpass:
                 DataAxesLeft.plot(shortDateVector, Efficiencyvector, c='DarkGreen', lw=2, ls='-', label='Propulsion system efficiency')
@@ -308,15 +345,27 @@ class Journey(object):
             shortDateVector = []
 
             for event in self.missionevents:
+                epoch = astropy.time.Time(event.JulianDate, format='jd', scale='tdb')
                 if event.EventType in ['SFthrust', 'SSFthrust', 'PSBIthrust']:
-                    Throttlevector.append(math.sqrt(event.Thrust[0]**2 + event.Thrust[1]**2 + event.Thrust[2]**2) / (event.AvailableThrust * self.thruster_duty_cycle))
-                    shortDateVector.append(datetime.datetime.strptime(event.GregorianDate,'%m/%d/%Y').date())
+                    Throttlevector.append(math.sqrt(event.Thrust[0]**2 + event.Thrust[1]**2 + event.Thrust[2]**2) / (event.AvailableThrust))
+                    shortDateVector.append((epoch - event.TimestepLength / 2).datetime)
+                    Throttlevector.append(math.sqrt(event.Thrust[0]**2 + event.Thrust[1]**2 + event.Thrust[2]**2) / (event.AvailableThrust))
+                    shortDateVector.append((epoch + event.TimestepLength / 2).datetime)
                 elif event.EventType in ['FBLTthrust','FBLTSthrust','PSFBthrust']:
                     Throttlevector.append(event.DVmagorThrottle)
-                    shortDateVector.append(datetime.datetime.strptime(event.GregorianDate,'%m/%d/%Y').date())
+                    shortDateVector.append((epoch - event.TimestepLength / 2).datetime)
+                    Throttlevector.append(event.DVmagorThrottle)
+                    shortDateVector.append((epoch + event.TimestepLength / 2).datetime)
                 elif event.EventType == 'LT_spiral':
                     Throttlevector.append(1.0)
-                    shortDateVector.append(datetime.datetime.strptime(event.GregorianDate,'%m/%d/%Y').date())
+                    shortDateVector.append((epoch - event.TimestepLength / 2).datetime)
+                    Throttlevector.append(1.0)
+                    shortDateVector.append((epoch + event.TimestepLength / 2).datetime)
+                elif event.EventType != 'match_point':
+                    Throttlevector.append(0.0)
+                    shortDateVector.append((epoch - event.TimestepLength / 2).datetime)
+                    Throttlevector.append(0.0)
+                    shortDateVector.append((epoch + event.TimestepLength / 2).datetime)
 
             if firstpass:
                 DataAxesLeft.plot(shortDateVector, Throttlevector, c='r', lw=2, ls='--', label='Control magnitude')
