@@ -41,8 +41,8 @@ namespace EMTG
             if (options.SpacecraftModelInput == EMTG::SpacecraftModelInputType::AssembleFromLibraries)
             {
                 //creates a single-stage spacecraft with the appropriate hardware
-                EMTG::HardwareModels::PowerSystemOptionsLibrary myPowerSystemOptionsLibrary(options.HardwarePath + options.PowerSystemsLibraryFile);
-                EMTG::HardwareModels::PropulsionSystemOptionsLibrary myPropulsionSystemOptionsLibrary(options.HardwarePath + options.PropulsionSystemsLibraryFile);
+                EMTG::HardwareModels::PowerSystemOptionsLibrary myPowerSystemOptionsLibrary(options.HardwarePath + "/" + options.PowerSystemsLibraryFile);
+                EMTG::HardwareModels::PropulsionSystemOptionsLibrary myPropulsionSystemOptionsLibrary(options.HardwarePath + "/" + options.PropulsionSystemsLibraryFile);
 
                 EMTG::HardwareModels::PowerSystemOptions myPowerSystemOptions(myPowerSystemOptionsLibrary.getPowerSystem(options.PowerSystemKey));
                 myPowerSystemOptions.setPowerMargin(options.power_margin);
@@ -82,7 +82,7 @@ namespace EMTG
             else if (options.SpacecraftModelInput == EMTG::SpacecraftModelInputType::ReadSpacecraftFile)
             {
                 //ingests a .emtg_spacecraftoptions file with any number of stages
-                mySpacecraftOptions.parse_input_file(options.HardwarePath + options.SpacecraftOptionsFile);
+                mySpacecraftOptions.parse_input_file(options.HardwarePath + "/" + options.SpacecraftOptionsFile);
 
                 for (size_t stageIndex = 0; stageIndex < mySpacecraftOptions.getNumberOfStages(); ++stageIndex)
 				{
@@ -142,18 +142,13 @@ namespace EMTG
                 myElectricPropulsionSystemOptions.setConstantIsp(options.IspLT);
                 myElectricPropulsionSystemOptions.setMinimumOrMonopropIsp(options.IspLT_minimum);
                 myElectricPropulsionSystemOptions.setFixedEfficiency(options.user_defined_engine_efficiency);
-                myElectricPropulsionSystemOptions.setThrottleTableFile(options.HardwarePath + options.ThrottleTableFile);
+                myElectricPropulsionSystemOptions.setThrottleTableFile(options.HardwarePath + "/" + options.ThrottleTableFile);
                 myElectricPropulsionSystemOptions.setMassPerString(0.0);
                 myElectricPropulsionSystemOptions.setg0(options.g0);
                 myElectricPropulsionSystemOptions.setPmin(options.engine_input_power_bounds[0]);
                 myElectricPropulsionSystemOptions.setPmax(options.engine_input_power_bounds[1]);
 				myElectricPropulsionSystemOptions.setSharpness(options.throttle_sharpness);
-
-                //the following settings are set differently depending on which thruster model is used
-                std::vector<double> temp_thrust_coefficients(7, 0.0);
-                std::vector<double> temp_mass_flow_coefficients(7, 0.0);
-                double temp_minP, temp_maxP;
-
+                
                 switch (options.engine_type)
                 {
                     case 0:
@@ -197,6 +192,10 @@ namespace EMTG
 
 #ifdef HAS_BUILT_IN_THRUSTERS
                         //recover coefficients from hard-coded models, but remember that the coefficients were in the reverse order back then
+                        std::vector<double> temp_thrust_coefficients(7, 0.0);
+                        std::vector<double> temp_mass_flow_coefficients(7, 0.0);
+                        double temp_minP, temp_maxP;
+
                         myElectricPropulsionSystemOptions.setThrusterMode(EMTG::SpacecraftThrusterMode::Poly1D);
 
                         EMTG::Astrodynamics::get_thruster_coefficients_from_library(options,
