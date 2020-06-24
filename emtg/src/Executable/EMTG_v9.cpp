@@ -381,20 +381,33 @@ int main(int argc, char* argv[])
             if (j > 0) //if not the first journey, insert an underscore
                 options.description.append("_");
             options.description.append(TheUniverse[j].central_body_name + "(");
-            switch (options.Journeys[j].sequence[0])
+
+            if (options.Journeys[j].departure_class == EMTG::BoundaryClass::EphemerisPegged)
             {
-            case -1: //begin at SOI
-            {
-                options.description.append("s");
-                break;
-            }
-            case 0: //begin at central body
-            {
-                options.description.append("c");
-                break;
-            }
-            default:
                 options.description.append(TheUniverse[j].bodies[options.Journeys[j].sequence[0] - 1].short_name);
+            }
+            else if (options.Journeys[j].departure_class == EMTG::BoundaryClass::EphemerisReferenced)
+            {
+                if (options.Journeys[j].sequence[0] == -1) //SOI
+                {
+                    options.description.append("s");
+                }
+                else if (options.Journeys[j].sequence[0] == 0) //central body
+                {
+                    options.description.append("c");
+                }
+                else //body in the universe
+                {
+                    options.description.append(TheUniverse[j].bodies[options.Journeys[j].sequence[0] - 1].short_name);
+                }
+            }
+            else if (options.Journeys[j].departure_class == EMTG::BoundaryClass::Periapse)
+            {
+                options.description.append("c"); //always the central body
+            }
+            else //free point
+            {
+                options.description.append("f");
             }
 
             //first, how many phases are there in the journey?
@@ -419,21 +432,32 @@ int main(int argc, char* argv[])
 
             options.Journeys[j].sequence.push_back(options.Journeys[j].destination_list[1]);
 
-
-            switch (options.Journeys[j].sequence.back())
+            if (options.Journeys[j].arrival_class == EMTG::BoundaryClass::EphemerisPegged)
             {
-            case -1: //begin at SOI
-            {
-                options.description.append("s");
-                break;
-            }
-            case 0: //begin at central body
-            {
-                options.description.append("c");
-                break;
-            }
-            default:
                 options.description.append(TheUniverse[j].bodies[options.Journeys[j].sequence.back() - 1].short_name);
+            }
+            else if (options.Journeys[j].arrival_class == EMTG::BoundaryClass::EphemerisReferenced)
+            {
+                if (options.Journeys[j].sequence.back() == -1) //SOI
+                {
+                    options.description.append("s");
+                }
+                else if (options.Journeys[j].sequence.back() == 0) //central body
+                {
+                    options.description.append("c");
+                }
+                else //body in the universe
+                {
+                    options.description.append(TheUniverse[j].bodies[options.Journeys[j].sequence.back() - 1].short_name);
+                }
+            }
+            else if (options.Journeys[j].arrival_class == EMTG::BoundaryClass::Periapse)
+            {
+                options.description.append("c"); //always the central body
+            }
+            else //free point
+            {
+                options.description.append("f");
             }
             options.description.append(")");
 
