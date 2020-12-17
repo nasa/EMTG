@@ -47,7 +47,7 @@ namespace EMTG
                 mySpacecraft,
                 myLaunchVehicle,
                 myOptions,
-                10, //numStatesToPropagate
+                9, //numStatesToPropagate
                 8) //numMatchConstraints
         {
             this->initialize();
@@ -90,7 +90,7 @@ namespace EMTG
             this->matchPointConstraintNames.push_back("virtual chemical fuel");
             this->matchPointConstraintStateIndex.push_back(8); //note we skipped the encode of boundary epoch, it does not get a match point constraint
             this->continuity_constraint_scale_factors(7) = 1.0 / (1.0 * this->myJourneyOptions->maximum_mass);
-            this->stateIndex_phase_propagation_variable = this->numStatesToPropagate - 1;
+            this->stateIndex_phase_propagation_variable = this->numStatesToPropagate;
             this->stateVectorNames.push_back("phase flight time");
 
             //no maneuvers
@@ -138,10 +138,10 @@ namespace EMTG
             else //integrated propagator
             {
                 this->isKeplerian = false;
-                this->ForwardSTM = math::Matrix<double>(14, math::identity);
-                this->BackwardSTM = math::Matrix<double>(14, math::identity);
-                this->Forward_dPropagatedStatedIndependentVariable.resize(this->numStatesToPropagate, 2, 0.0);
-                this->Backward_dPropagatedStatedIndependentVariable.resize(this->numStatesToPropagate, 2, 0.0);
+                this->ForwardSTM = math::Matrix<double>(10, math::identity);
+                this->BackwardSTM = math::Matrix<double>(10, math::identity);
+                this->Forward_dPropagatedStatedIndependentVariable.resize(this->numStatesToPropagate + 1, 2, 0.0);
+                this->Backward_dPropagatedStatedIndependentVariable.resize(this->numStatesToPropagate + 1, 2, 0.0);
 
                 //acceleration model object
                 this->mySpacecraftAccelerationModel = new Astrodynamics::SpacecraftAccelerationModel(this->myOptions,
@@ -149,23 +149,19 @@ namespace EMTG
                     this->myUniverse,
                     this->Xdescriptions,
                     this->mySpacecraft,
-                    13,//STM rows
-                    13,//STM columns
-                    this->numStatesToPropagate);
+                    10); // STM size
                 this->mySpacecraftAccelerationModel->setDutyCycle(this->PhaseDutyCycle);
 
                 //EOM
                 this->myEOM.setSpacecraftAccelerationModel(this->mySpacecraftAccelerationModel);
 
                 //integration scheme
-                this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, this->numStatesToPropagate + (13 * 13), this->numStatesToPropagate);
-                this->myIntegrationScheme->setNumStatesToIntegratePtr(this->total_number_of_states_to_integrate);
+                this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, this->numStatesToPropagate, 10);
 
                 this->ForwardHalfPhasePropagator = CreatePropagator(this->myOptions,
                     this->myUniverse,
-                    13,
-                    13,
                     this->numStatesToPropagate,
+                    10,
                     this->state_after_initial_TCM,
                     this->match_point_state_minus,
                     this->ForwardSTM,
@@ -176,10 +172,9 @@ namespace EMTG
                     this->ForwardIntegrationStepLength);
 
                 this->BackwardHalfPhasePropagator = CreatePropagator(this->myOptions,
-                    this->myUniverse,
-                    13,
-                    13,
+                    this->myUniverse,                    
                     this->numStatesToPropagate,
+                    10,
                     this->state_at_end_of_phase,
                     this->match_point_state_plus,
                     this->BackwardSTM,
@@ -226,9 +221,9 @@ namespace EMTG
                 this->TruthTable_Backward_MatchConstraints_Derivative_wrt_EncodedStates[7][stateIndex] = false; //fuel mass wrt state
             }
             this->TruthTable_Forward_MatchConstraints_Derivative_wrt_EncodedStates[7][7] = false; //fuel mass wrt epoch
-            this->TruthTable_Forward_MatchConstraints_Derivative_wrt_EncodedStates[7][9] = false; //fuel mass wrt oxidizer mass
+            //this->TruthTable_Forward_MatchConstraints_Derivative_wrt_EncodedStates[7][9] = false; //fuel mass wrt oxidizer mass
             this->TruthTable_Backward_MatchConstraints_Derivative_wrt_EncodedStates[7][7] = false; //fuel mass wrt epoch
-            this->TruthTable_Backward_MatchConstraints_Derivative_wrt_EncodedStates[7][9] = false; //fuel mass wrt oxidizer mass
+            //this->TruthTable_Backward_MatchConstraints_Derivative_wrt_EncodedStates[7][9] = false; //fuel mass wrt oxidizer mass
             //always true - propellant tank states do not affect anything but themselves
             for (size_t constraintIndex = 0; constraintIndex < 7; ++constraintIndex)
             {
@@ -237,7 +232,7 @@ namespace EMTG
             }
 
             //output stuff
-            this->output_state.resize(this->numStatesToPropagate + 13 * 13, 1, 0.0);
+            this->output_state.resize(this->numStatesToPropagate + 10 * 10, 1, 0.0);
         }//end initialize
 
         CoastPhase::~CoastPhase()
@@ -357,8 +352,8 @@ namespace EMTG
         {
             //do we want to propagate STMs or not?
             this->total_number_of_states_to_integrate = needG
-                ? this->numStatesToPropagate - 1 + 12 * 12
-                : this->numStatesToPropagate - 1;
+                ? this->numStatesToPropagate + 10 * 10
+                : this->numStatesToPropagate;
 
             this->process_phase_left_boundary(X, Xindex, F, Findex, G, needG);
 
@@ -444,7 +439,7 @@ namespace EMTG
                     }
                     else //integrated propagator
                     {
-                        this->ForwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->ForwardSTM(i, 13);
+                        this->ForwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->ForwardSTM(i, 9);
                     }
                 }
             }
@@ -507,7 +502,7 @@ namespace EMTG
                     }
                     else //integrated propagator
                     {
-                        this->BackwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->BackwardSTM(i, 13);
+                        this->BackwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->BackwardSTM(i, 9);
                     }
                     
                 }

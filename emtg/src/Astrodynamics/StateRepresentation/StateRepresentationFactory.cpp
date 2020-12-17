@@ -16,10 +16,6 @@
 // express or implied.   See the License for the specific language
 // governing permissions and limitations under the License.
 
-//EOM factory
-//Jacob Englander 1-8-2018
-
-#include "EOMFactory.h"
 #include "CartesianStateRepresentation.h"
 #include "SphericalRADECStateRepresentation.h"
 #include "SphericalAZFPAStateRepresentation.h"

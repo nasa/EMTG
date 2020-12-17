@@ -1,0 +1,286 @@
+#EMTGv9 .emtgopt file version 2
+
+#mission name
+mission_name escape_from_KSC_FreePointDirectDeparture_along_velocity_vector
+#objective function type
+#0: minimum deltaV
+#1: minimum time
+#2: maximum final mass
+#3: maximize initial mass
+#4: depart as late as possible in the window
+#5: depart as early as possible in the window
+#6: maximize orbit energy
+#7: minimize launch mass
+#8: arrive as early as possible
+#9: arrive as late as possible
+#10: <PLACEHOLDER FOR FUTURE OBJECTIVE FUNCTIONS>
+#11: maximum dry/wet ratio
+#12: maximum arrival kinetic energy
+#13: minimum BOL power
+#14: maximize log_10(final mass)
+#15: maximum log_e(final mass)
+#16: maximum dry mass margin
+#17: maximum dry mass
+#18: maximum log_10(dry mass)
+#19: maximum log_e(dry mass)
+#20: minimize chemical fuel
+#21: minimize chemical oxidizer
+#22: minimize electric propellant
+#23: minimize total propellant
+#24: minimize waypoint tracking error
+#25: minimize initial impulse magnitude
+#26: maximize distance from central body
+objective_type 0
+#Include the initial impulse in calculating the delta-v objective function?
+include_initial_impulse_in_cost 1
+#launch window open date (MJD)
+launch_window_open_date 59514.0
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable phase type
+#10: ProbeEntryPhase
+mission_type 7
+#Quiet NLP solver?
+quiet_NLP 0
+#Enable ACE feasible point finder?
+ACE_feasible_point_finder 1
+#maximum run time for MBH, in seconds
+MBH_max_run_time 600
+#NLP major iterations
+snopt_major_iterations 500
+#Seed MBH?
+seed_MBH 1
+#Universe folder
+universe_folder C:/emtg/testatron/universe
+#HardwarePath
+HardwarePath c:/emtg/testatron/HardwareModels/
+#which inner loop solver to run?
+#0: none, evaluate trialX
+#1: run MBH
+#2: run constrained DE
+#3: run NLP using trialX as initial guess
+#4: filament walker
+run_inner_loop 3
+#Enter any user data that should be appended to the .emtg file.
+#This is typically used in python wrappers
+user_data 
+
+
+
+BEGIN_JOURNEY
+
+#Journey name
+journey_name KSC_to_injection
+#Journey central body name
+journey_central_body Earth
+#destination list, as indices from the Universe file
+destination_list 0 0
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable (do not use)
+#10 ProbeEntryPhase
+phase_type 7
+#Journey wait time bounds (days)
+wait_time_bounds -0.5 0.5
+#journey departure type
+#0: launch or direct insertion
+#1: depart from parking orbit (you can use this one in place of a launch vehicle model, and the departure burn will be done with the EDS motor)
+#2: free direct departure, i.e. do not burn to get the departure v_infinity (used for when operations about a small body are not modeled but the departure velocity is known)
+#3: flyby (only valid for successive journeys)
+#4: flyby with fixed v-infinity-out (only valid for successive journeys)
+#5: spiral-out from circular orbit (low-thrust missions only)
+#6: zero-turn flyby (for small bodies)
+departure_type 2
+#one entry for each element
+departure_elements_vary_flag 0 0 0 1 1 1
+#cartesian state or SMA, ECC, INC, RAAN, AOP, TA
+departure_elements 6563.14 0.0 28.5 0.0 0.0 0.0
+#bounds on elements or state components, two entries for each element
+departure_elements_bounds 0.0 0.0 0.0 0.0 0.0 0.0 -180.0 180.0 -180.0 180.0 -360.0 360.0
+#Reference epoch (MJD) for journey departure elements
+departure_elements_reference_epoch 59514.58333333861
+#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+departure_elements_state_representation 3
+#journey departure boundary class
+#0: Ephemeris-pegged (default EMTG)
+#1: Free point
+#2: Ephemeris-referenced
+#3: Periapse
+departure_class 1
+#journey arrival type
+#0: insertion into parking orbit (use chemical Isp)
+#1: rendezvous (use chemical Isp)
+#2: intercept with bounded V_infinity
+#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)
+#4: match final v-infinity vector
+#5: match final v-infinity vector (low-thrust)
+#6: capture spiral
+#7: momentum transfer (kinetic impactor)
+arrival_type 2
+#one entry for each element
+arrival_elements_vary_flag 1 1 1 1 1 1
+#bounds on elements or state components, two entries for each element
+arrival_elements_bounds -7000.0 7000.0 -7000.0 7000.0 -7000.0 7000.0 -8.0 8.0 -8.0 8.0 -8.0 8.0
+#Reference epoch (MJD) for journey arrival elements
+arrival_elements_reference_epoch 59514.58333333861
+#journey arrival boundary class
+#0: Ephemeris-pegged (default EMTG)
+#1: Free point
+#2: Ephemeris-referenced
+#3: Periapse
+arrival_class 1
+#Print a target spec for free point arrival at the end of this journey?
+FreePointArrival_print_target_spec 0
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_departure_longitude_-80.6026_-80.6026_trueofdatebcf
+p0_departure_DeticLatitude_28.58345425_28.58345425_trueofdatebcf
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+p0CoastPhaseFreePointFreeDirectDeparture: event left state SMA ,6563.1400000000003274
+p0CoastPhaseFreePointFreeDirectDeparture: event left state ECC ,-1.0000000000000000304e-13
+p0CoastPhaseFreePointFreeDirectDeparture: event left state INC ,0.49741883681838561237
+p0CoastPhaseFreePointFreeDirectDeparture: event left state RAAN ,2.3292917192932192094
+p0CoastPhaseFreePointFreeDirectDeparture: event left state AOP ,-0.22336381672281957478
+p0CoastPhaseFreePointFreeDirectDeparture: event left state TA ,-4.4913561969769446591
+p0CoastPhaseFreePointFreeDirectDeparture: event left state mass ,525.19999999999993179
+p0CoastPhaseFreePointFreeDirectDeparture: event left state epoch ,59513.997029183628911
+p0CoastPhase: phase flight time ,0.00017735017127933910158
+p0CoastPhaseFreePointIntercept: event left state x ,-4114.5449851934681647
+p0CoastPhaseFreePointIntercept: event left state y ,-4042.3385980354628373
+p0CoastPhaseFreePointIntercept: event left state z ,3131.2656998960010242
+p0CoastPhaseFreePointIntercept: event left state vx ,0.44019459397869376005
+p0CoastPhaseFreePointIntercept: event left state vy ,2.5575893691454094636
+p0CoastPhaseFreePointIntercept: event left state vz ,-2.9492003172225045304
+p0CoastPhaseFreePointIntercept: event left state mass ,525.20000000000004547
+p0CoastPhaseFreePointIntercept: V_infinity_x ,4.9983544265307067178
+p0CoastPhaseFreePointIntercept: V_infinity_y ,-8.1389777278320600828
+p0CoastPhaseFreePointIntercept: V_infinity_z ,2.8902123514645019497
+p0CoastPhase: virtual chemical fuel ,5.251999996999999769e-11
+END_TRIALX
+
+END_JOURNEY
+
+BEGIN_JOURNEY
+
+#Journey name
+journey_name injection_to_escape
+#Journey central body name
+journey_central_body Earth
+#destination list, as indices from the Universe file
+destination_list 3 -1
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable (do not use)
+#10 ProbeEntryPhase
+phase_type 7
+#Journey wait time bounds (days)
+wait_time_bounds 0.0 0.0
+#what are the bounds on the initial impulse for each journey in km/s\
+#you can set a very high upper bound if you are using a launchy vehicle model - the optimizer will find the correct value
+initial_impulse_bounds 0.0 4.48106649388
+#Force free point direct insertion burn to be along the inertial velocity vector?
+force_free_point_direct_insertion_along_velocity_vector 1
+#cartesian state or SMA, ECC, INC, RAAN, AOP, TA
+departure_elements -874.83467727 -6504.5547018 -13.8025763 6.78869723 -0.90515995 -3.71853488
+#Reference epoch (MJD) for journey departure elements
+departure_elements_reference_epoch 59514.58333333861
+#journey departure boundary class
+#0: Ephemeris-pegged (default EMTG)
+#1: Free point
+#2: Ephemeris-referenced
+#3: Periapse
+departure_class 1
+#journey arrival type
+#0: insertion into parking orbit (use chemical Isp)
+#1: rendezvous (use chemical Isp)
+#2: intercept with bounded V_infinity
+#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)
+#4: match final v-infinity vector
+#5: match final v-infinity vector (low-thrust)
+#6: capture spiral
+#7: momentum transfer (kinetic impactor)
+arrival_type 2
+#journey arrival boundary class
+#0: Ephemeris-pegged (default EMTG)
+#1: Free point
+#2: Ephemeris-referenced
+#3: Periapse
+arrival_class 2
+#journey arrival ellipsoid axes (3)
+arrival_ellipsoid_axes 1471720.0 1471720.0 1471720.0
+#ECC for ephemeris pegged orbit insertion
+ephemeris_pegged_orbit_insertion_ECC 1e-10
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+p0CoastPhaseFreePointDirectInsertion: event left state mass ,525.20000000000004547
+p0CoastPhaseFreePointDirectInsertion: magnitude of outgoing velocity asymptote ,3.2035359307438215914
+p0CoastPhaseFreePointDirectInsertion: RA of departure asymptote ,36.900752504443957491
+p0CoastPhaseFreePointDirectInsertion: DEC of departure asymptote ,-0.007569279051287125526
+p0CoastPhaseFreePointDirectInsertion: virtual chemical fuel ,174.53252829000393831
+p0CoastPhaseFreePointDirectInsertion: virtual chemical oxidizer ,161.44258866825762766
+p0CoastPhase: phase flight time ,36.592461926888830703
+p0CoastPhaseEphemerisReferencedInterceptInterior: event interface state vMAG ,0.049039837776035308248
+p0CoastPhaseEphemerisReferencedInterceptInterior: event interface state vRA ,14.907993548933930583
+p0CoastPhaseEphemerisReferencedInterceptInterior: event interface state vDEC ,270.18366324263007527
+p0CoastPhaseEphemerisReferencedInterceptInterior: event interface state RA ,44.758824829780266441
+p0CoastPhaseEphemerisReferencedInterceptInterior: event interface state DEC ,-0.49735065990425142424
+p0CoastPhaseEphemerisReferencedInterceptInterior: event left state mass ,189.22488304179100282
+p0CoastPhase: virtual chemical fuel ,0
+END_TRIALX
+
+END_JOURNEY

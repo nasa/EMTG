@@ -26,92 +26,55 @@ namespace EMTG {
     namespace Astrodynamics {
 
         // constructors
-        IntegratedPropagator::IntegratedPropagator(Astrodynamics::universe & myUniverse,
-                                                   const size_t & STM_rows_in,
-                                                   const size_t & STM_columns_in,
-                                                   const size_t & STM_start_index_in) :
-                                                   PropagatorBase(myUniverse),
-                                                   num_STM_row(STM_rows_in),
-                                                   num_STM_col(STM_columns_in),
-                                                   STM_start_index(STM_start_index_in)
+        IntegratedPropagator::IntegratedPropagator(const size_t & numStates_in,
+                                                   const size_t & STM_size_in) :
+                                                   STM_size(STM_size_in)
         {
-            this->zero_control.resize(4, 1, 0.0);
-            this->state_left_augmented.resize(STM_start_index_in + STM_rows_in * STM_columns_in, 1, 0.0);
-            this->state_right_augmented.resize(STM_start_index_in + STM_rows_in * STM_columns_in, 1, 0.0);
+            this->numStates = numStates_in;
+            this->state_left.resize(this->numStates, 1, 0.0);
+            this->state_right.resize(this->numStates, 1, 0.0);
+            this->STM_left.resize(STM_size_in, STM_size_in, 0.0);
+            this->STM_right.resize(STM_size_in, STM_size_in, 0.0);
         }
 
-       void  IntegratedPropagator::unpackStates(const math::Matrix<doubleType> & state_left, const bool & STM_needed)
+       void  IntegratedPropagator::propagatorSetup(const math::Matrix<doubleType> & state_left, 
+                                                math::Matrix<double> & STM,           
+                                                const bool & STM_needed)
        {
+
+           //configure integration scheme pointers
+           this->integration_scheme->setLeftHandIndependentVariablePtr(this->current_independent_variable);
+
            // clear the state
-           this->state_left_augmented.assign_zeros();
+           this->state_left.assign_zeros();
 
-           // clear dStatedIndependentVariable
-           this->dStatedIndependentVariablePointer->assign_zeros();
-
-           // insert true state into augmented state
            size_t index = 0;
-           for (size_t k = 0; k < this->STM_start_index; ++k)
+           for (size_t k = 0; k < this->numStates; ++k)
            {
-               // TODO: FIX THIS MONSTRO-CITY: The incoming state vector has the current epoch as its
-               // 8th entry. We want to skip that as we don't have current epoch dynamics
-               // to integrate
-               //if (k == 7)
-               //{
-               //    ++index;
-               //}
-
-               this->state_left_augmented(k) = state_left(index++);
+               this->state_left(k) = state_left(index++);
            }
-
+           
+           this->STM_left = STM;
            if (STM_needed)
-           {
-               // make sure we integrate true states + STM entries
-               this->setNumStatesToIntegrate(this->STM_start_index + this->num_STM_row * this->num_STM_col);
-
-               // set STM to identity
-               for (size_t k = this->STM_start_index; k < this->state_left_augmented.get_n(); k = k + this->num_STM_row + 1)
-               {
-                   this->state_left_augmented(k) = 1.0;
-               }
-           }
-           else
-           {
-               this->setNumStatesToIntegrate(this->STM_start_index);
+           {               
+               this->STM_left.construct_identity_matrix();
            }
        }
 
-       void  IntegratedPropagator::packStates(math::Matrix<doubleType> & state_right, 
-                                              const math::Matrix<double> & dstate_rightdProp_vars,
-                                              math::Matrix<double> & STM, 
-                                              const bool & STM_needed)
+       void IntegratedPropagator::propagatorTeardown(const math::Matrix<doubleType> & state_left,
+                                                     math::Matrix<doubleType> & state_right,
+                                                     math::Matrix<double> & STM_ptr,
+                                                     const doubleType & propagation_span)
        {
-           size_t index = 0;
-           for (size_t k = 0; k < this->STM_start_index; ++k)
-           {
-               state_right(index++) = this->state_right_augmented(k);
-           }
+           // pack the augmented state back into the external state pointer
+           state_right = this->state_right;
 
-           if (STM_needed)
-           {
-               size_t STM_entry_index = this->STM_start_index;
-               for (size_t i = 0; i < this->num_STM_row; ++i)
-               {
-                   for (size_t j = 0; j < this->num_STM_col; ++j)
-                   {
-                       STM(i, j) = (this->state_right_augmented(STM_entry_index++)) _GETVALUE;
-                   }
-               }
+           STM_ptr = this->STM_right;
 
-               // insert the current epoch and propagation variable derivatives into the STM
-               size_t prop_var_slot = STM.get_m() - 1; // propagation variable slot is always the last STM column
-               for (size_t i = 0; i < 10; ++i)
-               {
-                   // previous flight times (current epoch)
-                   STM(i, this->index_of_epoch_in_state_vec) = dstate_rightdProp_vars(i, 0);
-                   // current phase propagation variable
-                   STM(i, prop_var_slot) = dstate_rightdProp_vars(i, 1);
-               }
-               STM(prop_var_slot, prop_var_slot) = 1.0;
+           if ((state_right(7) < state_left(7) && propagation_span > 0.0)
+               || (state_right(7) > state_left(7) && propagation_span < 0.0))
+           {
+               std::cout << "Oh noes!!...mismatch in left epoch vs. right epoch" << std::endl;
            }
        }
 

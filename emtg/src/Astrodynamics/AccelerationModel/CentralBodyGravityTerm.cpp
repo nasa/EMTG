@@ -42,6 +42,10 @@ namespace EMTG
             }
         }
 
+        CentralBodyGravityTerm::~CentralBodyGravityTerm()
+        {
+        }
+
         void CentralBodyGravityTerm::computeFrameDragAcceleration()
         {
             // Since we are the central body, then we do not want to compute the acceleration of

@@ -29,6 +29,7 @@ namespace EMTG
         
             this->central_body_J2 = 0.0;
             this->central_body_flattening_coefficient = 0.0;
+            this->central_body_J2_reference_radius = 0.0;
         
         }
 
@@ -44,6 +45,7 @@ namespace EMTG
 
             this->central_body_J2 = 0.0;
             this->central_body_flattening_coefficient = 0.0;
+            this->central_body_J2_reference_radius = 0.0;
 
     #ifdef SPLINE_EPHEM
             this->MySplineEphemUniverse = SplineEphemUniverse;
@@ -82,6 +84,8 @@ namespace EMTG
             double value;
             char dump_buffer[1024];
             bool contains_J2_AbsoluteMagnitude_Albedo = false;
+            bool J2_set = false;
+            bool J2_ref_radius_set = false;
 
             if (!inputfile.is_open())
             {
@@ -119,7 +123,13 @@ namespace EMTG
                     }
                     else if (choice == "central_body_J2")
                     {
+                        J2_set = true;
                         inputfile >> this->central_body_J2;
+                    }
+                    else if (choice == "central_body_J2_reference_radius")
+                    {
+                        J2_ref_radius_set = true;
+                        inputfile >> this->central_body_J2_reference_radius;
                     }
                     else if (choice == "central_body_flattening_coefficient")
                     {
@@ -185,6 +195,7 @@ namespace EMTG
                         std::vector<double> temp_elements(6);
 
                         double temp_J2 = 0.0010826265;
+                        double temp_J2_ref_radius = 6378.0;
                         double temp_AbsoluteMagnitude = 10.0;
                         double temp_albedo = 0.367;
 
@@ -220,6 +231,10 @@ namespace EMTG
                             for (int k = 0; k < 6; ++k)
                                 inputfile >> temp_elements[k];
 
+                            // TODO: right now we are not going to read a reference radius from 
+                            // the universe file (so we don't break all universe parsing)
+                            // since a Body doesn't actually ever use this, just give it the body radius for now
+                            temp_J2_ref_radius = temp_radius;
                             bodies.push_back(body(temp_bodycode,
                                                   tempname,
                                                   tempshortname,
@@ -228,6 +243,7 @@ namespace EMTG
                                                   temp_mu,
                                                   temp_radius,
                                                   temp_J2,
+                                                  temp_J2_ref_radius,
                                                   0.0,
                                                   temp_AbsoluteMagnitude,
                                                   temp_albedo,
@@ -253,6 +269,17 @@ namespace EMTG
                 }
             }
 
+            // we got to the end of the universe file and the user has specified a central body J2 value, but no reference radius....abort
+            if (J2_set && !J2_ref_radius_set)
+            {
+                throw std::invalid_argument("The central_body_J2 parameter has been set in the Universe file: " + universefile + ", but the central_body_J2_reference_radius parameter has not.");
+            }
+
+            if (J2_ref_radius_set && !J2_set)
+            {
+                throw std::invalid_argument("The central_body_J2_reference_radius parameter has been set in the Universe file: " + universefile + ", but the central_body_J2 parameter has not.");
+            }
+
             //create the flyby menu
             create_flyby_and_perturbation_menus(j, options);
 
@@ -271,6 +298,7 @@ namespace EMTG
             double temp_mu = this->mu;
             double temp_radius = this->central_body_radius;
             double temp_J2 = this->central_body_J2;
+            double temp_J2_reference_radius = this->central_body_J2_reference_radius;
             std::vector<double> temp_reference_angles = this->central_body_reference_angles;
             // TODO: I'm setting these to something trivial for now, but really, we should just
             // make these body fields private, so that central_body doesn't get them
@@ -287,6 +315,7 @@ namespace EMTG
                                              temp_mu,
                                              temp_radius,
                                              temp_J2,
+                                             temp_J2_reference_radius,
                                              this->central_body_flattening_coefficient,
                                              temp_absolute_magnitude,
                                              temp_albedo,
@@ -399,6 +428,7 @@ namespace EMTG
                             double timeScale = epoch.getDerivative(timevar) / this->X_scale_factors->operator[](timevar);
 
                             state[stateindex].setDerivative(timevar, statedouble[stateindex + 6] * this->X_scale_factors->operator[](timevar) * timeScale);
+                            //state[stateindex].setDerivative(timevar, statedouble[stateindex + 6]);
                         }
                     }
 #else

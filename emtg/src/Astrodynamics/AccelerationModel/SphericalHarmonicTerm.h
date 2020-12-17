@@ -21,7 +21,7 @@
 #ifndef SPHERICAL_HARMONIC_TERM_H
 #define SPHERICAL_HARMONIC_TERM_H
 
-#include "AccelerationModelTerm.h"
+#include "SpacecraftAccelerationModelTerm.h"
 #include "body.h"
 #include "SpacecraftAccelerationModel.h"
 
@@ -30,9 +30,8 @@ namespace EMTG
 {
     namespace Astrodynamics
     {
-        class SpacecraftAccelerationModel;
         class CentralBodyGravityTerm;
-        class SphericalHarmonicTerm : public AccelerationModelTerm
+        class SphericalHarmonicTerm : public SpacecraftAccelerationModelTerm
         {
         public:
             // constructor
@@ -43,7 +42,7 @@ namespace EMTG
             // methods
             virtual void computeAccelerationTerm() override;
             virtual void computeAccelerationTerm(const bool & generate_derivatives) override;
-            void populateInstrumentationFile(std::ofstream & acceleration_model_file) override;
+            virtual void populateInstrumentationFile(std::ofstream & acceleration_model_file) override;
             inline SphericalHarmonicTerm* clone() const override { return new SphericalHarmonicTerm(*this); }
 
 
@@ -51,8 +50,8 @@ namespace EMTG
             // fields
             body * my_body;
             CentralBodyGravityTerm * parent_gravity_term;
-            double degree;
-            double order;
+            size_t degree;
+            size_t order;
 
             math::Matrix<doubleType> r_body2sc_BCF;
             doubleType r_body2sc_BCF_norm;

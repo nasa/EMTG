@@ -25,15 +25,10 @@ namespace EMTG
     namespace Astrodynamics
     {
         //constructor
-        PropagatorBase::PropagatorBase(Astrodynamics::universe& myUniverse) :
-                                       PropagatorBase()
+        PropagatorBase::PropagatorBase()
         {
-            this->myUniverse = &myUniverse;
-
-            this->mu_km2s3 = this->myUniverse->mu;
-            this->LU = this->myUniverse->LU;
-            this->TU = this->myUniverse->TU;
             this->index_of_epoch_in_state_vec = -1;
+            this->store_propagation_history = false;
         }
     }//end namespace Astrodynamics
 }//end namespace EMTG

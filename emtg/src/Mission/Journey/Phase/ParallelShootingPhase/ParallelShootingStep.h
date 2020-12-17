@@ -375,11 +375,11 @@ namespace EMTG
             std::vector< std::vector<size_t> > dIndex_StateStepRightInertial_wrt_LeftStateVariables;//right stateIndex, variable
             std::vector< std::vector<size_t> > dIndex_StateStepRightInertial_wrt_PreviousTimeVariables;//right stateIndex, variable
             std::vector<size_t> dIndex_StateStepRightInertial_wrt_PhaseFlightTime;
-
-
-            std::vector< std::vector<size_t> > TruthTable_StateStepRightInertial_wrt_StateStepLeftInertial;
-            std::vector<size_t> TruthTable_StateStepRightInertial_wrt_Control;
-            std::vector<size_t> TruthTable_StateStepRightInertial_wrt_PhaseFlightTime;
+            
+            std::vector< std::vector<bool> > TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded; //stateIndex, varIndex
+            std::vector< std::vector<bool> > TruthTable_StateStepRightInertial_wrt_StateStepLeftInertial;
+            std::vector<bool> TruthTable_StateStepRightInertial_wrt_Control;
+            std::vector<bool> TruthTable_StateStepRightInertial_wrt_PhaseFlightTime;
         };
 
         inline ParallelShootingStep * new_clone(ParallelShootingStep const & other)

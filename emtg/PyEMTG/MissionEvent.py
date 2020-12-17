@@ -278,7 +278,7 @@ class MissionEvent(object):
             GraphicsObject.scatter(pX, pY, pZ, s=2, c='k', marker='o')
             
             if PlotOptions.ShowThrustVectors:
-                ControlVector = np.array(self.Thrust) / self.AvailableThrust * LU * 0.5
+                ControlVector = np.array(self.Thrust) / self.AvailableThrust * LU * 0.1
                 X = self.SpacecraftState[0] + np.array([0.0, ControlVector[0]])
                 Y = self.SpacecraftState[1] + np.array([0.0, ControlVector[1]])
                 Z = self.SpacecraftState[2] + np.array([0.0, ControlVector[2]])

@@ -20,6 +20,7 @@
 
 #pragma once
 
+#include "missionoptions.h"
 #include "KeplerPropagator.h"
 
 namespace EMTG
@@ -31,9 +32,7 @@ namespace EMTG
         public:
             // constructors
             KeplerPropagatorTimeDomain() {};
-            KeplerPropagatorTimeDomain(missionoptions& myOptions,
-                Astrodynamics::universe& myUniverse,
-                const size_t& numStates);
+            KeplerPropagatorTimeDomain(const size_t& numStates);
 
             //clone
             virtual KeplerPropagatorTimeDomain* clone() const { return new KeplerPropagatorTimeDomain(*this); }
@@ -47,6 +46,7 @@ namespace EMTG
             inline double getGt() const { return this->Gt; }
             inline double getFtt() const { return this->Ftt; }
             inline double getGtt() const { return this->Gtt; }
+            virtual std::vector<double> getPropagationHistory() const override { throw std::runtime_error("KeplerPropagatorTimeDomain::getPropagationHistory not implemented"); };
 
             // fields
             double F, G, Ft, Gt, Ftt, Gtt;

@@ -164,15 +164,18 @@ namespace EMTG
                 }
 
                 //Step 2.2: time variables
-                std::vector<size_t>& ListOfTimeVariablesAffectingCurrentStepLeftState = this->myStep->getListOfTimeVariablesAffectingCurrentStepLeftState();
-                for (size_t varIndex = 0; varIndex < ListOfTimeVariablesAffectingCurrentStepLeftState.size(); ++varIndex)
+                if (!this->isDefinedRelativeToCentralBody)
                 {
-                    size_t Xindex = ListOfTimeVariablesAffectingCurrentStepLeftState[varIndex];
+                    std::vector<size_t>& ListOfTimeVariablesAffectingCurrentStepLeftState = this->myStep->getListOfTimeVariablesAffectingCurrentStepLeftState();
+                    for (size_t varIndex = 0; varIndex < ListOfTimeVariablesAffectingCurrentStepLeftState.size(); ++varIndex)
+                    {
+                        size_t Xindex = ListOfTimeVariablesAffectingCurrentStepLeftState[varIndex];
 
-                    this->create_sparsity_entry(Fdescriptions->size() - 1,
-                        Xindex,
-                        this->Gindices_BPT_constraintMinimumAngle_wrt_StepLeftTime);
-                }
+                        this->create_sparsity_entry(Fdescriptions->size() - 1,
+                            Xindex,
+                            this->Gindices_BPT_constraintMinimumAngle_wrt_StepLeftTime);
+                    }
+                }//end time variable dependencies, which only exist if the constraint is NOT defined relative to the central body
 
                 //Step 2.3: control variables
                 std::vector<size_t>& Xindices_control = this->myStep->getXindices_control(this->subStepIndex);
@@ -234,15 +237,18 @@ namespace EMTG
                 }
 
                 //Step 2.2: time variables
-                std::vector<size_t>& ListOfTimeVariablesAffectingCurrentStepLeftState = this->myStep->getListOfTimeVariablesAffectingCurrentStepLeftState();
-                for (size_t varIndex = 0; varIndex < ListOfTimeVariablesAffectingCurrentStepLeftState.size(); ++varIndex)
+                if (!this->isDefinedRelativeToCentralBody)
                 {
-                    size_t Xindex = ListOfTimeVariablesAffectingCurrentStepLeftState[varIndex];
+                    std::vector<size_t>& ListOfTimeVariablesAffectingCurrentStepLeftState = this->myStep->getListOfTimeVariablesAffectingCurrentStepLeftState();
+                    for (size_t varIndex = 0; varIndex < ListOfTimeVariablesAffectingCurrentStepLeftState.size(); ++varIndex)
+                    {
+                        size_t Xindex = ListOfTimeVariablesAffectingCurrentStepLeftState[varIndex];
 
-                    this->create_sparsity_entry(Fdescriptions->size() - 1,
-                        Xindex,
-                        this->Gindices_BPT_constraintMaximumAngle_wrt_StepLeftTime);
-                }
+                        this->create_sparsity_entry(Fdescriptions->size() - 1,
+                            Xindex,
+                            this->Gindices_BPT_constraintMaximumAngle_wrt_StepLeftTime);
+                    }
+                }//end time variable dependencies, which only exist if the constraint is NOT relative to the central body
 
                 //Step 2.3: control variables
                 std::vector<size_t>& Xindices_control = this->myStep->getXindices_control(this->subStepIndex);
@@ -396,38 +402,41 @@ namespace EMTG
                 }//end non-time derivatives
 
                 //Step 2.2: time variables affecting spacecraft state
-                std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByTimeVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByTimeVariable();
-                std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState_wrt_Time = this->myStep->get_Derivatives_of_StateStepLeftInertial_wrt_Time();//Xindex, stateIndex, derivative value
-
-                for (size_t varIndex = 0; varIndex < DerivativesOfCurrentStepLeftStateByTimeVariable.size(); ++varIndex)
+                if (!this->isDefinedRelativeToCentralBody)
                 {
-                    dConstraintPointState_dDecisionVariable.assign_zeros();
+                    std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByTimeVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByTimeVariable();
+                    std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState_wrt_Time = this->myStep->get_Derivatives_of_StateStepLeftInertial_wrt_Time();//Xindex, stateIndex, derivative value
 
-                    for (size_t entryIndex = 0; entryIndex < DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex].size(); ++entryIndex)
+                    for (size_t varIndex = 0; varIndex < DerivativesOfCurrentStepLeftStateByTimeVariable.size(); ++varIndex)
                     {
-                        size_t stateIndex = std::get<0>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
-                        size_t dIndex = std::get<1>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
+                        dConstraintPointState_dDecisionVariable.assign_zeros();
 
-                        dConstraintPointState_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StepLeftState_wrt_Time[dIndex]);
-                    }
+                        for (size_t entryIndex = 0; entryIndex < DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex].size(); ++entryIndex)
+                        {
+                            size_t stateIndex = std::get<0>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
+                            size_t dIndex = std::get<1>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
 
-                    size_t Gindex = this->Gindices_BPT_constraintMinimumAngle_wrt_StepLeftTime[varIndex];
-                    size_t Xindex = this->jGvar->operator[](Gindex);
+                            dConstraintPointState_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StepLeftState_wrt_Time[dIndex]);
+                        }
 
-                    G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                        * -(dFdR[0] * dConstraintPointState_dDecisionVariable(0) - this->dspacecraft_to_reference_depoch(0)
-                            + dFdR[1] * dConstraintPointState_dDecisionVariable(1) - this->dspacecraft_to_reference_depoch(1)
-                            + dFdR[2] * dConstraintPointState_dDecisionVariable(2) - this->dspacecraft_to_reference_depoch(2));
+                        size_t Gindex = this->Gindices_BPT_constraintMinimumAngle_wrt_StepLeftTime[varIndex];
+                        size_t Xindex = this->jGvar->operator[](Gindex);
 
-                    //maximum angle constraint
-                    Gindex = this->Gindices_BPT_constraintMaximumAngle_wrt_StepLeftTime[varIndex];
-                    Xindex = this->jGvar->operator[](Gindex);
+                        G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                            * -(dFdR[0] * dConstraintPointState_dDecisionVariable(0) - this->dspacecraft_to_reference_depoch(0)
+                                + dFdR[1] * dConstraintPointState_dDecisionVariable(1) - this->dspacecraft_to_reference_depoch(1)
+                                + dFdR[2] * dConstraintPointState_dDecisionVariable(2) - this->dspacecraft_to_reference_depoch(2));
 
-                    G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                        * -(dFdR[0] * dConstraintPointState_dDecisionVariable(0) - this->dspacecraft_to_reference_depoch(0)
-                            + dFdR[1] * dConstraintPointState_dDecisionVariable(1) - this->dspacecraft_to_reference_depoch(1)
-                            + dFdR[2] * dConstraintPointState_dDecisionVariable(2) - this->dspacecraft_to_reference_depoch(2));
-                }//end time derivatives
+                        //maximum angle constraint
+                        Gindex = this->Gindices_BPT_constraintMaximumAngle_wrt_StepLeftTime[varIndex];
+                        Xindex = this->jGvar->operator[](Gindex);
+
+                        G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                            * -(dFdR[0] * dConstraintPointState_dDecisionVariable(0) - this->dspacecraft_to_reference_depoch(0)
+                                + dFdR[1] * dConstraintPointState_dDecisionVariable(1) - this->dspacecraft_to_reference_depoch(1)
+                                + dFdR[2] * dConstraintPointState_dDecisionVariable(2) - this->dspacecraft_to_reference_depoch(2));
+                    }//end time derivatives
+                }//end switch for time variables, which only exist if the constraint is NOT defined relative to the central body
 
                 //Step 2.3: control
                 for (size_t controlIndex = 0; controlIndex < 3; ++controlIndex)
@@ -481,29 +490,32 @@ namespace EMTG
                     }//end non-time derivatives
 
                     //Step 3.2: time
-                    std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByTimeVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByTimeVariable();
-                    std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState_wrt_Time = this->myStep->get_Derivatives_of_StateStepLeftInertial_wrt_Time();//Xindex, stateIndex, derivative value
-
-                    for (size_t varIndex = 0; varIndex < DerivativesOfCurrentStepLeftStateByTimeVariable.size(); ++varIndex)
+                    if (!this->isDefinedRelativeToCentralBody)
                     {
-                        dConstraintPointState_dDecisionVariable.assign_zeros();
+                        std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByTimeVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByTimeVariable();
+                        std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState_wrt_Time = this->myStep->get_Derivatives_of_StateStepLeftInertial_wrt_Time();//Xindex, stateIndex, derivative value
 
-                        for (size_t entryIndex = 0; entryIndex < DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex].size(); ++entryIndex)
+                        for (size_t varIndex = 0; varIndex < DerivativesOfCurrentStepLeftStateByTimeVariable.size(); ++varIndex)
                         {
-                            size_t stateIndex = std::get<0>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
-                            size_t dIndex = std::get<1>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
+                            dConstraintPointState_dDecisionVariable.assign_zeros();
 
-                            dConstraintPointState_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StepLeftState_wrt_Time[dIndex]);
-                        }
+                            for (size_t entryIndex = 0; entryIndex < DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex].size(); ++entryIndex)
+                            {
+                                size_t stateIndex = std::get<0>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
+                                size_t dIndex = std::get<1>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
 
-                        size_t Gindex = this->Gindices_BPT_constraintMinimumAngle_wrt_StepLeftTime[varIndex];
-                        size_t Xindex = this->jGvar->operator[](Gindex);
+                                dConstraintPointState_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StepLeftState_wrt_Time[dIndex]);
+                            }
 
-                        G[Gindex] += this->X_scale_factors->operator[](Xindex) * -dMinBoundary_dr _GETVALUE
-                            * (rx / r * this->dspacecraft_to_reference_depoch(0)
-                                + ry / r * this->dspacecraft_to_reference_depoch(1)
-                                + rz / r * this->dspacecraft_to_reference_depoch(2));
-                    }//end time derivatives
+                            size_t Gindex = this->Gindices_BPT_constraintMinimumAngle_wrt_StepLeftTime[varIndex];
+                            size_t Xindex = this->jGvar->operator[](Gindex);
+
+                            G[Gindex] += this->X_scale_factors->operator[](Xindex) * -dMinBoundary_dr _GETVALUE
+                                * (rx / r * this->dspacecraft_to_reference_depoch(0)
+                                    + ry / r * this->dspacecraft_to_reference_depoch(1)
+                                    + rz / r * this->dspacecraft_to_reference_depoch(2));
+                        }//end time derivatives
+                    }//end switch for time variables, which only exist if the constraint is NOT defined relative to the central body
                 }//end bound for minimum angle constraint
                 
                 //Step 4: bound for maximum angle constraint
@@ -540,29 +552,32 @@ namespace EMTG
                     }//end non-time derivatives
 
                     //Step 3.2: time
-                    std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByTimeVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByTimeVariable();
-                    std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState_wrt_Time = this->myStep->get_Derivatives_of_StateStepLeftInertial_wrt_Time();//Xindex, stateIndex, derivative value
-
-                    for (size_t varIndex = 0; varIndex < DerivativesOfCurrentStepLeftStateByTimeVariable.size(); ++varIndex)
+                    if (!this->isDefinedRelativeToCentralBody)
                     {
-                        dConstraintPointState_dDecisionVariable.assign_zeros();
+                        std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByTimeVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByTimeVariable();
+                        std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState_wrt_Time = this->myStep->get_Derivatives_of_StateStepLeftInertial_wrt_Time();//Xindex, stateIndex, derivative value
 
-                        for (size_t entryIndex = 0; entryIndex < DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex].size(); ++entryIndex)
+                        for (size_t varIndex = 0; varIndex < DerivativesOfCurrentStepLeftStateByTimeVariable.size(); ++varIndex)
                         {
-                            size_t stateIndex = std::get<0>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
-                            size_t dIndex = std::get<1>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
+                            dConstraintPointState_dDecisionVariable.assign_zeros();
 
-                            dConstraintPointState_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StepLeftState_wrt_Time[dIndex]);
-                        }
+                            for (size_t entryIndex = 0; entryIndex < DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex].size(); ++entryIndex)
+                            {
+                                size_t stateIndex = std::get<0>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
+                                size_t dIndex = std::get<1>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
 
-                        size_t Gindex = this->Gindices_BPT_constraintMaximumAngle_wrt_StepLeftTime[varIndex];
-                        size_t Xindex = this->jGvar->operator[](Gindex);
+                                dConstraintPointState_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StepLeftState_wrt_Time[dIndex]);
+                            }
 
-                        G[Gindex] += this->X_scale_factors->operator[](Xindex) * -dMaxBoundary_dr _GETVALUE
-                            * (rx / r * this->dspacecraft_to_reference_depoch(0)
-                                + ry / r * this->dspacecraft_to_reference_depoch(1)
-                                + rz / r * this->dspacecraft_to_reference_depoch(2));
-                    }//end time derivatives
+                            size_t Gindex = this->Gindices_BPT_constraintMaximumAngle_wrt_StepLeftTime[varIndex];
+                            size_t Xindex = this->jGvar->operator[](Gindex);
+
+                            G[Gindex] += this->X_scale_factors->operator[](Xindex) * -dMaxBoundary_dr _GETVALUE
+                                * (rx / r * this->dspacecraft_to_reference_depoch(0)
+                                    + ry / r * this->dspacecraft_to_reference_depoch(1)
+                                    + rz / r * this->dspacecraft_to_reference_depoch(2));
+                        }//end time derivatives
+                    }//end switch for time variables, which only exist if the constraint is NOT defined relative to the central body
                 }//end bound for Maximum angle constraint
             }//end derivatives
         }//end process_constraint()

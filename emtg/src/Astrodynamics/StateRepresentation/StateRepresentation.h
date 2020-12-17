@@ -16,7 +16,8 @@
 // express or implied.   See the License for the specific language
 // governing permissions and limitations under the License.
 
-#pragma once
+#ifndef STATE_REPRESENTATION_H
+#define STATE_REPRESENTATION_H
 
 #include <vector>
 
@@ -75,3 +76,5 @@ namespace EMTG
         };
     }//end namespace StateRepresentation
 }//end namespace EMTG
+
+#endif // STATE_REPRESENTATION_H

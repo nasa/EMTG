@@ -147,9 +147,7 @@ namespace EMTG
                 this->myUniverse,
                 this->Xdescriptions,
                 this->mySpacecraft,
-                13,//STM rows
-                13,//STM columns
-                this->numStatesToPropagate,
+                14, // STM size
                 false);//we do NOT need the central body because Kepler propagation takes care of it
             this->mySpacecraftAccelerationModel->setDutyCycle(this->PhaseDutyCycle);
 
@@ -174,10 +172,11 @@ namespace EMTG
             {
                 //forward
                 
-                this->ForwardPropagatorObjects.push_back(Astrodynamics::KeplerPropagatorTimeDomain(*this->myOptions, *this->myUniverse, 6));
+                this->ForwardPropagatorObjects.push_back(Astrodynamics::KeplerPropagatorTimeDomain(6));
                 this->ForwardPropagatorObjects.back().setStateLeft(this->spacecraft_state_event_plus[step]);
                 this->ForwardPropagatorObjects.back().setSTM(this->ForwardSTM[step]);
                 this->ForwardPropagatorObjects.back().setdStatedIndependentVariable(this->Forward_dStatedIndependentVariable[step]);
+                this->ForwardPropagatorObjects.back().setCentralBodyGM(this->myUniverse->mu);
                 if (step == this->num_timesteps / 2 - 1)
                     this->ForwardPropagatorObjects.back().setStateRight(this->match_point_state_minus);
                 else
@@ -213,10 +212,11 @@ namespace EMTG
 
                 //backward
                 size_t backstep = this->num_timesteps - 1 - step;
-                this->BackwardPropagatorObjects.push_back(Astrodynamics::KeplerPropagatorTimeDomain(*this->myOptions, *this->myUniverse, 6));
+                this->BackwardPropagatorObjects.push_back(Astrodynamics::KeplerPropagatorTimeDomain(6));
                 this->BackwardPropagatorObjects.back().setStateLeft(this->spacecraft_state_event_minus[backstep]);
                 this->BackwardPropagatorObjects.back().setSTM(this->BackwardSTM[step]);
                 this->BackwardPropagatorObjects.back().setdStatedIndependentVariable(this->Backward_dStatedIndependentVariable[step]);
+                this->BackwardPropagatorObjects.back().setCentralBodyGM(this->myUniverse->mu);
                 if (step == this->num_timesteps / 2 - 1)
                     this->BackwardPropagatorObjects.back().setStateRight(this->match_point_state_plus);
                 else
@@ -252,19 +252,21 @@ namespace EMTG
             }
 
             //forced coasts
-            this->InitialCoastPropagatorObject = Astrodynamics::KeplerPropagatorTimeDomain(*this->myOptions, *this->myUniverse, 6);
+            this->InitialCoastPropagatorObject = Astrodynamics::KeplerPropagatorTimeDomain(6);
             this->InitialCoastPropagatorObject.setStateLeft(this->state_after_initial_TCM);
             this->InitialCoastPropagatorObject.setStateRight(this->spacecraft_state_event_minus[0]);
             this->InitialCoastPropagatorObject.setSTM(this->STM_initial_coast);
             this->InitialCoastPropagatorObject.setdStatedIndependentVariable(this->InitialCoast_dStatedIndependentVariable);
             this->InitialCoastPropagatorObject.set_dPropagationTime_dIndependentVariable(&this->dForwardPropagationStepTimes_dPropagationVariable[0]);
+            this->InitialCoastPropagatorObject.setCentralBodyGM(this->myUniverse->mu);
 
-            this->TerminalCoastPropagatorObject = Astrodynamics::KeplerPropagatorTimeDomain(*this->myOptions, *this->myUniverse, 6);
+            this->TerminalCoastPropagatorObject = Astrodynamics::KeplerPropagatorTimeDomain(6);
             this->TerminalCoastPropagatorObject.setStateLeft(this->state_at_end_of_phase);
             this->TerminalCoastPropagatorObject.setStateRight(this->spacecraft_state_event_plus.back());
             this->TerminalCoastPropagatorObject.setSTM(this->STM_terminal_coast);
             this->TerminalCoastPropagatorObject.setdStatedIndependentVariable(this->TerminalCoast_dStatedIndependentVariable);
             this->TerminalCoastPropagatorObject.set_dPropagationTime_dIndependentVariable(&this->dBackwardPropagationStepTimes_dPropagationVariable[0]);
+            this->TerminalCoastPropagatorObject.setCentralBodyGM(this->myUniverse->mu);
 
             //output stuff
             this->output_state.resize(this->numStatesToPropagate + 12 * 12, 1, 0.0);

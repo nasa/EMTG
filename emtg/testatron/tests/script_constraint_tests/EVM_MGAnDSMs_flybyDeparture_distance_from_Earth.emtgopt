@@ -1,0 +1,133 @@
+#EMTGv9 .emtgopt file version 2
+
+#mission name
+mission_name EVM_MGAnDSMs_flybyDeparture_distance_from_Earth
+#flight time bounds (days)
+total_flight_time_bounds 0 1000
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable phase type
+#10: ProbeEntryPhase
+mission_type 6
+#Enable ACE feasible point finder?
+ACE_feasible_point_finder 1
+#NLP major iterations
+snopt_major_iterations 500
+#Seed MBH?
+seed_MBH 1
+#Universe folder
+universe_folder C:/emtg/testatron/Universe
+#HardwarePath
+HardwarePath c:/emtg/testatron/HardwareModels/
+#which inner loop solver to run?
+#0: none, evaluate trialX
+#1: run MBH
+#2: run constrained DE
+#3: run NLP using trialX as initial guess
+#4: filament walker
+run_inner_loop 3
+#Field for taking notes
+user_data 
+
+
+BEGIN_JOURNEY
+#flyby sequence, as indices from the Universe file
+sequence 2
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable (do not use)
+#10 ProbeEntryPhase
+phase_type 6
+#impulses per phase
+impulses_per_phase 2
+#journey arrival type
+#0: insertion into parking orbit (use chemical Isp)
+#1: rendezvous (use chemical Isp)
+#2: intercept with bounded V_infinity
+#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)
+#4: match final v-infinity vector
+#5: match final v-infinity vector (low-thrust)
+#6: capture spiral
+#7: momentum transfer (kinetic impactor)
+arrival_type 2
+#Which bodies are used for third-body perturbation?
+#Expressed as indices in the Universe file
+perturbation_bodies
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+pEnd_departure_distanceconstraint_3_0.01au_0.5au
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: event left state epoch ,54775.000788662124251
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote ,6.5274655049465186707
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote ,-18.699213565984319274
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote ,0.31913614972603432385
+p0MGAnDSMs: phase flight time ,228.65309868828509821
+p0MGAnDSMsEphemerisPeggedFlybyIn: event left state mass ,525.20000000000004547
+p0MGAnDSMsEphemerisPeggedFlybyIn: V_infinity_x ,6.7834146783357276433
+p0MGAnDSMsEphemerisPeggedFlybyIn: V_infinity_y ,-2.4142448539662417772
+p0MGAnDSMsEphemerisPeggedFlybyIn: V_infinity_z ,-0.15331747815415042169
+p0MGAnDSMs: virtual chemical fuel ,2.5599129220000001524e-11
+p0MGAnDSMs: virtual chemical oxidizer ,2.7357321740000000114e-11
+p0MGAnDSMsForwardSubPhase0: burn index ,0.80575191026071468769
+p0MGAnDSMsForwardSubPhase0: DSM x component ,1.3717557756365001248e-07
+p0MGAnDSMsForwardSubPhase0: DSM y component ,-2.7004735692059998587e-07
+p0MGAnDSMsForwardSubPhase0: DSM z component ,-7.4744246347789997488e-08
+p0MGAnDSMsBackwardSubPhase0: burn index ,0.15463674212857711487
+p0MGAnDSMsBackwardSubPhase1: burn index ,0.039611382657581052646
+p0MGAnDSMsBackwardSubPhase1: DSM x component ,3.0105386983337000634e-07
+p0MGAnDSMsBackwardSubPhase1: DSM y component ,1.2292066742247999886e-07
+p0MGAnDSMsBackwardSubPhase1: DSM z component ,1.1944957734044999237e-07
+p1MGAnDSMsEphemerisPeggedUnpoweredFlyby: V_infinity_x ,6.3438226362186149743
+p1MGAnDSMsEphemerisPeggedUnpoweredFlyby: V_infinity_y ,3.2428139571035394795
+p1MGAnDSMsEphemerisPeggedUnpoweredFlyby: V_infinity_z ,1.0520794467959930785
+p1MGAnDSMs: phase flight time ,161.60258072456002765
+p1MGAnDSMsEphemerisPeggedIntercept: event left state mass ,508.73035099574576634
+p1MGAnDSMsEphemerisPeggedIntercept: V_infinity_x ,3.3015193851403452641
+p1MGAnDSMsEphemerisPeggedIntercept: V_infinity_y ,3.7815171449834359407
+p1MGAnDSMsEphemerisPeggedIntercept: V_infinity_z ,2.3521223400707462758
+p1MGAnDSMs: virtual chemical fuel ,8.5556258155372635343
+p1MGAnDSMs: virtual chemical oxidizer ,7.9138972689939706129
+p1MGAnDSMsForwardSubPhase0: burn index ,0.3396356551044800165
+p1MGAnDSMsForwardSubPhase0: DSM x component ,-0.058048066600553838157
+p1MGAnDSMsForwardSubPhase0: DSM y component ,-0.079278319995051305114
+p1MGAnDSMsForwardSubPhase0: DSM z component ,-0.018584131956803418007
+p1MGAnDSMsBackwardSubPhase0: burn index ,0.65826366769073108021
+p1MGAnDSMsBackwardSubPhase1: burn index ,0.0021006772048888281389
+p1MGAnDSMsBackwardSubPhase1: DSM x component ,-3.6082633787515301577e-06
+p1MGAnDSMsBackwardSubPhase1: DSM y component ,4.6539744147366998921e-07
+p1MGAnDSMsBackwardSubPhase1: DSM z component ,1.5595597460560380818e-05
+END_TRIALX
+
+END_JOURNEY
+

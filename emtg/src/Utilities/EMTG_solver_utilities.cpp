@@ -27,19 +27,20 @@ namespace EMTG
 {
     namespace solver_utilities
     {
-        int detect_duplicate_Jacobian_entries(const std::vector<std::string>& Gdescriptions, const std::string& entry_name)
+        int detect_duplicate_Jacobian_entries(const std::vector<size_t>& iGfun,
+            const std::vector<size_t>& jGvar,
+            const size_t& Findex,
+            const size_t& Xindex)
         {
-            int duplicate_detected = -1;
-            for (size_t Gentry = 0; Gentry < Gdescriptions.size(); ++Gentry)
+            for (size_t Gindex = 0; Gindex < iGfun.size(); ++Gindex)
             {
-                if (Gdescriptions[Gentry].find(entry_name) < 1024)
+                if (iGfun[Gindex] == Findex && jGvar[Gindex] == Xindex) 
                 {
-                    duplicate_detected = Gentry;
-                    break;
+                    return Gindex;
                 }
             }
 
-            return duplicate_detected;
+            return -1;
         }//end detect_duplicate_Jacobian_entries()
 
 
@@ -65,7 +66,7 @@ namespace EMTG
                         std::stringstream EntryNameStream;
                         EntryNameStream << "Derivative of " << Fdescriptions[Findex] << " F[" << Findex << "] with respect to X[" << Xindex << "]: " << Xdescriptions[Xindex];
                         // std::cout<<EntryNameStream<<std::endl;
-                        int tempIdx = detect_duplicate_Jacobian_entries(Gdescriptions, EntryNameStream.str());
+                        int tempIdx = detect_duplicate_Jacobian_entries(iGfun, jGvar, Findex, Xindex);
                         if (tempIdx < 0)
                         {
                             iGfun.push_back(Findex);
@@ -88,7 +89,7 @@ namespace EMTG
                         std::stringstream EntryNameStream;
                         EntryNameStream << "Derivative of " << Fdescriptions[Findex] << " F[" << Findex << "] with respect to X[" << Xindex << "]: " << Xdescriptions[Xindex];
 
-                        int tempIdx = detect_duplicate_Jacobian_entries(Gdescriptions, EntryNameStream.str());
+                        int tempIdx = detect_duplicate_Jacobian_entries(iGfun, jGvar, Findex, Xindex);
                         if (tempIdx < 0)
                         {
                             iGfun.push_back(Findex);
@@ -147,7 +148,7 @@ namespace EMTG
             std::stringstream EntryNameStream;
             EntryNameStream << "Derivative of " << Fdescriptions[Findex] << " F[" << Findex << "] with respect to X[" << Xindex << "]: " << Xdescriptions[Xindex];
 
-            int tempIdx = detect_duplicate_Jacobian_entries(Gdescriptions, EntryNameStream.str());
+            int tempIdx = detect_duplicate_Jacobian_entries(iGfun, jGvar, Findex, Xindex);
             if (tempIdx < 0)
             {
                 iGfun.push_back(Findex);
@@ -206,7 +207,7 @@ namespace EMTG
                         std::stringstream EntryNameStream;
                         EntryNameStream << "Derivative of " << Fdescriptions[Findex] << " F[" << Findex << "] with respect to X[" << Xindex << "]: " << Xdescriptions[Xindex];
 
-                        int tempIdx = detect_duplicate_Jacobian_entries(Gdescriptions, EntryNameStream.str());
+                        int tempIdx = detect_duplicate_Jacobian_entries(iGfun, jGvar, Findex, Xindex);
                         if (tempIdx < 0)
                         {
                             iGfun.push_back(Findex);
@@ -232,7 +233,7 @@ namespace EMTG
                         std::stringstream EntryNameStream;
                         EntryNameStream << "Derivative of " << Fdescriptions[Findex] << " F[" << Findex << "] with respect to X[" << Xindex << "]: " << Xdescriptions[Xindex];
 
-                        int tempIdx = detect_duplicate_Jacobian_entries(Gdescriptions, EntryNameStream.str());
+                        int tempIdx = detect_duplicate_Jacobian_entries(iGfun, jGvar, Findex, Xindex);
                         if (tempIdx < 0)
                         {
                             iGfun.push_back(Findex);

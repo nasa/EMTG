@@ -151,7 +151,7 @@ namespace EMTG
         }//end initialize_ecliptic()
 
         //construct the rotation matrices between ICRF and the local frame
-        //epoch is in ET MJD seconds (i.e., seconds past MJD epoch, i.e., the time state of the state vector)
+        //epoch is in ET MJD seconds (i.e., seconds past the J2000 epoch, i.e., the time state of the state vector)
         void frame::construct_rotation_matrices(const doubleType& ETepoch, const bool& GenerateDerivatives)
         {
             doubleType days_since_reference_epoch = ETepoch / 86400.0 - 51544.5;
@@ -892,22 +892,22 @@ namespace EMTG
             math::Matrix<doubleType>& dRstate_dstate,
             math::Matrix<doubleType>& dRstate_dt,
             math::Matrix<doubleType>& dRstate_dreferenceVector,
-            const doubleType& ReferenceEpochJD,
+            const doubleType& ETsecSinceJ2000,
             const bool& GenerateDerivatives)
         {
             this->construct_rotation_matrices_J2000();
-            this->construct_rotation_matrices(ReferenceEpochJD, GenerateDerivatives);
+            this->construct_rotation_matrices(ETsecSinceJ2000, GenerateDerivatives);
 
             if (OriginalReferenceFrame == ReferenceFrame::PrincipleAxes || RotatedReferenceFrame == ReferenceFrame::PrincipleAxes)
-                this->construct_PrincipleAxes_to_BCF_rotation(ReferenceEpochJD, GenerateDerivatives);
+                this->construct_PrincipleAxes_to_BCF_rotation(ETsecSinceJ2000, GenerateDerivatives);
             if (OriginalReferenceFrame == ReferenceFrame::Topocentric || RotatedReferenceFrame == ReferenceFrame::Topocentric)
-                this->construct_Topocentric_to_BCF_rotation(ReferenceEpochJD, referenceVector, GenerateDerivatives);
+                this->construct_Topocentric_to_BCF_rotation(ETsecSinceJ2000, referenceVector, GenerateDerivatives);
             if (OriginalReferenceFrame == ReferenceFrame::Polar || RotatedReferenceFrame == ReferenceFrame::Polar)
-                this->construct_Polar_to_BCF_rotation(ReferenceEpochJD, GenerateDerivatives);
+                this->construct_Polar_to_BCF_rotation(ETsecSinceJ2000, GenerateDerivatives);
             if (OriginalReferenceFrame == ReferenceFrame::SAM || RotatedReferenceFrame == ReferenceFrame::SAM)
-                this->construct_SAM_to_J2000BCI_rotation(ReferenceEpochJD, referenceVector, dreferenceVector_dt, GenerateDerivatives);
+                this->construct_SAM_to_J2000BCI_rotation(ETsecSinceJ2000, referenceVector, dreferenceVector_dt, GenerateDerivatives);
             if (OriginalReferenceFrame == ReferenceFrame::ObjectReferenced || RotatedReferenceFrame == ReferenceFrame::ObjectReferenced)
-                this->construct_ObjectReferenced_to_ICRF_rotation(ReferenceEpochJD, referenceVector, dreferenceVector_dt, GenerateDerivatives);
+                this->construct_ObjectReferenced_to_ICRF_rotation(ETsecSinceJ2000, referenceVector, dreferenceVector_dt, GenerateDerivatives);
 
             this->rotate_frame_to_frame( OriginalReferenceFrame,
                                          state,
@@ -929,7 +929,7 @@ namespace EMTG
             const EMTG::ReferenceFrame& RotatedReferenceFrame,
             math::Matrix<doubleType>& Rstate,
             math::Matrix<doubleType>& dRstate_dstate,
-            const doubleType& ReferenceEpochJD)
+            const doubleType& ETsecSinceJ2000)
         {
             //make up dummies for a lot of the entries that we won't use because we don't care about derivatives
             static math::Matrix<doubleType> referenceVector(3, 1, 0.0);
@@ -948,7 +948,7 @@ namespace EMTG
                 dRstate_dstate,
                 dRstate_dt,
                 dRstate_dreferenceVector,
-                ReferenceEpochJD,
+                ETsecSinceJ2000,
                 false);
 
             dRstate_dstate = this->get_R(OriginalReferenceFrame, RotatedReferenceFrame);
@@ -961,7 +961,7 @@ namespace EMTG
             const math::Matrix<doubleType>& state,
             const EMTG::ReferenceFrame& RotatedReferenceFrame,
             math::Matrix<doubleType>& Rstate,
-            const doubleType& ReferenceEpochJD)
+            const doubleType& ETsecSinceJ2000)
         {
             //make up dummies for a lot of the entries that we won't use because we don't care about derivatives
             static math::Matrix<doubleType> referenceVector(3, 1, 0.0);
@@ -981,7 +981,7 @@ namespace EMTG
                                         dRstate_dstate,
                                         dRstate_dt,
                                         dRstate_dreferenceVector,
-                                        ReferenceEpochJD,
+                                        ETsecSinceJ2000,
                                         false);
         }//end rotate_frame_to_frame() if you don't want to return derivatives
 
@@ -992,7 +992,7 @@ namespace EMTG
             const math::Matrix<doubleType>& referenceVector,
             const EMTG::ReferenceFrame& RotatedReferenceFrame,
             math::Matrix<doubleType>& Rstate,
-            const doubleType& ReferenceEpochJD)
+            const doubleType& ETsecSinceJ2000)
         {
             //make up dummies for a lot of the entries that we won't use because we don't care about derivatives
             static math::Matrix<doubleType> dstate_dt(3, 1, 0.0);
@@ -1011,7 +1011,7 @@ namespace EMTG
                 dRstate_dstate,
                 dRstate_dt,
                 dRstate_dreferenceVector,
-                ReferenceEpochJD,
+                ETsecSinceJ2000,
                 false);
         }//end rotate_frame_to_frame() if you don't want to return derivatives, but you do have a reference vector
 

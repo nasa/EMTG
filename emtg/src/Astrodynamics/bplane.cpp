@@ -203,8 +203,7 @@ namespace EMTG
         //function to compute the outbound V-infinity vector and periapse distance from BdotR and BdotT
         void bplane::compute_Vinfinity_out_from_BdotR_BdotT(const double& mu, const doubleType& BdotR, const doubleType& BdotT, math::Matrix<doubleType>& V_infinity_out, doubleType& rp)
         {
-            std::cout << "bplane::compute_Vinfinity_out_from_BdotR_BdotT is not yet implemented!" << std::endl;
-            std::cin.ignore();
+            throw std::runtime_error("bplane::compute_Vinfinity_out_from_BdotR_BdotT is not yet implemented!");
 
             //basically, compute B_hat and negate the component of V_infinity_in in the direction of Bhat
             //i.e. (V_infinity_in dot B_hat) = (V_infinity_out dot B_hat)

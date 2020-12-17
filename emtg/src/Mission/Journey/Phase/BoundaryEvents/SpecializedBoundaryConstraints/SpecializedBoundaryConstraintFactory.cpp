@@ -28,6 +28,7 @@
 #include "BoundaryBCFlatitudeConstraint.h"
 #include "BoundaryDeticLatitudeConstraint.h"
 #include "BoundaryDeticAltitudeConstraint.h"
+#include "BoundaryOrbitalEnergyConstraint.h"
 #include "BoundaryVelocityDeclinationConstraint.h"
 #include "BoundaryVelocityMagnitudeConstraint.h"
 #include "BoundaryVelocitySphericalAzimuthConstraint.h"
@@ -69,7 +70,7 @@ namespace EMTG
                 const std::string& EventDefinition)
             {
                 std::vector<std::string> ConstraintDefinitionCell;
-                
+
                 std::string splitty_thing = boost::algorithm::to_lower_copy(ConstraintDefinition);
                 boost::split(ConstraintDefinitionCell, splitty_thing, boost::is_any_of("_"), boost::token_compress_on);
 
@@ -111,20 +112,20 @@ namespace EMTG
                             myBoundaryEvent,
                             ConstraintDefinition);
                     }
-					else if (ConstraintDefinitionCell[2].find("sma") < 1024)
-					{
-						return new SemimajorAxisConstraint(name,
-							journeyIndex,
-							phaseIndex,
-							stageIndex,
-							Universe,
-							mySpacecraft,
-							myOptions,
-							myBoundaryEvent,
-							ConstraintDefinition);
-					}
-					else if (ConstraintDefinitionCell[2].find("inc") < 1024)
-					{
+                    else if (ConstraintDefinitionCell[2].find("sma") < 1024)
+                    {
+                        return new SemimajorAxisConstraint(name,
+                            journeyIndex,
+                            phaseIndex,
+                            stageIndex,
+                            Universe,
+                            mySpacecraft,
+                            myOptions,
+                            myBoundaryEvent,
+                            ConstraintDefinition);
+                    }
+                    else if (ConstraintDefinitionCell[2].find("inc") < 1024)
+                    {
                         // if a frame is specified, then inform the constraint what the user wants
                         // otherwise terminate program
                         if (ConstraintDefinitionCell.size() > 5)
@@ -158,21 +159,21 @@ namespace EMTG
                         {
                             throw std::invalid_argument("Reference frame must be specified for inclination boundary constraint " + name);
                         }
-					}
-					else if (ConstraintDefinitionCell[2].find("ecc") < 1024)
-					{
-						return new EccentricityConstraint(name,
-							journeyIndex,
-							phaseIndex,
-							stageIndex,
-							Universe,
-							mySpacecraft,
-							myOptions,
-							myBoundaryEvent,
-							ConstraintDefinition);
-					}
-					else if (ConstraintDefinitionCell[2].find("raan") < 1024)
-					{
+                    }
+                    else if (ConstraintDefinitionCell[2].find("ecc") < 1024)
+                    {
+                        return new EccentricityConstraint(name,
+                            journeyIndex,
+                            phaseIndex,
+                            stageIndex,
+                            Universe,
+                            mySpacecraft,
+                            myOptions,
+                            myBoundaryEvent,
+                            ConstraintDefinition);
+                    }
+                    else if (ConstraintDefinitionCell[2].find("raan") < 1024)
+                    {
                         // if a frame is specified, then inform the constraint what the user wants
                         // otherwise terminate program
                         if (ConstraintDefinitionCell.size() > 5)
@@ -206,9 +207,9 @@ namespace EMTG
                         {
                             throw std::invalid_argument("Reference frame must be specified for RAAN boundary constraint " + name);
                         }
-					}
-					else if (ConstraintDefinitionCell[2].find("aop") < 1024)
-					{
+                    }
+                    else if (ConstraintDefinitionCell[2].find("aop") < 1024)
+                    {
                         // if a frame is specified, then inform the constraint what the user wants
                         // otherwise terminate program
                         if (ConstraintDefinitionCell.size() > 5)
@@ -242,58 +243,58 @@ namespace EMTG
                         {
                             throw std::invalid_argument("Reference frame must be specified for AOP boundary constraint " + name);
                         }
-					}
-					else if (ConstraintDefinitionCell[2].find("trueanomaly") < 1024)
-					{
-						return new TrueAnomalyConstraint(name,
-							journeyIndex,
-							phaseIndex,
-							stageIndex,
-							Universe,
-							mySpacecraft,
-							myOptions,
-							myBoundaryEvent,
-							ConstraintDefinition);
-					}
-					else if (ConstraintDefinitionCell[2].find("orbitperiod") < 1024)
-					{
-						return new OrbitPeriodConstraint(name,
-							journeyIndex,
-							phaseIndex,
-							stageIndex,
-							Universe,
-							mySpacecraft,
-							myOptions,
-							myBoundaryEvent,
-							ConstraintDefinition);
-					}
-					else if (ConstraintDefinitionCell[2].find("periapsedistance") < 1024)
-					{
-						return new PeriapseDistanceConstraint(name,
-							journeyIndex,
-							phaseIndex,
-							stageIndex,
-							Universe,
-							mySpacecraft,
-							myOptions,
-							myBoundaryEvent,
-							ConstraintDefinition);
-					}
-					else if (ConstraintDefinitionCell[2].find("apoapsedistance") < 1024)
-					{
-						return new ApoapseDistanceConstraint(name,
-							journeyIndex,
-							phaseIndex,
-							stageIndex,
-							Universe,
-							mySpacecraft,
-							myOptions,
-							myBoundaryEvent,
-							ConstraintDefinition);
-					}
-                    else if (ConstraintDefinitionCell[2].find("longitude") < 1024)
+                    }
+                    else if (ConstraintDefinitionCell[2].find("trueanomaly") < 1024)
                     {
-                        return new BoundaryLongitudeConstraint(name,
+                        return new TrueAnomalyConstraint(name,
+                            journeyIndex,
+                            phaseIndex,
+                            stageIndex,
+                            Universe,
+                            mySpacecraft,
+                            myOptions,
+                            myBoundaryEvent,
+                            ConstraintDefinition);
+                    }
+                    else if (ConstraintDefinitionCell[2].find("orbitperiod") < 1024)
+                    {
+                        return new OrbitPeriodConstraint(name,
+                            journeyIndex,
+                            phaseIndex,
+                            stageIndex,
+                            Universe,
+                            mySpacecraft,
+                            myOptions,
+                            myBoundaryEvent,
+                            ConstraintDefinition);
+                    }
+                    else if (ConstraintDefinitionCell[2].find("orbitalenergy") < 1024)
+                    {
+                        return new BoundaryOrbitalEnergyConstraint(name,
+                            journeyIndex,
+                            phaseIndex,
+                            stageIndex,
+                            Universe,
+                            mySpacecraft,
+                            myOptions,
+                            myBoundaryEvent,
+                            ConstraintDefinition);
+                    }
+                    else if (ConstraintDefinitionCell[2].find("periapsedistance") < 1024)
+                    {
+                        return new PeriapseDistanceConstraint(name,
+                            journeyIndex,
+                            phaseIndex,
+                            stageIndex,
+                            Universe,
+                            mySpacecraft,
+                            myOptions,
+                            myBoundaryEvent,
+                            ConstraintDefinition);
+                    }
+                    else if (ConstraintDefinitionCell[2].find("apoapsedistance") < 1024)
+                    {
+                        return new ApoapseDistanceConstraint(name,
                             journeyIndex,
                             phaseIndex,
                             stageIndex,
@@ -315,78 +316,118 @@ namespace EMTG
                             myBoundaryEvent,
                             ConstraintDefinition);
                     }
-					else if (ConstraintDefinitionCell[2].find("deticlatitude") < 1024)
-					{
-					// if a frame is specified, then inform the constraint what the user wants
-					// otherwise terminate program
-						if (ConstraintDefinitionCell.size() > 5)
-						{
-							ReferenceFrame user_specified_frame;
-							if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::J2000_BCF;
-							}
-							else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
-							}
-							else
-							{
-								throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: detic latitude boundary constraint " + name);
-							}
+                    else if (ConstraintDefinitionCell[2].find("longitude") < 1024)
+                    {
+                        // if a frame is specified, then inform the constraint what the user wants
+                        // otherwise terminate program
+                        if (ConstraintDefinitionCell.size() > 5)
+                        {
+                            ReferenceFrame user_specified_frame;
+                            if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("icrf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::ICRF;
+                            }
+                            else
+                            {
+                                throw std::invalid_argument("Currently only ICFR, J2000BCF and TrueOfDateBCF frames are supported: longitude boundary constraint " + name);
+                            }
 
-							return new BoundaryDeticLatitudeConstraint(name,
-								journeyIndex,
-								phaseIndex,
-								stageIndex,
-								Universe,
-								mySpacecraft,
-								myOptions,
-								user_specified_frame,
-								myBoundaryEvent,
-								ConstraintDefinition);
-						}
-						else
-						{
-							throw std::invalid_argument("Reference frame must be specified for detic latitude boundary constraint " + name);
-						}
-					}
-					else if (ConstraintDefinitionCell[2].find("deticaltitude") < 1024)
-					{
-					// if a frame is specified, then inform the constraint what the user wants
-					// otherwise terminate program
-						if (ConstraintDefinitionCell.size() > 5)
-						{
-							ReferenceFrame user_specified_frame;
-							if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::J2000_BCF;
-							}
-							else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
-							}
-							else
-							{
-								throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: detic altitude boundary constraint " + name);
-							}
+                            return new BoundaryLongitudeConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                user_specified_frame,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Reference frame must be specified for longitude boundary constraint " + name);
+                        }
+                    }
+                    else if (ConstraintDefinitionCell[2].find("deticlatitude") < 1024)
+                    {
+                        // if a frame is specified, then inform the constraint what the user wants
+                        // otherwise terminate program
+                        if (ConstraintDefinitionCell.size() > 5)
+                        {
+                            ReferenceFrame user_specified_frame;
+                            if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+                            }
+                            else
+                            {
+                                throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: detic latitude boundary constraint " + name);
+                            }
 
-							return new BoundaryDeticAltitudeConstraint(name,
-								journeyIndex,
-								phaseIndex,
-								stageIndex,
-								Universe,
-								mySpacecraft,
-								myOptions,
-								user_specified_frame,
-								myBoundaryEvent,
-								ConstraintDefinition);
-						}
-						else
-						{
-							throw std::invalid_argument("Reference frame must be specified for detic altitude boundary constraint " + name);
-						}
-					}
+                            return new BoundaryDeticLatitudeConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                user_specified_frame,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Reference frame must be specified for detic latitude boundary constraint " + name);
+                        }
+                    }
+                    else if (ConstraintDefinitionCell[2].find("deticaltitude") < 1024)
+                    {
+                        // if a frame is specified, then inform the constraint what the user wants
+                        // otherwise terminate program
+                        if (ConstraintDefinitionCell.size() > 5)
+                        {
+                            ReferenceFrame user_specified_frame;
+                            if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+                            }
+                            else
+                            {
+                                throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: detic altitude boundary constraint " + name);
+                            }
+
+                            return new BoundaryDeticAltitudeConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                user_specified_frame,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Reference frame must be specified for detic altitude boundary constraint " + name);
+                        }
+                    }
                     else if (ConstraintDefinitionCell[2].find("deticelevation") < 1024)
                     {
                         // if a frame is specified, then inform the constraint what the user wants
@@ -419,7 +460,7 @@ namespace EMTG
                             throw std::invalid_argument("Reference frame must be specified for detic elevation boundary constraint " + name);
                         }
                     }
-					else if (ConstraintDefinitionCell[2].find("velocitydeclination") < 1024)
+                    else if (ConstraintDefinitionCell[2].find("velocitydeclination") < 1024)
                     {
                         // if a frame is specified, then inform the constraint what the user wants
                         // otherwise terminate program
@@ -511,163 +552,163 @@ namespace EMTG
                             throw std::invalid_argument("Reference frame must be specified for velocity magnitude boundary constraint " + name);
                         }
                     }
-					else if (ConstraintDefinitionCell[2].find("sphericalazimuth") < 1024)
-					{
-					// if a frame is specified, then inform the constraint what the user wants
-					// otherwise terminate program
-						if (ConstraintDefinitionCell.size() > 5)
-						{
-							ReferenceFrame user_specified_frame;
-							if (ConstraintDefinitionCell[5].find("icrf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::ICRF;
-							}
-							else if (ConstraintDefinitionCell[5].find("j2000bci") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::J2000_BCI;
-							}
-							else if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::J2000_BCF;
-							}
-							else if (ConstraintDefinitionCell[5].find("trueofdatebci") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::TrueOfDate_BCI;
-							}
-							else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
-							}
-							else
-							{
-								throw std::invalid_argument("Currently only ICRF, J2000BCI, J2000BCF, TrueOfDateBCI, and TrueOfDateBCF frames are supported: velocity spherical Azimuth boundary constraint " + name);
-							}
+                    else if (ConstraintDefinitionCell[2].find("sphericalazimuth") < 1024)
+                    {
+                        // if a frame is specified, then inform the constraint what the user wants
+                        // otherwise terminate program
+                        if (ConstraintDefinitionCell.size() > 5)
+                        {
+                            ReferenceFrame user_specified_frame;
+                            if (ConstraintDefinitionCell[5].find("icrf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::ICRF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("j2000bci") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCI;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebci") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCI;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+                            }
+                            else
+                            {
+                                throw std::invalid_argument("Currently only ICRF, J2000BCI, J2000BCF, TrueOfDateBCI, and TrueOfDateBCF frames are supported: velocity spherical Azimuth boundary constraint " + name);
+                            }
 
-							return new BoundaryVelocitySphericalAzimuthConstraint(name,
-								journeyIndex,
-								phaseIndex,
-								stageIndex,
-								Universe,
-								mySpacecraft,
-								myOptions,
-								user_specified_frame,
-								myBoundaryEvent,
-								ConstraintDefinition);
-						}
-						else
-						{
-							throw std::invalid_argument("Reference frame must be specified for velocity spherical Azimuth boundary constraint " + name);
-						}
-					}
-					else if (ConstraintDefinitionCell[2].find("relativevmagnitude") < 1024)
-					{
-					// if a frame is specified, then inform the constraint what the user wants
-					// otherwise terminate program
-						if (ConstraintDefinitionCell.size() > 5)
-						{
-							ReferenceFrame user_specified_frame;
-							if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::J2000_BCF;
-							}
-							else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
-							}
-							else
-							{
-								throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: relative velocity magnitude " + name);
-							}
+                            return new BoundaryVelocitySphericalAzimuthConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                user_specified_frame,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Reference frame must be specified for velocity spherical Azimuth boundary constraint " + name);
+                        }
+                    }
+                    else if (ConstraintDefinitionCell[2].find("relativevmagnitude") < 1024)
+                    {
+                        // if a frame is specified, then inform the constraint what the user wants
+                        // otherwise terminate program
+                        if (ConstraintDefinitionCell.size() > 5)
+                        {
+                            ReferenceFrame user_specified_frame;
+                            if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+                            }
+                            else
+                            {
+                                throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: relative velocity magnitude " + name);
+                            }
 
-							return new BoundaryRelativeVelocityMagnitudeConstraint(name,
-								journeyIndex,
-								phaseIndex,
-								stageIndex,
-								Universe,
-								mySpacecraft,
-								myOptions,
-								user_specified_frame,
-								myBoundaryEvent,
-								ConstraintDefinition);
-						}
-						else
-						{
-							throw std::invalid_argument("Reference frame must be specified for relative velocity magnitude boundary constraint " + name);
-						}
-					}
-					else if (ConstraintDefinitionCell[2].find("relativevazimuth") < 1024)
-					{
-					// if a frame is specified, then inform the constraint what the user wants
-					// otherwise terminate program
-						if (ConstraintDefinitionCell.size() > 5)
-						{
-							ReferenceFrame user_specified_frame;
-							if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::J2000_BCF;
-							}
-							else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
-							}
-							else
-							{
-								throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: relative velocity Azimuth " + name);
-							}
+                            return new BoundaryRelativeVelocityMagnitudeConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                user_specified_frame,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Reference frame must be specified for relative velocity magnitude boundary constraint " + name);
+                        }
+                    }
+                    else if (ConstraintDefinitionCell[2].find("relativevazimuth") < 1024)
+                    {
+                        // if a frame is specified, then inform the constraint what the user wants
+                        // otherwise terminate program
+                        if (ConstraintDefinitionCell.size() > 5)
+                        {
+                            ReferenceFrame user_specified_frame;
+                            if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+                            }
+                            else
+                            {
+                                throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: relative velocity Azimuth " + name);
+                            }
 
-							return new BoundaryRelativeVelocityAzimuthConstraint(name,
-								journeyIndex,
-								phaseIndex,
-								stageIndex,
-								Universe,
-								mySpacecraft,
-								myOptions,
-								user_specified_frame,
-								myBoundaryEvent,
-								ConstraintDefinition);
-						}
-						else
-						{
-							throw std::invalid_argument("Reference frame must be specified for relative velocity Azimuth boundary constraint " + name);
-						}
-					}
-					else if (ConstraintDefinitionCell[2].find("relativevhfpa") < 1024)
-					{
-					// if a frame is specified, then inform the constraint what the user wants
-					// otherwise terminate program
-						if (ConstraintDefinitionCell.size() > 5)
-						{
-							ReferenceFrame user_specified_frame;
-							if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::J2000_BCF;
-							}
-							else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
-							}
-							else
-							{
-								throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: relative velocity HFPA " + name);
-							}
+                            return new BoundaryRelativeVelocityAzimuthConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                user_specified_frame,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Reference frame must be specified for relative velocity Azimuth boundary constraint " + name);
+                        }
+                    }
+                    else if (ConstraintDefinitionCell[2].find("relativevhfpa") < 1024)
+                    {
+                        // if a frame is specified, then inform the constraint what the user wants
+                        // otherwise terminate program
+                        if (ConstraintDefinitionCell.size() > 5)
+                        {
+                            ReferenceFrame user_specified_frame;
+                            if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+                            }
+                            else
+                            {
+                                throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: relative velocity HFPA " + name);
+                            }
 
-							return new BoundaryRelativeVelocityHFPAConstraint(name,
-								journeyIndex,
-								phaseIndex,
-								stageIndex,
-								Universe,
-								mySpacecraft,
-								myOptions,
-								user_specified_frame,
-								myBoundaryEvent,
-								ConstraintDefinition);
-						}
-						else
-						{
-							throw std::invalid_argument("Reference frame must be specified for relative velocity HFPA boundary constraint " + name);
-						}
-					}
-					else if (ConstraintDefinitionCell[2].find("vfpa") < 1024)
+                            return new BoundaryRelativeVelocityHFPAConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                user_specified_frame,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Reference frame must be specified for relative velocity HFPA boundary constraint " + name);
+                        }
+                    }
+                    else if (ConstraintDefinitionCell[2].find("vfpa") < 1024)
                     {
                         // if a frame is specified, then inform the constraint what the user wants
                         // otherwise terminate program
@@ -771,18 +812,18 @@ namespace EMTG
                             myBoundaryEvent,
                             ConstraintDefinition);
                     }
-					else if (ConstraintDefinitionCell[2].find("sma") < 1024)
-					{
-						return new SemimajorAxisConstraint(name,
-							journeyIndex,
-							phaseIndex,
-							stageIndex,
-							Universe,
-							mySpacecraft,
-							myOptions,
-							myBoundaryEvent,
-							ConstraintDefinition);
-					}
+                    else if (ConstraintDefinitionCell[2].find("sma") < 1024)
+                    {
+                        return new SemimajorAxisConstraint(name,
+                            journeyIndex,
+                            phaseIndex,
+                            stageIndex,
+                            Universe,
+                            mySpacecraft,
+                            myOptions,
+                            myBoundaryEvent,
+                            ConstraintDefinition);
+                    }
                     else if (ConstraintDefinitionCell[2].find("inc") < 1024)
                     {
                         // if a frame is specified, then inform the constraint what the user wants
@@ -819,18 +860,18 @@ namespace EMTG
                             throw std::invalid_argument("Reference frame must be specified for inclination boundary constraint " + name);
                         }
                     }
-					else if (ConstraintDefinitionCell[2].find("ecc") < 1024)
-					{
-						return new EccentricityConstraint(name,
-							journeyIndex,
-							phaseIndex,
-							stageIndex,
-							Universe,
-							mySpacecraft,
-							myOptions,
-							myBoundaryEvent,
-							ConstraintDefinition);
-					}
+                    else if (ConstraintDefinitionCell[2].find("ecc") < 1024)
+                    {
+                        return new EccentricityConstraint(name,
+                            journeyIndex,
+                            phaseIndex,
+                            stageIndex,
+                            Universe,
+                            mySpacecraft,
+                            myOptions,
+                            myBoundaryEvent,
+                            ConstraintDefinition);
+                    }
                     else if (ConstraintDefinitionCell[2].find("raan") < 1024)
                     {
                         // if a frame is specified, then inform the constraint what the user wants
@@ -903,57 +944,57 @@ namespace EMTG
                             throw std::invalid_argument("Reference frame must be specified for AOP boundary constraint " + name);
                         }
                     }
-					else if (ConstraintDefinitionCell[2].find("trueanomaly") < 1024)
-					{
-						return new TrueAnomalyConstraint(name,
-							journeyIndex,
-							phaseIndex,
-							stageIndex,
-							Universe,
-							mySpacecraft,
-							myOptions,
-							myBoundaryEvent,
-							ConstraintDefinition);
-					}
-					else if (ConstraintDefinitionCell[2].find("orbitperiod") < 1024)
-					{
-						return new OrbitPeriodConstraint(name,
-							journeyIndex,
-							phaseIndex,
-							stageIndex,
-							Universe,
-							mySpacecraft,
-							myOptions,
-							myBoundaryEvent,
-							ConstraintDefinition);
-					}
-					else if (ConstraintDefinitionCell[2].find("periapsedistance") < 1024)
-					{
-						return new PeriapseDistanceConstraint(name,
-							journeyIndex,
-							phaseIndex,
-							stageIndex,
-							Universe,
-							mySpacecraft,
-							myOptions,
-							myBoundaryEvent,
-							ConstraintDefinition);
-					}
-					else if (ConstraintDefinitionCell[2].find("apoapsedistance") < 1024)
-					{
-						return new ApoapseDistanceConstraint(name,
-							journeyIndex,
-							phaseIndex,
-							stageIndex,
-							Universe,
-							mySpacecraft,
-							myOptions,
-							myBoundaryEvent,
-							ConstraintDefinition);
-					}
-                    else if (ConstraintDefinitionCell[2].find("longitude") < 1024)
+                    else if (ConstraintDefinitionCell[2].find("trueanomaly") < 1024)
                     {
-                        return new BoundaryLongitudeConstraint(name,
+                        return new TrueAnomalyConstraint(name,
+                            journeyIndex,
+                            phaseIndex,
+                            stageIndex,
+                            Universe,
+                            mySpacecraft,
+                            myOptions,
+                            myBoundaryEvent,
+                            ConstraintDefinition);
+                    }
+                    else if (ConstraintDefinitionCell[2].find("orbitperiod") < 1024)
+                    {
+                        return new OrbitPeriodConstraint(name,
+                            journeyIndex,
+                            phaseIndex,
+                            stageIndex,
+                            Universe,
+                            mySpacecraft,
+                            myOptions,
+                            myBoundaryEvent,
+                            ConstraintDefinition);
+                    }
+                    else if (ConstraintDefinitionCell[2].find("orbitalenergy") < 1024)
+                    {
+                        return new BoundaryOrbitalEnergyConstraint(name,
+                            journeyIndex,
+                            phaseIndex,
+                            stageIndex,
+                            Universe,
+                            mySpacecraft,
+                            myOptions,
+                            myBoundaryEvent,
+                            ConstraintDefinition);
+                    }
+                    else if (ConstraintDefinitionCell[2].find("periapsedistance") < 1024)
+                    {
+                        return new PeriapseDistanceConstraint(name,
+                            journeyIndex,
+                            phaseIndex,
+                            stageIndex,
+                            Universe,
+                            mySpacecraft,
+                            myOptions,
+                            myBoundaryEvent,
+                            ConstraintDefinition);
+                    }
+                    else if (ConstraintDefinitionCell[2].find("apoapsedistance") < 1024)
+                    {
+                        return new ApoapseDistanceConstraint(name,
                             journeyIndex,
                             phaseIndex,
                             stageIndex,
@@ -975,78 +1016,118 @@ namespace EMTG
                             myBoundaryEvent,
                             ConstraintDefinition);
                     }
-					else if (ConstraintDefinitionCell[2].find("deticlatitude") < 1024)
-					{
-					// if a frame is specified, then inform the constraint what the user wants
-					// otherwise terminate program
-						if (ConstraintDefinitionCell.size() > 5)
-						{
-							ReferenceFrame user_specified_frame;
-							if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::J2000_BCF;
-							}
-							else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
-							}
-							else
-							{
-								throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: detic latitude boundary constraint " + name);
-							}
+                    else if (ConstraintDefinitionCell[2].find("longitude") < 1024)
+                    {
+                        // if a frame is specified, then inform the constraint what the user wants
+                        // otherwise terminate program
+                        if (ConstraintDefinitionCell.size() > 5)
+                        {
+                            ReferenceFrame user_specified_frame;
+                            if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("icrf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::ICRF;
+                            }
+                            else
+                            {
+                                throw std::invalid_argument("Currently only ICRF, J2000BCF and TrueOfDateBCF frames are supported: longitude boundary constraint " + name);
+                            }
 
-							return new BoundaryDeticLatitudeConstraint(name,
-								journeyIndex,
-								phaseIndex,
-								stageIndex,
-								Universe,
-								mySpacecraft,
-								myOptions,
-								user_specified_frame,
-								myBoundaryEvent,
-								ConstraintDefinition);
-						}
-						else
-						{
-							throw std::invalid_argument("Reference frame must be specified for detic latitude boundary constraint " + name);
-						}
-					}
-					else if (ConstraintDefinitionCell[2].find("deticaltitude") < 1024)
-					{
-					// if a frame is specified, then inform the constraint what the user wants
-					// otherwise terminate program
-						if (ConstraintDefinitionCell.size() > 5)
-						{
-							ReferenceFrame user_specified_frame;
-							if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::J2000_BCF;
-							}
-							else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
-							}
-							else
-							{
-								throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: detic altitude boundary constraint " + name);
-							}
+                            return new BoundaryLongitudeConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                user_specified_frame,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Reference frame must be specified for longitude boundary constraint " + name);
+                        }
+                    }
+                    else if (ConstraintDefinitionCell[2].find("deticlatitude") < 1024)
+                    {
+                        // if a frame is specified, then inform the constraint what the user wants
+                        // otherwise terminate program
+                        if (ConstraintDefinitionCell.size() > 5)
+                        {
+                            ReferenceFrame user_specified_frame;
+                            if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+                            }
+                            else
+                            {
+                                throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: detic latitude boundary constraint " + name);
+                            }
 
-							return new BoundaryDeticAltitudeConstraint(name,
-								journeyIndex,
-								phaseIndex,
-								stageIndex,
-								Universe,
-								mySpacecraft,
-								myOptions,
-								user_specified_frame,
-								myBoundaryEvent,
-								ConstraintDefinition);
-						}
-						else
-						{
-							throw std::invalid_argument("Reference frame must be specified for detic altitude boundary constraint " + name);
-						}
-					}
+                            return new BoundaryDeticLatitudeConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                user_specified_frame,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Reference frame must be specified for detic latitude boundary constraint " + name);
+                        }
+                    }
+                    else if (ConstraintDefinitionCell[2].find("deticaltitude") < 1024)
+                    {
+                        // if a frame is specified, then inform the constraint what the user wants
+                        // otherwise terminate program
+                        if (ConstraintDefinitionCell.size() > 5)
+                        {
+                            ReferenceFrame user_specified_frame;
+                            if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+                            }
+                            else
+                            {
+                                throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: detic altitude boundary constraint " + name);
+                            }
+
+                            return new BoundaryDeticAltitudeConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                user_specified_frame,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Reference frame must be specified for detic altitude boundary constraint " + name);
+                        }
+                    }
                     else if (ConstraintDefinitionCell[2].find("deticelevation") < 1024)
                     {
                         // if a frame is specified, then inform the constraint what the user wants
@@ -1124,7 +1205,7 @@ namespace EMTG
                         }
                     }
                     else if (ConstraintDefinitionCell[2].find("velocitymagnitude") < 1024)
-                        {
+                    {
                         // if a frame is specified, then inform the constraint what the user wants
                         // otherwise terminate program
                         if (ConstraintDefinitionCell.size() > 5)
@@ -1171,163 +1252,163 @@ namespace EMTG
                             throw std::invalid_argument("Reference frame must be specified for velocity magnitude boundary constraint " + name);
                         }
                     }
-					else if (ConstraintDefinitionCell[2].find("sphericalazimuth") < 1024)
-					{
-					// if a frame is specified, then inform the constraint what the user wants
-					// otherwise terminate program
-						if (ConstraintDefinitionCell.size() > 5)
-						{
-							ReferenceFrame user_specified_frame;
-							if (ConstraintDefinitionCell[5].find("icrf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::ICRF;
-							}
-							else if (ConstraintDefinitionCell[5].find("j2000bci") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::J2000_BCI;
-							}
-							else if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::J2000_BCF;
-							}
-							else if (ConstraintDefinitionCell[5].find("trueofdatebci") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::TrueOfDate_BCI;
-							}
-							else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
-							}
-							else
-							{
-								throw std::invalid_argument("Currently only ICRF, J2000BCI, J2000BCF, TrueOfDateBCI, and TrueOfDateBCF frames are supported: velocity spherical Azimuth boundary constraint " + name);
-							}
+                    else if (ConstraintDefinitionCell[2].find("sphericalazimuth") < 1024)
+                    {
+                        // if a frame is specified, then inform the constraint what the user wants
+                        // otherwise terminate program
+                        if (ConstraintDefinitionCell.size() > 5)
+                        {
+                            ReferenceFrame user_specified_frame;
+                            if (ConstraintDefinitionCell[5].find("icrf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::ICRF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("j2000bci") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCI;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebci") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCI;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+                            }
+                            else
+                            {
+                                throw std::invalid_argument("Currently only ICRF, J2000BCI, J2000BCF, TrueOfDateBCI, and TrueOfDateBCF frames are supported: velocity spherical Azimuth boundary constraint " + name);
+                            }
 
-							return new BoundaryVelocitySphericalAzimuthConstraint(name,
-								journeyIndex,
-								phaseIndex,
-								stageIndex,
-								Universe,
-								mySpacecraft,
-								myOptions,
-								user_specified_frame,
-								myBoundaryEvent,
-								ConstraintDefinition);
-						}
-						else
-						{
-							throw std::invalid_argument("Reference frame must be specified for velocity spherical Azimuth boundary constraint " + name);
-						}
-					}
-					else if (ConstraintDefinitionCell[2].find("relativevmagnitude") < 1024)
-						{
-						// if a frame is specified, then inform the constraint what the user wants
-						// otherwise terminate program
-						if (ConstraintDefinitionCell.size() > 5)
-						{
-							ReferenceFrame user_specified_frame;
-							if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::J2000_BCF;
-							}
-							else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
-							}
-							else
-							{
-								throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: relative velocity magnitude boundary constraint " + name);
-							}
+                            return new BoundaryVelocitySphericalAzimuthConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                user_specified_frame,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Reference frame must be specified for velocity spherical Azimuth boundary constraint " + name);
+                        }
+                    }
+                    else if (ConstraintDefinitionCell[2].find("relativevmagnitude") < 1024)
+                    {
+                        // if a frame is specified, then inform the constraint what the user wants
+                        // otherwise terminate program
+                        if (ConstraintDefinitionCell.size() > 5)
+                        {
+                            ReferenceFrame user_specified_frame;
+                            if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+                            }
+                            else
+                            {
+                                throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: relative velocity magnitude boundary constraint " + name);
+                            }
 
-							return new BoundaryRelativeVelocityMagnitudeConstraint(name,
-								journeyIndex,
-								phaseIndex,
-								stageIndex,
-								Universe,
-								mySpacecraft,
-								myOptions,
-								user_specified_frame,
-								myBoundaryEvent,
-								ConstraintDefinition);
-						}
-						else
-						{
-							throw std::invalid_argument("Reference frame must be specified for relative velocity magnitude boundary constraint " + name);
-						}
-					}
-					else if (ConstraintDefinitionCell[2].find("relativevazimuth") < 1024)
-					{
-					// if a frame is specified, then inform the constraint what the user wants
-					// otherwise terminate program
-						if (ConstraintDefinitionCell.size() > 5)
-						{
-							ReferenceFrame user_specified_frame;
-							if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::J2000_BCF;
-							}
-							else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
-							}
-							else
-							{
-								throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: relative velocity Azimuth " + name);
-							}
+                            return new BoundaryRelativeVelocityMagnitudeConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                user_specified_frame,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Reference frame must be specified for relative velocity magnitude boundary constraint " + name);
+                        }
+                    }
+                    else if (ConstraintDefinitionCell[2].find("relativevazimuth") < 1024)
+                    {
+                        // if a frame is specified, then inform the constraint what the user wants
+                        // otherwise terminate program
+                        if (ConstraintDefinitionCell.size() > 5)
+                        {
+                            ReferenceFrame user_specified_frame;
+                            if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+                            }
+                            else
+                            {
+                                throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: relative velocity Azimuth " + name);
+                            }
 
-							return new BoundaryRelativeVelocityAzimuthConstraint(name,
-								journeyIndex,
-								phaseIndex,
-								stageIndex,
-								Universe,
-								mySpacecraft,
-								myOptions,
-								user_specified_frame,
-								myBoundaryEvent,
-								ConstraintDefinition);
-						}
-						else
-						{
-							throw std::invalid_argument("Reference frame must be specified for relative velocity Azimuth boundary constraint " + name);
-						}
-					}
-					else if (ConstraintDefinitionCell[2].find("relativevhfpa") < 1024)
-					{
-					// if a frame is specified, then inform the constraint what the user wants
-					// otherwise terminate program
-						if (ConstraintDefinitionCell.size() > 5)
-						{
-							ReferenceFrame user_specified_frame;
-							if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::J2000_BCF;
-							}
-							else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
-							{
-								user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
-							}
-							else
-							{
-								throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: relative velocity HFPA " + name);
-							}
+                            return new BoundaryRelativeVelocityAzimuthConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                user_specified_frame,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Reference frame must be specified for relative velocity Azimuth boundary constraint " + name);
+                        }
+                    }
+                    else if (ConstraintDefinitionCell[2].find("relativevhfpa") < 1024)
+                    {
+                        // if a frame is specified, then inform the constraint what the user wants
+                        // otherwise terminate program
+                        if (ConstraintDefinitionCell.size() > 5)
+                        {
+                            ReferenceFrame user_specified_frame;
+                            if (ConstraintDefinitionCell[5].find("j2000bcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[5].find("trueofdatebcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+                            }
+                            else
+                            {
+                                throw std::invalid_argument("Currently only J2000BCF and TrueOfDateBCF frames are supported: relative velocity HFPA " + name);
+                            }
 
-							return new BoundaryRelativeVelocityHFPAConstraint(name,
-								journeyIndex,
-								phaseIndex,
-								stageIndex,
-								Universe,
-								mySpacecraft,
-								myOptions,
-								user_specified_frame,
-								myBoundaryEvent,
-								ConstraintDefinition);
-						}
-						else
-						{
-							throw std::invalid_argument("Reference frame must be specified for relative velocity HFPA boundary constraint " + name);
-						}
-					}
-					else if (ConstraintDefinitionCell[2].find("vfpa") < 1024)
+                            return new BoundaryRelativeVelocityHFPAConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                user_specified_frame,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Reference frame must be specified for relative velocity HFPA boundary constraint " + name);
+                        }
+                    }
+                    else if (ConstraintDefinitionCell[2].find("vfpa") < 1024)
                     {
                         // if a frame is specified, then inform the constraint what the user wants
                         // otherwise terminate program
@@ -1376,28 +1457,28 @@ namespace EMTG
                         }
                     }
                     else if (ConstraintDefinitionCell[2].find("rbp") < 1024)
-					{
-						if (myOptions->Journeys[journeyIndex].arrival_class == BoundaryClass::EphemerisPegged
-							&& (myOptions->Journeys[journeyIndex].arrival_type == ArrivalType::INTERCEPT
-								|| myOptions->Journeys[journeyIndex].arrival_type == ArrivalType::CHEM_RENDEZVOUS
-								|| myOptions->Journeys[journeyIndex].arrival_type == ArrivalType::MOMENTUM_EXCHANGE
-								|| myOptions->Journeys[journeyIndex].arrival_type == ArrivalType::INSERTION_INTO_PARKING))
-						{
-							return new RBPconstraint(name,
-								journeyIndex,
-								phaseIndex,
-								stageIndex,
-								Universe,
-								mySpacecraft,
-								myOptions,
+                    {
+                        if (myOptions->Journeys[journeyIndex].arrival_class == BoundaryClass::EphemerisPegged
+                            && (myOptions->Journeys[journeyIndex].arrival_type == ArrivalType::INTERCEPT
+                                || myOptions->Journeys[journeyIndex].arrival_type == ArrivalType::CHEM_RENDEZVOUS
+                                || myOptions->Journeys[journeyIndex].arrival_type == ArrivalType::MOMENTUM_EXCHANGE
+                                || myOptions->Journeys[journeyIndex].arrival_type == ArrivalType::INSERTION_INTO_PARKING))
+                        {
+                            return new RBPconstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
                                 myBoundaryEvent,
-								ConstraintDefinition);
-						}
-						else
-						{
-							throw std::invalid_argument("RBP constraint may only be applied to Ephemeris Pegged Intercept, Chemical Rendezvous, Momentum Exchange, or Insertion into Parking Orbit arrival events. Invalid constraint, " + ConstraintDefinition);
-						}
-					}
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("RBP constraint may only be applied to Ephemeris Pegged Intercept, Chemical Rendezvous, Momentum Exchange, or Insertion into Parking Orbit arrival events. Invalid constraint, " + ConstraintDefinition);
+                        }
+                    }
                     else if (ConstraintDefinitionCell[2].find("rpb") < 1024)
                     {
                         if (myOptions->Journeys[journeyIndex].arrival_class == BoundaryClass::EphemerisPegged
@@ -1423,7 +1504,7 @@ namespace EMTG
                     }
                     else if (ConstraintDefinitionCell[2].find("rrp") < 1024)
                     {
-                    
+
                         return new RRPconstraint(name,
                             journeyIndex,
                             phaseIndex,
@@ -1437,15 +1518,15 @@ namespace EMTG
                     else if (ConstraintDefinitionCell[2].find("rpr") < 1024)
                     {
 
-                    return new RPRconstraint(name,
-                        journeyIndex,
-                        phaseIndex,
-                        stageIndex,
-                        Universe,
-                        mySpacecraft,
-                        myOptions,
-                        myBoundaryEvent,
-                        ConstraintDefinition);
+                        return new RPRconstraint(name,
+                            journeyIndex,
+                            phaseIndex,
+                            stageIndex,
+                            Universe,
+                            mySpacecraft,
+                            myOptions,
+                            myBoundaryEvent,
+                            ConstraintDefinition);
                     }
                     else if (ConstraintDefinitionCell[2].find("angularmomentumreferenceangle") < 1024)
                     {
@@ -1466,7 +1547,7 @@ namespace EMTG
                     }
                 }//end arrival
                 throw std::invalid_argument("You have reached the end of the specialized boundary constraint factory without either making a constraint or throwing an error for an invalid constraint. This should be impossible. Constraint is:" + ConstraintDefinition);
-				return NULL;
+                return NULL;
             }
 
         }//end namespace SpecializedConstraints

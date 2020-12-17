@@ -173,6 +173,11 @@ class StateConverter(object):
             nu = safe_acos(dot(e_vec,r)/(e*r_mag))
             if (dot(r,v,3) < 0):
                 nu = 2*pi - nu
+
+        #deal with the "true anomaly is zero but truncation error says not" case
+        from math import fabs
+        if fabs(nu - 2*pi) < 1.0e-9:
+            nu = 0.0
     
         stateCOE = [a,e,i,OM,omega,nu]
     
@@ -362,26 +367,26 @@ class StateConverter(object):
 
         return [r[0], r[1], r[2], v[0], v[1], v[2]]
 
-    def OutgoingBplanetoCartesian(self, stateIncomingBplane, mu=1.0):
+    def OutgoingBplanetoCartesian(self, stateOutgoingBplane, mu=1.0):
         import numpy as np
         from BPlane2PosVelOut import BPlane2PosVelOut
         bplane = BPlane2PosVelOut()
     
-        eMagBack = back.eMag(x, mu)
-        sBack = back.sVector(x)
-        hMagBack = back.hMag(x)
-        tBack = back.tVector(x)
-        rBack = back.rVector(x)
-        BRBack = back.bDotR(x)
-        BTBack = back.bDotT(x)
-        BBack = back.bVector(x)
-        hUnitBack = back.hUnit(x)
-        hBack = back.hVector(x)
-        eBack = back.eVector(x, mu)
-        rpBack = back.positionVector(xp, mu)
-        vpBack = back.velocityVector(xp, mu)
-        rBack = back.positionVector(x, mu)
-        vBack = back.velocityVector(x, mu)
+        eMagBack = bplane.eMag(stateOutgoingBplane, mu)
+        sBack = bplane.sVector(stateOutgoingBplane)
+        hMagBack = bplane.hMag(stateOutgoingBplane)
+        tBack = bplane.tVector(stateOutgoingBplane)
+        rBack = bplane.rVector(stateOutgoingBplane)
+        BRBack = bplane.bDotR(stateOutgoingBplane)
+        BTBack = bplane.bDotT(stateOutgoingBplane)
+        BBack = bplane.bVector(stateOutgoingBplane)
+        hUnitBack = bplane.hUnit(stateOutgoingBplane)
+        hBack = bplane.hVector(stateOutgoingBplane)
+        eBack = bplane.eVector(stateOutgoingBplane, mu)
+        rpBack = bplane.positionVector(stateOutgoingBplane, mu)
+        vpBack = bplane.velocityVector(stateOutgoingBplane, mu)
+        r = bplane.positionVector(stateOutgoingBplane, mu)
+        v = bplane.velocityVector(stateOutgoingBplane, mu)
 
         return [r[0], r[1], r[2], v[0], v[1], v[2]]
 
@@ -492,7 +497,7 @@ class StateConverter(object):
         return stateIncomingBplane
 
     def SphericalAZFPAtoOutgoingBplane(self, stateSphericalAZFPA, mu=1.0):
-        stateCartesian = self.SphericalAZFPAtoCartesian(stateSphericalAZFPA, mu)
+        stateCartesian = self.SphericalAZFPAtoCartesian(stateSphericalAZFPA)
 
         stateOutgoingBplane = self.CartesiantoOutgoingBplane(stateCartesian, mu)
     
@@ -643,7 +648,7 @@ class StateConverter(object):
             description = X[Xindex][0]                                                                                    
             prefix = description.split(':')[0]
 
-            if any(keyword in description for keyword in keywords):
+            if any(keyword in description for keyword in keywords) and not 'PeriapseLaunch' in description: #don't convert PeriapseLaunch
                 #something to do here
                 if 'left state x' in description: #it's cartesian
                     stateCartesian = [float(X[Xindex][1]), float(X[Xindex+1][1]), float(X[Xindex+2][1]), float(X[Xindex+3][1]), float(X[Xindex+4][1]), float(X[Xindex+5][1])]

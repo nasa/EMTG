@@ -38,6 +38,9 @@ namespace EMTG
         void PowerSystem::initialize(const PowerSystemOptions& powersystemoptions)
         {
             this->MyPowerSystemOptions = powersystemoptions;
+            this->ProducedPower = 0.0;
+            this->BusPower = 0.0;
+            this->AvailablePower = 0.0;
         }
 
         //evaluate

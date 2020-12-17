@@ -216,6 +216,8 @@ BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
 END_PHASE_DISTANCE_CONSTRAINT_BLOCK
 \end{verbatim}
 
+Constraints are always prefixed with a tag representing the phase that they constrain. Tags are indexed from zero. For example, constraints on the first phase of the journey are prefixed \texttt{p0}, and constraints on the fifth phase are prefixed \texttt{p4}. The user can also place constraints on the \textit{last} phase of the journey using the prefix \texttt{pEnd}.
+
 Internally, the constraints are stored in the JourneyOptions structure as lists of strings:
 
 \begin{verbatim}
@@ -224,7 +226,9 @@ JourneyOptions.BoundaryConstraintDefinitions
 JourneyOptions.PhaseDistanceConstraintDefinitions
 \end{verbatim}
 
-PyEMTG collects the journey-level lists of constraints into ``master'' constraint lists that exist at the mission level as shown below. To do this, call \texttt{MissionOptions.AssembleMasterConstraintVectors}. You can also disassemble the master constraint list back to the journey level via  \texttt{MissionOptions.DisassembleMasterDecisionVector}.
+PyEMTG collects the journey-level lists of constraints into ``master'' constraint lists that exist at the mission level as shown below. To do this, call \texttt{MissionOptions.AssembleMasterConstraintVectors}. You can also disassemble the master constraint list back to the journey level via 
+
+ \texttt{MissionOptions.DisassembleMasterDecisionVector}.
 
 \begin{verbatim}
 MissionOptions.ManeuverConstraintDefinitions
@@ -248,7 +252,7 @@ MissionOptions.AssembleMasterConstraintVectors()
 MissionOptions.DisassembleMasterDecisionVector()
 \end{verbatim}
 
-Remember to call \texttt{MissionOptions.DisassembleMasterDecisionVector} and \texttt{MissionOptions.AssembleMasterDecisionVector} as appropriate so that the mission and journey-level constraint definition lists remain in sync. In a future update, we will find a way to make this happen automatically.
+Remember to call \texttt{MissionOptions.DisassembleMasterDecisionVector} and \\ \texttt{MissionOptions.AssembleMasterDecisionVector} as appropriate so that the mission and journey-level constraint definition lists remain in sync. In a future update, we will find a way to make this happen automatically.
 
 The user may comment out a constraint with the \texttt{\#} character. The constraint will remain in the script through ingest and rewrite in PyEMTG and EMTG, but will not be used in optimization.
 
@@ -262,7 +266,7 @@ Boundary constraints are specified in the boundary constraint block at the end o
 \subsection{Classical Orbit Element Boundary Constraints}
 \label{sec:boundaryCOEconstraints}
 
-Distance-based constraints may be specified in kilometers (km), nautical miles (nmi), \ac{AU} (AU) or universe length units (LU). Angular constraints may be specified in degrees (deg) or radians (rad). Time constraints may be specified in seconds (sec), hours (hr), days (d) or years (yr).
+Distance-based constraints may be specified in kilometers (km), nautical miles (nmi), \ac{AU} (AU) or universe length units (LU). Angular constraints may be specified in degrees (deg) or radians (rad). Time constraints may be specified in seconds (sec), hours (hr), days (d) or years (yr). The orientation COEs require that frame specification (e.g. ICRF, J2000BCI etc.).
 
 \subsubsection{Semimajor Axis}
 \label{sec:boundarySMAconstraint}
@@ -277,7 +281,7 @@ END_BOUNDARY_CONSTRAINT_BLOCK
 \label{sec:boundaryINCconstraint}
 \begin{verbatim}
 BEGIN_BOUNDARY_CONSTRAINT_BLOCK
-pP_arrival_INC_40deg_40.1deg
+pP_departure_INC_40deg_40.1deg_J2000BCI
 END_BOUNDARY_CONSTRAINT_BLOCK
 \end{verbatim}
 
@@ -295,7 +299,7 @@ END_BOUNDARY_CONSTRAINT_BLOCK
 
 \begin{verbatim}
 BEGIN_BOUNDARY_CONSTRAINT_BLOCK
-pP_arrival_RAAN_0.1rad_0.15rad
+pP_arrival_RAAN_0.1rad_0.15rad_ICRF
 END_BOUNDARY_CONSTRAINT_BLOCK
 \end{verbatim}
 
@@ -304,7 +308,7 @@ END_BOUNDARY_CONSTRAINT_BLOCK
 
 \begin{verbatim}
 BEGIN_BOUNDARY_CONSTRAINT_BLOCK
-pP_arrival_AOP_0.1rad_0.15rad
+pP_arrival_AOP_0.1rad_0.15rad_TrueOfDateBCF
 END_BOUNDARY_CONSTRAINT_BLOCK
 \end{verbatim}
 
@@ -313,7 +317,7 @@ END_BOUNDARY_CONSTRAINT_BLOCK
 
 \begin{verbatim}
 BEGIN_BOUNDARY_CONSTRAINT_BLOCK
-pP_arrival_trueanomaly_10deg_15deg
+pP_arrival_trueanomaly_10deg_15deg_ICRF
 END_BOUNDARY_CONSTRAINT_BLOCK
 \end{verbatim}
 
@@ -323,7 +327,19 @@ END_BOUNDARY_CONSTRAINT_BLOCK
 \subsubsection{Orbit Period}
 \label{sec:boundaryOrbitPeriod}
 
-\textcolor{red}{The orbit period constraint}
+For closed orbits (i.e. $a > 0.0$) the spacecraft's orbital period $T$ can be constrained:
+
+\begin{equation}
+	T = \sqrt{\frac{a^3}{\mu}}
+\end{equation}
+
+\begin{verbatim}
+	BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+	pP_departure_orbitperiod_5.0d_5.3d
+	END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+In general, it is preferable to specify this constraint as an SMA constraint \ref{sec:boundarySMAconstraint} in the event that the spacecraft state results in $a <= 0.0$ (which can happen during optimizer iteration).
 
 \subsubsection{Periapse Distance}
 \label{sec:boundaryOrbitPeriapse}
@@ -341,6 +357,24 @@ END_BOUNDARY_CONSTRAINT_BLOCK
 BEGIN_BOUNDARY_CONSTRAINT_BLOCK
 pP_arrival_apoapsedistance_10000nmi_12000nmi
 END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{Orbital Energy}
+\label{sec:orbitalEnergyConstraint}
+
+Specific orbital energy $\epsilon$ can be constrained:
+
+\begin{equation}
+	\label{eq:orbital_energy}
+	\epsilon = \frac{1}{2}v^2 - \frac{\mu}{r}
+\end{equation}
+
+\noindent Currently, orbital energy can only be specified in units of $km^2/s^2$.
+
+\begin{verbatim}
+	BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+	pP_arrival_orbitalenergy_10.0km2s2_10.3km2s2
+	END_BOUNDARY_CONSTRAINT_BLOCK
 \end{verbatim}
 
 \subsection{Distance Constraint}
@@ -426,19 +460,18 @@ p3_departure_biprop
 END_BOUNDARY_CONSTRAINT_BLOCK
 \end{verbatim}
 
-\subsection{BCF Longitude}
+\subsection{Longitude}
 \label{subsec:BCF_longitude}
 
-The user may constrain longitude in the J2000 \ac{BCF} frame as defined in the current journey's Universe file. Longitude is computed as,
+The user may constrain longitude in ICRF, J2000BCF or TrueOfDateBCF. Longitude is computed as,
 
 \begin{equation}
 	\label{eq:longitude}
-	\lambda = \atan2\left (y_{J2000BCF}, x_{J2000BCF} \right)
+	\lambda = \atan2\left (y, x \right)
 \end{equation}
 
 \noindent and is given in the range $\left[-180.0, 180.0 \right]$. The user provides lower and upper bounds on longitude, in degrees.
 
-Note that this constraint is computed in the \textit{universe's central body's} J2000 \ac{BCF} frame. This is true regardless of boundary class.
 
 \begin{verbatim}
 BEGIN_BOUNDARY_CONSTRAINT_BLOCK

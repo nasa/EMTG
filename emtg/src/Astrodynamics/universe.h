@@ -111,6 +111,7 @@ namespace EMTG
             int central_body_SPICE_ID;
             double central_body_radius;
             double central_body_J2;
+            double central_body_J2_reference_radius;
             double mu;
             double central_body_flattening_coefficient;
             double LU;

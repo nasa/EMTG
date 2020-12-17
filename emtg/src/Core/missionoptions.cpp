@@ -128,13 +128,13 @@ namespace EMTG
         this->SpacecraftModelInput = (SpacecraftModelInputType) 2;
         this->HardwarePath = "c:/Utilities/HardwareModels/";
         this->ThrottleTableFile = "empty.ThrottleTable";
-        this->LaunchVehicleLibraryFile = "NLSII_August2018.emtg_launchvehicleopt";
+        this->LaunchVehicleLibraryFile = "default.emtg_launchvehicleopt";
         this->PowerSystemsLibraryFile = "default.emtg_powersystemsopt";
-        this->PropulsionSystemsLibraryFile = "4_18_2017.emtg_propulsionsystemopt";
+        this->PropulsionSystemsLibraryFile = "default.emtg_propulsionsystemopt";
         this->SpacecraftOptionsFile = "default.emtg_spacecraftopt";
-        this->LaunchVehicleKey = "Atlas_V_401";
+        this->LaunchVehicleKey = "ExampleRocket";
         this->PowerSystemKey = "5kW_basic";
-        this->ElectricPropulsionSystemKey = "NSTAR";
+        this->ElectricPropulsionSystemKey = "defaultThruster";
         this->ChemicalPropulsionSystemKey = "DefaultChemicalPropulsionSystem";
         this->perturb_SRP = (bool) 0;
         this->perturb_thirdbody = (bool) 0;
@@ -201,7 +201,7 @@ namespace EMTG
         this->RLA_bounds_lowerBound = -math::LARGE;
         this->RLA_bounds_upperBound = math::LARGE;
         this->mission_type_lowerBound = (PhaseType) 0;
-        this->mission_type_upperBound = (PhaseType) 10;
+        this->mission_type_upperBound = (PhaseType) 11;
         this->NLP_solver_type_lowerBound = 0;
         this->NLP_solver_type_upperBound = 1;
         this->NLP_solver_mode_lowerBound = (NLPMode) 0;
@@ -1982,7 +1982,7 @@ namespace EMTG
         
         if (this->mission_type != 2 || writeAll)
         {
-            optionsFileStream << "#phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable phase type\n#10: ProbeEntryPhase" << std::endl;
+            optionsFileStream << "#phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable phase type\n#10: ProbeEntryPhase\n#11 ControlLawThrustPhase" << std::endl;
             optionsFileStream << "mission_type " << this->mission_type << std::endl;
         }
     
@@ -2556,7 +2556,7 @@ namespace EMTG
             optionsFileStream << "ThrottleTableFile " << this->ThrottleTableFile << std::endl;
         }
     
-        if (this->LaunchVehicleLibraryFile != "NLSII_August2018.emtg_launchvehicleopt" || writeAll)
+        if (this->LaunchVehicleLibraryFile != "default.emtg_launchvehicleopt" || writeAll)
         {
             optionsFileStream << "#LaunchVehicleLibraryFile" << std::endl;
             optionsFileStream << "LaunchVehicleLibraryFile " << this->LaunchVehicleLibraryFile << std::endl;
@@ -2568,7 +2568,7 @@ namespace EMTG
             optionsFileStream << "PowerSystemsLibraryFile " << this->PowerSystemsLibraryFile << std::endl;
         }
     
-        if (this->PropulsionSystemsLibraryFile != "4_18_2017.emtg_propulsionsystemopt" || writeAll)
+        if (this->PropulsionSystemsLibraryFile != "default.emtg_propulsionsystemopt" || writeAll)
         {
             optionsFileStream << "#PropulsionSystemsLibraryFile" << std::endl;
             optionsFileStream << "PropulsionSystemsLibraryFile " << this->PropulsionSystemsLibraryFile << std::endl;
@@ -2580,7 +2580,7 @@ namespace EMTG
             optionsFileStream << "SpacecraftOptionsFile " << this->SpacecraftOptionsFile << std::endl;
         }
     
-        if (this->LaunchVehicleKey != "Atlas_V_401" || writeAll)
+        if (this->LaunchVehicleKey != "ExampleRocket" || writeAll)
         {
             optionsFileStream << "#LaunchVehicleKey" << std::endl;
             optionsFileStream << "LaunchVehicleKey " << this->LaunchVehicleKey << std::endl;
@@ -2592,7 +2592,7 @@ namespace EMTG
             optionsFileStream << "PowerSystemKey " << this->PowerSystemKey << std::endl;
         }
     
-        if (this->ElectricPropulsionSystemKey != "NSTAR" || writeAll)
+        if (this->ElectricPropulsionSystemKey != "defaultThruster" || writeAll)
         {
             optionsFileStream << "#ElectricPropulsionSystemKey" << std::endl;
             optionsFileStream << "ElectricPropulsionSystemKey " << this->ElectricPropulsionSystemKey << std::endl;

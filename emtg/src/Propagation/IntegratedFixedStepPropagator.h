@@ -30,10 +30,8 @@ namespace EMTG {
         {
         public:
             // constructors
-            IntegratedFixedStepPropagator(universe & myUniverse,
-                                          const size_t & STM_rows_in,
-                                          const size_t & STM_columns_in,
-                                          const size_t & STM_start_index_in);
+            IntegratedFixedStepPropagator(const size_t & numStates_in,
+                                          const size_t & STM_size_in);
 
             //clone
             virtual IntegratedFixedStepPropagator* clone() const { return new IntegratedFixedStepPropagator(*this); }
@@ -45,16 +43,6 @@ namespace EMTG {
             }
             virtual void propagate(const doubleType & propagation_span, const bool & needSTM);
             virtual void propagate(const doubleType & propagation_span, const math::Matrix <doubleType> & control, const bool & needSTM);
-
-            void propagate_setup(const math::Matrix<doubleType> & state_left,
-                                 math::Matrix<double> & dstate_leftdProp_vars,
-                                 const bool & STM_needed);
-            void propagate_teardown(const math::Matrix<doubleType> & state_left,
-                                    math::Matrix<doubleType> & state_right,
-                                    const math::Matrix<double> & dstate_rightdProp_vars,
-                                    math::Matrix<double> & STM,
-                                    const doubleType & propagation_span,
-                                    const bool & STM_needed);
 
             // fields
            

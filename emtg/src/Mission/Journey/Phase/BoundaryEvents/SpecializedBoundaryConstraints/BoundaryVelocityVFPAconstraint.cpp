@@ -136,7 +136,7 @@ namespace EMTG
 
                 //Step 3: compute VFPA
                 doubleType rdotv_ConstraintFrame = this->PositionBeforeEventConstraintFrame.dot(this->VelocityBeforeEventConstraintFrame);
-                doubleType cosVFPA = rdotv_ConstraintFrame / (this->PositionBeforeEventConstraintFrame.norm() / this->VelocityBeforeEventConstraintFrame.norm() + math::SMALL);
+                doubleType cosVFPA = rdotv_ConstraintFrame / (this->PositionBeforeEventConstraintFrame.norm() * this->VelocityBeforeEventConstraintFrame.norm() + math::SMALL);
                 this->VFPA = math::safe_acos(cosVFPA);
 
                 F[Findex++] = cosVFPA;

@@ -34,66 +34,59 @@ namespace EMTG {
         TimeDomainSpacecraftEOM::~TimeDomainSpacecraftEOM() {}
 
 
-        void TimeDomainSpacecraftEOM::configureAccelerationModel(const math::Matrix<doubleType> & state,
-                                                                 const math::Matrix<double> & dstate_dProp_vars,
-                                                                 math::Matrix<double> & dstate_dotdProp_vars)
+        void TimeDomainSpacecraftEOM::configureAccelerationModel(const math::Matrix<doubleType> & state)
         {
             this->spacecraft_acceleration_model->setEpoch(this->current_epoch);
-            this->spacecraft_acceleration_model->setdCurrentEpochdPropVar(this->dcurrent_indvar_dProp_var);
-            this->spacecraft_acceleration_model->setdCurrentEpochdPropVarPrevious(this->dcurrent_indvar_dProp_var_previous);
-            this->spacecraft_acceleration_model->setdstate_dProp_vars(dstate_dProp_vars);
-            this->spacecraft_acceleration_model->setdstate_dotdProp_varsPtr(dstate_dotdProp_vars);
         }
 
-		void TimeDomainSpacecraftEOM::computeAcceleration(const math::Matrix<doubleType> & state,
-			                                              const math::Matrix<double> & dstate_dProp_vars, 
-			                                              math::Matrix<double> & dstate_dotdProp_vars, 
+		void TimeDomainSpacecraftEOM::computeAcceleration(const math::Matrix<doubleType> & state, 
 			                                              const bool & STM_needed)
 		{
-            this->configureAccelerationModel(state, dstate_dProp_vars, dstate_dotdProp_vars);
+            this->configureAccelerationModel(state);
 			this->spacecraft_acceleration_model->computeAcceleration(state, STM_needed);
 		}
 
-        void TimeDomainSpacecraftEOM::computeAcceleration(const math::Matrix<doubleType> & state,
-			                                              const math::Matrix<double> & dstate_dProp_vars, 
-			                                              math::Matrix<double> & dstate_dotdProp_vars, 
+        void TimeDomainSpacecraftEOM::computeAcceleration(const math::Matrix<doubleType> & state, 
                                                           const math::Matrix<doubleType> & control,
 			                                              const bool & STM_needed)
 		{
-            this->configureAccelerationModel(state, dstate_dProp_vars, dstate_dotdProp_vars);
+            this->configureAccelerationModel(state);
 			this->spacecraft_acceleration_model->computeAcceleration(state, control, STM_needed);
 		}
 
         void TimeDomainSpacecraftEOM::evaluate(const math::Matrix<doubleType> & state,
-                                               const math::Matrix<double> & dstate_dProp_vars,
                                                math::Matrix<doubleType> & state_dot,
-                                               math::Matrix<double> & dstate_dotdProp_vars,
                                                const bool & STM_needed)
         {
             // For t-domain EOM, the epoch IS the independent variable
             this->current_epoch = this->current_independent_variable;
-            this->computeAcceleration(state, dstate_dProp_vars, dstate_dotdProp_vars, STM_needed);
+            this->computeAcceleration(state, STM_needed);
             this->ballisticEOM(state, state_dot);
+
+            ThrustControlLaw control_law = this->spacecraft_acceleration_model->getThrustControlLaw();
+            if (control_law == ThrustControlLaw::Velocity ||
+                control_law == ThrustControlLaw::AntiVelocity)
+            {
+                this->propulsionEOM(state_dot, this->spacecraft_acceleration_model->getControl());
+            }
 
             state_dot(7) = 1.0; // epoch
 
 			if (STM_needed)
 			{
                 this->state_propagation_matrix = this->spacecraft_acceleration_model->getfx();
-				this->computeVariationalEquations(state, state_dot);
+				//this->computeVariationalEquations(state, state_dot);
 			}
         } // end evaluate without control method
 
         void TimeDomainSpacecraftEOM::evaluate(const math::Matrix<doubleType> & state,
-                                               const math::Matrix<double> & dstate_dProp_vars,
                                                math::Matrix<doubleType> & state_dot,
-                                               math::Matrix<double> & dstate_dotdProp_vars,
                                                const math::Matrix<doubleType> & control,
                                                const bool & STM_needed)
         {
             // For t-domain EOM, the epoch IS the independent variable
             this->current_epoch = this->current_independent_variable;
-            this->computeAcceleration(state, dstate_dProp_vars, dstate_dotdProp_vars, control, STM_needed);
+            this->computeAcceleration(state, control, STM_needed);
 			this->ballisticEOM(state, state_dot);
 			this->propulsionEOM(state_dot, control);
 
@@ -102,13 +95,17 @@ namespace EMTG {
             if (STM_needed)
             {
                 this->state_propagation_matrix = this->spacecraft_acceleration_model->getfx();
-				this->computeVariationalEquations(state, state_dot);
+				//this->computeVariationalEquations(state, state_dot);
             }
         } // end evaluate with control method
 
         void TimeDomainSpacecraftEOM::ballisticEOM(const math::Matrix<doubleType> & state,
-                                                math::Matrix<doubleType> & state_dot)
+                                                   math::Matrix<doubleType> & state_dot)
         {
+            // state_dot needs to be assigned to zero here, otherwise stale values
+            // might persist if an instance of this EOM class is being re-used by multiple entities
+            state_dot.assign_zeros();
+
             this->acceleration = this->spacecraft_acceleration_model->getAccelerationVec();
             state_dot(0) = state(3);        // x
             state_dot(1) = state(4);        // y
@@ -121,9 +118,9 @@ namespace EMTG {
             // Virtual chemical fuel equation
             // Even during a ballistic arc, we want to track ACS if applicable
             state_dot(8) = (this->spacecraft_acceleration_model->my_options->trackACS ?
-                           this->spacecraft_acceleration_model->my_options->ACS_kg_per_day / 86400.0 : 0.0);
+                            this->spacecraft_acceleration_model->my_options->ACS_kg_per_day / 86400.0 : 0.0);
             //virtual electric propellant / oxidizer
-            state_dot(9) = 0.0;
+            //state_dot(9) = 0.0;
         }
 
 		void TimeDomainSpacecraftEOM::propulsionEOM(math::Matrix<doubleType> & state_dot, const math::Matrix<doubleType> & control)
@@ -131,8 +128,7 @@ namespace EMTG {
 			// General propellant equation
 			doubleType throttle = sqrt(control(0) * control(0)
 				                     + control(1) * control(1)
-				                     + control(2) * control(2)
-				                     + 1.0e-25);
+				                     + control(2) * control(2));
 			state_dot(6) = -throttle * this->spacecraft_acceleration_model->getThrusterMaxMassFlowRate();
 			// TODO: verify that this is in the maxMassFlowRate 
 			//       * this->spacecraft_acceleration_model->getDutyCycle();			
@@ -140,31 +136,5 @@ namespace EMTG {
 			// Virtual electric tank propellant / chemical oxidizer
 			state_dot(9) = throttle * this->spacecraft_acceleration_model->getThrusterMaxMassFlowRate();
 		}
-
-		void TimeDomainSpacecraftEOM::computeVariationalEquations(const math::Matrix<doubleType> & state, math::Matrix<doubleType> & state_dot)
-		{
-			// Form the STM
-			size_t STM_entry_index = this->spacecraft_acceleration_model->getSTMstartIndex();
-			for (size_t i = 0; i < this->spacecraft_acceleration_model->getSTMrowDim(); ++i)
-			{
-				for (size_t j = 0; j < this->spacecraft_acceleration_model->getSTMcolDim(); ++j)
-				{
-					this->STM(i, j) = state(STM_entry_index++);
-				}
-			}
-
-			// differential equation for STM creation (STM variational equation)
-			this->STM_dot = this->state_propagation_matrix * this->STM;
-
-			STM_entry_index = this->spacecraft_acceleration_model->getSTMstartIndex();
-			for (size_t i = 0; i < this->spacecraft_acceleration_model->getSTMrowDim(); ++i)
-			{
-				for (size_t j = 0; j < this->spacecraft_acceleration_model->getSTMcolDim(); ++j)
-				{
-					state_dot(STM_entry_index++) = this->STM_dot(i, j);
-				}
-			}
-		}
-
     } // end Astrodynamics namespace
 } // end EMTG namespace

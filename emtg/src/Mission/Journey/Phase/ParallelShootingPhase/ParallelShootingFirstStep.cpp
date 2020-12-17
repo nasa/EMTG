@@ -296,13 +296,16 @@ namespace EMTG
             {
                 for (size_t cartesianStateIndex : {0, 1, 2, 3, 4, 5})
                 {
-                    size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_StateElements[encodedStateIndex][cartesianStateIndex];
+                    if (this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[cartesianStateIndex][encodedStateIndex])
+                    {
+                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_StateElements[encodedStateIndex][cartesianStateIndex];
 
-                    size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
+                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
 
-                    this->create_sparsity_entry(this->Findices_left_match_point_constraints[cartesianStateIndex],
-                        Xindex,
-                        this->Gindices_StepLeftMatchPoint_wrt_StepLeftEncodedState);
+                        this->create_sparsity_entry(this->Findices_left_match_point_constraints[cartesianStateIndex],
+                            Xindex,
+                            this->Gindices_StepLeftMatchPoint_wrt_StepLeftEncodedState);
+                    }
                 }
             }
 
@@ -355,15 +358,19 @@ namespace EMTG
                 {
                     for (size_t cartesianStateIndex : {0, 1, 2, 3, 4, 5})
                     {
-                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_StateElements[encodedStateIndex][cartesianStateIndex];
 
-                        size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_StepLeftEncodedState[dIndex];
+                        if (this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[cartesianStateIndex][encodedStateIndex])
+                        {
+                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_StateElements[encodedStateIndex][cartesianStateIndex];
 
-                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
+                            size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_StepLeftEncodedState[dIndex];
 
-                        G[Gindex] += this->X_scale_factors->operator[](Xindex)
-                            * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
-                            * continuity_constraint_scale_factors(cartesianStateIndex);
+                            size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
+
+                            G[Gindex] += this->X_scale_factors->operator[](Xindex)
+                                * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
+                                * continuity_constraint_scale_factors(cartesianStateIndex);
+                        }
                     }
                 }
 

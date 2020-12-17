@@ -27,12 +27,8 @@ namespace EMTG
     namespace Astrodynamics
     {
 
-        KeplerPropagatorTimeDomain::KeplerPropagatorTimeDomain(missionoptions& myOptions,
-            Astrodynamics::universe& myUniverse,
-            const size_t& numStates) :
-            KeplerPropagator(myOptions,
-                myUniverse,
-                numStates)
+        KeplerPropagatorTimeDomain::KeplerPropagatorTimeDomain(const size_t& numStates) :
+                                                               KeplerPropagator(numStates)
         {}
 
         //methods
@@ -40,7 +36,6 @@ namespace EMTG
         {
 			// In order to scale this propagator to canonical units, 
 			// set LU/TU to their values from myUniverse (e.g. LU = this->myUniverse->LU) and set mu to 1.0
-			double mu = this->myUniverse->mu;
 		    double LU = 1.0;
 			double TU = 1.0;
 			//double mu = 1.0;
@@ -49,7 +44,7 @@ namespace EMTG
 
             //Step 0: declare necessary variables
             int PropagationDirection = PropagationTime >= 0.0 ? 1 : -1;
-			double sqmu = sqrt(mu);
+			double sqmu = sqrt(this->mu);
             const double alphatol = 1.0e-12;
             const double Xtol = 1.0e-12;
             const int maximum_order = 10;
@@ -83,7 +78,7 @@ namespace EMTG
 
             //Step 2: compute alpha, which determines whether we are on an ellipse, parabola, or hyperbola
             //and also sigma0 which we need in the universal Kepler iteration
-            doubleType alpha = (2.0 / r0 - v0*v0 / mu);
+            doubleType alpha = (2.0 / r0 - v0*v0 / this->mu);
             doubleType sigma0 = (state0[0] * state0[3] + state0[1] * state0[4] + state0[2] * state0[5]) / sqmu;
             if (alpha > alphatol) //ellipse
                 sqalpha = sqrt(alpha);
@@ -262,51 +257,51 @@ namespace EMTG
                 double fr0_2 = fr0*fr0;
                 double fr_3 = fr_2 * fr;
                 double fr0_3 = fr0_2 * fr0;
-                double mu2 = mu * mu;
+                double mu2 = this->mu * this->mu;
 
                 //R~
-                STM(0, 0) = fr / mu*(xdot - xdot0)*(xdot - xdot0) + (fr0*(1.0 - F)*(x * x0) + C*(x0 * xdot)) / (fr0_3)+F;
-                STM(0, 1) = fr / mu*(xdot - xdot0)*(ydot - ydot0) + (fr0*(1.0 - F)*(x * y0) + C*(y0 * xdot)) / (fr0_3);
-                STM(0, 2) = fr / mu*(xdot - xdot0)*(zdot - zdot0) + (fr0*(1.0 - F)*(x * z0) + C*(z0 * xdot)) / (fr0_3);
-                STM(1, 0) = fr / mu*(ydot - ydot0)*(xdot - xdot0) + (fr0*(1.0 - F)*(y * x0) + C*(x0 * ydot)) / (fr0_3);
-                STM(1, 1) = fr / mu*(ydot - ydot0)*(ydot - ydot0) + (fr0*(1.0 - F)*(y * y0) + C*(y0 * ydot)) / (fr0_3)+F;
-                STM(1, 2) = fr / mu*(ydot - ydot0)*(zdot - zdot0) + (fr0*(1.0 - F)*(y * z0) + C*(z0 * ydot)) / (fr0_3);
-                STM(2, 0) = fr / mu*(zdot - zdot0)*(xdot - xdot0) + (fr0*(1.0 - F)*(z * x0) + C*(x0 * zdot)) / (fr0_3);
-                STM(2, 1) = fr / mu*(zdot - zdot0)*(ydot - ydot0) + (fr0*(1.0 - F)*(z * y0) + C*(y0 * zdot)) / (fr0_3);
-                STM(2, 2) = fr / mu*(zdot - zdot0)*(zdot - zdot0) + (fr0*(1.0 - F)*(z * z0) + C*(z0 * zdot)) / (fr0_3)+F;
+                STM(0, 0) = fr / this->mu*(xdot - xdot0)*(xdot - xdot0) + (fr0*(1.0 - F)*(x * x0) + C*(x0 * xdot)) / (fr0_3)+F;
+                STM(0, 1) = fr / this->mu*(xdot - xdot0)*(ydot - ydot0) + (fr0*(1.0 - F)*(x * y0) + C*(y0 * xdot)) / (fr0_3);
+                STM(0, 2) = fr / this->mu*(xdot - xdot0)*(zdot - zdot0) + (fr0*(1.0 - F)*(x * z0) + C*(z0 * xdot)) / (fr0_3);
+                STM(1, 0) = fr / this->mu*(ydot - ydot0)*(xdot - xdot0) + (fr0*(1.0 - F)*(y * x0) + C*(x0 * ydot)) / (fr0_3);
+                STM(1, 1) = fr / this->mu*(ydot - ydot0)*(ydot - ydot0) + (fr0*(1.0 - F)*(y * y0) + C*(y0 * ydot)) / (fr0_3)+F;
+                STM(1, 2) = fr / this->mu*(ydot - ydot0)*(zdot - zdot0) + (fr0*(1.0 - F)*(y * z0) + C*(z0 * ydot)) / (fr0_3);
+                STM(2, 0) = fr / this->mu*(zdot - zdot0)*(xdot - xdot0) + (fr0*(1.0 - F)*(z * x0) + C*(x0 * zdot)) / (fr0_3);
+                STM(2, 1) = fr / this->mu*(zdot - zdot0)*(ydot - ydot0) + (fr0*(1.0 - F)*(z * y0) + C*(y0 * zdot)) / (fr0_3);
+                STM(2, 2) = fr / this->mu*(zdot - zdot0)*(zdot - zdot0) + (fr0*(1.0 - F)*(z * z0) + C*(z0 * zdot)) / (fr0_3)+F;
 
                 //R
-                STM(0, 3) = fr0 / mu*(1.0 - F)*(xdot0 * (x - x0) - x0 * (xdot - xdot0)) + C / mu*(xdot * xdot0) + G;
-                STM(0, 4) = fr0 / mu*(1.0 - F)*(ydot0 * (x - x0) - y0 * (xdot - xdot0)) + C / mu*(xdot * ydot0);
-                STM(0, 5) = fr0 / mu*(1.0 - F)*(zdot0 * (x - x0) - z0 * (xdot - xdot0)) + C / mu*(xdot * zdot0);
-                STM(1, 3) = fr0 / mu*(1.0 - F)*(xdot0 * (y - y0) - x0 * (ydot - ydot0)) + C / mu*(ydot * xdot0);
-                STM(1, 4) = fr0 / mu*(1.0 - F)*(ydot0 * (y - y0) - y0 * (ydot - ydot0)) + C / mu*(ydot * ydot0) + G;
-                STM(1, 5) = fr0 / mu*(1.0 - F)*(zdot0 * (y - y0) - z0 * (ydot - ydot0)) + C / mu*(ydot * zdot0);
-                STM(2, 3) = fr0 / mu*(1.0 - F)*(xdot0 * (z - z0) - x0 * (zdot - zdot0)) + C / mu*(zdot * xdot0);
-                STM(2, 4) = fr0 / mu*(1.0 - F)*(ydot0 * (z - z0) - y0 * (zdot - zdot0)) + C / mu*(zdot * ydot0);
-                STM(2, 5) = fr0 / mu*(1.0 - F)*(zdot0 * (z - z0) - z0 * (zdot - zdot0)) + C / mu*(zdot * zdot0) + G;
+                STM(0, 3) = fr0 / this->mu*(1.0 - F)*(xdot0 * (x - x0) - x0 * (xdot - xdot0)) + C / this->mu*(xdot * xdot0) + G;
+                STM(0, 4) = fr0 / this->mu*(1.0 - F)*(ydot0 * (x - x0) - y0 * (xdot - xdot0)) + C / this->mu*(xdot * ydot0);
+                STM(0, 5) = fr0 / this->mu*(1.0 - F)*(zdot0 * (x - x0) - z0 * (xdot - xdot0)) + C / this->mu*(xdot * zdot0);
+                STM(1, 3) = fr0 / this->mu*(1.0 - F)*(xdot0 * (y - y0) - x0 * (ydot - ydot0)) + C / this->mu*(ydot * xdot0);
+                STM(1, 4) = fr0 / this->mu*(1.0 - F)*(ydot0 * (y - y0) - y0 * (ydot - ydot0)) + C / this->mu*(ydot * ydot0) + G;
+                STM(1, 5) = fr0 / this->mu*(1.0 - F)*(zdot0 * (y - y0) - z0 * (ydot - ydot0)) + C / this->mu*(ydot * zdot0);
+                STM(2, 3) = fr0 / this->mu*(1.0 - F)*(xdot0 * (z - z0) - x0 * (zdot - zdot0)) + C / this->mu*(zdot * xdot0);
+                STM(2, 4) = fr0 / this->mu*(1.0 - F)*(ydot0 * (z - z0) - y0 * (zdot - zdot0)) + C / this->mu*(zdot * ydot0);
+                STM(2, 5) = fr0 / this->mu*(1.0 - F)*(zdot0 * (z - z0) - z0 * (zdot - zdot0)) + C / this->mu*(zdot * zdot0) + G;
 
                 //V~
-                STM(3, 0) = (-C*mu2 * x*x0 + Ft*fr*fr0_3 * (mu*fr_2 - mu*x*x + fr*(xdot0 - xdot)*(y*(xdot*y - ydot*x) + z*(xdot*z - zdot*x))) + mu*fr_3 * fr0*x0*(xdot0 - xdot) + mu*fr*fr0_3 * x*(xdot0 - xdot)) / (mu*fr_3 * fr0_3);
-                STM(3, 1) = (-C*mu2 * x*y0 + Ft*fr*fr0_3 * (-mu*x*y + fr*(ydot0 - ydot)*(y*(xdot*y - ydot*x) + z*(xdot*z - zdot*x))) + mu*fr_3 * fr0*y0*(xdot0 - xdot) + mu*fr*fr0_3 * x*(ydot0 - ydot)) / (mu*fr_3 * fr0_3);
-                STM(3, 2) = (-C*mu2 * x*z0 + Ft*fr*fr0_3 * (-mu*x*z + fr*(zdot0 - zdot)*(y*(xdot*y - ydot*x) + z*(xdot*z - zdot*x))) + mu*fr_3 * fr0*z0*(xdot0 - xdot) + mu*fr*fr0_3 * x*(zdot0 - zdot)) / (mu*fr_3 * fr0_3);
-                STM(4, 0) = (-C*mu2 * x0*y - Ft*fr*fr0_3 * (mu*x*y + fr*(xdot0 - xdot)*(x*(xdot*y - ydot*x) - z*(ydot*z - zdot*y))) + mu*fr_3 * fr0*x0*(ydot0 - ydot) + mu*fr*fr0_3 * y*(xdot0 - xdot)) / (mu*fr_3 * fr0_3);
-                STM(4, 1) = (-C*mu2 * y*y0 - Ft*fr*fr0_3 * (-mu*fr_2 + mu*y*y + fr*(ydot0 - ydot)*(x*(xdot*y - ydot*x) - z*(ydot*z - zdot*y))) + mu*fr_3 * fr0*y0*(ydot0 - ydot) + mu*fr*fr0_3 * y*(ydot0 - ydot)) / (mu*fr_3 * fr0_3);
-                STM(4, 2) = (-C*mu2 * y*z0 - Ft*fr*fr0_3 * (mu*y*z + fr*(zdot0 - zdot)*(x*(xdot*y - ydot*x) - z*(ydot*z - zdot*y))) + mu*fr_3 * fr0*z0*(ydot0 - ydot) + mu*fr*fr0_3 * y*(zdot0 - zdot)) / (mu*fr_3 * fr0_3);
-                STM(5, 0) = (-C*mu2 * x0*z - Ft*fr*fr0_3 * (mu*x*z + fr*(xdot0 - xdot)*(x*(xdot*z - zdot*x) + y*(ydot*z - zdot*y))) + mu*fr_3 * fr0*x0*(zdot0 - zdot) + mu*fr*fr0_3 * z*(xdot0 - xdot)) / (mu*fr_3 * fr0_3);
-                STM(5, 1) = (-C*mu2 * y0*z - Ft*fr*fr0_3 * (mu*y*z + fr*(ydot0 - ydot)*(x*(xdot*z - zdot*x) + y*(ydot*z - zdot*y))) + mu*fr_3 * fr0*y0*(zdot0 - zdot) + mu*fr*fr0_3 * z*(ydot0 - ydot)) / (mu*fr_3 * fr0_3);
-                STM(5, 2) = (-C*mu2 * z*z0 - Ft*fr*fr0_3 * (-mu*fr_2 + mu*z*z + fr*(zdot0 - zdot)*(x*(xdot*z - zdot*x) + y*(ydot*z - zdot*y))) + mu*fr_3 * fr0*z0*(zdot0 - zdot) + mu*fr*fr0_3 * z*(zdot0 - zdot)) / (mu*fr_3 * fr0_3);
+                STM(3, 0) = (-C*mu2 * x*x0 + Ft*fr*fr0_3 * (this->mu*fr_2 - this->mu*x*x + fr*(xdot0 - xdot)*(y*(xdot*y - ydot*x) + z*(xdot*z - zdot*x))) + this->mu*fr_3 * fr0*x0*(xdot0 - xdot) + this->mu*fr*fr0_3 * x*(xdot0 - xdot)) / (this->mu*fr_3 * fr0_3);
+                STM(3, 1) = (-C*mu2 * x*y0 + Ft*fr*fr0_3 * (-this->mu*x*y + fr*(ydot0 - ydot)*(y*(xdot*y - ydot*x) + z*(xdot*z - zdot*x))) + this->mu*fr_3 * fr0*y0*(xdot0 - xdot) + this->mu*fr*fr0_3 * x*(ydot0 - ydot)) / (this->mu*fr_3 * fr0_3);
+                STM(3, 2) = (-C*mu2 * x*z0 + Ft*fr*fr0_3 * (-this->mu*x*z + fr*(zdot0 - zdot)*(y*(xdot*y - ydot*x) + z*(xdot*z - zdot*x))) + this->mu*fr_3 * fr0*z0*(xdot0 - xdot) + this->mu*fr*fr0_3 * x*(zdot0 - zdot)) / (this->mu*fr_3 * fr0_3);
+                STM(4, 0) = (-C*mu2 * x0*y - Ft*fr*fr0_3 * (this->mu*x*y + fr*(xdot0 - xdot)*(x*(xdot*y - ydot*x) - z*(ydot*z - zdot*y))) + this->mu*fr_3 * fr0*x0*(ydot0 - ydot) + this->mu*fr*fr0_3 * y*(xdot0 - xdot)) / (this->mu*fr_3 * fr0_3);
+                STM(4, 1) = (-C*mu2 * y*y0 - Ft*fr*fr0_3 * (-this->mu*fr_2 + this->mu*y*y + fr*(ydot0 - ydot)*(x*(xdot*y - ydot*x) - z*(ydot*z - zdot*y))) + this->mu*fr_3 * fr0*y0*(ydot0 - ydot) + this->mu*fr*fr0_3 * y*(ydot0 - ydot)) / (this->mu*fr_3 * fr0_3);
+                STM(4, 2) = (-C*mu2 * y*z0 - Ft*fr*fr0_3 * (this->mu*y*z + fr*(zdot0 - zdot)*(x*(xdot*y - ydot*x) - z*(ydot*z - zdot*y))) + this->mu*fr_3 * fr0*z0*(ydot0 - ydot) + this->mu*fr*fr0_3 * y*(zdot0 - zdot)) / (this->mu*fr_3 * fr0_3);
+                STM(5, 0) = (-C*mu2 * x0*z - Ft*fr*fr0_3 * (this->mu*x*z + fr*(xdot0 - xdot)*(x*(xdot*z - zdot*x) + y*(ydot*z - zdot*y))) + this->mu*fr_3 * fr0*x0*(zdot0 - zdot) + this->mu*fr*fr0_3 * z*(xdot0 - xdot)) / (this->mu*fr_3 * fr0_3);
+                STM(5, 1) = (-C*mu2 * y0*z - Ft*fr*fr0_3 * (this->mu*y*z + fr*(ydot0 - ydot)*(x*(xdot*z - zdot*x) + y*(ydot*z - zdot*y))) + this->mu*fr_3 * fr0*y0*(zdot0 - zdot) + this->mu*fr*fr0_3 * z*(ydot0 - ydot)) / (this->mu*fr_3 * fr0_3);
+                STM(5, 2) = (-C*mu2 * z*z0 - Ft*fr*fr0_3 * (-this->mu*fr_2 + this->mu*z*z + fr*(zdot0 - zdot)*(x*(xdot*z - zdot*x) + y*(ydot*z - zdot*y))) + this->mu*fr_3 * fr0*z0*(zdot0 - zdot) + this->mu*fr*fr0_3 * z*(zdot0 - zdot)) / (this->mu*fr_3 * fr0_3);
 
                 //V
-                STM(3, 3) = fr0 / mu*(xdot - xdot0)*(xdot - xdot0) + (fr0*(1.0 - F)*(x * x0) - C*(x * xdot0)) / (fr_3)+Gt;
-                STM(3, 4) = fr0 / mu*(xdot - xdot0)*(ydot - ydot0) + (fr0*(1.0 - F)*(x * y0) - C*(x * ydot0)) / (fr_3);
-                STM(3, 5) = fr0 / mu*(xdot - xdot0)*(zdot - zdot0) + (fr0*(1.0 - F)*(x * z0) - C*(x * zdot0)) / (fr_3);
-                STM(4, 3) = fr0 / mu*(ydot - ydot0)*(xdot - xdot0) + (fr0*(1.0 - F)*(y * x0) - C*(y * xdot0)) / (fr_3);
-                STM(4, 4) = fr0 / mu*(ydot - ydot0)*(ydot - ydot0) + (fr0*(1.0 - F)*(y * y0) - C*(y * ydot0)) / (fr_3)+Gt;
-                STM(4, 5) = fr0 / mu*(ydot - ydot0)*(zdot - zdot0) + (fr0*(1.0 - F)*(y * z0) - C*(y * zdot0)) / (fr_3);
-                STM(5, 3) = fr0 / mu*(zdot - zdot0)*(xdot - xdot0) + (fr0*(1.0 - F)*(z * x0) - C*(z * xdot0)) / (fr_3);
-                STM(5, 4) = fr0 / mu*(zdot - zdot0)*(ydot - ydot0) + (fr0*(1.0 - F)*(z * y0) - C*(z * ydot0)) / (fr_3);
-                STM(5, 5) = fr0 / mu*(zdot - zdot0)*(zdot - zdot0) + (fr0*(1.0 - F)*(z * z0) - C*(z * zdot0)) / (fr_3)+Gt;
+                STM(3, 3) = fr0 / this->mu*(xdot - xdot0)*(xdot - xdot0) + (fr0*(1.0 - F)*(x * x0) - C*(x * xdot0)) / (fr_3)+Gt;
+                STM(3, 4) = fr0 / this->mu*(xdot - xdot0)*(ydot - ydot0) + (fr0*(1.0 - F)*(x * y0) - C*(x * ydot0)) / (fr_3);
+                STM(3, 5) = fr0 / this->mu*(xdot - xdot0)*(zdot - zdot0) + (fr0*(1.0 - F)*(x * z0) - C*(x * zdot0)) / (fr_3);
+                STM(4, 3) = fr0 / this->mu*(ydot - ydot0)*(xdot - xdot0) + (fr0*(1.0 - F)*(y * x0) - C*(y * xdot0)) / (fr_3);
+                STM(4, 4) = fr0 / this->mu*(ydot - ydot0)*(ydot - ydot0) + (fr0*(1.0 - F)*(y * y0) - C*(y * ydot0)) / (fr_3)+Gt;
+                STM(4, 5) = fr0 / this->mu*(ydot - ydot0)*(zdot - zdot0) + (fr0*(1.0 - F)*(y * z0) - C*(y * zdot0)) / (fr_3);
+                STM(5, 3) = fr0 / this->mu*(zdot - zdot0)*(xdot - xdot0) + (fr0*(1.0 - F)*(z * x0) - C*(z * xdot0)) / (fr_3);
+                STM(5, 4) = fr0 / this->mu*(zdot - zdot0)*(ydot - ydot0) + (fr0*(1.0 - F)*(z * y0) - C*(z * ydot0)) / (fr_3);
+                STM(5, 5) = fr0 / this->mu*(zdot - zdot0)*(zdot - zdot0) + (fr0*(1.0 - F)*(z * z0) - C*(z * zdot0)) / (fr_3)+Gt;
 
                 //scale the stm->operator()
                 //lower left

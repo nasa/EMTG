@@ -1,0 +1,35 @@
+# EMTG atmospheric density model data file (space delimited)
+#
+# Model type: Tells interpretor what the contents of the file must be
+ModelType Exponential
+#
+# For ModelKey == Exponential, the contents are:
+# [Altitude (km)] [Reference density at altitude (kg/m^3)]
+#
+begin_data_list
+0.      1.2
+100.    5.69e-7
+150.    2.02e-9
+175.    7.66e-10
+200.    2.9e-10
+225.    1.46e-10
+250.    7.3e-11
+275.    4.1e-11
+300.    2.3e-11
+325.    1.38e-11
+350.    8.33e-12
+375.    5.24e-12
+400.    3.29e-12
+450.    1.39e-12
+500.    6.15e-13
+550.    2.84e-13
+600.    1.37e-13
+650.    6.87e-14
+700.    3.63e-14
+750.    2.02e-14
+800.    1.21e-14
+850.    7.69e-15
+900.    5.24e-15
+950.    3.78e-15
+1000.   2.86e-15
+end_data_list

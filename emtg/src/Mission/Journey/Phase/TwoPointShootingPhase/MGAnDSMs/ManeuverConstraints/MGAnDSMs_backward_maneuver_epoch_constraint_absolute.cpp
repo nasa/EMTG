@@ -61,13 +61,20 @@ namespace EMTG
             std::vector<std::string> ConstraintDefinitionCell;
             boost::split(ConstraintDefinitionCell, ConstraintDefinition, boost::is_any_of("_"), boost::token_compress_on);
 
-            double epoch = std::stod(ConstraintDefinitionCell[3]);
+			double epochLB = std::stod(ConstraintDefinitionCell[3]);
+			double epochUB = std::stod(ConstraintDefinitionCell[4]);
 
-            if (epoch > 2400000.5)
-                epoch -= 2400000.5;
+			if (epochLB > 2400000.5)
+				epochLB -= 2400000.5;
 
-            this->lowerBound = epoch / 10000.0;
-            this->upperBound = epoch / 10000.0 + 1.0e-8;
+			if (epochUB > 2400000.5)
+				epochUB -= 2400000.5;
+
+			this->lowerBound = epochLB / 10000.0;
+			this->upperBound = epochUB / 10000.0;
+
+			if ((this->upperBound - this->lowerBound) < 1.e-8)
+				this->upperBound = this->lowerBound + 1.e-8;
 
             //Step 2: create the constraint
             this->Flowerbounds->push_back(this->lowerBound - this->upperBound);

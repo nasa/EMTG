@@ -19,17 +19,18 @@
 //propagator factory
 //Jacob Englander 1-2-2018
 
+#include "ExplicitRungeKutta.h"
 #include "IntegrationSchemeFactory.h"
-
-#include "RungeKutta8.h"
+#include "IntegrationCoefficients.h"
 
 namespace EMTG
 {
     namespace Integration
     {
-        IntegrationScheme* CreateIntegrationScheme(Integrand * myIntegrand, const size_t & total_states_to_integrate, const size_t & num_prop_var_deriv_states)
+        IntegrationScheme* CreateIntegrationScheme(Integrand * myIntegrand, const size_t & num_states, const size_t & STM_size)
         {            
-            return new RungeKutta8(myIntegrand, total_states_to_integrate, num_prop_var_deriv_states);
+            // TODO: for now, we're hard-coding the eigth order RK scheme
+            return new ExplicitRungeKutta(myIntegrand, EMTG::rkdp87, num_states, STM_size);
         }
     }//end namespace HardwareModels
 }//end namespace EMTG

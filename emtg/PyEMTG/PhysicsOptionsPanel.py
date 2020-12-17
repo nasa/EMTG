@@ -336,11 +336,12 @@ class PhysicsOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
           
     def ChangeearliestPossibleEpoch(self, e):
         e.Skip()
-        self.missionoptions.earliestPossibleEpoch = eval(self.txtearliestPossibleEpoch.GetValue())
 
-        #convert from JD to MJD if applicable
-        if self.missionoptions.earliestPossibleEpoch > 2400000.5:
-            self.missionoptions.earliestPossibleEpoch -= 2400000.5
+        dateString = self.txtearliestPossibleEpoch.GetValue()
+
+        from timeUtilities import stringToJD
+
+        self.missionoptions.earliestPossibleEpoch = stringToJD(dateString, self.missionoptions.universe_folder)
 
         self.update()
 
@@ -352,11 +353,12 @@ class PhysicsOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         
     def ChangelatestPossibleEpoch(self, e):
         e.Skip()
-        self.missionoptions.latestPossibleEpoch = eval(self.txtlatestPossibleEpoch.GetValue())
 
-        #convert from JD to MJD if applicable
-        if self.missionoptions.latestPossibleEpoch > 2400000.5:
-            self.missionoptions.latestPossibleEpoch -= 2400000.5
+        dateString = self.txtlatestPossibleEpoch.GetValue()
+
+        from timeUtilities import stringToJD
+
+        self.missionoptions.latestPossibleEpoch = stringToJD(dateString, self.missionoptions.universe_folder)
 
         self.update()
 

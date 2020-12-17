@@ -102,6 +102,9 @@ namespace EMTG
             {
                 throw std::invalid_argument("PeriapseLaunch may only be the first event in the mission. Halting.");
             }
+
+            //construct boundary constraints
+            this->construct_boundary_constraints();
         }//end initialize
 
         //******************************************calcbounds methods

@@ -144,6 +144,12 @@ namespace EMTG
             size_t Xindex_current_left_mass;
             size_t Gindex_left_mass_continuity_wrt_current_event_left_mass;
             size_t Gindex_left_mass_continuity_wrt_previous_event_right_mass;
+
+            //journey initial mass constraint
+            std::vector<size_t> dIndex_journey_initial_mass_constraint_wrt_StateBeforeEventDecisionVariables;
+            std::vector<size_t> dIndex_journey_initial_mass_constraint_wrt_StateBeforeEventDecisionVariables_wrt_Time;
+            std::vector<size_t> Gindex_journey_initial_mass_constraint_wrt_StateBeforeEventDecisionVariables;
+            std::vector<size_t> Gindex_journey_initial_mass_constraint_wrt_StateBeforeEventDecisionVariables_wrt_Time;
         };
     }//end namespace BoundaryEvents
 }//end namespace EMTG

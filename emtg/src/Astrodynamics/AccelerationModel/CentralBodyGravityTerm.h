@@ -24,18 +24,17 @@
 #include "boost/ptr_container/ptr_vector.hpp"
 
 #include "SpacecraftAccelerationModel.h"
-#include "AccelerationModelTerm.h"
+#include "SpacecraftAccelerationModelTerm.h"
 #include "body.h"
 #include "CentralBody.h"
 #include "GravityTerm.h"
+#include "SphericalHarmonicTerm.h"
 #include "doubleType.h"
 
 namespace EMTG
 {
     namespace Astrodynamics
     {
-        class SpacecraftAccelerationModel;
-        class SphericalHarmonicTerm;
         class CentralBodyGravityTerm : public GravityTerm
         {
             friend class SphericalHarmonicTerm;
@@ -43,14 +42,15 @@ namespace EMTG
         public:
             // constructor
             CentralBodyGravityTerm(SpacecraftAccelerationModel * acceleration_model_in, CentralBody * central_body_in);
+            ~CentralBodyGravityTerm();
 
             // methods
             inline CentralBodyGravityTerm* clone() const override { return new CentralBodyGravityTerm(*this); }
-            void computeFrameDragAcceleration() override;
-            void computeAccelerationTerm() override;
-            void computeAccelerationTerm(const bool & generate_derivatives) override;
-            void computePointMassGravityTimeDerivatives() override;
-            void populateInstrumentationFile(std::ofstream & acceleration_model_file) override;
+            virtual void computeFrameDragAcceleration() override;
+            virtual void computeAccelerationTerm() override;
+            virtual void computeAccelerationTerm(const bool & generate_derivatives) override;
+            virtual void computePointMassGravityTimeDerivatives() override;
+            virtual void populateInstrumentationFile(std::ofstream & acceleration_model_file) override;
             
         protected:
             // fields

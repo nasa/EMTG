@@ -25,10 +25,7 @@ namespace EMTG
     namespace Astrodynamics
     {
         //constructor
-        KeplerPropagator::KeplerPropagator(missionoptions& myOptions,
-            Astrodynamics::universe& myUniverse,
-            const size_t& numStates) :
-            PropagatorBase(myUniverse)
+        KeplerPropagator::KeplerPropagator(const size_t& numStates)
         {
         }
     }//end namespace Astrodynamics

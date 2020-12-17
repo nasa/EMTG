@@ -63,6 +63,7 @@ namespace EMTG
                 const double& imass,
                 const double& iradius,
                 const double& iJ2,
+                const double& iJ2_ref_radius,
                 const double& iflattening_coefficient,
                 const double& iAbsoluteMagnitude,
                 const double& ialbedo,
@@ -102,6 +103,7 @@ namespace EMTG
                 const double& imass, 
                 const double& iradius,
                 const double& iJ2,
+                const double& iJ2_ref_radius,
                 const double& iflattening_coefficient,
                 const double& iAbsoluteMagnitude,
                 const double& ialbedo,
@@ -174,6 +176,7 @@ namespace EMTG
             double radius; //in km
             double flattening_coefficient;//flattening coefficient
             double J2;
+            double J2_ref_radius;
             double AbsoluteMagnitude;
             double albedo;
             double reference_epoch; //in MJD

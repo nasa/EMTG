@@ -21,16 +21,15 @@
 #ifndef THRUST_TERM_H
 #define THRUST_TERM_H
 
-#include "SpacecraftAccelerationModel.h"
-#include "AccelerationModelTerm.h"
 #include "doubleType.h"
+#include "SpacecraftAccelerationModel.h"
+#include "SpacecraftAccelerationModelTerm.h"
 
 namespace EMTG
 {
     namespace Astrodynamics
     {
-        class SpacecraftAccelerationModel;
-        class ThrustTerm : public AccelerationModelTerm
+        class ThrustTerm : public SpacecraftAccelerationModelTerm
         {
         public:
             //constructor
@@ -39,6 +38,11 @@ namespace EMTG
             ~ThrustTerm();
 
             //methods
+
+            inline void setThrustControlLaw(const ThrustControlLaw & control_law_in) { this->control_law = control_law_in; };
+            inline ThrustControlLaw getThrustControlLaw() const { return this->control_law; };
+
+            void processControlLogic();
             virtual void computeAccelerationTerm() override;
             virtual void computeAccelerationTerm(const bool & generate_derivatives) override;
             void populateInstrumentationFile(std::ofstream & acceleration_model_file) override;
@@ -48,6 +52,14 @@ namespace EMTG
 
         protected:
             //fields
+            ThrustControlLaw control_law;
+
+            // spacecraft state w.r.t. the central body
+            math::Matrix<doubleType> r_cb2sc;
+            doubleType r_cb2sc_norm;
+            math::Matrix<doubleType> v_cb2sc;
+            doubleType v_cb2sc_norm;            
+
             doubleType u_x;
             doubleType u_y;
             doubleType u_z;

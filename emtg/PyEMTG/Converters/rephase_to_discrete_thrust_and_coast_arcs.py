@@ -265,6 +265,11 @@ class phaseBlock(object):
             newJourney.stage_after_arrival = 0
         if not isFirst:
             newJourney.stage_after_departure = 0
+
+        #step 12: please don't print so many free point boundaries in the target spec file...
+        #if the old journey did not end with a free point, turn off the boundary target printer
+        if baseJourney.arrival_class != 1:
+            newJourney.FreePointArrival_print_target_spec = 0
             
         return newJourney, phaseIndex
         

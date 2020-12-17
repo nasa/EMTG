@@ -35,6 +35,8 @@ namespace EMTG
         {
             if (!(this->myPropulsionSystemOptions.getThrottleTableFile() == "none") && !(this->myPropulsionSystemOptions.getThrottleTableFile() == "MyThrottleTable.throttletable"))
                 this->myThrottleTable = ThrottleTable(this->myPropulsionSystemOptions.getThrottleTableFile(), this->myPropulsionSystemOptions.getSharpness());
+
+            this->ActivePower = 0.0;
         }
 
         //method to compute system mass

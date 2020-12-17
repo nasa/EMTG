@@ -22,7 +22,7 @@
 #define GRAVITY_TERM_H
 
 #include "SpacecraftAccelerationModel.h"
-#include "AccelerationModelTerm.h"
+#include "SpacecraftAccelerationModelTerm.h"
 #include "body.h"
 #include "doubleType.h"
 
@@ -30,8 +30,7 @@ namespace EMTG
 {
     namespace Astrodynamics
     {
-        class SpacecraftAccelerationModel;
-        class GravityTerm : public AccelerationModelTerm
+        class GravityTerm : public SpacecraftAccelerationModelTerm
         {
             friend class SphericalHarmonicTerm;
 
@@ -44,11 +43,10 @@ namespace EMTG
 
             virtual void computeAccelerationTerm() override;
             virtual void computeAccelerationTerm(const bool & generate_derivatives) override;
-            virtual void computePointMassGravityTimeDerivatives();
-            void populateInstrumentationFile(std::ofstream & acceleration_model_file) override;
+            virtual void populateInstrumentationFile(std::ofstream & acceleration_model_file) override;
             GravityTerm* clone() const override { return new GravityTerm(*this); }
-			
-
+            virtual void computePointMassGravityTimeDerivatives();
+            
         protected:
             void computeScBodyCBtriangle(const bool & generate_derivatives);
             void computePointMassGravityAcceleration(const bool & generate_derivatives);
@@ -85,14 +83,9 @@ namespace EMTG
             // spacecraft's position vector
             math::Matrix<double> da_cb2scdr_cb2body;
 
-            // partial of the gravitating body position vector relative to the central body
+            // explicit partial of the gravitating body position vector relative to the central body
             // w.r.t. the current epoch
             math::Matrix<double> dr_cb2bodydcurrent_epoch;
-
-            // partial of the gravitating body position vector relative to the central body
-            // w.r.t. the propagation variables 
-            math::Matrix<double> dr_cb2bodydProp_vars;
-
 
         };
     }

@@ -3,8 +3,9 @@ std::string,journey_name,,,default,,,Journey name,Journey name
 std::string,journey_central_body,,,Sun,,,Journey central body name,Journey central body name
 std::vector<int>,destination_list,,2,"[3, 4]","[-1, -1]","[inf, inf]","destination list, as indices from the Universe file","destination list, as indices from the Universe file"
 std::vector<int>,sequence,,inf,[],1,inf,"flyby sequence, as indices from the Universe file","flyby sequence, as indices from the Universe file"
-PhaseType,phase_type,,,2,0,10,"mission type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase, #9: variable (do not use), #10: ProbeEntryPhase",phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable (do not use)\n#10 ProbeEntryPhase
+PhaseType,phase_type,,,2,0,11,"mission type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase, #9: variable (do not use), #10: ProbeEntryPhase, #11 ControlLawThrustPhase",phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable (do not use)\n#10 ProbeEntryPhase\n#11 ControlLawThrustPhase
 size_t,impulses_per_phase,,,1,0,inf,impulses per phase,impulses per phase
+ThrustControlLaw,thrust_control_law,,,1,1,2,"Thrust control law,#0: Cartesian, #1: Velocity direction, #2: anti-velocity direction",Thrust control law\n#0: Cartesian\n#1: Velocity direction\n1#2: anti-velocity direction
 ControlMagnitudeType,force_unit_magnitude_control,,,0,0,2,"Force unit magnitude control?,#0: free control magnitude,#1: force unit magnitude,#2: force zero magnitude",Force unit magnitude control?\n#0: free control magnitude\n#1: force unit magnitude\n#2: force zero magnitude
 bool,force_fixed_inertial_control,,,0,0,1,Force fixed inertial control? All control vectors in a phase must be identical if this is selected.,Force fixed inertial control? All control vectors in a phase must be identical if this is selected.
 bool,override_num_steps,,,0,0,1,Override this journey's number of steps?,Override this journey's number of steps?
@@ -17,7 +18,7 @@ bool,override_integration_step_size,,,0,0,1,Override global integration step siz
 double,integration_step_size,,,86400,0,1000000,integration step size (s),integration step size (s)
 bool,override_flyby_altitude_bounds,,,0,0,1,Override journey flyby altitude?,Override journey flyby altitude?
 std::vector<double>,flyby_altitude_bounds,,2,"[300.0, 1.0e+6]","[0.0, 1.0]","[inf, inf]","Lower and upper bound on journey flyby altitude (only applies to the departure flyby, if there is one)","Lower and upper bound on journey flyby altitude (only applies to the departure flyby, if there is one)"
-bool,PeriapseArrival_override_altitude,,,0,0,1,Override journey flyby altitude?,Override journey flyby altitude?
+bool,PeriapseArrival_override_altitude,,,1,0,1,Override journey flyby altitude?,Override journey flyby altitude?
 std::vector<double>,PeriapseArrival_altitude_bounds,,2,"[300.0, 1.0e+6]","[0.0, 1.0]","[inf, inf]",Lower and upper bound on journey flyby altitude (km),Lower and upper bound on journey flyby altitude (km)
 std::vector<double>,PeriapseDeparture_altitude_bounds,,2,"[185.0, 185.0]","[0.0, 1.0]","[inf, inf]",PeriapseDeparture altitude bounds (in km),PeriapseDeparture altitude bounds (in km)
 size_t,num_interior_control_points,,,1,1,inf,number of interior control points for parallel shooting phase types,number of interior control points for parallel shooting phase types

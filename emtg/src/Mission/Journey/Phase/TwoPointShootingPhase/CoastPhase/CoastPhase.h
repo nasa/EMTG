@@ -95,7 +95,7 @@ namespace EMTG
             virtual void output_ephemeris(std::ofstream& outputfile, std::ofstream& acceleration_model_file);
 
             //process goes in the specialized phase
-            void process_phase(const std::vector<doubleType>& X,
+            virtual void process_phase(const std::vector<doubleType>& X,
                 size_t& Xindex,
                 std::vector<doubleType>& F,
                 size_t& Findex,
@@ -108,7 +108,7 @@ namespace EMTG
 
             virtual void calcbounds_match_point_constraints();
 
-            void calcbounds_virtual_propellant_tanks(); //ACS
+            virtual void calcbounds_virtual_propellant_tanks(); //ACS
 
             void calcbounds_deltav_contribution();
 

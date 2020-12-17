@@ -298,6 +298,20 @@ namespace EMTG
                     this->EventLeftEpoch += X[this->Xindices_EventLeftEpoch[listIndex]];
                 }
                 this->state_before_event(7) = this->EventLeftEpoch;
+
+                //let's do a check to make sure that the central body exists wrt the Sun at this epoch. If it doesn't then we're going to have a kaboom so let's throw an error and make SNOPT walk back
+                if (this->myUniverse->central_body.spice_ID != 10)//because the Sun always exists wrt itself{
+                {
+                    double latestAllowedEpoch = this->myUniverse->MySplineEphemUniverse->getEphemerisWindowClose(this->myUniverse->central_body.spice_ID, 10);
+                    if (this->EventLeftEpoch > latestAllowedEpoch)
+                    {
+                        throw std::runtime_error(this->name + " left epoch is beyond the length of your ephemeris"
+                            + " for the central body with respect to the Sun. EMTG is trying to poll the ephemeris at " + std::to_string(this->EventLeftEpoch _GETVALUE / 86400.0)
+                            + " but the ephemeris ends at " + std::to_string(latestAllowedEpoch / 86400.0) + "."
+                            + " Either don't worry about it because SNOPT and MBH will fix this for you, or get a longer ephemeris."
+                            + " Should you choose to debug, place a breakpoint at " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+                    }
+                }
             }//end process_left_epoch
 
             //function to process the virtual propellant constraint

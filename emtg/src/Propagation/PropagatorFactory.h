@@ -47,9 +47,8 @@ namespace EMTG
 
         PropagatorBase* CreatePropagator(missionoptions* myOptions,
                                          Astrodynamics::universe* myUniverse,
-                                         const size_t & num_STM_rows_in,
-                                         const size_t & num_STM_columns_in,
-                                         const size_t & STM_start_index_in,
+                                         const size_t & numStates_in,
+                                         const size_t & STM_size_in,
                                          math::Matrix <doubleType> & StateLeft,
                                          math::Matrix <doubleType> & StateRight,
                                          math::Matrix <double> & STM,
@@ -61,9 +60,8 @@ namespace EMTG
 
         PropagatorBase* CreateSundmanPropagator(missionoptions* myOptions,
                                                 Astrodynamics::universe* myUniverse,
-                                                const size_t & num_STM_rows_in,
-                                                const size_t & num_STM_columns_in,
-                                                const size_t & STM_start_index_in,
+                                                const size_t & numStates,
+                                                const size_t & STM_size_in,
                                                 math::Matrix <doubleType> & StateLeft,
                                                 math::Matrix <doubleType> & StateRight,
                                                 math::Matrix <double> & STM,

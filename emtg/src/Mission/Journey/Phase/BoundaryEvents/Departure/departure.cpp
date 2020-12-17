@@ -85,6 +85,8 @@ namespace EMTG
             std::string Tag = "p" + std::to_string(this->phaseIndex)
                 + "_departure";
 
+            std::string TagEnd = "pEnd_departure";
+
             //clear the current constraint vector
             this->mySpecializedConstraints.clear();
 
@@ -105,7 +107,7 @@ namespace EMTG
             {
                 if (constraint.find("#") != 0) //don't create a constraint if it is commented out
                 {
-                    if (constraint.find(Tag) < 1024)
+                    if (constraint.find(Tag) < 1024 || (constraint.find(TagEnd) < 1024 && this->phaseIndex == this->myJourneyOptions->number_of_phases - 1))
                     {
                         if (constraint.find("monoprop") < 1024)
                         {
@@ -155,11 +157,53 @@ namespace EMTG
                 Xlowerbounds->push_back(math::SMALL);
                 Xupperbounds->push_back(1.0);
                 X_scale_factors->push_back(1.0);
-                Xdescriptions->push_back(prefix + "journey initial mass increment multiplier");
+                Xdescriptions->push_back(this->prefix + "journey initial mass increment multiplier");
 
                 this->Derivatives_of_StateBeforeEvent.push_back(std::make_tuple<size_t, size_t, double>(Xdescriptions->size() - 1, 6, 1.0));
                 this->derivative_index_of_journey_initial_mass_increment_multiplier = this->Derivatives_of_StateBeforeEvent.size() - 1;
             }
+
+            //journey initial mass constraint
+            if (this->myJourneyOptions->constrain_initial_mass)
+            {
+                this->Flowerbounds->push_back(-this->myJourneyOptions->maximum_initial_mass / this->myJourneyOptions->maximum_mass);
+                this->Fupperbounds->push_back(0.0);
+                this->Fdescriptions->push_back(this->prefix + "journey initial mass constraint");
+
+                //has dependencies on all variables that affect initial mass
+                for (size_t dIndex = 0; dIndex < this->Derivatives_of_StateBeforeEvent.size(); ++dIndex)
+                {
+                    size_t stateIndex = std::get<1>(Derivatives_of_StateBeforeEvent[dIndex]);
+
+                    if (stateIndex == 6)
+                    {
+                        this->dIndex_journey_initial_mass_constraint_wrt_StateBeforeEventDecisionVariables.push_back(dIndex);
+
+                        size_t Xindex = std::get<0>(Derivatives_of_StateBeforeEvent[dIndex]);
+
+                        this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                            Xindex,
+                            this->Gindex_journey_initial_mass_constraint_wrt_StateBeforeEventDecisionVariables);
+                    }
+                }
+
+                //time variables
+                for (size_t dIndex = 0; dIndex < this->Derivatives_of_StateBeforeEvent_wrt_Time.size(); ++dIndex)
+                {
+                    size_t stateIndex = std::get<1>(Derivatives_of_StateBeforeEvent_wrt_Time[dIndex]);
+
+                    if (stateIndex == 6)
+                    {
+                        this->dIndex_journey_initial_mass_constraint_wrt_StateBeforeEventDecisionVariables_wrt_Time.push_back(dIndex);
+
+                        size_t Xindex = std::get<0>(Derivatives_of_StateBeforeEvent_wrt_Time[dIndex]);
+
+                        this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                            Xindex,
+                            this->Gindex_journey_initial_mass_constraint_wrt_StateBeforeEventDecisionVariables_wrt_Time);
+                    }
+                }
+            }//end journey initial mass constraint
         }//end calcbounds_mass_multipliers()
 
         void DepartureEvent::calcbounds_left_mass_continuity_constraint()
@@ -180,13 +224,13 @@ namespace EMTG
             for (size_t dIndex = 0; dIndex < PreviousEvent_Derivatives_of_StateAfterEvent.size(); ++dIndex)
             {
                 size_t stateIndex = std::get<1>(PreviousEvent_Derivatives_of_StateAfterEvent[dIndex]);
-                if (stateIndex == 6)
-                {
-                    this->dIndex_LeftMassContinuity_PreviousArrivalEventDecisionVariables.push_back(dIndex);
-                    this->create_sparsity_entry(this->Fdescriptions->size() - 1,
-                        std::get<0>(PreviousEvent_Derivatives_of_StateAfterEvent[dIndex]),
-                        this->Gindex_LeftMassContinuity_PreviousArrivalEventDecisionVariables);
-                }
+if (stateIndex == 6)
+{
+    this->dIndex_LeftMassContinuity_PreviousArrivalEventDecisionVariables.push_back(dIndex);
+    this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+        std::get<0>(PreviousEvent_Derivatives_of_StateAfterEvent[dIndex]),
+        this->Gindex_LeftMassContinuity_PreviousArrivalEventDecisionVariables);
+}
             }//end loop over decision variables that affect the previous event's "state after event"
 
             //with respect to time
@@ -233,11 +277,11 @@ namespace EMTG
         //**************************************process functions
         void DepartureEvent::
             process_event_left_side(const std::vector<doubleType>& X,
-                                    size_t& Xindex,
-                                    std::vector<doubleType>& F,
-                                    size_t& Findex,
-                                    std::vector<double>& G,
-                                    const bool& needG)
+                size_t& Xindex,
+                std::vector<doubleType>& F,
+                size_t& Findex,
+                std::vector<double>& G,
+                const bool& needG)
         {
             if (this->hasWaitTime)
                 this->EventWaitTime = X[Xindex++];
@@ -246,11 +290,11 @@ namespace EMTG
 
         void DepartureEvent::
             process_mass_multipliers(const std::vector<doubleType>& X,
-                                     size_t& Xindex,
-                                     std::vector<doubleType>& F,
-                                     size_t& Findex,
-                                     std::vector<double>& G,
-                                     const bool& needG)
+                size_t& Xindex,
+                std::vector<doubleType>& F,
+                size_t& Findex,
+                std::vector<double>& G,
+                const bool& needG)
         {
             if (this->isFirstEventInJourney
                 && this->myJourneyOptions->variable_mass_increment)
@@ -260,7 +304,7 @@ namespace EMTG
                     - this->myJourneyOptions->minimum_starting_mass_increment);
 
                 this->initial_mass_increment = this->journey_initial_mass_increment_multiplier
-                    * mass_scale;
+                    * mass_scale + this->myJourneyOptions->minimum_starting_mass_increment;
 
 
                 std::get<2>(this->Derivatives_of_StateBeforeEvent[this->derivative_index_of_journey_initial_mass_increment_multiplier])
@@ -272,6 +316,42 @@ namespace EMTG
             }
 
             this->state_before_event(6) += this->initial_mass_increment;
+
+            //journey initial mass constraint
+            if (this->myJourneyOptions->constrain_initial_mass)
+            {
+                F[Findex++] = (this->state_before_event(6) - this->myJourneyOptions->maximum_initial_mass) / this->myJourneyOptions->maximum_mass;
+
+                //has dependencies on all variables that affect initial mass
+                for (size_t varIndex = 0; varIndex < this->dIndex_journey_initial_mass_constraint_wrt_StateBeforeEventDecisionVariables.size(); ++varIndex)
+                {
+                    size_t dIndex = this->dIndex_journey_initial_mass_constraint_wrt_StateBeforeEventDecisionVariables[varIndex];
+
+                    double TheDerivative = std::get<2>(Derivatives_of_StateBeforeEvent[dIndex]);
+
+                    size_t Gindex = this->Gindex_journey_initial_mass_constraint_wrt_StateBeforeEventDecisionVariables[varIndex];
+                    size_t Xindex = this->jGvar->operator[](Gindex);
+
+                    G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                        * TheDerivative
+                        / this->myJourneyOptions->maximum_mass;
+                }//end non-time derivatives
+
+                //time derivatives
+                for (size_t varIndex = 0; varIndex < this->dIndex_journey_initial_mass_constraint_wrt_StateBeforeEventDecisionVariables_wrt_Time.size(); ++varIndex)
+                {
+                    size_t dIndex = this->dIndex_journey_initial_mass_constraint_wrt_StateBeforeEventDecisionVariables_wrt_Time[varIndex];
+
+                    double TheDerivative = std::get<2>(Derivatives_of_StateBeforeEvent_wrt_Time[dIndex]);
+
+                    size_t Gindex = this->Gindex_journey_initial_mass_constraint_wrt_StateBeforeEventDecisionVariables_wrt_Time[varIndex];
+                    size_t Xindex = this->jGvar->operator[](Gindex);
+
+                    G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                        * TheDerivative
+                        / this->myJourneyOptions->maximum_mass;
+                }//end time derivatives
+            }//end journey initial mass constraint
         }//end process_mass_multipliers()
 
 

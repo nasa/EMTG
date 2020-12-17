@@ -32,10 +32,8 @@ namespace EMTG {
         {
         public:
             // constructors
-            IntegratedPropagator(universe & myUniverse,
-                                 const size_t & STM_rows_in,
-                                 const size_t & STM_columns_in,
-                                 const size_t & STM_start_index_in);
+            IntegratedPropagator(const size_t & numStates_in,
+                                 const size_t & STM_size_in);
 
             // methods
             virtual IntegratedPropagator* clone() const = 0;
@@ -43,65 +41,52 @@ namespace EMTG {
             // set the integrand
             inline void setIntegrand(Integration::Integrand * integrand_in) { this->integrand = integrand_in; };
 
-            inline void setdStepSizedPropVar(const double & dstep_sizedProp_var_in) { this->dstep_sizedProp_var = dstep_sizedProp_var_in; }
-            inline void setdCurrentIndVardPropVar(const double & dcurrent_ind_vardProp_var_in) { this->dcurrent_ind_vardProp_var = dcurrent_ind_vardProp_var_in; }
-            inline void setdCurrentIndVardPropVarPrevious(const double & dcurrent_ind_vardProp_var_previous_in)
-            {
-                this->dcurrent_ind_vardProp_var_previous = dcurrent_ind_vardProp_var_previous_in;
-            }
+            inline void setdStepSizedPropVar(const double & dstep_sizedProp_var_in) { this->dstep_sizedProp_var = dstep_sizedProp_var_in; };
 
             // set the integration_scheme and link the propagator and integration_scheme current_independent_variable pointers
-            inline void setIntegrationScheme(Integration::IntegrationScheme * integration_scheme_in) 
-            { 
-                this->integration_scheme = integration_scheme_in; 
-            };
+            inline void setIntegrationScheme(Integration::IntegrationScheme * integration_scheme_in) { this->integration_scheme = integration_scheme_in; };
 
-            // set the actual number of states that you want the integration_scheme to integrate
-            // as the integration_scheme's state vector is state+STM
-            inline void setNumStatesToIntegrate(const size_t & num_states_in) 
+            virtual inline std::vector<double> getPropagationHistory() const override  
             { 
-                this->num_states_to_integrate = num_states_in; 
-                this->integration_scheme->setNumStatesToIntegratePtr(this->num_states_to_integrate);
+                if (this->propagation_history.size() > 0)
+                {
+                    return this->propagation_history;
+                }
+                else
+                {
+                    throw std::runtime_error("propagation history not stored...set using PropagatorBase::setStorePropagationHistory(bool)");
+                }
             }
-
-            inline size_t getSTMrowDim() const { return this->num_STM_row; }
-            inline size_t getSTMcolDim() const { return this->num_STM_col; }
-            inline size_t getSTMstartIndex() const { return this->STM_start_index; }
 
             virtual void propagate(const doubleType & propagation_span, const bool & needSTM) = 0;
             virtual void propagate(const doubleType & propagation_span, const math::Matrix <doubleType> & control, const bool & needSTM) = 0;
 
         protected:
 
-            void unpackStates(const math::Matrix<doubleType> & state_left, const bool & STM_needed);
-            void packStates(math::Matrix<doubleType> & state_right, 
-                            const math::Matrix<double> & dstate_rightdProp_vars,
-                            math::Matrix<double> & STM, 
-                            const bool & STM_needed);
+            void propagatorSetup(const math::Matrix<doubleType> & state_left, 
+                                 math::Matrix<double> & STM, 
+                                 const bool & STM_needed);
+            void propagatorTeardown(const math::Matrix<doubleType> & state_left,
+                                    math::Matrix<doubleType> & state_right,
+                                    math::Matrix<double> & STM_ptr,
+                                    const doubleType & propagation_span);
 
             // fields
-
             Integration::Integrand * integrand;
             Integration::IntegrationScheme * integration_scheme;
 
             // actual number of states that you want the integrtion_scheme to integrate, overriding any of its defaults
+            // TODO: remove this once we refactor the integrator
             size_t num_states_to_integrate;
 
-            // STM row dimension
-            size_t num_STM_row;
-
-            // STM column dimension
-            size_t num_STM_col;
-
-            // index in the state vector where STM entries begin
-            size_t STM_start_index;
-
-            // dummy control vector for when we call the propagator without control
-            math::Matrix <doubleType> zero_control;
+            // STM size
+            size_t STM_size;
 
             // create augmented state vectors to feed to the integration_scheme
-            math::Matrix<doubleType> state_left_augmented;
-            math::Matrix<doubleType> state_right_augmented;
+            math::Matrix<doubleType> state_left;
+            math::Matrix<doubleType> state_right;
+            math::Matrix<double> STM_left;
+            math::Matrix<double> STM_right;
 
             // Partial of the current propagation step size w.r.t. the current propagation variable (flight times or total angle)
             double dstep_sizedProp_var;

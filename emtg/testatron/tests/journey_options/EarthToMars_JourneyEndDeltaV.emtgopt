@@ -1,0 +1,182 @@
+#EMTGv9 .emtgopt file version 2
+
+#mission name
+mission_name EarthToMars_JourneyEndDeltaV
+#objective function type
+#0: minimum deltaV
+#1: minimum time
+#2: maximum final mass
+#3: maximize initial mass
+#4: depart as late as possible in the window
+#5: depart as early as possible in the window
+#6: maximize orbit energy
+#7: minimize launch mass
+#8: arrive as early as possible
+#9: arrive as late as possible
+#10: minimum propellant (not the same as #2)
+#11: maximum dry/wet ratio
+#12: maximum arrival kinetic energy
+#13: minimum BOL power
+#14: maximize log_10(final mass)
+#15: maximum log_e(final mass)
+#16: maximum dry mass margin
+#17: maximum dry mass
+#18: maximum log_10(dry mass)
+#19: maximum log_e(dry mass)
+#20: minimize chemical fuel
+#21: minimize chemical oxidizer
+#22: minimize electric propellant
+#23: minimize total propellant
+#24: minimize waypoint tracking error
+#25: minimize initial impulse magnitude
+#26: maximize distance from central body
+objective_type 0
+#Enable ACE feasible point finder?
+ACE_feasible_point_finder 1
+#optimality tolerance
+snopt_optimality_tolerance 0.1
+#Universe folder
+universe_folder C:\emtg\testatron\universe\
+#HardwarePath
+HardwarePath C:\emtg\testatron\HardwareModels\
+#Override the working directory?
+override_working_directory 1
+#User-defined working directory
+forced_working_directory C:\emtg\testatron\tests\journey_options
+#which inner loop solver to run?
+#0: none, evaluate trialX
+#1: run MBH
+#2: run constrained DE
+#3: run NLP using trialX as initial guess
+#4: filament walker
+run_inner_loop 0
+#Enter any user data that should be appended to the .emtg file.
+#This is typically used in python wrappers
+user_data 
+
+
+
+BEGIN_JOURNEY
+
+#Journey name
+journey_name EarthToMarsSOI
+#Journey central body name
+journey_central_body SUN
+#journey arrival type
+#0: insertion into parking orbit (use chemical Isp)
+#1: rendezvous (use chemical Isp)
+#2: intercept with bounded V_infinity
+#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)
+#4: match final v-infinity vector
+#5: match final v-infinity vector (low-thrust)
+#6: capture spiral
+#7: momentum transfer (kinetic impactor)
+arrival_type 2
+#Journey forced terminal coast (in days)
+forced_terminal_coast 15.0
+#journey arrival boundary class
+#0: Ephemeris-pegged (default EMTG)
+#1: Free point
+#2: Ephemeris-referenced
+#3: Periapse
+arrival_class 2
+#journey arrival ellipsoid axes (3)
+arrival_ellipsoid_axes 982897.38322896 982897.38322896 982897.38322896
+#Journey-end delta-v (km/s)
+journey_end_deltav 3.0
+#ECC for ephemeris pegged orbit insertion
+ephemeris_pegged_orbit_insertion_ECC 1e-10
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+p0MGALTEphemerisPeggedLaunchDirectInsertion: event left state epoch,54339.40295066786347888410
+p0MGALTEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote,6.66522115368869005891
+p0MGALTEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote,10.59312627712648691158
+p0MGALTEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote,1.47845324601832439626
+p0MGALT: phase flight time,249.88372382087425194186
+p0MGALTEphemerisReferencedInterceptExterior: event interface state vMAG,4.26410897684548650943
+p0MGALTEphemerisReferencedInterceptExterior: event interface state vRA,14.48551152181845225186
+p0MGALTEphemerisReferencedInterceptExterior: event interface state vDEC,-176.23936950455561145645
+p0MGALTEphemerisReferencedInterceptExterior: event interface state RA,11.68724823301219828409
+p0MGALTEphemerisReferencedInterceptExterior: event interface state DEC,-1.06142948266397429968
+p0MGALTEphemerisReferencedInterceptExterior: event left state mass,467.07384179697305626178
+p0MGALT: virtual chemical fuel,0.00000000005251999997
+p0MGALT: virtual electric propellant,58.12615820313156689281
+p0MGALT: step 0 u_x,0.64426627031753391783
+p0MGALT: step 0 u_y,0.56846286714228200232
+p0MGALT: step 0 u_z,0.18769904740911247387
+p0MGALT: step 1 u_x,0.69819578216801092552
+p0MGALT: step 1 u_y,0.59565045738734490044
+p0MGALT: step 1 u_z,0.24731012931766627183
+p0MGALT: step 2 u_x,0.66414525868315510415
+p0MGALT: step 2 u_y,0.63337738229638240739
+p0MGALT: step 2 u_z,0.33387284457466925858
+p0MGALT: step 3 u_x,0.59353069543827641219
+p0MGALT: step 3 u_y,0.75789978297120308426
+p0MGALT: step 3 u_z,0.23520427080029993050
+p0MGALT: step 4 u_x,0.48142406290228478838
+p0MGALT: step 4 u_y,0.79792207427040295897
+p0MGALT: step 4 u_z,0.29011590192946701272
+p0MGALT: step 5 u_x,0.35434809732359640044
+p0MGALT: step 5 u_y,0.81718123151320365416
+p0MGALT: step 5 u_z,0.22578892399121119894
+p0MGALT: step 6 u_x,0.38440460746005089554
+p0MGALT: step 6 u_y,0.84703466054181908440
+p0MGALT: step 6 u_z,0.32412468182013220996
+p0MGALT: step 7 u_x,0.31662325018329218196
+p0MGALT: step 7 u_y,0.81646062236142258328
+p0MGALT: step 7 u_z,0.44859459159246717341
+p0MGALT: step 8 u_x,0.03712686678176457811
+p0MGALT: step 8 u_y,0.77910237006776705826
+p0MGALT: step 8 u_z,0.58458161746476156040
+p0MGALT: step 9 u_x,-0.07324351331697109835
+p0MGALT: step 9 u_y,0.63692171271644770769
+p0MGALT: step 9 u_z,0.58042520680233278263
+p0MGALT: step 10 u_x,-0.15311319419775426542
+p0MGALT: step 10 u_y,0.62263413880431706104
+p0MGALT: step 10 u_z,0.74642295317004170307
+p0MGALT: step 11 u_x,-0.30296922256487657243
+p0MGALT: step 11 u_y,0.41639177876650013133
+p0MGALT: step 11 u_z,0.85146766637094062347
+p0MGALT: step 12 u_x,-0.26140745590451164304
+p0MGALT: step 12 u_y,0.21049783914365605142
+p0MGALT: step 12 u_z,0.90239133376699753875
+p0MGALT: step 13 u_x,-0.30836353852915854290
+p0MGALT: step 13 u_y,0.03639723726929822156
+p0MGALT: step 13 u_z,0.89807964906566084551
+p0MGALT: step 14 u_x,-0.37148286205250524716
+p0MGALT: step 14 u_y,-0.35571955486560447035
+p0MGALT: step 14 u_z,0.61226487415403973991
+p0MGALT: step 15 u_x,-0.27554600345381030646
+p0MGALT: step 15 u_y,-0.52441416483174674301
+p0MGALT: step 15 u_z,0.77285577629880974904
+p0MGALT: step 16 u_x,-0.27846023201027703120
+p0MGALT: step 16 u_y,-0.67873050328058970315
+p0MGALT: step 16 u_z,0.58675673921488313844
+p0MGALT: step 17 u_x,-0.17325707956194236203
+p0MGALT: step 17 u_y,-0.72057869474251723396
+p0MGALT: step 17 u_z,0.60240315486821960356
+p0MGALT: step 18 u_x,-0.06118952887057349521
+p0MGALT: step 18 u_y,-0.74311534756903940835
+p0MGALT: step 18 u_z,0.60163056908526213462
+p0MGALT: step 19 u_x,0.50110645589944491363
+p0MGALT: step 19 u_y,-0.79480460457893442605
+p0MGALT: step 19 u_z,0.24391379004062563318
+END_TRIALX
+
+END_JOURNEY

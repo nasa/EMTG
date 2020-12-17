@@ -48,6 +48,7 @@ include_directories(Mission
                     Mission/Journey/Phase/TwoPointShootingPhase/MGAnDSMs/ProbeEntryPhase
                     Mission/Journey/Phase/TwoPointShootingPhase/CoastPhase
                     Mission/Journey/Phase/TwoPointShootingPhase/CoastPhase/SundmanCoastPhase
+                    Mission/Journey/Phase/TwoPointShootingPhase/CoastPhase/ControlLawThrustPhase
                     Mission/Journey/Phase/ParallelShootingPhase
                     Mission/Journey/Phase/ParallelShootingPhase/PSFBphase
                     Mission/Journey/Phase/ParallelShootingPhase/PSBIphase

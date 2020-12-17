@@ -49,7 +49,7 @@ namespace EMTG
 
             this->StateAfterPropagationBeforeDSM = math::Matrix<doubleType>(10, 1, 0.0);
             this->StateAfterDSMBeforeTCM = math::Matrix<doubleType>(10, 1, 0.0);
-            this->output_state.resize(10 + 12 * 12, 1, 0.0);
+            this->output_state.resize(10 + 11 * 11, 1, 0.0);
             this->empty3.resize(3, 1, 0.0);
             this->myPropagator = nullptr;
             this->mySpacecraftAccelerationModel = nullptr;
@@ -114,7 +114,7 @@ namespace EMTG
             else //integrated propagator
             {
                 this->isKeplerian = false;
-                this->STM = math::Matrix<double>(14, math::identity);
+                this->STM = math::Matrix<double>(11, math::identity);
             }
         }//end constructor
 

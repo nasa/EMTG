@@ -117,24 +117,20 @@ namespace EMTG
                 this->myUniverse,
                 this->Xdescriptions,
                 this->mySpacecraft,
-                13,//STM rows
-                13,//STM columns
-                10);
+                14); //STM size
             this->myCoastSpacecraftAccelerationModel->setDutyCycle(0.0);
 
             //coast EOM
             this->myCoastEOM.setSpacecraftAccelerationModel(this->myCoastSpacecraftAccelerationModel);
 
             //coast integration scheme
-            this->myCoastIntegrationScheme = CreateIntegrationScheme(&this->myCoastEOM, 10 + (13 * 13), 10);
-            this->myCoastIntegrationScheme->setNumStatesToIntegratePtr(this->total_number_of_states_to_integrate);
+            this->myCoastIntegrationScheme = CreateIntegrationScheme(&this->myCoastEOM, 10, 14);
             
             //coast propagator
             this->myCoastPropagator = CreatePropagator(this->myOptions,
                 this->myUniverse,
-                13,
-                13,
                 10,
+                14,
                 this->StateAfterThrustInertial,
                 this->StateStepRightInertial,
                 this->CoastSTM,

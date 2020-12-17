@@ -45,6 +45,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Converters\Convert_emtgopt_v1_to_v2.py" />
+    <Compile Include="Converters\convert_old_PeriapseLaunchOrImpulsiveDeparture_to_PeriapseLaunch.py" />
     <Compile Include="Converters\convert_to_single_phase_journeys.py" />
     <Compile Include="Converters\Convert_TwoPointShootingLowThrust_to_PSFB.py" />
     <Compile Include="Converters\MGAnDSMs_HiFi_to_LowFi_Flybys.py" />
@@ -192,6 +193,7 @@
     <Compile Include="StateConverter.py" />
     <Compile Include="test_PyMissionOptions.py" />
     <Compile Include="ThrottleTable.py" />
+    <Compile Include="timeUtilities.py" />
     <Compile Include="Universe.py" />
     <Compile Include="UniverseNotebook.py" />
   </ItemGroup>

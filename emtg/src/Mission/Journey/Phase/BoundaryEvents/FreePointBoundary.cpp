@@ -81,10 +81,10 @@ namespace EMTG
             }
             else
             {
-                this->STM = math::Matrix<double>(14, math::identity);
+                this->STM = math::Matrix<double>(11, math::identity);
                 this->dPropagatedStatedIndependentVariable = math::Matrix<double>(10, 2, 0.0);
-                this->StateBeforeEventBeforePropagation = math::Matrix<doubleType>(10 + 13 * 13, 1, 0.0);
-                this->state_before_event = math::Matrix<doubleType>(10 + 13 * 13, 1, 0.0);
+                this->StateBeforeEventBeforePropagation = math::Matrix<doubleType>(10, 1, 0.0);
+                this->state_before_event = math::Matrix<doubleType>(10, 1, 0.0);
             }
 
             //set up propagation
@@ -114,9 +114,7 @@ namespace EMTG
                         Universe,
                         this->Xdescriptions,
                         mySpacecraft,
-                        13,//STM rows
-                        13,//STM columns
-                        10);
+                        11); //STM size
                     this->mySpacecraftAccelerationModel->setDutyCycle(1.0);
 
                     //EOM
@@ -124,15 +122,13 @@ namespace EMTG
                     this->myEOM.setSpacecraftAccelerationModel(this->mySpacecraftAccelerationModel);
 
                     //integration scheme
-                    this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, 10 + (13 * 13), 10);
-                    this->myIntegrationScheme->setNumStatesToIntegratePtr(this->total_number_of_states_to_integrate);
+                    this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, 10, 11);
 
                     //propagator
                     this->myPropagator = Astrodynamics::CreatePropagator(myOptions,
                         Universe,
-                        13,
-                        13,
                         10,
+                        11,
                         this->StateBeforeEventBeforePropagation,
                         this->state_before_event,
                         this->STM,
@@ -536,8 +532,8 @@ namespace EMTG
 
                 //Step 5.3: then we need to propagate
                 this->total_number_of_states_to_integrate = needG
-                    ? 10 + 13 * 13
-                    : 10;
+                    ? 11 + 11 * 11
+                    : 11;
                 this->dPropagatedStatedIndependentVariable.assign_zeros();
                 this->myPropagator->setCurrentEpoch(this->ReferenceEpoch);
                 this->myPropagator->setIndexOfEpochInStateVec(7);
@@ -564,7 +560,7 @@ namespace EMTG
                     if (this->myPropagatorType == PropagatorType::KeplerPropagator)
                         this->dStateBeforeEvent_dStateBeforeEventICRF(i, 7) = (PropagationTime >= 0.0 ? 1.0 : -1.0) * this->dPropagatedStatedIndependentVariable(i);
                     else
-                        this->dStateBeforeEvent_dStateBeforeEventICRF(i, 7) = this->STM(i, 13); //remember, the initial epoch is the propagation time, too
+                        this->dStateBeforeEvent_dStateBeforeEventICRF(i, 7) = this->STM(i, 10); //remember, the initial epoch is the propagation time, too
                 }
 
                 //Step 7: assemble the derivatives of state_before_event with respect to the encoded state

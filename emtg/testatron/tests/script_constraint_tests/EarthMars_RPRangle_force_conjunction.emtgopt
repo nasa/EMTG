@@ -1,0 +1,106 @@
+#EMTGv9 .emtgopt file version 2
+
+#mission name
+mission_name EarthMars_RPRangle_force_conjunction
+#flight time bounds (days)
+total_flight_time_bounds 0.0 2000.0
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable phase type
+#10: ProbeEntryPhase
+#11 ControlLawThrustPhase
+mission_type 6
+#Enable ACE feasible point finder?
+ACE_feasible_point_finder 1
+#NLP major iterations
+snopt_major_iterations 500
+#Universe folder
+universe_folder c:/emtg/testatron/Universe
+#thrust polynomial coefficients
+engine_input_thrust_coefficients 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+#mass flow rate polynomial coefficients
+engine_input_mass_flow_rate_coefficients 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+#thruster input power bounds (kW)
+engine_input_power_bounds 0.0 5.0
+#HardwarePath
+HardwarePath c:/emtg/testatron/HardwareModels/
+#LaunchVehicleLibraryFile
+LaunchVehicleLibraryFile default.emtg_launchvehicleopt
+#LaunchVehicleKey
+LaunchVehicleKey ExampleRocket
+#state representation for periapse boundary conditions (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+PeriapseBoundaryStateRepresentation 2
+#Shorten output file names?
+short_output_file_names 0
+#which inner loop solver to run?
+#0: none, evaluate trialX
+#1: run MBH
+#2: run constrained DE
+#3: run NLP using trialX as initial guess
+#4: filament walker
+run_inner_loop 3
+#Enter any user data that should be appended to the .emtg file.
+#This is typically used in python wrappers
+user_data 
+
+
+
+BEGIN_JOURNEY
+
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable (do not use)
+#10 ProbeEntryPhase
+#11 ControlLawThrustPhase
+phase_type 6
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_RPR_cb_3_0.0_3.0
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: event left state epoch,54063.09037249979883199558
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote,3.13261490645312790093
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote,47.35810013402871732069
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote,0.36778952135864506623
+p0MGAnDSMs: phase flight time,1925.00913551026724235271
+p0MGAnDSMsEphemerisPeggedLTRendezvous: event left state mass,196.75887555520591831737
+p0MGAnDSMs: virtual chemical fuel,170.61876594542744101091
+p0MGAnDSMs: virtual chemical oxidizer,157.82235849952454032064
+p0MGAnDSMsForwardSubPhase0: burn index,0.40996031490483858528
+p0MGAnDSMsForwardSubPhase0: DSM x component,2.99951083273035123966
+p0MGAnDSMsForwardSubPhase0: DSM y component,0.55147534500537176427
+p0MGAnDSMsForwardSubPhase0: DSM z component,0.43772891607310526751
+p0MGAnDSMsBackwardSubPhase0: burn index,0.59003968509526150132
+END_TRIALX
+
+END_JOURNEY

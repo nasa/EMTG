@@ -129,10 +129,10 @@ namespace EMTG
             this->SpacecraftStateBackward.resize(this->numberOfBackwardSubphases - 1, math::Matrix<doubleType>(this->numStatesToPropagate, 1, 0.0));
 
             //size the SPTM vectors
-            this->ForwardSPTM.resize(this->numberOfForwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 2, math::identity));
-            this->BackwardSPTM.resize(this->numberOfBackwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 2, math::identity));
-            this->CumulativeForwardSPTM.resize(this->numberOfForwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 2, math::identity));
-            this->CumulativeBackwardSPTM.resize(this->numberOfBackwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 2, math::identity));
+            this->ForwardSPTM.resize(this->numberOfForwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 3, math::identity));
+            this->BackwardSPTM.resize(this->numberOfBackwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 3, math::identity));
+            this->CumulativeForwardSPTM.resize(this->numberOfForwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 3, math::identity));
+            this->CumulativeBackwardSPTM.resize(this->numberOfBackwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 3, math::identity));
             this->Forward_dPropagatedState_dIndependentVariable = this->myPropagatorType == PropagatorType::IntegratedPropagator ? math::Matrix<double>( 10, 2, 0.0) : math::Matrix<double>(6, 1, 0.0);
             this->Backward_dPropagatedState_dIndependentVariable = this->myPropagatorType == PropagatorType::IntegratedPropagator ? math::Matrix<double>(10, 2, 0.0) : math::Matrix<double>(6, 1, 0.0);
 
@@ -212,7 +212,7 @@ namespace EMTG
 
 
             //size the TCM transition matrix
-            this->TCMTM = math::Matrix<double>(this->numStatesToPropagate + 2, math::identity);
+            this->TCMTM = math::Matrix<double>(this->numStatesToPropagate + 3, math::identity);
         }//end constructor
 
         MGAnDSMs_phase::~MGAnDSMs_phase()
@@ -702,8 +702,8 @@ namespace EMTG
             if (needG)
             {
                 //Step 4: derivatives with respect to control
-                math::Matrix<double> dStateNow_dDecisionVariable(this->numStatesToPropagate + 2, 1, 0.0);
-                math::Matrix<double> dMatchPointState_dDecisionVariable(this->numStatesToPropagate + 2, 1, 0.0);
+                math::Matrix<double> dStateNow_dDecisionVariable(this->numStatesToPropagate + 3, 1, 0.0);
+                math::Matrix<double> dMatchPointState_dDecisionVariable(this->numStatesToPropagate + 3, 1, 0.0);
                 size_t constraintIndex_start = 0; //we need this to control for the fact that the last DSM before the match point does not affect position
 
                 //Step 4.1: Forward Control
@@ -786,6 +786,12 @@ namespace EMTG
 							dMatchPointState_dDecisionVariable(8) = dStateNow_dDecisionVariable(8);
 							dMatchPointState_dDecisionVariable(9) = dStateNow_dDecisionVariable(9);
 						}
+                        else
+                        {
+                            dMatchPointState_dDecisionVariable(6) /= this->BackwardSPTM[backwardSubPhaseIndex](6, 6);
+                            dMatchPointState_dDecisionVariable(8) /= this->BackwardSPTM[backwardSubPhaseIndex](6, 6);
+                            dMatchPointState_dDecisionVariable(9) /= this->BackwardSPTM[backwardSubPhaseIndex](6, 6);
+                        }
 
                         for (size_t constraintIndex = 0; constraintIndex < this->numMatchConstraints; ++constraintIndex)
                         {
@@ -1047,9 +1053,7 @@ namespace EMTG
                 this->myUniverse,
                 this->Xdescriptions,
                 this->mySpacecraft,
-                13,//STM rows
-                13,//STM columns
-                10);
+                11); // STM size
 
             // Reset the spacecraft
             this->mySpacecraft->setActiveStage(this->stageIndex);

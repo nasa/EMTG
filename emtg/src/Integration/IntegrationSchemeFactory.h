@@ -33,6 +33,6 @@ namespace EMTG
 {
     namespace Integration
     {
-        IntegrationScheme* CreateIntegrationScheme(Integrand * myIntegrand, const size_t & total_states_to_integrate, const size_t & num_prop_var_deriv_states);
+        IntegrationScheme* CreateIntegrationScheme(Integrand * myIntegrand, const size_t & num_states, const size_t & STM_size);
     }//end namespace HardwareModels
 }//end namespace EMTG

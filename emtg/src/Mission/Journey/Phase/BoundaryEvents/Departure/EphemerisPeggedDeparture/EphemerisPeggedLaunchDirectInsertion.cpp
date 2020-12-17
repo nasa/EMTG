@@ -392,11 +392,25 @@ namespace EMTG
                 if (needG)
                 {
                     size_t nTimeVariables = this->Xindices_EventLeftEpoch.size();
-                    for (size_t stateIndex = 0; stateIndex < 6; ++stateIndex)
+
+                    if (this->isFirstEventInMission)
                     {
-                        for (size_t Xepoch_index = 1; Xepoch_index < nTimeVariables + 1; ++Xepoch_index)
+                        for (size_t stateIndex = 0; stateIndex < 6; ++stateIndex)
                         {
-                            std::get<2>(this->Derivatives_of_StateBeforeEvent_wrt_Time[stateIndex * nTimeVariables + Xepoch_index + nTimeVariables - 1]) = body_state[stateIndex + 6]_GETVALUE;
+                            for (size_t Xepoch_index = 1; Xepoch_index < nTimeVariables + 1; ++Xepoch_index)
+                            {
+                                std::get<2>(this->Derivatives_of_StateBeforeEvent_wrt_Time[stateIndex * nTimeVariables + Xepoch_index + nTimeVariables - 1]) = body_state[stateIndex + 6]_GETVALUE;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        for (size_t stateIndex = 0; stateIndex < 6; ++stateIndex)
+                        {
+                            for (size_t Xepoch_index = 0; Xepoch_index < nTimeVariables + 0; ++Xepoch_index)
+                            {
+                                std::get<2>(this->Derivatives_of_StateBeforeEvent_wrt_Time[nTimeVariables + stateIndex * nTimeVariables + Xepoch_index - 1]) = body_state[stateIndex + 6]_GETVALUE;
+                            }
                         }
                     }
                 }

@@ -32,6 +32,7 @@ namespace EMTG
                 Astrodynamics::universe* Universe,
                 HardwareModels::Spacecraft* mySpacecraft,
                 missionoptions* myOptions,
+                ReferenceFrame constraint_reference_frame,
                 BoundaryEventBase* myBoundaryEvent,
                 const std::string& constraintDefinition) :
                 SpecializedBoundaryConstraintBase::SpecializedBoundaryConstraintBase(name,
@@ -44,13 +45,14 @@ namespace EMTG
                     myBoundaryEvent,
                     constraintDefinition)
             {
-                this->myReferenceFrame = ReferenceFrame::J2000_BCF;
+                this->myReferenceFrame = constraint_reference_frame;
             }//end constructor
 
             void BoundaryLongitudeConstraint::calcbounds()
             {
                 // Step 1: parse the constraint definition
-				// constraintDefinition is like p0_departure_longitude_84.0_85.0
+                // constraintDefinition is like p0_arrival_Longitude_30.0_30.1_trueofdatebcf
+
                 std::vector<std::string> ConstraintDefinitionCell;
                 std::string splitty_thing = boost::algorithm::to_lower_copy(this->constraintDefinition);
                 boost::split(ConstraintDefinitionCell, splitty_thing, boost::is_any_of("_"), boost::token_compress_on);
@@ -58,12 +60,13 @@ namespace EMTG
                 //Step 2: lower bound
                 this->Flowerbounds->push_back(std::stod(ConstraintDefinitionCell[3]) * math::deg2rad);
 
+
                 //Step 3: upper bound
                 this->Fupperbounds->push_back(std::stod(ConstraintDefinitionCell[4]) * math::deg2rad);
                 this->Fdescriptions->push_back(prefix + "longitude");
 
                 //Step 5: sparsity pattern
-                //derivatives with respect to anything influencing the boundary event's right-hand position vector
+                //derivatives with respect to anything influencing the boundary event's right-hand velocity vector
                 std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StateBeforeEvent = this->myBoundaryEvent->get_Derivatives_of_StateBeforeEvent();
                 std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StateBeforeEvent_wrt_Time = this->myBoundaryEvent->get_Derivatives_of_StateBeforeEvent_wrt_Time();
 
@@ -124,17 +127,25 @@ namespace EMTG
                 //Step 1: get the state in ICRF
                 math::Matrix<doubleType>& StateBeforeEventICRF = this->myBoundaryEvent->get_state_before_event();
 
-                //Step 2: convert to BCF
+                //Step 2: convert to constraint frame
                 this->myUniverse->LocalFrame.construct_rotation_matrices(StateBeforeEventICRF(7), needG);
-                math::Matrix<doubleType> R_from_ICRF_to_J2000BCF = this->myUniverse->LocalFrame.get_R_from_ICRF_to_J2000BCF();
-                this->PositionBeforeEventBCF = R_from_ICRF_to_J2000BCF * StateBeforeEventICRF.getSubMatrix1D(0, 2);
+                math::Matrix<doubleType> R_from_ICRF_to_ConstraintFrame = this->myUniverse->LocalFrame.get_R(ReferenceFrame::ICRF, this->myReferenceFrame);
+                this->PositionBeforeEventConstraintFrame = R_from_ICRF_to_ConstraintFrame * StateBeforeEventICRF.getSubMatrix1D(0, 2);
 
+                //Step 3: compute Longitude magnitude
+                //First, make sure that the probe is not at the pole because there is a singularity at the pole. 
+                doubleType rx = this->PositionBeforeEventConstraintFrame(0);
+                doubleType ry = this->PositionBeforeEventConstraintFrame(1);
+                doubleType rxy = sqrt(rx * rx + ry * ry);
 
-                //Step 3: compute longitude
-                this->Longitude = atan2(this->PositionBeforeEventBCF(1), this->PositionBeforeEventBCF(0));
+                if (rxy < math::SMALL)
+                {
+                    throw std::runtime_error(this->prefix + "The probe is too close to the pole to calculate longitude and its derivatives.");
+                }
+
+                this->Longitude = atan2(ry, rx);
 
                 F[Findex++] = this->Longitude;
-
                 //Step 4: derivatives
                 if (needG)
                 {
@@ -155,17 +166,17 @@ namespace EMTG
                         G[this->Gindex_constraint_wrt_time_variables[entryIndex]] = 0.0;
                     }
 
-                    //Step 4.2: derivatives of longitude w.r.t. BCF states
-                    double dLongitude_dxJ2000BCF = (-this->PositionBeforeEventBCF(1) / (this->PositionBeforeEventBCF(0) * this->PositionBeforeEventBCF(0) + this->PositionBeforeEventBCF(1) * this->PositionBeforeEventBCF(1)))  _GETVALUE;
-                    double dLongitude_dyJ2000BCF = ( this->PositionBeforeEventBCF(0) / (this->PositionBeforeEventBCF(0) * this->PositionBeforeEventBCF(0) + this->PositionBeforeEventBCF(1) * this->PositionBeforeEventBCF(1)))  _GETVALUE;
+                    //Step 4.2: derivatives of longitude w.r.t. CF states
+                    double dlongitude_drx = (-ry / rxy / rxy) _GETVALUE;
+                    double dlongitude_dry = (rx / rxy / rxy) _GETVALUE;
 
                     //Step 4.3: derivatives with respect to non-time variables affecting state Before boundary event
                     std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StateBeforeEvent = this->myBoundaryEvent->get_Derivatives_of_StateBeforeEvent();
-
+                    //position
                     for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
                     {
-                        double dxJ2000BCF_dstateICRF = R_from_ICRF_to_J2000BCF(0, stateIndex) _GETVALUE;
-                        double dyJ2000BCF_dstateICRF = R_from_ICRF_to_J2000BCF(1, stateIndex) _GETVALUE;
+                        double drxConstraintFrame_dstateICRF = R_from_ICRF_to_ConstraintFrame(0, stateIndex) _GETVALUE;
+                        double dryConstraintFrame_dstateICRF = R_from_ICRF_to_ConstraintFrame(1, stateIndex) _GETVALUE;
 
                         for (size_t entryIndex = 0; entryIndex < this->dIndex_with_respect_to_StateBeforeEvent[stateIndex].size(); ++entryIndex)
                         {
@@ -173,9 +184,10 @@ namespace EMTG
                             size_t Gindex = this->Gindex_constraint_wrt_StateBeforeEvent_variables[stateIndex][entryIndex];
                             size_t Xindex = this->jGvar->operator[](Gindex);
 
-                            double Gentry = (dLongitude_dxJ2000BCF * dxJ2000BCF_dstateICRF + dLongitude_dyJ2000BCF * dyJ2000BCF_dstateICRF)
+                            double Gentry = (dlongitude_drx * drxConstraintFrame_dstateICRF
+                                + dlongitude_dry * dryConstraintFrame_dstateICRF)
                                 * std::get<2>(Derivatives_of_StateBeforeEvent[dIndex]);
-                            
+
                             G[Gindex] += this->X_scale_factors->operator[](Xindex)
                                 * Gentry;
                         }
@@ -186,8 +198,8 @@ namespace EMTG
 
                     for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
                     {
-                        double dxJ2000BCF_dstateICRF = R_from_ICRF_to_J2000BCF(0, stateIndex) _GETVALUE;
-                        double dyJ2000BCF_dstateICRF = R_from_ICRF_to_J2000BCF(1, stateIndex) _GETVALUE;
+                        double drxConstraintFrame_dstateICRF = R_from_ICRF_to_ConstraintFrame(0, stateIndex) _GETVALUE;
+                        double dryConstraintFrame_dstateICRF = R_from_ICRF_to_ConstraintFrame(1, stateIndex) _GETVALUE;
 
                         for (size_t entryIndex = 0; entryIndex < this->dIndex_with_respect_to_StateBeforeEvent_wrt_Time[stateIndex].size(); ++entryIndex)
                         {
@@ -195,7 +207,8 @@ namespace EMTG
                             size_t Gindex = this->Gindex_constraint_wrt_StateBeforeEvent_time_variables[stateIndex][entryIndex];
                             size_t Xindex = this->jGvar->operator[](Gindex);
 
-                            double Gentry = (dLongitude_dxJ2000BCF * dxJ2000BCF_dstateICRF + dLongitude_dyJ2000BCF * dyJ2000BCF_dstateICRF)
+                            double Gentry = (+dlongitude_drx * drxConstraintFrame_dstateICRF
+                                + dlongitude_dry * dryConstraintFrame_dstateICRF)
                                 * std::get<2>(Derivatives_of_StateBeforeEvent_wrt_Time[dIndex]);
 
                             G[Gindex] += this->X_scale_factors->operator[](Xindex)
@@ -205,11 +218,11 @@ namespace EMTG
 
 
                     //Step 4.4: derivatives of longitude with respect to frame rotation due to change in epoch
-                    math::Matrix<doubleType> dR_from_ICRF_to_J2000BCF_dt = this->myUniverse->LocalFrame.get_dR_from_ICRF_to_J2000BCF_dt();
-                    this->dPositionBeforeEventBCF_dt = dR_from_ICRF_to_J2000BCF_dt * StateBeforeEventICRF.getSubMatrix1D(0, 2);
+                    math::Matrix<doubleType> dR_from_ICRF_to_ConstraintFrame_dt = this->myUniverse->LocalFrame.get_dRdt(ReferenceFrame::ICRF, this->myReferenceFrame);
+                    this->dPositionBeforeEventConstraintFrame_dt = dR_from_ICRF_to_ConstraintFrame_dt * StateBeforeEventICRF.getSubMatrix1D(0, 2);
 
-                    double timeDerivative = (dLongitude_dxJ2000BCF * this->dPositionBeforeEventBCF_dt(0)
-                        + dLongitude_dyJ2000BCF * this->dPositionBeforeEventBCF_dt(1)) _GETVALUE;
+                    double timeDerivative = (dlongitude_drx * this->dPositionBeforeEventConstraintFrame_dt(0)
+                        + dlongitude_dry * this->dPositionBeforeEventConstraintFrame_dt(1)) _GETVALUE;
 
                     for (size_t entryIndex = 0; entryIndex < this->Gindex_constraint_wrt_time_variables.size(); ++entryIndex)
                     {
@@ -226,7 +239,7 @@ namespace EMTG
             {
                 std::string framestring = this->myUniverse->central_body_name + " " + this->ReferenceFrameStrings[this->myReferenceFrame];
 
-                outputfile << this->myBoundaryEvent->getName() << " longitude (degrees, " << framestring << "): " << this->Longitude _GETVALUE / math::deg2rad  << std::endl;
+                outputfile << this->myBoundaryEvent->getName() << " longitude (degrees, " << framestring << "): " << this->Longitude _GETVALUE / math::deg2rad << std::endl;
             }//end output()
 
         }//end namespace SpecializedConstraints

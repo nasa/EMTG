@@ -26,6 +26,14 @@ namespace EMTG {
         IntegrationScheme::IntegrationScheme(Integrand * integrand_in) : integrand(integrand_in)
         {
         }
+
+        IntegrationScheme::IntegrationScheme(Integrand * integrand_in, 
+                                             const size_t & num_states_in, 
+                                             const size_t & STM_size_in) : integrand(integrand_in), 
+                                             num_states(num_states_in),
+                                             STM_size(STM_size_in)
+        {
+        }
        
 
     } // end namespace Integration

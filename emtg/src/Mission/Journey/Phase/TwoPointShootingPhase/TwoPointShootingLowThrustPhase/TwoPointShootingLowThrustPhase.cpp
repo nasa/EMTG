@@ -108,7 +108,7 @@ namespace EMTG
             for (std::string& constraint : this->myJourneyOptions->PhaseDistanceConstraintDefinitions)
             {
                 if (constraint.find("#") != 0
-                    && constraint.find(shortprefix) < 1024)
+                    && (constraint.find(shortprefix) < 1024 || (constraint.find("pEnd") < 1024 && this->isLastPhaseInJourney)))
                 {
                     this->distance_constraint_definitions.push_back(CreatePhaseDistanceConstraint(constraint, this->myOptions, this->myUniverse));
                 }
@@ -387,9 +387,17 @@ namespace EMTG
                 for (size_t constraintIndex = 0; constraintIndex < this->number_of_distance_constraints; ++constraintIndex)
                 {
                     //create the constraint
-                    Flowerbounds->push_back((std::get<1>(this->distance_constraint_definitions[constraintIndex]) - std::get<2>(this->distance_constraint_definitions[constraintIndex])) / this->myUniverse->LU);
-                    Fupperbounds->push_back(0.0);
-                    Fdescriptions->push_back(prefix + " step " + std::to_string(step) + " distance from body " + std::to_string(constraintIndex));
+                    this->Flowerbounds->push_back((std::get<1>(this->distance_constraint_definitions[constraintIndex]) - std::get<2>(this->distance_constraint_definitions[constraintIndex])) / this->myUniverse->LU);
+                    this->Fupperbounds->push_back(0.0);
+                    int bodyIndex = std::get<0>(this->distance_constraint_definitions[constraintIndex]);
+                    if (bodyIndex == -2)
+                    {
+                        this->Fdescriptions->push_back(prefix + " step " + std::to_string(step) + " distance from " + this->myUniverse->central_body.name);
+                    }
+                    else
+                    {
+                        this->Fdescriptions->push_back(prefix + " step " + std::to_string(step) + " distance from " + this->myUniverse->bodies[bodyIndex - 1].name);
+                    }
 
                     //derivatives with respect to boundary states
                     for (size_t encodedStateIndex = 0; encodedStateIndex < 8; ++encodedStateIndex)

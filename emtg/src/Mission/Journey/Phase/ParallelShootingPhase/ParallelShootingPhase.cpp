@@ -936,10 +936,6 @@ namespace EMTG
                         size_t stateIndex = std::get<1>(Derivatives_of_StateAfterPhase_wrt_Time[dIndex]);
                         dBoundaryState_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StateAfterPhase_wrt_Time[dIndex]);
                     }
-
-                    //derivative of epoch with respect to phase flight time is already carried in the STM since May 2018, so we strip it out here
-                    if (Xindex == this->Xindex_PhaseFlightTime)
-                        dBoundaryState_dDecisionVariable(7) = 0.0;
                     
                     //Step 3.2.2.2: chain!
                     if (this->hasTerminalCoast)

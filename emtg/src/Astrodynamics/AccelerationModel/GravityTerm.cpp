@@ -32,7 +32,7 @@ namespace EMTG
     {
         //constructors
         GravityTerm::GravityTerm(SpacecraftAccelerationModel * acceleration_model_in, body * body_in) :
-            AccelerationModelTerm::AccelerationModelTerm(acceleration_model_in), my_body(body_in)
+            SpacecraftAccelerationModelTerm::SpacecraftAccelerationModelTerm(acceleration_model_in), my_body(body_in)
         {
             this->r_body2sc.resize(3, 1, 0.0);
             this->v_body2sc.resize(3, 1, 0.0);
@@ -42,7 +42,6 @@ namespace EMTG
 
             // derivative containers
             this->da_cb2scdr_cb2body.resize(3, 3, 0.0);
-            this->dr_cb2bodydProp_vars.resize(3, 2, 0.0);
             this->dr_cb2bodydcurrent_epoch.resize(3, 1, 0.0);
         }
 
@@ -214,28 +213,6 @@ namespace EMTG
                                                + this->da_cb2scdr_cb2body(2, 1) * this->dr_cb2bodydcurrent_epoch(1)
                                                + this->da_cb2scdr_cb2body(2, 2) * this->dr_cb2bodydcurrent_epoch(2);
 
-            // These will have been set equal to zero if we are the central body by computeScBodyCBtriangle...
-            for (size_t i = 0; i < 3; ++i)
-            {
-                this->dr_cb2bodydProp_vars(i, 0) = this->dr_cb2bodydcurrent_epoch(i) * this->acceleration_model->dcurrent_epochdProp_var_previous;
-                this->dr_cb2bodydProp_vars(i, 1) = this->dr_cb2bodydcurrent_epoch(i) * this->acceleration_model->dcurrent_epochdProp_var;
-            }
-
-            
-            for (size_t propVar = 0; propVar < 2; ++propVar)
-            {
-                this->acceleration_model->da_cb2scdPropVars(0, propVar) += this->da_cb2scdr_cb2body(0, 0) * this->dr_cb2bodydProp_vars(0, propVar)
-                                                                        + this->da_cb2scdr_cb2body(0, 1) * this->dr_cb2bodydProp_vars(1, propVar)
-                                                                        + this->da_cb2scdr_cb2body(0, 2) * this->dr_cb2bodydProp_vars(2, propVar);
-
-                this->acceleration_model->da_cb2scdPropVars(1, propVar) += this->da_cb2scdr_cb2body(1, 0) * this->dr_cb2bodydProp_vars(0, propVar)
-                                                                        + this->da_cb2scdr_cb2body(1, 1) * this->dr_cb2bodydProp_vars(1, propVar)
-                                                                        + this->da_cb2scdr_cb2body(1, 2) * this->dr_cb2bodydProp_vars(2, propVar);
-
-                this->acceleration_model->da_cb2scdPropVars(2, propVar) += this->da_cb2scdr_cb2body(2, 0) * this->dr_cb2bodydProp_vars(0, propVar)
-                                                                        + this->da_cb2scdr_cb2body(2, 1) * this->dr_cb2bodydProp_vars(1, propVar)
-                                                                        + this->da_cb2scdr_cb2body(2, 2) * this->dr_cb2bodydProp_vars(2, propVar);
-            }
         }
 
         void GravityTerm::populateInstrumentationFile(std::ofstream & acceleration_model_file)

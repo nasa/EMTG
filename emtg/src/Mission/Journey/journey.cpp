@@ -37,6 +37,10 @@
 #include "ProbeEntryPhase.h"
 #endif
 
+#ifdef HAS_CONTROLLAWTHRUSTPHASE
+#include "ControlLawThrustPhase.h"
+#endif
+
 #include "journey.h"
 #include "missionoptions.h"
 #include "universe.h"
@@ -84,7 +88,7 @@ namespace EMTG
 
         //create the phases
 
-        this->phase_type_codes = std::vector<std::string>({ "MGALTS", "FBLTS", "MGALT", "FBLT", "PSBI",  "PSFB", "MGAnDSMs", "CoastPhase", "SundmanCoastPhase", "VARIABLE_PHASE_TYPE", "ProbeEntryPhase" });
+        this->phase_type_codes = std::vector<std::string>({ "MGALTS", "FBLTS", "MGALT", "FBLT", "PSBI",  "PSFB", "MGAnDSMs", "CoastPhase", "SundmanCoastPhase", "VARIABLE_PHASE_TYPE", "ProbeEntryPhase", "ControlLawThrustPhase" });
 
         this->number_of_phases = this->myJourneyOptions->number_of_phases;
 
@@ -234,6 +238,24 @@ namespace EMTG
                         this->myOptions));
 #else
                     throw std::invalid_argument("The ProbeEntryPhase phase type is not included in this version of EMTG. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+#endif
+                    break;
+                }
+                case EMTG ::PhaseType::ControlLawThrustPhase:
+                {
+                    //this phase is a SundmanCoastPhase
+#ifdef HAS_CONTROLLAWTHRUSTPHASE
+                    this->phases.push_back(new Phases::ControlLawThrustPhase(PhaseName,
+                        this->journeyIndex,
+                        phaseIndex,
+                        stageIndex,
+                        previousPhase,
+                        this->myUniverse,
+                        this->mySpacecraft,
+                        this->myLaunchVehicle,
+                        this->myOptions));
+#else
+                    throw std::invalid_argument("The ControlLawThrustPhase phase type is not included in this version of EMTG. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
 #endif
                     break;
                 }
@@ -725,8 +747,8 @@ namespace EMTG
     {
         //print this journey
         //start with the header
-        //++jprint;
         this->output_journey_header(outputfile, jprint);
+        ++jprint;
 
         for (int phaseIndex = 0; phaseIndex < this->number_of_phases; ++phaseIndex)
         {
@@ -797,8 +819,11 @@ namespace EMTG
             this->phases[phaseIndex].getArrivalEvent()->output_specialized_constraints(outputfile);
         }
 
-        //skip two lines
+        //skip a line, print the flight time, and skip one more line
         outputfile << std::endl;
+        doubleType flightTime = this->phases.back().getArrivalEvent()->get_state_after_event()(7) - this->phases.front().getDepartureEvent()->get_state_before_event()(7);
+        outputfile << "Journey flight time (seconds): " << flightTime << std::endl;
+        outputfile << "Journey flight time (days): " << flightTime / 86400.0 << std::endl;
         outputfile << std::endl;
 
         outputfile << "End journey" << std::endl;

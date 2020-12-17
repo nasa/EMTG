@@ -68,9 +68,7 @@ void MTMtestbed(EMTG::missionoptions& options,
         &TheUniverse[0],
         &Xdescriptions,
         &mySpacecraft,
-        13,//STM rows
-        13,//STM columns
-        numStatesToPropagate);
+        14); // STM size
     mySpacecraftAccelerationModel.setDutyCycle(options.engine_duty_cycle);
 
     for (size_t stateIndex = 0; stateIndex < num_states; ++stateIndex)

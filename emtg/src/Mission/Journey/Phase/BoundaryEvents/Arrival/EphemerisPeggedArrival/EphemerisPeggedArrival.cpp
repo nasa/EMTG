@@ -166,6 +166,9 @@ namespace EMTG
 
             //Step 4: perform post-arrival delta-v
             this->process_post_arrival_deltav();
+
+            //Step 5: adjust the mass derivative as necessary
+            std::get<2>(this->Derivatives_of_StateAfterEvent[this->dIndex_mass_wrt_encodedMass]) *= this->ETM(6, 6);
         }//end process_event_right_side()
 
         //******************************************output methods

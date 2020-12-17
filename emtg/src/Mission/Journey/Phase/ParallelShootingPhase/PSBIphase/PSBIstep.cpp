@@ -96,14 +96,12 @@ namespace EMTG
 
 
             //acceleration model
-            this->mySpacecraftAccelerationModel = new Astrodynamics::SpacecraftAccelerationModel(this->myOptions,
+                this->mySpacecraftAccelerationModel = new Astrodynamics::SpacecraftAccelerationModel(this->myOptions,
                 this->myJourneyOptions,
                 this->myUniverse,
                 this->Xdescriptions,
-                this->mySpacecraft,
-                13,//STM rows
-                13,//STM columns
-                10,//number of states to propagate
+                this->mySpacecraft,                                
+                14,// STM size
                 false);//we do NOT need the central body because Kepler propagation takes care of it
             this->mySpacecraftAccelerationModel->setDutyCycle(this->StepDutyCycle);//we're not actually using the acceleration model for thrust right now
 
@@ -275,8 +273,8 @@ namespace EMTG
                     this->augmentedSTM1(i, 13) = this->dStatedIndependentVariable1(i);
                     this->augmentedSTM2(i, 13) = this->dStatedIndependentVariable2(i);
                 }
-                this->augmentedSTM1(7, 13) = this->dHalfStepTime_dPhaseFlightTime * (2 * this->stepIndex + 1);
-                this->augmentedSTM2(7, 13) = this->dHalfStepTime_dPhaseFlightTime * (2 * this->stepIndex + 2);
+                this->augmentedSTM1(7, 13) = this->dHalfStepTime_dPhaseFlightTime;
+                this->augmentedSTM2(7, 13) = this->dHalfStepTime_dPhaseFlightTime;
 
                 //Step 4.2: form the augmented MTM
                 //this is like the original MTM, except that:

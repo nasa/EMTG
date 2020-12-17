@@ -115,26 +115,22 @@ namespace EMTG
                 this->myUniverse,
                 this->Xdescriptions,
                 this->mySpacecraft,
-                13,//STM rows
-                13,//STM columns
-                10);
+                14); // STM size
             this->mySpacecraftAccelerationModel->setDutyCycle(this->StepDutyCycle);
 
             //EOM
             this->myEOM.setSpacecraftAccelerationModel(this->mySpacecraftAccelerationModel);
 
             //integration scheme
-            this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, 10 + (13 * 13), 10);
-            this->myIntegrationScheme->setNumStatesToIntegratePtr(this->total_number_of_states_to_integrate);
+            this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, 10, 14);
 
             //propagator
             for (size_t subStepIndex = 0; subStepIndex < this->num_interior_control_points; ++subStepIndex)
             {
                 this->myPropagators.push_back(CreatePropagator(this->myOptions,
                     this->myUniverse,
-                    13,
-                    13,
                     10,
+                    14,
                     subStepIndex == 0 ? this->StateStepLeftInertial : this->StateAfterSubStepInertial[subStepIndex - 1],
                     subStepIndex == this->num_interior_control_points - 1 ? this->StateStepRightInertial : this->StateAfterSubStepInertial[subStepIndex],
                     this->STM[subStepIndex],
@@ -173,7 +169,7 @@ namespace EMTG
             const bool& needG)
         {
             this->total_number_of_states_to_integrate = needG
-                ? 10 + 13 * 13
+                ? 10 + 14 * 14
                 : 10;
 
             this->process_step_left_state(X, Xindex, F, Findex, G, needG);
@@ -205,13 +201,11 @@ namespace EMTG
                 //Step 1: propagate
                 if (subStepIndex == 0)
                 {
-                    this->dPropagatedStatedIndependentVariable[subStepIndex].assign_zeros();
                     this->myPropagators[subStepIndex].setCurrentEpoch(this->StateStepLeftInertial(7));
                     this->myPropagators[subStepIndex].setCurrentIndependentVariable(this->StateStepLeftInertial(7));
                 }
                 else
                 {
-                    this->dPropagatedStatedIndependentVariable[subStepIndex] = this->dPropagatedStatedIndependentVariable[subStepIndex - 1];
                     this->myPropagators[subStepIndex].setCurrentEpoch(this->StateAfterSubStepInertial[subStepIndex - 1](7));
                     this->myPropagators[subStepIndex].setCurrentIndependentVariable(this->StateAfterSubStepInertial[subStepIndex - 1](7));
                 }
@@ -562,11 +556,11 @@ namespace EMTG
                 doubleType r_sc_sun_AU = R_sc_Sun.norm() / this->myOptions->AU;
                 this->mySpacecraft->computePowerState(r_sc_sun_AU, output_state(7));
 
-                //Step 2.2.1.3: call the thruster model
+                //Step 2.2.1.3: call the thruster model using 100% duty cycle because we want the raw performance information
                 if (this->num_controls == 4)
-                    this->mySpacecraft->computeElectricPropulsionPerformance(this->StepDutyCycle, this->ControlVector[0](3));
+                    this->mySpacecraft->computeElectricPropulsionPerformance(1.0, this->ControlVector[0](3));
                 else
-                    this->mySpacecraft->computeElectricPropulsionPerformance(this->StepDutyCycle);
+                    this->mySpacecraft->computeElectricPropulsionPerformance(1.0);
 
                 //Step 2.2.1.3: populate fields
                 ManeuverThrottleLevel = this->mySpacecraft->getEPThrottleLevel();
@@ -646,11 +640,11 @@ namespace EMTG
                     doubleType r_sc_sun_AU = R_sc_Sun.norm() / this->myOptions->AU;
                     this->mySpacecraft->computePowerState(r_sc_sun_AU, output_state(7));
 
-                    //Step 2.2.2.7: call the thruster model
+                    //Step 2.2.2.7: call the thruster model using 100% duty cycle because we want the raw performance information
                     if (this->num_controls == 4)
-                        this->mySpacecraft->computeElectricPropulsionPerformance(this->StepDutyCycle, this->ControlVector[subStepIndex](3));
+                        this->mySpacecraft->computeElectricPropulsionPerformance(1.0, this->ControlVector[subStepIndex](3));
                     else
-                        this->mySpacecraft->computeElectricPropulsionPerformance(this->StepDutyCycle);
+                        this->mySpacecraft->computeElectricPropulsionPerformance(1.0);
 
                     //Step 2.2.2.8: did the thrust change? if so save off a thrust arc and reset
 
