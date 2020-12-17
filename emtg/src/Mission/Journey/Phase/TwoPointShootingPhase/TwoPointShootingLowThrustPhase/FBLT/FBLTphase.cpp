@@ -134,27 +134,23 @@ namespace EMTG
                                                                                                  this->myUniverse,
                                                                                                  this->Xdescriptions,
                                                                                                  this->mySpacecraft,
-                                                                                                 13,//STM rows
-                                                                                                 13,//STM columns
-                                                                                                 this->numStatesToPropagate);
+                                                                                                 14); // STM size
             this->mySpacecraftAccelerationModel->setDutyCycle(this->PhaseDutyCycle);
 
             //EOM
             this->myEOM.setSpacecraftAccelerationModel(this->mySpacecraftAccelerationModel);
 
             //integration scheme
-            this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, this->numStatesToPropagate + (13 * 13), 10);
-            this->myIntegrationScheme->setNumStatesToIntegratePtr(this->total_number_of_states_to_integrate);
+            this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, this->numStatesToPropagate, 14);
 
             //propagator objects
             for (size_t step = 0; step < this->num_timesteps / 2; ++step)
             {
                 //forward
                 this->ForwardPropagatorObjects.push_back(CreatePropagator(this->myOptions,
-                    this->myUniverse, 
-                    13,
-                    13,
+                    this->myUniverse,                     
                     this->numStatesToPropagate,
+                    14,
                     this->spacecraft_state_event_minus[step],
                     this->spacecraft_state_event_plus[step],
                     this->ForwardSTM[step],
@@ -169,10 +165,9 @@ namespace EMTG
                 //backward
                 size_t backstep = this->num_timesteps - 1 - step;
                 this->BackwardPropagatorObjects.push_back(CreatePropagator(this->myOptions, 
-                    this->myUniverse, 
-                    13, 
-                    13, 
+                    this->myUniverse,                      
                     this->numStatesToPropagate,
+                    14,
                     this->spacecraft_state_event_plus[backstep],
                     this->spacecraft_state_event_minus[backstep],
                     this->BackwardSTM[step],
@@ -196,10 +191,9 @@ namespace EMTG
                 this->STM_Augmented_initial_coast = I14;
 
                 this->InitialCoastPropagatorObject = CreatePropagator(this->myOptions,
-                    this->myUniverse, 
-                    13, 
-                    13,
+                    this->myUniverse,                     
                     this->numStatesToPropagate,
+                    14,
                     this->state_after_initial_TCM,
                     this->spacecraft_state_event_minus[0],
                     this->STM_initial_coast,
@@ -218,10 +212,9 @@ namespace EMTG
                 this->STM_Augmented_terminal_coast = I14;
 
                 this->TerminalCoastPropagatorObject = CreatePropagator(this->myOptions,
-                    this->myUniverse,
-                    13, 
-                    13, 
+                    this->myUniverse,                    
                     this->numStatesToPropagate,
+                    14,
                     this->state_at_end_of_phase,
                     this->spacecraft_state_event_plus.back(),
                     this->STM_terminal_coast,
@@ -257,7 +250,7 @@ namespace EMTG
             }
 
             //output stuff
-            this->output_state.resize(this->numStatesToPropagate + 13 * 13, 1, 0.0);
+            this->output_state.resize(this->numStatesToPropagate + 14 * 14, 1, 0.0);
         }//end constructor
 
         FBLTphase::~FBLTphase()
@@ -1977,14 +1970,14 @@ namespace EMTG
                     doubleType r_sc_sun_AU = R_sc_Sun.norm() / this->myOptions->AU;
                     this->mySpacecraft->computePowerState(r_sc_sun_AU, this->output_state(7));
 
-                    //Step 2.2.1.3: call the thruster model
+                    //Step 2.2.1.3: call the thruster model using 100% duty cycle because we want the raw performance information
                     if (this->num_controls == 4)
                     {
-                        this->mySpacecraft->computeElectricPropulsionPerformance(this->PhaseDutyCycle, this->ControlVector[segment](3));
+                        this->mySpacecraft->computeElectricPropulsionPerformance(1.0, this->ControlVector[segment](3));
                     }
                     else
                     {
-                        this->mySpacecraft->computeElectricPropulsionPerformance(this->PhaseDutyCycle);
+                        this->mySpacecraft->computeElectricPropulsionPerformance(1.0);
                     }
 
                     //Step 2.2.1.3: populate fields
@@ -2128,8 +2121,8 @@ namespace EMTG
                 target_spec_line segmentEndTargetLine(segment_name,
                     "EME2000",
                     this->myUniverse->central_body.name,
-                    output_state(7),
-                    output_state); // this is the state at the end of the current thrust segment
+                    this->spacecraft_state_event_plus[segment](7),
+                    this->spacecraft_state_event_plus[segment]); // this is the state at the end of the current thrust segment
 
                 // write target spec object
                 segmentEndTargetLine.write(target_spec_file);
@@ -2197,14 +2190,14 @@ namespace EMTG
                     doubleType r_sc_sun_AU = R_sc_Sun.norm() / this->myOptions->AU;
                     this->mySpacecraft->computePowerState(r_sc_sun_AU, this->output_state(7));
 
-                    //Step 2.2.1.3: call the thruster model
+                    //Step 2.2.1.3: call the thruster model using 100% duty cycle because we want the raw performance information
                     if (this->num_controls == 4)
                     {
-                        this->mySpacecraft->computeElectricPropulsionPerformance(this->PhaseDutyCycle, this->ControlVector[backstep](3));
+                        this->mySpacecraft->computeElectricPropulsionPerformance(1.0, this->ControlVector[backstep](3));
                     }
                     else
                     {
-                        this->mySpacecraft->computeElectricPropulsionPerformance(this->PhaseDutyCycle);
+                        this->mySpacecraft->computeElectricPropulsionPerformance(1.0);
                     }
 
                     //Step 2.2.1.3: populate fields
@@ -2280,11 +2273,11 @@ namespace EMTG
                     doubleType r_sc_sun_AU = R_sc_Sun.norm() / this->myOptions->AU;
                     this->mySpacecraft->computePowerState(r_sc_sun_AU, this->output_state(7));
 
-                    //Step 2.2.2.7: call the thruster model
+                    //Step 2.2.2.7: call the thruster model using 100% duty cycle because we want the raw performance information
                     if (this->num_controls == 4)
-                        this->mySpacecraft->computeElectricPropulsionPerformance(this->PhaseDutyCycle, this->ControlVector[backstep](3));
+                        this->mySpacecraft->computeElectricPropulsionPerformance(1.0, this->ControlVector[backstep](3));
                     else
-                        this->mySpacecraft->computeElectricPropulsionPerformance(this->PhaseDutyCycle);
+                        this->mySpacecraft->computeElectricPropulsionPerformance(1.0);
 
                     //Step 2.2.2.8: did the thrust change? if so save off a thrust arc and reset
 
@@ -2361,8 +2354,8 @@ namespace EMTG
                 target_spec_line segmentEndTargetLine(segment_name,
                     "EME2000",
                     this->myUniverse->central_body.name,
-                    output_state(7),
-                    output_state); // this is the state at the end of the current thrust segment
+                    this->spacecraft_state_event_plus[backstep](7),
+                    this->spacecraft_state_event_plus[backstep]); // this is the state at the end of the current thrust segment
 
                 // write target spec object
                 // if we are the last segment before the right hand phase boundary, then we will skip writing a target

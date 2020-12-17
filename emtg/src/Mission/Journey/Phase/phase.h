@@ -103,6 +103,7 @@ namespace EMTG
             double getInitialCoastDuration() const { return this->InitialCoastDuration; }
             double getTerminalCoastDuration() const { return this->TerminalCoastDuration; }
             doubleType getFinalMass() const { return this->myArrivalEvent->get_state_after_event()(6); }
+            bool getIsLastPhaseInJourney() const { return this->isLastPhaseInJourney; }
 
             inline std::vector<std::string>& get_matchPointConstraintNames() { return this->matchPointConstraintNames; }
             inline std::vector<size_t>& get_matchPointConstraintStateIndex() { return this->matchPointConstraintStateIndex; }

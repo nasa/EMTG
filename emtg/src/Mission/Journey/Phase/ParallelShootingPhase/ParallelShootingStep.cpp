@@ -134,8 +134,8 @@ namespace EMTG
             std::string shortprefix = "p" + std::to_string(this->phaseIndex);
             for (std::string& constraintDefinition : this->myJourneyOptions->PhaseDistanceConstraintDefinitions)
             {
-                if (constraintDefinition.find("#") != 0 
-                    && constraintDefinition.find(shortprefix) < 1024)
+                if (constraintDefinition.find("#") != 0
+                    && (constraintDefinition.find(shortprefix) < 1024 || (constraintDefinition.find("pEnd") < 1024 && this->myPhase->getIsLastPhaseInJourney())))
                 {
                     this->myDistanceConstraints.push_back(ParallelShootingStepDistanceConstraint(constraintDefinition,
                         this->journeyIndex,
@@ -157,7 +157,8 @@ namespace EMTG
             {
                 if (constraintDefinition.find("#") != 0) //don't create a constraint if it is commented out
                 {
-                    if (constraintDefinition.find(shortprefix) < 1024)
+                    if (constraintDefinition.find(shortprefix) < 1024 
+                        || (constraintDefinition.find("pEnd") < 1024 && this->myPhase->getIsLastPhaseInJourney()))
                     {
                         if (boost::to_lower_copy(constraintDefinition).find("dutycycle") < 1024)                       
                         {
@@ -193,13 +194,21 @@ namespace EMTG
             //time derivative
             this->dStepTime_dPhaseFlightTime = 1.0 / this->myPhase->get_num_steps();
 
-            //truth tables
-            this->TruthTable_StateStepRightInertial_wrt_StateStepLeftInertial.resize(10, std::vector<size_t>(10, true));
+            //left-hand side truth tables (default values, 6-state gets done in calcbounds_step_left_state())
+            //almost everything is zero
+            this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded.resize(10, std::vector<bool>(10, false));
+            //mass and tanks are pass throughs
+            this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[6][6] = true;
+            this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[8][8] = true;
+            this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[9][9] = true;
+
+            //right-hand side truth tables
+            this->TruthTable_StateStepRightInertial_wrt_StateStepLeftInertial.resize(10, std::vector<bool>(10, true));
             this->TruthTable_StateStepRightInertial_wrt_Control.resize(10, true);
             this->TruthTable_StateStepRightInertial_wrt_PhaseFlightTime.resize(10, true);
 
             //epoch has derivatives with respect only to itself
-            this->TruthTable_StateStepRightInertial_wrt_StateStepLeftInertial[7] = std::vector<size_t>(10, false);
+            this->TruthTable_StateStepRightInertial_wrt_StateStepLeftInertial[7] = std::vector<bool>(10, false);
             this->TruthTable_StateStepRightInertial_wrt_StateStepLeftInertial[7][7] = true;
 
             //position, velocity, and mass have no derivative with respect to either tank variable
@@ -210,7 +219,7 @@ namespace EMTG
             }
 
             //chemical fuel only has a derivative with respect to itself and epoch, and even then only if ACS is on
-            this->TruthTable_StateStepRightInertial_wrt_StateStepLeftInertial[8] = std::vector<size_t>(10, false);
+            this->TruthTable_StateStepRightInertial_wrt_StateStepLeftInertial[8] = std::vector<bool>(10, false);
             this->TruthTable_StateStepRightInertial_wrt_StateStepLeftInertial[8][8] = true;
             if (this->myOptions->trackACS)
                 this->TruthTable_StateStepRightInertial_wrt_StateStepLeftInertial[8][7] = true;
@@ -312,6 +321,23 @@ namespace EMTG
                 this->statesToRepresent.push_back({ "vRA",  -8.0 * math::PI, 8.0 * math::PI, 1.0, true });
                 this->statesToRepresent.push_back({ "vDEC", -8.0 * math::PI, 8.0 * math::PI, 1.0, true });
 
+                //the first three variables affect all position states
+                for (size_t stateIndex : { 0, 1, 2 })
+                {
+                    for (size_t varIndex : { 0, 1, 2 })
+                    {
+                        this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[stateIndex][varIndex] = true;
+                    }
+                }
+                //the last three variables affect all velocity states
+                for (size_t stateIndex : { 3, 4, 5 })
+                {
+                    for (size_t varIndex : { 3, 4, 5 })
+                    {
+                        this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[stateIndex][varIndex] = true;
+                    }
+                }
+
                 break;
             }
             case StateRepresentation::SphericalAZFPA:
@@ -322,6 +348,23 @@ namespace EMTG
                 this->statesToRepresent.push_back({ "v",  0.0, 10.0 * this->myUniverse->LU / this->myUniverse->TU, this->myUniverse->LU / this->myUniverse->TU, false });
                 this->statesToRepresent.push_back({ "AZ",  -8.0 * math::PI, 8.0 * math::PI, 1.0, true });
                 this->statesToRepresent.push_back({ "FPA",  -8.0 * math::PI, 8.0 * math::PI, 1.0, true });
+
+                //the first three variables affect all position states
+                for (size_t stateIndex : { 0, 1, 2 })
+                {
+                    for (size_t varIndex : { 0, 1, 2 })
+                    {
+                        this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[stateIndex][varIndex] = true;
+                    }
+                }
+                //the last three variables affect all velocity states
+                for (size_t stateIndex : { 3, 4, 5 })
+                {
+                    for (size_t varIndex : { 3, 4, 5 })
+                    {
+                        this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[stateIndex][varIndex] = true;
+                    }
+                }
 
                 break;
             }
@@ -334,6 +377,13 @@ namespace EMTG
                 this->statesToRepresent.push_back({ "vy", -10.0 * this->myUniverse->LU / this->myUniverse->TU, 10.0 * this->myUniverse->LU / this->myUniverse->TU, this->myUniverse->LU / this->myUniverse->TU, false });
                 this->statesToRepresent.push_back({ "vz", -10.0 * this->myUniverse->LU / this->myUniverse->TU, 10.0 * this->myUniverse->LU / this->myUniverse->TU, this->myUniverse->LU / this->myUniverse->TU, false });
 
+                //encoded states match 1:1 with cartesian states
+                for (size_t stateIndex : { 0, 1, 2, 3, 4, 5 })
+                {
+                    size_t varIndex = stateIndex;
+                    
+                    this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[stateIndex][varIndex] = true;
+                }
                 break;
             }
             case StateRepresentation::COE:
@@ -345,6 +395,15 @@ namespace EMTG
                 this->statesToRepresent.push_back({ "AOP",  -8.0 * math::PI, 8.0 * math::PI, 1.0, true });
                 this->statesToRepresent.push_back({ "TA",  -8.0 * math::PI, 8.0 * math::PI, 1.0, true });
 
+                //all states affect everything
+                for (size_t stateIndex : { 0, 1, 2, 3, 4, 5 })
+                {
+                    for (size_t varIndex : { 0, 1, 2, 3, 4, 5 })
+                    {
+                        this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[stateIndex][varIndex] = true;
+                    }
+                }
+
                 break;
             }
             case StateRepresentation::MEE:
@@ -355,6 +414,15 @@ namespace EMTG
                 this->statesToRepresent.push_back({ "H",  -10.0, 10.0, 1.0, false });
                 this->statesToRepresent.push_back({ "K",  -10.0, 10.0, 1.0, false });
                 this->statesToRepresent.push_back({ "L",  -8.0 * math::PI, 8.0 * math::PI, 1.0, true });
+
+                //all states affect everything
+                for (size_t stateIndex : { 0, 1, 2, 3, 4, 5 })
+                {
+                    for (size_t varIndex : { 0, 1, 2, 3, 4, 5 })
+                    {
+                        this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[stateIndex][varIndex] = true;
+                    }
+                }
 
                 break;
             }
@@ -375,10 +443,20 @@ namespace EMTG
 
                 std::vector<size_t> dIndex_StateStepLeftInertial_wrt_thisStateElement;
 
+                size_t varIndex = this->Xindex_state_elements.size() - 1;
+
+                //create a derivative entry if one exists
                 for (size_t stateIndex : {0, 1, 2, 3, 4, 5})
                 {
-                    this->Derivatives_of_StateStepLeftInertial.push_back(std::make_tuple(this->Xdescriptions->size() - 1, stateIndex, 1.0));
-                    dIndex_StateStepLeftInertial_wrt_thisStateElement.push_back(this->Derivatives_of_StateStepLeftInertial.size() - 1);
+                    if (this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[stateIndex][varIndex])
+                    {
+                        this->Derivatives_of_StateStepLeftInertial.push_back(std::make_tuple(this->Xdescriptions->size() - 1, stateIndex, 1.0));
+                        dIndex_StateStepLeftInertial_wrt_thisStateElement.push_back(this->Derivatives_of_StateStepLeftInertial.size() - 1);
+                    }
+                    else //we have to keep the size of the dIndex matrix constant
+                    {
+                        dIndex_StateStepLeftInertial_wrt_thisStateElement.push_back(32767);
+                    }
                 }
 
                 this->dIndex_StateStepLeftInertial_wrt_StateElements.push_back(dIndex_StateStepLeftInertial_wrt_thisStateElement);
@@ -882,13 +960,16 @@ namespace EMTG
                 {
                     for (size_t cartesianStateIndex : {0, 1, 2, 3, 4, 5})
                     {
-                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_StateElements[encodedStateIndex][cartesianStateIndex];
+                        if (this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[cartesianStateIndex][encodedStateIndex])
+                        {
+                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_StateElements[encodedStateIndex][cartesianStateIndex];
 
-                        size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
+                            size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
 
-                        this->create_sparsity_entry(this->Findices_left_match_point_constraints[cartesianStateIndex],
-                            Xindex,
-                            this->Gindices_StepLeftMatchPoint_wrt_StepLeftEncodedState);
+                            this->create_sparsity_entry(this->Findices_left_match_point_constraints[cartesianStateIndex],
+                                Xindex,
+                                this->Gindices_StepLeftMatchPoint_wrt_StepLeftEncodedState);
+                        }
                     }
                 }
             }
@@ -973,9 +1054,12 @@ namespace EMTG
                 {
                     for (size_t cartesianStateIndex : {0, 1, 2, 3, 4, 5})
                     {
-                        size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_StateElements[nativeStateIndex][cartesianStateIndex];
+                        if (this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[cartesianStateIndex][nativeStateIndex])
+                        {
+                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_StateElements[nativeStateIndex][cartesianStateIndex];
 
-                        std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex]) = TransformationMatrix(cartesianStateIndex, nativeStateIndex)_GETVALUE;
+                            std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex]) = TransformationMatrix(cartesianStateIndex, nativeStateIndex)_GETVALUE;
+                        }
                     }
                 }
             }
@@ -1122,15 +1206,18 @@ namespace EMTG
                     {
                         for (size_t cartesianStateIndex : {0, 1, 2, 3, 4, 5})
                         {
-                            size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_StateElements[encodedStateIndex][cartesianStateIndex];
+                            if (this->TruthTable_StateStepLeftCartesian_wrt_StateStepLeftEncoded[cartesianStateIndex][encodedStateIndex])
+                            {
+                                size_t dIndex = this->dIndex_StateStepLeftInertial_wrt_StateElements[encodedStateIndex][cartesianStateIndex];
 
-                            size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_StepLeftEncodedState[dIndex];
+                                size_t Gindex = this->Gindices_StepLeftMatchPoint_wrt_StepLeftEncodedState[dIndex];
 
-                            size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
+                                size_t Xindex = std::get<0>(this->Derivatives_of_StateStepLeftInertial[dIndex]);
 
-                            G[Gindex] =+ this->X_scale_factors->operator[](Xindex)
-                                * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
-                                * continuity_constraint_scale_factors(cartesianStateIndex);
+                                G[Gindex] = +this->X_scale_factors->operator[](Xindex)
+                                    * std::get<2>(this->Derivatives_of_StateStepLeftInertial[dIndex])
+                                    * continuity_constraint_scale_factors(cartesianStateIndex);
+                            }
                         }
                     }
                 }
@@ -1370,7 +1457,7 @@ namespace EMTG
 
                 if (Xindex == this->Xindex_PhaseFlightTime)
                 {
-                    dLeftState_dDecisionVariable(7) = 0.0;
+                    dLeftState_dDecisionVariable(7) = (float)stepIndex / this->myPhase->get_num_steps();
                     dLeftState_dDecisionVariable(13) = 1.0;
                 }
 

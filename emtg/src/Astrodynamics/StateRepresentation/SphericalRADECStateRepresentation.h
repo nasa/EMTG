@@ -16,7 +16,8 @@
 // express or implied.   See the License for the specific language
 // governing permissions and limitations under the License.
 
-#pragma once
+#ifndef SPHERICAL_RADEC_STATE_REPRESENTATION_H
+#define SPHERICAL_RADEC_STATE_REPRESENTATION_H
 
 #include "StateRepresentation.h"
 
@@ -37,3 +38,5 @@ namespace EMTG
         };
     }//end namespace StateRepresentation
 }//end namespace EMTG
+
+#endif // SPHERICAL_RADEC_STATE_REPRESENTATION_H

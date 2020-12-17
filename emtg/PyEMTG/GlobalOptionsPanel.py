@@ -33,7 +33,7 @@ class GlobalOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.txtMissionName = wx.TextCtrl(self, -1, "mission_name", size=(500,-1))
 
         self.lblMissionType = wx.StaticText(self, -1, "Mission Type")
-        phasetypes = ['MGALTS (not yet implemented)', 'FBLTS (not yet implemented)', 'MGALT', 'FBLT', 'PSBI', 'PSFB', 'MGAnDSMs', 'CoastPhase', 'SundmanCoastPhase', 'Variable phase type']
+        phasetypes = ['MGALTS (not yet implemented)', 'FBLTS (not yet implemented)', 'MGALT', 'FBLT', 'PSBI', 'PSFB', 'MGAnDSMs', 'CoastPhase', 'SundmanCoastPhase', 'Variable phase type', 'ProbeEntryPhase', 'ControlLawThrustPhase']
         self.cmbMissionType = wx.ComboBox(self, -1, choices=phasetypes, style=wx.CB_READONLY)
 
         self.lblobjective_type = wx.StaticText(self, -1, "Objective function")
@@ -67,10 +67,9 @@ class GlobalOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         CovarianceSizer.AddMany([self.txtcovariance_file_path, self.btncovariance_file_path])
         
         self.lbllaunch_window_open_date = wx.StaticText(self, -1, "Launch window open date")
-        self.txtlaunch_window_open_date = wx.TextCtrl(self, -1, "launch_window_open_date")
+        self.txtlaunch_window_open_date = wx.TextCtrl(self, -1, "launch_window_open_date", size=(450, -1))
         self.LaunchDateCalendar = wx.adv.CalendarCtrl(self, -1)
-        calendarbox = wx.BoxSizer(wx.HORIZONTAL)
-        calendarbox.AddMany([self.txtlaunch_window_open_date, self.LaunchDateCalendar])
+        CalendarSpacer = wx.StaticText(self, -1, "")
         
         self.lblnum_timesteps = wx.StaticText(self, -1, "Number of time-steps")
         self.txtnum_timesteps = wx.TextCtrl(self, -1, "num_timesteps")
@@ -85,7 +84,8 @@ class GlobalOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
                                     self.lblwaypoint_file_path, WayPointSizer,
                                     self.lblcovariance_file_path, CovarianceSizer,
                                     self.lblinclude_initial_impulse_in_cost, self.chkinclude_initial_impulse_in_cost,
-                                    self.lbllaunch_window_open_date, calendarbox,
+                                    self.lbllaunch_window_open_date, self.txtlaunch_window_open_date,
+                                    CalendarSpacer, self.LaunchDateCalendar,
                                     self.lblnum_timesteps, self.txtnum_timesteps,
                                     self.lblstop_after_journey, self.txtstop_after_journey])
 
@@ -374,11 +374,12 @@ class GlobalOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
     def Changelaunch_window_open_date(self, e):
         e.Skip()
-        self.missionoptions.launch_window_open_date = eval(self.txtlaunch_window_open_date.GetValue())
+        
+        dateString = self.txtlaunch_window_open_date.GetValue()
 
-        #convert from JD to MJD if applicable
-        if self.missionoptions.launch_window_open_date > 2400000.5:
-            self.missionoptions.launch_window_open_date -= 2400000.5
+        from timeUtilities import stringToJD
+
+        self.missionoptions.launch_window_open_date = stringToJD(dateString, self.missionoptions.universe_folder)
 
         self.update()
 

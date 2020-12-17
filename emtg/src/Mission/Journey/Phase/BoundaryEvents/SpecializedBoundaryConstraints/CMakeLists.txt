@@ -10,6 +10,7 @@ set(SPECIALIZED_BOUNDARY_CONSTRAINTS_HEADERS ${SPECIALIZED_BOUNDARY_CONSTRAINTS_
                                              ${CMAKE_CURRENT_SOURCE_DIR}/BoundaryBCFlatitudeConstraint.h
                                              ${CMAKE_CURRENT_SOURCE_DIR}/BoundaryDeticLatitudeConstraint.h
                                              ${CMAKE_CURRENT_SOURCE_DIR}/BoundaryDeticAltitudeConstraint.h
+                                             ${CMAKE_CURRENT_SOURCE_DIR}/BoundaryOrbitalEnergyConstraint.h
                                              ${CMAKE_CURRENT_SOURCE_DIR}/BoundaryVelocityDeclinationConstraint.h
                                              ${CMAKE_CURRENT_SOURCE_DIR}/BoundaryVelocityMagnitudeConstraint.h
                                              ${CMAKE_CURRENT_SOURCE_DIR}/BoundaryVelocitySphericalAzimuthConstraint.h
@@ -29,6 +30,7 @@ set(SPECIALIZED_BOUNDARY_CONSTRAINTS_SOURCE ${SPECIALIZED_BOUNDARY_CONSTRAINTS_S
                                             ${CMAKE_CURRENT_SOURCE_DIR}/BoundaryBCFlatitudeConstraint.cpp
                                             ${CMAKE_CURRENT_SOURCE_DIR}/BoundaryDeticLatitudeConstraint.cpp
                                             ${CMAKE_CURRENT_SOURCE_DIR}/BoundaryDeticAltitudeConstraint.cpp
+                                            ${CMAKE_CURRENT_SOURCE_DIR}/BoundaryOrbitalEnergyConstraint.cpp
                                             ${CMAKE_CURRENT_SOURCE_DIR}/BoundaryVelocityDeclinationConstraint.cpp
                                             ${CMAKE_CURRENT_SOURCE_DIR}/BoundaryVelocityMagnitudeConstraint.cpp
                                             ${CMAKE_CURRENT_SOURCE_DIR}/BoundaryVelocitySphericalAzimuthConstraint.cpp

@@ -10,6 +10,7 @@ class Body(object):
         self.mu = 1.0
         self.G = 6.674280000000000367e-20
         self.J2 = 0.0010826265
+        self.J2_ref_radius = 1000.0
         self.AbsoluteMagnitude = 10.0
         self.albedo = 0.367
         self.radius = 1000.0
@@ -42,6 +43,10 @@ class Body(object):
             self.mu = float(linecell[5])
             self.radius = float(linecell[6])
             self.J2 = float(linecell[7])
+            # TODO: right now we are not going to read a reference radius from 
+            # the universe file (so we don't break all universe parsing)
+            # since a Body doesn't actually ever use this, just give it the body radius for now
+            self.J2_ref_radius = self.radius
             self.AbsoluteMagnitude = float(linecell[8])
             self.albedo = float(linecell[9])
             self.ephemeris_epoch = float(linecell[10])

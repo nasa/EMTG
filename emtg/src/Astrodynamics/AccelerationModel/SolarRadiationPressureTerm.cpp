@@ -19,7 +19,7 @@
 //central force term
 
 #include "SpacecraftAccelerationModel.h"
-#include "AccelerationModelTerm.h"
+#include "SpacecraftAccelerationModelTerm.h"
 #include "doubleType.h"
 #include "SolarRadiationPressureTerm.h"
 
@@ -29,9 +29,8 @@ namespace EMTG
     {
         // constructors
         SolarRadiationPressureTerm::SolarRadiationPressureTerm(SpacecraftAccelerationModel * acceleration_model_in) :
-                                                               AccelerationModelTerm::AccelerationModelTerm(acceleration_model_in)
+            SpacecraftAccelerationModelTerm::SpacecraftAccelerationModelTerm(acceleration_model_in)
         {
-            // TODO: expose more of these to the GUI
             this->sc_area = this->acceleration_model->my_options->spacecraft_area / (1000.0 * 1000.0); 
             this->K = this->acceleration_model->my_options->solar_percentage; // percentage of Sun seen by spacecraft [0, 1]
             this->Cr = this->acceleration_model->my_options->coefficient_of_reflectivity; // [0, 2]
@@ -116,21 +115,6 @@ namespace EMTG
             this->acceleration_model->fx(5, 7) += da_cb2scdr_cb2sun_SRP_term(2, 0) * this->acceleration_model->dr_cb2sundcurrent_epoch(0)
                                                +  da_cb2scdr_cb2sun_SRP_term(2, 1) * this->acceleration_model->dr_cb2sundcurrent_epoch(1)
                                                +  da_cb2scdr_cb2sun_SRP_term(2, 2) * this->acceleration_model->dr_cb2sundcurrent_epoch(2);
-
-            for (size_t propVar = 0; propVar < 2; ++propVar)
-            {
-                this->acceleration_model->da_cb2scdPropVars(0, propVar) += da_cb2scdr_cb2sun_SRP_term(0, 0) * this->acceleration_model->dr_cb2sundProp_vars(0, propVar)
-                                                                         + da_cb2scdr_cb2sun_SRP_term(0, 1) * this->acceleration_model->dr_cb2sundProp_vars(1, propVar)
-                                                                         + da_cb2scdr_cb2sun_SRP_term(0, 2) * this->acceleration_model->dr_cb2sundProp_vars(2, propVar);
-
-                this->acceleration_model->da_cb2scdPropVars(1, propVar) += da_cb2scdr_cb2sun_SRP_term(1, 0) * this->acceleration_model->dr_cb2sundProp_vars(0, propVar)
-                                                                         + da_cb2scdr_cb2sun_SRP_term(1, 1) * this->acceleration_model->dr_cb2sundProp_vars(1, propVar)
-                                                                         + da_cb2scdr_cb2sun_SRP_term(1, 2) * this->acceleration_model->dr_cb2sundProp_vars(2, propVar);
-
-                this->acceleration_model->da_cb2scdPropVars(2, propVar) += da_cb2scdr_cb2sun_SRP_term(2, 0) * this->acceleration_model->dr_cb2sundProp_vars(0, propVar)
-                                                                         + da_cb2scdr_cb2sun_SRP_term(2, 1) * this->acceleration_model->dr_cb2sundProp_vars(1, propVar)
-                                                                         + da_cb2scdr_cb2sun_SRP_term(2, 2) * this->acceleration_model->dr_cb2sundProp_vars(2, propVar);
-            }
 
         } // end computeAccelerationTerm(bool)
 

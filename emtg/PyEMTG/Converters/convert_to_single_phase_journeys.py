@@ -150,8 +150,15 @@ def convert_to_single_phase_journeys(originalOptions):
             
             #Step 2.9: rename the journey
             newJourney.journey_name = oldJourney.journey_name + '_phase' + str(phaseIndex)
+
+            #Step 2.10: staging
+            if phaseIndex == len(oldJourney.sequence):
+                newJourney.stage_before_arrival = 0
+                newJourney.stage_after_arrival = 0
+            else:
+                newJourney.stage_after_departure = 0
             
-            #Step 2.10: attach the new journey to the mission
+            #Step 2.11: attach the new journey to the mission
             newOptions.Journeys.append(copy.deepcopy(newJourney))
                 
     #get rid of the mission-level forced coasts since they are now captured at the journey level in the new options object

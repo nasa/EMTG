@@ -50,6 +50,11 @@ namespace EMTG
             this->ElectricPropellantMargin = 0.0;
             this->ChemicalFuelMargin = 0.0;
             this->ChemicalOxidizerMargin = 0.0;
+
+            this->ProducedPower = 0.0;
+            this->BusPower = 0.0;
+            this->AvailablePower = 0.0;
+            this->ActivePower = 0.0;
         }
 
         //compute dry mass
@@ -179,23 +184,23 @@ namespace EMTG
             //with respect to virtual electric tanks
             for (size_t i = 0; i < this->ElectricPropellantTank_Xindices.size(); ++i)
             {
-                G[this->DryMass_Gindices[Gindex++]] = -ElectricPropellantMargin * this->ElectricPropellantTank_Xscaleranges[i] / this->DryMass;
+                G[this->DryMass_Gindices[Gindex++]] = ElectricPropellantMargin * this->ElectricPropellantTank_Xscaleranges[i] / this->DryMass;
             }
 
             //with respect to virtual chemical fuel tanks
             for (size_t i = 0; i < this->ChemicalFuelTank_Xindices.size(); ++i)
             {
-                G[this->DryMass_Gindices[Gindex++]] = -ChemicalPropellantMargin * this->ChemicalFuelTank_Xscaleranges[i] / this->DryMass;
+                G[this->DryMass_Gindices[Gindex++]] = ChemicalPropellantMargin * this->ChemicalFuelTank_Xscaleranges[i] / this->DryMass;
             }
 
             //with respect to virtual chemical oxidizer tanks
             for (size_t i = 0; i < this->ChemicalOxidizerTank_Xindices.size(); ++i)
             {
-                G[this->DryMass_Gindices[Gindex++]] = -ChemicalPropellantMargin * this->ChemicalOxidizerTank_Xscaleranges[i] / this->DryMass;
+                G[this->DryMass_Gindices[Gindex++]] = ChemicalPropellantMargin * this->ChemicalOxidizerTank_Xscaleranges[i] / this->DryMass;
             }
 
             //with respect to final mass
-            G[this->DryMass_Gindices[Gindex++]] = this->Xscale_StageFinalMass / this->DryMass;
+            G[this->DryMass_Gindices[Gindex++]] = -this->Xscale_StageFinalMass / this->DryMass;
         }
 
         void Stage::output_mass_information(std::ofstream& outputfile)

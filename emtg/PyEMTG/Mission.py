@@ -20,8 +20,10 @@ class Mission(object):
         self.spacecraft_dry_mass = 1.0e-20
         self.final_mass_including_propellant_margin = 1.0e-20
         self.total_electric_propellant_including_margin = 1.0e+20
-        self.total_chemical_fuel_used = 1.0e+20
-        self.total_chemical_oxidizer_used = 1.0e+20
+        self.chemical_fuel_with_margin = 1.0e+20
+        self.chemical_fuel_used = 1.0e+20
+        self.chemical_oxidizer_with_margin = 1.0e+20
+        self.chemical_oxidizer_used = 1.0e+20
         self.total_electric_propellant_used = 1.0e+20
         self.spacecraft_dry_mass_margin = -1.0e+20
         self.DecisionVector = []
@@ -1143,6 +1145,15 @@ class Mission(object):
         TableFile.write('\end{document}\n')
 
         TableFile.close()
+
+    #************************************************************************************getJourneyIndex()
+    def getJourneyIndex(self, journeyNameString):
+        for journeyIndex in range(0, len(self.Journeys)):
+            if self.Journeys[journeyIndex].journey_name == journeyNameString:
+                return journeyIndex
+        
+        #if you get this far, something went wrong                                                                 
+        raise Exception("Journey '" + journeyNameString + "' not found.")  
         
     def Comparatron(self,baseline_path,csv_file_name=None,full_output=False,tolerance_dict={},default_tolerance=1e-15):
         '''

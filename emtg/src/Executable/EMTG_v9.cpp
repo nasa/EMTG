@@ -116,7 +116,11 @@ int main(int argc, char* argv[])
             }
             catch (std::exception &e)
             {
-                std::cerr << "Error " << e.what() << ": Directory creation failed" << std::endl;
+                //std::cerr << "Error " << e.what() << ": Directory creation failed" << std::endl;
+#ifdef _WIN32
+                std::cout << "Perhaps the output directory path is too long?" << std::endl;
+#endif
+                throw;
             }
 
             //print the options file to the new directory
@@ -244,12 +248,20 @@ int main(int argc, char* argv[])
                 std::vector<int> body_index_array;
 
                 //first boundary point
-                if (options.Journeys[j].destination_list[0] > 0)
-                    body_index_array.push_back(options.Journeys[j].destination_list[0] - 1);
+                if (options.Journeys[j].departure_class != EMTG::BoundaryClass::FreePoint
+                    && options.Journeys[j].departure_elements_frame != EMTG::ReferenceFrame::ObjectReferenced)
+                {
+                    if (options.Journeys[j].destination_list[0] > 0)
+                        body_index_array.push_back(options.Journeys[j].destination_list[0] - 1);
+                }
 
                 //last boundary point
-                if (options.Journeys[j].destination_list[1] > 0)
-                    body_index_array.push_back(options.Journeys[j].destination_list[1] - 1);
+                if (options.Journeys[j].arrival_class != EMTG::BoundaryClass::FreePoint
+                    && options.Journeys[j].arrival_elements_frame != EMTG::ReferenceFrame::ObjectReferenced)
+                {
+                    if (options.Journeys[j].destination_list[1] > 0)
+                        body_index_array.push_back(options.Journeys[j].destination_list[1] - 1);
+                }
 
                 //sequence
                 for (int body : options.Journeys[j].sequence)
@@ -359,8 +371,11 @@ int main(int argc, char* argv[])
             std::cout << myError.what() << std::endl;
             std::cout << "Submit this error message to the EMTG development team, along with your .emtgopt, .emtg_universe file(s), your hardware model files, any relevant ephemeris files, and which branch you are using. This information will allow us to properly help you." << std::endl;
 #ifndef BACKGROUND_MODE //macro overrides if statement
-            std::cout << "Press enter to close window." << std::endl;
-            std::cin.ignore();
+            if (!options.background_mode)
+            {
+                std::cout << "Press enter to close window." << std::endl;
+                std::cin.ignore();
+            }
 #endif
             throw;
         }
@@ -381,33 +396,27 @@ int main(int argc, char* argv[])
             if (j > 0) //if not the first journey, insert an underscore
                 options.description.append("_");
             options.description.append(TheUniverse[j].central_body_name + "(");
-
-            if (options.Journeys[j].departure_class == EMTG::BoundaryClass::EphemerisPegged)
+            switch (options.Journeys[j].sequence[0])
             {
-                options.description.append(TheUniverse[j].bodies[options.Journeys[j].sequence[0] - 1].short_name);
+            case -1: //begin at SOI
+            {
+                options.description.append("s");
+                break;
             }
-            else if (options.Journeys[j].departure_class == EMTG::BoundaryClass::EphemerisReferenced)
+            case 0: //begin at central body
             {
-                if (options.Journeys[j].sequence[0] == -1) //SOI
+                options.description.append("c");
+                break;
+            }
+            default:
+                if (options.Journeys[j].departure_class == EMTG::BoundaryClass::FreePoint)
                 {
-                    options.description.append("s");
+                    options.description.append("f");
                 }
-                else if (options.Journeys[j].sequence[0] == 0) //central body
-                {
-                    options.description.append("c");
-                }
-                else //body in the universe
+                else
                 {
                     options.description.append(TheUniverse[j].bodies[options.Journeys[j].sequence[0] - 1].short_name);
                 }
-            }
-            else if (options.Journeys[j].departure_class == EMTG::BoundaryClass::Periapse)
-            {
-                options.description.append("c"); //always the central body
-            }
-            else //free point
-            {
-                options.description.append("f");
             }
 
             //first, how many phases are there in the journey?
@@ -432,32 +441,28 @@ int main(int argc, char* argv[])
 
             options.Journeys[j].sequence.push_back(options.Journeys[j].destination_list[1]);
 
-            if (options.Journeys[j].arrival_class == EMTG::BoundaryClass::EphemerisPegged)
+
+            switch (options.Journeys[j].sequence.back())
             {
-                options.description.append(TheUniverse[j].bodies[options.Journeys[j].sequence.back() - 1].short_name);
+            case -1: //begin at SOI
+            {
+                options.description.append("s");
+                break;
             }
-            else if (options.Journeys[j].arrival_class == EMTG::BoundaryClass::EphemerisReferenced)
+            case 0: //begin at central body
             {
-                if (options.Journeys[j].sequence.back() == -1) //SOI
+                options.description.append("c");
+                break;
+            }
+            default:
+                if (options.Journeys[j].arrival_class == EMTG::BoundaryClass::FreePoint)
                 {
-                    options.description.append("s");
+                    options.description.append("f");
                 }
-                else if (options.Journeys[j].sequence.back() == 0) //central body
-                {
-                    options.description.append("c");
-                }
-                else //body in the universe
+                else
                 {
                     options.description.append(TheUniverse[j].bodies[options.Journeys[j].sequence.back() - 1].short_name);
                 }
-            }
-            else if (options.Journeys[j].arrival_class == EMTG::BoundaryClass::Periapse)
-            {
-                options.description.append("c"); //always the central body
-            }
-            else //free point
-            {
-                options.description.append("f");
             }
             options.description.append(")");
 

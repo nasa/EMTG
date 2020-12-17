@@ -29,7 +29,7 @@ namespace EMTG
     {
         //constructors
         SphericalHarmonicTerm::SphericalHarmonicTerm(SpacecraftAccelerationModel * acceleration_model_in, body * my_body_in, CentralBodyGravityTerm * parent_gravity_term_in, const size_t & degree_in, const size_t & order_in) :
-                               AccelerationModelTerm::AccelerationModelTerm(acceleration_model_in), 
+            SpacecraftAccelerationModelTerm::SpacecraftAccelerationModelTerm(acceleration_model_in),
                                my_body(my_body_in), 
                                parent_gravity_term(parent_gravity_term_in), 
                                degree(degree_in), 
@@ -55,9 +55,9 @@ namespace EMTG
             }
             this->acceleration_model->my_universe->LocalFrame.rotate_frame_to_frame(EMTG::ReferenceFrame::ICRF,
                 temp_matrix_in,
-                EMTG::ReferenceFrame::J2000_BCF,
+                EMTG::ReferenceFrame::TrueOfDate_BCF,
                 temp_matrix_out,
-                this->acceleration_model->current_epoch_JD);
+                this->acceleration_model->current_epoch);
             for (size_t k = 0; k < 3; ++k) 
             {
                 this->r_body2sc_BCF(k) = temp_matrix_out(k, 0);
@@ -72,7 +72,7 @@ namespace EMTG
 
             doubleType z2 = this->r_body2sc_BCF(2) * this->r_body2sc_BCF(2);
             doubleType zcoeff = 5.0 * z2 / (spacecraft_distance_from_central_body_BCF2);
-            doubleType J2coeff = 3.0 * this->acceleration_model->my_universe->central_body_J2 * this->my_body->mu * this->my_body->radius * this->my_body->radius / (2.0 * spacecraft_distance_from_central_body_BCF5);
+            doubleType J2coeff = 3.0 * this->acceleration_model->my_universe->central_body_J2 * this->my_body->mu * this->my_body->J2_ref_radius * this->my_body->J2_ref_radius / (2.0 * spacecraft_distance_from_central_body_BCF5);
 
             // compute the J2 acceleration in BCF coordinates
             this->spherical_harmonic_term_acceleration_BCF(0) = -J2coeff * (1.0 - zcoeff) * this->r_body2sc_BCF(0);
@@ -84,11 +84,11 @@ namespace EMTG
             {
                 temp_matrix_in(k, 0) = this->spherical_harmonic_term_acceleration_BCF(k);
             }
-            this->acceleration_model->my_universe->LocalFrame.rotate_frame_to_frame(EMTG::ReferenceFrame::J2000_BCF,
+            this->acceleration_model->my_universe->LocalFrame.rotate_frame_to_frame(EMTG::ReferenceFrame::TrueOfDate_BCF,
                 temp_matrix_in,
                 EMTG::ReferenceFrame::ICRF,
                 temp_matrix_out,
-                this->acceleration_model->current_epoch_JD);
+                this->acceleration_model->current_epoch);
             
             // dump the spherical harmonic contribution into the parent gravity term
             for (size_t k = 0; k < 3; ++k) 
@@ -121,18 +121,18 @@ namespace EMTG
             doubleType spacecraft_distance_from_central_body_BCF2 = this->r_body2sc_BCF_norm * this->r_body2sc_BCF_norm;
             doubleType spacecraft_distance_from_central_body_BCF5 = this->r_body2sc_BCF_norm * spacecraft_distance_from_central_body_BCF2 * spacecraft_distance_from_central_body_BCF2;
             doubleType spacecraft_distance_from_central_body_BCF9 = spacecraft_distance_from_central_body_BCF5 * spacecraft_distance_from_central_body_BCF2 * spacecraft_distance_from_central_body_BCF2;
-            doubleType J2_deriv_coeff = -this->acceleration_model->my_universe->central_body_J2 * this->my_body->mu * this->my_body->radius * this->my_body->radius / (2.0 * spacecraft_distance_from_central_body_BCF9);
+            doubleType J2_deriv_coeff = -this->acceleration_model->my_universe->central_body_J2 * this->my_body->mu * this->my_body->J2_ref_radius * this->my_body->J2_ref_radius / (2.0 * spacecraft_distance_from_central_body_BCF9);
             doubleType J2_deriv_coeff3 = J2_deriv_coeff * J2_deriv_coeff * J2_deriv_coeff;
             // grab the ICRF->BCF and BCF->ICRF frame rotation matrices
-            static EMTG::math::Matrix <doubleType> R_from_ICRF_to_J2000BCF;
-            static EMTG::math::Matrix <doubleType> R_from_J2000BCF_to_ICRF;
+            static EMTG::math::Matrix <doubleType> R_from_ICRF_to_BCF;
+            static EMTG::math::Matrix <doubleType> R_from_BCF_to_ICRF;
             static EMTG::math::Matrix <doubleType> accel_position_Jacobian_BCF(3, 3, 0.0);
             static EMTG::math::Matrix <doubleType> accel_position_Jacobian_ICRF(3, 3, 0.0);
 
             //this->acceleration_model->my_universe->LocalFrame.construct_rotation_matrices(this->acceleration_model->current_epoch_JD, generate_derivatives);
 
-            R_from_ICRF_to_J2000BCF = this->acceleration_model->my_universe->LocalFrame.get_R_from_ICRF_to_J2000BCF();
-            R_from_J2000BCF_to_ICRF = this->acceleration_model->my_universe->LocalFrame.get_R_from_J2000BCF_to_ICRF();
+            R_from_ICRF_to_BCF = this->acceleration_model->my_universe->LocalFrame.get_R_from_ICRF_to_BCF();
+            R_from_BCF_to_ICRF = this->acceleration_model->my_universe->LocalFrame.get_R_from_BCF_to_ICRF();
             
             accel_position_Jacobian_BCF(0, 0) =  3.0  * J2_deriv_coeff * (4.0 * x4 + 3.0 * x2y2 - 27.0* x2z2 - y4 + 3.0 * y2z2 + 4.0 * z4);
             accel_position_Jacobian_BCF(0, 1) =  15.0 * J2_deriv_coeff * xy * (x2 + y2 - 6.0 * z2);
@@ -144,7 +144,7 @@ namespace EMTG
             accel_position_Jacobian_BCF(2, 1) =  15.0 * J2_deriv_coeff * yz * (3.0 * x2 + 3.0 * y2 - 4.0 * z2);
             accel_position_Jacobian_BCF(2, 2) = -3.0  * J2_deriv_coeff * (3.0 * x4 + 6.0 * x2y2 - 24.0 * x2z2 + 3.0 * y4 - 24.0 * y2z2 + 8.0 * z4);
 
-            accel_position_Jacobian_ICRF = -(R_from_J2000BCF_to_ICRF * accel_position_Jacobian_BCF * R_from_ICRF_to_J2000BCF);
+            accel_position_Jacobian_ICRF = -(R_from_BCF_to_ICRF * accel_position_Jacobian_BCF * R_from_ICRF_to_BCF);
 
             //doubleType dax_BCFdx_ICRF = dax_BCFdx_BCF * R_from_ICRF_to_BCF(0, 0) + dax_BCFdy_BCF * R_from_ICRF_to_BCF(1, 0) + dax_BCFdz_BCF * R_from_ICRF_to_BCF(2, 0);
             //doubleType dax_BCFdy_ICRF = dax_BCFdx_BCF * R_from_ICRF_to_BCF(0, 1) + dax_BCFdy_BCF * R_from_ICRF_to_BCF(1, 1) + dax_BCFdz_BCF * R_from_ICRF_to_BCF(2, 1);
@@ -181,13 +181,13 @@ namespace EMTG
             // dadt
             // first compute the time partial of the accel_position_Jacobian_ICRF computed above
             //static EMTG::math::Matrix <doubleType> daccel_position_Jacobian_ICRF_dt(3, 3, 0.0);
-            //static EMTG::math::Matrix <doubleType> dR_from_ICRF_to_J2000BCF_dt;
-            //static EMTG::math::Matrix <doubleType> dR_from_J2000BCF_to_ICRF_dt;
-            //dR_from_ICRF_to_J2000BCF_dt = this->acceleration_model->my_universe->LocalFrame.get_dR_from_ICRF_to_J2000BCF_dt();
-            //dR_from_J2000BCF_to_ICRF_dt = this->acceleration_model->my_universe->LocalFrame.get_dR_from_J2000BCF_to_ICRF_dt();
+            //static EMTG::math::Matrix <doubleType> dR_from_ICRF_to_BCF_dt;
+            //static EMTG::math::Matrix <doubleType> dR_from_BCF_to_ICRF_dt;
+            //dR_from_ICRF_to_BCF_dt = this->acceleration_model->my_universe->LocalFrame.get_dR_from_ICRF_to_BCF_dt();
+            //dR_from_BCF_to_ICRF_dt = this->acceleration_model->my_universe->LocalFrame.get_dR_from_BCF_to_ICRF_dt();
             //
-            //daccel_position_Jacobian_ICRF_dt = dR_from_ICRF_to_J2000BCF_dt * R_from_J2000BCF_to_ICRF * this->term_acceleration
-            //                                 + R_from_ICRF_to_J2000BCF * dR_from_ICRF_to_J2000BCF_dt * this->term_acceleration;
+            //daccel_position_Jacobian_ICRF_dt = dR_from_ICRF_to_BCF_dt * R_from_BCF_to_ICRF * this->term_acceleration
+            //                                 + R_from_ICRF_to_BCF * dR_from_ICRF_to_BCF_dt * this->term_acceleration;
             //
             //this->acceleration_model->fx(3, 7) += (daccel_position_Jacobian_ICRF_dt(0)) _GETVALUE;
             //this->acceleration_model->fx(4, 7) += (daccel_position_Jacobian_ICRF_dt(1)) _GETVALUE;

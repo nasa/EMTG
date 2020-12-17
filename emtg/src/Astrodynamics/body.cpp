@@ -60,6 +60,7 @@ namespace EMTG
                 3.986004418e+5,
                 6378.136,
                 0.0010826265,
+                6378.136,
                 1.0 / 298.257223563,
                 10.0,
                 0.367,
@@ -84,6 +85,7 @@ namespace EMTG
             const double& imass,
             const double& iradius,
             const double& iJ2,
+            const double& iJ2_ref_radius,
             const double& iflattening_coefficient,
             const double& iAbsoluteMagnitude,
             const double& ialbedo,
@@ -115,6 +117,7 @@ namespace EMTG
                 imass,
                 iradius,
                 iJ2,
+                iJ2_ref_radius,
                 iflattening_coefficient,
                 iAbsoluteMagnitude,
                 ialbedo,
@@ -143,6 +146,7 @@ namespace EMTG
             const double& imu,
             const double& iradius,
             const double& iJ2,
+            const double& iJ2_ref_radius,
             const double& iflattening_coefficient,
             const double& iAbsoluteMagnitude,
             const double& ialbedo,
@@ -173,6 +177,7 @@ namespace EMTG
             this->reference_epoch = iepoch;
 
             this->J2 = iJ2;
+            this->J2_ref_radius = iJ2_ref_radius;
             this->flattening_coefficient = iflattening_coefficient;
             this->AbsoluteMagnitude = iAbsoluteMagnitude;
             this->albedo = ialbedo;
@@ -285,6 +290,7 @@ namespace EMTG
                         double timeScale = epoch.getDerivative(timevar) / this->X_scale_factors->operator[](timevar);
 
                         state[stateindex].setDerivative(timevar, statedouble[stateindex + 6] * this->X_scale_factors->operator[](timevar) * timeScale);
+                        //state[stateindex].setDerivative(timevar, statedouble[stateindex + 6]);
                     }
                 }
 #else
@@ -339,9 +345,6 @@ namespace EMTG
                         + " with respect to " + std::to_string(this->central_body_spice_ID) + " on epoch " + std::to_string(epoch _GETVALUE / 86400.0) + ".");
                 }
                 break;
-#ifndef BACKGROUND_MODE
-                std::cin.ignore();
-#endif
             }
 
             return 0;

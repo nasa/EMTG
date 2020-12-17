@@ -74,6 +74,11 @@ class MissionConverter_TPSLT_to_PSFB(object):
         newDecisionVector = []
         for entry in DecisionVector:
             line = copy.deepcopy(entry)
+
+            if self.OriginalTranscription[0] not in line[0]:
+                newDecisionVector.append(line)
+                continue
+
             line = [line[0].replace(self.OriginalTranscription[0], 'PSFB'), line[1]]
             
             journeyIndex = int(line[0][1:line[0].find('p')])
@@ -146,36 +151,46 @@ class MissionConverter_TPSLT_to_PSFB(object):
                 xdot = float(Rvelocity[0])
                 ydot = float(Rvelocity[1])
                 zdot = float(Rvelocity[2])
-                r = (x**2 + y**2 + z**2)**0.5
-                v = (xdot**2 + ydot**2 + zdot**2)**0.5
-                RA = atan2(y, x)
-                DEC = asin(z / r)
-                FPA = acos( (x*xdot + y*ydot + z*zdot) / r / v )
-        
-                #azimuth is complicated
-                xhat = numpy.matrix([cos(RA)*cos(DEC), sin(RA)*cos(DEC), sin(DEC)]).T
-                yhat = numpy.matrix([cos(RA + pi / 2.0), sin(RA + pi / 2.0), 0.0]).T
-                zhat = numpy.matrix([-cos(RA)*sin(DEC), -sin(RA)*sin(DEC), cos(DEC)]).T
-                R = numpy.hstack([xhat, yhat, zhat]).T
-                V = numpy.matrix([xdot, ydot, zdot]).T
-                Vprime = R * V
-                AZ = atan2(Vprime[1], Vprime[2])
-                  
-                #vRA and vDEC
-                vRA = atan2(ydot, xdot)                                                                                 
-                vDEC = asin(zdot / v)   
 
                 prefix = 'j' + str(journeyIndex) + 'p0PSFB_Step' + str(stepIndex) + ': '
-                newDecisionVector.append([prefix + 'left state r', r])
-                newDecisionVector.append([prefix + 'left state RA', RA])
-                newDecisionVector.append([prefix + 'left state DEC', DEC])
-                newDecisionVector.append([prefix + 'left state v', v])
-                if self.originalOptions.ParallelShootingStateRepresentation == 2: #spherical AZFPA
-                    newDecisionVector.append([prefix + 'left state AZ', AZ])
-                    newDecisionVector.append([prefix + 'left state FPA', FPA])
-                else: #spherical RADEC
-                    newDecisionVector.append([prefix + 'left state vRA', vRA])
-                    newDecisionVector.append([prefix + 'left state vDEC', vDEC])
+
+                if self.originalOptions.ParallelShootingStateRepresentation in [1, 2]:
+                    r = (x**2 + y**2 + z**2)**0.5
+                    v = (xdot**2 + ydot**2 + zdot**2)**0.5
+                    RA = atan2(y, x)
+                    DEC = asin(z / r)
+                    FPA = acos( (x*xdot + y*ydot + z*zdot) / r / v )
+        
+                    #azimuth is complicated
+                    xhat = numpy.matrix([cos(RA)*cos(DEC), sin(RA)*cos(DEC), sin(DEC)]).T
+                    yhat = numpy.matrix([cos(RA + pi / 2.0), sin(RA + pi / 2.0), 0.0]).T
+                    zhat = numpy.matrix([-cos(RA)*sin(DEC), -sin(RA)*sin(DEC), cos(DEC)]).T
+                    R = numpy.hstack([xhat, yhat, zhat]).T
+                    V = numpy.matrix([xdot, ydot, zdot]).T
+                    Vprime = R * V
+                    AZ = atan2(Vprime[1], Vprime[2])
+                  
+                    #vRA and vDEC
+                    vRA = atan2(ydot, xdot)                                                                                 
+                    vDEC = asin(zdot / v)   
+
+                    newDecisionVector.append([prefix + 'left state r', r])
+                    newDecisionVector.append([prefix + 'left state RA', RA])
+                    newDecisionVector.append([prefix + 'left state DEC', DEC])
+                    newDecisionVector.append([prefix + 'left state v', v])
+                    if self.originalOptions.ParallelShootingStateRepresentation == 2: #spherical AZFPA
+                        newDecisionVector.append([prefix + 'left state AZ', AZ])
+                        newDecisionVector.append([prefix + 'left state FPA', FPA])
+                    else: #spherical RADEC
+                        newDecisionVector.append([prefix + 'left state vRA', vRA])
+                        newDecisionVector.append([prefix + 'left state vDEC', vDEC])
+                else: #cartesian! this is easier...
+                    newDecisionVector.append([prefix + 'left state x', x])
+                    newDecisionVector.append([prefix + 'left state y', y])
+                    newDecisionVector.append([prefix + 'left state z', z])
+                    newDecisionVector.append([prefix + 'left state vx', xdot])
+                    newDecisionVector.append([prefix + 'left state vy', ydot])
+                    newDecisionVector.append([prefix + 'left state vz', zdot])
                 newDecisionVector.append([prefix + 'left state mass', event.Mass])
                 newDecisionVector.append([prefix + 'virtual chemical fuel', 0.0])
                 newDecisionVector.append([prefix + 'virtual electric propellant', 0.0])

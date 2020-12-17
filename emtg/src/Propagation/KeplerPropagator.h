@@ -21,6 +21,7 @@
 #pragma once
 
 #include "PropagatorBase.h"
+#include "missionoptions.h"
 
 namespace EMTG
 {
@@ -31,12 +32,12 @@ namespace EMTG
         public:
             //constructors
             KeplerPropagator() {};
-            KeplerPropagator(missionoptions& myOptions,
-                Astrodynamics::universe& myUniverse,
-                const size_t& numStates);
+            KeplerPropagator(const size_t& numStates);
 
             //methods
             virtual void propagate(const doubleType& PropagationTime, const bool& needSTM) = 0;
+            inline void setCentralBodyGM(const double& mu) { this->mu = mu; };
+            virtual std::vector<double> getPropagationHistory() const = 0;
 
             void set_dPropagationTime_dIndependentVariable(double * dPropagationTime_dIndependentVariable)
             {
@@ -45,6 +46,7 @@ namespace EMTG
 
         protected:
             //fields
+            double mu;
             double* dPropagationTime_dIndependentVariable;
         };
     }//end namespace Astrodynamics

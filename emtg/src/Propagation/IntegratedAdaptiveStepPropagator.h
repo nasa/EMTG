@@ -30,10 +30,8 @@ namespace EMTG {
         {
         public:
             // constructors
-            IntegratedAdaptiveStepPropagator(universe & myUniverse,
-                const size_t & STM_rows_in,
-                const size_t & STM_columns_in,
-                const size_t & STM_start_index_in);
+            IntegratedAdaptiveStepPropagator(const size_t & numStates_in,
+                                             const size_t & STM_size_in);
 
             //clone
             virtual IntegratedAdaptiveStepPropagator* clone() const { return new IntegratedAdaptiveStepPropagator(*this); }
@@ -60,16 +58,13 @@ namespace EMTG {
 
             void propagateAdaptiveStep(const doubleType & propagation_span, 
                                        const math::Matrix <doubleType> & control, 
-                                       math::Matrix<double> & dstate_leftdProp_vars,
-                                       math::Matrix<double> & dstate_rightdProp_vars,
                                        const bool & STM_needed);
 
             void computePropVarPartials(const doubleType & propagation_span, 
                                         const math::Matrix <doubleType> & control, 
                                         math::Matrix<doubleType> & state_left,
                                         math::Matrix<doubleType> & state_right,
-                                        math::Matrix<double> & dstate_leftdProp_vars,
-                                        math::Matrix<double> & dstate_rightdProp_vars);
+                                        math::Matrix<double> & STM_left);
 
         };
 

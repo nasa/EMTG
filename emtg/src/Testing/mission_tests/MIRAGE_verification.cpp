@@ -142,17 +142,15 @@ void MIRAGE_verification(EMTG::missionoptions& options,
 
 	size_t state_vector_size = 10;
 	size_t STM_start_index = 9;
-	size_t num_STM_rows = 12;
-	size_t num_STM_columns = 12;
+	size_t num_STM_rows = 14;
+	size_t num_STM_columns = 14;
     std::vector<std::string> stringthing;
 	EMTG::Astrodynamics::SpacecraftAccelerationModel test_acceleration_model(&myMission.options,
 		                                                                     &myMission.options.Journeys[0],
 		                                                                     &TheUniverse[0],
                                                                              &stringthing,
 		                                                                     &mySpacecraft,
-		                                                                     num_STM_rows,
-		                                                                     num_STM_columns,
-		                                                                     STM_start_index);
+		                                                                     num_STM_rows);
 
     test_acceleration_model.setDutyCycle(myMission.options.engine_duty_cycle);
 

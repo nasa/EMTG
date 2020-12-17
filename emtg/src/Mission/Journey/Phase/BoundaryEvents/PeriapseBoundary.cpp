@@ -170,7 +170,7 @@ namespace EMTG
                     //AOP
                     stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
                     //TA
-                    stateBounds.push_back({ -math::SMALL, math::PIover2 });
+                    stateBounds.push_back({ -math::SMALL, math::SMALL });
 
                     break;
                 }

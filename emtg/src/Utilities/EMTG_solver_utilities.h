@@ -28,7 +28,10 @@ namespace EMTG
 {
     namespace solver_utilities
     {
-        int detect_duplicate_Jacobian_entries(const std::vector<std::string>& Gdescriptions, const std::string& entry_name);
+        int detect_duplicate_Jacobian_entries(const std::vector<size_t>& iGfun,
+            const std::vector<size_t>& jGvar,
+            const size_t& Findex,
+            const size_t& Xindex);
 
         size_t create_sparsity_entry(const size_t& Findex,
             const size_t& Xstart,

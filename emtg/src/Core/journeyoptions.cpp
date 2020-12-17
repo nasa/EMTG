@@ -23,6 +23,7 @@ namespace EMTG
         this->destination_list = std::vector<int>({ 3, 4}); 
         this->phase_type = (PhaseType) 2;
         this->impulses_per_phase = 1;
+        this->thrust_control_law = (ThrustControlLaw) 1;
         this->force_unit_magnitude_control = (ControlMagnitudeType) 0;
         this->force_fixed_inertial_control = (bool) 0;
         this->override_num_steps = (bool) 0;
@@ -35,7 +36,7 @@ namespace EMTG
         this->integration_step_size = 86400;
         this->override_flyby_altitude_bounds = (bool) 0;
         this->flyby_altitude_bounds = std::vector<double>({ 300.0, 1000000.0}); 
-        this->PeriapseArrival_override_altitude = (bool) 0;
+        this->PeriapseArrival_override_altitude = (bool) 1;
         this->PeriapseArrival_altitude_bounds = std::vector<double>({ 300.0, 1000000.0}); 
         this->PeriapseDeparture_altitude_bounds = std::vector<double>({ 185.0, 185.0}); 
         this->num_interior_control_points = 1;
@@ -146,9 +147,11 @@ namespace EMTG
         this->sequence_lowerBound = 1;
         this->sequence_upperBound = INT_MAX;
         this->phase_type_lowerBound = (PhaseType) 0;
-        this->phase_type_upperBound = (PhaseType) 10;
+        this->phase_type_upperBound = (PhaseType) 11;
         this->impulses_per_phase_lowerBound = 0;
         this->impulses_per_phase_upperBound = SIZE_MAX;
+        this->thrust_control_law_lowerBound = (ThrustControlLaw) 1;
+        this->thrust_control_law_upperBound = (ThrustControlLaw) 2;
         this->force_unit_magnitude_control_lowerBound = (ControlMagnitudeType) 0;
         this->force_unit_magnitude_control_upperBound = (ControlMagnitudeType) 2;
         this->number_of_steps_lowerBound = 1;
@@ -443,6 +446,17 @@ namespace EMTG
             if (this->impulses_per_phase < this->impulses_per_phase_lowerBound || this->impulses_per_phase > this->impulses_per_phase_upperBound)
             {
                 throw std::out_of_range("Input option impulses_per_phase is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->impulses_per_phase) + ", bounds are [" + std::to_string(this->impulses_per_phase_lowerBound) + ", " + std::to_string(this->impulses_per_phase_upperBound) + "].");
+            }
+            return;
+        }
+        if (linecell[0] == "thrust_control_law")
+        {
+            this->thrust_control_law = (ThrustControlLaw) std::stoi(linecell[1]);
+            
+            //bounds check
+            if (this->thrust_control_law < this->thrust_control_law_lowerBound || this->thrust_control_law > this->thrust_control_law_upperBound)
+            {
+                throw std::out_of_range("Input option thrust_control_law is out of bounds on line " + std::to_string(lineNumber) + ". Value is " + std::to_string(this->thrust_control_law) + ", bounds are [" + std::to_string(this->thrust_control_law_lowerBound) + ", " + std::to_string(this->thrust_control_law_upperBound) + "].");
             }
             return;
         }
@@ -1943,7 +1957,7 @@ namespace EMTG
         
         if (this->phase_type != 2 || writeAll || this->print_this_journey_options_no_matter_what)
         {
-            optionsFileStream << "#phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable (do not use)\n#10 ProbeEntryPhase" << std::endl;
+            optionsFileStream << "#phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable (do not use)\n#10 ProbeEntryPhase\n#11 ControlLawThrustPhase" << std::endl;
             optionsFileStream << "phase_type " << this->phase_type << std::endl;
         }
     
@@ -1951,6 +1965,12 @@ namespace EMTG
         {
             optionsFileStream << "#impulses per phase" << std::endl;
             optionsFileStream << "impulses_per_phase " << this->impulses_per_phase << std::endl;
+        }
+    
+        if (this->thrust_control_law != 1 || writeAll || this->print_this_journey_options_no_matter_what)
+        {
+            optionsFileStream << "#Thrust control law\n#0: Cartesian\n#1: Velocity direction\n1#2: anti-velocity direction" << std::endl;
+            optionsFileStream << "thrust_control_law " << this->thrust_control_law << std::endl;
         }
     
         if (this->force_unit_magnitude_control != 0 || writeAll || this->print_this_journey_options_no_matter_what)
@@ -2028,7 +2048,7 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->PeriapseArrival_override_altitude != 0 || writeAll || this->print_this_journey_options_no_matter_what)
+        if (this->PeriapseArrival_override_altitude != 1 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Override journey flyby altitude?" << std::endl;
             optionsFileStream << "PeriapseArrival_override_altitude " << this->PeriapseArrival_override_altitude << std::endl;

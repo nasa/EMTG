@@ -1,0 +1,299 @@
+#EMTGv9 .emtgopt file version 2
+
+#mission name
+mission_name EME_stageBeforeArrival
+#launch window open date (MJD)
+launch_window_open_date 53701.0
+#flight time bounds (days)
+total_flight_time_bounds 0.0 1000.0
+#Enable ACE feasible point finder?
+ACE_feasible_point_finder 1
+#maximum number of trials for MBH
+MBH_max_trials 100000
+#optimality tolerance
+snopt_optimality_tolerance 0.002
+#NLP major iterations
+snopt_major_iterations 500
+#NLP max run time (seconds)
+snopt_max_run_time 20
+#Seed MBH?
+seed_MBH 1
+#Universe folder
+universe_folder C:\emtg\testatron\universe
+#Beginning of the SplineEphem data set
+earliestPossibleEpoch 51513.0
+#End of the SplineEphem data set
+latestPossibleEpoch 88008.04166666651
+#Allow the mass at the beginning of the first journey to vary up to the allowed maximum?
+allow_initial_mass_to_vary 1
+#maximum possible mass of the spacecraft (kg)
+maximum_mass 5000.0
+#Spacecraft object input type
+#0: Assemble from libraries
+#1: Read .emtg_spacecraftoptions file
+#2: Assemble from missionoptions object
+SpacecraftModelInput 1
+#HardwarePath
+HardwarePath C:/emtg/testatron/HardwareModels/
+#LaunchVehicleLibraryFile
+LaunchVehicleLibraryFile default.emtg_launchvehicleopt
+#SpacecraftOptionsFile
+SpacecraftOptionsFile default_2stage.emtg_spacecraftopt
+#LaunchVehicleKey
+LaunchVehicleKey ExampleRocket
+#PowerSystemKey
+PowerSystemKey 7kWarray_800Wbus
+#User-defined working directory
+forced_working_directory C:\emtg\testatron\tests\global_mission_options
+#Stop after a particular journey? (if this value is greater than the number of journeys, do the whole mission)
+stop_after_journey 100
+#which inner loop solver to run?
+#0: none, evaluate trialX
+#1: run MBH
+#2: run constrained DE
+#3: run NLP using trialX as initial guess
+#4: filament walker
+run_inner_loop 3
+#Enter any user data that should be appended to the .emtg file.
+#This is typically used in python wrappers
+user_data 
+
+
+
+BEGIN_JOURNEY
+
+#Journey name
+journey_name EM
+#PeriapseDeparture altitude bounds (in km)
+PeriapseDeparture_altitude_bounds 300.0 300.0
+#what are the bounds on the initial impulse for each journey in km/s\
+#you can set a very high upper bound if you are using a launchy vehicle model - the optimizer will find the correct value
+initial_impulse_bounds 0.0 5.0
+#journey departure ellipsoid axes (3)
+departure_ellipsoid_axes 10000000.0 10000000.0 10000000.0
+#journey arrival type
+#0: insertion into parking orbit (use chemical Isp)
+#1: rendezvous (use chemical Isp)
+#2: intercept with bounded V_infinity
+#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)
+#4: match final v-infinity vector
+#5: match final v-infinity vector (low-thrust)
+#6: capture spiral
+#7: momentum transfer (kinetic impactor)
+arrival_type 2
+#journey arrival ellipsoid axes (3)
+arrival_ellipsoid_axes 10000000.0 10000000.0 10000000.0
+#Stage before arrival?
+stage_before_arrival 1
+#ECC for ephemeris pegged orbit insertion
+ephemeris_pegged_orbit_insertion_ECC 1e-10
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+p0MGALTEphemerisPeggedLaunchDirectInsertion: event left state epoch ,54324.58903964327328139916
+p0MGALTEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote ,1.77583106824093084342
+p0MGALTEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote ,-17.80283633342672544586
+p0MGALTEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote ,0.22410349902411619283
+p0MGALTEphemerisPeggedLaunchDirectInsertion: initial mass multiplier ,1.00000000000000000000
+p0MGALT: phase flight time ,273.74631206579363151832
+p0MGALTEphemerisPeggedIntercept: event left state mass ,2615.12255367163606933900
+p0MGALTEphemerisPeggedIntercept: V_infinity_x ,-2.34606940563028487645
+p0MGALTEphemerisPeggedIntercept: V_infinity_y ,2.12687520002265983976
+p0MGALTEphemerisPeggedIntercept: V_infinity_z ,1.76858266886649317939
+p0MGALT: virtual chemical fuel ,0.00087829718330869537
+p0MGALT: virtual electric propellant ,219.71717048417568207697
+p0MGALT: step 0 u_x ,0.41799935539359078795
+p0MGALT: step 0 u_y ,0.86736335965579502982
+p0MGALT: step 0 u_z ,0.27010615270953408640
+p0MGALT: step 1 u_x ,0.26135947568893413973
+p0MGALT: step 1 u_y ,0.89817424054178562898
+p0MGALT: step 1 u_z ,0.35351505034124119931
+p0MGALT: step 2 u_x ,0.09535032429494272321
+p0MGALT: step 2 u_y ,0.90182427669054754382
+p0MGALT: step 2 u_z ,0.42145133933916079094
+p0MGALT: step 3 u_x ,-0.06872147709233322743
+p0MGALT: step 3 u_y ,0.87761842773462106493
+p0MGALT: step 3 u_z ,0.47440802777088086906
+p0MGALT: step 4 u_x ,-0.22154607252656799421
+p0MGALT: step 4 u_y ,0.82846322402343486324
+p0MGALT: step 4 u_z ,0.51435978986277386404
+p0MGALT: step 5 u_x ,-0.35666558696979744347
+p0MGALT: step 5 u_y ,0.75938484672980366419
+p0MGALT: step 5 u_z ,0.54417193145253883735
+p0MGALT: step 6 u_x ,-0.46815916241859545366
+p0MGALT: step 6 u_y ,0.67770733208005284887
+p0MGALT: step 6 u_z ,0.56704358124662723739
+p0MGALT: step 7 u_x ,-0.55535992195027406026
+p0MGALT: step 7 u_y ,0.59046029050119086534
+p0MGALT: step 7 u_z ,0.58559784459147978808
+p0MGALT: step 8 u_x ,-0.61635338073215362176
+p0MGALT: step 8 u_y ,0.50400933529680069789
+p0MGALT: step 8 u_z ,0.60504817791126153104
+p0MGALT: step 9 u_x ,-0.65288925585520729555
+p0MGALT: step 9 u_y ,0.42527272307159380560
+p0MGALT: step 9 u_z ,0.62681239170301594754
+p0MGALT: step 10 u_x ,-0.66961210162366791021
+p0MGALT: step 10 u_y ,0.36057617253938079038
+p0MGALT: step 10 u_z ,0.64931084093265756252
+p0MGALT: step 11 u_x ,-0.66544343397063676626
+p0MGALT: step 11 u_y ,0.31442143057682558904
+p0MGALT: step 11 u_z ,0.67699621234007745230
+p0MGALT: step 12 u_x ,-0.64346805085217062548
+p0MGALT: step 12 u_y ,0.29196968007543189216
+p0MGALT: step 12 u_z ,0.70760331245464258565
+p0MGALT: step 13 u_x ,-0.60559146892816462238
+p0MGALT: step 13 u_y ,0.29691301557557880919
+p0MGALT: step 13 u_z ,0.73830992364154068852
+p0MGALT: step 14 u_x ,-0.55154353242046827432
+p0MGALT: step 14 u_y ,0.33124377422303630247
+p0MGALT: step 14 u_z ,0.76555690728052394611
+p0MGALT: step 15 u_x ,-0.48688185012835960563
+p0MGALT: step 15 u_y ,0.39631461699972714285
+p0MGALT: step 15 u_z ,0.77838348265518209068
+p0MGALT: step 16 u_x ,-0.01902166016894613065
+p0MGALT: step 16 u_y ,0.02277580582589755487
+p0MGALT: step 16 u_z ,0.03619112747879937864
+p0MGALT: step 17 u_x ,-0.00004320002597368866
+p0MGALT: step 17 u_y ,0.00018024046656051063
+p0MGALT: step 17 u_z ,0.00047820150473509848
+p0MGALT: step 18 u_x ,-0.00001461643652445055
+p0MGALT: step 18 u_y ,0.00010462567283009427
+p0MGALT: step 18 u_z ,0.00008663018445176363
+p0MGALT: step 19 u_x ,-0.00003182284676706004
+p0MGALT: step 19 u_y ,0.00011283729643918328
+p0MGALT: step 19 u_z ,0.00001755389638846694
+END_TRIALX
+
+END_JOURNEY
+
+BEGIN_JOURNEY
+
+#Journey name
+journey_name ME
+#destination list, as indices from the Universe file
+destination_list 4 3
+#journey departure type
+#0: launch or direct insertion
+#1: depart from parking orbit (you can use this one in place of a launch vehicle model, and the departure burn will be done with the EDS motor)
+#2: free direct departure, i.e. do not burn to get the departure v_infinity (used for when operations about a small body are not modeled but the departure velocity is known)
+#3: flyby (only valid for successive journeys)
+#4: flyby with fixed v-infinity-out (only valid for successive journeys)
+#5: spiral-out from circular orbit (low-thrust missions only)
+#6: zero-turn flyby (for small bodies)
+departure_type 3
+#journey arrival type
+#0: insertion into parking orbit (use chemical Isp)
+#1: rendezvous (use chemical Isp)
+#2: intercept with bounded V_infinity
+#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)
+#4: match final v-infinity vector
+#5: match final v-infinity vector (low-thrust)
+#6: capture spiral
+#7: momentum transfer (kinetic impactor)
+arrival_type 2
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+p0MGALTEphemerisPeggedUnpoweredFlyby: V_infinity_x ,0.94112364792792391199
+p0MGALTEphemerisPeggedUnpoweredFlyby: V_infinity_y ,2.99496364382335045207
+p0MGALTEphemerisPeggedUnpoweredFlyby: V_infinity_z ,1.81658324016678207613
+p0MGALT: phase flight time ,616.63726998296169767855
+p0MGALTEphemerisPeggedIntercept: event left state mass ,2306.69498934916009602603
+p0MGALTEphemerisPeggedIntercept: V_infinity_x ,-1.50009724399724930777
+p0MGALTEphemerisPeggedIntercept: V_infinity_y ,10.23626364663807208899
+p0MGALTEphemerisPeggedIntercept: V_infinity_z ,5.36047330767306107191
+p0MGALT: virtual chemical fuel ,0.00008977546991538232
+p0MGALT: virtual electric propellant ,308.42724576221309007451
+p0MGALT: step 0 u_x ,0.44181050875289651358
+p0MGALT: step 0 u_y ,0.78547007473419960810
+p0MGALT: step 0 u_z ,0.43340542784992841518
+p0MGALT: step 1 u_x ,0.18522345934361328368
+p0MGALT: step 1 u_y ,0.84882408219683780359
+p0MGALT: step 1 u_z ,0.49516643539527316342
+p0MGALT: step 2 u_x ,-0.09706883766563134674
+p0MGALT: step 2 u_y ,0.84782903783491492256
+p0MGALT: step 2 u_z ,0.52130939532018949478
+p0MGALT: step 3 u_x ,-0.39277679473208182426
+p0MGALT: step 3 u_y ,0.77058315161688684114
+p0MGALT: step 3 u_z ,0.50192108448211847360
+p0MGALT: step 4 u_x ,-0.68134020128761074719
+p0MGALT: step 4 u_y ,0.59624270755715680359
+p0MGALT: step 4 u_z ,0.42458256769252544771
+p0MGALT: step 5 u_x ,-0.91833988547081646381
+p0MGALT: step 5 u_y ,0.29191988564960458241
+p0MGALT: step 5 u_z ,0.26727301957997640081
+p0MGALT: step 6 u_x ,-0.98245344281114543872
+p0MGALT: step 6 u_y ,-0.18642753915273713172
+p0MGALT: step 6 u_z ,0.00501619218592863625
+p0MGALT: step 7 u_x ,-0.52303973290416627684
+p0MGALT: step 7 u_y ,-0.78423842091996787129
+p0MGALT: step 7 u_z ,-0.33376515764698877486
+p0MGALT: step 8 u_x ,0.50637661968385039302
+p0MGALT: step 8 u_y ,-0.76264641156833945512
+p0MGALT: step 8 u_z ,-0.40243399804414858867
+p0MGALT: step 9 u_x ,0.96329720004154273383
+p0MGALT: step 9 u_y ,-0.21224496638207190902
+p0MGALT: step 9 u_z ,-0.16434610251502446143
+p0MGALT: step 10 u_x ,0.00029811313937511130
+p0MGALT: step 10 u_y ,0.00010382936000175036
+p0MGALT: step 10 u_z ,0.00000040992760275138
+p0MGALT: step 11 u_x ,0.00020175910994923996
+p0MGALT: step 11 u_y ,0.00008151057967120678
+p0MGALT: step 11 u_z ,0.00011152108204259825
+p0MGALT: step 12 u_x ,0.00010028166731501642
+p0MGALT: step 12 u_y ,0.00004916541615584968
+p0MGALT: step 12 u_z ,0.00016834699314882684
+p0MGALT: step 13 u_x ,0.00000524647780109078
+p0MGALT: step 13 u_y ,0.00013949317980577192
+p0MGALT: step 13 u_z ,0.00008928228372484526
+p0MGALT: step 14 u_x ,-0.00007179831899872813
+p0MGALT: step 14 u_y ,0.00017909434536278468
+p0MGALT: step 14 u_z ,0.00010470145223817617
+p0MGALT: step 15 u_x ,-0.00006236932560887976
+p0MGALT: step 15 u_y ,0.00014439029202595322
+p0MGALT: step 15 u_z ,0.00003772571049998064
+p0MGALT: step 16 u_x ,-0.00011929441853419931
+p0MGALT: step 16 u_y ,0.00008205457733034827
+p0MGALT: step 16 u_z ,0.00001313306428407657
+p0MGALT: step 17 u_x ,-0.00008686819866421391
+p0MGALT: step 17 u_y ,-0.00006268272092990745
+p0MGALT: step 17 u_z ,-0.00005208660820354982
+p0MGALT: step 18 u_x ,-0.00007691727473779775
+p0MGALT: step 18 u_y ,0.00003623083272108474
+p0MGALT: step 18 u_z ,-0.00011543943434677573
+p0MGALT: step 19 u_x ,-0.00000869722282526020
+p0MGALT: step 19 u_y ,0.00001361380325159978
+p0MGALT: step 19 u_z ,-0.00001430553074510676
+END_TRIALX
+
+END_JOURNEY

@@ -22,7 +22,7 @@
 #define AERODYNAMIC_DRAG_TERM_H
 
 #include "SpacecraftAccelerationModel.h"
-#include "AccelerationModelTerm.h"
+#include "SpacecraftAccelerationModelTerm.h"
 #include "doubleType.h"
 #include "ExponentialAtmosphere.h"
 #include "BodydeticConversions.h"
@@ -31,8 +31,7 @@ namespace EMTG
 {
 	namespace Astrodynamics
 	{
-		class SpacecraftAccelerationModel;
-		class AerodynamicDragTerm : public AccelerationModelTerm
+		class AerodynamicDragTerm : public SpacecraftAccelerationModelTerm
 		{
 		public:
 			//constructor

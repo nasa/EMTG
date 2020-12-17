@@ -1,0 +1,404 @@
+#EMTGv9 .emtgopt file version 2
+
+#mission name
+mission_name globalmissionoptions_MGALT_obj4
+#objective function type
+#0: minimum deltaV
+#1: minimum time
+#2: maximum final mass
+#3: maximize initial mass
+#4: depart as late as possible in the window
+#5: depart as early as possible in the window
+#6: maximize orbit energy
+#7: minimize launch mass
+#8: arrive as early as possible
+#9: arrive as late as possible
+#10: minimum propellant (not the same as #2)
+#11: maximum dry/wet ratio
+#12: maximum arrival kinetic energy
+#13: minimum BOL power
+#14: maximize log_10(final mass)
+#15: maximum log_e(final mass)
+#16: maximum dry mass margin
+#17: maximum dry mass
+#18: maximum log_10(dry mass)
+#19: maximum log_e(dry mass)
+#20: minimize chemical fuel
+#21: minimize chemical oxidizer
+#22: minimize electric propellant
+#23: minimize total propellant
+#24: minimize waypoint tracking error
+#25: minimize initial impulse magnitude
+#26: maximize distance from central body
+objective_type 4
+#launch window open date (MJD)
+launch_window_open_date 54101.0
+#flight time bounds (days)
+total_flight_time_bounds 0.0 1200.0
+#Quiet NLP solver?
+quiet_NLP 0
+#maximum number of trials for MBH
+MBH_max_trials 100000
+#optimality tolerance
+snopt_optimality_tolerance 0.1
+#NLP max run time (seconds)
+snopt_max_run_time 59
+#Universe folder
+universe_folder C:\emtg\testatron\universe
+#TCM magnitude before flybys (km/s)
+TCM_pre_flyby 1.0
+#LaunchVehicleLibraryFile
+LaunchVehicleLibraryFile default.emtg_launchvehicleopt
+LaunchVehicleKey ExampleRocket
+#Override the working directory?
+override_working_directory 1
+#User-defined working directory
+forced_working_directory C:\emtg\testatron\tests\global_mission_options
+#Stop after a particular journey? (if this value is greater than the number of journeys, do the whole mission)
+stop_after_journey 0
+#which inner loop solver to run?
+#0: none, evaluate trialX
+#1: run MBH
+#2: run constrained DE
+#3: run NLP using trialX as initial guess
+#4: filament walker
+run_inner_loop 0
+#Enter any user data that should be appended to the .emtg file.
+#This is typically used in python wrappers
+user_data 
+
+
+
+BEGIN_JOURNEY
+
+#Journey name
+journey_name EEM_journey
+#flyby sequence, as indices from the Universe file
+sequence 3 3 4
+#PeriapseDeparture altitude bounds (in km)
+PeriapseDeparture_altitude_bounds 300.0 300.0
+#Journey wait time bounds (days)
+wait_time_bounds 0.0 1366.0
+#journey departure ellipsoid axes (3)
+departure_ellipsoid_axes 10000000.0 10000000.0 10000000.0
+#journey arrival type
+#0: insertion into parking orbit (use chemical Isp)
+#1: rendezvous (use chemical Isp)
+#2: intercept with bounded V_infinity
+#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)
+#4: match final v-infinity vector
+#5: match final v-infinity vector (low-thrust)
+#6: capture spiral
+#7: momentum transfer (kinetic impactor)
+arrival_type 0
+#journey arrival ellipsoid axes (3)
+arrival_ellipsoid_axes 10000000.0 10000000.0 10000000.0
+#ECC for ephemeris pegged orbit insertion
+ephemeris_pegged_orbit_insertion_ECC 1e-10
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+p0MGALTEphemerisPeggedLaunchDirectInsertion: event left state epoch,54470.27617083652148721740
+p0MGALTEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote,3.61662045683827715337
+p0MGALTEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote,-10.94365631477940326022
+p0MGALTEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote,-0.69595435403187067003
+p0MGALT: phase flight time,362.72484113286077445082
+p0MGALTEphemerisPeggedFlybyIn: event left state mass,515.02021399098862275423
+p0MGALTEphemerisPeggedFlybyIn: V_infinity_x,-0.09682962275820372611
+p0MGALTEphemerisPeggedFlybyIn: V_infinity_y,2.73185564061637009559
+p0MGALTEphemerisPeggedFlybyIn: V_infinity_z,-2.36144761121947865945
+p0MGALTEphemerisPeggedFlybyIn: virtual chemical fuel,205.70896634522722479232
+p0MGALT: virtual chemical fuel,0.00000000000000000000
+p0MGALT: virtual electric propellant,10.17978600901075125762
+p0MGALT: step 0 u_x,-0.00782349642175794724
+p0MGALT: step 0 u_y,0.03939131943231699573
+p0MGALT: step 0 u_z,0.02237745563124238224
+p0MGALT: step 1 u_x,-0.01424204042137866555
+p0MGALT: step 1 u_y,0.05363787921420226645
+p0MGALT: step 1 u_z,0.01281778455985271847
+p0MGALT: step 2 u_x,-0.02939764459369043070
+p0MGALT: step 2 u_y,-0.09148515991471639630
+p0MGALT: step 2 u_z,0.03251405144254015944
+p0MGALT: step 3 u_x,-0.03248141244115476667
+p0MGALT: step 3 u_y,-0.02560330673911903610
+p0MGALT: step 3 u_z,0.07804720403592568800
+p0MGALT: step 4 u_x,-0.03700583342023788802
+p0MGALT: step 4 u_y,-0.04583918145745136119
+p0MGALT: step 4 u_z,0.09421724934202613255
+p0MGALT: step 5 u_x,-0.01325366181442944047
+p0MGALT: step 5 u_y,-0.02103588770075126568
+p0MGALT: step 5 u_z,0.10118959484237555202
+p0MGALT: step 6 u_x,-0.00996253299470628573
+p0MGALT: step 6 u_y,-0.02969439502970860900
+p0MGALT: step 6 u_z,0.10034606800866230358
+p0MGALT: step 7 u_x,-0.03222436925011618047
+p0MGALT: step 7 u_y,-0.02521078033198409507
+p0MGALT: step 7 u_z,0.00396954178908925925
+p0MGALT: step 8 u_x,0.02521682940311520404
+p0MGALT: step 8 u_y,-0.01605955352773091871
+p0MGALT: step 8 u_z,-0.30316519437549338534
+p0MGALT: step 9 u_x,0.01553523207075979684
+p0MGALT: step 9 u_y,-0.04537758286150694875
+p0MGALT: step 9 u_z,0.05124949214561613786
+p0MGALT: step 10 u_x,-0.05263772327310489718
+p0MGALT: step 10 u_y,-0.03069186593714900990
+p0MGALT: step 10 u_z,0.14640715704495543825
+p0MGALT: step 11 u_x,-0.01641916524166275870
+p0MGALT: step 11 u_y,-0.02832299230104917687
+p0MGALT: step 11 u_z,0.09598719221740181773
+p0MGALT: step 12 u_x,0.05331688057158512350
+p0MGALT: step 12 u_y,-0.02024011034409556320
+p0MGALT: step 12 u_z,-0.01314622472353643712
+p0MGALT: step 13 u_x,0.09854823712556748383
+p0MGALT: step 13 u_y,0.04029880668365981577
+p0MGALT: step 13 u_z,-0.02146572270668156701
+p0MGALT: step 14 u_x,0.14005030661638295797
+p0MGALT: step 14 u_y,-0.00617625837085533647
+p0MGALT: step 14 u_z,-0.07248037297756748654
+p0MGALT: step 15 u_x,-0.00944447778875157073
+p0MGALT: step 15 u_y,0.05549747534129467752
+p0MGALT: step 15 u_z,-0.08843194527315756392
+p0MGALT: step 16 u_x,-0.01863356088322010162
+p0MGALT: step 16 u_y,-0.07114537059423120535
+p0MGALT: step 16 u_z,0.05924829751936533384
+p0MGALT: step 17 u_x,-0.01683424323611693030
+p0MGALT: step 17 u_y,-0.00296347995289814037
+p0MGALT: step 17 u_z,-0.08152547584627778399
+p0MGALT: step 18 u_x,-0.03171663887351539035
+p0MGALT: step 18 u_y,-0.02485285069768128352
+p0MGALT: step 18 u_z,-0.07794453795729716639
+p0MGALT: step 19 u_x,-0.00683748562720232211
+p0MGALT: step 19 u_y,-0.04286383542158755944
+p0MGALT: step 19 u_z,-0.05509145428892747720
+p1MGALTEphemerisPeggedUnpoweredFlyby: V_infinity_x,0.58991754083074354753
+p1MGALTEphemerisPeggedUnpoweredFlyby: V_infinity_y,-3.08890899810929298042
+p1MGALTEphemerisPeggedUnpoweredFlyby: V_infinity_z,-1.77749327413369684336
+p1MGALT: phase flight time,294.10487210308588146290
+p1MGALTEphemerisPeggedFlybyIn: event left state mass,286.39694264645970633865
+p1MGALTEphemerisPeggedFlybyIn: V_infinity_x,-3.49868208484793186130
+p1MGALTEphemerisPeggedFlybyIn: V_infinity_y,-3.05582949908911771786
+p1MGALTEphemerisPeggedFlybyIn: V_infinity_z,-1.68084358874689598906
+p1MGALTEphemerisPeggedFlybyIn: virtual chemical fuel,114.39244021066599543701
+p1MGALT: virtual chemical fuel,0.00000000005253633084
+p1MGALT: virtual electric propellant,22.91430499935404085932
+p1MGALT: step 0 u_x,0.00969081633108714868
+p1MGALT: step 0 u_y,-0.05560789487660811048
+p1MGALT: step 0 u_z,0.05627189221376815986
+p1MGALT: step 1 u_x,-0.00241100623169099304
+p1MGALT: step 1 u_y,-0.05809225249924876433
+p1MGALT: step 1 u_z,0.06883416613728021716
+p1MGALT: step 2 u_x,-0.01017165094264949055
+p1MGALT: step 2 u_y,-0.05603432138148245478
+p1MGALT: step 2 u_z,0.06267603674357125065
+p1MGALT: step 3 u_x,-0.00410788529799466229
+p1MGALT: step 3 u_y,-0.04551388813695722568
+p1MGALT: step 3 u_z,0.05919013210516199663
+p1MGALT: step 4 u_x,-0.00016380117084946466
+p1MGALT: step 4 u_y,-0.31164774794393357293
+p1MGALT: step 4 u_z,0.01850688626928764791
+p1MGALT: step 5 u_x,0.00343558973089574948
+p1MGALT: step 5 u_y,-0.02215865020890850356
+p1MGALT: step 5 u_z,0.03620085834657382762
+p1MGALT: step 6 u_x,0.00713199782662066184
+p1MGALT: step 6 u_y,-0.00946425358010016815
+p1MGALT: step 6 u_z,0.02160695425718484053
+p1MGALT: step 7 u_x,0.01232428749127034706
+p1MGALT: step 7 u_y,-0.01198119079793302788
+p1MGALT: step 7 u_z,0.00666440860979755634
+p1MGALT: step 8 u_x,-0.08420630939683093619
+p1MGALT: step 8 u_y,0.02605990227036336648
+p1MGALT: step 8 u_z,-0.00707437115494768953
+p1MGALT: step 9 u_x,-0.17871224499885185466
+p1MGALT: step 9 u_y,0.04242765009953952671
+p1MGALT: step 9 u_z,-0.02690436099580284512
+p1MGALT: step 10 u_x,-0.82304724604500678620
+p1MGALT: step 10 u_y,0.07654872859453543121
+p1MGALT: step 10 u_z,-0.03673679876179691828
+p1MGALT: step 11 u_x,-0.85277969315747681467
+p1MGALT: step 11 u_y,-0.05593755896193985944
+p1MGALT: step 11 u_z,-0.09075923809944919096
+p1MGALT: step 12 u_x,-0.78743619906359896277
+p1MGALT: step 12 u_y,-0.15049366940183761532
+p1MGALT: step 12 u_z,-0.15772100958633827883
+p1MGALT: step 13 u_x,-0.65286262972331932097
+p1MGALT: step 13 u_y,-0.19878761798121269422
+p1MGALT: step 13 u_z,-0.18896885529879103860
+p1MGALT: step 14 u_x,-0.47722168216362126358
+p1MGALT: step 14 u_y,-0.18346637471593518764
+p1MGALT: step 14 u_z,-0.15135757890015955063
+p1MGALT: step 15 u_x,-0.30299989130692772665
+p1MGALT: step 15 u_y,-0.10989980977308422272
+p1MGALT: step 15 u_z,-0.11701834755301809832
+p1MGALT: step 16 u_x,-0.03931198792321033419
+p1MGALT: step 16 u_y,0.07944853993701950223
+p1MGALT: step 16 u_z,-0.04431377078857734464
+p1MGALT: step 17 u_x,-0.06451111713173118822
+p1MGALT: step 17 u_y,0.13390781219760938825
+p1MGALT: step 17 u_z,-0.03953887321406490685
+p1MGALT: step 18 u_x,-0.08815689445662766577
+p1MGALT: step 18 u_y,0.14285473143403581986
+p1MGALT: step 18 u_z,-0.01878734780189872389
+p1MGALT: step 19 u_x,-0.12641941194578498742
+p1MGALT: step 19 u_y,0.14486848866185786378
+p1MGALT: step 19 u_z,0.00613780483982440117
+p2MGALTEphemerisPeggedUnpoweredFlyby: V_infinity_x,-2.68264399347735604806
+p2MGALTEphemerisPeggedUnpoweredFlyby: V_infinity_y,3.85974024768203705094
+p2MGALTEphemerisPeggedUnpoweredFlyby: V_infinity_z,-1.51985147209217075215
+p2MGALT: phase flight time,177.02186406381659367071
+p2MGALTEphemerisPeggedFlybyIn: event left state mass,144.90385151759952009343
+p2MGALTEphemerisPeggedFlybyIn: V_infinity_x,-5.29004490822662276628
+p2MGALTEphemerisPeggedFlybyIn: V_infinity_y,2.21669915331966294048
+p2MGALTEphemerisPeggedFlybyIn: V_infinity_z,4.64659376275026758663
+p2MGALTEphemerisPeggedFlybyIn: virtual chemical fuel,57.87738171304977896625
+p2MGALT: virtual chemical fuel,0.00000000000025414424
+p2MGALT: virtual electric propellant,27.10065091835179273971
+p2MGALT: step 0 u_x,-0.13716630809725738338
+p2MGALT: step 0 u_y,0.24802569602497093193
+p2MGALT: step 0 u_z,0.13737314042296611127
+p2MGALT: step 1 u_x,-0.05540441642848747961
+p2MGALT: step 1 u_y,0.18434025737864478955
+p2MGALT: step 1 u_z,0.24464268933823363206
+p2MGALT: step 2 u_x,-0.05339418943579166132
+p2MGALT: step 2 u_y,0.11268086763484852497
+p2MGALT: step 2 u_z,0.35057136084886297844
+p2MGALT: step 3 u_x,-0.04444574382010912927
+p2MGALT: step 3 u_y,0.16147109651096935856
+p2MGALT: step 3 u_z,0.44414543014252960695
+p2MGALT: step 4 u_x,-0.03230820564554015561
+p2MGALT: step 4 u_y,0.13853056409274078220
+p2MGALT: step 4 u_z,0.52791039515659354819
+p2MGALT: step 5 u_x,0.00466351504974538145
+p2MGALT: step 5 u_y,0.11609266352906133513
+p2MGALT: step 5 u_z,0.58769616937185698013
+p2MGALT: step 6 u_x,-0.00335246733926508611
+p2MGALT: step 6 u_y,-0.08770403167998863658
+p2MGALT: step 6 u_z,0.66186867695173901005
+p2MGALT: step 7 u_x,0.04680523604993847009
+p2MGALT: step 7 u_y,-0.09274335847223380558
+p2MGALT: step 7 u_z,0.63355896328204397427
+p2MGALT: step 8 u_x,-0.00151894855190637390
+p2MGALT: step 8 u_y,-0.09950089946236062577
+p2MGALT: step 8 u_z,0.63501297600832273815
+p2MGALT: step 9 u_x,0.00643167830821256281
+p2MGALT: step 9 u_y,0.04861991144424426814
+p2MGALT: step 9 u_z,0.64761416184211229030
+p2MGALT: step 10 u_x,0.00070129112589101261
+p2MGALT: step 10 u_y,0.03936981095366975936
+p2MGALT: step 10 u_z,0.64782334581731726431
+p2MGALT: step 11 u_x,0.03601392056005847664
+p2MGALT: step 11 u_y,0.03134435497149823391
+p2MGALT: step 11 u_z,0.63722609384620554351
+p2MGALT: step 12 u_x,0.03244540849494459422
+p2MGALT: step 12 u_y,-0.08721790630969605829
+p2MGALT: step 12 u_z,0.64326997534283991698
+p2MGALT: step 13 u_x,0.03341970968618523941
+p2MGALT: step 13 u_y,-0.08891949426119605260
+p2MGALT: step 13 u_z,0.66654856888681623950
+p2MGALT: step 14 u_x,0.03617720022830894777
+p2MGALT: step 14 u_y,-0.07155545242689353991
+p2MGALT: step 14 u_z,0.62691751151465968661
+p2MGALT: step 15 u_x,0.01379296133869978291
+p2MGALT: step 15 u_y,-0.05801430337069990451
+p2MGALT: step 15 u_z,0.58521432781634619147
+p2MGALT: step 16 u_x,0.29959018667313341844
+p2MGALT: step 16 u_y,-0.02707906835049223027
+p2MGALT: step 16 u_z,0.40641939024692685933
+p2MGALT: step 17 u_x,0.53529096365948736214
+p2MGALT: step 17 u_y,-0.03561014981267884849
+p2MGALT: step 17 u_z,0.25590783242001879927
+p2MGALT: step 18 u_x,0.77406812105417954761
+p2MGALT: step 18 u_y,-0.07166193664758901960
+p2MGALT: step 18 u_z,0.09619476727656772752
+p2MGALT: step 19 u_x,0.90994549947903191622
+p2MGALT: step 19 u_y,-0.07328867247590553635
+p2MGALT: step 19 u_z,-0.33127414882209793578
+p3MGALTEphemerisPeggedUnpoweredFlyby: V_infinity_x,-4.69730167988507218979
+p3MGALTEphemerisPeggedUnpoweredFlyby: V_infinity_y,4.47379946086016033746
+p3MGALTEphemerisPeggedUnpoweredFlyby: V_infinity_z,3.52273062211149934342
+p3MGALT: phase flight time,365.91353047329158698631
+p3MGALTEphemerisPeggedOrbitInsertion: event left state mass,63.41724882965163345716
+p3MGALTEphemerisPeggedOrbitInsertion: V_infinity_x,7.15515007877867859065
+p3MGALTEphemerisPeggedOrbitInsertion: V_infinity_y,4.36873036760870192552
+p3MGALTEphemerisPeggedOrbitInsertion: V_infinity_z,-5.48652474239623799690
+p3MGALTEphemerisPeggedOrbitInsertion: virtual chemical fuel,30.45663408523769888347
+p3MGALTEphemerisPeggedOrbitInsertion: virtual chemical oxidizer,28.17238652884094918250
+p3MGALT: virtual chemical fuel,0.00000000000025414424
+p3MGALT: virtual electric propellant,23.60922097495064164718
+p3MGALT: step 0 u_x,0.00794705414316609904
+p3MGALT: step 0 u_y,-0.02088569075520785301
+p3MGALT: step 0 u_z,0.31090786404373060847
+p3MGALT: step 1 u_x,-0.00314457333151363372
+p3MGALT: step 1 u_y,-0.10122287410162011945
+p3MGALT: step 1 u_z,0.32157477598331363211
+p3MGALT: step 2 u_x,0.01024483927766173252
+p3MGALT: step 2 u_y,-0.11549086755745086030
+p3MGALT: step 2 u_z,0.31561481442145722376
+p3MGALT: step 3 u_x,0.03141162025837873628
+p3MGALT: step 3 u_y,-0.14252439792724369561
+p3MGALT: step 3 u_z,0.30379622791446547758
+p3MGALT: step 4 u_x,0.17951592848885211673
+p3MGALT: step 4 u_y,-0.22837569167583116059
+p3MGALT: step 4 u_z,0.21199139403648503688
+p3MGALT: step 5 u_x,0.33971131068156079635
+p3MGALT: step 5 u_y,-0.30827869603763802253
+p3MGALT: step 5 u_z,0.11263693324609058699
+p3MGALT: step 6 u_x,0.46710388523775381309
+p3MGALT: step 6 u_y,-0.35227910600009926245
+p3MGALT: step 6 u_z,0.03855172891146541048
+p3MGALT: step 7 u_x,0.54308307492105978298
+p3MGALT: step 7 u_y,-0.35780806221135619261
+p3MGALT: step 7 u_z,0.00146834344042701126
+p3MGALT: step 8 u_x,0.53663887503740537177
+p3MGALT: step 8 u_y,-0.32719886304699552504
+p3MGALT: step 8 u_z,0.01146029422909089490
+p3MGALT: step 9 u_x,0.41179178454249121266
+p3MGALT: step 9 u_y,-0.27336568741105160552
+p3MGALT: step 9 u_z,0.07225488000722801729
+p3MGALT: step 10 u_x,0.16894377157380269239
+p3MGALT: step 10 u_y,-0.02874504481274597900
+p3MGALT: step 10 u_z,-0.04331333415529081687
+p3MGALT: step 11 u_x,0.20986882473839618690
+p3MGALT: step 11 u_y,-0.02199193671054255894
+p3MGALT: step 11 u_z,0.01223283355737603273
+p3MGALT: step 12 u_x,0.23399862044772712366
+p3MGALT: step 12 u_y,-0.01037149092808908879
+p3MGALT: step 12 u_z,0.02108607373459192580
+p3MGALT: step 13 u_x,0.12443634433839600995
+p3MGALT: step 13 u_y,0.00801472281799364694
+p3MGALT: step 13 u_z,0.09477967113600316296
+p3MGALT: step 14 u_x,0.20014390703515805292
+p3MGALT: step 14 u_y,0.02279333289086449277
+p3MGALT: step 14 u_z,0.05027032010389009820
+p3MGALT: step 15 u_x,0.18498249368186825414
+p3MGALT: step 15 u_y,-0.03721995421086243816
+p3MGALT: step 15 u_z,0.02046485251853891185
+p3MGALT: step 16 u_x,0.05022992385806079874
+p3MGALT: step 16 u_y,0.00442206755819674058
+p3MGALT: step 16 u_z,-0.01079029737530712296
+p3MGALT: step 17 u_x,0.11555762846856465487
+p3MGALT: step 17 u_y,0.02955739107510857444
+p3MGALT: step 17 u_z,-0.08662081816045230642
+p3MGALT: step 18 u_x,0.09210211195501072368
+p3MGALT: step 18 u_y,0.10684452284312384585
+p3MGALT: step 18 u_z,-0.15885369087120426723
+p3MGALT: step 19 u_x,0.03164498271578342070
+p3MGALT: step 19 u_y,0.04641217457072732699
+p3MGALT: step 19 u_z,-0.02253178367353037004
+END_TRIALX
+
+END_JOURNEY

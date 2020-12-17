@@ -1,20 +1,20 @@
 
 set(ACCELERATION_MODEL_HEADERS  ${ACCELERATION_MODEL_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/AccelerationModel.h
-															  ${CMAKE_CURRENT_SOURCE_DIR}/AccelerationModelTerm.h
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/CentralBodyGravityTerm.h
 															  ${CMAKE_CURRENT_SOURCE_DIR}/GravityTerm.h
 															  ${CMAKE_CURRENT_SOURCE_DIR}/SolarRadiationPressureTerm.h
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/SpacecraftAccelerationModel.h
+                                                              ${CMAKE_CURRENT_SOURCE_DIR}/SpacecraftAccelerationModelTerm.h
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/SphericalHarmonicTerm.h
 															  ${CMAKE_CURRENT_SOURCE_DIR}/ThrustTerm.h
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/AerodynamicDragTerm.h)
 																	  
 set(ACCELERATION_MODEL_SOURCE  ${ACCELERATION_MODEL_SOURCE} ${CMAKE_CURRENT_SOURCE_DIR}/AccelerationModel.cpp
-															${CMAKE_CURRENT_SOURCE_DIR}/AccelerationModelTerm.cpp
                                                             ${CMAKE_CURRENT_SOURCE_DIR}/CentralBodyGravityTerm.cpp
 															${CMAKE_CURRENT_SOURCE_DIR}/GravityTerm.cpp
 															${CMAKE_CURRENT_SOURCE_DIR}/SolarRadiationPressureTerm.cpp
                                                             ${CMAKE_CURRENT_SOURCE_DIR}/SpacecraftAccelerationModel.cpp
+                                                            ${CMAKE_CURRENT_SOURCE_DIR}/SpacecraftAccelerationModelTerm.cpp
                                                             ${CMAKE_CURRENT_SOURCE_DIR}/SphericalHarmonicTerm.cpp
 															${CMAKE_CURRENT_SOURCE_DIR}/ThrustTerm.cpp
                                                             ${CMAKE_CURRENT_SOURCE_DIR}/AerodynamicDragTerm.cpp)
@@ -48,22 +48,22 @@ set(ACCELERATION_MODEL_FILES ${ACCELERATION_MODEL_FILES} ${ACCELERATION_MODEL_HE
 if (RUN_ACCELERATION_MODEL_TESTBED)
     set(ACCELERATION_MODEL_TESTBED_ACCELERATION_MODEL_HEADERS ${ACCELERATION_MODEL_TESTBED_ACCELERATION_MODEL_HEADERS} 
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/AccelerationModel.h
-                                                              ${CMAKE_CURRENT_SOURCE_DIR}/AccelerationModelTerm.h
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/CentralBodyGravityTerm.h
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/GravityTerm.h
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/SolarRadiationPressureTerm.h
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/SpacecraftAccelerationModel.h
+                                                              ${CMAKE_CURRENT_SOURCE_DIR}/SpacecraftAccelerationModelTerm.h
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/SphericalHarmonicTerm.h
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/ThrustTerm.h
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/AerodynamicDragTerm.h)
                                                                           
     set(ACCELERATION_MODEL_TESTBED_ACCELERATION_MODEL_SOURCE ${ACCELERATION_MODEL_TESTBED_ACCELERATION_MODEL_SOURCE} 
                                                              ${CMAKE_CURRENT_SOURCE_DIR}/AccelerationModel.cpp
-                                                             ${CMAKE_CURRENT_SOURCE_DIR}/AccelerationModelTerm.cpp
                                                              ${CMAKE_CURRENT_SOURCE_DIR}/CentralBodyGravityTerm.cpp
                                                              ${CMAKE_CURRENT_SOURCE_DIR}/GravityTerm.cpp
                                                              ${CMAKE_CURRENT_SOURCE_DIR}/SolarRadiationPressureTerm.cpp
                                                              ${CMAKE_CURRENT_SOURCE_DIR}/SpacecraftAccelerationModel.cpp
+                                                             ${CMAKE_CURRENT_SOURCE_DIR}/SpacecraftAccelerationModelTerm.cpp
                                                              ${CMAKE_CURRENT_SOURCE_DIR}/SphericalHarmonicTerm.cpp
                                                              ${CMAKE_CURRENT_SOURCE_DIR}/ThrustTerm.cpp
                                                              ${CMAKE_CURRENT_SOURCE_DIR}/AerodynamicDragTerm.cpp)

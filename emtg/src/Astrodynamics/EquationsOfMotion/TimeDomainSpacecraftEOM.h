@@ -40,23 +40,19 @@ namespace EMTG {
             ~TimeDomainSpacecraftEOM();
 
             virtual void evaluate(const math::Matrix<doubleType> & state,
-                                  const math::Matrix<double> & dstate_dProp_vars,
                                   math::Matrix<doubleType> & state_dot,
-                                  math::Matrix<double> & dstate_dotdProp_vars,
                                   const bool & generate_derivatives);
 
             virtual void evaluate(const math::Matrix<doubleType> & state,
-                                  const math::Matrix<double> & dstate_dProp_vars,
                                   math::Matrix<doubleType> & state_dot,
-                                  math::Matrix<double> & dstate_dotdProp_vars,
                                   const math::Matrix<doubleType> & control,
                                   const bool & generate_derivatives);
 
             inline void setSpacecraftAccelerationModel(SpacecraftAccelerationModel * spacecraft_acceleration_model_in) 
             { 
                 this->spacecraft_acceleration_model = spacecraft_acceleration_model_in; 
-                STM.resize(this->spacecraft_acceleration_model->getSTMrowDim(), this->spacecraft_acceleration_model->getSTMcolDim(), 0.0);
-                STM_dot.resize(this->spacecraft_acceleration_model->getSTMrowDim(), this->spacecraft_acceleration_model->getSTMcolDim(), 0.0);
+                STM.resize(this->spacecraft_acceleration_model->getSTMsize(), this->spacecraft_acceleration_model->getSTMsize(), 0.0);
+                STM_dot.resize(this->spacecraft_acceleration_model->getSTMsize(), this->spacecraft_acceleration_model->getSTMsize(), 0.0);
             }
 
 		protected:
@@ -64,26 +60,18 @@ namespace EMTG {
 			math::Matrix<doubleType> acceleration;
 			math::Matrix<doubleType> STM;
 			math::Matrix<doubleType> STM_dot;
-            math::Matrix<double> state_propagation_matrix;
+            doubleType current_epoch;
 
-            void configureAccelerationModel(const math::Matrix<doubleType> & state,
-                                            const math::Matrix<double> & dstate_dProp_vars,
-                                            math::Matrix<double> & dstate_dotdProp_vars);
+            void configureAccelerationModel(const math::Matrix<doubleType> & state);
 
 			void computeAcceleration(const math::Matrix<doubleType> & state,
-				                     const math::Matrix<double> & dstate_dProp_vars,
-				                     math::Matrix<double> & dstate_dotdProp_vars,
 				                     const bool & STM_needed);
             void computeAcceleration(const math::Matrix<doubleType> & state,
-				                     const math::Matrix<double> & dstate_dProp_vars,
-				                     math::Matrix<double> & dstate_dotdProp_vars,
                                      const math::Matrix<doubleType> & control,
 				                     const bool & STM_needed);
 			void ballisticEOM(const math::Matrix<doubleType> & state, math::Matrix<doubleType> & state_dot);
 			void propulsionEOM(math::Matrix<doubleType> & state_dot, const math::Matrix<doubleType> & control);
 			
-        private:
-            void computeVariationalEquations(const math::Matrix<doubleType> & state, math::Matrix<doubleType> & state_dot);
         };
     } // end Astrodynamics namespace
 } // end EMTG namespace

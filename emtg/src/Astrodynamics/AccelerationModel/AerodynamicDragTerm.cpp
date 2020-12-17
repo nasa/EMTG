@@ -19,7 +19,7 @@
 // aerodynamic drag term
 
 #include "SpacecraftAccelerationModel.h"
-#include "AccelerationModelTerm.h"
+#include "SpacecraftAccelerationModelTerm.h"
 #include "doubleType.h"
 #include "AerodynamicDragTerm.h"
 
@@ -30,7 +30,7 @@ namespace EMTG
 	{
 		// constructors
 		AerodynamicDragTerm::AerodynamicDragTerm(SpacecraftAccelerationModel * acceleration_model_in) :
-			AccelerationModelTerm::AccelerationModelTerm(acceleration_model_in)
+            SpacecraftAccelerationModelTerm::SpacecraftAccelerationModelTerm(acceleration_model_in)
 		{
 			this->sc_area = this->acceleration_model->my_journey_options->spacecraft_drag_area / (1000.0 * 1000.0); // convert from input (m^2) to internal units (km^2)
 			this->Cd = this->acceleration_model->my_journey_options->coefficient_of_drag; // [0, inf)
@@ -354,7 +354,7 @@ namespace EMTG
 			// d a / d [prop vars]
 			///////////////////////
 			
-
+            /*
 			for (size_t i = 0; i < 3; ++i)
 			{
 				this->DaccDpropVars(i, 0) = this->DaccDstate(i, 7) * this->acceleration_model->dcurrent_epochdProp_var_previous;
@@ -369,6 +369,7 @@ namespace EMTG
 
 				this->acceleration_model->da_cb2scdPropVars(2, propVar) += this->DaccDpropVars(2, propVar);
 			}
+            */
 		} // end computeAccelerationTerm(bool)
 
 		void AerodynamicDragTerm::populateInstrumentationFile(std::ofstream & acceleration_model_file)

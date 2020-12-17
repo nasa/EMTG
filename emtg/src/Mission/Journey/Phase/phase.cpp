@@ -939,14 +939,6 @@ namespace EMTG
             else
                 this->synodic_period = T1; //effectively allows you to hop resonances
 
-            if (this->myJourneyOptions->override_integration_step_size)
-            {
-                this->integration_step_length = this->myJourneyOptions->integration_step_size;
-            }
-            else
-            {
-                this->integration_step_length = fmin(fmin(T1, T2) / 100.0, this->myUniverse->TU / 30.0);
-            }
         }//end calcbounds_phase_flight_time()
 
         void phase::calcbounds_phase_left_boundary()

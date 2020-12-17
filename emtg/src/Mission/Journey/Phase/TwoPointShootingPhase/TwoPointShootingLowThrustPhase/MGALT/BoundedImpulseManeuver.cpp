@@ -103,7 +103,7 @@ namespace EMTG
             if (this->hasPerturbations)
             {
                 this->mySpacecraftAccelerationModel->setEpoch(this->ManeuverEpoch);
-                this->mySpacecraftAccelerationModel->computeAcceleration(*this->state_at_natural_perturbation, needDerivatives, false);
+                this->mySpacecraftAccelerationModel->computeAcceleration(*this->state_at_natural_perturbation, needDerivatives);
 
                 this->NaturalAcceleration = this->mySpacecraftAccelerationModel->getAccelerationVec();
                 math::Matrix<double> fx = this->mySpacecraftAccelerationModel->getfx();

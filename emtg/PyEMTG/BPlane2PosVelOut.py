@@ -1,6 +1,6 @@
 
 from mathUtilities import mathUtilities
-import autograd.numpy as np # use the autograd version of np
+import numpy as np # use the autograd version of np
 
 class BPlane2PosVelOut(object):
     # x = [vInfMag, vInfRA, vInfDec, bScalar, bTheta, TA]

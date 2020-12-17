@@ -27,6 +27,7 @@
 #include "AccelerationModel.h"
 #include "boost/ptr_container/ptr_vector.hpp"
 #include "doubleType.h"
+#include "EMTG_enums.h"
 #include "GravityTerm.h"
 #include "journeyoptions.h"
 #include "missionoptions.h"
@@ -58,9 +59,7 @@ namespace EMTG {
                                         universe * universe_in,
                                         std::vector<std::string>* Xdescriptions,
                                         HardwareModels::Spacecraft * spacecraft_in,
-                                        const size_t & num_STM_rows_in,
-                                        const size_t & num_STM_columns_in,
-                                        const size_t & STM_start_index,
+                                        const size_t & STM_size_in,
                                         const bool& needCentralBody = true);
 
             // destructor
@@ -69,6 +68,9 @@ namespace EMTG {
             // set the launch epoch of the spaceraft
             inline void setLaunchEpoch(const doubleType & launch_epoch_in)  { this->launch_epoch = launch_epoch_in; }
             inline void setDutyCycle(const double & duty_cycle_in)  { this->duty_cycle = duty_cycle_in; }
+            inline void setThrustControlLaw(const ThrustControlLaw & control_law_in) { this->thrust_term.setThrustControlLaw(control_law_in); };
+
+            inline ThrustControlLaw getThrustControlLaw() const { return this->thrust_term.getThrustControlLaw(); };
 
             // returns the net acceleration vector of the spacecraft
             inline math::Matrix<doubleType> getAccelerationVec() const { return this->acceleration; }
@@ -123,27 +125,25 @@ namespace EMTG {
             // returns the norm of the control parameters
             inline doubleType getControlNorm() const { return this->control_norm; }
 
+            inline math::Matrix<doubleType> getControl() const { return this->control; }
+
             // returns the current duty cycle of the propulsion system (modelled continuously)
             inline double getDutyCycle() const { return this->duty_cycle; }
 
             inline math::Matrix<double> getfx() const { return this->fx; }
             
-            inline size_t getSTMrowDim() const { return this->num_STM_row; }
-            inline size_t getSTMcolDim() const { return this->num_STM_col; }
-            inline size_t getSTMstartIndex() const { return this->STM_start_index; }
+            inline size_t getSTMsize() const { return this->STM_size; }
 			inline doubleType getCB2SC() const { return this->r_cb2sc_norm; }
 			inline doubleType getMaxMassFlowRate() const { return this->thrust_term.getMaxMassFlowRate(); }
 
             // compute the current net acceleration of the spacecraft
             virtual void computeAcceleration(const math::Matrix<doubleType> & state_in,
-                                             const bool & generate_derivatives,
-                                             const bool & generate_time_derivatives = true);
+                                             const bool & generate_derivatives);
 
             // compute the current net acceleration of the spacecraft given the input throttle levels
             virtual void computeAcceleration(const math::Matrix<doubleType> & spacecraft_state,
                                              const math::Matrix<doubleType> & control,
-                                             const bool & generate_derivatives,
-                                             const bool & generate_time_derivatives = true);
+                                             const bool & generate_derivatives);
             
             virtual void populateInstrumentationFile(std::ofstream & acceleration_model_file, 
                                                      const math::Matrix<doubleType> & spacecraft_state,
@@ -157,11 +157,8 @@ namespace EMTG {
 
             void constructorInitialize(const bool& needCentralBody = true);
             void initializeAndComputeGeometry(const math::Matrix<doubleType> & spacecraft_state,
-                                        const bool & generate_derivatives);
-            void computePropVarDerivatives();
-            void computedPowerdPropVars();
+                                              const bool & generate_derivatives);
             
-
         protected:
 
             void computeScCbSunTriangle(const bool & generate_derivatives);
@@ -184,7 +181,7 @@ namespace EMTG {
             doubleType spacecraft_mass;
 
             // vector containing all of the acceleration terms
-            boost::ptr_vector< AccelerationModelTerm > natural_acceleration_terms;
+            boost::ptr_vector< SpacecraftAccelerationModelTerm > natural_acceleration_terms;
 
             // acceleration components due to any gravitating bodies
             //boost::ptr_vector< GravityTerm > gravity_terms;
@@ -234,32 +231,15 @@ namespace EMTG {
             // derivative containers
             /////////////////////////
 
-            // STM row dimension
-            size_t num_STM_row;
-
-            // STM column dimension
-            size_t num_STM_col;
-
-            // index in the state vector where STM entries begin
-            size_t STM_start_index;
+            // STM size
+            size_t STM_size;
 
             // state propagation matrix 
             math::Matrix<double> fx;
 
-
             math::Matrix<double> dr_sun2sc_normdr_cb2sc;
             math::Matrix<double> dr_sun2sc_normdr_cb2sun;
-            math::Matrix<double> dr_sun2sc_normdProp_vars;
             math::Matrix<double> dr_cb2sundcurrent_epoch;
-            math::Matrix<double> dr_cb2sundProp_vars;
-
-            // partial of the spacecraft position vector relative to the central body
-            // w.r.t. the propagation variables
-            math::Matrix<double> da_cb2scdPropVars;
-
-            math::Matrix<double> dmass_flow_ratedProp_vars;
-            math::Matrix<double> dPdProp_vars;
-
         };
     } // end Astrodynamics namespace
 } // end EMTG namespace

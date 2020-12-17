@@ -8,7 +8,7 @@ double,launch_window_open_date,86400,,53782,0,inf,launch window open date (MJD),
 std::vector<double>,total_flight_time_bounds,86400,2,"[0.0, 302]","[0.0, 1e-10]","[inf, inf]",flight time bounds (days),flight time bounds (days)
 std::vector<double>,DLA_bounds,,2,"[-90.0, 90.0]","[-90.0, -90.0]","[90.0, 90.0]",DLA in degrees,DLA in degrees
 std::vector<double>,RLA_bounds,,2,"[-2880.0, 2880.0]",-inf,inf,RLA in degrees,RLA in degrees
-PhaseType,mission_type,,,2,0,10,"mission type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase, #9: variable phase type, #10: ProbeEntryPhase",phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable phase type\n#10: ProbeEntryPhase
+PhaseType,mission_type,,,2,0,11,"mission type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase, #9: variable phase type, #10: ProbeEntryPhase, #11 ControlLawThrustPhase",phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable phase type\n#10: ProbeEntryPhase\n#11 ControlLawThrustPhase
 int,NLP_solver_type,,,0,0,1,"NLP solver type,#0: SNOPT,#1: WORHP",NLP solver type\n#0: SNOPT\n#1: WORHP
 NLPMode,NLP_solver_mode,,,1,0,2,"NLP solver mode,#0: find feasible point only,#1: find optimal solution,#2: satisfy equality constraints",NLP solver mode\n#0: find feasible point only\n#1: find optimal solution\n#2: satisfy equality constraints
 bool,quiet_NLP,,,1,0,1,Quiet NLP solver?,Quiet NLP solver?
@@ -101,13 +101,13 @@ double,chemical_propellant_margin,,,0,0,1,Chemical propellant margin (fraction),
 SpacecraftModelInputType,SpacecraftModelInput,,,2,0,2,"Spacecraft object input type,#0: Assemble from libraries,#1: Read .emtg_spacecraftoptions file,#2: Assemble from missionoptions object",Spacecraft object input type\n#0: Assemble from libraries\n#1: Read .emtg_spacecraftoptions file\n#2: Assemble from missionoptions object
 std::string,HardwarePath,,,c:/Utilities/HardwareModels/,,,HardwarePath,HardwarePath
 std::string,ThrottleTableFile,,,empty.ThrottleTable,,,ThrottleTableFile,ThrottleTableFile
-std::string,LaunchVehicleLibraryFile,,,NLSII_August2018.emtg_launchvehicleopt,,,LaunchVehicleLibraryFile,LaunchVehicleLibraryFile
+std::string,LaunchVehicleLibraryFile,,,default.emtg_launchvehicleopt,,,LaunchVehicleLibraryFile,LaunchVehicleLibraryFile
 std::string,PowerSystemsLibraryFile,,,default.emtg_powersystemsopt,,,PowerSystemsLibraryFile,PowerSystemsLibraryFile
-std::string,PropulsionSystemsLibraryFile,,,4_18_2017.emtg_propulsionsystemopt,,,PropulsionSystemsLibraryFile,PropulsionSystemsLibraryFile
+std::string,PropulsionSystemsLibraryFile,,,default.emtg_propulsionsystemopt,,,PropulsionSystemsLibraryFile,PropulsionSystemsLibraryFile
 std::string,SpacecraftOptionsFile,,,default.emtg_spacecraftopt,,,SpacecraftOptionsFile,SpacecraftOptionsFile
-std::string,LaunchVehicleKey,,,Atlas_V_401,,,LaunchVehicleKey,LaunchVehicleKey
+std::string,LaunchVehicleKey,,,ExampleRocket,,,LaunchVehicleKey,LaunchVehicleKey
 std::string,PowerSystemKey,,,5kW_basic,,,PowerSystemKey,PowerSystemKey
-std::string,ElectricPropulsionSystemKey,,,NSTAR,,,ElectricPropulsionSystemKey,ElectricPropulsionSystemKey
+std::string,ElectricPropulsionSystemKey,,,defaultThruster,,,ElectricPropulsionSystemKey,ElectricPropulsionSystemKey
 std::string,ChemicalPropulsionSystemKey,,,DefaultChemicalPropulsionSystem,,,ChemicalPropulsionSystemKey,ChemicalPropulsionSystemKey
 bool,perturb_SRP,,,0,0,1,solar radiation pressure?,solar radiation pressure?
 bool,perturb_thirdbody,,,0,0,1,third body perturbations?,third body perturbations?

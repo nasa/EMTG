@@ -42,7 +42,7 @@ class DepartureElementsPanel(OrbitElementsPanel.OrbitElementsPanel):
         self.cmbelements_representation.Bind(wx.EVT_COMBOBOX, self.Changedeparture_elements_representation)
         self.cmbelements_frame.Bind(wx.EVT_COMBOBOX, self.Changedeparture_elements_frame)
         self.txtelements_reference_epoch.Bind(wx.EVT_KILL_FOCUS, self.Changedeparture_elements_reference_epoch)
-        self.chkAllowJourneyFreePointToPropagate.Bind(wx.EVT_KILL_FOCUS, self.ChangeAllowJourneyFreePointDepartureToPropagate)
+        self.chkAllowJourneyFreePointToPropagate.Bind(wx.EVT_CHECKBOX, self.ChangeAllowJourneyFreePointDepartureToPropagate)
         self.chkSMA.Bind(wx.EVT_CHECKBOX,self.ChangevarySMA_departure)
         self.chkECC.Bind(wx.EVT_CHECKBOX,self.ChangevaryECC_departure)
         self.chkINC.Bind(wx.EVT_CHECKBOX,self.ChangevaryINC_departure)
@@ -217,12 +217,13 @@ class DepartureElementsPanel(OrbitElementsPanel.OrbitElementsPanel):
 
     def Changedeparture_elements_reference_epoch(self, e):
         e.Skip()
-        value = eval(self.txtelements_reference_epoch.GetValue())
 
-        if value > 2400000.5:
-            value -= 2400000.5
+        dateString = self.txtelements_reference_epoch.GetValue()
 
-        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_elements_reference_epoch = value
+        from timeUtilities import stringToJD
+
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_elements_reference_epoch = stringToJD(dateString, self.missionoptions.universe_folder)
+
         self.update()
 
     def ChangeAllowJourneyFreePointDepartureToPropagate(self, e):

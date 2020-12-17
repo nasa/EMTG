@@ -37,40 +37,24 @@ namespace EMTG {
             virtual ~Integrand();
 
             virtual void evaluate(const math::Matrix<doubleType> & state,
-                                  const math::Matrix<double> & dstate_dProp_vars,
                                   math::Matrix<doubleType> & state_dot,
-                                  math::Matrix<double> & dstate_dotdProp_vars,
                                   const bool & generate_derivatives) = 0;
 
             virtual void evaluate(const math::Matrix<doubleType> & state,
-                                  const math::Matrix<double> & dstate_dProp_vars,
                                   math::Matrix<doubleType> & state_dot,
-                                  math::Matrix<double> & dstate_dotdProp_vars,
                                   const math::Matrix<doubleType> & control,
-                                  const bool & generate_derivatives) = 0;
+                                  const bool & generate_derivatives) { throw std::runtime_error("The control overload for Integrand::evaluate has not been implemented!!"); };
 
             inline void setCurrentIndependentVariable(const doubleType & current_independent_variable_in) 
             { 
                 this->current_independent_variable = current_independent_variable_in; 
             }
-            inline void setdCurrentIndVardPropVar(const double & dcurrent_indvar_dProp_var_in) 
-            { 
-                this->dcurrent_indvar_dProp_var = dcurrent_indvar_dProp_var_in; 
-            }
-            inline void setdCurrentIndVardPropVarPrevious(const double & dcurrent_indvar_dProp_var_previous_in)
-            {
-                this->dcurrent_indvar_dProp_var_previous = dcurrent_indvar_dProp_var_previous_in;
-            }
+
+            inline EMTG::math::Matrix<double> getStatePropMat() const { return this->state_propagation_matrix; }
 
         protected:
             doubleType current_independent_variable;
-            doubleType current_epoch;
-            
-            // Partial of the current independent variable w.r.t. previous propagation variables (flight times)
-            double dcurrent_indvar_dProp_var_previous;
-
-            // Partial of the current independent variable w.r.t. the current propagation variable (flight times or total angle)
-            double dcurrent_indvar_dProp_var;
+            math::Matrix<double> state_propagation_matrix;
         };
 
     } // end namespace Integration

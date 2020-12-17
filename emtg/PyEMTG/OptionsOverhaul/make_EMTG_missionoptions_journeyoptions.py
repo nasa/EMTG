@@ -8,7 +8,7 @@ from optionValidator import validate
 #get the current epoch
 now = time.strftime("%c")
 
-EMTG_path = 'C:/EMTG/'
+EMTG_path = 'C:/EMTG/emtg/'
 
 EMTG_MissionOptionsStructure_file = EMTG_path + 'OptionsOverhaul/list_of_missionoptions.csv'
 EMTG_JourneyOptionsStructure_file = EMTG_path + 'OptionsOverhaul/list_of_journeyoptions.csv'

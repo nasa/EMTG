@@ -34,9 +34,7 @@ namespace EMTG {
                                                                  universe * universe_in, 
                                                                  std::vector<std::string>* Xdescriptions,
                                                                  HardwareModels::Spacecraft * spacecraft_in,
-                                                                 const size_t & num_STM_rows_in,
-                                                                 const size_t & num_STM_columns_in,
-                                                                 const size_t & STM_start_index_in,
+                                                                 const size_t & STM_size_in,                                                                 
                                                                  const bool& needCentralBody) :
                                                                  AccelerationModel(options_in, 
                                                                                    journey_options_in, 
@@ -44,9 +42,7 @@ namespace EMTG {
                                                                                    Xdescriptions),
                                                                  my_spacecraft(spacecraft_in),
                                                                  thrust_term(this),
-                                                                 num_STM_row(num_STM_rows_in),
-                                                                 num_STM_col(num_STM_columns_in),
-                                                                 STM_start_index(STM_start_index_in)
+                                                                 STM_size(STM_size_in)
         {
             this->constructorInitialize(needCentralBody);
         }
@@ -68,14 +64,10 @@ namespace EMTG {
             this->control.resize(4, 1, 0.0);
 
             // size the derivative containers
-            this->fx.resize(this->num_STM_row, this->num_STM_col, 0.0);
+            this->fx.resize(this->STM_size, this->STM_size, 0.0);
             this->dr_sun2sc_normdr_cb2sc.resize(3, 1, 0.0);
-            this->dr_sun2sc_normdProp_vars.resize(1, 2, 0.0);
-            this->da_cb2scdPropVars.resize(3, 2, 0.0);
-            this->dr_cb2sundProp_vars.resize(3, 2, 0.0);
+            this->dr_sun2sc_normdr_cb2sun.resize(3, 1, 0.0);
             this->dr_cb2sundcurrent_epoch.resize(3, 1, 0.0);
-            this->dmass_flow_ratedProp_vars.resize(1, 2, 0.0);
-            this->dPdProp_vars.resize(1, 2, 0.0);
 
             // we will always have central body gravity
             if (needCentralBody)
@@ -146,11 +138,6 @@ namespace EMTG {
                 this->fx(0, 3) = 1.0;
                 this->fx(1, 4) = 1.0;
                 this->fx(2, 5) = 1.0;
-
-
-
-                this->da_cb2scdPropVars.assign_zeros();
-                this->dmass_flow_ratedProp_vars.assign_zeros();
             }
 
 
@@ -169,8 +156,7 @@ namespace EMTG {
         }
 
         void SpacecraftAccelerationModel::computeAcceleration(const math::Matrix<doubleType> & spacecraft_state,
-                                                              const bool & generate_derivatives,
-                                                              const bool & generate_time_derivatives)
+                                                              const bool & generate_derivatives)
         {
             this->initializeAndComputeGeometry(spacecraft_state, generate_derivatives);
 
@@ -180,17 +166,25 @@ namespace EMTG {
             {
                 // NOTE: we must call the thrust term first in order to set all of the appropriate
                 // quantities in the spacecraft object
+                ThrustControlLaw control_law = this->thrust_term.getThrustControlLaw();
+                if (control_law == ThrustControlLaw::Velocity ||
+                    control_law == ThrustControlLaw::AntiVelocity)
+                {
+                    this->thrust_term.computeAccelerationTerm(generate_derivatives);
+                }
                 for (size_t k = 0; k < this->natural_acceleration_terms.size(); ++k)
                 {
                     this->natural_acceleration_terms[k].computeAccelerationTerm(generate_derivatives);
                 }
-                if (generate_time_derivatives)
-                {
-                    this->computePropVarDerivatives();
-                }
             }
             else
             {
+                ThrustControlLaw control_law = this->thrust_term.getThrustControlLaw();
+                if (control_law == ThrustControlLaw::Velocity ||
+                    control_law == ThrustControlLaw::AntiVelocity)
+                {
+                    this->thrust_term.computeAccelerationTerm();
+                }
                 for (size_t k = 0; k < this->natural_acceleration_terms.size(); ++k)
                 {
                     this->natural_acceleration_terms[k].computeAccelerationTerm();
@@ -210,8 +204,7 @@ namespace EMTG {
 
         void SpacecraftAccelerationModel::computeAcceleration(const math::Matrix<doubleType> & spacecraft_state,
                                                               const math::Matrix<doubleType> & control_in,
-                                                              const bool & generate_derivatives,
-                                                              const bool & generate_time_derivatives)
+                                                              const bool & generate_derivatives)
         {
             this->control = control_in;
             this->initializeAndComputeGeometry(spacecraft_state, generate_derivatives);
@@ -223,10 +216,6 @@ namespace EMTG {
                 for (size_t k = 0; k < this->natural_acceleration_terms.size(); ++k)
                 {
                     this->natural_acceleration_terms[k].computeAccelerationTerm(generate_derivatives);
-                }
-                if (generate_time_derivatives)
-                {
-                    this->computePropVarDerivatives();
                 }
             }
             else
@@ -296,120 +285,7 @@ namespace EMTG {
             this->dr_sun2sc_normdr_cb2sc(1) = (this->r_sun2sc(1) * one_over_r_sun2sc_norm) _GETVALUE;
             this->dr_sun2sc_normdr_cb2sc(2) = (this->r_sun2sc(2) * one_over_r_sun2sc_norm) _GETVALUE;
 
-            // These are obviously zero if the sun is our central body
-            for (size_t i = 0; i < 3; ++i)
-            {
-                this->dr_cb2sundProp_vars(i, 0) = this->dr_cb2sundcurrent_epoch(i) * this->dcurrent_epochdProp_var_previous;
-                this->dr_cb2sundProp_vars(i, 1) = this->dr_cb2sundcurrent_epoch(i) * this->dcurrent_epochdProp_var;
-            }
-
-        }
-
-        void SpacecraftAccelerationModel::computePropVarDerivatives()
-        {
-            math::Matrix<double> & dstate_dotdProp_vars = *this->dstate_dotdProp_varsPtr;
-
-            this->computedPowerdPropVars();
-
-            for (size_t propVar = 0; propVar < 2; ++propVar)
-            {
-                // partials of position w.r.t. propagation variables
-                dstate_dotdProp_vars(0, propVar) = this->dstate_dProp_vars(3, propVar);
-                dstate_dotdProp_vars(1, propVar) = this->dstate_dProp_vars(4, propVar);
-                dstate_dotdProp_vars(2, propVar) = this->dstate_dProp_vars(5, propVar);
-
-                // partials of velocity w.r.t. propagation variables
-                dstate_dotdProp_vars(3, propVar) = this->fx(3, 0) * this->dstate_dProp_vars(0, propVar)
-                                                 + this->fx(3, 1) * this->dstate_dProp_vars(1, propVar)
-                                                 + this->fx(3, 2) * this->dstate_dProp_vars(2, propVar)
-                                                 + this->da_cb2scdPropVars(0, propVar)
-                                                 + this->fx(3, 6) * dstate_dProp_vars(6, propVar);
-
-                dstate_dotdProp_vars(4, propVar) = this->fx(4, 0) * this->dstate_dProp_vars(0, propVar)
-                                                 + this->fx(4, 1) * this->dstate_dProp_vars(1, propVar)
-                                                 + this->fx(4, 2) * this->dstate_dProp_vars(2, propVar)
-                                                 + this->da_cb2scdPropVars(1, propVar)
-                                                 + this->fx(4, 6) * dstate_dProp_vars(6, propVar);
-
-                dstate_dotdProp_vars(5, propVar) = this->fx(5, 0) * this->dstate_dProp_vars(0, propVar)
-                                                 + this->fx(5, 1) * this->dstate_dProp_vars(1, propVar)
-                                                 + this->fx(5, 2) * this->dstate_dProp_vars(2, propVar)
-                                                 + this->da_cb2scdPropVars(2, propVar)
-                                                 + this->fx(5, 6) * dstate_dProp_vars(6, propVar);
-
-                // partials of mass w.r.t. propagation variables
-                this->dmass_flow_ratedProp_vars(propVar) = this->my_spacecraft->getEPdMassFlowRatedP() * this->dPdProp_vars(propVar);
-                dstate_dotdProp_vars(6, propVar) = (-this->control_norm * this->dmass_flow_ratedProp_vars(propVar)) _GETVALUE;
-
-                // TODO: something here
-                dstate_dotdProp_vars(8, propVar) = 0.0;
-
-                // partials of electric propellant tank w.r.t. propagation variables
-                dstate_dotdProp_vars(9, propVar) = -1.0 * dstate_dotdProp_vars(6, propVar);
-
-            }
-        }
-
-        void SpacecraftAccelerationModel::computedPowerdPropVars()
-        {
-            // derivatives of power w.r.t. propagation derivatives
-            for (size_t propVar = 0; propVar < 2; ++propVar)
-            {
-                this->dr_sun2sc_normdProp_vars(propVar)
-                    = this->dr_sun2sc_normdr_cb2sc(0) * (this->dstate_dProp_vars(0, propVar) - this->dr_cb2sundProp_vars(0, propVar))
-                    + this->dr_sun2sc_normdr_cb2sc(1) * (this->dstate_dProp_vars(1, propVar) - this->dr_cb2sundProp_vars(1, propVar))
-                    + this->dr_sun2sc_normdr_cb2sc(2) * (this->dstate_dProp_vars(2, propVar) - this->dr_cb2sundProp_vars(2, propVar));
-            }
-
-            this->dPdProp_vars(0) = (this->my_spacecraft->getdPdr() / this->my_options->AU) * this->dr_sun2sc_normdProp_vars(0)
-                                   + this->my_spacecraft->getdPdt() * this->dcurrent_epochdProp_var_previous;
-
-            this->dPdProp_vars(1) = (this->my_spacecraft->getdPdr() / this->my_options->AU) * this->dr_sun2sc_normdProp_vars(1)
-                                   + this->my_spacecraft->getdPdt() * this->dcurrent_epochdProp_var;
-
-
-            // The sensitivity of the spacecraft's position relative to the central body to changes in 
-            // the perturbing body's position relative to the central body has additional terms if the perturbing body
-            // happens to be the Sun AND if the thrusters are firing
-            if (!this->isHeliocentric)
-            {
-                doubleType D_dTdP_dPdr_over_msc = (this->my_spacecraft->getEPdTdP() * 1.0e-3) * (this->my_spacecraft->getdPdr() / this->my_options->AU ) / this->spacecraft_mass;
-                doubleType ux_D_dTdP_dPdr_over_msc = this->control(0) * D_dTdP_dPdr_over_msc;
-                doubleType uy_D_dTdP_dPdr_over_msc = this->control(1) * D_dTdP_dPdr_over_msc;
-                doubleType uz_D_dTdP_dPdr_over_msc = this->control(2) * D_dTdP_dPdr_over_msc;
-                
-                math::Matrix<double> da_cb2scdr_cb2sun_thrust_term(3, 3, 0.0);
-                // daxdr3B
-                da_cb2scdr_cb2sun_thrust_term(0, 0) = (-ux_D_dTdP_dPdr_over_msc * this->dr_sun2sc_normdr_cb2sc(0)) _GETVALUE;
-                da_cb2scdr_cb2sun_thrust_term(0, 1) = (-ux_D_dTdP_dPdr_over_msc * this->dr_sun2sc_normdr_cb2sc(1)) _GETVALUE;
-                da_cb2scdr_cb2sun_thrust_term(0, 2) = (-ux_D_dTdP_dPdr_over_msc * this->dr_sun2sc_normdr_cb2sc(2)) _GETVALUE;
-                
-                // daydr3B
-                da_cb2scdr_cb2sun_thrust_term(1, 0) = (-uy_D_dTdP_dPdr_over_msc * this->dr_sun2sc_normdr_cb2sc(0)) _GETVALUE;
-                da_cb2scdr_cb2sun_thrust_term(1, 1) = (-uy_D_dTdP_dPdr_over_msc * this->dr_sun2sc_normdr_cb2sc(1)) _GETVALUE;
-                da_cb2scdr_cb2sun_thrust_term(1, 2) = (-uy_D_dTdP_dPdr_over_msc * this->dr_sun2sc_normdr_cb2sc(2)) _GETVALUE;
-                
-                // dazdr3B
-                da_cb2scdr_cb2sun_thrust_term(2, 0) = (-uz_D_dTdP_dPdr_over_msc * this->dr_sun2sc_normdr_cb2sc(0)) _GETVALUE;
-                da_cb2scdr_cb2sun_thrust_term(2, 1) = (-uz_D_dTdP_dPdr_over_msc * this->dr_sun2sc_normdr_cb2sc(1)) _GETVALUE;
-                da_cb2scdr_cb2sun_thrust_term(2, 2) = (-uz_D_dTdP_dPdr_over_msc * this->dr_sun2sc_normdr_cb2sc(2)) _GETVALUE;
-                
-                for (size_t propVar = 0; propVar < 2; ++propVar)
-                {
-                    this->da_cb2scdPropVars(0, propVar) += da_cb2scdr_cb2sun_thrust_term(0, 0) * this->dr_cb2sundProp_vars(0, propVar)
-                                                        +  da_cb2scdr_cb2sun_thrust_term(0, 1) * this->dr_cb2sundProp_vars(1, propVar)
-                                                        +  da_cb2scdr_cb2sun_thrust_term(0, 2) * this->dr_cb2sundProp_vars(2, propVar);
-                
-                    this->da_cb2scdPropVars(1, propVar) += da_cb2scdr_cb2sun_thrust_term(1, 0) * this->dr_cb2sundProp_vars(0, propVar)
-                                                        +  da_cb2scdr_cb2sun_thrust_term(1, 1) * this->dr_cb2sundProp_vars(1, propVar)
-                                                        +  da_cb2scdr_cb2sun_thrust_term(1, 2) * this->dr_cb2sundProp_vars(2, propVar);
-                
-                    this->da_cb2scdPropVars(2, propVar) += da_cb2scdr_cb2sun_thrust_term(2, 0) * this->dr_cb2sundProp_vars(0, propVar)
-                                                        +  da_cb2scdr_cb2sun_thrust_term(2, 1) * this->dr_cb2sundProp_vars(1, propVar)
-                                                        +  da_cb2scdr_cb2sun_thrust_term(2, 2) * this->dr_cb2sundProp_vars(2, propVar);
-                }
-
-            }
+            this->dr_sun2sc_normdr_cb2sun = -this->dr_sun2sc_normdr_cb2sc;
         }
 
         void SpacecraftAccelerationModel::populateInstrumentationFile(std::ofstream & acceleration_model_file, 

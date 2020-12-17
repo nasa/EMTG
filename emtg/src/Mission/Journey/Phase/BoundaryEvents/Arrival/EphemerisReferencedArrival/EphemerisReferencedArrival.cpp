@@ -119,14 +119,14 @@ namespace EMTG
 
             this->EventRightEpoch = this->state_after_event(7);
 
-            //Step 2: adjust the mass derivative as necessary
-            std::get<2>(this->Derivatives_of_StateAfterEvent[this->dIndex_mass_wrt_encodedMass]) *= this->ETM(6, 6);
-
-            //Step 3: perform arrival mass increment
+            //Step 2: perform arrival mass increment
             this->process_post_arrival_mass_increment();
 
-            //Step 4: perform post-arrival delta-v
+            //Step 3: perform post-arrival delta-v
             this->process_post_arrival_deltav();
+
+            //Step 4: adjust the mass derivative as necessary
+            std::get<2>(this->Derivatives_of_StateAfterEvent[this->dIndex_mass_wrt_encodedMass]) *= this->ETM(6, 6);
         }//end process_event_right_side()
     }//end namespace BoundaryEvents
 }//end namespace EMTG

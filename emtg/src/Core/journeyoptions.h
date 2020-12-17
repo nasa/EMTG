@@ -37,8 +37,9 @@ namespace EMTG
         std::string journey_central_body;//Journey central body name
         std::vector<int> destination_list;//destination list, as indices from the Universe file
         std::vector<int> sequence;//flyby sequence, as indices from the Universe file
-        PhaseType phase_type;//mission type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase, #9: variable (do not use), #10: ProbeEntryPhase
+        PhaseType phase_type;//mission type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase, #9: variable (do not use), #10: ProbeEntryPhase, #11 ControlLawThrustPhase
         size_t impulses_per_phase;//impulses per phase
+        ThrustControlLaw thrust_control_law;//Thrust control law,#0: Cartesian, #1: Velocity direction, #2: anti-velocity direction
         ControlMagnitudeType force_unit_magnitude_control;//Force unit magnitude control?,#0: free control magnitude,#1: force unit magnitude,#2: force zero magnitude
         bool force_fixed_inertial_control;//Force fixed inertial control? All control vectors in a phase must be identical if this is selected.
         bool override_num_steps;//Override this journey's number of steps?
@@ -172,6 +173,8 @@ namespace EMTG
         PhaseType phase_type_upperBound;
         size_t impulses_per_phase_lowerBound;
         size_t impulses_per_phase_upperBound;
+        ThrustControlLaw thrust_control_law_lowerBound;
+        ThrustControlLaw thrust_control_law_upperBound;
         ControlMagnitudeType force_unit_magnitude_control_lowerBound;
         ControlMagnitudeType force_unit_magnitude_control_upperBound;
         size_t number_of_steps_lowerBound;

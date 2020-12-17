@@ -9,8 +9,9 @@ class JourneyOptions(object):
         self.journey_central_body = "Sun" #Journey central body name
         self.destination_list = [3, 4] #destination list, as indices from the Universe file
         self.sequence = [] #flyby sequence, as indices from the Universe file
-        self.phase_type = 2 #mission type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase, #9: variable (do not use), #10: ProbeEntryPhase
+        self.phase_type = 2 #mission type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase, #9: variable (do not use), #10: ProbeEntryPhase, #11 ControlLawThrustPhase
         self.impulses_per_phase = 1 #impulses per phase
+        self.thrust_control_law = 1 #Thrust control law,#0: Cartesian, #1: Velocity direction, #2: anti-velocity direction
         self.force_unit_magnitude_control = 0 #Force unit magnitude control?,#0: free control magnitude,#1: force unit magnitude,#2: force zero magnitude
         self.force_fixed_inertial_control = 0 #Force fixed inertial control? All control vectors in a phase must be identical if this is selected.
         self.override_num_steps = 0 #Override this journey's number of steps?
@@ -23,7 +24,7 @@ class JourneyOptions(object):
         self.integration_step_size = 86400 #integration step size (s)
         self.override_flyby_altitude_bounds = 0 #Override journey flyby altitude?
         self.flyby_altitude_bounds = [300.0, 1.0e+6] #Lower and upper bound on journey flyby altitude (only applies to the departure flyby, if there is one)
-        self.PeriapseArrival_override_altitude = 0 #Override journey flyby altitude?
+        self.PeriapseArrival_override_altitude = 1 #Override journey flyby altitude?
         self.PeriapseArrival_altitude_bounds = [300.0, 1.0e+6] #Lower and upper bound on journey flyby altitude (km)
         self.PeriapseDeparture_altitude_bounds = [185.0, 185.0] #PeriapseDeparture altitude bounds (in km)
         self.num_interior_control_points = 1 #number of interior control points for parallel shooting phase types
@@ -173,6 +174,9 @@ class JourneyOptions(object):
                   
                     elif linecell[0] == "impulses_per_phase":
                         self.impulses_per_phase = int(linecell[1])
+                  
+                    elif linecell[0] == "thrust_control_law":
+                        self.thrust_control_law = int(linecell[1])
                   
                     elif linecell[0] == "force_unit_magnitude_control":
                         self.force_unit_magnitude_control = int(linecell[1])
@@ -584,12 +588,16 @@ class JourneyOptions(object):
                 optionsFile.write("\n")
     
             if (self.phase_type != 2 or writeAll or self.print_this_journey_options_no_matter_what):
-                optionsFile.write("#phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable (do not use)\n#10 ProbeEntryPhase\n")
+                optionsFile.write("#phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable (do not use)\n#10 ProbeEntryPhase\n#11 ControlLawThrustPhase\n")
                 optionsFile.write("phase_type " + str(self.phase_type) + "\n")
     
             if (self.impulses_per_phase != 1 or writeAll or self.print_this_journey_options_no_matter_what):
                 optionsFile.write("#impulses per phase\n")
                 optionsFile.write("impulses_per_phase " + str(self.impulses_per_phase) + "\n")
+    
+            if (self.thrust_control_law != 1 or writeAll or self.print_this_journey_options_no_matter_what):
+                optionsFile.write("#Thrust control law\n#0: Cartesian\n#1: Velocity direction\n1#2: anti-velocity direction\n")
+                optionsFile.write("thrust_control_law " + str(self.thrust_control_law) + "\n")
     
             if (self.force_unit_magnitude_control != 0 or writeAll or self.print_this_journey_options_no_matter_what):
                 optionsFile.write("#Force unit magnitude control?\n#0: free control magnitude\n#1: force unit magnitude\n#2: force zero magnitude\n")
@@ -642,7 +650,7 @@ class JourneyOptions(object):
                     optionsFile.write(" " + str(entry))
                 optionsFile.write("\n")
     
-            if (self.PeriapseArrival_override_altitude != 0 or writeAll or self.print_this_journey_options_no_matter_what):
+            if (self.PeriapseArrival_override_altitude != 1 or writeAll or self.print_this_journey_options_no_matter_what):
                 optionsFile.write("#Override journey flyby altitude?\n")
                 optionsFile.write("PeriapseArrival_override_altitude " + str(int(self.PeriapseArrival_override_altitude)) + "\n")
     
@@ -1178,6 +1186,33 @@ class JourneyOptions(object):
         except:                                                                                                                                                                                               
             print("Failed to find " + self.universe_folder + "/" + self.journey_central_body + ".emtg_universe" + "  Cannot find appropriate mu for decision vector conversion. Using 1.0. Good luck.")       
                                                                                                                                                                                                               
+        #switch between MGALT/FBLT and PSBI/PSFB                                                                                                                                                              
+        for entry in self.trialX:                                                                                                                                                                             
+            if "MGALT" in entry[0] and (self.phase_type == 3):                                                                                                                                                
+                entry[0] = entry[0].replace("MGALT","FBLT")                                                                                                                                                   
+            elif "FBLT" in entry[0] and (self.phase_type == 2):                                                                                                                                               
+                entry[0] = entry[0].replace("FBLT","MGALT")                                                                                                                                                   
+            elif "PSBI" in entry[0] and (self.phase_type == 5):                                                                                                                                               
+                entry[0] = entry[0].replace("PSBI","PSFB")                                                                                                                                                    
+            elif "PSFB" in entry[0] and (self.phase_type == 4):                                                                                                                                               
+                entry[0] = entry[0].replace("PSFB","PSBI")                                                                                                                                                    
+                                                                                                                                                                                                              
+            if "xdot" in entry[0]:                                                                                                                                                                            
+                entry[0] = entry[0].replace("xdot", "vx")                                                                                                                                                     
+            elif "ydot" in entry[0]:                                                                                                                                                                          
+                entry[0] = entry[0].replace("ydot", "vy")                                                                                                                                                     
+            elif "zdot" in entry[0]:                                                                                                                                                                          
+                entry[0] = entry[0].replace("zdot", "vz")                                                                                                                                                     
+                                                                                                                                                                                                              
+        #old launch to new launch                                                                                                          
+        if self.departure_class == 3 and self.departure_type == 0: #periapse launch                                                        
+            import os, sys, inspect                                                                                                        
+            currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))                                         
+            sys.path.append(currentdir + "/Converters")                                                                               
+            import convert_old_PeriapseLaunchOrImpulsiveDeparture_to_PeriapseLaunch as lc                                                  
+                                                                                                                                           
+            self = lc.convert_launch(self, mu)                                                                                             
+                                                                                                                                           
         #ParallelShooting                                                                                                                  
         self.trialX = myStateConverter.convertDecisionVector(self.trialX,                                                                  
                                                             stateRepresentationNames[ParallelShootingStateRepresentation],                 
@@ -1203,3 +1238,27 @@ class JourneyOptions(object):
                                                             mu)                                                                            
                                                                                                                                            
         return                                                                                                                             
+                                                                                                                                           
+                                                                                                                                           
+                                                                                                                                           
+    #************************************************************************************getDecisionVariable()                             
+    def getDecisionVariable(self, variableDefinition):                                                                                     
+        for entry in self.trialX:                                                                                                          
+            if entry[0].strip() == variableDefinition:                                                                                     
+                return entry[1]                                                                                                            
+                                                                                                                                           
+        #if you made it here, something went wrong.                                                                                        
+                                                                                                                                           
+        raise Exception("Variable '" + variableDefinition + "' not found.")                                                              
+                                                                                                                                           
+                                                                                                                                           
+    #************************************************************************************setDecisionVariable()                             
+    def setDecisionVariable(self, variableDefinition, value):                                                                              
+        for entryIndex in range(0, len(self.trialX)):                                                                                      
+            if self.trialX[entryIndex][0].strip() == variableDefinition:                                                                   
+                self.trialX[entryIndex][1] = value                                                                                         
+                return                                                                                                                     
+                                                                                                                                           
+        #if you made it here, something went wrong.                                                                                        
+                                                                                                                                           
+        raise Exception("Variable '" + variableDefinition + "' not found.")                                                              

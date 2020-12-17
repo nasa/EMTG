@@ -191,6 +191,10 @@ namespace EMTG
                     successfully_optimized = true;
 
                     this->output(this->options.outputfile);
+
+                    //print an XFfile
+                    this->X = this->Xopt;
+                    this->output_problem_bounds_and_descriptions(this->options.working_directory + "//" + "XFfile.csv");
                 }
                 catch (std::exception &error)
                 {
@@ -326,6 +330,10 @@ namespace EMTG
                     }
 
                     this->output(this->options.outputfile);
+
+                    //print an XFfile
+                    this->X = this->Xopt;
+                    this->output_problem_bounds_and_descriptions(this->options.working_directory + "//" + "XFfile.csv");
                 }
 
                 break;

@@ -695,6 +695,7 @@ class SolverOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
                 self.missionoptions.ConvertDecisionVector()
                 self.missionoptions.AssembleMasterDecisionVector()
 
+
                 del tempmission
 
 

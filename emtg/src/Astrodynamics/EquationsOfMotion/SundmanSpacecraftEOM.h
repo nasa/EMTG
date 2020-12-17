@@ -41,53 +41,40 @@ namespace EMTG {
             ~SundmanSpacecraftEOM();
 
             virtual void evaluate(const math::Matrix<doubleType> & state,
-                                  const math::Matrix<double> & dstate_dProp_vars,
                                   math::Matrix<doubleType> & state_dot,
-                                  math::Matrix<double> & dstate_dotdProp_vars,
                                   const bool & generate_derivatives);
 
             virtual void evaluate(const math::Matrix<doubleType> & state,
-                                  const math::Matrix<double> & dstate_dProp_vars,
                                   math::Matrix<doubleType> & state_dot,
-                                  math::Matrix<double> & dstate_dotdProp_vars,
                                   const math::Matrix<doubleType> & control,
                                   const bool & generate_derivatives);
             
-			inline void setSundmanC(const double & c_in) { this->sundman_c = c_in; }
+			inline void setSundmanC(const double & c_in) { this->sundman_constant = c_in; }
 			inline void setSundmanGamma(const double & gamma_in) { this->sundman_gamma = gamma_in; }
 
         private:
 
-			doubleType sundman_c;
+			doubleType sundman_constant;
 			double sundman_gamma;
-            doubleType sundman_constant;
+            doubleType sundman_transform;
 
             math::Matrix<doubleType> specific_angular_momentum;
             math::Matrix<doubleType> velocity;
             doubleType mass_flow_rate;
-            math::Matrix<double> dsundman_constantdPropVar;
             math::Matrix<double> dsundman_constantdState;
 
-            void configureAccelerationModel(const math::Matrix<doubleType> & state,
-                const math::Matrix<double> & dstate_dProp_vars,
-                math::Matrix<double> & dstate_dotdProp_vars);
+            void configureAccelerationModel(const math::Matrix<doubleType> & state);
 
             void computeAcceleration(const math::Matrix<doubleType> & state,
-                const math::Matrix<double> & dstate_dProp_vars,
-                math::Matrix<double> & dstate_dotdProp_vars,
                 const bool & STM_needed);
             void computeAcceleration(const math::Matrix<doubleType> & state,
-                const math::Matrix<double> & dstate_dProp_vars,
-                math::Matrix<double> & dstate_dotdProp_vars,
                 const math::Matrix<doubleType> & control,
                 const bool & STM_needed);
 
-            void computeVariationalEquations(const math::Matrix<doubleType> & state,
-                                             math::Matrix<doubleType> & state_dot,
-                                             math::Matrix<double> & dstate_dotdProp_vars);
-            void computeSundmanConstantTA(const math::Matrix<doubleType> & state, const math::Matrix<double> & dstate_dProp_vars);
-            void computeSundmanConstantGA(const math::Matrix<doubleType> & state, const math::Matrix<double> & dstate_dProp_vars);
-            void computeSundmanConstantScaled(const math::Matrix<doubleType> & state, const math::Matrix<double> & dstate_dProp_vars);
+            void computeSundmanStatePropagationMatrix();
+            void computeSundmanConstantTA(const math::Matrix<doubleType> & state);
+            void computeSundmanConstantGA(const math::Matrix<doubleType> & state);
+            void computeSundmanConstantScaled(const math::Matrix<doubleType> & state);
         };
     } // end Astrodynamics namespace
 } // end EMTG namespace

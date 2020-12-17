@@ -54,26 +54,22 @@ namespace EMTG
                 this->myUniverse,
                 this->Xdescriptions,
                 this->mySpacecraft,
-                13,//STM rows
-                13,//STM columns
-                this->numStatesToPropagate);
+                14); // STM size
             this->mySpacecraftAccelerationModel->setDutyCycle(this->PhaseDutyCycle);
 
             //EOM
             this->myEOM.setSpacecraftAccelerationModel(this->mySpacecraftAccelerationModel);
 
             //integration scheme
-            this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, this->numStatesToPropagate + (13 * 13), 10);
-            this->myIntegrationScheme->setNumStatesToIntegratePtr(this->total_number_of_states_to_integrate);
+            this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, this->numStatesToPropagate, 14);
 
             //integrators for initial and terminal coasts
             if (this->hasInitialCoast)
             {
                 this->InitialCoastPropagatorObject = CreatePropagator(this->myOptions,
-                    this->myUniverse,
-                    13,
-                    13,
-                    this->numStatesToPropagate ,
+                    this->myUniverse,                    
+                    this->numStatesToPropagate,
+                    14,
                     this->state_after_initial_TCM,
                     this->state_after_initial_coast,
                     this->STM_initial_coast,
@@ -89,10 +85,9 @@ namespace EMTG
             if (this->hasTerminalCoast)
             {
                 this->TerminalCoastPropagatorObject = CreatePropagator(this->myOptions,
-                    this->myUniverse,
-                    13,
-                    13,
+                    this->myUniverse,                    
                     this->numStatesToPropagate,
+                    14,
                     this->state_at_end_of_phase,
                     this->state_before_terminal_coast,
                     this->STM_terminal_coast,

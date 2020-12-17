@@ -61,6 +61,11 @@ def make_bsps(args):
     #myPool = multiprocessing.Pool(multiprocessing.cpu_count())
     
     working_directory = args[0]
+
+    if working_directory == '.':
+        from os import getcwd
+        working_directory = getcwd()
+
     destination_dir = working_directory + '/ephemeris'
     EMTGpath = args[1]
     
@@ -90,6 +95,7 @@ def make_bsps(args):
                 
     counter = 1
     for bsp_to_make in bsps_to_make:
+        sys.path.append(os.path.dirname(bsp_to_make))
         os.system('python ' + bsp_to_make + ' &')
         counter += 1
         if counter > nproc:

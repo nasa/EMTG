@@ -1,0 +1,9 @@
+Get from the NAIF website:
+
+de430.bsp
+naif0012.tls
+pck00010.tpc
+
+Also get the body-specific SPICE kernels for any body that you need that is not part of de430.
+
+To successfully run the regression tests, you will need bsps for Mars and Jupiter.

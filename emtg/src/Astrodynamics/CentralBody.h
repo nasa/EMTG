@@ -64,6 +64,7 @@ namespace EMTG
                         const double& imass,
                         const double& iradius,
                         const double& iJ2,
+                        const double& iJ2_ref_radius,
                         const double& iflattening_coefficient,
                         const double& iAbsoluteMagnitude,
                         const double& ialbedo,

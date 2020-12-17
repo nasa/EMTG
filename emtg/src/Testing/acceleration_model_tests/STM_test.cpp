@@ -35,13 +35,13 @@
 #include "SpacecraftOptionsFactory.h"
 #include "doubleType.h"
 #include "EMTG_Matrix.h"
+#include "ExplicitRungeKutta.h"
 #include "file_utilities.h"
 #include "IntegratedAdaptiveStepPropagator.h"
 #include "IntegratedFixedStepPropagator.h"
 #include "mission.h"
 #include "missionoptions.h"
 #include "PropagatorFactory.h"
-#include "RungeKutta8.h"
 #include "SpacecraftAccelerationModel.h"
 #include "SpiceUsr.h" 
 #include "TimeDomainSpacecraftEOM.h"
@@ -412,32 +412,28 @@ int main(int argc, char* argv[])
     //TheUniverse[0].set_X_scale_factors(&myMission.X_scale_factors);
 
     size_t state_vector_size = 10;
-    size_t STM_start_index = 10;
-    size_t num_STM_rows = 14;
-    size_t num_STM_columns = 14;
+    size_t STM_size = 14;
     std::vector<std::string> Xdescriptions;
     EMTG::Astrodynamics::SpacecraftAccelerationModel test_acceleration_model(&myMission.options, 
                                                                              &myMission.options.Journeys[0], 
                                                                              &TheUniverse[0],
                                                                              &Xdescriptions,
                                                                              &mySpacecraft, 
-                                                                             num_STM_rows - 1, 
-                                                                             num_STM_columns - 1,
-                                                                             STM_start_index);
+                                                                             STM_size);
     
     doubleType test_launch_epoch = myMission.options.launch_window_open_date; // seconds past MJD J2000
     doubleType TOFprevious, TOF;
     if (options.mission_type == EMTG::PhaseType::SundmanCoastPhase)
     {
         TOFprevious = 0.0 * 86400.0;
-        TOF = 22750.0*EMTG::math::PI;
-        //TOF = 1000.0*EMTG::math::PI;
+        //TOF = 22750.0*EMTG::math::PI;
+        TOF = 1000.0*EMTG::math::PI;
     }
     else
     {
         TOFprevious = 0.0 * 86400.0;
-        //TOF = 5.07152939736843 * 86400.0; // what it was before
-		TOF = 58.0; // for drag
+        TOF = 5.07152939736843 * 86400.0; // what it was before
+		//TOF = 58.0; // for drag
         //TOF = 1.0 * 86400.0;
 
     }
@@ -458,7 +454,7 @@ int main(int argc, char* argv[])
     std::vector<double> x(8);
     double shit = test_epoch _GETVALUE - (51544.5 * 86400.0);
     //spkez_c(399, shit, "J2000", "NONE", 10, x.data(), &LT_dump);
-    //spkez_c(504, test_epoch _GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", 599, x.data(), &LT_dump);
+    spkez_c(504, test_epoch _GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", 599, x.data(), &LT_dump);
     //spkez_c(301, test_epoch _GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", 399, x.data(), &LT_dump);
     //spkez_c(499, test_epoch _GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", 4, x.data(), &LT_dump);
     //spkez_c(602, test_epoch _GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", 699, x.data(), &LT_dump);
@@ -470,12 +466,12 @@ int main(int argc, char* argv[])
     //x[5] = 1.31500098;
     x[6] = myMission.options.maximum_mass;
     x[7] = test_epoch _GETVALUE;
-    x[0] = 4571.0;
-    x[1] = 3403.3;
-    x[2] = 3003.3;
-    x[3] = -0.1;
-    x[4] = 7.4;
-    x[5] = -0.5;
+    //x[0] = 4571.0;
+    //x[1] = 3403.3;
+    //x[2] = 3003.3;
+    //x[3] = -0.1;
+    //x[4] = 7.4;
+    //x[5] = -0.5;
 	//x[0] = 6571.0;
 	//x[1] = 14.3;
 	//x[2] = 100.3;
@@ -515,7 +511,7 @@ int main(int argc, char* argv[])
     // current epoch
     test_state(7) = test_epoch;
 #ifdef AD_INSTRUMENTATION
-    //test_state(7).setDerivative(GSADindex++, 1.0);
+    test_state(7).setDerivative(GSADindex++, 1.0);
 #endif
 
 // virtual chemical thruster propellant tank
@@ -564,21 +560,15 @@ int main(int argc, char* argv[])
     }
 
     // create the integration scheme
-    // {x, y, z, vx, vy, vz, m, ux, uy, uz}
-    size_t total_states_to_integrate = STM_start_index + (num_STM_rows - 1) * (num_STM_columns - 1);
-    size_t number_of_prop_var_derivative_states = 10;
-    EMTG::Integration::RungeKutta8 rk8(thing, total_states_to_integrate, number_of_prop_var_derivative_states);
-
-    // specify the current number of states that you want to integrate 
-    // basically do you want states+STM or just states?
-    rk8.setNumStatesToIntegratePtr(total_states_to_integrate);
+    // {x, y, z, vx, vy, vz, m, epoch, tank1, tank2, ux, uy, uz}
+    EMTG::Integration::ExplicitRungeKutta explicit_rk8(thing, EMTG::rkdp87, state_vector_size, STM_size);
 
     // create the propagator
     EMTG::math::Matrix <doubleType> state_left(state_vector_size, 1, 0.0);
     EMTG::math::Matrix <double> dstate_leftdTOF(10, 2, 0.0); // initial state partials w.r.t. previous and current TOF
     EMTG::math::Matrix <doubleType> state_right(state_vector_size, 1, 0.0);
     EMTG::math::Matrix <double> dstate_rightdTOF(10, 2, 0.0); // final state partials w.r.t. previous and current TOF
-    EMTG::math::Matrix <double> STM(num_STM_rows, num_STM_columns, 0.0);
+    EMTG::math::Matrix <double> STM(STM_size, STM_size, 0.0);
     double BoundaryTarget_dStepSizedPropVar = 1.0 / options.num_timesteps;
 
     // insert true state
@@ -598,15 +588,14 @@ int main(int argc, char* argv[])
 
     EMTG::Astrodynamics::PropagatorBase * integratedPropagator = EMTG::Astrodynamics::CreatePropagator(&options,
         &TheUniverse[0],
-        num_STM_rows - 1,
-        num_STM_columns - 1,
-        STM_start_index,
+        state_vector_size,
+        STM_size,
         state_left,
         state_right,
         STM,
         dstate_leftdTOF,
         thing,
-        &rk8,
+        &explicit_rk8,
         &BoundaryTarget_dStepSizedPropVar,
         options.Journeys[0].override_integration_step_size
         ? options.Journeys[0].integration_step_size
@@ -631,7 +620,8 @@ int main(int argc, char* argv[])
     // Start a timer
     std::cout << std::setprecision(16);
     clock_t begin = clock();
-    integratedPropagator->propagate(TOF, true);
+    //integratedPropagator->propagate(TOF / options.num_timesteps, control, true);
+    integratedPropagator->propagate(TOF / options.num_timesteps, true);
     clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
     std::cout << "Propagation time: " << std::setprecision(16) << elapsed_secs << " secs\n" << std::endl;
@@ -639,9 +629,9 @@ int main(int argc, char* argv[])
     dstate_rightdTOF = dstate_leftdTOF;    
 
     std::cout << "Numerically integrated STM:" << std::endl;
-    for (size_t i = 0; i < num_STM_rows; ++i)
+    for (size_t i = 0; i < STM_size; ++i)
     {
-        for (size_t j = 0; j < num_STM_columns; ++j)
+        for (size_t j = 0; j < STM_size; ++j)
         {
             std::cout << STM(i, j) << "     ";
         }
@@ -652,11 +642,11 @@ int main(int argc, char* argv[])
 
 #ifdef AD_INSTRUMENTATION
     std::cout << "AD computed STM:" << std::endl;
-    EMTG::math::Matrix <double> AD_STM(num_STM_rows, num_STM_columns, 0.0);
+    EMTG::math::Matrix <double> AD_STM(STM_size, STM_size, 0.0);
     size_t derivIndex = 3;
     for (size_t i = 0; i < state_vector_size; ++i)
     {
-        for (size_t derivIndex = 3; derivIndex < num_STM_columns + 2; ++derivIndex)
+        for (size_t derivIndex = 3; derivIndex < STM_size + 3; ++derivIndex)
         {
             AD_STM(i, derivIndex - 3) = state_right(i).getDerivative(derivIndex);
             std::cout << AD_STM(i, derivIndex - 3) << "     ";
@@ -670,9 +660,9 @@ int main(int argc, char* argv[])
     std::cout << std::endl << std::endl;
 
     std::cout << "Absolute STM error:" << std::endl;
-    for (size_t i = 0; i < num_STM_rows; ++i)
+    for (size_t i = 0; i < STM_size; ++i)
     {
-        for (size_t j = 0; j < num_STM_columns; ++j)
+        for (size_t j = 0; j < STM_size; ++j)
         {
             std::cout << AD_STM(i, j) - STM(i, j) << "     ";
         }
@@ -682,9 +672,9 @@ int main(int argc, char* argv[])
     std::cout << std::endl << std::endl;
 
     std::cout << "Relative STM error:" << std::endl;
-    for (size_t i = 0; i < num_STM_rows; ++i)
+    for (size_t i = 0; i < STM_size; ++i)
     {
-        for (size_t j = 0; j < num_STM_columns; ++j)
+        for (size_t j = 0; j < STM_size; ++j)
         {
             if (AD_STM(i, j) < 1.0e-20 && (AD_STM(i, j) - STM(i, j)) < 1.0e-20)
             {
@@ -702,26 +692,26 @@ int main(int argc, char* argv[])
 
     std::cout << "Independent variable derivatives" << std::endl;
     std::cout << "Format: analytical, GSAD, absolute error, relative error" << std::endl;
-    std::cout << "dxdIndVarcurrent: "      << dstate_rightdTOF(0, 1) << " " << state_right(0).getDerivative(2) << " " << dstate_rightdTOF(0, 1) - state_right(0).getDerivative(2) << " " << (dstate_rightdTOF(0, 1) - state_right(0).getDerivative(2)) / state_right(0).getDerivative(2) << std::endl;
-    std::cout << "dxdIndVarprevious: "     << dstate_rightdTOF(0, 0) << " " << state_right(0).getDerivative(1) << " " << dstate_rightdTOF(0, 0) - state_right(0).getDerivative(1) << " " << (dstate_rightdTOF(0, 0) - state_right(0).getDerivative(1)) / state_right(0).getDerivative(1) << std::endl;
-    std::cout << "dydIndVarcurrent: "      << dstate_rightdTOF(1, 1) << " " << state_right(1).getDerivative(2) << " " << dstate_rightdTOF(1, 1) - state_right(1).getDerivative(2) << " " << (dstate_rightdTOF(1, 1) - state_right(1).getDerivative(2)) / state_right(1).getDerivative(2) << std::endl;
-    std::cout << "dydIndVarprevious: "     << dstate_rightdTOF(1, 0) << " " << state_right(1).getDerivative(1) << " " << dstate_rightdTOF(1, 0) - state_right(1).getDerivative(1) << " " << (dstate_rightdTOF(1, 0) - state_right(1).getDerivative(1)) / state_right(1).getDerivative(1) << std::endl;
-    std::cout << "dzdIndVarcurrent: "      << dstate_rightdTOF(2, 1) << " " << state_right(2).getDerivative(2) << " " << dstate_rightdTOF(2, 1) - state_right(2).getDerivative(2) << " " << (dstate_rightdTOF(2, 1) - state_right(2).getDerivative(2)) / state_right(2).getDerivative(2) << std::endl;
-    std::cout << "dzdIndVarprevious: "     << dstate_rightdTOF(2, 0) << " " << state_right(2).getDerivative(1) << " " << dstate_rightdTOF(2, 0) - state_right(2).getDerivative(1) << " " << (dstate_rightdTOF(2, 0) - state_right(2).getDerivative(1)) / state_right(2).getDerivative(1) << std::endl;
-    std::cout << "dvxdIndVarcurrent: "     << dstate_rightdTOF(3, 1) << " " << state_right(3).getDerivative(2) << " " << dstate_rightdTOF(3, 1) - state_right(3).getDerivative(2) << " " << (dstate_rightdTOF(3, 1) - state_right(3).getDerivative(2)) / state_right(3).getDerivative(2) << std::endl;
-    std::cout << "dvxdIndVarprevious: "    << dstate_rightdTOF(3, 0) << " " << state_right(3).getDerivative(1) << " " << dstate_rightdTOF(3, 0) - state_right(3).getDerivative(1) << " " << (dstate_rightdTOF(3, 0) - state_right(3).getDerivative(1)) / state_right(3).getDerivative(1) << std::endl;
-    std::cout << "dvydIndVarcurrent: "     << dstate_rightdTOF(4, 1) << " " << state_right(4).getDerivative(2) << " " << dstate_rightdTOF(4, 1) - state_right(4).getDerivative(2) << " " << (dstate_rightdTOF(4, 1) - state_right(4).getDerivative(2)) / state_right(4).getDerivative(2) << std::endl;
-    std::cout << "dvydIndVarprevious: "    << dstate_rightdTOF(4, 0) << " " << state_right(4).getDerivative(1) << " " << dstate_rightdTOF(4, 0) - state_right(4).getDerivative(1) << " " << (dstate_rightdTOF(4, 0) - state_right(4).getDerivative(1)) / state_right(4).getDerivative(1) << std::endl;
-    std::cout << "dvzdIndVarcurrent: "     << dstate_rightdTOF(5, 1) << " " << state_right(5).getDerivative(2) << " " << dstate_rightdTOF(5, 1) - state_right(5).getDerivative(2) << " " << (dstate_rightdTOF(5, 1) - state_right(5).getDerivative(2)) / state_right(5).getDerivative(2) << std::endl;
-    std::cout << "dvzdIndVarprevious: "    << dstate_rightdTOF(5, 0) << " " << state_right(5).getDerivative(1) << " " << dstate_rightdTOF(5, 0) - state_right(5).getDerivative(1) << " " << (dstate_rightdTOF(5, 0) - state_right(5).getDerivative(1)) / state_right(5).getDerivative(1) << std::endl;
-    std::cout << "dmdIndVarcurrent: "      << dstate_rightdTOF(6, 1) << " " << state_right(6).getDerivative(2) << " " << dstate_rightdTOF(6, 1) - state_right(6).getDerivative(2) << " " << (dstate_rightdTOF(6, 1) - state_right(6).getDerivative(2)) / state_right(6).getDerivative(2) << std::endl;
-    std::cout << "dmdIndVarprevious: "     << dstate_rightdTOF(6, 0) << " " << state_right(6).getDerivative(1) << " " << dstate_rightdTOF(6, 0) - state_right(6).getDerivative(1) << " " << (dstate_rightdTOF(6, 0) - state_right(6).getDerivative(1)) / state_right(6).getDerivative(1) << std::endl;
-    std::cout << "depochdIndVarcurrent: "  << dstate_rightdTOF(7, 1) << " " << state_right(7).getDerivative(2) << " " << dstate_rightdTOF(7, 1) - state_right(7).getDerivative(2) << " " << (dstate_rightdTOF(7, 1) - state_right(7).getDerivative(2)) / state_right(7).getDerivative(2) << std::endl;
-    std::cout << "depochdIndVarprevious: " << dstate_rightdTOF(7, 0) << " " << state_right(7).getDerivative(1) << " " << dstate_rightdTOF(7, 0) - state_right(7).getDerivative(1) << " " << (dstate_rightdTOF(7, 0) - state_right(7).getDerivative(1)) / state_right(7).getDerivative(1) << std::endl;
-    std::cout << "dchemdIndVarcurrent: "   << dstate_rightdTOF(8, 1) << " " << state_right(8).getDerivative(2) << " " << dstate_rightdTOF(8, 1) - state_right(8).getDerivative(2) << " " << (dstate_rightdTOF(8, 1) - state_right(8).getDerivative(2)) / state_right(8).getDerivative(2) << std::endl;
-    std::cout << "dchemdIndVarprevious: "  << dstate_rightdTOF(8, 0) << " " << state_right(8).getDerivative(1) << " " << dstate_rightdTOF(8, 0) - state_right(8).getDerivative(1) << " " << (dstate_rightdTOF(8, 0) - state_right(8).getDerivative(1)) / state_right(8).getDerivative(1) << std::endl;
-    std::cout << "delecdIndVarcurrent: "   << dstate_rightdTOF(9, 1) << " " << state_right(9).getDerivative(2) << " " << dstate_rightdTOF(9, 1) - state_right(9).getDerivative(2) << " " << (dstate_rightdTOF(9, 1) - state_right(9).getDerivative(2)) / state_right(9).getDerivative(2) << std::endl;
-    std::cout << "delecdIndVarprevious: "  << dstate_rightdTOF(9, 0) << " " << state_right(9).getDerivative(1) << " " << dstate_rightdTOF(9, 0) - state_right(9).getDerivative(1) << " " << (dstate_rightdTOF(9, 0) - state_right(9).getDerivative(1)) / state_right(9).getDerivative(1) << std::endl;
+    std::cout << "dxdIndVarcurrent: "      << STM(0, 13) << " " << state_right(0).getDerivative(2) << " " << STM(0, 13) - state_right(0).getDerivative(2) << " " << (STM(0, 13) - state_right(0).getDerivative(2)) / state_right(0).getDerivative(2) << std::endl;
+    std::cout << "dxdIndVarprevious: "     << STM(0, 7)  << " " << state_right(0).getDerivative(1) << " " << STM(0, 7)  - state_right(0).getDerivative(1) << " " << (STM(0, 7)  - state_right(0).getDerivative(1)) / state_right(0).getDerivative(1) << std::endl;
+    std::cout << "dydIndVarcurrent: "      << STM(1, 13) << " " << state_right(1).getDerivative(2) << " " << STM(1, 13) - state_right(1).getDerivative(2) << " " << (STM(1, 13) - state_right(1).getDerivative(2)) / state_right(1).getDerivative(2) << std::endl;
+    std::cout << "dydIndVarprevious: "     << STM(1, 7)  << " " << state_right(1).getDerivative(1) << " " << STM(1, 7)  - state_right(1).getDerivative(1) << " " << (STM(1, 7)  - state_right(1).getDerivative(1)) / state_right(1).getDerivative(1) << std::endl;
+    std::cout << "dzdIndVarcurrent: "      << STM(2, 13) << " " << state_right(2).getDerivative(2) << " " << STM(2, 13) - state_right(2).getDerivative(2) << " " << (STM(2, 13) - state_right(2).getDerivative(2)) / state_right(2).getDerivative(2) << std::endl;
+    std::cout << "dzdIndVarprevious: "     << STM(2, 7)  << " " << state_right(2).getDerivative(1) << " " << STM(2, 7)  - state_right(2).getDerivative(1) << " " << (STM(2, 7)  - state_right(2).getDerivative(1)) / state_right(2).getDerivative(1) << std::endl;
+    std::cout << "dvxdIndVarcurrent: "     << STM(3, 13) << " " << state_right(3).getDerivative(2) << " " << STM(3, 13) - state_right(3).getDerivative(2) << " " << (STM(3, 13) - state_right(3).getDerivative(2)) / state_right(3).getDerivative(2) << std::endl;
+    std::cout << "dvxdIndVarprevious: "    << STM(3, 7)  << " " << state_right(3).getDerivative(1) << " " << STM(3, 7)  - state_right(3).getDerivative(1) << " " << (STM(3, 7)  - state_right(3).getDerivative(1)) / state_right(3).getDerivative(1) << std::endl;
+    std::cout << "dvydIndVarcurrent: "     << STM(4, 13) << " " << state_right(4).getDerivative(2) << " " << STM(4, 13) - state_right(4).getDerivative(2) << " " << (STM(4, 13) - state_right(4).getDerivative(2)) / state_right(4).getDerivative(2) << std::endl;
+    std::cout << "dvydIndVarprevious: "    << STM(4, 7)  << " " << state_right(4).getDerivative(1) << " " << STM(4, 7)  - state_right(4).getDerivative(1) << " " << (STM(4, 7)  - state_right(4).getDerivative(1)) / state_right(4).getDerivative(1) << std::endl;
+    std::cout << "dvzdIndVarcurrent: "     << STM(5, 13) << " " << state_right(5).getDerivative(2) << " " << STM(5, 13) - state_right(5).getDerivative(2) << " " << (STM(5, 13) - state_right(5).getDerivative(2)) / state_right(5).getDerivative(2) << std::endl;
+    std::cout << "dvzdIndVarprevious: "    << STM(5, 7)  << " " << state_right(5).getDerivative(1) << " " << STM(5, 7)  - state_right(5).getDerivative(1) << " " << (STM(5, 7)  - state_right(5).getDerivative(1)) / state_right(5).getDerivative(1) << std::endl;
+    std::cout << "dmdIndVarcurrent: "      << STM(6, 13) << " " << state_right(6).getDerivative(2) << " " << STM(6, 13) - state_right(6).getDerivative(2) << " " << (STM(6, 13) - state_right(6).getDerivative(2)) / state_right(6).getDerivative(2) << std::endl;
+    std::cout << "dmdIndVarprevious: "     << STM(6, 7)  << " " << state_right(6).getDerivative(1) << " " << STM(6, 7)  - state_right(6).getDerivative(1) << " " << (STM(6, 7)  - state_right(6).getDerivative(1)) / state_right(6).getDerivative(1) << std::endl;
+    std::cout << "depochdIndVarcurrent: "  << STM(7, 13) << " " << state_right(7).getDerivative(2) << " " << STM(7, 13) - state_right(7).getDerivative(2) << " " << (STM(7, 13) - state_right(7).getDerivative(2)) / state_right(7).getDerivative(2) << std::endl;
+    std::cout << "depochdIndVarprevious: " << STM(7, 7)  << " " << state_right(7).getDerivative(1) << " " << STM(7, 7)  - state_right(7).getDerivative(1) << " " << (STM(7, 7)  - state_right(7).getDerivative(1)) / state_right(7).getDerivative(1) << std::endl;
+    std::cout << "dchemdIndVarcurrent: "   << STM(8, 13) << " " << state_right(8).getDerivative(2) << " " << STM(8, 13) - state_right(8).getDerivative(2) << " " << (STM(8, 13) - state_right(8).getDerivative(2)) / state_right(8).getDerivative(2) << std::endl;
+    std::cout << "dchemdIndVarprevious: "  << STM(8, 7)  << " " << state_right(8).getDerivative(1) << " " << STM(8, 7)  - state_right(8).getDerivative(1) << " " << (STM(8, 7)  - state_right(8).getDerivative(1)) / state_right(8).getDerivative(1) << std::endl;
+    std::cout << "delecdIndVarcurrent: "   << STM(9, 13) << " " << state_right(9).getDerivative(2) << " " << STM(9, 13) - state_right(9).getDerivative(2) << " " << (STM(9, 13) - state_right(9).getDerivative(2)) / state_right(9).getDerivative(2) << std::endl;
+    std::cout << "delecdIndVarprevious: "  << STM(9, 7)  << " " << state_right(9).getDerivative(1) << " " << STM(9, 7)  - state_right(9).getDerivative(1) << " " << (STM(9, 7)  - state_right(9).getDerivative(1)) / state_right(9).getDerivative(1) << std::endl;
 #endif
     
     std::cout << "\nInitial State Information:\n" << std::endl;

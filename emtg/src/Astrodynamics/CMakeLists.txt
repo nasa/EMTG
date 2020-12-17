@@ -40,7 +40,6 @@ if (RUN_FBLT_TESTBED)
                                            ${CMAKE_CURRENT_SOURCE_DIR}/body.h
                                            ${CMAKE_CURRENT_SOURCE_DIR}/CentralBody.h
 							               ${CMAKE_CURRENT_SOURCE_DIR}/bplane.h
-                                           ${CMAKE_CURRENT_SOURCE_DIR}/engine_model.h
                                            ${CMAKE_CURRENT_SOURCE_DIR}/FBLT_acceleration_model.h
                                            ${CMAKE_CURRENT_SOURCE_DIR}/FBLT_EOM.h
                                            ${CMAKE_CURRENT_SOURCE_DIR}/frame.h
@@ -67,7 +66,6 @@ if (RUN_ACCELERATION_MODEL_TESTBED)
                                                          ${CMAKE_CURRENT_SOURCE_DIR}/body.h
                                                          ${CMAKE_CURRENT_SOURCE_DIR}/CentralBody.h
 							                             ${CMAKE_CURRENT_SOURCE_DIR}/bplane.h
-                                                         ${CMAKE_CURRENT_SOURCE_DIR}/engine_model.h
                                                          ${CMAKE_CURRENT_SOURCE_DIR}/frame.h
                                                          ${CMAKE_CURRENT_SOURCE_DIR}/orbit_element_conversions.h
                                                          ${CMAKE_CURRENT_SOURCE_DIR}/universe.h)

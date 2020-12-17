@@ -224,12 +224,20 @@ int main(int argc, char* argv[])
                 std::vector<int> body_index_array;
 
                 //first boundary point
-                if (options.Journeys[j].destination_list[0] > 0)
-                    body_index_array.push_back(options.Journeys[j].destination_list[0] - 1);
+                if (options.Journeys[j].departure_class != EMTG::BoundaryClass::FreePoint
+                    && options.Journeys[j].departure_elements_frame != EMTG::ReferenceFrame::ObjectReferenced)
+                {
+                    if (options.Journeys[j].destination_list[0] > 0)
+                        body_index_array.push_back(options.Journeys[j].destination_list[0] - 1);
+                }
 
                 //last boundary point
-                if (options.Journeys[j].destination_list[1] > 0)
-                    body_index_array.push_back(options.Journeys[j].destination_list[1] - 1);
+                if (options.Journeys[j].arrival_class != EMTG::BoundaryClass::FreePoint
+                    && options.Journeys[j].arrival_elements_frame != EMTG::ReferenceFrame::ObjectReferenced)
+                {
+                    if (options.Journeys[j].destination_list[1] > 0)
+                        body_index_array.push_back(options.Journeys[j].destination_list[1] - 1);
+                }
 
                 //sequence
                 for (int body : options.Journeys[j].sequence)

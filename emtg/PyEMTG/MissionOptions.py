@@ -16,7 +16,7 @@ class MissionOptions(object):
         self.total_flight_time_bounds = [0.0, 302] #flight time bounds (days)
         self.DLA_bounds = [-90.0, 90.0] #DLA in degrees
         self.RLA_bounds = [-2880.0, 2880.0] #RLA in degrees
-        self.mission_type = 2 #mission type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase, #9: variable phase type, #10: ProbeEntryPhase
+        self.mission_type = 2 #mission type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase, #9: variable phase type, #10: ProbeEntryPhase, #11 ControlLawThrustPhase
         self.NLP_solver_type = 0 #NLP solver type,#0: SNOPT,#1: WORHP
         self.NLP_solver_mode = 1 #NLP solver mode,#0: find feasible point only,#1: find optimal solution,#2: satisfy equality constraints
         self.quiet_NLP = 1 #Quiet NLP solver?
@@ -109,13 +109,13 @@ class MissionOptions(object):
         self.SpacecraftModelInput = 2 #Spacecraft object input type,#0: Assemble from libraries,#1: Read .emtg_spacecraftoptions file,#2: Assemble from missionoptions object
         self.HardwarePath = "c:/Utilities/HardwareModels/" #HardwarePath
         self.ThrottleTableFile = "empty.ThrottleTable" #ThrottleTableFile
-        self.LaunchVehicleLibraryFile = "NLSII_August2018.emtg_launchvehicleopt" #LaunchVehicleLibraryFile
+        self.LaunchVehicleLibraryFile = "default.emtg_launchvehicleopt" #LaunchVehicleLibraryFile
         self.PowerSystemsLibraryFile = "default.emtg_powersystemsopt" #PowerSystemsLibraryFile
-        self.PropulsionSystemsLibraryFile = "4_18_2017.emtg_propulsionsystemopt" #PropulsionSystemsLibraryFile
+        self.PropulsionSystemsLibraryFile = "default.emtg_propulsionsystemopt" #PropulsionSystemsLibraryFile
         self.SpacecraftOptionsFile = "default.emtg_spacecraftopt" #SpacecraftOptionsFile
-        self.LaunchVehicleKey = "Atlas_V_401" #LaunchVehicleKey
+        self.LaunchVehicleKey = "ExampleRocket" #LaunchVehicleKey
         self.PowerSystemKey = "5kW_basic" #PowerSystemKey
-        self.ElectricPropulsionSystemKey = "NSTAR" #ElectricPropulsionSystemKey
+        self.ElectricPropulsionSystemKey = "defaultThruster" #ElectricPropulsionSystemKey
         self.ChemicalPropulsionSystemKey = "DefaultChemicalPropulsionSystem" #ChemicalPropulsionSystemKey
         self.perturb_SRP = 0 #solar radiation pressure?
         self.perturb_thirdbody = 0 #third body perturbations?
@@ -780,7 +780,7 @@ class MissionOptions(object):
                 optionsFile.write("\n")
     
             if (self.mission_type != 2 or writeAll):
-                optionsFile.write("#phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable phase type\n#10: ProbeEntryPhase\n")
+                optionsFile.write("#phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable phase type\n#10: ProbeEntryPhase\n#11 ControlLawThrustPhase\n")
                 optionsFile.write("mission_type " + str(self.mission_type) + "\n")
     
             if (self.NLP_solver_type != 0 or writeAll):
@@ -1169,7 +1169,7 @@ class MissionOptions(object):
                 optionsFile.write("#ThrottleTableFile\n")
                 optionsFile.write("ThrottleTableFile " + str(self.ThrottleTableFile) + "\n")
     
-            if (self.LaunchVehicleLibraryFile != "NLSII_August2018.emtg_launchvehicleopt" or writeAll):
+            if (self.LaunchVehicleLibraryFile != "default.emtg_launchvehicleopt" or writeAll):
                 optionsFile.write("#LaunchVehicleLibraryFile\n")
                 optionsFile.write("LaunchVehicleLibraryFile " + str(self.LaunchVehicleLibraryFile) + "\n")
     
@@ -1177,7 +1177,7 @@ class MissionOptions(object):
                 optionsFile.write("#PowerSystemsLibraryFile\n")
                 optionsFile.write("PowerSystemsLibraryFile " + str(self.PowerSystemsLibraryFile) + "\n")
     
-            if (self.PropulsionSystemsLibraryFile != "4_18_2017.emtg_propulsionsystemopt" or writeAll):
+            if (self.PropulsionSystemsLibraryFile != "default.emtg_propulsionsystemopt" or writeAll):
                 optionsFile.write("#PropulsionSystemsLibraryFile\n")
                 optionsFile.write("PropulsionSystemsLibraryFile " + str(self.PropulsionSystemsLibraryFile) + "\n")
     
@@ -1185,7 +1185,7 @@ class MissionOptions(object):
                 optionsFile.write("#SpacecraftOptionsFile\n")
                 optionsFile.write("SpacecraftOptionsFile " + str(self.SpacecraftOptionsFile) + "\n")
     
-            if (self.LaunchVehicleKey != "Atlas_V_401" or writeAll):
+            if (self.LaunchVehicleKey != "ExampleRocket" or writeAll):
                 optionsFile.write("#LaunchVehicleKey\n")
                 optionsFile.write("LaunchVehicleKey " + str(self.LaunchVehicleKey) + "\n")
     
@@ -1193,7 +1193,7 @@ class MissionOptions(object):
                 optionsFile.write("#PowerSystemKey\n")
                 optionsFile.write("PowerSystemKey " + str(self.PowerSystemKey) + "\n")
     
-            if (self.ElectricPropulsionSystemKey != "NSTAR" or writeAll):
+            if (self.ElectricPropulsionSystemKey != "defaultThruster" or writeAll):
                 optionsFile.write("#ElectricPropulsionSystemKey\n")
                 optionsFile.write("ElectricPropulsionSystemKey " + str(self.ElectricPropulsionSystemKey) + "\n")
     
@@ -1510,3 +1510,12 @@ class MissionOptions(object):
                 if journeyIndex < len(self.Journeys):
                     self.Journeys[journeyIndex].PhaseDistanceConstraintDefinitions.append(commentCharacter + entry[entry.find("p"):].rstrip("\r\n"))
         
+        
+    #************************************************************************************getJourneyIndex()
+    def getJourneyIndex(self, journeyNameString):
+        for journeyIndex in range(0, len(self.Journeys)):
+            if self.Journeys[journeyIndex].journey_name == journeyNameString:
+                return journeyIndex
+        
+        #if you get this far, something went wrong                                                                 
+        raise Exception("Journey '" + journeyNameString + "' not found.")  

@@ -1,0 +1,142 @@
+#EMTGv9 .emtgopt file version 2
+
+#mission name
+mission_name EarthToMarsParkingOrbit_PatchedConic
+#objective function type
+#0: minimum deltaV
+#1: minimum time
+#2: maximum final mass
+#3: maximize initial mass
+#4: depart as late as possible in the window
+#5: depart as early as possible in the window
+#6: maximize orbit energy
+#7: minimize launch mass
+#8: arrive as early as possible
+#9: arrive as late as possible
+#10: minimum propellant (not the same as #2)
+#11: maximum dry/wet ratio
+#12: maximum arrival kinetic energy
+#13: minimum BOL power
+#14: maximize log_10(final mass)
+#15: maximum log_e(final mass)
+#16: maximum dry mass margin
+#17: maximum dry mass
+#18: maximum log_10(dry mass)
+#19: maximum log_e(dry mass)
+#20: minimize chemical fuel
+#21: minimize chemical oxidizer
+#22: minimize electric propellant
+#23: minimize total propellant
+#24: minimize waypoint tracking error
+#25: minimize initial impulse magnitude
+#26: maximize distance from central body
+objective_type 0
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable phase type
+mission_type 6
+#Enable ACE feasible point finder?
+ACE_feasible_point_finder 1
+#optimality tolerance
+snopt_optimality_tolerance 0.1
+#Universe folder
+universe_folder C:\emtg\testatron\universe\
+#HardwarePath
+HardwarePath C:\emtg\testatron\HardwareModels\
+#Override the working directory?
+override_working_directory 1
+#User-defined working directory
+forced_working_directory C:\emtg\testatron\tests\journey_options
+#which inner loop solver to run?
+#0: none, evaluate trialX
+#1: run MBH
+#2: run constrained DE
+#3: run NLP using trialX as initial guess
+#4: filament walker
+run_inner_loop 0
+#Enter any user data that should be appended to the .emtg file.
+#This is typically used in python wrappers
+user_data 
+
+
+
+BEGIN_JOURNEY
+
+#Journey name
+journey_name EarthToMarsSOI
+#Journey central body name
+journey_central_body SUN
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+phase_type 6
+#journey arrival type
+#0: insertion into parking orbit (use chemical Isp)
+#1: rendezvous (use chemical Isp)
+#2: intercept with bounded V_infinity
+#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)
+#4: match final v-infinity vector
+#5: match final v-infinity vector (low-thrust)
+#6: capture spiral
+#7: momentum transfer (kinetic impactor)
+arrival_type 0
+#journey arrival ellipsoid axes (3)
+arrival_ellipsoid_axes 982897.38322896 982897.38322896 982897.38322896
+#SMA (in km) for ephemeris pegged orbit insertion
+ephemeris_pegged_orbit_insertion_SMA 10000.0
+#ECC for ephemeris pegged orbit insertion
+ephemeris_pegged_orbit_insertion_ECC 0.3
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: event left state epoch,54392.02654491802240954712
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote,5.49790157108062071956
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote,-36.74836042134681690641
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote,0.69943725795092781539
+p0MGAnDSMs: phase flight time,260.24316033208839371582
+p0MGAnDSMsEphemerisPeggedOrbitInsertion: event left state mass,525.20000000000004547474
+p0MGAnDSMsEphemerisPeggedOrbitInsertion: V_infinity_x,-0.23290466244262475470
+p0MGAnDSMsEphemerisPeggedOrbitInsertion: V_infinity_y,2.29991362378565966651
+p0MGAnDSMsEphemerisPeggedOrbitInsertion: V_infinity_z,0.38795157064627616705
+p0MGAnDSMsEphemerisPeggedOrbitInsertion: virtual chemical fuel,97.66461596975311465485
+p0MGAnDSMsEphemerisPeggedOrbitInsertion: virtual chemical oxidizer,90.33976977201778879589
+p0MGAnDSMs: virtual chemical fuel,0.00000000000347826943
+p0MGAnDSMs: virtual chemical oxidizer,0.00000000002229459331
+p0MGAnDSMsForwardSubPhase0: burn index,0.50356968246781952381
+p0MGAnDSMsForwardSubPhase0: DSM x component,-0.00000952452271896220
+p0MGAnDSMsForwardSubPhase0: DSM y component,-0.00001774788424313556
+p0MGAnDSMsForwardSubPhase0: DSM z component,0.00001209812946534328
+p0MGAnDSMsBackwardSubPhase0: burn index,0.49643031753228045178
+END_TRIALX
+
+END_JOURNEY

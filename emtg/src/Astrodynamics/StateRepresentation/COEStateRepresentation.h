@@ -16,7 +16,8 @@
 // express or implied.   See the License for the specific language
 // governing permissions and limitations under the License.
 
-#pragma once
+#ifndef COE_STATE_REPRESENTATION_H
+#define COE_STATE_REPRESENTATION_H
 
 #include "StateRepresentation.h"
 
@@ -38,3 +39,5 @@ namespace EMTG
         };
     }//end namespace StateRepresentation
 }//end namespace EMTG
+
+#endif // COE_STATE_REPRESENTATION_H

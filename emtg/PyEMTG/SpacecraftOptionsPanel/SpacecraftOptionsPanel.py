@@ -293,11 +293,12 @@ class SpacecraftOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
     def Changepower_system_reference_epoch(self, e):
         e.Skip()
-        self.missionoptions.power_system_decay_reference_epoch = eval(self.txtpower_system_decay_reference_epoch.GetValue())
 
-        #convert from JD to MJD if applicable
-        if self.missionoptions.power_system_decay_reference_epoch > 2400000.5:
-            self.missionoptions.power_system_decay_reference_epoch -= 2400000.5
+        dateString = self.txtpower_system_decay_reference_epoch.GetValue()
+
+        from timeUtilities import stringToJD
+
+        self.missionoptions.power_system_decay_reference_epoch = stringToJD(dateString, self.missionoptions.universe_folder)
 
         self.update()
 

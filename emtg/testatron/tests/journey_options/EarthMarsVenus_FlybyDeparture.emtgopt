@@ -1,0 +1,231 @@
+#EMTGv9 .emtgopt file version 2
+
+#mission name
+mission_name EarthMarsVenus_FlybyDeparture
+#objective function type
+#0: minimum deltaV
+#1: minimum time
+#2: maximum final mass
+#3: maximize initial mass
+#4: depart as late as possible in the window
+#5: depart as early as possible in the window
+#6: maximize orbit energy
+#7: minimize launch mass
+#8: arrive as early as possible
+#9: arrive as late as possible
+#10: <PLACEHOLDER FOR FUTURE OBJECTIVE FUNCTIONS>
+#11: maximum dry/wet ratio
+#12: maximum arrival kinetic energy
+#13: minimum BOL power
+#14: maximize log_10(final mass)
+#15: maximum log_e(final mass)
+#16: maximum dry mass margin
+#17: maximum dry mass
+#18: maximum log_10(dry mass)
+#19: maximum log_e(dry mass)
+#20: minimize chemical fuel
+#21: minimize chemical oxidizer
+#22: minimize electric propellant
+#23: minimize total propellant
+#24: minimize waypoint tracking error
+#25: minimize initial impulse magnitude
+#26: maximize distance from central body
+objective_type 0
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable phase type
+#10: ProbeEntryPhase
+#11 ControlLawThrustPhase
+mission_type 6
+#Enable ACE feasible point finder?
+ACE_feasible_point_finder 1
+#optimality tolerance
+snopt_optimality_tolerance 0.1
+#NLP major iterations
+snopt_major_iterations 500
+#Universe folder
+universe_folder C:\emtg\testatron\universe\
+#maximum possible mass of the spacecraft (kg)
+maximum_mass 1000.0
+#HardwarePath
+HardwarePath C:\emtg\testatron\HardwareModels\
+#LaunchVehicleLibraryFile
+LaunchVehicleLibraryFile default.emtg_launchvehicleopt
+#LaunchVehicleKey
+LaunchVehicleKey ExampleRocket
+#Override the working directory?
+override_working_directory 1
+#User-defined working directory
+forced_working_directory C:\emtg\testatron\tests\journey_options
+#which inner loop solver to run?
+#0: none, evaluate trialX
+#1: run MBH
+#2: run constrained DE
+#3: run NLP using trialX as initial guess
+#4: filament walker
+run_inner_loop 3
+#Enter any user data that should be appended to the .emtg file.
+#This is typically used in python wrappers
+user_data 
+
+
+
+BEGIN_JOURNEY
+
+#Journey name
+journey_name EarthToMarsIntercept
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable (do not use)
+#10 ProbeEntryPhase
+#11 ControlLawThrustPhase
+phase_type 6
+#journey arrival type
+#0: insertion into parking orbit (use chemical Isp)
+#1: rendezvous (use chemical Isp)
+#2: intercept with bounded V_infinity
+#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)
+#4: match final v-infinity vector
+#5: match final v-infinity vector (low-thrust)
+#6: capture spiral
+#7: momentum transfer (kinetic impactor)
+arrival_type 2
+#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+arrival_elements_state_representation 3
+#journey arrival ellipsoid axes (3)
+arrival_ellipsoid_axes 982897.38322896 982897.38322896 982897.38322896
+#ECC for ephemeris pegged orbit insertion
+ephemeris_pegged_orbit_insertion_ECC 1e-10
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: event left state epoch,54415.70078319551976164803
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote,6.96999999999999975131
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote,45.04868649721039730593
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote,0.48466225273750218605
+p0MGAnDSMs: phase flight time,149.40970612194564637321
+p0MGAnDSMsEphemerisPeggedIntercept: event left state mass,378.60658309265767229590
+p0MGAnDSMsEphemerisPeggedIntercept: V_infinity_x,-1.42117666048103075127
+p0MGAnDSMsEphemerisPeggedIntercept: V_infinity_y,4.14436326092231510643
+p0MGAnDSMsEphemerisPeggedIntercept: V_infinity_z,1.93082877663238150490
+p0MGAnDSMs: virtual chemical fuel,156.66702035122921188304
+p0MGAnDSMs: virtual chemical oxidizer,144.91699382487988145840
+p0MGAnDSMsForwardSubPhase0: burn index,0.00010000000010007959
+p0MGAnDSMsForwardSubPhase0: DSM x component,0.77590409209046740102
+p0MGAnDSMsForwardSubPhase0: DSM y component,1.42983601329603970953
+p0MGAnDSMsForwardSubPhase0: DSM z component,0.85668184161589877590
+p0MGAnDSMsBackwardSubPhase0: burn index,0.99990000000000001101
+END_TRIALX
+
+END_JOURNEY
+
+BEGIN_JOURNEY
+
+#Journey name
+journey_name MarsFlybyToVenusIntercept
+#destination list, as indices from the Universe file
+destination_list 4 2
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable (do not use)
+#10 ProbeEntryPhase
+#11 ControlLawThrustPhase
+phase_type 6
+#Override journey flyby altitude?
+override_flyby_altitude_bounds 1
+#Lower and upper bound on journey flyby altitude (only applies to the departure flyby, if there is one)
+flyby_altitude_bounds 300.0 1000.0
+#journey departure type
+#0: launch or direct insertion
+#1: depart from parking orbit (you can use this one in place of a launch vehicle model, and the departure burn will be done with the EDS motor)
+#2: free direct departure, i.e. do not burn to get the departure v_infinity (used for when operations about a small body are not modeled but the departure velocity is known)
+#3: flyby (only valid for successive journeys)
+#4: flyby with fixed v-infinity-out (only valid for successive journeys)
+#5: spiral-out from circular orbit (low-thrust missions only)
+#6: zero-turn flyby (for small bodies)
+departure_type 3
+#journey arrival type
+#0: insertion into parking orbit (use chemical Isp)
+#1: rendezvous (use chemical Isp)
+#2: intercept with bounded V_infinity
+#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)
+#4: match final v-infinity vector
+#5: match final v-infinity vector (low-thrust)
+#6: capture spiral
+#7: momentum transfer (kinetic impactor)
+arrival_type 2
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+p0MGAnDSMsEphemerisPeggedUnpoweredFlyby: V_infinity_x,1.79273709882520648762
+p0MGAnDSMsEphemerisPeggedUnpoweredFlyby: V_infinity_y,3.97463628146644865069
+p0MGAnDSMsEphemerisPeggedUnpoweredFlyby: V_infinity_z,1.97786446200650800620
+p0MGAnDSMs: phase flight time,152.59029387805435362679
+p0MGAnDSMsEphemerisPeggedIntercept: event left state mass,96.91964923170168333399
+p0MGAnDSMsEphemerisPeggedIntercept: V_infinity_x,13.78767076674471780962
+p0MGAnDSMsEphemerisPeggedIntercept: V_infinity_y,13.23107139668388754217
+p0MGAnDSMsEphemerisPeggedIntercept: V_infinity_z,5.90244763165099328717
+p0MGAnDSMs: virtual chemical fuel,146.33087473311601911519
+p0MGAnDSMs: virtual chemical oxidizer,135.35605912814003204403
+p0MGAnDSMsForwardSubPhase0: burn index,0.00010000000009996933
+p0MGAnDSMsForwardSubPhase0: DSM x component,4.23353216886426508836
+p0MGAnDSMsForwardSubPhase0: DSM y component,-0.59033509152262730879
+p0MGAnDSMsForwardSubPhase0: DSM z component,-0.11580926345484421347
+p0MGAnDSMsBackwardSubPhase0: burn index,0.99990000000000001101
+END_TRIALX
+
+END_JOURNEY

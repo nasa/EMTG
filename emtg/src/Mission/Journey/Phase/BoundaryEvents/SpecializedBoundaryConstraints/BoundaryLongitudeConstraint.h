@@ -42,6 +42,7 @@ namespace EMTG
                     Astrodynamics::universe* Universe,
                     HardwareModels::Spacecraft* mySpacecraft,
                     missionoptions* myOptions,
+                    ReferenceFrame constraint_reference_frame,
                     BoundaryEventBase* myBoundaryEvent,
                     const std::string& constraintDefinition);
 
@@ -65,8 +66,8 @@ namespace EMTG
             protected:
                 //fields
                 doubleType Longitude;
-                math::Matrix<doubleType> PositionBeforeEventBCF;
-                math::Matrix<doubleType> dPositionBeforeEventBCF_dt;
+                math::Matrix<doubleType> PositionBeforeEventConstraintFrame;
+                math::Matrix<doubleType> dPositionBeforeEventConstraintFrame_dt;
 
                 std::vector<size_t> Gindex_constraint_wrt_time_variables;
                 std::vector< std::vector<size_t> > Gindex_constraint_wrt_StateBeforeEvent_variables;//stateIndex, Gindex

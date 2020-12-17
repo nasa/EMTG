@@ -41,12 +41,13 @@ namespace EMTG
                                          math::Matrix <double> & dStatedIndependentVariable,
                                          double* dPropagationTime_dIndependentVariable)
         {
-            KeplerPropagatorTimeDomain* myPropagator = new KeplerPropagatorTimeDomain(*myOptions, *myUniverse, num_states);
+            KeplerPropagatorTimeDomain* myPropagator = new KeplerPropagatorTimeDomain(num_states);
             myPropagator->setStateLeft(StateLeft);
             myPropagator->setStateRight(StateRight);
             myPropagator->setSTM(STM);
             myPropagator->setdStatedIndependentVariable(dStatedIndependentVariable);
             myPropagator->set_dPropagationTime_dIndependentVariable(dPropagationTime_dIndependentVariable);
+            myPropagator->setCentralBodyGM(myUniverse->mu);
 
             return myPropagator;
         }
@@ -54,9 +55,8 @@ namespace EMTG
         //for integrators
         PropagatorBase* CreatePropagator(missionoptions* myOptions,
                                          Astrodynamics::universe* myUniverse,
-                                         const size_t & num_STM_rows_in, 
-                                         const size_t & num_STM_columns_in, 
-                                         const size_t & STM_start_index_in,
+                                         const size_t & numStates_in, 
+                                         const size_t & STM_size_in,                                          
                                          math::Matrix <doubleType> & StateLeft,
                                          math::Matrix <doubleType> & StateRight,
                                          math::Matrix <double> & STM,
@@ -68,7 +68,7 @@ namespace EMTG
         {
             if (myOptions->integratorType == IntegratorType::rk8_fixed)
             {
-                IntegratedFixedStepPropagator* myPropagator = new IntegratedFixedStepPropagator(*myUniverse, num_STM_rows_in, num_STM_columns_in, STM_start_index_in);
+                IntegratedFixedStepPropagator* myPropagator = new IntegratedFixedStepPropagator(numStates_in, STM_size_in);
                 myPropagator->setStateLeft(StateLeft);
                 myPropagator->setStateRight(StateRight);
                 myPropagator->setSTM(STM);
@@ -83,7 +83,7 @@ namespace EMTG
             }
             else if (myOptions->integratorType == IntegratorType::rk7813m_adaptive)
             {
-                IntegratedAdaptiveStepPropagator* myPropagator = new IntegratedAdaptiveStepPropagator(*myUniverse, num_STM_rows_in, num_STM_columns_in, STM_start_index_in);
+                IntegratedAdaptiveStepPropagator* myPropagator = new IntegratedAdaptiveStepPropagator(numStates_in, STM_size_in);
                 myPropagator->setStateLeft(StateLeft);
                 myPropagator->setStateRight(StateRight);
                 myPropagator->setSTM(STM);
@@ -94,7 +94,7 @@ namespace EMTG
                 myPropagator->setPropagationStepSize(PropagationStepSize);
                 myPropagator->setTolerance(myOptions->integrator_tolerance);
 
-                math::Matrix<double> error_scaling_factors(STM_start_index_in + num_STM_rows_in * num_STM_columns_in, 1, 0.0);
+                math::Matrix<double> error_scaling_factors(numStates_in + STM_size_in * STM_size_in, 1, 0.0);
 
                 size_t index = 0;
                 // position and velocity error scaling

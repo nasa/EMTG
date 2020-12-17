@@ -47,7 +47,7 @@ namespace EMTG
                 mySpacecraft,
                 myLaunchVehicle,
                 myOptions,
-                10, //numStatesToPropagate
+                9, //numStatesToPropagate
                 9) //numMatchConstraints
         {
             this->G_indices_match_point_constraints_wrt_SundmanIndependentVariable.resize(this->numMatchConstraints);
@@ -96,35 +96,13 @@ namespace EMTG
             //which propagator do we want?
             if (this->myPropagatorType == PropagatorType::KeplerPropagator)
             {
-                this->isKeplerian = true;
-                this->ForwardSTM = math::Matrix<double>(6, math::identity);
-                this->BackwardSTM = math::Matrix<double>(6, math::identity);
-                this->Forward_dPropagatedStatedIndependentVariable = math::Matrix<double>(6, 1, 0.0);
-                this->Backward_dPropagatedStatedIndependentVariable = math::Matrix<double>(6, 1, 0.0);
-
-                this->ForwardHalfPhasePropagator = Astrodynamics::CreatePropagator(this->myOptions,
-                    this->myUniverse,
-                    6,
-                    this->state_after_initial_TCM,
-                    this->match_point_state_minus,
-                    this->ForwardSTM,
-                    this->Forward_dPropagatedStatedIndependentVariable,
-                    &this->dStepSize_dPropagationVariable);
-
-                this->BackwardHalfPhasePropagator = Astrodynamics::CreatePropagator(this->myOptions,
-                    this->myUniverse,
-                    6,
-                    this->state_at_end_of_phase,
-                    this->match_point_state_plus,
-                    this->BackwardSTM,
-                    this->Backward_dPropagatedStatedIndependentVariable,
-                    &this->dStepSize_dPropagationVariable);
+                throw std::invalid_argument("Keplerian propagation is not possible with SundmanCoastPhase, use CoastPhase instead...aborting");
             }
             else //integrated propagator
             {
                 this->isKeplerian = false;
-                this->ForwardSTM = math::Matrix<double>(14, math::identity);
-                this->BackwardSTM = math::Matrix<double>(14, math::identity);
+                this->ForwardSTM = math::Matrix<double>(10, math::identity);
+                this->BackwardSTM = math::Matrix<double>(10, math::identity);
                 this->Forward_dPropagatedStatedIndependentVariable = math::Matrix<double>(this->numStatesToPropagate, 2, 0.0);
                 this->Backward_dPropagatedStatedIndependentVariable = math::Matrix<double>(this->numStatesToPropagate, 2, 0.0);
 
@@ -134,17 +112,14 @@ namespace EMTG
                     this->myUniverse,
                     this->Xdescriptions,
                     this->mySpacecraft,
-                    13,//STM rows
-                    13,//STM columns
-                    this->numStatesToPropagate);
+                    10); // STM size
                 this->mySpacecraftAccelerationModel->setDutyCycle(this->PhaseDutyCycle);
 
                 //EOM
                 this->myEOM.setSpacecraftAccelerationModel(this->mySpacecraftAccelerationModel);
 
                 //integration scheme
-                this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, this->numStatesToPropagate + (13 * 13), 10);
-                this->myIntegrationScheme->setNumStatesToIntegratePtr(this->total_number_of_states_to_integrate);
+                this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, this->numStatesToPropagate, 10);
 
                 //integration step length
 
@@ -154,14 +129,13 @@ namespace EMTG
                 }
                 else
                 {
-                    this->integration_step_length = 5.0 / 180.0 * math::PI * this->myUniverse->LU;
+                    this->integration_step_length = 0.25 / 180.0 * math::PI * this->myUniverse->LU;
                 }
 
                 this->ForwardHalfPhasePropagator = CreatePropagator(this->myOptions,
-                    this->myUniverse,
-                    13,
-                    13,
+                    this->myUniverse,                 
                     this->numStatesToPropagate,
+                    10,
                     this->state_after_initial_TCM,
                     this->match_point_state_minus,
                     this->ForwardSTM,
@@ -173,9 +147,8 @@ namespace EMTG
 
                 this->BackwardHalfPhasePropagator = CreatePropagator(this->myOptions,
                     this->myUniverse,
-                    13,
-                    13,
                     this->numStatesToPropagate,
+                    10,
                     this->state_at_end_of_phase,
                     this->match_point_state_plus,
                     this->BackwardSTM,
@@ -203,16 +176,6 @@ namespace EMTG
                 }
                 this->TruthTable_Forward_MatchConstraints_Derivative_wrt_EncodedStates[6][7] = false; //epoch
                 this->TruthTable_Backward_MatchConstraints_Derivative_wrt_EncodedStates[6][7] = false; //epoch
-
-                //mass variables do not affect other constraints
-                if (this->isKeplerian)
-                {
-                    for (size_t constraintIndex = 0; constraintIndex < 6; ++constraintIndex)
-                    {
-                        this->TruthTable_Forward_MatchConstraints_Derivative_wrt_EncodedStates[constraintIndex][6] = false; //mass variables
-                        this->TruthTable_Backward_MatchConstraints_Derivative_wrt_EncodedStates[constraintIndex][6] = false; //mass variables
-                    }
-                }
             }
 
             //always true - propellant tanks are only affected by themselves and mass
@@ -310,41 +273,19 @@ namespace EMTG
             //Step 1: set the tank states
             this->state_after_initial_TCM(8) = this->chemical_fuel_used; //TCM propellant, usually zero
             
-            //Step 2: set propagation time variable
-            this->state_after_initial_TCM(9) = 0.0;
-
             //Step 3: propagate
             this->Forward_dPropagatedStatedIndependentVariable.assign_zeros();
             this->ForwardHalfPhasePropagator->setCurrentEpoch(this->state_after_initial_TCM(7));
             this->ForwardHalfPhasePropagator->setIndexOfEpochInStateVec(7);
-            this->ForwardHalfPhasePropagator->setCurrentIndependentVariable(this->state_after_initial_TCM(7));
+            this->ForwardHalfPhasePropagator->setCurrentIndependentVariable(0.0);
             this->ForwardHalfPhasePropagator->propagate(this->MatchPointFraction * this->SundmanIndependentVariable, needG);
-
-            if (this->isKeplerian) //otherwise this happens in the propagator
-            {
-                doubleType ACS_fuel_used = (this->myOptions->trackACS ? this->myOptions->ACS_kg_per_day * this->PhaseFlightTime  * this->MatchPointFraction / 86400.0 : 0.0);
-
-                this->match_point_state_minus(6) = this->state_after_initial_TCM(6) - ACS_fuel_used;
-                this->match_point_state_minus(8) = this->state_after_initial_TCM(8) + ACS_fuel_used; //virtual fuel
-
-                if (this->myOptions->trackACS)
-                {
-                    //mass
-                    this->ForwardSPTM(6, 6) = (this->match_point_state_minus(6) / this->state_after_initial_TCM(6)) _GETVALUE;
-                    this->ForwardSPTM(6, this->stateIndex_phase_propagation_variable) = -this->MatchPointFraction * this->myOptions->ACS_kg_per_day / 86400.0 * this->ForwardSPTM(6, 6);
-
-                    //tanks
-                    this->ForwardSPTM(8, 6) = ((this->chemical_fuel_used - ACS_fuel_used) / this->match_point_state_minus(6)) _GETVALUE;
-                    this->ForwardSPTM(8, this->stateIndex_phase_propagation_variable) = this->MatchPointFraction * this->myOptions->ACS_kg_per_day / 86400.0;
-                }
-            }
 
             //MTM entries for ACS
             if (needG)
             {
                 //Step 3: form the SPTM
                 //Step 3.1: upper left 6x6 is the regular STM
-                size_t stateMax = this->isKeplerian ? 6 : 10;
+                size_t stateMax = 10;
                 for (size_t i = 0; i < stateMax; ++i)
                     for (size_t j = 0; j < stateMax; ++j)
                         this->ForwardSPTM(i, j) = this->ForwardSTM(i, j);
@@ -359,7 +300,7 @@ namespace EMTG
                     }
                     else //integrated propagator
                     {
-                        this->ForwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->ForwardSTM(i, 13);
+                        this->ForwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->ForwardSTM(i, 9);
                     }
                 }
                 //this->ForwardSPTM(7, this->stateIndex_phase_propagation_variable) = this->Forward_dPropagatedStatedIndependentVariable(7, 1);
@@ -376,42 +317,18 @@ namespace EMTG
             //Step 1: set the tank states
             this->state_at_end_of_phase(8) = this->virtual_chemical_fuel_used;
 
-            //Step 2: set propagation time
-            this->state_at_end_of_phase(9) = this->PhaseFlightTime;
-
             //Step 3: call the backward propagator
             this->Backward_dPropagatedStatedIndependentVariable.assign_zeros();
             this->BackwardHalfPhasePropagator->setCurrentEpoch(this->state_at_end_of_phase(7));
             this->BackwardHalfPhasePropagator->setIndexOfEpochInStateVec(7);
-            this->BackwardHalfPhasePropagator->setCurrentIndependentVariable(this->state_at_end_of_phase(7));
+            this->BackwardHalfPhasePropagator->setCurrentIndependentVariable(0.0);
             this->BackwardHalfPhasePropagator->propagate(-(1.0 - this->MatchPointFraction) * this->SundmanIndependentVariable, needG);
-
-            if (this->isKeplerian) //otherwise this happens in the propagator
-            {
-                doubleType ACS_fuel_used = (this->myOptions->trackACS ? this->myOptions->ACS_kg_per_day * this->PhaseFlightTime * (1.0 - this->MatchPointFraction) / 86400.0 : 0.0);
-
-                this->match_point_state_plus(6) = this->state_at_end_of_phase(6) + ACS_fuel_used;
-                this->match_point_state_plus(7) = this->state_at_end_of_phase(7) - this->PhaseFlightTime * (1.0 - this->MatchPointFraction);
-                this->match_point_state_plus(8) = this->state_at_end_of_phase(8) - ACS_fuel_used; //virtual fuel
-
-                if (this->myOptions->trackACS)
-                {
-                    //mass
-                    this->BackwardSPTM(6, 6) = (this->match_point_state_plus(6) / this->state_at_end_of_phase(6)) _GETVALUE;
-                    this->BackwardSPTM(6, this->stateIndex_phase_propagation_variable) = (1.0 - this->MatchPointFraction) * this->myOptions->ACS_kg_per_day / 86400.0 * this->BackwardSPTM(6, 6);
-
-                    //tanks
-                    this->BackwardSPTM(8, 6) = -((this->chemical_fuel_used - ACS_fuel_used) / this->state_at_end_of_phase(6)) _GETVALUE;
-                    this->BackwardSPTM(8, this->stateIndex_phase_propagation_variable) = -(1.0 - this->MatchPointFraction) * this->myOptions->ACS_kg_per_day / 86400.0;
-                }
-            }
-
-                                                                                                 
+                                                                                     
             if (needG)
             {
                 //Step 3: form the SPTM
                 //Step 3.1: upper left 6x6 is the regular STM
-                size_t stateMax = this->isKeplerian ? 6 : 10;
+                size_t stateMax = 10;
                 for (size_t i = 0; i < stateMax; ++i)
                     for (size_t j = 0; j < stateMax; ++j)
                         this->BackwardSPTM(i, j) = this->BackwardSTM(i, j);
@@ -425,7 +342,7 @@ namespace EMTG
                     }
                     else //integrated propagator
                     {
-                        this->BackwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->BackwardSTM(i, 13);
+                        this->BackwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->BackwardSTM(i, 9);
                     }
                     
                 }
@@ -457,9 +374,16 @@ namespace EMTG
                 math::Matrix<double> dMatchPointState_dDecisionVariable(this->numStatesToPropagate + 1, 1, 0.0);
 
                 //Step 3: Derivatives with respect to propagation time
-                dStateNow_dDecisionVariable.assign_zeros();
-                dStateNow_dDecisionVariable(9) = 1.0;
 
+                // NOTE: TwoPointShootingPhase is already computing the match point partials for PhaseFlightTime
+                // and those computations are applicable for SundmanCoastPhase as well, so we don't need to perform the calculation
+                // here as well
+
+                /*
+                dStateNow_dDecisionVariable.assign_zeros();
+                
+                // PhaseFlightTime does NOT impact the left hand side of the match point
+                dStateNow_dDecisionVariable(7) = 0.0;
 
                 //Forward
                 dMatchPointState_dDecisionVariable = this->ForwardHPTM * dStateNow_dDecisionVariable;
@@ -479,6 +403,8 @@ namespace EMTG
                 }
 
                 //Backward
+                dStateNow_dDecisionVariable.assign_zeros();
+                dStateNow_dDecisionVariable(7) = 1.0;
                 dMatchPointState_dDecisionVariable = this->BackwardHPTM * dStateNow_dDecisionVariable;
 
                 for (size_t constraintIndex = 0; constraintIndex < this->numMatchConstraints; ++constraintIndex)
@@ -489,11 +415,12 @@ namespace EMTG
                         size_t Gindex = this->G_indices_match_point_constraints_wrt_PhaseFlightTime[constraintIndex];
                         size_t Xindex = this->jGvar->operator[](Gindex);
 
-                        G[Gindex] += this->X_scale_factors->operator[](Xindex)
+                        G[Gindex] = this->X_scale_factors->operator[](Xindex)
                             * dMatchPointState_dDecisionVariable(stateIndex)
                             * this->continuity_constraint_scale_factors(constraintIndex);
                     }
                 }
+                */
 
                 //Step 3: Derivatives with respect to Sundman variable
                 dStateNow_dDecisionVariable.assign_zeros();
@@ -571,14 +498,17 @@ namespace EMTG
                 this->Forward_dPropagatedStatedIndependentVariable.assign_zeros();
                 this->ForwardHalfPhasePropagator->setCurrentEpoch(this->state_after_initial_TCM(7));
                 this->ForwardHalfPhasePropagator->setIndexOfEpochInStateVec(7);
-                this->ForwardHalfPhasePropagator->setCurrentIndependentVariable(this->state_after_initial_TCM(7));
-                this->ForwardHalfPhasePropagator->propagate(output_step * (step + 0.5), false);
+                this->ForwardHalfPhasePropagator->setCurrentIndependentVariable(0.0);
 
-
-                if (this->isKeplerian)
+                if (step == this->num_timesteps / 2 - 1)
                 {
-                    doubleType ACS_fuel_used = (this->myOptions->trackACS ? this->myOptions->ACS_kg_per_day * (output_state(7) - this->state_after_initial_TCM(7)) / 86400.0 : 0.0);
-                    output_state(6) = this->state_after_initial_TCM(6) - ACS_fuel_used;
+                    this->ForwardHalfPhasePropagator->setStorePropagationHistory(true);
+                    this->ForwardHalfPhasePropagator->propagate(output_step * (step + 0.5), false);
+                    this->ForwardHalfPhasePropagator->setStorePropagationHistory(false);
+                }
+                else
+                {
+                    this->ForwardHalfPhasePropagator->propagate(output_step * (step + 0.5), false);
                 }
 
                 math::Matrix<doubleType> R_sc_Sun(3, 1, 0.0);
@@ -632,10 +562,13 @@ namespace EMTG
                     0,//number_of_active_engines
                     active_power,
                     "none");//active_power
-            }
+            } // end forward output
 
             //reset the propagator to go where it is supposed to
             this->ForwardHalfPhasePropagator->setStateRight(this->match_point_state_minus);
+            std::vector<double> forward_propagation_history = this->ForwardHalfPhasePropagator->getPropagationHistory();
+            this->ForwardHalfPhasePropagator->setStorePropagationHistory(false);
+            this->ForwardHalfPhasePropagator->clearPropagationHistory();
 
             math::Matrix<doubleType> R_sc_Sun(3, 1, 0.0);
             if (this->myUniverse->central_body_SPICE_ID == 10)
@@ -702,13 +635,17 @@ namespace EMTG
                 this->Backward_dPropagatedStatedIndependentVariable.assign_zeros();
                 this->BackwardHalfPhasePropagator->setCurrentEpoch(this->state_at_end_of_phase(7));
                 this->BackwardHalfPhasePropagator->setIndexOfEpochInStateVec(7);
-                this->BackwardHalfPhasePropagator->setCurrentIndependentVariable(this->state_at_end_of_phase(7));
-                this->BackwardHalfPhasePropagator->propagate(-output_step * (backstep + 0.5), false);
+                this->BackwardHalfPhasePropagator->setCurrentIndependentVariable(0.0);
 
-                if (this->isKeplerian)
+                if (step == 0)
                 {
-                    doubleType ACS_fuel_used = (this->myOptions->trackACS ? this->myOptions->ACS_kg_per_day *  (output_state(7) - this->state_after_initial_TCM(7)) / 86400.0 : 0.0);
-                    output_state(6) = this->state_after_initial_TCM(6) + ACS_fuel_used;
+                    this->BackwardHalfPhasePropagator->setStorePropagationHistory(true);
+                    this->BackwardHalfPhasePropagator->propagate(-output_step * (backstep + 0.5), false);
+                    this->BackwardHalfPhasePropagator->setStorePropagationHistory(false);
+                }
+                else
+                {
+                    this->BackwardHalfPhasePropagator->propagate(-output_step * (backstep + 0.5), false);
                 }
 
                 math::Matrix<doubleType> R_sc_Sun(3, 1, 0.0);
@@ -762,15 +699,23 @@ namespace EMTG
                     0,//number_of_active_engines
                     active_power,
                     "none");//active_power
-            }
+            } // end backward output
 
             //reset the propagator to go where it is supposed to
             this->BackwardHalfPhasePropagator->setStateRight(this->match_point_state_plus);
+            std::vector<double> backward_propagation_history = this->BackwardHalfPhasePropagator->getPropagationHistory();
+            this->BackwardHalfPhasePropagator->setStorePropagationHistory(false);
+            this->BackwardHalfPhasePropagator->clearPropagationHistory();
 
             //Step 6: print the arrival event
             this->myArrivalEvent->output(outputfile, this->LaunchDate _GETVALUE, eventcount);
-        }
 
+            // print out Sundman step size information
+            outputfile << std::endl;
+            outputfile << "s-domain integration step length: " << this->integration_step_length << std::endl;
+            outputfile << "Left boundary integration step length (s): " << forward_propagation_history[0] << std::endl;
+            outputfile << "Right boundary integration step length (s): " << std::fabs(backward_propagation_history[0]) << std::endl;
+        }
 
         void SundmanCoastPhase::output_ephemeris(std::ofstream& outputfile, std::ofstream& acceleration_model_file)
         {
@@ -801,7 +746,7 @@ namespace EMTG
                     this->Forward_dPropagatedStatedIndependentVariable.assign_zeros();
                     this->ForwardHalfPhasePropagator->setCurrentEpoch(this->state_after_initial_TCM(7));
                     this->ForwardHalfPhasePropagator->setIndexOfEpochInStateVec(7);
-                    this->ForwardHalfPhasePropagator->setCurrentIndependentVariable(this->state_after_initial_TCM(7));
+                    this->ForwardHalfPhasePropagator->setCurrentIndependentVariable(0.0);
                     this->ForwardHalfPhasePropagator->propagate(anomalyToPropagate, false);
                     output_state(6) = this->state_after_initial_TCM(6);
                     this->temp_state = output_state;

@@ -1,0 +1,6 @@
+build/
+emtg/PyEMTG/PyEMTG.pyw - Shortcut.lnk
+OpenSourceData/universe/ephemeris_files/de430.bsp
+OpenSourceData/universe/ephemeris_files/PlanetsLight.bsp
+scripts/*
+testatron/*

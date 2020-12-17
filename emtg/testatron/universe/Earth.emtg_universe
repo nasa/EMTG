@@ -1,0 +1,41 @@
+#universe file
+#Earth
+
+#Central body name
+central_body_name Earth
+#Central body SPICE ID
+central_body_SPICE_ID 399
+#central body radius
+central_body_radius 6378.1363
+#central body J2
+central_body_J2 0.00108262617373944
+central_body_J2_reference_radius 6378.1363
+#gravitational constant of central body, in km^3/s^2
+mu 398600.4415
+#characteristic length unit, in km
+LU 42164
+#angles defining the local reference frame relative to ICRF, given in degrees
+#alpha0, alphadot, delta0, deltadot, W, Wdot
+reference_angles -90.0 -0.641 90.0 -0.557 280.147 360.9856235
+#radius of the central body's sphere of influence
+r_SOI 1.47172e+006
+#minimum safe distance from the central body
+minimum_safe_distance 6678.1363
+
+#menu of bodies
+#name shortname number SPICE_ID minimum_flyby_altitude GM radius ephemeris_epoch alpha0 alphadot delta0 deltadot W Wdot SMA ECC INC RAAN AOP MA
+#SMA, radius, and minimum_flyby_altitude in km, angles in degrees, GM in km^3/s^2
+#if minimum_flyby_altitude <= 0, then this object is not placed on the flyby menu
+#orbit elements are for MJD 51544 / January 1, 2000 00:00 CT, ("Coordinate Time" as per JPL HORIZONS documentation) in ICRF frame
+begin_body_list
+Sun S 1 10 20000000.0 132712440041.939 4379000.0 0.0010826265 10.0 0.367 51544.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+Mercury Y 2 199 300.0 22031.78 2440.0 0 0 0 51544.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+Venus V 3 299 300.0 324858.592 6051.8 0 0 0 51544.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+Mars_system M 4 4 300.0 42828.375214 3389.9 0 0 0 51544.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+Jupiter_system J 5 5 528508.0 126712764.8 71492.0 0 0 0 51544.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+Saturn_system S 6 6 9732.0 37940585.2 60268.0 0 0 0 51544.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+Uranus_system U 7 7 25000.0 5794548.6 25559.0 0 0 0 51544.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+Neptune_system N 8 8 25000.0 6836527.1 24766.0 0 0 0 51544.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+Pluto_system P 9 9 100.0 977.0 1151.0 0 0 0 51544.0 132.993 0.0 -6.163 0.0 237.305 56.3625225 5908896392.23 0.247827513494 23.4749047046 44.0386243415 184.676583872 14.1002138697
+Moon L 10 301 200 4902.800066 1737.53 0 0 0 51544 269.9949 0.0031 66.5392 0.0130 38.3213 13.17635815 3.812186875611919E+05 6.476694126942699E-02 2.094024252661913E+01 1.223324045627363E+01 6.078357549567350E+01 1.407402558848975E+02
+end_body_list

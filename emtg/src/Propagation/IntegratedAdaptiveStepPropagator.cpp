@@ -25,14 +25,10 @@ namespace EMTG {
 
         // constructors
 
-        IntegratedAdaptiveStepPropagator::IntegratedAdaptiveStepPropagator(universe & myUniverse,
-            const size_t & STM_rows_in,
-            const size_t & STM_columns_in,
-            const size_t & STM_start_index_in) :
-            IntegratedPropagator(myUniverse,
-                STM_rows_in,
-                STM_columns_in,
-                STM_start_index_in)
+        IntegratedAdaptiveStepPropagator::IntegratedAdaptiveStepPropagator(const size_t & numStates_in,
+                                                                           const size_t & STM_size_in) :
+                                                                           IntegratedPropagator(numStates_in,
+                                                                                                STM_size_in)
 
         {
 
@@ -42,42 +38,35 @@ namespace EMTG {
         void IntegratedAdaptiveStepPropagator::propagate(const doubleType & propagation_span, const bool & STM_needed)
         {
             //TODO: probably won't have to do this...just call an appropriately overloaded IntegrationScheme step method
-            this->propagate(propagation_span, this->zero_control, STM_needed);
+            EMTG::math::Matrix<doubleType> zero_control(4, 1, 0.0);
+            this->propagate(propagation_span, zero_control, STM_needed);
         }
 
         void IntegratedAdaptiveStepPropagator::propagate(const doubleType & propagation_span, const math::Matrix <doubleType> & control, const bool & STM_needed)
         {
             math::Matrix<doubleType> & state_left = *this->StateLeftPointer;
             math::Matrix<doubleType> & state_right = *this->StateRightPointer;
-            math::Matrix<double> & dstate_leftdProp_vars = *this->dStatedIndependentVariablePointer;
-            math::Matrix<double> dstate_rightdProp_vars;
-            math::Matrix<double> & STM = *this->STMpointer;
+            math::Matrix<double> & STM_ptr = *this->STMpointer;
 
             //configure integration scheme pointers
             this->integration_scheme->setLeftHandIndependentVariablePtr(this->current_epoch);
-            this->integration_scheme->setdLeftHandIndVardPropVarPtr(this->dcurrent_ind_vardProp_var);
-            this->integration_scheme->setdLeftHandIndVardPropVarPreviousPtr(this->dcurrent_ind_vardProp_var_previous);
-
-            this->dcurrent_ind_vardProp_var_previous = 1.0;
-            this->dcurrent_ind_vardProp_var = 0.0;
 
             // unpack the external state pointer into the integrator's augmented state
-            this->unpackStates(state_left, STM_needed);
+            this->propagatorSetup(state_left, STM_ptr, STM_needed);
 
-            this->propagateAdaptiveStep(propagation_span, control, dstate_leftdProp_vars, dstate_rightdProp_vars, STM_needed);
+            this->propagateAdaptiveStep(propagation_span, control, STM_needed);
 
             // If we got here, we made it all of the way through the whole propagation_span
             // pack the augmented state back into the external state pointer
-            this->packStates(state_right, dstate_rightdProp_vars, STM, STM_needed);
-
+            this->propagatorTeardown(state_left, state_right, STM_ptr, propagation_span);
+            
             // now compute the partials of the state w.r.t. the propagation variables
+            /*
             if (STM_needed)
             {
-                this->computePropVarPartials(propagation_span, control, state_left, state_right, dstate_leftdProp_vars, dstate_rightdProp_vars);
-
-                // the left hand container is also the output container
-                dstate_leftdProp_vars = dstate_rightdProp_vars;
+                this->computePropVarPartials(propagation_span, control, state_left, state_right, STM_left);
             }
+            */
 
         } // end propagate method
 
@@ -85,9 +74,8 @@ namespace EMTG {
                                                                       const math::Matrix <doubleType> & control, 
                                                                       math::Matrix<doubleType> & state_left,
                                                                       math::Matrix<doubleType> & state_right,
-                                                                      math::Matrix<double> & dstate_leftdProp_vars,
-                                                                      math::Matrix<double> & dstate_rightdProp_vars)
-        {
+                                                                      math::Matrix<double> & STM_left)
+        {/*
                 math::Matrix<doubleType> states_perturbed_foward;
                 math::Matrix<doubleType> states_perturbed_backward;
                 //double central_difference_interval = 6.7e-05;
@@ -100,20 +88,20 @@ namespace EMTG {
                 // reset the left hand state container
                 // also ensure that STM_needed is set to false so that we don't needlessly compute STM entries
                 // during the finite differencing
-                this->unpackStates(state_left, false);
+                this->unpackStates(state_left, STM_left, false);
 
                 // forward perturb the current independent variable
                 this->current_epoch += central_difference_interval;
-                this->propagateAdaptiveStep(propagation_span, control, dstate_leftdProp_vars, dstate_rightdProp_vars, false);
-                states_perturbed_foward = this->state_right_augmented;
+                this->propagateAdaptiveStep(propagation_span, control, false);
+                states_perturbed_foward = this->state_right;
 
                 // backward perturb the current independent variable
-                this->unpackStates(state_left, false);
+                this->unpackStates(state_left, STM_left, false);
                 this->current_epoch = original_independent_variable - central_difference_interval;
-                this->propagateAdaptiveStep(propagation_span, control, dstate_leftdProp_vars, dstate_rightdProp_vars, false);
-                states_perturbed_backward = this->state_right_augmented;
+                this->propagateAdaptiveStep(propagation_span, control, false);
+                states_perturbed_backward = this->state_right;
 
-                for (size_t k = 0; k < this->STM_start_index; ++k)
+                for (size_t k = 0; k < this->STM_size; ++k)
                 {
                     dstate_rightdProp_vars(k, 0) = ((states_perturbed_foward(k) - states_perturbed_backward(k)) * one_over_two_step) _GETVALUE;
                 }
@@ -122,17 +110,17 @@ namespace EMTG {
                 this->current_epoch = original_independent_variable;
 
                 // forward perturb the propagation span
-                this->unpackStates(state_left, false);
-                this->propagateAdaptiveStep(propagation_span + central_difference_interval, control, dstate_leftdProp_vars, dstate_rightdProp_vars, false);
-                states_perturbed_foward = this->state_right_augmented;
+                this->unpackStates(state_left, STM_left, false);
+                this->propagateAdaptiveStep(propagation_span + central_difference_interval, control, false);
+                states_perturbed_foward = this->state_right;
 
                 // backward perturb the propagation span
-                this->unpackStates(state_left, false);
-                this->propagateAdaptiveStep(propagation_span - central_difference_interval, control, dstate_leftdProp_vars, dstate_rightdProp_vars, false);
-                states_perturbed_backward = this->state_right_augmented;
+                this->unpackStates(state_left, STM_left, false);
+                this->propagateAdaptiveStep(propagation_span - central_difference_interval, control, false);
+                states_perturbed_backward = this->state_right;
 
 
-                for (size_t k = 0; k < this->STM_start_index; ++k)
+                for (size_t k = 0; k < this->STM_size; ++k)
                 {
                     dstate_rightdProp_vars(k, 1) = ((states_perturbed_foward(k) - states_perturbed_backward(k)) * one_over_two_step) _GETVALUE;
 
@@ -142,13 +130,11 @@ namespace EMTG {
                     // if the propagation is backwards, then the sign is flipped
                     dstate_rightdProp_vars(k, 1) *= propagation_span < 0.0 ? -this->boundary_target_dstep_sizedProp_var : this->boundary_target_dstep_sizedProp_var;
                 }
-
+            */
         } // end computePropVarPartials method
 
         void IntegratedAdaptiveStepPropagator::propagateAdaptiveStep(const doubleType & propagation_span, 
-                                                                     const math::Matrix <doubleType> & control, 
-                                                                     math::Matrix<double> & dstate_leftdProp_vars,
-                                                                     math::Matrix<double> & dstate_rightdProp_vars,
+                                                                     const math::Matrix <doubleType> & control,  
                                                                      const bool & STM_needed)
         {
 
@@ -184,17 +170,16 @@ namespace EMTG {
 
                     effectiveH = nextStep;
                     // Take the trial RK step
-                    this->integration_scheme->errorControlledStep(this->state_left_augmented,
-                                                                  dstate_leftdProp_vars,
-                                                                  this->state_right_augmented,
-                                                                  dstate_rightdProp_vars,
+                    this->integration_scheme->errorControlledStep(this->state_left,
+                                                                  this->STM_left,
+                                                                  this->state_right,
+                                                                  this->STM_right,
                                                                   control,
                                                                   effectiveH,
                                                                   this->dstep_sizedProp_var,
                                                                   STM_needed,
                                                                   adaptive_step_error,
                                                                   this->error_scaling_factors);
-
 
                     if (!last_step)
                     {
@@ -203,7 +188,6 @@ namespace EMTG {
                         {
                             adaptive_step_error = 1e-15; //Almost zero!
                         }
-
 
                         // if we rejected the last sub-step (i.e. the error was too large) shorten the time step
                         if (adaptive_step_error >= this->integrator_tolerance)
@@ -221,7 +205,6 @@ namespace EMTG {
                             {
                                 nextStep = propagation_span - accumulatedH;
                             }
-
                         }
 
                         if (fabs(propagation_span - accumulatedH) < fabs(nextStep) && !last_step)
@@ -248,8 +231,9 @@ namespace EMTG {
                 } while (adaptive_step_error > this->integrator_tolerance);
 
                 // if we got here, then the trial substep was accurate enough; it becomes the new left
-                this->state_left_augmented = this->state_right_augmented;
-                dstate_leftdProp_vars = dstate_rightdProp_vars;
+                this->state_left = this->state_right;
+
+                this->STM_left = this->STM_right;
 
                 // keep track of our progress through the full RK step
                 accumulatedH += effectiveH;
@@ -257,7 +241,12 @@ namespace EMTG {
                 // move the left hand epoch for the next substep forward to the correct value
                 this->current_epoch += effectiveH;
 
-                // if our next step will push us over, reduce it down to be as small as necessary to hit target exactly
+                if (this->store_propagation_history)
+                {
+                    this->propagation_history.push_back(this->state_right(this->index_of_epoch_in_state_vec) _GETVALUE - this->state_left(this->index_of_epoch_in_state_vec) _GETVALUE);
+                }
+
+                // if our next step will push us over, reduce it to be as small as necessary to hit target exactly
                 if (fabs(propagation_span - accumulatedH) < fabs(nextStep) && fabs(propagation_span - accumulatedH) > 0 && !last_step)
                 {
                     nextStep = propagation_span - accumulatedH;

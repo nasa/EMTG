@@ -48,31 +48,17 @@ namespace EMTG {
                                                                 this->current_epoch_JD = (this->current_epoch / 86400.0 + 2400000.5);}
             inline void setEpochJD(const doubleType & epoch_JD_in) { this->current_epoch_JD = epoch_JD_in;
                                                                      this->current_epoch = (this->current_epoch_JD - 2400000.5) * 86400.0;}
-            inline void setdCurrentEpochdPropVar(const double & dcurrent_epochdProp_var_in) { this->dcurrent_epochdProp_var = dcurrent_epochdProp_var_in; }
-            inline void setdCurrentEpochdPropVarPrevious(const double & dcurrent_epochdProp_var_previous_in) 
-            { 
-                this->dcurrent_epochdProp_var_previous = dcurrent_epochdProp_var_previous_in; 
-            }
-
-            inline void setdstate_dProp_vars(const math::Matrix<double> & dstate_dProp_vars_in)
-            {
-                this->dstate_dProp_vars = dstate_dProp_vars_in;
-            }
-
-            inline void setdstate_dotdProp_varsPtr(math::Matrix<double> & dstate_dotdProp_varsPtr_in) { this->dstate_dotdProp_varsPtr = &dstate_dotdProp_varsPtr_in; }
 
             inline math::Matrix<doubleType> getAcceleration() const { return this->acceleration; }
 
             std::vector<std::string>* getXescriptions() { return this->Xdescriptions; }
 
             virtual void computeAcceleration(const math::Matrix<doubleType> & state_in,
-                                             const bool & generate_derivatives,
-                                             const bool & generate_time_derivatives = true) = 0;
+                                             const bool & generate_derivatives) = 0;
 
             virtual void computeAcceleration(const math::Matrix<doubleType> & spacecraft_state,
                                              const math::Matrix<doubleType> & control,
-                                             const bool & generate_derivatives,
-                                             const bool & generate_time_derivatives = true) = 0;
+                                             const bool & generate_derivatives) { throw std::runtime_error("The control overload for AccelerationModel::computeAcceleration has not been implemented!!"); };
 
             virtual void populateInstrumentationFile(std::ofstream & acceleration_model_file, 
                                                      const math::Matrix<doubleType> & spacecraft_state,
@@ -80,7 +66,7 @@ namespace EMTG {
             virtual void populateInstrumentationFile(std::ofstream & acceleration_model_file, 
                                                      const math::Matrix<doubleType> & spacecraft_state,  
                                                      const doubleType & epoch,
-                                                     const math::Matrix<doubleType> & control) = 0;
+                                                     const math::Matrix<doubleType> & control) { throw std::runtime_error("The control overload for AccelerationModel::populateInstrumentationFile has not been implemented!!"); };
             
             // pointers to EMTG configuration objects
             missionoptions * my_options;
@@ -96,14 +82,6 @@ namespace EMTG {
 
             // current epoch in JD
             doubleType current_epoch_JD;
-
-            double dcurrent_epochdProp_var;
-            double dcurrent_epochdProp_var_previous;
-            math::Matrix<double> dstate_dProp_vars;
-
-            // partial derivatives of the state propagation matrix 
-            // w.r.t. the propagation variables
-            math::Matrix<double> * dstate_dotdProp_varsPtr;
 
             //pointer to Xdescriptions, in case we need to manually insert derivatives due to black boxes like GSL/SPICE
             std::vector<std::string>* Xdescriptions;

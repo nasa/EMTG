@@ -1,0 +1,211 @@
+#EMTGv9 .emtgopt file version 2
+
+#mission name
+mission_name spacecraftoptions_powMargin
+#launch window open date (MJD)
+launch_window_open_date 53701.0
+#flight time bounds (days)
+total_flight_time_bounds 0.0 600.0
+#Enable ACE feasible point finder?
+ACE_feasible_point_finder 1
+#maximum number of trials for MBH
+MBH_max_trials 100000
+#optimality tolerance
+snopt_optimality_tolerance 0.002
+#NLP major iterations
+snopt_major_iterations 500
+#NLP max run time (seconds)
+snopt_max_run_time 59
+#Seed MBH?
+seed_MBH 1
+#Universe folder
+universe_folder C:\emtg\testatron\universe
+#Beginning of the SplineEphem data set
+earliestPossibleEpoch 51513.0
+#End of the SplineEphem data set
+latestPossibleEpoch 88008.04166666651
+#maximum possible mass of the spacecraft (kg)
+maximum_mass 5000.0
+#low-thrust engine type
+#0: fixed thrust/Isp
+#1: constant Isp, efficiency, EMTG computes input power
+#2: choice of power model, constant efficiency, EMTG chooses Isp
+#3: choice of power model, constant efficiency and Isp
+#4: continuously-varying specific impulse
+#5: custom thrust and mass flow rate polynomial
+#6: NSTAR
+#7: XIPS-25
+#8: BPT-4000 High-Isp
+#9: BPT-4000 High-Thrust
+#10: BPT-4000 Ex-High-Isp
+#11: NEXT high-Isp v9
+#12: VASIMR (argon, using analytical model)
+#13: Hall Thruster (Xenon, using analytical model)
+#14: NEXT high-ISP v10
+#15: NEXT high-thrust v10
+#16: BPT-4000 MALTO
+#17: NEXIS Cardiff 8-15-201
+#18: H6MS Cardiff 8-15-2013
+#19: BHT20K Cardiff 8-16-2013
+#20: Aerojet HiVHAC EM
+#21: 13 kW STMD Hall high-Isp (not available in open-source)
+#22: 13 kW STMD Hall high-thrust (not available in open-source)
+#23: NEXT TT11 High-Thrust
+#24: NEXT TT11 High-Isp
+#25: NEXT TT11 Expanded Throttle Table
+#26: 13 kW STMD Hall high-Isp 10-1-2014 (not available in open-source)
+#27: 13 kW STMD Hall medium-thrust 10-1-2014 (not available in open-source)
+#28: 13 kW STMD Hall high-thrust 10-1-2014 (not available in open-source)
+#29: 2D Throttle table
+#30: 1D Throttle table high-thrust
+#31: 1D Throttle table high-Isp
+#32: 2D polynomial fit
+engine_type 3
+#Power at 1 AU (kW)
+power_at_1_AU 10.0
+#power margin (fraction)
+power_margin 0.15
+#thruster input power bounds (kW)
+engine_input_power_bounds 0.0 5.0
+#HardwarePath
+HardwarePath c:/emtg/testatron/HardwareModels/
+#Override the working directory?
+override_working_directory 1
+#User-defined working directory
+forced_working_directory C:\emtg\testatron\tests\spacecraft_options
+#Stop after a particular journey? (if this value is greater than the number of journeys, do the whole mission)
+stop_after_journey 0
+#which inner loop solver to run?
+#0: none, evaluate trialX
+#1: run MBH
+#2: run constrained DE
+#3: run NLP using trialX as initial guess
+#4: filament walker
+run_inner_loop 3
+#Enter any user data that should be appended to the .emtg file.
+#This is typically used in python wrappers
+user_data 
+
+
+
+BEGIN_JOURNEY
+
+#Journey name
+journey_name EM_journey
+#destination list, as indices from the Universe file
+destination_list 3 1
+#PeriapseDeparture altitude bounds (in km)
+PeriapseDeparture_altitude_bounds 300.0 300.0
+#what are the bounds on the initial impulse for each journey in km/s\
+#you can set a very high upper bound if you are using a launchy vehicle model - the optimizer will find the correct value
+initial_impulse_bounds 0.0 7.0
+#journey departure ellipsoid axes (3)
+departure_ellipsoid_axes 10000000.0 10000000.0 10000000.0
+#journey arrival type
+#0: insertion into parking orbit (use chemical Isp)
+#1: rendezvous (use chemical Isp)
+#2: intercept with bounded V_infinity
+#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)
+#4: match final v-infinity vector
+#5: match final v-infinity vector (low-thrust)
+#6: capture spiral
+#7: momentum transfer (kinetic impactor)
+arrival_type 2
+#Bounds on this journey's final velocity (in km/s)
+final_velocity 0.0 10.0 0.0
+#journey arrival ellipsoid axes (3)
+arrival_ellipsoid_axes 10000000.0 10000000.0 10000000.0
+#ECC for ephemeris pegged orbit insertion
+ephemeris_pegged_orbit_insertion_ECC 1e-10
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+p0MGALTEphemerisPeggedLaunchDirectInsertion: event left state epoch ,53793.48421595522813731804
+p0MGALTEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote ,5.30192003238243891872
+p0MGALTEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote ,-36.62505580163539065097
+p0MGALTEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote ,0.04544844045509410790
+p0MGALT: phase flight time ,492.26802001758710503054
+p0MGALTEphemerisPeggedIntercept: event left state mass ,1709.10288494352494126360
+p0MGALTEphemerisPeggedIntercept: V_infinity_x ,7.06218948040917027242
+p0MGALTEphemerisPeggedIntercept: V_infinity_y ,3.51310141782168017244
+p0MGALTEphemerisPeggedIntercept: V_infinity_z ,6.14683643680987401581
+p0MGALT: virtual chemical fuel ,0.00000000000000000000
+p0MGALT: virtual electric propellant ,343.97182634249202237697
+p0MGALT: step 0 u_x ,0.21632990209949354288
+p0MGALT: step 0 u_y ,0.97237335619770104422
+p0MGALT: step 0 u_z ,-0.08770148513434017357
+p0MGALT: step 1 u_x ,-0.25553841441811897539
+p0MGALT: step 1 u_y ,0.92576068642524123042
+p0MGALT: step 1 u_z ,-0.27869297352096344955
+p0MGALT: step 2 u_x ,-0.63229573272029337971
+p0MGALT: step 2 u_y ,0.67116044442995437258
+p0MGALT: step 2 u_z ,-0.38697088093467324477
+p0MGALT: step 3 u_x ,-0.89381384891617099431
+p0MGALT: step 3 u_y ,0.13294015871908859694
+p0MGALT: step 3 u_z ,-0.42828081702338560710
+p0MGALT: step 4 u_x ,-0.60637548973921218121
+p0MGALT: step 4 u_y ,-0.68849329070596521074
+p0MGALT: step 4 u_z ,-0.39785186075425171826
+p0MGALT: step 5 u_x ,0.29196715772481907081
+p0MGALT: step 5 u_y ,-0.94606194392152986872
+p0MGALT: step 5 u_z ,-0.14043547366328557047
+p0MGALT: step 6 u_x ,0.78408972402622900688
+p0MGALT: step 6 u_y ,-0.59139869594870320135
+p0MGALT: step 6 u_z ,0.18828526550104540682
+p0MGALT: step 7 u_x ,0.93810823772096685325
+p0MGALT: step 7 u_y ,-0.10587625929006139192
+p0MGALT: step 7 u_z ,0.32976247233209754484
+p0MGALT: step 8 u_x ,0.81734866343650214304
+p0MGALT: step 8 u_y ,0.55590667869429544190
+p0MGALT: step 8 u_z ,0.15135819594368626895
+p0MGALT: step 9 u_x ,0.25152109123397314860
+p0MGALT: step 9 u_y ,0.92566589361009743442
+p0MGALT: step 9 u_z ,-0.28263123851184468460
+p0MGALT: step 10 u_x ,-0.21712509715676309163
+p0MGALT: step 10 u_y ,0.83456134502865442215
+p0MGALT: step 10 u_z ,-0.50632407210738672454
+p0MGALT: step 11 u_x ,-0.58939974153776819588
+p0MGALT: step 11 u_y ,0.55807097978055830723
+p0MGALT: step 11 u_z ,-0.58409316736030236772
+p0MGALT: step 12 u_x ,-0.81606096104881786779
+p0MGALT: step 12 u_y ,-0.23659024331357847437
+p0MGALT: step 12 u_z ,-0.52732302169833744632
+p0MGALT: step 13 u_x ,0.05517028496704745599
+p0MGALT: step 13 u_y ,-0.98472978291394785977
+p0MGALT: step 13 u_z ,-0.16511825787114275954
+p0MGALT: step 14 u_x ,0.69677716434778202981
+p0MGALT: step 14 u_y ,-0.66516007585967773519
+p0MGALT: step 14 u_z ,0.26844724977993705828
+p0MGALT: step 15 u_x ,0.89788129219610746112
+p0MGALT: step 15 u_y ,-0.15882105186969086574
+p0MGALT: step 15 u_z ,0.41059132255107577691
+p0MGALT: step 16 u_x ,0.78801068218866809900
+p0MGALT: step 16 u_y ,0.61467895943890571431
+p0MGALT: step 16 u_z ,0.03478993204316793708
+p0MGALT: step 17 u_x ,0.13244353620054938325
+p0MGALT: step 17 u_y ,0.84891739990107595304
+p0MGALT: step 17 u_z ,-0.51166248366586297713
+p0MGALT: step 18 u_x ,-0.22690607911523830165
+p0MGALT: step 18 u_y ,0.69214968042674440696
+p0MGALT: step 18 u_z ,-0.68515889029066290306
+p0MGALT: step 19 u_x ,-0.59592058341870512983
+p0MGALT: step 19 u_y ,0.31295176470451080419
+p0MGALT: step 19 u_z ,-0.73955409262949034499
+END_TRIALX
+
+END_JOURNEY

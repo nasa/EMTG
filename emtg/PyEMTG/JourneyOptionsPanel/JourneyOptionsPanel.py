@@ -59,7 +59,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.txtjourney_name = wx.TextCtrl(self, -1, "journey_name", size=(300,-1))
 
         self.lblPhaseType = wx.StaticText(self, -1, "Phase type")
-        phasetypes = ['MGALTS (not yet implemented)', 'FBLTS (not yet implemented)', 'MGALT', 'FBLT', 'PSBI', 'PSFB', 'MGAnDSMs', 'CoastPhase', 'SundmanCoastPhase']
+        phasetypes = ['MGALTS (not yet implemented)', 'FBLTS (not yet implemented)', 'MGALT', 'FBLT', 'PSBI', 'PSFB', 'MGAnDSMs', 'CoastPhase', 'SundmanCoastPhase','variable phase type (do not use)','ProbeEntryPhase','ControlLawThrustPhase']
         self.cmbPhaseType = wx.ComboBox(self, -1, choices=phasetypes, style=wx.CB_READONLY)
 
         self.lblModelProbeSecondPhase = wx.StaticText(self, -1, "Model the probe's atmospheric flight phase?")
@@ -75,6 +75,9 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         
         self.lblimpulses_per_phase = wx.StaticText(self, -1, "Impulses per phase")
         self.txtimpulses_per_phase = wx.TextCtrl(self, -1, "impulses_per_phase")
+        
+        self.lblthrust_control_law = wx.StaticText(self, -1, "Thrust control law")
+        self.cmbthrust_control_law = wx.ComboBox(self, -1, choices=['velocity direction', 'anti-velocity direction'], style=wx.CB_READONLY)        
 
         self.lblforce_unit_magnitude_control = wx.StaticText(self, -1, "Force 100% control in this journey?")
         self.cmbforce_unit_magnitude_control = wx.ComboBox(self, -1, choices=['up to unit magnitude', 'unit magnitude', 'zero magnitude'], style=wx.CB_READONLY)
@@ -152,10 +155,12 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.lblarrival_date_bounds = wx.StaticText(self, -1, "Journey arrival date bounds")
         self.txtarrival_date_bounds_lower = wx.TextCtrl(self, -1, "arrival_date_bounds[0]")
         self.txtarrival_date_bounds_upper = wx.TextCtrl(self, -1, "arrival_date_bounds[1]")
-        self.ArrivalDateLowerCalendar = wx.adv.CalendarCtrl(self, -1)
-        self.ArrivalDateUpperCalendar = wx.adv.CalendarCtrl(self, -1)
+        self.ArrivalDateLowerCalendar = wx.adv.CalendarCtrl(self, -1, size=(200,-1))
+        self.ArrivalDateUpperCalendar = wx.adv.CalendarCtrl(self, -1, size=(200,-1))
         arrival_date_sizer = wx.BoxSizer(wx.HORIZONTAL)
         arrival_date_sizer.AddMany([self.txtarrival_date_bounds_lower, self.ArrivalDateLowerCalendar, self.txtarrival_date_bounds_upper, self.ArrivalDateUpperCalendar])
+        arrival_date_calendar_sizer = wx.BoxSizer(wx.HORIZONTAL)
+
 
         self.lblbounded_departure_date = wx.StaticText(self, -1, "Bounded journey departure date?")
         self.chkbounded_departure_date = wx.CheckBox(self, -1)
@@ -397,6 +402,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
                                         self.lblnumber_of_steps, self.txtnumber_of_steps,
                                         self.lblnum_interior_control_points, self.txtnum_interior_control_points,
                                         self.lblimpulses_per_phase, self.txtimpulses_per_phase,
+                                        self.lblthrust_control_law, self.cmbthrust_control_law,
                                         self.lblforce_unit_magnitude_control, self.cmbforce_unit_magnitude_control,
                                         self.lblforce_fixed_inertial_control, self.chkforce_fixed_inertial_control,
                                         self.lbljourney_central_body, journey_central_body_box,
@@ -509,6 +515,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.txtnumber_of_steps.Bind(wx.EVT_KILL_FOCUS, self.Changenumber_of_steps)
         self.txtnum_interior_control_points.Bind(wx.EVT_KILL_FOCUS, self.Changenum_interior_control_points)
         self.txtimpulses_per_phase.Bind(wx.EVT_KILL_FOCUS, self.Changeimpulses_per_phase)
+        self.cmbthrust_control_law.Bind(wx.EVT_COMBOBOX, self.Changethrust_control_law)
         self.cmbforce_unit_magnitude_control.Bind(wx.EVT_COMBOBOX, self.Changeforce_unit_magnitude_control)
         self.chkforce_fixed_inertial_control.Bind(wx.EVT_CHECKBOX, self.Changeforce_fixed_inertial_control)
         self.txtjourney_central_body.Bind(wx.EVT_KILL_FOCUS,self.Changejourney_central_body)
@@ -642,112 +649,129 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.JourneySelectBox.SetItems(self.Journeylist)
         self.JourneySelectBox.SetSelection(self.missionoptions.ActiveJourney)
 
-        self.txtjourney_name.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].journey_name))        
-        self.cmbPhaseType.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type)
-        self.chkModelProbeSecondPhase.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ModelProbeSecondPhase)
-        self.chkoverride_num_steps.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].override_num_steps)
-        self.txtnumber_of_steps.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].number_of_steps))
-        self.txtnum_interior_control_points.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].num_interior_control_points))
-        self.txtimpulses_per_phase.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].impulses_per_phase))
-        self.cmbforce_unit_magnitude_control.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].force_unit_magnitude_control)
-        self.chkforce_fixed_inertial_control.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].force_fixed_inertial_control)
-        self.txtjourney_central_body.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].journey_central_body))
-        self.txtstart_destination.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[0]))
-        self.txtfinal_destination.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[1]))
-        self.txtfixed_starting_mass_increment.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].fixed_starting_mass_increment))
-        self.txtminimum_starting_mass_increment.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].minimum_starting_mass_increment))
-        self.txtmaximum_starting_mass_increment.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].maximum_starting_mass_increment))
-        self.chkvariable_mass_increment.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].variable_mass_increment)    
-        self.txtfixed_ending_mass_increment.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].fixed_ending_mass_increment))        
-        self.chkconstrain_initial_mass.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].constrain_initial_mass)
-        self.txtmaximum_initial_mass.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].maximum_initial_mass))
-        self.chkconstrain_initial_mass.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].constrain_initial_mass)
-        self.txtmaximum_initial_mass.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].maximum_initial_mass))
-        self.txtwait_time_bounds_lower.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].wait_time_bounds[0]))
-        self.txtwait_time_bounds_upper.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].wait_time_bounds[1]))
-        self.cmbtimebounded.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].timebounded)
-        self.txtflight_time_bounds_lower.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].flight_time_bounds[0]))
-        self.txtflight_time_bounds_upper.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].flight_time_bounds[1]))
-        self.txtarrival_date_bounds_lower.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_date_bounds[0]))
-        self.chkbounded_departure_date.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].bounded_departure_date)
-        date = wx.DateTime.FromJDN(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_date_bounds[0] + 2400000.5)
+        myJourneyOptions = self.missionoptions.Journeys[self.missionoptions.ActiveJourney]
+
+        self.txtjourney_name.SetValue(str(myJourneyOptions.journey_name))        
+        self.cmbPhaseType.SetSelection(myJourneyOptions.phase_type)
+        self.chkModelProbeSecondPhase.SetValue(myJourneyOptions.ModelProbeSecondPhase)
+        self.chkoverride_num_steps.SetValue(myJourneyOptions.override_num_steps)
+        self.txtnumber_of_steps.SetValue(str(myJourneyOptions.number_of_steps))
+        self.txtnum_interior_control_points.SetValue(str(myJourneyOptions.num_interior_control_points))
+        self.txtimpulses_per_phase.SetValue(str(myJourneyOptions.impulses_per_phase))
+        self.cmbthrust_control_law.SetSelection(myJourneyOptions.thrust_control_law - 1)
+        self.cmbforce_unit_magnitude_control.SetSelection(myJourneyOptions.force_unit_magnitude_control)
+        self.chkforce_fixed_inertial_control.SetValue(myJourneyOptions.force_fixed_inertial_control)
+        self.txtjourney_central_body.SetValue(str(myJourneyOptions.journey_central_body))
+        self.txtstart_destination.SetValue(str(myJourneyOptions.destination_list[0]))
+        self.txtfinal_destination.SetValue(str(myJourneyOptions.destination_list[1]))
+        self.txtfixed_starting_mass_increment.SetValue(str(myJourneyOptions.fixed_starting_mass_increment))
+        self.txtminimum_starting_mass_increment.SetValue(str(myJourneyOptions.minimum_starting_mass_increment))
+        self.txtmaximum_starting_mass_increment.SetValue(str(myJourneyOptions.maximum_starting_mass_increment))
+        self.chkvariable_mass_increment.SetValue(myJourneyOptions.variable_mass_increment)    
+        self.txtfixed_ending_mass_increment.SetValue(str(myJourneyOptions.fixed_ending_mass_increment))        
+        self.chkconstrain_initial_mass.SetValue(myJourneyOptions.constrain_initial_mass)
+        self.txtmaximum_initial_mass.SetValue(str(myJourneyOptions.maximum_initial_mass))
+        self.chkconstrain_initial_mass.SetValue(myJourneyOptions.constrain_initial_mass)
+        self.txtmaximum_initial_mass.SetValue(str(myJourneyOptions.maximum_initial_mass))
+        self.txtwait_time_bounds_lower.SetValue(str(myJourneyOptions.wait_time_bounds[0]))
+        self.txtwait_time_bounds_upper.SetValue(str(myJourneyOptions.wait_time_bounds[1]))
+        self.cmbtimebounded.SetSelection(myJourneyOptions.timebounded)
+        self.txtflight_time_bounds_lower.SetValue(str(myJourneyOptions.flight_time_bounds[0]))
+        self.txtflight_time_bounds_upper.SetValue(str(myJourneyOptions.flight_time_bounds[1]))
+        self.txtarrival_date_bounds_lower.SetValue(str(myJourneyOptions.arrival_date_bounds[0]))
+        self.chkbounded_departure_date.SetValue(myJourneyOptions.bounded_departure_date)
+        date = wx.DateTime.FromJDN(myJourneyOptions.arrival_date_bounds[0] + 2400000.5)
         self.ArrivalDateLowerCalendar.SetDate(date.MakeUTC())
-        self.txtarrival_date_bounds_upper.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_date_bounds[1]))
-        date = wx.DateTime.FromJDN(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_date_bounds[1] + 2400000.5)
+        self.txtarrival_date_bounds_upper.SetValue(str(myJourneyOptions.arrival_date_bounds[1]))
+        date = wx.DateTime.FromJDN(myJourneyOptions.arrival_date_bounds[1] + 2400000.5)
         self.ArrivalDateUpperCalendar.SetDate(date.MakeUTC())
-        self.txtdeparture_date_bounds_lower.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_date_bounds[0]))
-        date = wx.DateTime.FromJDN(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_date_bounds[0] + 2400000.5)
+        self.txtdeparture_date_bounds_lower.SetValue(str(myJourneyOptions.departure_date_bounds[0]))
+        date = wx.DateTime.FromJDN(myJourneyOptions.departure_date_bounds[0] + 2400000.5)
         self.departureDateLowerCalendar.SetDate(date.MakeUTC())
-        self.txtdeparture_date_bounds_upper.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_date_bounds[1]))
-        date = wx.DateTime.FromJDN(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_date_bounds[1] + 2400000.5)
+        self.txtdeparture_date_bounds_upper.SetValue(str(myJourneyOptions.departure_date_bounds[1]))
+        date = wx.DateTime.FromJDN(myJourneyOptions.departure_date_bounds[1] + 2400000.5)
         self.departureDateUpperCalendar.SetDate(date.MakeUTC())
-        self.txtinitial_impulse_bounds_lower.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].initial_impulse_bounds[0]))
-        self.txtinitial_impulse_bounds_upper.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].initial_impulse_bounds[1]))
-        self.chkforce_free_point_direct_insertion_along_velocity_vector.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].force_free_point_direct_insertion_along_velocity_vector)
-        self.cmbdeparture_type.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_type)
-        self.cmbdeparture_class.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class)
-        self.txtPeriapseDeparture_altitude_bounds_lower.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].PeriapseDeparture_altitude_bounds[0]))
-        self.txtPeriapseDeparture_altitude_bounds_upper.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].PeriapseDeparture_altitude_bounds[1]))
-        self.txtdeparture_ellipsoid_axes.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_ellipsoid_axes))
-        self.txtzero_turn_flyby_distance.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].zero_turn_flyby_distance))
-        self.txtforced_initial_coast.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].forced_initial_coast))
-        self.chkoverride_flyby_altitude_bounds.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].override_flyby_altitude_bounds)
-        self.txtflyby_altitude_boundsLower.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].flyby_altitude_bounds[0]))
-        self.txtflyby_altitude_boundsUpper.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].flyby_altitude_bounds[1]))
-        self.txtescape_spiral_starting_radius.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].escape_spiral_starting_radius))
-        self.txtescape_spiral_final_radius.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].escape_spiral_final_radius))
-        self.cmbarrival_type.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_type)
-        self.cmbarrival_class.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class)
-        self.txtPeriapseArrival_altitude_bounds_lower.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].PeriapseArrival_altitude_bounds[0]))
-        self.txtPeriapseArrival_altitude_bounds_upper.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].PeriapseArrival_altitude_bounds[1]))
-        self.txtephemeris_pegged_orbit_insertion_SMA.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ephemeris_pegged_orbit_insertion_SMA))
-        self.txtephemeris_pegged_orbit_insertion_ECC.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ephemeris_pegged_orbit_insertion_ECC))
-        self.txtarrival_ellipsoid_axes.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_ellipsoid_axes))
-        self.txtcapture_spiral_starting_radius.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].capture_spiral_starting_radius))
-        self.txtcapture_spiral_final_radius.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].capture_spiral_final_radius))
-        self.txtforced_terminal_coast.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].forced_terminal_coast))
-        self.txtfinal_velocity0.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].final_velocity[0]))
-        self.txtfinal_velocity1.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].final_velocity[1]))
-        self.txtfinal_velocity2.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].final_velocity[2]))
-        self.chkFreePointArrival_print_target_spec.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].FreePointArrival_print_target_spec)
+        self.txtinitial_impulse_bounds_lower.SetValue(str(myJourneyOptions.initial_impulse_bounds[0]))
+        self.txtinitial_impulse_bounds_upper.SetValue(str(myJourneyOptions.initial_impulse_bounds[1]))
+        self.chkforce_free_point_direct_insertion_along_velocity_vector.SetValue(myJourneyOptions.force_free_point_direct_insertion_along_velocity_vector)
+        self.cmbdeparture_type.SetSelection(myJourneyOptions.departure_type)
+        self.cmbdeparture_class.SetSelection(myJourneyOptions.departure_class)
+        self.txtPeriapseDeparture_altitude_bounds_lower.SetValue(str(myJourneyOptions.PeriapseDeparture_altitude_bounds[0]))
+        self.txtPeriapseDeparture_altitude_bounds_upper.SetValue(str(myJourneyOptions.PeriapseDeparture_altitude_bounds[1]))
+        self.txtdeparture_ellipsoid_axes.SetValue(str(myJourneyOptions.departure_ellipsoid_axes))
+        self.txtzero_turn_flyby_distance.SetValue(str(myJourneyOptions.zero_turn_flyby_distance))
+        self.txtforced_initial_coast.SetValue(str(myJourneyOptions.forced_initial_coast))
+        self.chkoverride_flyby_altitude_bounds.SetValue(myJourneyOptions.override_flyby_altitude_bounds)
+        self.txtflyby_altitude_boundsLower.SetValue(str(myJourneyOptions.flyby_altitude_bounds[0]))
+        self.txtflyby_altitude_boundsUpper.SetValue(str(myJourneyOptions.flyby_altitude_bounds[1]))
+        self.txtescape_spiral_starting_radius.SetValue(str(myJourneyOptions.escape_spiral_starting_radius))
+        self.txtescape_spiral_final_radius.SetValue(str(myJourneyOptions.escape_spiral_final_radius))
+        self.cmbarrival_type.SetSelection(myJourneyOptions.arrival_type)
+        self.cmbarrival_class.SetSelection(myJourneyOptions.arrival_class)
+        self.txtPeriapseArrival_altitude_bounds_lower.SetValue(str(myJourneyOptions.PeriapseArrival_altitude_bounds[0]))
+        self.txtPeriapseArrival_altitude_bounds_upper.SetValue(str(myJourneyOptions.PeriapseArrival_altitude_bounds[1]))
+        self.txtephemeris_pegged_orbit_insertion_SMA.SetValue(str(myJourneyOptions.ephemeris_pegged_orbit_insertion_SMA))
+        self.txtephemeris_pegged_orbit_insertion_ECC.SetValue(str(myJourneyOptions.ephemeris_pegged_orbit_insertion_ECC))
+        self.txtarrival_ellipsoid_axes.SetValue(str(myJourneyOptions.arrival_ellipsoid_axes))
+        self.txtcapture_spiral_starting_radius.SetValue(str(myJourneyOptions.capture_spiral_starting_radius))
+        self.txtcapture_spiral_final_radius.SetValue(str(myJourneyOptions.capture_spiral_final_radius))
+        self.txtforced_terminal_coast.SetValue(str(myJourneyOptions.forced_terminal_coast))
+        self.txtfinal_velocity0.SetValue(str(myJourneyOptions.final_velocity[0]))
+        self.txtfinal_velocity1.SetValue(str(myJourneyOptions.final_velocity[1]))
+        self.txtfinal_velocity2.SetValue(str(myJourneyOptions.final_velocity[2]))
+        self.chkFreePointArrival_print_target_spec.SetValue(myJourneyOptions.FreePointArrival_print_target_spec)
  
-        self.txtimpact_momentum_enhancement_factor.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].impact_momentum_enhancement_factor))
-        self.txtprobe_separation_impulse.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_separation_impulse))
-        self.txtprobe_mass.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_mass))
-        self.txtprobe_communication_distance_boundsLower.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_communication_distance_bounds[0]))
-        self.txtprobe_communication_distance_boundsUpper.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_communication_distance_bounds[1]))
+        self.txtimpact_momentum_enhancement_factor.SetValue(str(myJourneyOptions.impact_momentum_enhancement_factor))
+        self.txtprobe_separation_impulse.SetValue(str(myJourneyOptions.probe_separation_impulse))
+        self.txtprobe_mass.SetValue(str(myJourneyOptions.probe_mass))
+        self.txtprobe_communication_distance_boundsLower.SetValue(str(myJourneyOptions.probe_communication_distance_bounds[0]))
+        self.txtprobe_communication_distance_boundsUpper.SetValue(str(myJourneyOptions.probe_communication_distance_bounds[1]))
         
-        self.txtsequence.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].sequence))
-        self.chkperiapse_burns.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].enable_periapse_burns)
-        self.txtperturbation_bodies.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].perturbation_bodies))
-        self.chkfreeze_decision_variables.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].freeze_decision_variables)
-        self.chkprint_this_journey_options_no_matter_what.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].print_this_journey_options_no_matter_what)
+        self.txtsequence.SetValue(str(myJourneyOptions.sequence))
+        self.chkperiapse_burns.SetValue(myJourneyOptions.enable_periapse_burns)
+        self.txtperturbation_bodies.SetValue(str(myJourneyOptions.perturbation_bodies))
+        self.chkfreeze_decision_variables.SetValue(myJourneyOptions.freeze_decision_variables)
+        self.chkprint_this_journey_options_no_matter_what.SetValue(myJourneyOptions.print_this_journey_options_no_matter_what)
         
-        self.txtjourney_end_deltav.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].journey_end_deltav))
-        self.txtjourney_end_TCM.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].journey_end_TCM))
+        self.txtjourney_end_deltav.SetValue(str(myJourneyOptions.journey_end_deltav))
+        self.txtjourney_end_TCM.SetValue(str(myJourneyOptions.journey_end_TCM))
         
-        self.chkoverride_duty_cycle.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].override_duty_cycle)
-        self.txtduty_cycle.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].duty_cycle))
-        self.chkoverride_PropagatorType.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].override_PropagatorType)
-        self.cmbpropagatorType.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].propagatorType)
-        self.chkoverride_integration_step_size.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].override_integration_step_size)
-        self.txtintegration_step_size.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].integration_step_size))      
-        self.txtCoastPhaseMatchPointFraction.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].CoastPhaseMatchPointFraction))
-        self.txtCoastPhaseForwardIntegrationStepLength.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].CoastPhaseForwardIntegrationStepLength))
-        self.txtCoastPhaseBackwardIntegrationStepLength.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].CoastPhaseBackwardIntegrationStepLength))
-        self.txtProbeSeparationToAEI_MatchPointFraction.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeSeparationToAEI_MatchPointFraction))
-        self.txtProbeSeparationToAEI_ForwardIntegrationStepLength.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeSeparationToAEI_ForwardIntegrationStepLength))
-        self.txtProbeSeparationToAEI_BackwardIntegrationStepLength.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeSeparationToAEI_BackwardIntegrationStepLength))
-        self.txtProbeAEI_to_end_MatchPointFraction.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeAEI_to_end_MatchPointFraction))
-        self.txtProbeAEI_to_end_ForwardIntegrationStepLength.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeAEI_to_end_ForwardIntegrationStepLength))
-        self.txtProbeAEI_to_end_BackwardIntegrationStepLength.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ProbeAEI_to_end_BackwardIntegrationStepLength))
+        self.chkoverride_duty_cycle.SetValue(myJourneyOptions.override_duty_cycle)
+        self.txtduty_cycle.SetValue(str(myJourneyOptions.duty_cycle))
+        self.chkoverride_PropagatorType.SetValue(myJourneyOptions.override_PropagatorType)
+        self.cmbpropagatorType.SetSelection(myJourneyOptions.propagatorType)
+        self.chkoverride_integration_step_size.SetValue(myJourneyOptions.override_integration_step_size)
+        self.txtintegration_step_size.SetValue(str(myJourneyOptions.integration_step_size))      
+        self.txtCoastPhaseMatchPointFraction.SetValue(str(myJourneyOptions.CoastPhaseMatchPointFraction))
+        self.txtCoastPhaseForwardIntegrationStepLength.SetValue(str(myJourneyOptions.CoastPhaseForwardIntegrationStepLength))
+        self.txtCoastPhaseBackwardIntegrationStepLength.SetValue(str(myJourneyOptions.CoastPhaseBackwardIntegrationStepLength))
+        self.txtProbeSeparationToAEI_MatchPointFraction.SetValue(str(myJourneyOptions.ProbeSeparationToAEI_MatchPointFraction))
+        self.txtProbeSeparationToAEI_ForwardIntegrationStepLength.SetValue(str(myJourneyOptions.ProbeSeparationToAEI_ForwardIntegrationStepLength))
+        self.txtProbeSeparationToAEI_BackwardIntegrationStepLength.SetValue(str(myJourneyOptions.ProbeSeparationToAEI_BackwardIntegrationStepLength))
+        self.txtProbeAEI_to_end_MatchPointFraction.SetValue(str(myJourneyOptions.ProbeAEI_to_end_MatchPointFraction))
+        self.txtProbeAEI_to_end_ForwardIntegrationStepLength.SetValue(str(myJourneyOptions.ProbeAEI_to_end_ForwardIntegrationStepLength))
+        self.txtProbeAEI_to_end_BackwardIntegrationStepLength.SetValue(str(myJourneyOptions.ProbeAEI_to_end_BackwardIntegrationStepLength))
 
         try:
-            universeFile = self.missionoptions.universe_folder + "\\" + self.missionoptions.Journeys[self.missionoptions.ActiveJourney].journey_central_body + ".emtg_universe"
+            universeFile = self.missionoptions.universe_folder + "/" + myJourneyOptions.journey_central_body + ".emtg_universe"
             self.universe = Universe.Universe(universeFile)
             
-            self.lblstart_destination_name.SetLabel(self.universe.bodies[self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[0] - 1].name)
-            self.lblfinal_destination_name.SetLabel(self.universe.bodies[self.missionoptions.Journeys[self.missionoptions.ActiveJourney].destination_list[1] - 1].name)
+            startCode = myJourneyOptions.destination_list[0]
+            endCode = myJourneyOptions.destination_list[1]
+
+            if startCode > 1:
+                self.lblstart_destination_name.SetLabel(self.universe.bodies[startCode - 1].name)
+            elif startCode == 1:
+                self.lblstart_destination_name.SetLabel('central body')
+            elif startCode == 0:
+                self.lblstart_destination_name.SetLabel('sphere of influence')
+                
+            if startCode > 1:
+                self.lblfinal_destination_name.SetLabel(self.universe.bodies[endCode - 1].name)
+            elif startCode == 1:
+                self.lblfinal_destination_name.SetLabel('central body')
+            elif startCode == 0:
+                self.lblfinal_destination_name.SetLabel('sphere of influence')
         except:
             print('Could not find universe file', universeFile)
 
@@ -755,20 +779,20 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         ##############
         # drag updates
         ##############
-        self.chkEnableDrag.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].perturb_drag)
-        self.chkperturb_drag_probe_separation_to_AEI.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].perturb_drag_probe_separation_to_AEI)
-        self.chkperturb_drag_probe_AEI_to_end.SetValue(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].perturb_drag_probe_AEI_to_end)
-        self.txtprobe_drag_area_probe_separation_to_AEI.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_drag_area_probe_separation_to_AEI))
-        self.txtprobe_drag_area_probe_AEI_to_end.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_drag_area_probe_AEI_to_end))
-        self.txtSpacecraftDragArea.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].spacecraft_drag_area))
-        self.txtSpacecraftDragCoefficient.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].coefficient_of_drag))
-        self.txtprobe_coefficient_of_drag_probe_separation_to_AEI.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_coefficient_of_drag_probe_separation_to_AEI))
-        self.txtprobe_coefficient_of_drag_probe_AEI_to_end.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].probe_coefficient_of_drag_probe_AEI_to_end))
+        self.chkEnableDrag.SetValue(myJourneyOptions.perturb_drag)
+        self.chkperturb_drag_probe_separation_to_AEI.SetValue(myJourneyOptions.perturb_drag_probe_separation_to_AEI)
+        self.chkperturb_drag_probe_AEI_to_end.SetValue(myJourneyOptions.perturb_drag_probe_AEI_to_end)
+        self.txtprobe_drag_area_probe_separation_to_AEI.SetValue(str(myJourneyOptions.probe_drag_area_probe_separation_to_AEI))
+        self.txtprobe_drag_area_probe_AEI_to_end.SetValue(str(myJourneyOptions.probe_drag_area_probe_AEI_to_end))
+        self.txtSpacecraftDragArea.SetValue(str(myJourneyOptions.spacecraft_drag_area))
+        self.txtSpacecraftDragCoefficient.SetValue(str(myJourneyOptions.coefficient_of_drag))
+        self.txtprobe_coefficient_of_drag_probe_separation_to_AEI.SetValue(str(myJourneyOptions.probe_coefficient_of_drag_probe_separation_to_AEI))
+        self.txtprobe_coefficient_of_drag_probe_AEI_to_end.SetValue(str(myJourneyOptions.probe_coefficient_of_drag_probe_AEI_to_end))
         
         self.cmbAtmosphericDensityModel.SetSelection(
-            self.atmosphericDensityModelChoices.index(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].AtmosphericDensityModelKey))
-        #self.cmbAtmosphericDensityModel.SetSelection(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].AtmosphericDensityModelKey)
-        self.txtAtmosphericDensityModelDataFile.SetValue(str(self.missionoptions.Journeys[self.missionoptions.ActiveJourney].AtmosphericDensityModelDataFile))
+            self.atmosphericDensityModelChoices.index(myJourneyOptions.AtmosphericDensityModelKey))
+        #self.cmbAtmosphericDensityModel.SetSelection(myJourneyOptions.AtmosphericDensityModelKey)
+        self.txtAtmosphericDensityModelDataFile.SetValue(str(myJourneyOptions.AtmosphericDensityModelDataFile))
 
         #if there is only one journey in the list then disable delete, up, and down
         if self.missionoptions.number_of_journeys == 1:
@@ -799,7 +823,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.cmbPhaseType.Show(False)
 
         #only show number of steps if override is on
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].override_num_steps:
+        if myJourneyOptions.override_num_steps:
             self.lblnumber_of_steps.Show(True)
             self.txtnumber_of_steps.Show(True)
         else:
@@ -807,15 +831,27 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtnumber_of_steps.Show(False)
 
         #do we want to show the number of interior control points?
-        if self.missionoptions.mission_type in [4, 5] or (self.missionoptions.mission_type == 9 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [4, 5]):
+        if self.missionoptions.mission_type in [4, 5] or (self.missionoptions.mission_type == 9 and myJourneyOptions.phase_type in [4, 5]):
             self.lblnum_interior_control_points.Show(True)
             self.txtnum_interior_control_points.Show(True)
         else:
             self.lblnum_interior_control_points.Show(False)
             self.txtnum_interior_control_points.Show(False)
 
+        #do we want to show the option to change the thrust control law?
+        if self.missionoptions.mission_type in [11] or (self.missionoptions.mission_type == 9 and myJourneyOptions.phase_type in [11]):
+            self.lblthrust_control_law.Show(True)
+            self.cmbthrust_control_law.Show(True)
+            self.lblthrust_control_law.Show(True)
+            self.cmbthrust_control_law.Show(True)
+        else:
+            self.lblthrust_control_law.Show(False)
+            self.cmbthrust_control_law.Show(False)
+            self.lblthrust_control_law.Show(False)
+            self.cmbthrust_control_law.Show(False)
+
         #do we want to show the option to force unit magnitude control and forced fixed inertial control?
-        if self.missionoptions.mission_type in [0, 1, 2, 3, 4, 5] or (self.missionoptions.mission_type == 9 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [0, 1, 2, 3, 4, 5]):
+        if self.missionoptions.mission_type in [0, 1, 2, 3, 4, 5] or (self.missionoptions.mission_type == 9 and myJourneyOptions.phase_type in [0, 1, 2, 3, 4, 5]):
             self.lblforce_unit_magnitude_control.Show(True)
             self.cmbforce_unit_magnitude_control.Show(True)
             self.lblforce_fixed_inertial_control.Show(True)
@@ -827,7 +863,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.chkforce_fixed_inertial_control.Show(False)
 
         #do we want to show number of impulses?
-        if self.missionoptions.mission_type in [6, 10] or (self.missionoptions.mission_type == 9 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [6, 10]):
+        if self.missionoptions.mission_type in [6, 10] or (self.missionoptions.mission_type == 9 and myJourneyOptions.phase_type in [6, 10]):
             self.lblimpulses_per_phase.Show(True)
             self.txtimpulses_per_phase.Show(True)
         else:
@@ -835,7 +871,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtimpulses_per_phase.Show(False)
 
         #hide or show flight time and arrival date bounds
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].timebounded == 0:
+        if myJourneyOptions.timebounded == 0:
             self.lblflight_time_bounds.Show(False)
             self.txtflight_time_bounds_lower.Show(False)
             self.txtflight_time_bounds_upper.Show(False)
@@ -844,7 +880,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtarrival_date_bounds_upper.Show(False)
             self.ArrivalDateLowerCalendar.Show(False)
             self.ArrivalDateUpperCalendar.Show(False)
-        elif self.missionoptions.Journeys[self.missionoptions.ActiveJourney].timebounded == 1 or self.missionoptions.Journeys[self.missionoptions.ActiveJourney].timebounded == 3:
+        elif myJourneyOptions.timebounded == 1 or myJourneyOptions.timebounded == 3:
             self.lblflight_time_bounds.Show(True)
             self.txtflight_time_bounds_lower.Show(True)
             self.txtflight_time_bounds_upper.Show(True)
@@ -853,7 +889,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtarrival_date_bounds_upper.Show(False)
             self.ArrivalDateLowerCalendar.Show(False)
             self.ArrivalDateUpperCalendar.Show(False)
-        elif self.missionoptions.Journeys[self.missionoptions.ActiveJourney].timebounded == 2:
+        elif myJourneyOptions.timebounded == 2:
             self.lblflight_time_bounds.Show(False)
             self.txtflight_time_bounds_lower.Show(False)
             self.txtflight_time_bounds_upper.Show(False)
@@ -865,9 +901,9 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
         #hide or show departure date bounds
         if self.missionoptions.ActiveJourney == 0 \
-                or self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_type == 3 \
-                or self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_type == 4 \
-                or self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_type == 6:
+                or myJourneyOptions.departure_type == 3 \
+                or myJourneyOptions.departure_type == 4 \
+                or myJourneyOptions.departure_type == 6:
             self.lblbounded_departure_date.Show(False)
             self.chkbounded_departure_date.Show(False)
             self.lbldeparture_date_bounds.Show(False)
@@ -875,7 +911,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtdeparture_date_bounds_upper.Show(False)
             self.departureDateLowerCalendar.Show(False)
             self.departureDateUpperCalendar.Show(False)
-        elif self.missionoptions.Journeys[self.missionoptions.ActiveJourney].bounded_departure_date == 0:
+        elif myJourneyOptions.bounded_departure_date == 0:
             self.lblbounded_departure_date.Show(True)
             self.chkbounded_departure_date.Show(True)
             self.lbldeparture_date_bounds.Show(False)
@@ -894,14 +930,14 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
         #enable or disable the orbit elements selection boxes as appropriate
         #don't show the departure elements box if we are a later journey. We just pull the state and epoch from the previous journey anyway so these boxes don't do anything
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class == 1 and self.missionoptions.ActiveJourney == 0:
+        if myJourneyOptions.departure_class == 1 and self.missionoptions.ActiveJourney == 0:
             #enable departure orbit elements box
             self.DepartureElementsPanel.Show(True)
             self.DepartureElementsPanel.update()
         else:
             self.DepartureElementsPanel.Show(False)
         
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class == 1:
+        if myJourneyOptions.arrival_class == 1:
             #enable arrival orbit elements box
             self.ArrivalElementsPanel.Show(True)
             self.lblFreePointArrival_print_target_spec.Show(True)
@@ -914,15 +950,15 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
         #destination list
         #show for ephemeris pegged, ephemeris referenced, or free point boundary in object referenced frame. Otherwise hide
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class in [0, 2] \
-            or self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class == 1 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_elements_frame == 9:
+        if myJourneyOptions.departure_class in [0, 2] \
+            or myJourneyOptions.departure_class == 1 and myJourneyOptions.departure_elements_frame == 9:
             self.lblstart_destination.Show(True)
             self.txtstart_destination.Show(True)
             self.btnstart_destination.Show(True)
             self.lblstart_destination_name.Show(True)
 
             #if object referenced, change the name of the option
-            if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class == 1 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_elements_frame == 9:
+            if myJourneyOptions.departure_class == 1 and myJourneyOptions.departure_elements_frame == 9:
                 self.lblstart_destination.SetLabel('Departure frame reference body')
             else:
                 self.lblstart_destination.SetLabel('Start location')
@@ -932,15 +968,15 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.btnstart_destination.Show(False)
             self.lblstart_destination_name.Show(False)
 
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class in [0, 2] \
-            or self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class == 1 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_elements_frame == 9:
+        if myJourneyOptions.arrival_class in [0, 2] \
+            or myJourneyOptions.arrival_class == 1 and myJourneyOptions.arrival_elements_frame == 9:
             self.lblfinal_destination.Show(True)
             self.txtfinal_destination.Show(True)
             self.btnfinal_destination.Show(True)
             self.lblfinal_destination_name.Show(True)
 
             #if object referenced, change the name of the option
-            if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class == 1 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_elements_frame == 9:
+            if myJourneyOptions.arrival_class == 1 and myJourneyOptions.arrival_elements_frame == 9:
                 self.lblfinal_destination.SetLabel('Arrival frame reference body')
             else:
                 self.lblfinal_destination.SetLabel('Final location')
@@ -953,7 +989,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
 
         #impact momentum enhancement factor
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class == 0 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_type == 7:
+        if myJourneyOptions.arrival_class == 0 and myJourneyOptions.arrival_type == 7:
             self.lblimpact_momentum_enhancement_factor.Show(True)
             self.txtimpact_momentum_enhancement_factor.Show(True)
         else:
@@ -961,7 +997,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtimpact_momentum_enhancement_factor.Show(False)
 
         #probe entry parameters
-        if self.missionoptions.mission_type in [10] or (self.missionoptions.mission_type == 9 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [10]):
+        if self.missionoptions.mission_type in [10] or (self.missionoptions.mission_type == 9 and myJourneyOptions.phase_type in [10]):
             self.lblModelProbeSecondPhase.Show(True)
             self.chkModelProbeSecondPhase.Show(True)
             self.lblprobe_separation_impulse.Show(True)
@@ -985,7 +1021,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtProbeSeparationToAEI_BackwardIntegrationStepLength.Show(True)
             self.ProbeArrivalElementsPanelToAEI.Show(True)
             self.ProbeArrivalElementsPanelToAEI.update()
-            if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].ModelProbeSecondPhase:
+            if myJourneyOptions.ModelProbeSecondPhase:
                 self.lblperturb_drag_probe_AEI_to_end.Show(True)
                 self.chkperturb_drag_probe_AEI_to_end.Show(True)
                 self.lblprobe_drag_area_probe_AEI_to_end.Show(True)
@@ -1052,7 +1088,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.ProbeArrivalElementsPanelToEnd.Show(False)
 
         #ephemeris pegged orbit insertion
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class == 0 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_type == 0:
+        if myJourneyOptions.arrival_class == 0 and myJourneyOptions.arrival_type == 0:
             self.txtephemeris_pegged_orbit_insertion_SMA.Show(True)
             self.lblephemeris_pegged_orbit_insertion_SMA.Show(True)
             self.txtephemeris_pegged_orbit_insertion_ECC.Show(True)
@@ -1064,10 +1100,10 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.lblephemeris_pegged_orbit_insertion_ECC.Show(False)
 
         #only show the flyby altitude override options if we are a flyby or a zero-turn flyby
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_type in [3, 4, 6]:
+        if myJourneyOptions.departure_type in [3, 4, 6]:
             self.lbloverride_flyby_altitude_bounds.Show(True)
             self.chkoverride_flyby_altitude_bounds.Show(True)
-            if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].override_flyby_altitude_bounds:                    
+            if myJourneyOptions.override_flyby_altitude_bounds:                    
                 self.lblflyby_altitude_bounds.Show(True)
                 self.txtflyby_altitude_boundsLower.Show(True)
                 self.txtflyby_altitude_boundsUpper.Show(True)
@@ -1082,13 +1118,15 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtflyby_altitude_boundsLower.Show(False)
             self.txtflyby_altitude_boundsUpper.Show(False)
 
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_type in [3, 4, 6]:
+        if myJourneyOptions.departure_type in [3, 4, 6]:
             self.lblwait_time_bounds.Show(False)
             self.txtwait_time_bounds_lower.Show(False)
             self.txtwait_time_bounds_upper.Show(False)
             self.lblinitial_impulse_bounds.Show(False)
             self.txtinitial_impulse_bounds_lower.Show(False)
             self.txtinitial_impulse_bounds_upper.Show(False)
+
+            self.lblinitial_impulse_bounds.SetLabel("Journey initial impulse bounds (km/s)")
         else:
             self.lblwait_time_bounds.Show(True)
             self.txtwait_time_bounds_lower.Show(True)
@@ -1097,8 +1135,15 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtinitial_impulse_bounds_lower.Show(True)
             self.txtinitial_impulse_bounds_upper.Show(True)
 
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_type in [0] \
-            and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class == 1:
+            if myJourneyOptions.departure_class == 3 \
+                and myJourneyOptions.departure_type == 0:
+        
+                self.lblinitial_impulse_bounds.SetLabel("Journey v-infinity bounds (km/s)")
+            else:
+                self.lblinitial_impulse_bounds.SetLabel("Journey initial impulse bounds (km/s)")
+
+        if myJourneyOptions.departure_type in [0] \
+            and myJourneyOptions.departure_class == 1:
 
             self.lblforce_free_point_direct_insertion_along_velocity_vector.Show(True)
             self.chkforce_free_point_direct_insertion_along_velocity_vector.Show(True)
@@ -1107,19 +1152,19 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.chkforce_free_point_direct_insertion_along_velocity_vector.Show(False)
 
 
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_type in [4, 5]:
+        if myJourneyOptions.arrival_type in [4, 5]:
             self.lblfinal_velocity.Show(True)
             self.lblfinal_velocity.SetLabel("Journey final velocity vector")
             self.txtfinal_velocity0.Show(True)
             self.txtfinal_velocity1.Show(True)
             self.txtfinal_velocity2.Show(True)
-        elif self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_type in [1]:
+        elif myJourneyOptions.arrival_type in [1]:
             self.lblfinal_velocity.Show(True)
             self.lblfinal_velocity.SetLabel("Journey final impulse bounds (km/s)")
             self.txtfinal_velocity0.Show(True)
             self.txtfinal_velocity1.Show(True)
             self.txtfinal_velocity2.Show(False)
-        elif self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_type in [2, 7]:
+        elif myJourneyOptions.arrival_type in [2, 7]:
             self.lblfinal_velocity.Show(True)
             self.lblfinal_velocity.SetLabel("Journey final velocity bounds (km/s)")
             self.txtfinal_velocity0.Show(True)
@@ -1134,7 +1179,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
  
         #only show the pre-intercept coast  flag if this is a bounded v-infinity intercept or orbit insertion 
         #same rule applies for pre-intercept coast 
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_type in [0, 1, 2]:  
+        if myJourneyOptions.arrival_type in [0, 1, 2]:  
             self.lblforced_terminal_coast.Show(True) 
             self.txtforced_terminal_coast.Show(True) 
         else:
@@ -1143,7 +1188,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
  
 
         #options for an escape spiral
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_type == 5:
+        if myJourneyOptions.departure_type == 5:
             self.lblinitial_impulse_bounds.Show(False)
             self.txtinitial_impulse_bounds_lower.Show(False)
             self.txtinitial_impulse_bounds_upper.Show(False)
@@ -1152,7 +1197,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.lblescape_spiral_final_radius.Show(True)
             self.txtescape_spiral_final_radius.Show(True)
         #free direct departure
-        elif self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_type == 2:
+        elif myJourneyOptions.departure_type == 2:
             self.lblinitial_impulse_bounds.Show(False)
             self.txtinitial_impulse_bounds_lower.Show(False)
             self.txtinitial_impulse_bounds_upper.Show(False)
@@ -1168,7 +1213,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtescape_spiral_final_radius.Show(False)
 
         #options for a capture spiral
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_type == 6:
+        if myJourneyOptions.arrival_type == 6:
             self.lblcapture_spiral_starting_radius.Show(True)
             self.txtcapture_spiral_starting_radius.Show(True)
             self.lblcapture_spiral_final_radius.Show(True)
@@ -1190,7 +1235,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtperturbation_bodies.Show(False)
             self.btnperturbation_bodies.Show(False)
 
-        if (self.missionoptions.Journeys[self.missionoptions.ActiveJourney].override_duty_cycle):
+        if (myJourneyOptions.override_duty_cycle):
             self.lblduty_cycle.Show(True)
             self.txtduty_cycle.Show(True)
         else:
@@ -1199,19 +1244,19 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
         #show journey-end maneuver components if it is needed
         #should point to journey-end propulsion system here
-        #if (self.missionoptions.Journeys[self.missionoptions.ActiveJourney].journey_end_deltav > 0.0):
+        #if (myJourneyOptions.journey_end_deltav > 0.0):
          
         #else:
           
         #journey-end TCM, only needed for intercepts, orbit insertions, and chemical rendezvous
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_type in [0, 1, 2]:
+        if myJourneyOptions.arrival_type in [0, 1, 2]:
             self.lbljourney_end_TCM.Show(True)
             self.txtjourney_end_TCM.Show(True)
         else:
             self.lbljourney_end_TCM.Show(False)
             self.txtjourney_end_TCM.Show(False)
 
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].variable_mass_increment:
+        if myJourneyOptions.variable_mass_increment:
             self.txtmaximum_starting_mass_increment.Show(True)
             self.txtminimum_starting_mass_increment.Show(True)
             self.txtfixed_starting_mass_increment.Show(False)
@@ -1226,18 +1271,18 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.lblminimum_starting_mass_increment.Show(False)
             self.lblfixed_starting_mass_increment.Show(True)
         
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].constrain_initial_mass:
+        if myJourneyOptions.constrain_initial_mass:
             self.txtmaximum_initial_mass.Show(True)
             self.lblmaximum_initial_mass.Show(True)
         else:
             self.txtmaximum_initial_mass.Show(False)
             self.lblmaximum_initial_mass.Show(False)
 
-        if self.missionoptions.mission_type in [1, 3, 5, 6, 7, 10] or (self.missionoptions.mission_type == 9 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [1, 3, 5, 6, 7, 10]):
+        if self.missionoptions.mission_type in [1, 3, 5, 6, 7, 10] or (self.missionoptions.mission_type == 9 and myJourneyOptions.phase_type in [1, 3, 5, 6, 7, 10]):
             self.lbloverride_PropagatorType.Show(True)
             self.chkoverride_PropagatorType.Show(True)
 
-            if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].override_PropagatorType:
+            if myJourneyOptions.override_PropagatorType:
                 self.lblpropagatorType.Show(True)
                 self.cmbpropagatorType.Show(True)
             else:
@@ -1249,7 +1294,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.lblpropagatorType.Show(False)
             self.cmbpropagatorType.Show(False)
 
-        if self.missionoptions.mission_type in [7] or (self.missionoptions.mission_type == 9 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [7]):
+        if self.missionoptions.mission_type in [7, 11] or (self.missionoptions.mission_type == 9 and myJourneyOptions.phase_type in [7, 11]):
             self.lblCoastPhaseMatchPointFraction.Show(True)
             self.txtCoastPhaseMatchPointFraction.Show(True)
             self.lblCoastPhaseForwardIntegrationStepLength.Show(True)
@@ -1261,15 +1306,15 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.lblintegration_step_size.Show(False)
             self.txtintegration_step_size.Show(False)
         elif self.missionoptions.mission_type in [1, 3, 5, 8] \
-            or (self.missionoptions.mission_type in [6, 10] and (self.missionoptions.propagatorType == 1 or self.missionoptions.Journeys[self.missionoptions.ActiveJourney].propagatorType == 1)) \
-            or (self.missionoptions.mission_type == 9 and (self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [1, 3, 5, 8] or (self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [6, 10] and (self.missionoptions.propagatorType == 1 or self.missionoptions.Journeys[self.missionoptions.ActiveJourney].propagatorType == 1)))):
+            or (self.missionoptions.mission_type in [6, 10] and (self.missionoptions.propagatorType == 1 or myJourneyOptions.propagatorType == 1)) \
+            or (self.missionoptions.mission_type == 9 and (myJourneyOptions.phase_type in [1, 3, 5, 8] or (myJourneyOptions.phase_type in [6, 10] and (self.missionoptions.propagatorType == 1 or myJourneyOptions.propagatorType == 1)))):
             self.lbloverride_integration_step_size.Show(True)
             self.chkoverride_integration_step_size.Show(True)
-            if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].override_integration_step_size:
+            if myJourneyOptions.override_integration_step_size:
                 self.lblintegration_step_size.Show(True)
                 self.txtintegration_step_size.Show(True)
 
-                if self.missionoptions.mission_type == 8 or (self.missionoptions.mission_type == 9 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type == 8):
+                if self.missionoptions.mission_type == 8 or (self.missionoptions.mission_type == 9 and myJourneyOptions.phase_type == 8):
                     self.lblintegration_step_size.SetLabel('Integration step size (degrees)')
                 else:
                     self.lblintegration_step_size.SetLabel('Integration step size (seconds)')
@@ -1278,7 +1323,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
                 self.txtintegration_step_size.Show(False)
 
             #ProbeEntryPhase needs the CoastPhase stuff, too
-            if self.missionoptions.mission_type in [10] or (self.missionoptions.mission_type == 9 and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].phase_type in [10]):
+            if self.missionoptions.mission_type in [10] or (self.missionoptions.mission_type == 9 and myJourneyOptions.phase_type in [10]):
                 self.lblCoastPhaseMatchPointFraction.Show(True)
                 self.txtCoastPhaseMatchPointFraction.Show(True)
                 self.lblCoastPhaseForwardIntegrationStepLength.Show(True)
@@ -1306,7 +1351,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtCoastPhaseBackwardIntegrationStepLength.Show(False)
 
         #ellipsoid controls
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class == 2: #ephemeris referenced
+        if myJourneyOptions.departure_class == 2: #ephemeris referenced
             self.lbldeparture_ellipsoid_axes.Show(True)
             self.txtdeparture_ellipsoid_axes.Show(True)
             self.btndeparture_ellipsoid_axes.Show(True)
@@ -1315,7 +1360,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtdeparture_ellipsoid_axes.Show(False)
             self.btndeparture_ellipsoid_axes.Show(False)
 
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class == 2: #ephemeris referenced
+        if myJourneyOptions.arrival_class == 2: #ephemeris referenced
             self.lblarrival_ellipsoid_axes.Show(True)
             self.txtarrival_ellipsoid_axes.Show(True)
             self.btnarrival_ellipsoid_axes.Show(True)
@@ -1325,7 +1370,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.btnarrival_ellipsoid_axes.Show(False)
 
         #periapse boundary controls
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class == 3: #periapse
+        if myJourneyOptions.departure_class == 3: #periapse
             self.lblPeriapseDeparture_altitude_bounds.Show(True)
             self.txtPeriapseDeparture_altitude_bounds_lower.Show(True)
             self.txtPeriapseDeparture_altitude_bounds_upper.Show(True)
@@ -1334,7 +1379,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtPeriapseDeparture_altitude_bounds_lower.Show(False)
             self.txtPeriapseDeparture_altitude_bounds_upper.Show(False)
         
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_class == 3: #periapse
+        if myJourneyOptions.arrival_class == 3: #periapse
             self.lblPeriapseArrival_altitude_bounds.Show(True)
             self.txtPeriapseArrival_altitude_bounds_lower.Show(True)
             self.txtPeriapseArrival_altitude_bounds_upper.Show(True)
@@ -1344,8 +1389,8 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtPeriapseArrival_altitude_bounds_upper.Show(False)
 
         #zero-turn flyby distance
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_class == 0 \
-            and self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_type == 6: #ephemeris-pegged zero-turn flyby
+        if myJourneyOptions.departure_class == 0 \
+            and myJourneyOptions.departure_type == 6: #ephemeris-pegged zero-turn flyby
             self.lblzero_turn_flyby_distance.Show(True)
             self.txtzero_turn_flyby_distance.Show(True)
         else:
@@ -1353,7 +1398,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.txtzero_turn_flyby_distance.Show(False)
 
         # show drag options?
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].perturb_drag == 1:
+        if myJourneyOptions.perturb_drag == 1:
             self.lblSpacecraftDragArea.Show(True)
             self.txtSpacecraftDragArea.Show(True)
             self.lblSpacecraftDragCoefficient.Show(True)
@@ -1389,6 +1434,9 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
     
     def ClickAddNewJourney(self, e):
+        self.missionoptions.DisassembleMasterConstraintVectors()
+        self.missionoptions.DisassembleMasterDecisionVector()
+        
         #add
         temp_JourneyOptions = JO.JourneyOptions()
         temp_JourneyOptions.sequence = []
@@ -1407,7 +1455,13 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         #determine which journey is "active"
         self.missionoptions.ActiveJourney = self.JourneySelectBox.GetSelection()
 
+        self.missionoptions.AssembleMasterConstraintVectors()
+        self.missionoptions.AssembleMasterDecisionVector()        
+
     def ClickDeleteJourney(self, e):
+        self.missionoptions.DisassembleMasterConstraintVectors()
+        self.missionoptions.DisassembleMasterDecisionVector()
+        
         #determine which journey is "active"
         self.missionoptions.ActiveJourney = self.JourneySelectBox.GetSelection()
 
@@ -1418,26 +1472,43 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         if self.missionoptions.ActiveJourney > self.missionoptions.number_of_journeys - 1:
             self.missionoptions.ActiveJourney -= 1
 
+        self.missionoptions.AssembleMasterConstraintVectors()
+        self.missionoptions.AssembleMasterDecisionVector()    
+
         self.JourneySelectBox.SetSelection(0)
         self.parent.update()
 
     def ClickMoveJourneyUp(self, e):
+        self.missionoptions.DisassembleMasterConstraintVectors()
+        self.missionoptions.DisassembleMasterDecisionVector()
+        
         #determine which journey is "active"
         self.missionoptions.ActiveJourney = self.JourneySelectBox.GetSelection()
 
         #move up
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney], self.missionoptions.Journeys[self.missionoptions.ActiveJourney-1] = self.missionoptions.Journeys[self.missionoptions.ActiveJourney-1], self.missionoptions.Journeys[self.missionoptions.ActiveJourney]
         self.missionoptions.ActiveJourney -= 1
+
+        self.missionoptions.AssembleMasterConstraintVectors()
+        self.missionoptions.AssembleMasterDecisionVector()    
+
         self.JourneySelectBox.SetSelection(self.missionoptions.ActiveJourney)
         self.parent.update()
 
     def ClickMoveJourneyDown(self, e):
+        self.missionoptions.DisassembleMasterConstraintVectors()
+        self.missionoptions.DisassembleMasterDecisionVector()
+        
         #determine which journey is "active"
         self.missionoptions.ActiveJourney = self.JourneySelectBox.GetSelection()
 
         #move down
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney], self.missionoptions.Journeys[self.missionoptions.ActiveJourney+1] = self.missionoptions.Journeys[self.missionoptions.ActiveJourney+1], self.missionoptions.Journeys[self.missionoptions.ActiveJourney]
         self.missionoptions.ActiveJourney += 1
+
+        self.missionoptions.AssembleMasterConstraintVectors()
+        self.missionoptions.AssembleMasterDecisionVector()    
+
         self.JourneySelectBox.SetSelection(self.missionoptions.ActiveJourney)
         self.parent.update()
 
@@ -1484,6 +1555,12 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         e.Skip()
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].impulses_per_phase = int(self.txtimpulses_per_phase.GetValue())
         self.parent.update()    
+
+    def Changethrust_control_law(self, e):
+        e.Skip()
+        #increment by one because we are not allowing the user to select Cartesian
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].thrust_control_law = self.cmbforce_unit_magnitude_control.GetSelection() + 1
+        self.parent.update()  
 
     def Changeforce_unit_magnitude_control(self, e):
         e.Skip()
@@ -1569,11 +1646,13 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.update()
 
     def Changearrival_date_bounds_lower(self, e):
-        e.Skip()
-        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_date_bounds[0] = eval(self.txtarrival_date_bounds_lower.GetValue())
-                
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_date_bounds[0] > 2400000.5:
-            self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_date_bounds[0] -= 2400000.5
+        e.Skip()            
+        
+        dateString = self.txtarrival_date_bounds_lower.GetValue()
+
+        from timeUtilities import stringToJD
+
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_date_bounds[0] = stringToJD(dateString, self.missionoptions.universe_folder)
 
         self.update()
 
@@ -1581,6 +1660,7 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         date = self.ArrivalDateLowerCalendar.GetDate()
         date = date.FromTimezone(wx.DateTime.TimeZone(offset=0))
         self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_date_bounds[0] = date.GetMJD()
+
         self.update()
 
     def ChangeArrivalDateUpperCalendar(self, e):
@@ -1591,11 +1671,13 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
     def Changearrival_date_bounds_upper(self, e):
         e.Skip()
-        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_date_bounds[1] = eval(self.txtarrival_date_bounds_upper.GetValue())
         
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_date_bounds[1] > 2400000.5:
-            self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_date_bounds[1] -= 2400000.5
-        
+        dateString = self.txtarrival_date_bounds_upper.GetValue()
+
+        from timeUtilities import stringToJD
+
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_date_bounds[1] = stringToJD(dateString, self.missionoptions.universe_folder)
+
         self.update()
 
     def Changebounded_departure_date(self, e):
@@ -1604,10 +1686,12 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
     def Changedeparture_date_bounds_lower(self, e):
         e.Skip()
-        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_date_bounds[0] = eval(self.txtdeparture_date_bounds_lower.GetValue())
+        
+        dateString = self.txtdeparture_date_bounds_lower.GetValue()
 
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_date_bounds[0] > 2400000.5:
-            self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_date_bounds[0] -= 2400000.5
+        from timeUtilities import stringToJD
+
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_date_bounds[0] = stringToJD(dateString, self.missionoptions.universe_folder)
 
         self.update()
 
@@ -1625,11 +1709,13 @@ class JourneyOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
     def Changedeparture_date_bounds_upper(self, e):
         e.Skip()
-        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_date_bounds[1] = eval(self.txtdeparture_date_bounds_upper.GetValue())
         
-        if self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_date_bounds[1] > 2400000.5:
-            self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_date_bounds[1] -= 2400000.5
-        
+        dateString = self.txtdeparture_date_bounds_upper.GetValue()
+
+        from timeUtilities import stringToJD
+
+        self.missionoptions.Journeys[self.missionoptions.ActiveJourney].departure_date_bounds[1] = stringToJD(dateString, self.missionoptions.universe_folder)
+
         self.update()
 
     def Changeinitial_impulse_bounds_lower(self, e):

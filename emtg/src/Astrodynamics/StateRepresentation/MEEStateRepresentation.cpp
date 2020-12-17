@@ -16,8 +16,6 @@
 // express or implied.   See the License for the specific language
 // governing permissions and limitations under the License.
 
-#pragma once
-
 #include "MEEStateRepresentation.h"
 #include "EMTG_math.h"
 
@@ -54,7 +52,7 @@ namespace EMTG
 
             doubleType RAAN = atan2(K / A, H / A);
 
-            bool prograde = true; //how do you check an MEE state for whether it is prograde or retrograde?
+            bool prograde = true; // TODO: how do you check an MEE state for whether it is prograde or retrograde?
 
             doubleType INC, AOP;
             if (prograde)

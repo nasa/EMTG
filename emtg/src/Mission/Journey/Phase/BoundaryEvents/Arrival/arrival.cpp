@@ -99,6 +99,8 @@ namespace EMTG
             std::string Tag = "p" + std::to_string(this->phaseIndex)
                 + "_arrival";
 
+            std::string TagEnd = "pEnd_arrival";
+
             //clear the current constraint vector
             this->mySpecializedConstraints.clear();
 
@@ -110,7 +112,7 @@ namespace EMTG
             {
                 if (constraint.find("#") != 0) //don't create a constraint if it is commented out
                 {
-                    if (constraint.find(Tag) < 1024)
+                    if (constraint.find(Tag) < 1024 || (constraint.find(TagEnd) < 1024 && this->isLastEventInJourney))
                     {
                         if (constraint.find("monoprop") < 1024)
                         {

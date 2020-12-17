@@ -936,7 +936,7 @@ namespace EMTG
             {
                 this->mySpacecraft.setActiveStage(stageIndex);
                 this->mySpacecraft.computeStageRequiredFinalMass(stageIndex);
-                F[Findex++] = (X[this->mySpacecraft.getXindex_StageFinalMass(stageIndex)] - this->mySpacecraft.getStageRequiredFinalMass(stageIndex) ) / this->mySpacecraft.getCurrentDryMass();
+                F[Findex++] = (this->mySpacecraft.getStageRequiredFinalMass(stageIndex) - X[this->mySpacecraft.getXindex_StageFinalMass(stageIndex)]) / this->mySpacecraft.getCurrentDryMass();
 
                 if (needG)
                     this->mySpacecraft.populateDryMassDerivatives(stageIndex, G, this->options.electric_propellant_margin, this->options.chemical_propellant_margin);

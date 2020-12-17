@@ -26,7 +26,6 @@
 #include <vector>
 
 #include <EMTG_Matrix.h>
-#include "universe.h"
 
 namespace EMTG
 {
@@ -36,11 +35,9 @@ namespace EMTG
         {
         public:
             //constructors
-            PropagatorBase() {};
+            PropagatorBase();
 			
 			virtual ~PropagatorBase() = default;
-
-            PropagatorBase(universe & myUniverse);
 
             //clone
             virtual PropagatorBase* clone() const = 0;
@@ -51,19 +48,29 @@ namespace EMTG
 
             inline void setStateLeft(math::Matrix <doubleType> & StateLeft) { this->StateLeftPointer = &StateLeft; };
             inline void setStateRight(math::Matrix <doubleType> & StateRight) { this->StateRightPointer = &StateRight; };
-            inline void setSTM(math::Matrix<double>& STM) { this->STMpointer = &STM; };
+            inline void setSTM(math::Matrix<double>& STM) 
+            { 
+                this->STMpointer = &STM;
+                this->prop_var_column_index = STM.get_m() - 1; // propagation variable slot is always the last STM column
+            };
             inline void setdStatedIndependentVariable(math::Matrix<double> & dStatedIndependentVariable) { this->dStatedIndependentVariablePointer = &dStatedIndependentVariable; };
             inline void setCurrentEpoch(const doubleType & current_epoch_in) { this->current_epoch = current_epoch_in; };
             inline void setCurrentIndependentVariable(const doubleType & current_indvar_in) { this->current_independent_variable = current_indvar_in; };
             inline void setIndexOfEpochInStateVec(const size_t & index_in) { this->index_of_epoch_in_state_vec = index_in;  };
+            inline void setPropVarSTMcolumnIndex(const size_t & index_in) { };
             inline void setPropagationStepSize(const double & PropagationStepSize) { this->PropagationStepSize = PropagationStepSize; };
+            inline void setStorePropagationHistory(const bool & switch_in) { this->store_propagation_history = switch_in; };
+            inline void clearPropagationHistory() { this->propagation_history.clear(); };
+            virtual std::vector<double> getPropagationHistory() const = 0;
             
 
             //fields
         protected:
-            Astrodynamics::universe* myUniverse;
-            double mu_km2s3, LU, TU;
+
             size_t numStates;
+
+            bool store_propagation_history;
+            std::vector<double> propagation_history;
 
             math::Matrix<double>* STMpointer;
             math::Matrix<doubleType>* StateLeftPointer;
@@ -73,6 +80,7 @@ namespace EMTG
             doubleType current_epoch;
             doubleType current_independent_variable;
             size_t index_of_epoch_in_state_vec;
+            size_t prop_var_column_index;
             
             // Partial of the current independent variable w.r.t. previous propagation variables (flight times)
             double dcurrent_ind_vardProp_var;

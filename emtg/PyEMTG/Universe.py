@@ -10,6 +10,7 @@ class Universe(object):
         self.central_body_SPICE_ID = 10
         self.central_body_radius = 4.379e+6
         self.central_body_J2 = 2.2e-7
+        self.central_body_J2_reference_radius = 4.379e+6
         self.mu = 132712440017.99
         self.central_body_flattening_coefficient = 0.0
         self.LU = 1.49597870691e+8
@@ -90,6 +91,9 @@ class Universe(object):
 
                         elif choice == "central_body_J2":
                             self.central_body_J2 = eval(linecell[1])
+
+                        elif choice == "central_body_J2_reference_radius":
+                            self.central_body_J2_reference_radius = eval(linecell[1])
 
                         elif choice == "mu":
                             self.mu = eval(linecell[1])
@@ -186,6 +190,8 @@ class Universe(object):
         outputfile.write("central_body_radius " + str(self.central_body_radius) + "\n")
         outputfile.write("#central body J2\n")
         outputfile.write("central_body_J2 " + str(self.central_body_J2) + "\n")
+        outputfile.write("#central body J2\n")
+        outputfile.write("central_body_J2_reference_radius " + str(self.central_body_J2_reference_radius) + "\n")
         outputfile.write("#gravitational constant of central body, in km^3/s^2\n")
         outputfile.write("mu " + str(self.mu) + "\n")
         outputfile.write("#central body flattening coefficient\n")

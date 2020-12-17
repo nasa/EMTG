@@ -112,11 +112,22 @@ namespace EMTG
                 std::string ManeuverTag = "p" + std::to_string(this->phaseIndex)
                     + "b" + std::to_string(whichBurnAmI);
 
+                std::string ManeuverEndTag = "pEndb" + std::to_string(whichBurnAmI);
+
+                std::string ManeuverEndLastBurnTag1 = "pEndbEnd";
+                std::string ManeuverEndLastBurnTag2 = "p" + std::to_string(this->phaseIndex) + "bEnd";
+
+
                 for (std::string& constraint : this->myJourneyOptions->ManeuverConstraintDefinitions)
                 {
+                    bool bob = (constraint.find(ManeuverEndLastBurnTag1) < 1024 && this->myPhase->getIsLastPhaseInJourney() && this->subphaseIndex == 1);
+                    bool tim = (constraint.find(ManeuverEndLastBurnTag2) < 1024 && this->subphaseIndex == 1);
+                    bool fred = constraint.find(ManeuverTag) < 1024;
+                    bool james = (constraint.find(ManeuverEndTag) < 1024 && this->myPhase->getIsLastPhaseInJourney());
+                    
                     if (constraint.find("#") != 0) //don't create a constraint if it is commented out
                     {
-                        if (constraint.find(ManeuverTag) < 1024)
+                        if (bob || tim || fred || james)
                         {
                             if (constraint.find("epoch") < 1024
                                 || constraint.find("magnitude") < 1024)
@@ -169,9 +180,7 @@ namespace EMTG
                     this->myUniverse,
                     this->Xdescriptions,
                     this->mySpacecraft,
-                    13,//STM rows
-                    13,//STM columns
-                    10);
+                    11); // STM size
                 this->mySpacecraftAccelerationModel->setDutyCycle(1.0);
 
                 //EOM
@@ -179,14 +188,13 @@ namespace EMTG
                 this->myEOM.setSpacecraftAccelerationModel(this->mySpacecraftAccelerationModel);
 
                 //integration scheme
-                this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, 10 + (13 * 13), 10);
+                this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, 10, 11);
 
                 //propagator
                 this->myPropagator = Astrodynamics::CreatePropagator(this->myOptions,
                     this->myUniverse,
-                    13,
-                    13,
-                    10,
+                    10,                    
+                    11,
                     this->StateAfterPropagationBeforeDSM,
                     *this->spacecraft_state_minus_pointer,
                     this->STM,
@@ -360,8 +368,8 @@ namespace EMTG
                     }
                     else //integrated propagator
                     {
-                        SPTM(i, 10) = this->STM(i, 13);
-                        SPTM(i, 11) = -this->STM(i, 13)
+                        SPTM(i, 10) = this->STM(i, 10);
+                        SPTM(i, 11) = -this->STM(i, 10)
                             * (PhaseFlightTime / this->BurnIndex) _GETVALUE;
                     }
                 }
@@ -404,8 +412,8 @@ namespace EMTG
                 }
                 else
                 {
-                    SPTM(9, 10) = STM(9, 13) + SPTM(6, 10) * this->dOxidizerConsumedDSM_dMassAtDSM;
-                    SPTM(9, 11) = -(STM(9, 13) + SPTM(6, 10) * this->dOxidizerConsumedDSM_dMassAtDSM) * (PhaseFlightTime / this->BurnIndex) _GETVALUE;
+                    SPTM(9, 10) = STM(9, 10) + SPTM(6, 10) * this->dOxidizerConsumedDSM_dMassAtDSM;
+                    SPTM(9, 11) = -(STM(9, 10) + SPTM(6, 10) * this->dOxidizerConsumedDSM_dMassAtDSM) * (PhaseFlightTime / this->BurnIndex) _GETVALUE;
                 }
 
                 //Step 7: derivatives of mass with respect to DSM components
@@ -451,7 +459,7 @@ namespace EMTG
             size_t& eventcount)
         {
             //first we will propagate forward and print coast states at regular intervals
-            size_t steps_per_subphase = (size_t)(this->BurnIndex _GETVALUE * this->num_timesteps);
+            size_t steps_per_subphase = std::max(1, (int)(this->BurnIndex _GETVALUE * this->num_timesteps));
             doubleType output_timestep = this->SubPhaseTime / steps_per_subphase;
             math::Matrix<doubleType>& state_before_subphase = *this->spacecraft_state_minus_pointer;
 

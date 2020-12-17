@@ -32,8 +32,8 @@ namespace EMTG
 
     //***********************************************
     //global options enums
-    enum PhaseType {MGALTS, FBLTS, MGALT, FBLT, PSBI, PSFB, MGAnDSMs, CoastPhase, SundmanCoastPhase, VARIABLE_PHASE_TYPE, ProbeEntryPhase};
-    const std::vector<std::string> PhaseTypeStrings({ "MGALTS", "FBLTS", "MGALT", "FBLT", "PSBI", "PSFB", "MGAnDSMs", "CoastPhase", "SundmanCoastPhase", "VARIABLE_PHASE_TYPE", "ProbeEntryPhase" });
+    enum PhaseType {MGALTS, FBLTS, MGALT, FBLT, PSBI, PSFB, MGAnDSMs, CoastPhase, SundmanCoastPhase, VARIABLE_PHASE_TYPE, ProbeEntryPhase, ControlLawThrustPhase};
+    const std::vector<std::string> PhaseTypeStrings({ "MGALTS", "FBLTS", "MGALT", "FBLT", "PSBI", "PSFB", "MGAnDSMs", "CoastPhase", "SundmanCoastPhase", "VARIABLE_PHASE_TYPE", "ProbeEntryPhase", "ControlLawThrustPhase" });
 
     enum StateRepresentation {Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane };
     const std::vector<std::string> StateRepresentationStrings({ "Cartesian", "SphericalRADEC", "SphericalAZFPA", "COE", "MEE", "IncomingBplane", "OutgoingBplane" });
@@ -43,6 +43,9 @@ namespace EMTG
 
     enum ControlMagnitudeType {UpToUnitMagnitude, UnitMagnitude, ZeroMagnitude};
     const std::vector<std::string> ControlMagnitudeTypeString({ "UpToUnitMagnitude", "UnitMagnitude", "ZeroMagnitude" });
+
+    enum ThrustControlLaw {CartesianUnit, Velocity, AntiVelocity};
+    const std::vector<std::string> ThrustControlLawStrings({ "CartesianUnit", "Velocity", "AntiVelocity" });
 
     enum ObjectiveFunctionType {MINIMIZE_DELTAV,
                                 MINIMIZE_TIME,
@@ -212,6 +215,9 @@ namespace EMTG
 
     enum IntegratorType {rk7813m_adaptive, rk8_fixed};
     const std::vector<std::string> IntegratorTypeStrings ({ "rk7813m_adaptive", "rk8_fixed" });
+
+    enum IntegrationCoefficientsType {rk4, rkdp87};
+    const std::vector<std::string> IntegrationCoefficientsTypeStrings({ "rk4", "rkdp87" });
 
 	enum PropagationDomain {Time, Sundman};
     const std::vector<std::string> PropagationDomainStrings ({ "Time", "Sundman" });

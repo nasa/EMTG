@@ -47,7 +47,9 @@ namespace SplineEphem
 
         if (body_index < 0)
         {
-            throw std::invalid_argument("User has requested a (body, reference) pair from SplineEphem that SplineEphem did not load. This could be user error or a bug in SplineEphem. Please report this message to the developers. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+            throw std::invalid_argument("User has requested a (body, reference) pair from SplineEphem that SplineEphem did not load. The requested pair was ("
+                + std::to_string(SPICE_ID) + ", " +  std::to_string(ReferenceBody_SPICE_ID) + ")."
+                + "This could be user error or a bug in SplineEphem. Please report this message to the developers. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
         }
 
         this->bodies[body_index]->getPosition(epoch, PositionArray);
@@ -58,7 +60,9 @@ namespace SplineEphem
 
         if (body_index < 0)
         {
-            throw std::invalid_argument("User has requested a (body, reference) pair from SplineEphem that SplineEphem did not load. This could be user error or a bug in SplineEphem. Please report this message to the developers. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+            throw std::invalid_argument("User has requested a (body, reference) pair from SplineEphem that SplineEphem did not load. The requested pair was ("
+                + std::to_string(SPICE_ID) + ", " + std::to_string(ReferenceBody_SPICE_ID) + ")."
+                + "This could be user error or a bug in SplineEphem. Please report this message to the developers. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
         }
 
         this->bodies[body_index]->getVelocity(epoch, VelocityArray);
@@ -69,7 +73,9 @@ namespace SplineEphem
 
         if (body_index < 0)
         {
-            throw std::invalid_argument("User has requested a (body, reference) pair from SplineEphem that SplineEphem did not load. This could be user error or a bug in SplineEphem. Please report this message to the developers. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+            throw std::invalid_argument("User has requested a (body, reference) pair from SplineEphem that SplineEphem did not load. The requested pair was ("
+                + std::to_string(SPICE_ID) + ", " + std::to_string(ReferenceBody_SPICE_ID) + ")."
+                + "This could be user error or a bug in SplineEphem. Please report this message to the developers. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
         }
 
         this->bodies[body_index]->get6State(epoch, StateArray);
@@ -80,7 +86,9 @@ namespace SplineEphem
 
         if (body_index < 0)
         {
-            throw std::invalid_argument("User has requested a (body, reference) pair from SplineEphem that SplineEphem did not load. This could be user error or a bug in SplineEphem. Please report this message to the developers. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+            throw std::invalid_argument("User has requested a (body, reference) pair from SplineEphem that SplineEphem did not load. The requested pair was ("
+                + std::to_string(SPICE_ID) + ", " + std::to_string(ReferenceBody_SPICE_ID) + ")."
+                + "This could be user error or a bug in SplineEphem. Please report this message to the developers. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
         }
 
         this->bodies[body_index]->getPositionDerivative(epoch, PositionDerivativeArray);
@@ -91,7 +99,9 @@ namespace SplineEphem
 
         if (body_index < 0)
         {
-            throw std::invalid_argument("User has requested a (body, reference) pair from SplineEphem that SplineEphem did not load. This could be user error or a bug in SplineEphem. Please report this message to the developers. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+            throw std::invalid_argument("User has requested a (body, reference) pair from SplineEphem that SplineEphem did not load. The requested pair was ("
+                + std::to_string(SPICE_ID) + ", " + std::to_string(ReferenceBody_SPICE_ID) + ")."
+                + "This could be user error or a bug in SplineEphem. Please report this message to the developers. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
         }
 
         this->bodies[body_index]->getVelocityDerivative(epoch, VelocityDerivativeArray);
@@ -102,7 +112,9 @@ namespace SplineEphem
 
         if (body_index < 0)
         {
-            throw std::invalid_argument("User has requested a (body, reference) pair from SplineEphem that SplineEphem did not load. This could be user error or a bug in SplineEphem. Please report this message to the developers. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+            throw std::invalid_argument("User has requested a (body, reference) pair from SplineEphem that SplineEphem did not load. The requested pair was ("
+                + std::to_string(SPICE_ID) + ", " + std::to_string(ReferenceBody_SPICE_ID) + ")."
+                + "This could be user error or a bug in SplineEphem. Please report this message to the developers. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
         }
 
         this->bodies[body_index]->get6StateDerivative(epoch, StateDerivativeArray);
@@ -113,7 +125,9 @@ namespace SplineEphem
 
         if (body_index < 0)
         {
-            throw std::invalid_argument("User has requested a (body, reference) pair from SplineEphem that SplineEphem did not load. This could be user error or a bug in SplineEphem. Please report this message to the developers. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+            throw std::invalid_argument("User has requested a (body, reference) pair from SplineEphem that SplineEphem did not load. The requested pair was ("
+                + std::to_string(SPICE_ID) + ", " + std::to_string(ReferenceBody_SPICE_ID) + ")."
+                + "This could be user error or a bug in SplineEphem. Please report this message to the developers. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
         }
 
         this->bodies[body_index]->get6StateAndDerivative(epoch, StateAndDerivativeArray);

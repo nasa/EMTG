@@ -22,15 +22,14 @@
 #define SOLAR_RADIATION_PRESSURE_TERM_H
 
 #include "SpacecraftAccelerationModel.h"
-#include "AccelerationModelTerm.h"
+#include "SpacecraftAccelerationModelTerm.h"
 #include "doubleType.h"
 
 namespace EMTG
 {
     namespace Astrodynamics
     {
-        class SpacecraftAccelerationModel;
-        class SolarRadiationPressureTerm : public AccelerationModelTerm
+        class SolarRadiationPressureTerm : public SpacecraftAccelerationModelTerm
         {
         public:
             //constructor

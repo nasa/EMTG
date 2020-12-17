@@ -63,24 +63,21 @@ namespace EMTG
                 this->myUniverse,
                 &dummy_Xdescriptions,
                 this->mySpacecraft,
-                13,//STM rows
-                13,//STM columns
-                10);
+                14); // STM dimension
+                
             this->mySpacecraftAccelerationModel->setDutyCycle(1.0);
 
             //EOM
             this->myEOM.setSpacecraftAccelerationModel(this->mySpacecraftAccelerationModel);
 
             //integration scheme
-            this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, 10 + (13 * 13), 10);
-            this->myIntegrationScheme->setNumStatesToIntegratePtr(this->total_number_of_states_to_integrate);
+            this->myIntegrationScheme = CreateIntegrationScheme(&this->myEOM, 10, 14); // EOM, state dimension, STM dimension
 
             //propagator
             this->myPropagator = CreatePropagator(this->myOptions,
                 this->myUniverse,
-                13,
-                13,
                 10,
+                14,
                 this->StateBeforePropagation,
                 this->StateAfterPropagation,
                 this->STM,
