@@ -558,7 +558,7 @@ namespace EMTG
 
 
                         //epoch time with respect to propagation time
-                        this->BackwardAugmentedSTM[step](7, this->stateIndex_phase_propagation_variable) = this->dBackwardPropagationStepTimes_dPropagationVariable[step];
+                        this->BackwardAugmentedSTM[step](7, this->stateIndex_phase_propagation_variable) = -this->dBackwardPropagationStepTimes_dPropagationVariable[step];
 
                         //Step 2.1.2: cumulative STM chains
                         //this is done by multiplying BackwardAugmentedSTM on the right by the NEXT step's BackwardAugmentedSTM

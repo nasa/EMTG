@@ -141,6 +141,7 @@ namespace EMTG
             inline std::vector< std::vector< std::tuple<size_t, size_t> > >& getDerivativesOfCurrentStepLeftStateByVariable() { return this->DerivativesOfCurrentStepLeftStateByVariable; }
             inline std::vector< std::vector< std::tuple<size_t, size_t> > >& getDerivativesOfCurrentStepLeftStateByTimeVariable() { return this->DerivativesOfCurrentStepLeftStateByTimeVariable; }
 
+            inline std::vector<size_t>& getXindex_state_elements() { return this->Xindex_state_elements; };
             inline std::vector<size_t>& getXindices_control(const size_t& subStepIndex) { return this->Xindices_control[subStepIndex]; }
             inline math::Matrix<doubleType>& getControlVector(const size_t& subStepIndex) { return this->ControlVector[subStepIndex]; }
 

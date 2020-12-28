@@ -129,59 +129,73 @@ namespace EMTG
             Fdescriptions->push_back(this->name);
 
             //Step 2: sparsity pattern
-            //Step 2.1: non-time variables
-            std::vector<size_t>& ListOfVariablesAffectingCurrentStepLeftPosition = this->myStep->getListOfVariablesAffectingCurrentStepLeftPosition();
-
-            std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByVariable();
-            std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState = this->myStep->get_Derivatives_of_StateStepLeftInertial();//Xindex, stateIndex, derivative value
-
-            for (size_t varIndex = 0; varIndex < ListOfVariablesAffectingCurrentStepLeftPosition.size(); ++varIndex)
+            if (this->isDefinedRelativeToCentralBody
+                && (this->myOptions->ParallelShootingStateRepresentation == StateRepresentation::SphericalRADEC
+                    || this->myOptions->ParallelShootingConstraintStateRepresentation == StateRepresentation::SphericalAZFPA))
             {
-                size_t Xindex = ListOfVariablesAffectingCurrentStepLeftPosition[varIndex];
-                std::vector<size_t> dIndex_distance_constraints_wrt_StepLeftPositionVariable;
+                //lucky us, there's only one entry! and no time dependence!
+                size_t Xindex = this->myStep->getXindex_state_elements()[0];
 
-                std::vector< std::tuple<size_t, size_t> > DerivativesOfCurrentStepLeftStateThisVariable = DerivativesOfCurrentStepLeftStateByVariable[varIndex];
+                this->create_sparsity_entry(Fdescriptions->size() - 1,
+                    Xindex,
+                    this->G_indices_distance_constraints_wrt_StepLeftPosition);
+            }
+            else
+            {
+                //Step 2.1: non-time variables
+                std::vector<size_t>& ListOfVariablesAffectingCurrentStepLeftPosition = this->myStep->getListOfVariablesAffectingCurrentStepLeftPosition();
 
-                bool madeEntryFlag = false;
+                std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByVariable();
+                std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState = this->myStep->get_Derivatives_of_StateStepLeftInertial();//Xindex, stateIndex, derivative value
 
-                for (std::tuple<size_t, size_t> thisDerivativeEntry : DerivativesOfCurrentStepLeftStateThisVariable)
+                for (size_t varIndex = 0; varIndex < ListOfVariablesAffectingCurrentStepLeftPosition.size(); ++varIndex)
                 {
-                    size_t stateIndex = std::get<0>(thisDerivativeEntry);
+                    size_t Xindex = ListOfVariablesAffectingCurrentStepLeftPosition[varIndex];
+                    std::vector<size_t> dIndex_distance_constraints_wrt_StepLeftPositionVariable;
 
+                    std::vector< std::tuple<size_t, size_t> > DerivativesOfCurrentStepLeftStateThisVariable = DerivativesOfCurrentStepLeftStateByVariable[varIndex];
 
-                    if (stateIndex < 3)
+                    bool madeEntryFlag = false;
+
+                    for (std::tuple<size_t, size_t> thisDerivativeEntry : DerivativesOfCurrentStepLeftStateThisVariable)
                     {
-                        size_t dIndex = std::get<1>(thisDerivativeEntry);
-                        dIndex_distance_constraints_wrt_StepLeftPositionVariable.push_back(dIndex);
+                        size_t stateIndex = std::get<0>(thisDerivativeEntry);
 
 
-                        if (!madeEntryFlag)
+                        if (stateIndex < 3)
                         {
-                            this->create_sparsity_entry(Fdescriptions->size() - 1,
-                                Xindex,
-                                this->G_indices_distance_constraints_wrt_StepLeftPosition);
+                            size_t dIndex = std::get<1>(thisDerivativeEntry);
+                            dIndex_distance_constraints_wrt_StepLeftPositionVariable.push_back(dIndex);
 
-                            madeEntryFlag = true;
+
+                            if (!madeEntryFlag)
+                            {
+                                this->create_sparsity_entry(Fdescriptions->size() - 1,
+                                    Xindex,
+                                    this->G_indices_distance_constraints_wrt_StepLeftPosition);
+
+                                madeEntryFlag = true;
+                            }
                         }
                     }
+
+                    this->dIndex_distance_constraints_wrt_StepLeftPosition.push_back(dIndex_distance_constraints_wrt_StepLeftPositionVariable);
                 }
 
-                this->dIndex_distance_constraints_wrt_StepLeftPosition.push_back(dIndex_distance_constraints_wrt_StepLeftPositionVariable);
-            }
-
-            if (!this->isDefinedRelativeToCentralBody)
-            {
-                //Step 2.2: time variables - only relevant if reference body is NOT the central body
-                std::vector<size_t>& ListOfTimeVariablesAffectingCurrentStepLeftState = this->myStep->getListOfTimeVariablesAffectingCurrentStepLeftState();
-                for (size_t varIndex = 0; varIndex < ListOfTimeVariablesAffectingCurrentStepLeftState.size(); ++varIndex)
+                if (!this->isDefinedRelativeToCentralBody)
                 {
-                    size_t Xindex = ListOfTimeVariablesAffectingCurrentStepLeftState[varIndex];
+                    //Step 2.2: time variables - only relevant if reference body is NOT the central body
+                    std::vector<size_t>& ListOfTimeVariablesAffectingCurrentStepLeftState = this->myStep->getListOfTimeVariablesAffectingCurrentStepLeftState();
+                    for (size_t varIndex = 0; varIndex < ListOfTimeVariablesAffectingCurrentStepLeftState.size(); ++varIndex)
+                    {
+                        size_t Xindex = ListOfTimeVariablesAffectingCurrentStepLeftState[varIndex];
 
-                    this->create_sparsity_entry(Fdescriptions->size() - 1,
-                        Xindex,
-                        this->G_indices_distance_constraints_wrt_StepLeftTime);
+                        this->create_sparsity_entry(Fdescriptions->size() - 1,
+                            Xindex,
+                            this->G_indices_distance_constraints_wrt_StepLeftTime);
+                    }
                 }
-            }
+            }//end derivatives for the non-trivial case
         }//end calcbounds
 
         void ParallelShootingStepDistanceConstraint::process(const std::vector<doubleType>& X,
@@ -192,24 +206,32 @@ namespace EMTG
             const bool& needG)
         {
             //Step 1: evaluate the constraint
-            math::Matrix<doubleType>& SpacecraftState = this->myStep->get_StateStepLeftInertial();
-
-            
-            //Step 1.1: get the position vector of the spacecraft relative to the body
-            doubleType body_state[12];
-            this->myBody->locate_body(
-                SpacecraftState(7),
-                body_state,
-                (needG),
-                *this->myOptions);
-            for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
+            if (this->isDefinedRelativeToCentralBody
+                && (this->myOptions->ParallelShootingStateRepresentation == StateRepresentation::SphericalRADEC
+                    || this->myOptions->ParallelShootingConstraintStateRepresentation == StateRepresentation::SphericalAZFPA))
             {
-                this->distance_constraint_relative_position(stateIndex) = SpacecraftState(stateIndex) - body_state[stateIndex];
-                this->distance_constraint_body_position_time_derivatives(stateIndex) = body_state[6 + stateIndex] _GETVALUE;
+                this->distance_from_body = X[this->myStep->getXindex_state_elements()[0]];
             }
+            else
+            {
+                math::Matrix<doubleType>& SpacecraftState = this->myStep->get_StateStepLeftInertial();
 
-            //Step 1.2: apply the constraint
-            this->distance_from_body = this->distance_constraint_relative_position.norm();
+                //Step 1.1: get the position vector of the spacecraft relative to the body
+                doubleType body_state[12];
+                this->myBody->locate_body(
+                    SpacecraftState(7),
+                    body_state,
+                    (needG),
+                    *this->myOptions);
+                for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
+                {
+                    this->distance_constraint_relative_position(stateIndex) = SpacecraftState(stateIndex) - body_state[stateIndex];
+                    this->distance_constraint_body_position_time_derivatives(stateIndex) = body_state[6 + stateIndex] _GETVALUE;
+                }
+
+                //Step 1.2: apply the constraint
+                this->distance_from_body = this->distance_constraint_relative_position.norm();
+            }
 
             //Step 1.3: put the constraint into the constraint vector
             F[Findex++] = (this->distance_from_body - this->upperBound) / this->myUniverse->LU;
@@ -217,71 +239,86 @@ namespace EMTG
             //Step 2: derivatives
             if (needG)
             {
-                math::Matrix<double> dConstraintPointState_dDecisionVariable(10, 1, 0.0);
-
-                //Step 2.1 non-time variables
-                std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState = this->myStep->get_Derivatives_of_StateStepLeftInertial();//Xindex, stateIndex, derivative value
-
-                for (size_t varIndex = 0; varIndex < this->dIndex_distance_constraints_wrt_StepLeftPosition.size(); ++varIndex)
+                if (this->isDefinedRelativeToCentralBody
+                    && (this->myOptions->ParallelShootingStateRepresentation == StateRepresentation::SphericalRADEC
+                        || this->myOptions->ParallelShootingConstraintStateRepresentation == StateRepresentation::SphericalAZFPA))
                 {
-                    dConstraintPointState_dDecisionVariable.assign_zeros();
+                    //lucky us, there's only one entry! and no time dependence!
 
-                    for (size_t dIndex : this->dIndex_distance_constraints_wrt_StepLeftPosition[varIndex])
-                    {
-                        size_t stateIndex = std::get<1>(Derivatives_of_StepLeftState[dIndex]);
-
-                        dConstraintPointState_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StepLeftState[dIndex]);
-                    }
-
-                    size_t Gindex = this->G_indices_distance_constraints_wrt_StepLeftPosition[varIndex];
+                    size_t Gindex = this->G_indices_distance_constraints_wrt_StepLeftPosition[0];
                     size_t Xindex = this->jGvar->operator[](Gindex);
 
                     G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                        / this->distance_from_body _GETVALUE
-                        * (this->distance_constraint_relative_position(0) * dConstraintPointState_dDecisionVariable(0)
-                            + this->distance_constraint_relative_position(1) * dConstraintPointState_dDecisionVariable(1)
-                            + this->distance_constraint_relative_position(2) * dConstraintPointState_dDecisionVariable(2)) _GETVALUE
                         / this->myUniverse->LU;
+                }
+                else
+                {
+                    math::Matrix<double> dConstraintPointState_dDecisionVariable(10, 1, 0.0);
 
-                    if (!this->isDefinedRelativeToCentralBody)
+                    //Step 2.1 non-time variables
+                    std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState = this->myStep->get_Derivatives_of_StateStepLeftInertial();//Xindex, stateIndex, derivative value
+
+                    for (size_t varIndex = 0; varIndex < this->dIndex_distance_constraints_wrt_StepLeftPosition.size(); ++varIndex)
                     {
-                        //Step 2.2: time variables
-                        std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByTimeVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByTimeVariable();
-                        std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState_wrt_Time = this->myStep->get_Derivatives_of_StateStepLeftInertial_wrt_Time();//Xindex, stateIndex, derivative value
+                        dConstraintPointState_dDecisionVariable.assign_zeros();
 
-
-                        for (size_t varIndex = 0; varIndex < DerivativesOfCurrentStepLeftStateByTimeVariable.size(); ++varIndex)
+                        for (size_t dIndex : this->dIndex_distance_constraints_wrt_StepLeftPosition[varIndex])
                         {
-                            dConstraintPointState_dDecisionVariable.assign_zeros();
+                            size_t stateIndex = std::get<1>(Derivatives_of_StepLeftState[dIndex]);
 
-                            for (size_t entryIndex = 0; entryIndex < DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex].size(); ++entryIndex)
-                            {
-                                size_t stateIndex = std::get<0>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
-                                size_t dIndex = std::get<1>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
-
-                                dConstraintPointState_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StepLeftState_wrt_Time[dIndex]);
-                            }
-
-                            size_t Gindex = this->G_indices_distance_constraints_wrt_StepLeftTime[varIndex];
-                            size_t Xindex = this->jGvar->operator[](Gindex);
-
-                            size_t num_steps = this->myJourneyOptions->override_num_steps ? this->myJourneyOptions->number_of_steps : this->myOptions->num_timesteps;
-                            double timeScale = varIndex < DerivativesOfCurrentStepLeftStateByTimeVariable.size() - 1 ?
-                                1.0 : (double)(this->stepIndex) / num_steps;
-
-                            G[Gindex] = this->X_scale_factors->operator[](Xindex)
-                                / this->distance_from_body _GETVALUE
-                                * (this->distance_constraint_relative_position(0) * dConstraintPointState_dDecisionVariable(0)
-                                    + this->distance_constraint_relative_position(1) * dConstraintPointState_dDecisionVariable(1)
-                                    + this->distance_constraint_relative_position(2) * dConstraintPointState_dDecisionVariable(2)
-                                    - this->distance_constraint_relative_position(0) * distance_constraint_body_position_time_derivatives(0) * timeScale
-                                    - this->distance_constraint_relative_position(1) * distance_constraint_body_position_time_derivatives(1) * timeScale
-                                    - this->distance_constraint_relative_position(2) * distance_constraint_body_position_time_derivatives(2) * timeScale
-                                    ) _GETVALUE
-                                / this->myUniverse->LU;
+                            dConstraintPointState_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StepLeftState[dIndex]);
                         }
-                    }//end time derivatives, only relevant when the constraint is defined to a body other than the central body
-                }//end non-central body constraint derivatives
+
+                        size_t Gindex = this->G_indices_distance_constraints_wrt_StepLeftPosition[varIndex];
+                        size_t Xindex = this->jGvar->operator[](Gindex);
+
+                        G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                            / this->distance_from_body _GETVALUE
+                            * (this->distance_constraint_relative_position(0) * dConstraintPointState_dDecisionVariable(0)
+                                + this->distance_constraint_relative_position(1) * dConstraintPointState_dDecisionVariable(1)
+                                + this->distance_constraint_relative_position(2) * dConstraintPointState_dDecisionVariable(2)) _GETVALUE
+                            / this->myUniverse->LU;
+
+                        if (!this->isDefinedRelativeToCentralBody)
+                        {
+                            //Step 2.2: time variables
+                            std::vector< std::vector< std::tuple<size_t, size_t> > >& DerivativesOfCurrentStepLeftStateByTimeVariable = this->myStep->getDerivativesOfCurrentStepLeftStateByTimeVariable();
+                            std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StepLeftState_wrt_Time = this->myStep->get_Derivatives_of_StateStepLeftInertial_wrt_Time();//Xindex, stateIndex, derivative value
+
+
+                            for (size_t varIndex = 0; varIndex < DerivativesOfCurrentStepLeftStateByTimeVariable.size(); ++varIndex)
+                            {
+                                dConstraintPointState_dDecisionVariable.assign_zeros();
+
+                                for (size_t entryIndex = 0; entryIndex < DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex].size(); ++entryIndex)
+                                {
+                                    size_t stateIndex = std::get<0>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
+                                    size_t dIndex = std::get<1>(DerivativesOfCurrentStepLeftStateByTimeVariable[varIndex][entryIndex]);
+
+                                    dConstraintPointState_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StepLeftState_wrt_Time[dIndex]);
+                                }
+
+                                size_t Gindex = this->G_indices_distance_constraints_wrt_StepLeftTime[varIndex];
+                                size_t Xindex = this->jGvar->operator[](Gindex);
+
+                                size_t num_steps = this->myJourneyOptions->override_num_steps ? this->myJourneyOptions->number_of_steps : this->myOptions->num_timesteps;
+                                double timeScale = varIndex < DerivativesOfCurrentStepLeftStateByTimeVariable.size() - 1 ?
+                                    1.0 : (double)(this->stepIndex) / num_steps;
+
+                                G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                                    / this->distance_from_body _GETVALUE
+                                    * (this->distance_constraint_relative_position(0) * dConstraintPointState_dDecisionVariable(0)
+                                        + this->distance_constraint_relative_position(1) * dConstraintPointState_dDecisionVariable(1)
+                                        + this->distance_constraint_relative_position(2) * dConstraintPointState_dDecisionVariable(2)
+                                        - this->distance_constraint_relative_position(0) * distance_constraint_body_position_time_derivatives(0) * timeScale
+                                        - this->distance_constraint_relative_position(1) * distance_constraint_body_position_time_derivatives(1) * timeScale
+                                        - this->distance_constraint_relative_position(2) * distance_constraint_body_position_time_derivatives(2) * timeScale
+                                        ) _GETVALUE
+                                    / this->myUniverse->LU;
+                            }
+                        }//end time derivatives, only relevant when the constraint is defined to a body other than the central body
+                    }//end non-central body constraint derivatives
+                }//end derivatives for the non-trivial case
             }//end derivatives
         }//end process
     }//end namespace Phases
