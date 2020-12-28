@@ -107,7 +107,7 @@ class MissionOptions(object):
         self.bipropellant_mixture_ratio = 0.925 #Bipropellant mixture ratio
         self.chemical_propellant_margin = 0 #Chemical propellant margin (fraction)
         self.SpacecraftModelInput = 2 #Spacecraft object input type,#0: Assemble from libraries,#1: Read .emtg_spacecraftoptions file,#2: Assemble from missionoptions object
-        self.HardwarePath = "c:/emtg/testatron/HardwareModels/" #HardwarePath
+        self.HardwarePath = "c:/Utilities/HardwareModels/" #HardwarePath
         self.ThrottleTableFile = "empty.ThrottleTable" #ThrottleTableFile
         self.LaunchVehicleLibraryFile = "default.emtg_launchvehicleopt" #LaunchVehicleLibraryFile
         self.PowerSystemsLibraryFile = "default.emtg_powersystemsopt" #PowerSystemsLibraryFile

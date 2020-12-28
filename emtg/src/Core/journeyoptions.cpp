@@ -2048,7 +2048,7 @@ namespace EMTG
             optionsFileStream << std::endl;
         }
         
-        if (this->PeriapseArrival_override_altitude != 0 || writeAll || this->print_this_journey_options_no_matter_what)
+        if (this->PeriapseArrival_override_altitude != 1 || writeAll || this->print_this_journey_options_no_matter_what)
         {
             optionsFileStream << "#Override journey flyby altitude?" << std::endl;
             optionsFileStream << "PeriapseArrival_override_altitude " << this->PeriapseArrival_override_altitude << std::endl;

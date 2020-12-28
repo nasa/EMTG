@@ -24,7 +24,7 @@ class JourneyOptions(object):
         self.integration_step_size = 86400 #integration step size (s)
         self.override_flyby_altitude_bounds = 0 #Override journey flyby altitude?
         self.flyby_altitude_bounds = [300.0, 1.0e+6] #Lower and upper bound on journey flyby altitude (only applies to the departure flyby, if there is one)
-        self.PeriapseArrival_override_altitude = 0 #Override journey flyby altitude?
+        self.PeriapseArrival_override_altitude = 1 #Override journey flyby altitude?
         self.PeriapseArrival_altitude_bounds = [300.0, 1.0e+6] #Lower and upper bound on journey flyby altitude (km)
         self.PeriapseDeparture_altitude_bounds = [185.0, 185.0] #PeriapseDeparture altitude bounds (in km)
         self.num_interior_control_points = 1 #number of interior control points for parallel shooting phase types
@@ -650,7 +650,7 @@ class JourneyOptions(object):
                     optionsFile.write(" " + str(entry))
                 optionsFile.write("\n")
     
-            if (self.PeriapseArrival_override_altitude != 0 or writeAll or self.print_this_journey_options_no_matter_what):
+            if (self.PeriapseArrival_override_altitude != 1 or writeAll or self.print_this_journey_options_no_matter_what):
                 optionsFile.write("#Override journey flyby altitude?\n")
                 optionsFile.write("PeriapseArrival_override_altitude " + str(int(self.PeriapseArrival_override_altitude)) + "\n")
     

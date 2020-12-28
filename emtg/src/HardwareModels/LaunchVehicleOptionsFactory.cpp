@@ -25,7 +25,7 @@ namespace EMTG
         LaunchVehicleOptions CreateLaunchVehicleOptions(const missionoptions& options)
         {
             //creates a launch vehicle with the appropriate hardware
-            EMTG::HardwareModels::LaunchVehicleOptionsLibrary myLaunchVehicleOptionsLibrary(options.HardwarePath + options.LaunchVehicleLibraryFile);
+            EMTG::HardwareModels::LaunchVehicleOptionsLibrary myLaunchVehicleOptionsLibrary(options.HardwarePath + "/" + options.LaunchVehicleLibraryFile);
             return myLaunchVehicleOptionsLibrary.getLaunchVehicle(options.LaunchVehicleKey);
         }//end CreateLaunchVehicleOptions()
     }//end namespace HardwareModels
