@@ -1,24 +1,100 @@
-Welcome to EMTGv9 Open Source Release
-README.opensource file compiled by Jacob Englander 4-20-2020
+  _____ __  __ _____ ____ 
+ | ____|  \/  |_   _/ ___|
+ |  _| | |\/| | | || |  _ 
+ | |___| |  | | | || |_| |
+ |_____|_|  |_| |_| \____|                        
+======================================================================================================================================
+Evolutionary Mission Trajectory Generator (EMTG) Open Source Release
+Originating author: Jacob Englander
+Mainainer: NASA Goddard Spaceflight Center (GSFC) Code 595 EMTG team (GSFC-DL-TrajOpt-Support@mail.nasa.gov)
+Version: 9.01
+License: NASA Open Source Agreement (https://www.nasa.gov/open/open-source-development.html)
+======================================================================================================================================
+~~~~~~~~
+Purpose:
+~~~~~~~~
+The contents of this NASA GSFC public software release distribution contains all of the source code and documentation for the 
+Evolutionary Mission Trajectory Generator (EMTG). No third-party code is included in this release. Users need to download and install 
+all third-party dependencies. 
 
-This package contains all of the code that NASA GSFC is releasing for the Evolutionary Mission Trajectory Generator, version 9. No third-party code is included in this release. You will need to download the third-party components yourself. This information is detailed in documents that may be found in the docs/build_system folder.
+~~~~~~~~~~~~~
+Dependencies:
+~~~~~~~~~~~~~
+EMTG has several software dependencies but all, with the exception of the Sparse Nonlinear OPTimizer (SNOPT), are free software. 
+The current EMTG software is configured to work best with SNOPT 7.6. To acquire SNOPT visit their product page 
+(http://sbsi-sol-optimize.com/asp/sol_product_snopt.htm). 
 
-In particular, you will need a license for SNOPT. This is not free. Many of you probably already have SNOPT, and the rest may have to purchase it. EMTGv9 is known to work with SNOPT 7.5 and 7.6. It probably also works with 7.7 but I can't verify this because I don't have a license for 7.7. Older versions *might* work.
+~~~~~~~~~~~~~
+Installation:
+~~~~~~~~~~~~~
+The GSFC EMTG team is primarily using Windows and the initial installation guide is written for Windows. EMTG is known to work for 
+Linux and should also work on Mac. 
 
-You will want to download SPICE ephemeris files for the bodies that you are visiting. I recommend downloading the full 3+ GB set from http://naif.jpl.nasa.gov/naif/ and placing it in your Universe/ephemeris_files folder
+Navigate to the /docs/build_system/ directory for EMTG_*_build_system*.pdf documents detailing step-by-step instructions on how to 
+install the software dependencies and build EMTG. These documents are catered to specific software dependency versions. 
+Alternative versions may work but proceed at your own risk when deviating from the provided install guidance.
 
-Note that regardless of whether you download all of the various SPICE ephemerides for the solar system, you will need to download de430.bsp from https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de430.bsp and place it in your Universe/ephemeris_files folder. I could not supply this file because it is too large for Github.
+~~~~~~~~~~~~~
+Disclaimer:
+~~~~~~~~~~~~~
 
-You must edit the EMTG-Config.cmake file as follows:
+EMTG is provided "as is" but is in a capable state. The US Government, NASA, and the EMTG developers cannot guarantee that the results
+you produce with EMTG are correct. EMTG is intended for use as a trade study tool and an initial guess generator for a flight 
+navigation tool. 
 
-1) Change the CSPICE_DIR to wherever you have placed your CSPICE package. CSPICE_DIR should point to the root CSPICE directory.
+======================================================================================================================================
+**************************************************************************************************************************************
+The EMTG development team is pleased to share the fruits of our labors with you. We ask, but do not require, that if you do something 
+really awesome with it please publish your awesome accomplishments and cite us.
+**************************************************************************************************************************************
 
-2) Change the SNOPT_ROOT_DIR to be wherever you have placed the unzipped SNOPT folder.  From this directory, it will seek the traditional /lib and /interface folders (as appropriate to your SNOPT version, which should be auto detected).  Report any problems to the EMTG lead developers.
-	Example: This is currently usually a directory called "snopt7"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Frequently Asked Questions (FAQ)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-3) Change the 'BOOST_ROOT' to the root of your boost installer.  This presupposes you have already built boost (run its bootstrapper)
-		3a) Optionally, if during the run phase of CMAKE boost is not being found, uncomment the next two lines and specifically specify the BOOST_INCLUDEDIR and BOOST_LIBRARYDIR.  The default options are traditional variants that are sometimes chosen by boost installers, but yours may vary.
+Q: Is there a user manual?
+A: Not at the moment but work is being done to enhance the user documentation associated with EMTG. Future releases will add
+user documentation to the /docs/ directory.
 
-Once all the above is in place, open CMake, and point the source directory at the EMTG root directory.  Point the build directory to the directory of your choice (may be the same). Run configure, then Generate, as per the usual CMake Process. This will create either  makefile for Linux or a Visual Studio project for Windows, or an Xcode project for Mac.
+Q: Is there a reason the GUI has so many bugs?
+A: Due to limited staffing, core functionality was prioritized. This is an excellent opportunity for contribution from the open 
+source community.
 
-EMTGv9 is provided "as is" in its imperfect but very capable state. The US Government, NASA, and the developers cannot guarantee that the results you produce with EMTG are correct. EMTG is intended for use as a trade study tool and an initial guess generator for a flight navigation tool. We recommend that you use it in those contexts and only those contexts.
+Q: Can you give me technical support for installing and operating EMTG?
+A: Feel free to reach out to the team contact information provided at the header of this file but be aware that the development team
+has limited availability to respond to all inquiries.
+
+Q: Will EMTG work on Linux?
+A: Yes, it will. Linux build instructions for the public are in development.
+
+Q: Will EMTG work on a Mac? If so, why is there not a Mac build document?
+A: Yes EMTG should work on a Mac. The development team did not have access to a Mac to be able to do development/testing.
+
+Q: Will EMTG work on my smart phone?
+A: We are not pursuing getting EMTG to run on a smart phone, but if you try it and it works, we'd love to hear about it!
+
+Q: How frequently will you update EMTG?
+A: Resources are limited for the development team so open source releases will occure infrequently.
+
+Q: Can you make me an executable?
+A: No. EMTG depends on a number of third-party packages and NASA does not have the rights to distribute all of them.
+
+Q: Why doesn't my PyEMTG work?
+A: The various Python packages and libraries change fast and the development team has limited resources. The build system 
+instructions are focused on specific package versions but may also work with other versions. Please make adjustments to PyEMTG 
+as-needed to make it work on your system.
+
+Q: I have a different SNOPT version than what is listed in the build system instructions. Will it work with EMTG?
+A: It is possible other version will work. Feel free to try it and if you succeed consider providing us with updates we can 
+incorporate in future releases. You can make changes to /src/InnerLoop/snoptProblemExtension.h to get it to talk to your SNOPT.
+
+Q: Can I use this commercially?
+A: Yes.
+
+Q: Can I teach a class with this?
+A: Absolutely!
+
+Q: I found a bug! How can I submit the bug so it can potentially be fixed in a future version?
+A: Thank you for finding the bug and wanting to improve future versions. Please email us about the bug so that we can fix it for 
+future versions!
+
