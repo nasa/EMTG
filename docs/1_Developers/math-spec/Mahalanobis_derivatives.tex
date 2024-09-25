@@ -1,0 +1,38 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage[latin1]{inputenc}
+\setlength{\parskip}{2mm}
+
+\title{Derivatives of Mahalanobis distance}
+\author{Jacob Englander}
+\date{5/7/2018}
+
+\begin{document}
+\maketitle
+
+Let $\mathbf{x}$ be the spacecraft state vector and $\bf{x}_c\left(t\right)$ be the continuous reference trajectory that you want to track. $\mathbf{x}$ is a direct function of the decision variables in parallel shooting, \textit{i.e.} the optimizer chooses it directly. The error between the actual trajectory and the reference trajectory is therefore:
+
+$\mathbf{y} = \mathbf{x} - \mathbf{x}_c\left(t\right)$
+
+Let $P\left(t\right)$ be the partical covariance matrix associated with the reference trajectory. Let $Q \left(t\right)= P^{-1}\left(t\right)$ because it's a pain to write the inverse a bunch of times. Both $\mathbf{x}_c\left(t\right)$ and $Q\left(t\right)$ are continuous spline fits to sample data, a complication that we will ignore for now. Sampled values of $\mathbf{x}_c\left(t\right)$ and $Q\left(t\right)$ are outputs of the hypertube sensitivity analysis.
+
+The Mahalanobis distance between $\mathbf{x}$ and $\mathbf{x}_c$ is written:
+
+$M = \sqrt{\mathbf{y}^T Q \mathbf{y}}$
+
+We need the derivatives of $M$ with respect to all of the decision variables - those defining the spacecraft 7-state ($x, y, z, vx, vy, vz, m$) and those defining the epoch ($t$).
+
+Let $\mathbf{q}$ be the column vector of decision variables, and $\mathbf{x}$ is a function of $\mathbf{q}$, \textit{i.e.} every $x_i$ is a function of and only of the entries in $\mathbf{q}$. For example $\mathbf{q}$ in EMTG is a spherical-azimuth-and-flight-path angle (AZFPA) coordinate representation of the cartesian $\mathbf{x}$ because the optimizer likes spherical coordinates. We can then write the derivatives of $M$ with respect to $\mathbf{q}$:
+
+$\frac{\partial M}{\partial \mathbf{q}} = \frac{\partial M}{\partial \mathbf{x}}\frac{\partial x}{\partial \mathbf{q}} = \frac{\partial M}{\partial \mathbf{y}}\frac{\partial \mathbf{y}}{\partial \mathbf{x}}\frac{\partial \mathbf{x}}{\partial \mathbf{q}} = \frac{1}{2M}\mathbf{y}^T \left(Q^T + Q\right)\frac{\partial x}{\partial \mathbf{q}}$
+
+
+The time derivative is an ugly combination of a the same vector calculus identity that I used to get $\frac{\partial M}{\partial \mathbf{q}}$ and an Einstein notation thing that I figured out this morning. I think it's Einstein notation anyway, I only learned the name after I worked it out. There is likely a much nicer way to write the second term but I don't know how.
+
+$\frac{\partial M}{\partial t} = \frac{1}{2M} \left[-\mathbf{y}^T \left(Q^T + Q\right)\frac{\partial \mathbf{x}_c}{\partial t} + \sum_{i=1}^{7}\sum_{j=1}^{7}y_i y_j \frac{\partial Q_{ij}}{\partial t} \right]$
+
+All of these now need to be coded up and checked numerically. But at least $\frac{\partial M}{\partial t}$ is coming out as a scalar now. Also I've checked individual terms in symbolic MATLAB.
+
+\end{document}

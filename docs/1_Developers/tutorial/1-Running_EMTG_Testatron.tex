@@ -1,0 +1,215 @@
+\documentclass[11pt]{article}
+
+%% PACKAGES
+\usepackage{graphicx}
+\usepackage[printonlyused]{acronym}
+\usepackage{float}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{tocloft}
+\usepackage{listings}
+
+\lstset{basicstyle=\small\ttfamily,columns=flexible,breaklines=true,xleftmargin=0.5in,keepspaces=true}
+
+
+\makeatletter
+\g@addto@macro\normalsize{%
+  \setlength\abovedisplayskip{0.25pt}
+  \setlength\belowdisplayskip{0.25pt}
+  \setlength\abovedisplayshortskip{0.25pt}
+  \setlength\belowdisplayshortskip{0.25pt}
+}
+\makeatother
+
+\setlength{\parskip}{\baselineskip}
+
+%% GRAPHICS PATH
+\graphicspath{{../../shared_latex_inputs/images}{../../shared_latex_inputs/graphs}}
+
+\newcommand{\acposs}[1]{%
+	\expandafter\ifx\csname AC@#1\endcsname\AC@used
+	\acs{#1}'s%
+	\else
+	\aclu{#1}'s (\acs{#1}'s)%
+	\fi
+}
+
+\title{\Huge EMTG Testatron Tutorial: Running Testatron}
+
+\newcommand{\listofknownissuesname}{\Large List of Known Issues}
+\newlistof{knownissues}{mcf}{\listofknownissuesname}
+
+\newcommand{\knownissue}[3]
+{
+	\refstepcounter{knownissues}
+	\par\noindent\textbf{\hyperref[#2_b]{\theknownissues\quad #1}}\label{#2_h}
+	\textbf{\hfill\pageref{#2_b}}
+	#3
+}
+
+\newcommand{\knownissuelabel}[2]
+{
+	 \phantomsection
+  	\hyperref[#2_h]{#1}\def\@currentlabel{\unexpanded{#1}}\label{#2_b}
+}
+
+
+\begin{document}
+
+\begin{titlepage}
+\maketitle
+\thispagestyle{empty}
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\textwidth}{|l|l|X|}
+		\hline
+		\textbf{Revision Date} & \textbf{Author} & \textbf{Description of Change} \\
+		\hline
+		\date{June 30, 2023} & Joseph Hauerstein & Initial revision.\\ 
+		\hline
+	\end{tabularx}
+\end{table}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+\listofknownissues
+\thispagestyle{empty}
+
+\knownissue{An \acs{NLP} test is incorrectly listed as failed}{known_failing_test}
+\knownissue{Some tests fail if EMTG is not in the C:\textbackslash emtg\textbackslash{} directory}{tests_require_specific_dir}
+
+\newpage
+\clearpage
+\setcounter{page}{1}
+\input{../../shared_latex_inputs/acronymlist}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{sec:introduction}
+%%%%%%%%%%%%%%%%%%%%%
+
+Welcome to the \ac{EMTG} Testatron tutorial, which is designed to get new users familiar with the Testatron regression testing system. Testatron allows users to execute various tests to ensure any changes made to the code did not adversely affect its results. Before starting this tutorial, it is expected that you have installed \ac{EMTG} and have completed the ``Tutorials and Intro'', ``OSIRIS-REx'', and ``LowSIRIS-REx'' \ac{EMTG} tutorials. This tutorial will assume that you set up \ac{EMTG} following the installation guides located in \textless EMTG\_root\_dir\textgreater /docs/0\_Users/build\_system, where \textless EMTG\_root\_dir\textgreater{} is the directory where you downloaded/cloned the \ac{EMTG} repository. Any commands (denoted by the use of \texttt{monospace font}) shown in this tutorial that utilize \textless EMTG\_root\_dir\textgreater{} syntax require you to replace it with the path to your \ac{EMTG} root directory.
+
+\noindent\knownissuelabel{NOTE: It is recommended to use C:\textbackslash emtg\textbackslash{} for \textless EMTG\_root\_dir\textgreater{} because some tests depend on files being in this directory.}{tests_require_specific_dir}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Setup}
+\label{sec:setup}
+%%%%%%%%%%%%%%%%%%%%%
+
+Follow the steps below to set up your terminal to run Testatron.
+
+\begin{enumerate}
+\item Navigate to the \textless EMTG\_root\_dir\textgreater /testatron folder. This directory contains the testatron.py file, which is the primary file used to run testatron. It also includes tests for all the features of \ac{EMTG}, which can be found in the \textless EMTG\_root\_dir\textgreater /testatron/tests folder. 
+\item Open the Miniforge Prompt used during \ac{EMTG} installation. 
+\item Navigate to the testatron folder using the command:
+
+\texttt{cd <EMTG\_root\_dir>\textbackslash testatron}
+\item Activate your \ac{EMTG} python environment created during installation using the command: 
+
+\texttt{mamba activate PyEmtgEnv}
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Configuration}
+\label{sec:configuration}
+%%%%%%%%%%%%%%%%%%%%%
+
+The various configuration options for Testatron can be seen by running the command: 
+
+\texttt{python testatron.py --help}
+
+\noindent By passing the ``--unit'' option to testatron.py, you can run the unit tests. Try to run the Testatron unit tests using the command:
+
+\texttt{python testatron.py --unit}
+
+\noindent Without further configuration, it is likely that this command will cause an error, similar to Figure \ref{fig:testatron_error}. 
+
+\begin{figure}[H]
+	\centering
+	\fbox{\includegraphics[width=0.7\linewidth]{Testatron_error_without_correct_file_paths.png}}
+	\caption{\label{fig:testatron_error}Testatron error without correct file paths.}
+\end{figure}
+
+\noindent This error occurs because Testatron needs to be told where your EMTGv9.exe file and PyEMTG directory are if they are not in the default location (``C:\textbackslash emtg\textbackslash bin\textbackslash EMTGv9.exe'' and ``C:\textbackslash emtg\textbackslash PyEMTG\textbackslash{}'' respectively). These can be set on the command line when Testatron is run, or you can change the defaults by editing the testatron.py file directly. This tutorial will focus on the command line approach. To use the command line to set the location of the EMTGv9.exe file, use the ``-e'' or the ``-{}-emtg'' option followed by the path to the executable. To set the location of the PyEMTG directory, use the ``-p'' or ``-{}-pyemtg'' command followed by the path to the folder. For example, the following command would run the unit tests with the correct \ac{EMTG} and PyEMTG locations:
+
+\texttt{python testatron.py --emtg <EMTG\_root\_dir>\textbackslash bin\textbackslash EMTGv9.exe --pyemtg <EMTG\_root\_di\newline\indent r>\textbackslash PyEMTG\textbackslash{} --unit}
+
+\noindent These two options must be set each time Testatron is run unless your EMTGv9.exe and PyEMTG directory are in the default location.
+
+%%%%%%%%%%%%%%%%%%%%%
+\subsection{Test Suites}
+\label{sec:test_suites}
+%%%%%%%%%%%%%%%%%%%%%
+
+While it is most common to run the unit tests, there are a few other sets of tests that can be run. When running Testatron, only one of these sets should be specified. The available options are explained in Table \ref{tab:testatron_options}. Note that examples do not include paths to \ac{EMTG} or PyEMTG for brevity.
+
+\begin{table}[H]
+	\begin{small}
+		\begin{tabularx}{\linewidth} { >{\arraybackslash} l >{\arraybackslash}p{17em} >{\arraybackslash} X}
+			\hline
+			Test Type & Option & Explanation \\
+			\hline 
+			Unit tests & ``-u'' or ``-{}-unit'' & Runs all tests that are not expected to fail. It is recommended to run these tests when adding a new feature to make sure EMTG is still working properly.\newline\newline Ex:\newline \texttt{python testatron.py -u} \\
+ 			\hline
+			Failed tests & ``-{}-failure \textless path-to-failed\_tests.csv\textgreater'' & Reruns all tests in a ``failed\_tests.csv'' file produced by a previous testatron run. Do not include ``failed\_tests.csv'' in the path. You can include multiple paths in a space separated list. \newline\newline Ex:\newline \texttt{python testatron.py --failure output\textbackslash Thu\_Jun\_15\_121445\_2023} \\
+ 			\hline
+			Mission tests & ``-m'' or ``-{}-mission'' & Runs the tests associated with specific missions that used EMTG. (Not available in the public release.)\newline\newline Ex:\newline \texttt{python testatron.py -m} \\
+			\hline
+			Test cases & ``-c \textless list-of-test-cases\textgreater'' or\newline ``-{}-cases \textless list-of-test-cases\textgreater'' & Runs the test cases specified in the space separated list following the command. This must be the full path to the test and does not include a file extension.\newline\newline Ex:\newline \texttt{python testatron.py -c <EMTG\_root\_dir> \textbackslash testatron\textbackslash tests\textbackslash output\_options\textbackslash output options\_frameICRF <EMTG\_root\_dir>\textbackslash testa tron\textbackslash tests\textbackslash spacecraft\_options\textbackslash spacecraf toptions\_Chemmargin} \\
+			\hline
+			Test folders & ``-f \textless list-of-folders\textgreater'' or \newline``-{}-folders \textless list-of-folders \textgreater'' & Runs all the test cases in each folder specified in the space separated list of folders following the command.\newline\newline Ex:\newline\texttt{python testatron.py -f global\_mission\_options journey\_options} \\
+			\hline
+			Update truths & ``-{}-update-truths'' & Replaces the truth cases (*.emtg files) for all tests with the output of this Testatron run. This is useful if an update has caused every test to fail (e.g., a new option has been added).\newline\newline Ex:\newline\texttt{python testatron.py --update-truths} \\
+			\hline
+			All tests & ``-a'', ``-{}-all'', or none of the above options & Runs all tests, including those in the ``tests\_that\_dont\_work'' folder.\newline\newline Ex:\newline\texttt{python testatron.py -a} or\newline\texttt{python testatron.py} \\
+			\hline 
+		\end{tabularx} 
+	\end{small}
+	\caption{\label{tab:testatron_options}Available Testatron test suites.}
+\end{table}
+
+%%%%%%%%%%%%%%%%%%%%%
+\subsection{Other Options}
+\label{sec:other_options}
+%%%%%%%%%%%%%%%%%%%%%
+
+You can ignore specific Mission, Journey, or MissionEvent attributes by using the ``-{}-ignore'' option followed by a list of attributes to ignore. Mission attributes should be preceded by ``M.'', Journey attributes by ``J.'', and MissionEvent attributes by ``E.''. When defining this and other lists you should avoid putting them in quotes or brackets and using commas. The list of attributes can be found in the class definitions for Mission, Journey, and MissionEvent. As an example, to run the Testatron unit tests ignoring the chemical\_oxidizer\_used Mission attribute, you can run the command:
+
+\texttt{python testatron.py --emtg <EMTG\_root\_dir>\textbackslash bin\textbackslash EMTGv9.exe --pyemtg <EMTG\_root\_di\newline\indent r>\textbackslash PyEMTG\textbackslash{} --unit --ignore M.chemical\_oxidizer\_used}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Running Testatron}
+\label{sec:running_testatron}
+%%%%%%%%%%%%%%%%%%%%%
+
+If you have not already done so, run the Testatron unit tests by running the following command explained in the previous section: 
+
+\texttt{python testatron.py --emtg <EMTG\_root\_dir>\textbackslash bin\textbackslash EMTGv9.exe --pyemtg <EMTG\_root\_di\newline\indent r>\textbackslash PyEMTG\textbackslash{} --unit}
+
+\noindent Testatron will execute the unit tests, which can take up to half an hour. Do not worry if some errors occur during specific \ac{EMTG} runs. These are most often normal \acs{SPICE} errors and do not indicate a failed test. When Testatron finishes, it will list any failed tests and the path to the test as shown in Figure \ref{fig:testatron_output}. 
+
+\noindent\knownissuelabel{NOTE: The ``solveroptions\_nlp\_skip\_emtg139'' test is currently expected to fail unless the ``-{}-ignore M.number\_of\_solution\_attemps'' argument is utilized.}{known_failing_test}
+
+\begin{figure}[H]
+	\centering
+	\fbox{\includegraphics[width=0.9\linewidth]{Testatron_output_from_unit_tests.png}}
+	\caption{\label{fig:testatron_output}Testatron output with some failed tests.}
+\end{figure}
+
+\newpage
+%%%%%%%%%%%%%%%%%%%%%
+\section{Output}
+\label{sec:output}
+%%%%%%%%%%%%%%%%%%%%%
+
+The results from the Testatron run will be located in the \textless EMTG\_root\_dir\textgreater /testatron/output/\textless time-of-test\textgreater{} folder. Where \textless time-of-test\textgreater{} is the date and time the test was run so that each run goes into a separate folder. This folder will contain the *.emtg file from each run of \ac{EMTG}, along with the corresponding *.emtgopt file, and any other files, such as *.emtg\_spacecraftopt files. It also includes the ``failed\_tests.csv'' file and a ``test\_results.csv'' file. The ``failed\_tests.csv'' file lists only the failed tests and the amount of error and tolerance for each test. If a test is listed with no other information, it is likely that the test caused an error while running \ac{EMTG}. As discussed in the Configuration section, the ``failed\_tests.csv'' file can be used with the ``-{}-failure'' option to rerun the failed tests. The ``test\_results.csv'' file lists all the tests that were run and whether they were successful. These files can be used as a starting point to troubleshoot any issues with \ac{EMTG} introduced by new updates.
+
+
+\end{document}

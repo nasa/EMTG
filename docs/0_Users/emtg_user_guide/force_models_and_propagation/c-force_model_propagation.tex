@@ -1,0 +1,76 @@
+\chapter{EMTG Force Models and Propagation}
+\label{chap:force_model_prop}
+This chapter describes how \ac{EMTG} models gravitational and other non-maneuver forces on the spacecraft as well as spacecraft state propagation. Users should keep in mind that not all perturbing forces will apply to the spacecraft depending on the combination of Mission Type and Propagator selected for the current Journey. Refer to Table \ref{tab:mission_propagation_perturbation_compatibility} to check if perturbations are compatible with a chosen Mission Type and Propagator.
+
+\section{Force Modeling}
+\label{sec:force_model}
+% The gravitational effects on the spacecraft due to the central body and the maneuvers applied to the spacecraft are the default forces considered by \ac{EMTG}.
+By default, \ac{EMTG} only models forces due to the gravitational effects of the central body and from whatever maneuvers are applied to the spacecraft.
+However, additional forces can be included when higher fidelity modeling is desired. These forces are known as Perturbations in \ac{EMTG}. These perturbations can accumulate over time and cause significant changes to a spacecraft's trajectory if left uncorrected. \ac{EMTG} can model perturbing forces on the spacecraft caused by central body gravitational harmonics, third body gravitational effects, atmospheric drag, and solar radiation pressure.  
+
+        \subsection{Solar Radiation Pressure (SRP)}
+        \label{sec:force_model_srp}
+
+        \ac{SRP} is a force that affects spacecraft in space due to the radiation emitted by the Sun. This force can cause small but measurable changes in a spacecraft's trajectory over time. \ac{EMTG} uses a spherical/cannonball solar radiation pressure model. Users must specify the spacecraft coefficient of reflectivity $C_r$, the surface area $A_s$, the illumination percentage $K$, solar irradiance $\Phi$ at 1 AU (in $W/m^2$), and the speed of light in a vacuum $c$. These parameters are specified on the Physics Options tab in PyEMTG.
+
+            \begin{equation}
+                \ddot{\mathbf{r}} = C_{\text{SRP}}\frac{1}{m ~ r_{s/\odot}^2}\frac{\mathbf{r}_{s/\odot}}{r_{s/\odot}} 
+                \label{eq:EOM_SRP}
+            \end{equation}
+            
+            \begin{equation}
+                C_{\text{SRP}} = \frac{C_r A_{s} K \phi}{c} \label{eq:SRP_coeff}
+            \end{equation}
+
+        \subsection{Third Body Gravitational Forces}
+        \label{sec:force_model_third_body}
+        \ac{EMTG} can model third body gravitational forces with the perturbing bodies configured at the Journey level using the ``Perturbation bodies'' field in the PyEMTG Journey Options tab (see Section \ref{sec:journey_perturbations}), which is revealed when the user selects ``Enable third body'' on the Physics Options tab (see Section \ref{sec:physics_options}).
+
+        \subsection{Central Body Spherical Harmonics}
+        \label{sec:force_model_spherical_harmonics}
+        Central body spherical harmonics may be enabled using the Physics Options setting ``Enable central-body J2'', which applies J2-perturbations to all Journeys where the central body has a defined J2 coefficient in its Universe file (see Section: \ref{sec:physics_options}). Additionally, higher order perturbations can be included at the Journey-level by selecting the ``Enable central-body gravity harmonics'' on the Journey Options tab (see Section \ref{sec:journey_perturbations}). When selecting this option, a {\tt .grv} file must be provided. This file follows the standard format required by the Ansys \ac{STK}.
+
+
+        \subsection{Atmospheric Drag}
+        \label{sec:force_model_drag}
+        %#??Is this only applicable to probe entry phase? Doesn't quite look like it.
+        \ac{EMTG} is also capable of modeling atmospheric drag given a file containing various information about the atmosphere model. This can be included at the Journey-level by selecting the ``Enable aerodynamic drag'' option in the Journey Options tab (see Section \ref{sec:journey_perturbations}). When selecting this option, an {\tt .emtg\_densityopt} file must be provided. This file describes the altitude versus density information fit to the chosen atmospheric density model. Various tools may be used to generate the data required for {\tt .emtg\_densityopt} files, as atmospheric data varies based on position on the planet and time of day. Figure \ref{fig:emtgdensityopt_example} provides an example of the expected format. Note that the first line must be a negative altitude (typically near the center of the body) to ensure validity of the fitted model.
+        \begin{figure}[htb]
+            \centering
+            \begin{tabular}{|l|}
+                \hline
+                {\tt \#altitude (km) \quad density (kg/m$^3$)} \\
+                {\tt \quad -6378 \quad \quad \quad \quad \quad 1.225} \\
+                {\tt \quad \ 0.0 \quad \quad \quad \quad \quad \ 1.225} \\
+                {\tt \quad \ 1.0 \quad \quad \quad \quad \quad \ 1.112} \\
+                {\tt \quad \ 2.0 \quad \quad \quad \quad \quad \ 1.007} \\
+                {\tt \quad \ 3.0 \quad \quad \quad \quad \quad \ 0.9093} \\
+                {\tt \quad \ 4.0 \quad \quad \quad \quad \quad \ 0.8194} \\
+                {\tt \quad \ 5.0 \quad \quad \quad \quad \quad \ 0.7364} \\
+                {\tt \quad \ ... \quad \quad \quad \quad \quad \ ...} \\
+                \hline
+            \end{tabular}
+            \caption{Example {\tt .emtg\_densityopt} File Structure}
+            \label{fig:emtgdensityopt_example}
+        \end{figure}
+
+
+
+
+
+\section{Propagation}
+\label{sec:prop}
+\ac{EMTG} has two main methods for performing propagation of the spacecraft: Kepler (or analytic) and Integrator. Kepler propagation is much faster than Integrator propagation at the cost of accuracy and is not always compatible with certain perturbations depending on Mission Type (see Chapter \ref{chap:mission_types}). Kepler propagation is more appropriate at earlier stages of mission design. 
+
+
+    \subsection{Kepler}
+    \label{sec:prop_kepler}
+
+    Kepler uses Kepler's equation to analytically propagate the spacecraft's orbit state between delta-v
+    events. The ``Integrator time step size option'' in the Physics Options tab of PyEMTG does not affect Kepler propagation since Kepler propagation is analytical. Kepler propagation is compatible with \ac{MGALT}, Coast Phase, \ac{MGAnDSMs}, \ac{PSBI}, and Probe Entry Phase.
+
+
+    \subsection{Integrator}
+    \label{sec:prop_integrator}
+
+    \ac{EMTG}'s Integrator option propagates the spacecraft by integrating the full equations of motion,whether they are simple two-body equations or more complex N-body equations with additional perturbations. As a result, Integrator propagation is slower than Kepler propagation but can model  more realistic forces. Integrator is compatible with \ac{FBLT}, Coast Phase, and \ac{MGAnDSMs}, \ac{PSFB}, Probe Entry Phase, and Control Law Thrust Phase. Currently, the only functional ``Integrator type'' is ``rk8 fixed step.'' Do not choose ``rk7813M adaptive step.''

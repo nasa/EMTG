@@ -72,7 +72,7 @@
 \setlength{\parskip}{\baselineskip}
 
 %% GRAPHICS PATH
-\graphicspath{{./pictures/pdf/}{./pictures/ps/}{./pictures/png/}}
+\graphicspath{{../../shared_latex_inputs/images}{../../shared_latex_inputs/graphs}}
 
 %% TODO
 \newcommand{\todo}[1]{\vspace{5 mm}\par \noindent \framebox{\begin{minipage}[c]{0.98 \columnwidth} \ttfamily\flushleft \textcolor{red}{#1}\end{minipage}}\vspace{5 mm}\par}
@@ -138,8 +138,9 @@
 \author
 {
 	Donald H. Ellison \thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Flight Dynamics and Mission Design Branch Code 595},
-	Jacob A. Englander \thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Flight Dynamics and Mission Design Branch Code 595}
-	Ryo Nakamura \thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Flight Dynamics and Mission Design Branch Code 595, detailed from JAXA}
+	Jacob A. Englander \thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Flight Dynamics and Mission Design Branch Code 595},
+	Ryo Nakamura \thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Flight Dynamics and Mission Design Branch Code 595, detailed from JAXA},
+	Noble Hatten \thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Flight Dynamics and Mission Design Branch Code 595}
 }
 \vspace{0.5cm}
 
@@ -174,8 +175,16 @@
 		\hline
 		\date{October 10, 2019} & Ryo Nakamura & \makecell[l]{Added spinning body-relative velocity magnitude constraint.}\\
 		\hline
-    \date{October 23, 2019} & Ryo Nakamura & \makecell[l]{Added detic latitude, detic altitude, spherical velocity azimuth,\\ relative velocity azimuth, and relative velocity HFPA constraint.}\\
+    \date{October 23, 2019} & Ryo Nakamura & \makecell[l]{Added  latitude, detic altitude, spherical velocity azimuth,\\ relative velocity azimuth, and relative velocity HFPA constraint.}\\
 		\hline
+    \date{February 12, 2021} & Noble Hatten & \makecell[l]{Created ``How-To'' section for creating a new scripted constraint.}\\
+    \hline
+    \date{July 29, 2021} & Noble Hatten & \makecell[l]{Added two-body rotating frame state boundary constraint.}\\
+		\hline
+	\date{July 30, 2021} & Noble Hatten & \makecell[l]{Added new content to how-to section.}\\
+	\hline
+	\date{September 8, 2021} & Noble Hatten & \makecell[l]{Added PyEMTG interface description.}\\
+	\hline
 	\end{tabular}
 \end{table}
 \end{titlepage}
@@ -259,9 +268,377 @@ The user may comment out a constraint with the \texttt{\#} character. The constr
 \section{Boundary Constraints}
 \label{sec:boundaryConstraints}
 
-Boundary constraints may be applied to any boundary condition class. In order to apply the constraint to the left boundary of a particular phase/journey, the constraint should be tagged as a departure constraint (e.g. p2\_departure\_orbitperiod\_1yr\_1.1yr). Likewise, for a right boundary, it would be tagged as ``arrival''.
+Boundary constraints may be applied to any boundary condition class. In order to apply the constraint to the left boundary of a particular phase/journey, the constraint should be tagged as a departure constraint (e.g. p2\_departure\_orbitperiod\_1yr\_1.1yr). Likewise, for a right boundary, it would be tagged as ``arrival''. 
 
-Boundary constraints are specified in the boundary constraint block at the end of each journey in the .emtgopt file.
+Moving forward, the ability to apply the constrain infinitesimally before or after the boundary of choice is also being added by appending a ``-'' or ``+'' to the boundary name, yielding four possibilities: ``departure-'', ``departure+'', ``arrival-'', and ``arrival+''. The difference between ``-'' and ``+'' is that the ``-'' version does not take into account events that happen instantaneously at the boundary (like a $\Delta v$ or a mass drop), while the ``+'' version does. So far, the state in two-body rotating frame constraint is the only constraint that supports this capability and syntax. For constraints that do not support this syntax, the user must look at the \texttt{process\_constraint} method of the boundary constraint to determine whether the constraint is evaluate before or after the boundary event.
+
+Boundary constraints are specified in the boundary constraint block at the end of each journey in the .emtgopt file. (See Section~\ref{sec:overview}.)
+
+\subsection{How to Create a New Boundary Constraint}
+\label{sec:howToCreateANewBoundaryConstraint}
+
+Creating a new boundary constraint consists of creating a new class derived from \texttt{SpecializedBoundaryConstraintBase} and editing existing code to make EMTG aware of the existence of the new constraint. All required steps are described in this section.
+
+\textbf{The easiest way to create a new specialized boundary constraint is to examine (i.e., copy and paste) an existing boundary constraint to use as a starting point.} As of July 30, 2021, it is recommended to start from the \texttt{BoundaryStateInTwoBodyRotatingFrameConstraint} class because it contains most if not all of the features required to create a new boundary constraint.
+
+\subsubsection{New Files}
+
+A new boundary constraint requires creating a new class derived from \texttt{SpecializedBoundaryConstraintBase}. Thus, a \texttt{.h} and a \texttt{.cpp} file must be created. These files are placed in 
+
+\begin{verbatim}
+emtg/src/Mission/Journey/Phase/BoundaryEvents/SpecializedBoundaryConstraints/
+\end{verbatim}
+
+In addition, the CMakeLists.txt file in the preceding directory must be edited so that the new header file is added to the list of \texttt{SPECIALIZED\_BOUNDARY\_EVENT\_HEADERS} and the new source file is added to the list of \texttt{SPECIALIZED\_BOUNDARY\_CONSTRAINTS\_SOURCE}. The EMTG cmake file must be reconfigured and regenerated after the new files are added to the CMakeLists.txt file in order for the changes to take effect.
+
+
+\subsubsection{Structure of the New Class}
+
+Several methods of \texttt{SpecializedBoundaryConstraintBase} must be overridden by the new constraint class:
+
+\begin{itemize}
+	\item \texttt{output}: Prints the name and value of the constraint to the .emtg output file. The text is displayed underneath the state and control history output for the journey on which the constraint is applied. 
+	\item \texttt{calcbounds}: Parses the text of the constraint definition; sets the upper and lower bounds of the constraint; sets the sparsity pattern of the constraint. Called once per execution, prior to optimization.
+	\item \texttt{process\_constraint}: Calculates the value of the constraint and, optionally, its Jacobian.
+\end{itemize}
+
+In addition, it may be useful to add code to the constraint's constructor method. E.g., the user may wish to set a reference frame.
+
+It is common practice to create class variables for a boundary constraint class. In particular, a class variable for the value being constrained can be used in the \texttt{output} method to print the value.
+
+\subsubsection{The Constructor Method}
+
+The constructor method is constraint-specific. There are two common argument lists for constructors: one that contains the \texttt{constraint\_reference\_frame} argument and one that does not. The \texttt{constraint\_reference\_frame} argument is required if the user is allowed to specify the reference frame in which the constraint is applied. An example is \texttt{InclinationConstraint}, which may be found in the \texttt{OrbitElementsConstraints} directory. The \texttt{constraint\_reference\_frame} argument is not required if the user is not allowed to specify the reference frame in which the constraint is applied. An example is \texttt{SemimajorAxisConstraint}, which may be found in the \texttt{OrbitElementsConstraints} directory.
+
+In some cases, the contents of the constructor method is empty. Examples of tasks that are commonly performed in a constructor include:
+
+\begin{itemize}
+	\item Assigning the \texttt{constraint\_reference\_frame} argument to a class variable, if relevant.
+	\item Setting the dimensions of any \texttt{Matrix} class variables.
+	\item Switching on the computation of orbit elements at the boundary event. See Section~\ref{sec:CreatingConstraintTipsAndTricks} for more details.
+\end{itemize}
+
+\subsubsection{The \texttt{output} Method}
+
+The \texttt{output} method is extremely simple and consists of printing the value of the constraint and, if desirable, basic associated metadata (e.g., reference frame in which the constraint was computed), to the .emtg output file. The text is displayed underneath the state and control history output for the journey on which the constraint is applied.  
+
+\subsubsection{The \texttt{calcbounds} Method}
+
+The first task of \texttt{calcbounds} is to parse the text of \texttt{this->constraintDefinition}, which contains the name of the constraint, when the constraint should be applied, the upper and lower bounds of the constraint, and any additional information required to specify the constraint. The different parts of the constraint definition are separated by underscores, and the \texttt{boost::split} function is used to extract the individual parts.
+
+The text description of the constraint is set with
+
+\texttt{this->Fdescriptions->push\_back(prefix + "<description>")}
+
+where \texttt{<description>} is a short description of the constraint. In the \texttt{SpecializedBoundaryConstraintBase} \texttt{setup\_calcbounds} method, \texttt{prefix} is set to \texttt{this->name + ": "}. Note: Do not put a comma in any of the text that will be part of \texttt{Fdescriptions} because it will mess up csv readers.
+
+The lower bound of the constraint is set with
+
+\texttt{this->Flowerbounds->push\_back(<lowerBound>)}
+
+The upper bound is set with
+
+\texttt{this->Fupperbounds->push\_back(<upperBound>)}
+
+\textbf{Important:} If it is desired to scale the constraint, then the values added to \texttt{Flowerbounds} and \texttt{Fupperbounds} must be scaled appropriately.
+
+The final job of \texttt{calcbounds} is to set the sparsity pattern of the constraint function. This process can be quite confusing, so copy/pasting and making minimal adaptations for a specific constraint from a previous boundary constraint class is highly recommended. This walkthrough assumes that the reader is following along with the code in \texttt{BoundaryStateInTwoBodyRotatingFrameConstraint.cpp}.
+
+The first call when creating the sparsity pattern is
+
+\begin{verbatim}
+	std::vector< std::tuple<size_t, size_t, double> >&
+	 Derivatives_of_StateAroundEvent = this->myBoundaryEvent->
+	get_Derivatives_of_StateBeforeOrAfterEvent(this->getStateAndDerivativesIndex);
+\end{verbatim}
+
+\noindent The first element of each returned tuple in \texttt{Derivatives\_of\_StateAroundEvent} is the index of the decision variable in the global decision vector. The second element of each returned tuple in \texttt{Derivatives\_of\_StateAroundEvent} is the local position of the decision variable in the state vector. Note that the position/velocity of the state vector is always in ICRF Cartesian coordinates, regardless of the frame and state representation used to encode the decision variables. The third element of each returned tuple in \texttt{Derivatives\_of\_StateAroundEvent} is the actual derivative value. When \texttt{calcbounds} is called, no value has been set, but that is OK \textemdash we do not need it for setting the sparsity pattern. We can think of the elements of \texttt{Derivatives\_of\_StateAroundEvent} as: the derivative of the second element with respect to the first element is equal to the third element.
+
+We do this for derivatives with respect to time, as well:
+
+\begin{verbatim}
+std::vector< std::tuple<size_t, size_t, double> >& 
+Derivatives_of_StateAroundEvent_wrt_Timethis->myBoundaryEvent->
+get_Derivatives_of_StateBeforeOrAfterEvent_wrt_Time(this->getStateAndDerivativesIndex);
+\end{verbatim}
+
+We then loop through state indexes. In the two-body rotating frame constraint example, this is done by looping from 0 to 2, and handling velocity separately from position within the same loop. An alternative formulation could loop from 0 to 5.
+
+Within the loop, the first action handles the derivatives with respect to position. We loop through each element of the \texttt{Derivatives\_of\_StateAroundEvent} vector. For each element, we check if second element of that tuple is equal to our current state index (the loop variable of our outer loop). In other words, does our current index correspond to differentiating an element of the position state? If so, we wish to add a sparsity entry for it because our constraint depends on all elements of the position vector. So, we call
+
+\begin{verbatim}
+this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+std::get<0>(Derivatives_of_StateAroundEvent[dIndex]),
+state_Gindex_constraint_position_wrt_StateAroundEvent_variables);
+\end{verbatim}
+
+\noindent The first argument to this call is the index of the current constraint in the overall vector of constraints. The second argument is the position of the independent variable currently under consideration in the overall vector of decision variables. The third argument is an output: the vector of global Jacobian entry indexex, which is a single-dimension vector because it is an unrolled vector.
+
+After looping through the elements of the \texttt{Derivatives\_of\_StateAroundEvent} vector, we call
+
+\begin{verbatim}
+this->dIndex_constraint_position_wrt_StateAroundEvent.push_back
+(state_dIndex_constraint_position_wrt_StateAroundEvent);
+
+this->Gindex_constraint_position_wrt_StateAroundEvent_variables.push_back
+(state_Gindex_constraint_position_wrt_StateAroundEvent_variables);
+\end{verbatim}
+
+\noindent These calls basically put what were originally local variables into class variables that can be accessed from later calls to \texttt{process\_constraint}.
+
+We then do a similar loop to create sparsity entries for ``implicit'' dependencies of state elements on time variables. These exist because we are using a multiple-shooting method. The state and time loops are separate because we can have non-zero partial derivatives with respect to time variables from other phases in a multiple-shooting algorithm, whereas we will never have non-zero partial derivatives with respect to state variables from other phases. For example, the position state at a boundary depends on the launch epoch and the times of flight of all previous phases.
+
+After handling the dependencies of position on state and time decision variables, two more loops are performed to do the same thing for velocity. In the two-body rotating frame example, the constraint only depends on velocity if a velocity state is being constrained. As a result, the velocity sparsity pattern creation loops are in an \texttt{if} block.
+
+After completing the loop through state indexes, we still need to handle \emph{explicit} time dependencies, if they exist. An explicit time dependence exists if the constraint value depends on an ephemeris lookup or a time-dependent rotation matrix. If explicit time dependencies exist, we call
+
+\begin{verbatim}
+std::vector<size_t> timeVariables = this->myBoundaryEvent->get_Xindices_EventRightEpoch();
+\end{verbatim}
+
+\noindent and then loop through \texttt{timeVariables}, creating sparsity entries. Note that this workflow only works because EMTG constructs constraints sequentially in the order in which time marches forward. At the time \texttt{calcbounds} is called for a constraint, subsequent journeys haven't been constructed yet.
+
+The \texttt{calcbounds} of each specialized constraint is only called once in each EMTG execution, prior to optimization.
+
+\subsubsection{The \texttt{process\_constraint} Method}
+
+The \texttt{process\_constraint} method is called whenever EMTG needs to evaluate the value of the constraint and/or its Jacobian.
+
+The arguments are:
+
+\begin{itemize}
+	\item \texttt{X}: The decision vector. Often, \texttt{X} is not used directly because more useful routines exist to do things like extract the state at the boundary.
+	\item \texttt{Xindex}: This argument is not actually used, and, confusingly, is overridden locally in the \texttt{process\_constraint} method of many constraints.
+	\item \texttt{F}: Vector of constraints. The value of the constraint is added to this vector.
+	\item \texttt{Findex}: A locator of a constraint within the vector of constraints \texttt{F}.
+	\item \texttt{G}: The Jacobian of the constraint with respect to all decision variables. Must be populated if \texttt{needG} is true.
+	\item \texttt{needG}: If true, the Jacobian of the constraint must be calculated. If false, it need not be.
+\end{itemize}
+
+The value of the constraint must be calculated. Recall that the value of the constraint is generally assigned to a class member so that it is accessible from the \texttt{output} method. Methods exist for doing things like obtaining the state of the spacecraft at the point of constraint application. Once the value is calculated, it is added to the vector of constraints with
+
+\texttt{F[Findex++] = <value>}
+
+If the Jacobian is required, it must be calculated. Frequently, the dependencies of a constraint are some subset of position, velocity, and time at, infinitesimally before, or infinitesimally after a boundary event.\footnote{``Infinitesimally before/after'' means before/after an instantaneous boundary event, such as a $\Delta v$, takes place.} A new specialized boundary constraint is responsible for calculating these ``first-level'' derivatives, and, then, using the chain rule to achieve the derivatives of the constraint with respect to the decision variables themselves. The derivatives of the state vector with respect to the decision variables at the boundary event are accessible to facilitate this procedure.
+
+If the Jacobian is required, it must be placed in the correct entries of \texttt{G}. Determining the correct entries of \texttt{G} is similar to the procedure used to set the sparsity pattern in \texttt{calcbounds}. Like for setting the sparsity pattern, this walkthrough assumes that the reader is following along with the code in \texttt{BoundaryStateInTwoBodyRotatingFrameConstraint.cpp}. We follow these steps:
+
+\begin{enumerate}
+	\item Prior to setting the relevant elements of \texttt{G}, it is standard practice to set them to zero. We loop through the relevant state indices and the relevant entries of \texttt{this->Gindex\_constraint\_position\_wrt\_StateAroundEvent\_variables} to know which elements to set to zero. We also loop through the explicit time dependence indexes, if relevant.
+	\item We then set the derivatives of the constraint with respect to non-time variables affecting the boundary state. We grab the derivatives of the state at the boundary with respect to decision variables because this is the last link in the chain rule chain we need to create. Then, we loop through various indexes to place our derivatives appropriately. The things we need to keep in mind are:
+	\begin{itemize}
+		\item Our \texttt{Gentry} needs to contain our local derivative entry (constraint with respect to boundary state) multiplied with the derivative of the state at the boundary with respect to the relevant decision variable, which is held in \texttt{std::get<2>(Derivatives\_of\_StateAroundEvent[dIndex])}.
+		\item When we add our \texttt{Gentry} to \texttt{G[Gindex]}, the premultiplication by \texttt{this->X\_scale\_factors->operator[](Xindex)} takes care of scaling the decision variable, but it is our responsibility to scale by the scale factor of the constraint, if one was used.
+	\end{itemize}
+	\item We then set derivatives of the constraint with respect to time variables affecting the boundary state (i.e., the implicit time dependencies). This procedure is extremely similar to that for setting the derivatives with respect to the boundary state itself. The important thing to remember here is that our local part of the chain rule still uses derivatives of our constraint with respect to the boundary state, \emph{not} time. Time dependence comes through the other part of the chain rule: the time derivatives of the boundary state.
+	\item If necessary, we then set explicit time dependencies. This is where derivatives of the constraint directly with respect to time are used. There is no additional chain rule beyond that here.
+\end{enumerate}
+
+\subsubsection{Updating \texttt{SpecializedBoundaryConstraintFactory}}
+
+In addition to creating a new class derived from \texttt{SpecializedBoundaryConstraintBase}, a new block of code must be added to the \texttt{create\_boundary\_event\_constraint} function in the file \texttt{SpecializedBoundaryConstraintFactory.cpp}. \texttt{create\_boundary\_event\_constraint} parses the text of a specialized boundary constraint and ``decides'' which specialized boundary class should be used to instantiate a new specialized boundary constraint object based on the text. So, to make a new specialized boundary event accessible to users, new \texttt{else if} blocks must be added that look for \emph{uniquely identifiable} text within the text of the new specialized boundary constraint. Frequently, constraint text is organized as (all on one line)
+
+\begin{verbatim}
+p<phase number>_<departure or arrival><- or +>_<constraint name>_
+<lower bound><lower bound units>_<upper bound><upper bound units>
+\end{verbatim}
+
+(See the examples in later sections.) \texttt{create\_boundary\_event\_constraint} splits the entire string at each underscore and puts the results in the \texttt{std::vector ConstraintDefinitionCell}. The constraint name --- or \texttt{ConstraintDefinitionCell[2]} --- is almost always used to identify the constraint in \texttt{create\_boundary\_event\_constraint}. Thus, it is important to give the new constraint a unique name --- and to instruct \texttt{create\_boundary\_event\_constraint} to search for unique text!
+
+Within the new \texttt{else if} block, the only action required is to \texttt{return} a \texttt{new} appropriate specialized boundary constraint object. The code from an existing block may therefore be copied into a new block, with the only required change being the name of the class derived from \texttt{SpecializedBoundaryConstraintBase}.
+
+\textbf{Important note:} All of the \texttt{if/else if} blocks based on \texttt{ConstraintDefinitionCell[2]} are contained within an outer \texttt{if/else if} block based on \texttt{EventDefinition}. \texttt{EventDefinition} can be either ``departure'' or ``arrival''. If the desired behavior is for the new constraint to be applicable at either a departure or arrival event, then an identical \texttt{else if} block must be added to both the \texttt{if} and \texttt{else} blocks of the \texttt{EventDefinition}-based block. Alternatively, if the desired behavior is for the new constraint to be applicable to only departure \emph{or} arrival events, then the new code block should still be added to both sections, but should throw a helpful exception if the user attempts to invoke the constraint incorrectly (i.e., if the user tries to apply a departure-only constraint at an arrival event).
+
+\subsubsection{Updating the Executables}
+\label{sec:UpdatingTheExecutables}
+
+For some constraints, it may be necessary to update the contents of the executable files \texttt{EMTG\_v9.cpp} and \texttt{testbed\_driver.cpp}. The reason to update the executables is if the new constraint is allowed to depend on a universe body other than the central body of the journey.\footnote{An example of a constraint that does depend on an additional universe body is the RPR angle constraint because one or both of the reference bodies could be a universe body other than the central body. An example of a constraint that does not depend on an additional universe body is the semimajor axis constraint because the semimajor axis is always calculated relative to the central body of the constraint.} If the constraint is allowed to depend on a universe body other than the central body, then the executables must be updated to create splines of the states of any additional universe bodies whose states are required by the constraint. To accomplish this, a new block of code must be placed in each executable inside the \texttt{for} loop that begins
+
+\begin{verbatim}
+//boundary constraint list
+//some, but not all, require new splines
+for (std::string& constraint : options.Journeys[j].BoundaryConstraintDefinitions)
+{
+	...
+}
+\end{verbatim}
+
+The new block of code can be modeled after the existing \texttt{if} blocks inside this loop. For example, for the distance constraint, we have:
+
+\begin{verbatim}
+// distance constraint
+if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("distanceconstraint") < 1024)
+{
+	if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+	{
+		int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+		body_index_array.push_back(bodyIndex);
+	}
+}
+\end{verbatim}
+
+The outer \texttt{if} block determines whether a given boundary constraint is used. The inner \texttt{if} block checks to see if a universe body other than the central body is required to calculate the constraint, determines which universe body is required, and adds that body to the array of bodies to be splined. Note that the contents of the inner \texttt{if} block may change based on the individual constraint.
+
+
+\subsubsection{Tips and Tricks}
+\label{sec:CreatingConstraintTipsAndTricks}
+
+Depending on what the constraint is on, it may be appropriate to scale the constraint. For example, constraints on distances are usually scaled by 1 LU.
+
+It may be appropriate to allow the user to set units on the constraint.
+
+Routines for obtaining existing state information:
+
+\begin{itemize}
+	\item \texttt{BoundaryEventBase::get\_state\_before\_or\_after\_event(int before\_or\_after)}
+	\begin{itemize}
+		\item Returns state before event if \texttt{before\_or\_after} == -1; returns state after event if \texttt{before\_or\_after} == 1.
+	\end{itemize}
+%	\item \texttt{BoundaryEventBase::get\_state\_before\_event()}
+%	\item \texttt{BoundaryEventBase::get\_state\_after\_event()}
+\end{itemize}
+
+Routines for obtaining existing derivative information:
+
+\begin{itemize}
+	\item \texttt{BoundaryEventBase::get\_Derivatives\_of\_StateBeforeOrAfterEvent(int before\_or\_after)}
+	\begin{itemize}
+		\item Returns state before event if \texttt{before\_or\_after} == -1; returns state after event if \texttt{before\_or\_after} == 1.
+	\end{itemize}
+	\item \texttt{BoundaryEventBase::get\_Derivatives\_of\_StateBeforeOrAfterEvent\_wrt\_Time(int before\_or\_after)}
+	\begin{itemize}
+		\item Returns state before event if \texttt{before\_or\_after} == -1; returns state after event if \texttt{before\_or\_after} == 1.
+	\end{itemize}
+%	\item \texttt{BoundaryEventBase::get\_Derivatives\_of\_StateBeforeEvent()}
+%	\item \texttt{BoundaryEventBase::get\_Derivatives\_of\_StateAfterEvent()}
+%	\item \texttt{BoundaryEventBase::get\_Derivatives\_of\_StateBeforeEvent\_wrt\_Time()}
+%	\item \texttt{BoundaryEventBase::get\_Derivatives\_of\_StateAfterEvent\_wrt\_Time()}
+\end{itemize}
+
+Routines for computing orbit elements:
+
+\begin{itemize}
+	\item \texttt{BoundaryEventBase::setComputeOrbitElements()}
+	\item \texttt{BoundaryEventBase::add\_orbit\_element\_reference\_frame()}
+	\item \texttt{BoundaryEventBase::get\_orbit\_elements\_after\_event()}
+	\item \texttt{BoundaryEventBase::get\_orbit\_element\_Jacobian\_after\_event()}
+\end{itemize}
+
+\subsubsection{A Note on States and Derivatives Before and After Boundaries}
+\label{sec:states_and_derivatives_before_and_after_boundaries}
+
+Section~\ref{sec:CreatingConstraintTipsAndTricks} describes methods for obtaining state and derivative information infinitesimally before or after a boundary event. Some constraints, like the constraint on a state in a two-body rotating frame (Section~\ref{subsec:state_in_two_body_rotating_frame}), allow the user to use a \texttt{-} or \texttt{+} to indicate that they wish to constrain the state infinitesimally before or after a boundary event. However, it is important to realize that, while these methods exist, the backend EMTG data, unfortunately, does not always contain the information the user may want or expect when using these methods. The list below describes what EMTG actually stores for commonly used boundary types and classes. In the list, the following shorthand is used:
+
+\begin{itemize}
+	\item $x-$: State obtained by \texttt{get\_state\_before\_event()}.
+	\item $x+$: State obtained by \texttt{get\_state\_after\_event()}.
+	\item $x_1$: State given in .emtg file for \texttt{Boundary: 1} for a journey.
+	\item $x_2$: State given in .emtg file for \texttt{Boundary: 2} for a journey.
+	\item $x_{e,1}$ State given in .emtg file in first row of mission events for a journey.
+	\item $x_{e,-1}$ State given in .emtg file in last row of mission events for a journey.
+	\item $\Delta v_1$, $\Delta v_{-1}$ Values given in \texttt{dV\_x}, \texttt{dV\_y}, and \texttt{dV\_z} columns of the first or last mission event in the .emtg file for a journey.
+\end{itemize}
+
+\begin{itemize}
+	\item Departure types/classes:
+	\begin{itemize}
+		\item Type 0: Launch or direct insertion
+		\begin{itemize}
+			\item Class 0: Ephemeris-pegged
+			\begin{itemize}
+				\item $x- = x+ = x_{e,1}$
+				\item $v_{e,1} = v_1 + \Delta v_1$
+				\item $\Delta v_1$ is set by the decision variables for $v_\infty$, RA, and DEC.
+				\item As currently implemented, I would consider both $x-$ and $x+$ to actually by $x+$ (i.e., after the launch or direct insertion maneuver).
+			\end{itemize}
+			\item Class 1: Free point
+			\begin{itemize}
+				\item $x- = x+ = x_{e,1}$
+				\item $v_{e,1} = v_1 + \Delta v_1$
+				\item $\Delta v_1$ is set by the decision variables for $v_\infty$, RA, and DEC.
+				\item As currently implemented, I would consider both $x-$ and $x+$ to actually by $x+$ (i.e., after the launch or direct insertion maneuver).
+			\end{itemize}
+			\item Class 3: Periapse
+			\begin{itemize}
+				\item $x- = x+ = x_{e,1} = x_1$
+				\item $\Delta v_1$ is zero.
+				\item As currently implemented, I would consider both $x-$ and $x+$ to actually by $x+$ (i.e., after the launch or direct insertion maneuver).
+			\end{itemize}
+		\end{itemize}
+		\item Type 2: Free direct departure
+		\begin{itemize}
+			\item Class 1: Free point
+			\begin{itemize}
+				\item $x- = x+ = x_{e,1} = x_1$
+				\item $\Delta v_1$ is zero.
+				\item It makes sense that all position and velocity states are equal because there is no maneuver.
+			\end{itemize}
+		\end{itemize}
+		\item Type 3: Flyby
+		\begin{itemize}
+			\item Class 0: Ephemeris-pegged
+			\begin{itemize}
+				\item $x- = x+ = x_{e,1}$
+				\item $v_{e,1} = v_1 + $ the journey's $v_\infty$ decision variables.
+				\item As currently implemented, I would consider both $x-$ and $x+$ to actually by $x+$ (i.e., after the velocity change from the flyby has been imparted).
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+	\item Arrival types/classes:
+	\begin{itemize}
+		\item Type 0: Insertion into parking orbit with chemical Isp
+		\begin{itemize}
+			\item Class 0: Ephemeris-pegged
+			\begin{itemize}
+				\item $x- = x+ = x_{e,-1}$
+				\item $v_{e,-1} = v_2 - \Delta v_{-1}$
+				\item $\Delta v_{-1} =-v_\infty$ from the decision variables.
+				\item It makes sense that $x- = x+$ even though $v_2$ is different because a maneuver is not actually being performed at the boundary. EMTG is just comparing the spacecraft state to the boundary state using $v_\infty$.
+			\end{itemize}
+		\end{itemize}
+		\item Type 1: Rendezvous with chemical maneuver
+		\begin{itemize}
+			\item Class 1: Free point
+			\begin{itemize}
+				\item $x+ = x+ = x_{e,-1} = x_2$
+				\item $v- = (v+) - \Delta v_{-1}$
+				\item This one actually behaves out I would expect it to behave.
+			\end{itemize}
+		\end{itemize}
+		\item Type 2: Intercept with bounded v infinity
+		\begin{itemize}
+			\item Class 0: Ephemeris-pegged
+			\begin{itemize}
+				\item $x- = x+ = x_{e,-1}$
+				\item $v_{e,-1} = v_2 - \Delta v_{-1}$
+				\item $\Delta v_{-1} =-v_\infty$ from the decision variables.
+				\item It makes sense that $x- = x+$ even though $v_2$ is different because a maneuver is not actually being performed at the boundary. EMTG is just comparing the spacecraft state to the boundary state using $v_\infty$.
+			\end{itemize}
+			\item Class 1: Free point
+			\begin{itemize}
+				\item $x- = x+ = x_{e,-1}$
+				\item $v_{e,-1} = v_2 - \Delta v_{-1}$
+				\item $\Delta v_{-1} =-v_\infty$ from the decision variables.
+				\item It makes sense that $x- = x+$ even though $v_2$ is different because a maneuver is not actually being performed at the boundary. EMTG is just comparing the spacecraft state to the boundary state using $v_\infty$.
+			\end{itemize}
+			\item Class 2: Ephemeris-referenced
+			\begin{itemize}
+				\item $x- = x_{e,-1}$
+				\item $v_{e,-1} = v_2 - \Delta v_{-1}$, which is derived from the decision variables.
+				\item $x+ = x_{e,-1}$ BUT $x+$ is returned to the user relative to the boundary-event body, NOT the central body of the journey.
+				\item It makes sense that $x- = x+$, though expressed relative to different central bodies, even though $v_2$ is different because a maneuver is not actually being performed at the boundary. EMTG is just comparing the spacecraft state to the boundary state using $v_\infty$.
+			\end{itemize}
+			\item Class 3: Periapse
+			\begin{itemize}
+				\item $x- = x+ = x_{e,-1} = x_2$
+				\item It makes sense that $x- = x+$ because a maneuver is not actually being performed at the boundary. EMTG is just comparing the spacecraft state to the boundary state using $v_\infty$.
+			\end{itemize}
+		\end{itemize}
+	\end{itemize}
+\end{itemize}
+
+In summary, there are some boundaries at which it would be expected that the before/after states be the same. There are there boundaries at which it would be expected that the before/after states be different, but EMTG returns the same value. This may be changed in the future, but it has not been changed yet.
 
 \subsection{Classical Orbit Element Boundary Constraints}
 \label{sec:boundaryCOEconstraints}
@@ -527,7 +904,7 @@ END_BOUNDARY_CONSTRAINT_BLOCK
 \end{verbatim}
 
 \subsection{(Geo)Detic Target Body Elevation}
-\label{subsec:detic_altitude}
+\label{subsec:target_detic_elevation}
 
 The user may constrain the (geo)detic elevation of a target body with respect to the surface normal vector of a spheroid with flattening factor $f$. The target body is specified using an integer encoding a body's index in that Journey's Universe file. The user may specify this constraint in J2000BCF and TrueOfDateBCI frames. The user provides lower and upper bounds on detic elevation, in degrees.
 
@@ -535,7 +912,29 @@ The user may constrain the (geo)detic elevation of a target body with respect to
 
 \begin{verbatim}
 BEGIN_BOUNDARY_CONSTRAINT_BLOCK
-p0_arrival_DeticElevation_10_70.0_90.0_trueofdatebcf
+p0_arrival_TargetDeticElevation_10_70.0_90.0_trueofdatebcf
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{(Geo)Detic Elevation from Ground Station}
+\label{subsec:detic_elevation_from_groundstation}
+
+The user may constrain the (geo)detic elevation of the spacecraft with respect to a ground station. The location of the ground station is defined using latitude/longitude/altitude in a true-of-date, body-fixed reference frame relative to the body on which the ground station is located.
+
+The syntax of the constraint following the \texttt{DeticElevationFromGroundStation} text block is:
+
+\begin{enumerate}
+	\item ID for body on which the ground station is located. Either \texttt{CB} for central body or a number for the body ID.
+	\item Latitude of ground station.
+	\item Longitude of ground station.
+	\item Altitude of ground station.
+	\item Lower bound on elevation angle.
+	\item Upper bound on elevation angle.
+\end{enumerate}
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_arrival_DeticElevationFromGroundStation_CB_28.455deg_-52.246deg_0.0km_60.0deg_60.0deg
 END_BOUNDARY_CONSTRAINT_BLOCK
 \end{verbatim}
 
@@ -553,6 +952,41 @@ The user may constrain velocity declination, given by:
 \begin{verbatim}
 BEGIN_BOUNDARY_CONSTRAINT_BLOCK
 p0_departure_VelocityDeclination_-20.0_5.0_ICRF
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+\subsection{Velocity Declination with Respect to Any Body}
+\label{subsec:velocity_declination_wrt_any_body}
+
+The velocity declination constraint described in Section~\ref{subsec:velocity_declination} can only be used to constrain the velocity with respect to the central body of the journey. The constraint described here is the same mathematical construct, but can be referenced to any body defined in the relevant journey's universe.
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p<phase number>_<boundary><before or after boundary>_VelocityDeclinationAnyBody_
+<Body ID>_<lower bound><lower bound units>_<upper bound><upper bound units>_<Frame>
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+where
+
+\begin{itemize}
+	\item \texttt{<phase number>} is the integer number of the phase on which the constraint is applied.
+	\item \texttt{<boundary>} is \texttt{departure} or \texttt{arrival}.
+	\item \texttt{<before or after boundary>} is \texttt{-} or \texttt{+}. A \texttt{-} indicates that the constraint is applied infinitesimally before the boundary. A \texttt{+} indicates that the constraint is applied infinitesimally after the boundary. See Section~\ref{sec:states_and_derivatives_before_and_after_boundaries} for a full description of what \texttt{-} or \texttt{+} actually means for a given boundary type/class.
+	\item \texttt{<body ID>} is the ID for the body with respect to which the velocity declination is calculated. The velocity vector of the spacecraft is calculated with respect to this body, and the reference frame with respect to which the declination angle of the velocity vector is calculated is defined by this body. May be either \texttt{cb} to indicate the central body of the journey or any numerical body ID defined in the journey's universe file body list.
+	\item \texttt{<lower bound>} The numerical lower bound for the constraint.
+	\item \texttt{<lower bound units>} The units of the lower bound. May be \texttt{deg} or \texttt{rad}.
+	\item \texttt{<upper bound>} The numerical upper bound for the constraint.
+	\item \texttt{<upper bound units>} The units of the upper bound. May be \texttt{deg} or \texttt{rad}.
+	\item \texttt{<Frame>} The reference frame with respect to which the declination angle is calculated, defined by \texttt{body ID}. Valid choices are \texttt{ICRF}, \texttt{J2000BCI}, \texttt{J2000BCF}, \texttt{TrueOfDateBCI}, and \texttt{TrueOfDateBCF}.
+\end{itemize}
+
+Syntax examples:
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_departure-_VelocityDeclinationAnyBody_CB_9_-1.0rad_2rad_ICRF
+p0_arrival+_VelocityDeclinationAnyBody_3_10deg_50deg_TrueOfDateBCF
 END_BOUNDARY_CONSTRAINT_BLOCK
 \end{verbatim}
 
@@ -740,6 +1174,55 @@ p0_arrival_RelativeVHFPA_-14.1_-14.0_trueofdatebcf
 END_BOUNDARY_CONSTRAINT_BLOCK
 \end{verbatim}
 
+\subsection{State in Two-Body Rotating Frame}
+\label{subsec:state_in_two_body_rotating_frame}
+The user may constrain the state of the spacecraft relative to a two-body rotating reference frame. This frame is analogous to, e.g., GMAT's ``ObjectReferenced'' frame type. The user sets two bodies in the journey's universe to define the axes of the frame. The $x$ axis points from the first body to the second body, the $z$ axis points in the direction of the angular momentum vector of the second body's motion about the first body, and the $y$ axis completes the right-handed set. Notes on implementation:
+
+\begin{itemize}
+	\item The user may constrain independently any element of the position/velocity state of the spacecraft in this frame.
+	\item The constraint may be applied at arrival or departure of a phase. Additionally, the constraint may be applied infinitesimally before or after the phase boundary time in order to take into account (or not) events that happen instantaneously at a boundary (e.g., an impulsive maneuver).
+	\item Currently, the constrained state can only be defined relative to the second body used to define the frame.
+	\item Position constraints are expressed in the rotating frame.
+	\item Velocity constraints are calculated by differentiating in the rotating frame \emph{and} expressing the velocity in the rotating frame.
+\end{itemize} 
+
+Syntax (all one line):
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p<phase number>_<boundary><before or after boundary>_StateInTwoBodyRotatingFrame
+_<state element>_<body ID for B1>_<body ID for B2>_<origin of frame>
+_<lower bound><lower bound units>_<upper bound><upper bound units>
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+where
+
+\begin{itemize}
+	\item \texttt{<phase number>} is the integer number of the phase on which the constraint is applied.
+	\item \texttt{<boundary>} is \texttt{departure} or \texttt{arrival}.
+	\item \texttt{<before or after boundary>} is \texttt{-} or \texttt{+}. A \texttt{-} indicates that the constraint is applied infinitesimally before the boundary. A \texttt{+} indicates that the constraint is applied infinitesimally after the boundary. See Section~\ref{sec:states_and_derivatives_before_and_after_boundaries} for a full description of what \texttt{-} or \texttt{+} actually means for a given boundary type/class.
+	\item \texttt{<state element>} is the state to be constraint. Valid values are: \texttt{x}, \texttt{y}, \texttt{z}, \texttt{vx}, \texttt{vy}, \texttt{vz}.
+	\item \texttt{<body ID for B1>} is the ID for the first body that defines the frame. May be either \texttt{cb} to indicate the central body of the journey or any numerical body ID defined in the journey's universe file body list. Cannot be the same as \texttt{<body ID for B2>}.
+	\item \texttt{<body ID for B2>} is the ID for the second body that defines the frame. May be either \texttt{cb} to indicate the central body of the journey or any numerical body ID defined in the journey's universe file body list. \texttt{<body ID for B1>}.
+	\item \texttt{<origin of frame>} Defines the origin of the rotating frame. Currently, the only valid value is \texttt{body2}.
+	\item \texttt{<lower bound>} The numerical lower bound for the constraint.
+	\item \texttt{<lower bound units>} The units of the lower bound. If \texttt{<state element>} is \texttt{x}, \texttt{y}, or \texttt{z}, then valid values are \texttt{km}, \texttt{AU}, or \texttt{LU}. If \texttt{<state element>} is \texttt{vx}, \texttt{vy}, or \texttt{vz}, then valid values are \texttt{km/s}.
+	\item \texttt{<upper bound>} The numerical upper bound for the constraint.
+	\item \texttt{<upper bound units>} The units of the upper bound. If \texttt{<state element>} is \texttt{x}, \texttt{y}, or \texttt{z}, then valid values are \texttt{km}, \texttt{AU}, or \texttt{LU}. If \texttt{<state element>} is \texttt{vx}, \texttt{vy}, or \texttt{vz}, then valid values are \texttt{km/s}.
+\end{itemize}
+
+Syntax examples:
+
+\begin{verbatim}
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+p0_departure-_StateInTwoBodyRotatingFrame_VY_CB_9_Body2_-1km/s_2km/s
+p0_arrival+_StateInTwoBodyRotatingFrame_X_7_9_Body2_1000km_2000km
+END_BOUNDARY_CONSTRAINT_BLOCK
+\end{verbatim}
+
+Additional documentation is available in the directory \texttt{docs/constraint\_in\_two\_body\_rotating\_frame}. The PowerPoint presentation \texttt{EMTG-182\_Constraint\_In\_Rotating\_Frame.pptx} describes the basic architectural design of the constraint. \texttt{constraint\_in\_two\_body\_rotating\_frame.pdf} gives the full mathematical specification.
+
 
 \section{MGAnDSMs Maneuver Constraints}
 \label{sec:MGAnDSMs_Maneuver_Constraints}
@@ -879,9 +1362,9 @@ END_MANEUVER_CONSTRAINT_BLOCK
 \section{Phase Distance Constraint}
 \label{sec:PhaseDistanceConstraint}
 
-The user may constrain the distance between the spacecraft and any other body in the universe file. The body may be expressed either as ``cb'' for the central body, or with an integer code describing the reference body's position in the Universe file. The lower and upper bounds on the distance constraint may be specified in LU, AU, or km.
+The user may constrain the distance between the spacecraft and any other body in the universe file at each time at which a maneuver occurs. The body may be expressed either as ``cb'' for the central body, or with an integer code describing the reference body's position in the Universe file. The lower and upper bounds on the distance constraint may be specified in LU, AU, or km.
 
-At the moment, this constraint works in \ac{MGALT}, \ac{FBLT}, \ac{PSBI}, and \ac{PSFB}. \ac{MGAnDSMs} does not currently have a phase distance constraint.
+At the moment, this constraint works in \ac{MGALT}, \ac{FBLT}, \ac{PSBI}, \ac{PSFB}, and \ac{MGAnDSMs}. Note that, for \ac{MGAnDSMs} especially (because its maneuvers are potentially spaced so far apart), this constraint does not necessarily mean that the spacecraft never violates this constraint. It means that no point at which the spacecraft performs a maneuver violates this constraint.
 
 Each Journey block in the .emtgopt file has its own phase distance constraint section.
 
@@ -891,6 +1374,51 @@ p0_4_0.9au_10.0au
 END_PHASE_DISTANCE_CONSTRAINT_BLOCK
 \end{verbatim}
 
+\section{PyEMTG Interface}
+\label{sec:PyemtgInterface}
+
+Scripted constraints may be accessed via PyEMTG through the following class properties.
+
+\subsection{Boundary Constraints}
+\label{sec:PyemtgBoundaryConstraints}
+
+Boundary constraint definitions are stored on a per-journey basis as a list in
+
+\begin{verbatim}
+JourneyOptions.BoundaryConstraintDefinitions
+\end{verbatim}
+ 
+Each element of the list is a string that contains the entirety of the boundary constraint text. In other words, the upper and lower bound, etc. of the constraint are not stored separately. If there are no boundary constraints for a given journey, then the list is empty.
+
+Boundary constraint output is stored on a per-journey basis as a list in
+
+\begin{verbatim}
+Journey.BoundaryConstraintOutputs
+\end{verbatim}
+
+Each element of the list is a string that contains the entirety of the boundary constraint output text (i.e., the entirety of the line written to the .emtg output file for that constraint). The user may then employ string-parsing techniques to, e.g., extract the numerical value of the constraint. If there are no boundary constraints for a given journey, then the list is empty.
+
+\subsection{Maneuver Constraints}
+\label{sec:PyemtgManueverConstraints}
+
+Maneuver constraint definitions are stored on a per-journey basis as a list in
+
+\begin{verbatim}
+JourneyOptions.ManeuverConstraintDefinitions
+\end{verbatim}
+
+Each element of the list is a string that contains the entirety of the maneuver constraint text. In other words, the upper and lower bound, etc. of the constraint are not stored separately. If there are no maneuver constraints for a given journey, then the list is empty.
+
+\subsection{Phase Distance Constraints}
+\label{sec:PyemtgPhaseDistanceConstraints}
+
+Phase distance constraint definitions are stored on a per-journey basis as a list in
+
+\begin{verbatim}
+JourneyOptions.PhaseDistanceConstraintDefinitions
+\end{verbatim}
+
+Each element of the list is a string that contains the entirety of the phase distance constraint text. In other words, the upper and lower bound, etc. of the constraint are not stored separately. If there are no phase distance constraints for a given journey, then the list is empty.
 
 %\bibliographystyle{AAS_publication}
 %\bibliography{EMTGbib_Jacob_June_2014}

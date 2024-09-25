@@ -1,0 +1,6 @@
+\chapter{Configuration Files}
+\label{chap:config_files}
+This chapter describes how configuration files may be used to model performance characteristics of the spacecraft and launch vehicles used when obtaining solutions.
+While vehicle characteristics may be set in the PyEMTG \ac{GUI}, configuration files are the most flexible option for defining vehicle characteristics.
+Additionally, these files may be shared across missions, allowing users to define configuration files for specific vehicles that may be consistently re-used, such as a particular launch vehicle.
+These files are used exclusively for options {\it 0: Assemble from libraries} and {\it 1: Read .emtg\_spacecraftoptions file} in the Spacecraft Option tab's ``Spacecraft model type'' field in PyEMTG, or by respectively setting the {\tt SpacecraftModelInput} value in the {\tt .emtgopt} file. 

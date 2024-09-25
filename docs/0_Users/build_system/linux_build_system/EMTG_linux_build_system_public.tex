@@ -1,0 +1,338 @@
+\documentclass[11pt]{article}
+
+%% PACKAGES
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{url}
+\usepackage[printonlyused]{acronym}
+\usepackage[ruled]{algorithm}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{overpic}
+\usepackage{calc}
+\usepackage{color}
+%\usepackage{times}
+%\usepackage{ragged2e}
+ \usepackage[margin=1.0in]{geometry}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{textcomp}
+\usepackage{cite}
+\usepackage{mdwlist}
+\usepackage{subfiles}
+\usepackage{enumitem}
+\usepackage{calc}
+\usepackage{array}
+\usepackage{units}
+\usepackage{arydshln,leftidx,mathtools}
+\usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{relsize}
+\usepackage{float}
+\usepackage{makecell}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\usepackage{tabularx}
+
+\makeatletter
+\let\@tmp\@xfloat
+\usepackage{fixltx2e}
+\let\@xfloat\@tmp
+\makeatother
+
+\usepackage{listings}
+\lstset{basicstyle=\small\ttfamily,columns=flexible,breaklines=true,xleftmargin=-0.5in,keepspaces=true}
+
+\usepackage[subfigure]{tocloft}
+\usepackage[singlespacing]{setspace}
+\usepackage{pgfplots}
+
+\usepackage{cancel}
+
+\usepackage{tikz}
+\usetikzlibrary{calc,patterns,decorations.pathmorphing,decorations.markings,fit,backgrounds}
+
+\usepackage[strict]{changepage} %use to manually place figs/tables to get them within the margins
+
+\makeatletter
+\g@addto@macro\normalsize{%
+  \setlength\abovedisplayskip{0.25pt}
+  \setlength\belowdisplayskip{0.25pt}
+  \setlength\abovedisplayshortskip{0.25pt}
+  \setlength\belowdisplayshortskip{0.25pt}
+}
+\makeatother
+
+
+
+\setlength{\parskip}{\baselineskip}
+
+%% GRAPHICS PATH
+\graphicspath{{../../../shared_latex_inputs/images}{../../../shared_latex_inputs/graphs}}
+
+%% TODO
+\newcommand{\todo}[1]{\vspace{5 mm}\par \noindent \framebox{\begin{minipage}[c]{0.98 \columnwidth} \ttfamily\flushleft \textcolor{red}{#1}\end{minipage}}\vspace{5 mm}\par}
+
+%% MACROS
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+\providecommand{\dualnorm}[1]{\norm{#1}_\ast}
+\providecommand{\set}[1]{\lbrace\,#1\,\rbrace}
+\providecommand{\cset}[2]{\lbrace\,{#1}\nobreak\mid\nobreak{#2}\,\rbrace}
+\providecommand{\onevect}{\mathbf{1}}
+\providecommand{\zerovect}{\mathbf{0}}
+\providecommand{\field}[1]{\mathbb{#1}}
+\providecommand{\C}{\field{C}}
+\providecommand{\R}{\field{R}}
+\providecommand{\polar}{\triangle}
+\providecommand{\Cspace}{\mathcal{Q}}
+\providecommand{\Fspace}{\mathcal{F}}
+\providecommand{\free}{\text{\{}\mathsf{free}\text{\}}}
+\providecommand{\iff}{\Leftrightarrow}
+\providecommand{\qstart}{q_\text{initial}}
+\providecommand{\qgoal}{q_\text{final}}
+\providecommand{\contact}[1]{\Cspace_{#1}}
+\providecommand{\feasible}[1]{\Fspace_{#1}}
+\providecommand{\prob}[2]{p(#1|#2)}
+\providecommand{\prior}[1]{p(#1)}
+\providecommand{\Prob}[2]{P(#1|#2)}
+\providecommand{\Prior}[1]{P(#1)}
+\providecommand{\parenth}[1] {\left(#1\right)}
+\providecommand{\braces}[1] {\left\{#1\right\}}
+\providecommand{\micron}{\hbox{\textmu m}}
+
+%% MATH FUNCTION NAMES
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\cone}{cone}
+\DeclareMathOperator{\homog}{homog}
+\DeclareMathOperator{\domain}{dom}
+\DeclareMathOperator{\range}{range}
+\DeclareMathOperator{\argmax}{arg\,max}
+\DeclareMathOperator{\argmin}{arg\,min}
+\DeclareMathOperator{\area}{area}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\mathspan}{span}
+\DeclareMathOperator{\sn}{sn}
+\DeclareMathOperator{\cn}{cn}
+\DeclareMathOperator{\dn}{dn}
+\DeclareMathOperator*{\minimize}{minimize}
+
+\DeclareMathOperator{\atan2}{atan2}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\newcommand{\acposs}[1]{%
+	\expandafter\ifx\csname AC@#1\endcsname\AC@used
+	\acs{#1}'s%
+	\else
+	\aclu{#1}'s (\acs{#1}'s)%
+	\fi
+}
+
+%\setlength{\RaggedRightParindent}{2em}
+%\setlength{\RaggedRightRightskip}{0pt plus 3em}
+%\pagestyle{empty}
+
+
+
+
+\title{{\Huge EMTGv9 Linux Build Guide}}
+\vspace{0.5cm}
+\author
+{
+	Noble Hatten\thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Flight Dynamics and Mission Design Branch Code 595}
+}
+\vspace{0.5cm}
+
+\begin{document}
+
+\begin{titlepage}
+\date{}
+\maketitle
+\thispagestyle{empty}
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\textwidth}{|l|l|X|}
+		\hline
+		\textbf{Revision Date} & \textbf{Author} & \textbf{Description of Change} \\ \hline
+		\date{June 6, 2022} & Noble Hatten & Migration of content from Markdown text to \LaTeX.\\ \hline
+		\date{August 8, 2023} & Joseph Hauerstein & Created of public release version of Linux install guide. \\ \hline
+		\date{December 7, 2023} & Edwin Dove & Clarified instructions. \\ \hline
+	\end{tabularx}
+\end{table}
+\end{titlepage}
+
+
+
+\newpage
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+\clearpage
+\setcounter{page}{1}
+
+\input{../../../shared_latex_inputs/acronymlist}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{sec:introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+The purpose of this document is to describe:
+
+\begin{itemize}
+	\item How to obtain the \ac{EMTG} codebase using the public NASA GitHub Repository (Section~\ref{sec:obtaining_emtg}).
+	\item How to obtain the dependencies of \ac{EMTG}, either by obtaining the dependencies invididually and building from source or by making use of package management tools  (Section~\ref{sec:setting_up_dependencies_with_management_capabilities} and~\ref{sec:manually_obtaining_dependencies}).
+	\item How to compile \ac{EMTG} from source on a Linux system (Section~\ref{sec:building_emtg}).
+\end{itemize}
+
+\noindent Other notes about the contents of this document:
+\begin{itemize}
+	\item When listing \acposs{EMTG} dependencies, specific versions of the dependencies are listed. These dependencies are known to work. The use of other versions of dependencies is not guaranteed to work.
+	\item The instructions in this document are intended to be followed in the order in which they are given.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{System Requirements}
+\label{sec:system_requirements}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+The instructions in this document are intended for a computer running on a 64-bit Linux installation. The instructions have been tested on \ac{RHEL} 8.8.
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Obtaining Dependencies Using System Package Management}
+\label{sec:setting_up_dependencies_with_management_capabilities}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\ac{EMTG} relies on external dependencies. This section describes how to obtain (and, when necessary, build) all dependencies with heavy use of package managers. In particular, the \texttt{yum} command and the Mamba Python package manager are used to install several dependencies.
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{System Package Manager Installations}
+\label{sec:yum_installations}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-yum_installations_public_linux}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Obtaining the EMTG Git Repository}
+\label{sec:obtaining_emtg}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-obtaining_emtg_public_linux}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Mamba}
+\label{sec:mamba}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-mamba_public_linux}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Manually Obtaining and Setting Up Other Dependencies}
+\label{sec:manually_obtaining_dependencies}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+This section describes how to obtain (and, when necessary, build) the remaining dependencies.
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Random-Number Utilities}
+\label{sec:randutils}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-dep_randutils_public_linux.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{GCC}
+\label{sec:gcc}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-gcc_from_source_public_linux}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{CMake}
+\label{sec:cmake}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-cmake_public_linux}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Linux Environment Variables}
+\label{sec:linux_environment}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-linux_env_public_linux}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{GSL}
+\label{sec:gsl}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-gsl_public_linux}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{CSPICE}
+\label{sec:cspice}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-cspice_public_linux}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Boost}
+\label{sec:boost}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-boost_public_linux}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{SNOPT}
+\label{sec:snopt}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-snopt_public_linux}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Building EMTG}
+\label{sec:building_emtg}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+This section describes how to build the \ac{EMTG} executable after all dependencies have been acquired and set up.
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{The EMTG-Config.cmake File}
+\label{sec:emtg_config_public_linux}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-emtg_config_cmake_public_linux}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Setting CMake Options}
+\label{sec:setting_cmake_options}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-setting_cmake_options_public_linux}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsubsection{Non-Standard CMake Options}
+\label{sec:nonstandard_cmake_options}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-nonstandard_cmake_options}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Executing EMTG Without PyEMTG}
+\label{sec:executing_emtg_without_pyemtg}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-executing_emtg_without_pyemtg}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{PyEMTG}
+\label{sec:pyemtg_look_elsewhere}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{../../../shared_latex_inputs/sec-pyemtg_look_elsewhere}
+
+
+\end{document}

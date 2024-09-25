@@ -1,0 +1,15 @@
+%\subsection{Executing \ac{PEATSA}}
+%\label{sec:executing_peatsa}
+
+Once the files required to set up a PEATSA run has been created, the command-line command to execute a PEATSA run is (all on one line):
+
+\setlength\parindent{-15pt} \verb|nohup python path/to/PEATSA.py /path/to/trade_study_file.py > /path/to/peatsa.out 2>&1 &|
+
+\noindent The following is a breakdown of the different elements of this command:
+
+\begin{itemize}
+	\item \verb|nohup|: Ignore the hangup signal so that the process does not stop if the user logs out or is diconnected.
+	\item \verb|python path/to/PEATSA.py /path/to/trade_study_file.py|: Use python to execute \\ PEATSA.py with trade\_study\_file.py as a command-line argument.
+	\item \verb|> /path/to/peatsa.out 2>&1|: Redirect standard output and standard error to peatsa.out. \ac{PEATSA} writes output to this file, so the user can monitor the progress of a \ac{PEATSA} run by examining the contents of this file. The user can also see if a \ac{PEATSA} run has died unexpectedly by examining the contents of this file.
+	\item \verb|&|: Run in the background.
+\end{itemize}

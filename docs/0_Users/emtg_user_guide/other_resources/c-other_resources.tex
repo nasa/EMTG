@@ -1,0 +1,15 @@
+\chapter{Other Resources}
+\label{chap:other_resources}
+
+While this user guide is intended to cover the vast majority of the usage of \ac{EMTG}, some of the more advanced capabilities benefit from independent explanation. There are two main advanced capabilities to cover: manual constraint scripting and the Python \ac{EMTG} Automated Trade Study Application (PEATSA).
+
+\section{Constraint Scripting}
+Manual constraint scripting refers to the ability to script more complex constraints directly in the {\tt .emtgopt} file. This allows users to design constraints that exceed the limitations of PyEMTG. There are three classes of constraints available: boundary constraints, maneuver constraints, and phase distance constraints (otherwise known as path constraints). Additionally, users may as needed create new boundary constraints by developing custom \ac{EMTG} C++ code. For more information on constraint scripting, refer to the \ac{EMTG} Constraint Scripting documentation located at {\tt docs/0\_Users/constraint\_scripting/\ac{EMTG}\_constraint\_scripting.pdf}. For a brief tutorial on basic usage of constraint scripting in \ac{EMTG}, refer to the Constraint Scripting tutorial located at {\tt docs/0\_Users/tutorial/Tutorial\_Docs/8\_Constraint\_Scripting.pdf}.
+
+
+\section{Python EMTG Automated Trade Study Application}
+The Python \ac{EMTG} Automated Trade Study Application, or PEATSA, is a tool used to create and execute trade studies. It is a set of Python scripts which take an \ac{EMTG} options file, known as the ``base case'', and varies parameters as defined by the user to generate and execute variations from said base case. 
+% As a parameter is varied and solutions are obtained, these solutions may be used as initial guesses for new neighboring cases.
+% Additionally, PEATSA is capable of taking advantage of parallel computing.
+% PEATSA has many capabilities, such as solution seeding from neighboring trade parameters and parallel processing.
+For more information on PEATSA, including how to design and execute a PEATSA run, refer to the PEATSA user guide located at {\tt docs/0\_Users/PyEMTG\_User\_Guide/PyEMTG\_User\_Guide.pdf}. For a brief tutorial on the usage of PEATSA, refer to the PEATSA tutorial located at {\tt docs/0\_Users/tutorial/Tutorial\_Docs/7\_PEATSA.pdf}.

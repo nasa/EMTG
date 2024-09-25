@@ -1,0 +1,68 @@
+\section{Launch Vehicle Configuration}
+
+\label{sec:lv_config}
+The Launch Vehicle Options file (extension: {\tt .emtg\_launchvehicleopt}) is used to specify the capabilities of one or more launch vehicles.
+These options are used to calculate the delivered mass of a launch vehicle for a given input hyperbolic excess energy ($C_3$), as well as the derivative of the delivered mass with respect to a changing $C_3$.
+In \ac{EMTG}, Launch Vehicle Options files are relatively simple. 
+In one line, they specify the launch vehicle name, the \acf{DLA} and $C_3$ (Hyperbolic Excess Energy) bounds, the launch vehicle payload Adapter Mass, and the polynomial coefficients for injected mass as a function of $C_3$. The format is shown in Table \ref{tab:launchvehicleopt}.
+
+\begin{table}[ht]
+    \centering
+    \begin{tabular}{lll}
+    \hline
+    \textbf{Index} & \textbf{Variable Name} & \textbf{Data Type} \\
+    \hline
+    \textbf{1} & Name & String \\
+    % \hline
+    \textbf{2} & ModelType & Integer (0: polynomial, only type currently available) \\
+    % \hline
+    \textbf{3} & \ac{DLA}\_Lowerbound & Real (deg) \\
+    % \hline
+    \textbf{4} & \ac{DLA}\_Upperbound & Real (deg) \\
+    % \hline
+    \textbf{5} & C3Lowerbound & Real (km\textsuperscript{2}/s\textsuperscript{2}) \\
+    % \hline
+    \textbf{6} & C3Upperbound & Real (km\textsuperscript{2}/s\textsuperscript{2}) \\
+    % \hline
+    \textbf{7} & AdapterMass & Real (kg) \\
+    % \hline
+    \textbf{8->end of line} & C3Coefficient & Real ($C_3$ is in km\textsuperscript{2}/s\textsuperscript{2}) \\
+    % \hline
+    \end{tabular}
+    \caption{Launch Vehicle Variables}
+    \label{tab:launchvehicleopt}
+\end{table}
+
+\noindent The $C_3$ coefficients are used to model the capability of the launch vehicle within the $C_3$ bounds set by values 5 and 6 in the launch vehicle line.
+The \ac{DLA} and $C_3$ bounds set define the range over which the coefficients are valid.
+Typically the $C_3$ coefficients are set for polynomials up to fifth order ($n=5$).
+Data for polynomial fits may be obtained from NASA's Launch Services Program Launch Vehicle Performance Website: \href{https://elvperf.ksc.nasa.gov/Pages/Default.aspx}{https://elvperf.ksc.nasa.gov/Pages/Default.aspx}
+
+\flushleft The injected mass is governed by the following equation:
+\begin{equation}
+    m(C_3) = (1 - \eta_{LV})\sum_{i=0}^{n}\left(c_i \cdot C_3^{i} - m_{adapter}\right)
+    \label{eq:lv_injected_mass}
+\end{equation}
+Where $\eta_{LV}$ is the launch vehicle margin, $c_i$ is the $i$th $C_3$ Coefficient, and $m_{adapter}$ is the launch vehicle adapter mass.
+
+% \emtgknownissue{Launch Vehicle config file issue with payload adapter mass for some scenarios.}{Payload adapter mass calculation may not behave as expected when modifying the adapter mass for a solution where the obtained $C_3$ is against the provided upper bound. To workaround this issue in this scenario, in PyEMTG use the ``Fixed starting mass increment (kg)'' option for Journey 1 and set it to the negative value of the desired adapter mass, ensuring that the adapter mass set in the {\tt .emtg\_launchvehicleopt} file is set to zero.}
+
+\begin{alertbox}{\emtgknownissue{Launch Vehicle configuration file issue with payload adapter mass for some scenarios.}{Launch Vehicle Configuration Issue}}
+    \noindent Payload adapter mass calculation may not behave as expected when modifying the adapter mass for a solution where the obtained $C_3$ is against the provided upper bound. To workaround this issue in this scenario, in PyEMTG use the ``Fixed starting mass increment (kg)'' option for Journey 1 and set it to the negative value of the desired adapter mass, ensuring that the adapter mass set in the {\tt .emtg\_launchvehicleopt} file is set to zero.
+\end{alertbox}
+
+
+An example {\tt .emtg\_launchvehicleopt} file is shown in Figure \ref{fig:config_launchvehicleopt}. Note that lines beginning with \# are read as comments.
+
+\begin{figure}[htb]
+    \centering
+    \begin{tabular}{|l|}
+        \hline
+        {\tt \#name ModelType \ac{DLA}\_lb \ac{DLA}\_ub C3\_lb C3\_ub AdapterMass coeff[0] ... coeff[n]} \\
+        {\tt ExampleRocket 0 -28.5 28.5 0 50 0.0 3000.0 -65.0 0.35 0.0 0.0 0.0} \\
+        {\tt SmallExampleRocket 0 -28.5 28.5 0 6.5 0.0 3000.0 -65.0 0.35 0.0 0.0 0.0} \\
+        \hline
+    \end{tabular}
+    \caption{Example Launch Vehicle Options File}
+    \label{fig:config_launchvehicleopt}
+\end{figure}

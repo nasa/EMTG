@@ -1,0 +1,35 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsubsection{CMake}
+%\label{sec:cmake}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Purpose}
+
+\ac{EMTG} has a CMake-based build system, and is known to be compatible with CMake 3.23.2. 
+
+\subsubsection{Download Location}
+
+The version of CMake known to be compatible with \ac{EMTG} can be found at \url{https://github.com/Kitware/CMake/releases/v3.23.2/}.
+
+\subsubsection{Depedency Installation Instructions}
+
+\begin{enumerate}
+	\item Navigate to the Utilities directory by executing the following command: \\
+
+	\texttt{cd /Utilities/}
+	\item Download CMake using the following command: \\
+
+	\texttt{curl -LO https://github.com/Kitware/CMake/releases/download/v3.23.2/cmake- \newline\indent 3.23.2-linux-x86\_64.tar.gz}
+
+	\item Extract the tarball with the pre-built binaries by using the following command:
+
+	\begin{verbatim}
+	tar -xzf cmake-3.23.2-linux-x86_64.tar.gz
+	\end{verbatim}
+	
+	\item Rename the cmake directory using the following command:
+	\begin{verbatim}
+	mv /Utilities/cmake-3.23.2-linux-x86_64/ /Utilities/cmake-3.23.2/
+	\end{verbatim}	
+	
+\end{enumerate}

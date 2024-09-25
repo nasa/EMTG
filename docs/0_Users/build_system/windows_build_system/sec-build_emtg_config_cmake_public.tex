@@ -1,0 +1,49 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+% 1) The EMTG-Config.cmake File
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+Follow the following instructions:
+\begin{enumerate}
+	\item Navigate to the \textbf{\textless EMTG\_root\_dir\textgreater}\textbackslash directory
+	\item Copy the `EMTG-Config-template.cmake' file and rename to `EMTG-Config.cmake'
+	\item Open `EMTG-Config.cmake' in a text editor \\ \emph{This file is heavily commented with specific instructions. The user must know where they installed CSPICE, SNOPT, Boost, and GSL.}
+	\item Set the CSPICE DIR variable to the full path of the CSPICE root directory.
+	\begin{enumerate}
+		\item If CSPICE were placed in C:\textbackslash SW\_Installs\textbackslash cspice, then the user would type in the EMTG-Config.cmake file \\
+		\begin{verbatim}
+			set(CSPICE_DIR C:/SW_Installs/cspice)
+			 
+		\end{verbatim}
+		
+		\emph{Note the use of forward slashes in the file path even though the Windows file system uses backslashes.}
+	\end{enumerate}
+	\item Set the SNOPT\_ROOT\_DIR variable to the full path of the SNOPT root directory.
+	\begin{enumerate}
+		\item If SNOPT  were placed in C:\textbackslash SW\_Installs\textbackslash SNOPT77, then the user would type in the EMTG-Config.cmake file \\
+		\begin{verbatim}
+			set(SNOPT_ROOT_DIR C:/SW_Installs/SNOPT77)
+			 
+		\end{verbatim}
+		
+		\emph{Note the use of forward slashes in the file path even though the Windows file system uses backslashes.}
+	\end{enumerate}
+	\item Set the BOOST\_ROOT, BOOST\_INCLUDE\_DIR, and BOOST\_LIBRARY\_DIRS variables.
+	\begin{enumerate}
+		\item BOOST\_ROOT is the full path to the root directory of Boost.
+		\item BOOST\_INCLUDE\_DIR is the full path to the directory that contains the Boost header files. For Boost 1.79.0, this is a subdirectory in the Boost root directory called Boost.
+		\item BOOST\_LIBRARY\_DIRS is the full path to the directory that holds the Boost libraries after they are built. For Boost 1.79.0, this is a subdirectory in the Boost root directory called stage\textbackslash lib.
+	\end{enumerate}
+	If Boost were placed in C:\textbackslash SW\_Installs\textbackslash boost\_1\_79\_0, then the user would type in the EMTG-Config.cmake file 
+	\begin{verbatim}
+		set(BOOST_ROOT C:/SW_Installs/boost_1_79_0) 
+		set(BOOST_INCLUDE_DIR ${BOOST_ROOT}/boost) 
+		set(BOOST_LIBRARY_DIRS ${BOOST_ROOT}/stage/lib) 
+	\end{verbatim}	
+	\emph{Note the use of forward slashes in the file path even though the Windows file system uses backslashes.}
+	\item Set the GSL\_PATH variable to the full path to the GSL build directory (where the libraries are located). For example, if GSL were placed in C:\textbackslash SW\_Installs\textbackslash gsl-2.4.0, then the user would type in the EMTG-Config.cmake file 
+	\begin{verbatim}
+		set(GSL_PATH C:/SW_Installs/gsl-2.4.0/build)
+	\end{verbatim}
+	\emph{Note the use of forward slashes in the file path even though the Windows file system uses backslashes.}
+	\item Save the changes made to the EMTG-Config.cmake file
+\end{enumerate}

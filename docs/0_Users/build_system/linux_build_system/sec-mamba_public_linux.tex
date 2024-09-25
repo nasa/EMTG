@@ -1,0 +1,61 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Mamba}
+%\label{sec:mamba}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Purpose}
+
+The Mamba Python package manager is used to create a Python environment in which to use the PyEMTG interface and install dependencies. PyEMTG is known to be compatible with Python 3.7. so it is strongly recommended that a Python 3.7 environment be created for PyEMTG. While there are many methods for installing Python, the method supported in this guide is using the Mamba package manager. 
+
+\subsubsection{Download Location}
+
+The Mamba release known to be compatible with \ac{EMTG} can be found at \url{https://github.com/conda-forge/miniforge/releases/22.9.0-2}. Additional information on obtaining and using Mamba is available at \url{https://mamba.readthedocs.io/en/latest/\#}. To install Mamba, follow the steps below.
+
+\subsubsection{Dependency Installation Instructions}
+
+\begin{enumerate}
+	\item Navigate to your user home directory (e.g. /home/username/) in the Terminal window.
+	\item Execute the following command in the terminal to get the installation script for your flavor of Linux: \\
+
+	\texttt{curl -LO "https://github.com/conda-forge/miniforge/releases/download/22.9.0-2 \newline /Mambaforge-\$(uname)-\$(uname -m).sh"}
+
+	\item Execute the installation script using the following command: \\
+
+	\texttt{bash "Mambaforge-\$(uname)-\$(uname -m).sh"}
+
+	\item Follow the prompts given by the script. \\ Once the files have been downloaded and installed, the script will ask you if you want to run \texttt{conda init}. Choose to run \texttt{conda init}. If you do not, you will have to run the following command to finish setting up Mamba for the current user: \\
+	\texttt{eval "\$(path/to/conda shell.bash hook)" \&\& conda init}
+	
+	\item Close and reopen the Terminal window for the conda initialization to finalize.
+
+	\item Create a Python environment called ``PyEmtgEnv'' the following conda command: \\
+
+	\texttt{conda create -n PyEmtgEnv python=3.7}
+	\begin{itemize}
+		\item \textit{NOTE: PyEMTG is known to specifically NOT be compatible with Python 3.10 because wxWidgets is not compatible with Python 3.10.}
+	\end{itemize}
+	
+	\item Activate the created Python environment by running the following command: \\
+	\texttt{conda activate PyEmtgEnv}
+	
+	\item Install all the python packages by executing the following commands individually or copying the block of code and pasting into a terminal window: \\
+	\textit{(It may take a while for all the packages to be found and installed. The package versions listed are those which \ac{EMTG} and PyEMTG have been tested.)}
+	\begin{verbatim}
+	pip install astropy==4.3.1
+	pip install spiceypy==5.1.0
+	pip install jplephem==2.17
+	pip install matplotlib==3.5.3
+	pip install numpy==1.21.6
+	pip install scipy==1.7.3
+	pip install pandas==1.3.5
+	\end{verbatim}
+	
+	\begin{itemize}
+		\item \textit{NOTE: The wxPython package is not listed in the above list even though the PyEMTG \ac{GUI} depends on wxPython and wxPython may be installed via \texttt{pip} on Windows. This is because \texttt{pip} may \emph{not} be used to install wxPython on Linux. Installing wxPython on Linux is a more involved procedure, and is beyond the scope of this document at this time, though it may be added at a later date. As a result, these instructions as-is do not allow a user to use the PyEMTG \ac{GUI}, though other features of PyEMTG are usable.}
+		\item \textit{See this web page for more details on installing wxPython on Linux: \\ \url{https://wxpython.org/blog/2017-08-17-builds-for-linux-with-pip/index.html}}
+	\end{itemize}
+	
+	\item Execute the following command to list the python packages installed and verify they are the versions mentioned in the previous step: \\
+	
+	\texttt{pip list}
+\end{enumerate}

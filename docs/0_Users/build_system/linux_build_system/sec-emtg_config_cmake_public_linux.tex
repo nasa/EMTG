@@ -1,0 +1,44 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsection{The EMTG-Config.cmake File}
+%\label{sec:emtg_config}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+There is a file called EMTG-Config-template.cmake in the \ac{EMTG} repository root directory. Prior to building \ac{EMTG}, a copy of this file called EMTG-Config.cmake must be created and the contents of this new file must be edited in order to reflect the locations of dependencies on the user's system.
+
+\noindent The template file is heavily commented with specific instructions. In order to set the necessary information to appropriately edit the content of the file, the user must know where they installed CSPICE, \ac{SNOPT}, Boost, and \ac{GSL}. If using \ac{GSAD}, the user must also know the location of their GSAD\_2B.h file. With this information, open the EMTG-Config.cmake file in a text editor and set the following variables:
+
+\begin{itemize}
+	\item Set the CSPICE\_DIR variable to the full path to the root directory of CSPICE. For example, if CSPICE were placed in /Utilities/cspice, then the user would type in the EMTG-Config.cmake file:
+	
+	\begin{verbatim}
+	set(CSPICE_DIR /Utilities/cspice)
+	\end{verbatim}
+	
+	\item Set the SNOPT\_ROOT\_DIR variable to the full path to the root directory of \ac{SNOPT}. For example, if \ac{SNOPT} were placed in /Utilities/SNOPT-7.7, then the user would type in the EMTG-Config.cmake file:
+	
+	\begin{verbatim}
+	set(SNOPT_ROOT_DIR /Utilities/SNOPT-7.7)
+	\end{verbatim}
+	
+	\item Set the Boost-related variables. Depending on how Boost was installed, it may not be necessary to set all Boost-related variables because CMake can often ``find'' Boost without user inputs. BOOST\_ROOT is the full path to the root directory of Boost. BOOST\_INCLUDE\_DIR is the full path to the directory that contains the Boost header files. BOOST\_LIBRARY\_DIRS is the full path to the directory that holds the Boost libraries after they are built. If the user installed Boost manually using the procedure described in Section~\ref{sec:boost}, then the BOOST\_ROOT, BOOST\_INCLUDE\_DIR, and BOOST\_LIBRARY\_DIRS variables should be set. If Boost were placed in /Utilities/boost-1.79.0, then the user would type in the EMTG-Config.cmake file:
+	
+	\begin{verbatim}
+	set(BOOST_ROOT /Utilities/boost-1.79.0)
+	set(BOOST_INCLUDE_DIR ${BOOST_ROOT}/boost)
+	set(BOOST_LIBRARY_DIRS ${BOOST_ROOT}/stage/lib)
+	\end{verbatim}
+	
+	In this case, all other Boost-related lines of the EMTG-Config.cmake file should be commented out.
+	
+	\item Set the GSL\_PATH variable to the full path in which the \ac{GSL} libraries are located. If \ac{GSL} were installed from source (Section~\ref{sec:gsl}), then the GSL\_PATH variable must be set to the full path to the \ac{GSL} build directory. Thus, if \ac{GSL} were placed in /Utilities/gsl, then the user would type in the EMTG-Config.cmake file:
+	
+	\begin{verbatim}
+	set(GSL_PATH /Utilities/gsl/build)
+	\end{verbatim}
+	
+	\item If using \ac{GSAD}, set the GSAD\_PATH variable to the full path to the directory in which GSAD\_2B.h is located. For example, if GSAD\_2B.h is located in /Utilities, then the user would type in the EMTG-Config.cmake file:
+	
+	\begin{verbatim}
+	set(GSAD_PATH /Utilities)
+	\end{verbatim}
+\end{itemize}

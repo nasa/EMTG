@@ -76,7 +76,8 @@ EMTG currently implements the following state representations, each of which has
 	\item SphericalAZFPA
 	\item SphericalRADEC
 	\item Classical Orbit Elements (COE)
-	\item B-plane coordinates $\left\{v_\infty, RHA, DHA, b_{radius}, b_{theta}, TA\right\}$. A full math spec is available in the ``bplane\_math.pdf'' file in the EMTG repository. Note that the b-plane reference vector for \texttt{IncomingBplaneRepresentation} is the current reference frame\'s $\hat z$ vector. It is not possible to make the reference vector depend on the state as that would result in a circular definition of the Cartesian state as a function of the b-plane coordinates.
+	\item B-plane coordinates $\left\{v_\infty, RHA, DHA, b_{radius}, b_{theta}, TA\right\}$. A full math spec is available in the ``bplane\_math.pdf'' file in the EMTG repository. Note that the b-plane reference vector for \texttt{IncomingBplaneRepresentation} is the current reference frame's $\hat z$ vector. It is not possible to make the reference vector depend on the state as that would result in a circular definition of the Cartesian state as a function of the b-plane coordinates. Incoming and outgoing versions of these B-planes coordinates are available.
+	\item B-plane coordinates using $r_p$ instead of $b_{radius}$: $\left\{v_\infty, RHA, DHA, r_p, b_{theta}, TA\right\}$. A full math spec is available in the ``bplane\_math.pdf'' file in the EMTG repository. Note that the b-plane reference vector for \texttt{IncomingBplaneRepresentation} is the current reference frame's $\hat z$ vector. It is not possible to make the reference vector depend on the state as that would result in a circular definition of the Cartesian state as a function of the b-plane coordinates. Incoming and outgoing versions of these B-planes coordinates are available.
 \end{itemize}
 
 \section{B-plane}
@@ -96,7 +97,7 @@ The \texttt{SpacecraftAccelerationModel} class implements a Cartesian accelerati
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.3\linewidth]{./astrodynamics/AccelerationModel_inheritance.pdf}
+    \includegraphics[width=0.3\linewidth]{AccelerationModel_inheritance.png}
     \caption{\label{fig:AccelerationModel_inheritance} AccelerationModel inheritance diagram.}
 \end{figure} 
 
@@ -209,7 +210,7 @@ All equations of motion classes are instances of the Integrand class, which is o
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=0.3\linewidth]{./astrodynamics/Integrand_EOM_inheritance.pdf}
+    \includegraphics[width=0.3\linewidth]{Integrand_EOM_inheritance.png}
     \caption{\label{fig:Integrand_EOM_inheritance} Integrand inheritance diagram.}
 \end{figure}
 

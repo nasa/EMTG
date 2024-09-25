@@ -1,0 +1,401 @@
+\section{Spacecraft Options}
+\label{sec:spacecraft_options}
+
+The Spacecraft Options tab allows users to specify the launch vehicle and spacecraft used to define a mission. The launch vehicle is defined explicitly with a configuration file, while a spacecraft may be defined either via configuration files or within the Spacecraft Options tab directly. The spacecraft configuration files allow for greater flexibility when defining a spacecraft than may be easily achieved via the PyEMTG window. For details on how to create configuration files for launch vehicles and spacecraft, as well as the available propulsion, power, and constraint options which may be defined, refer to Chapter \ref{chap:config_files}.
+
+\noindent While many of the options defining spacecraft are explicitly defined in the configuration files, some of the options defining how \ac{EMTG} handles a spacecraft still must be set in the Spacecraft Options tab.
+
+\subsection{Common Hardware Options}
+Common hardware options define the most general parameters for a missions vehicles as well as the spacecraft model type used to define the spacecraft.
+
+
+\begin{enumerate}
+    \item \textbf{Maximum mass (kg):} A ``maximum mass'' field which scales the optimization problem. In \ac{EMTG}, the actual launch mass is limited to whatever the launch vehicle can carry to the C3 chosen by the optimizer. The launch vehicle configuration file contains settings which define the function relating injected mass to C3 (see Section \ref{sec:lv_config}).
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|maximum_mass| \\
+        Data Type & \verb|double| \\
+        Allowed Values & 1.0E-10 $<$ Real $<$ 1.0E-30 \\
+        Default Value & $525.2$ \\
+        Units & kg
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Allow initial mass to vary:} Option to allow \ac{EMTG} to use less initial mass than the launch vehicle can inject to a given C3 if that results in a higher final mass. Initial mass is still bounded by the capabilities of the launch vehicle (i.e., injected mass to C3).
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|allow_initial_mass_to_vary| \\
+        Data Type & \verb|bool| \\
+        Allowed Values & true, false \\
+        Default Value & false \\
+        \end{tabular}
+    \end{table}
+    
+    
+    \item \textbf{Spacecraft model type:} Specifies the method used to define the spacecraft. \\
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|SpacecraftModelInput| \\
+        Data Type & \verb|(SpacecraftModelInputType) enum| \\
+        Allowed Values & \verb|0: Assemble from libraries,| \newline
+                        \verb|1: Read .emtg_spacecraftoptions file,| \newline
+                        \verb|2: Assemble from missionoptions object| \\
+        Default Value & \verb|2: Assemble from missionoptions object| \\
+        \end{tabular}
+    \end{table}
+    Descriptions of the available options follows.
+    \begin{enumerate}
+        \item[] \verb|0: Assemble from libraries|: 
+        
+        \hspace{0.25in}\begin{minipage}{0.9\linewidth}Uses {\tt .emtg\_powersystemsopt} and {\tt .emtg\_propulsionsystemopt} files to define the power and propulsion systems of a spacecraft, while opening up a ``Tanks'' section in PyEMTG which allows users to set and define propellant tank constraints for both electric and chemical propulsion systems. Generally, it is recommended to avoid this mode as it is more complex than mode 2 while providing less flexibility than mode 1.
+        \end{minipage} \\
+
+        \item[] \verb|1: Read .emtg_spacecraftoptions file|: 
+        
+        \hspace{0.25in}\begin{minipage}{0.9\linewidth}Uses a {\tt .emtg\_spacecraftopt} file as defined in Section \ref{sec:spacecraft_config} to define the spacecraft. Where possible it is recommended for users to use this option as it provides the greatest flexibility.
+        \end{minipage} \\
+        
+        \item[] \verb|2: Assemble from missionoptions object|: 
+        
+        \hspace{0.25in}\begin{minipage}{0.9\linewidth}Allows users to set options defining a spacecraft directly in the Spacecraft Options tab by opening up ``Propulsion options'', ``Power options'', and ``Tanks'' sections. The options which may be set here are discussed in greater detail in Section \ref{sec:spacecraft_config}. 
+        %     When implementing higher fidelity modeling of a spacecraft, it is highly recommended to instead use a {\tt .emtg\_spacecraftopt} file to explicitly define the vehicle.
+        \end{minipage}
+    \end{enumerate}
+
+    \item \textbf{Hardware library path:} Specifies the path to the folder containing all options files for launch vehicles and spacecraft. A \textbf{trailing slash is required} to avoid an error in PyEMTG.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|HardwarePath| \\
+        Data Type & \verb|string| \\
+        Default Value & ``c:/Utilities/HardwareModels/'' \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Launch vehicle library file:} Specifies which {\tt .emtg\_launchvehicleopt} file in the hardware library path to use to obtain available launch vehicles for the mission. See Section \ref{sec:lv_config} for details on the configuration of these files.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|LaunchVehicleLibraryFile| \\
+        Data Type & \verb|string| \\
+        Default Value & ``NLSII\_August2018.emtg\_launchvehicleopt'' \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Launch vehicle:} Sets the launch vehicle for the mission. Must be the name of a launch vehicle defined in the {\tt .emtg\_launchvehicleopt} file.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|LaunchVehicleKey| \\
+        Data Type & \verb|string| \\
+        Default Value & ``Atlas\_V\_401'' \\
+        \end{tabular}
+    \end{table}
+\end{enumerate}
+
+
+
+\subsection{Spacecraft Model Type: 0}
+In ``Spacecraft model type'' mode 0, a launch vehicle options file, power systems option file, and propulsion system options file are required. The following are the options available when using this mode:\\
+
+\begin{enumerate}
+    \item \textbf{Power systems library file:} Specifies which {\tt .emtg\_powersystemsopt} file in the hardware library path to use to obtain available power systems for the mission. See Section \ref{sec:spacecraft_config} for details on the configuration of these files.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|PowerSystemsLibraryFile| \\
+        Data Type & \verb|string| \\
+        Default Value & ``default.emtg\_powersystemsopt'' \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Propulsion systems library file:} Specifies which {\tt .emtg\_propulsionsystemopt} file in the hardware library path to use to obtain available propulsion systems for the mission. See Section \ref{sec:spacecraft_config} for details on the configuration of these files.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|PropulsionSystemsLibraryFile| \\
+        Data Type & \verb|string| \\
+        Default Value & ``4\_18\_2017.emtg\_propulsionsystemopt'' \\
+        \end{tabular}
+    \end{table}
+
+    \item \textbf{Power system:} Sets the power system for the mission. Must be the name of a power system defined in the {\tt .emtg\_powersystemsopt} file to use.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|PowerSystemKey| \\
+        Data Type & \verb|string| \\
+        Default Value & ``5kW\_basic'' \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Electric propulsion system:} Sets the electric propulsion system for the mission. Must be the name of a power system defined in the {\tt .emtg\_propulsionsystemopt} file.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|ElectricPropulsionSystemKey| \\
+        Data Type & \verb|string| \\
+        Default Value & ``NSTAR'' \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Chemical propulsion system:} Sets the chemical propulsion system for the mission. Must be the name of a power system defined in the {\tt .emtg\_propulsionsystemopt} file.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|ChemicalPropulsionSystemKey| \\
+        Data Type & \verb|string| \\
+        Default Value & ``DefaultChemicalPropulsionSystem'' \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Number of thrusters:} Specifies the number of thrusters to use for the power and propulsion system calculations. Further detail on these calculations is provided in Section \ref{sec:spacecraft_config}.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|number_of_electric_propulsion_systems| \\
+        Data Type & \verb|int| \\
+        Allowed Values & $1$ $<$ Real $<$ $2147483647$ \\
+        Default Value & $1$ \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Enable electric propulsion propellant tank constraint?:} Option to enable an upper bound constraint on available propellant for the electric propulsion system.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|enable_electric_propellant_tank_constraint| \\
+        Data Type & \verb|bool| \\
+        Allowed Values & true, false \\
+        Default Value & false \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Maximum electric propulsion propellant (kg):} Only used when the electric tank constraint is active. Defines the upper bound on allowed propellant for the electric propulsion system.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|maximum_electric_propellant| \\
+        Data Type & \verb|int| \\
+        Allowed Values & $0$ $<$ Real $<$ 1.0E30 \\
+        Default Value & 1000 \\
+        Units & kg
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Enable chemical propulsion tank constraints?:} Option to enable an upper bound constraint on available fuel for the chemical propulsion system.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|enable_chemical_propellant_tank_constraint| \\
+        Data Type & \verb|bool| \\
+        Allowed Values & true, false \\
+        Default Value & false \\
+        Units & kg
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Maximum chemical fuel (kg):} Only used when the chemical tank constraint is active. Defines the upper bound on allowed chemical fuel.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|maximum_chemical_fuel| \\
+        Data Type & \verb|double| \\
+        Allowed Values & $0$ $<$ Real $<$ 1.0E30 \\
+        Default Value & 1000 \\
+        Units & kg
+        \end{tabular}
+    \end{table}
+
+    \item \textbf{Maximum chemical oxidizer (kg):} Only used when the chemical tank constraint is active. Defines the upper bound on allowed chemical oxidizer.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|maximum_chemical_oxidizer| \\
+        Data Type & \verb|double| \\
+        Allowed Values & $0$ $<$ Real $<$ 1.0E30 \\
+        Default Value & 1000 \\
+        Units & kg
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Bipropellant mixture ratio:} Only used when both electric and chemical tank constraints are inactive. Defines the mixture ratio for the chemical thruster.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|bipropellant_mixture_ratio| \\
+        Data Type & \verb|double| \\
+        Allowed Values & 1.0E-10 $<$ Real $<$ $1$ \\
+        Default Value & $0.925$ \\
+        \end{tabular}
+    \end{table}
+\end{enumerate}
+
+
+
+
+\subsection{Spacecraft Model Type: 1}
+In ``Spacecraft model type'' mode 1, a launch vehicle options file and spacecraft options file are required. Since the spacecraft options are all defined in the spacecraft options file, less options are present in the PyEMTG window. The following are the options available when using this mode:\\
+
+\begin{enumerate}
+    \item \textbf{Spacecraft file:} Specifies which {\tt .emtg\_spacecraftopt} file in the hardware library path to use to define the spacecraft for the mission. See Section \ref{sec:spacecraft_config} for details on the configuration of these files.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|SpacecraftOptionsFile| \\
+        Data Type & \verb|string| \\
+        Default Value & ``default.emtg\_spacecraftopt'' \\
+        \end{tabular}
+    \end{table}
+\end{enumerate}
+
+
+
+\subsection{Spacecraft Model Type: 2}
+In ``Spacecraft model type'' mode 2 only a launch vehicle options file is required. All other options are set by the user. The following are the options used to define a launch vehicle in this mode:\\
+
+\begin{enumerate}
+    \item \textbf{Engine type:} Allows the user to specify a specific thruster mode which opens up many additional options defining how thrust and mass flow rate are calculated. There are 32 available options a user may choose in this field in PyEMTG, though not all are functional. Furthermore, the numbering of these modes does not match that used for defining an engine type in a {\tt .emtg\_spacecraftopt} file. Given the variety of options present here and to avoid repeated details in this document, refer to Section \ref{sec:propulsion_system} for detailed explanations of these options. These options are also discussed in Section 5.6 of the \ac{EMTG} Software Design Document.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|engine_type| \\
+        Data Type & \verb|int| \\
+        Default Value & \verb|5: custom thrust and mass flow rate polynomial| \\
+        \end{tabular}
+    \end{table}
+\end{enumerate}
+
+
+\subsection{Additional Spacecraft Options}
+The Spacecraft Options tab contains other various options which are present no matter the chosen ``Spacecraft model type''. These options follow:
+
+\begin{enumerate}
+    \item \textbf{Launch vehicle margin (fraction):} Sets a margin which scales down the calculated injected mass to a C3 value for a launch vehicle by some percentage. The calculation is detailed in Section \ref{sec:lv_config}.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|LV_margin| \\
+        Data Type & \verb|double| \\
+        Allowed Values & $0$ $<$ Real $<$ $1$ \\
+        Default Value & $0$ \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Power margin (fraction):} Sets a margin which scales down the calculated available power for the propulsion system by some percentage. A value of zero causes no reduction in available power other than that required by the spacecraft bus for non-propulsive functions. The calculation is detailed in Section \ref{sec:power_system}.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|power_margin| \\
+        Data Type & \verb|double| \\
+        Allowed Values & $0$ $<$ Real $<$ $1$ \\
+        Default Value & $0$ \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Thruster duty cycle:} Defines the percentage of time the engine can operate.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|engine_duty_cycle| \\
+        Data Type & \verb|double| \\
+        Allowed Values & 1.0E-10 $<$ Real $<$ $1$ \\
+        Default Value & $1$ \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Duty cycle type:} Defines whether \ac{EMTG} uses "averaged" or "realistic" duty cycles for thrust arcs in the \ac{PSFB} transcription (defined in Chapter \ref{chap:mission_types}). Defaults to ``0: Averaged''.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|duty_cycle_type| \\
+        Data Type & \verb|(DutyCycleType) enum| \\
+        Allowed Values & \verb|0: Averaged,| \newline
+                        \verb|1: Realistic| \\
+        Default Value & \verb|0: Averaged| \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Electric propulsion propellant margin:} Sets a electric propellant margin for an objective to ensure some percentage of propellant for the electric propulsion system is retained when maximizing mass as an objective or applying dry mass constraints. This bound also modifies the upper bound on available electric propellant by scaling the user-defined tank size. A value of 0 specifies that no propellant need be saved.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|electric_propellant_margin| \\
+        Data Type & \verb|double| \\
+        Allowed Values & $0$ $<$ Real $<$ $1$ \\
+        Default Value & $1$ \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Chemical propulsion propellant margin:} Sets a chemical propellant margin for an objective to ensure some percentage of propellant for the chemical propulsion system is retained when maximizing mass as an objective or applying dry mass constraints. This bound also modifies the upper bound on available chemical propellant by scaling the user-defined tank size. A value of 0 specifies that no propellant need be saved.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|chemical_propellant_margin| \\
+        Data Type & \verb|double| \\
+        Allowed Values & $0$ $<$ Real $<$ $1$ \\
+        Default Value & $1$ \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Track ACS propellant?:} Enables a constant mass leak term to approximate propellant consumption due to the Attitude Control System (ACS) maneuvers. Propellant loss is applied against the spacecraft's chemical fuel tank. Opens an additional option to define ACS propellant use per day.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|trackACS| \\
+        Data Type & \verb|bool| \\
+        Allowed Values & true, false \\
+        Default Value & false \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{ACS propellant use per day (kg):} Only available when ``Track ACS propellant'' is enabled. Defines the constant mass leak in kilograms of chemical propellant a spacecraft will lose per day due to ACS maneuvers.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|ACS_kg_per_day| \\
+        Data Type & \verb|double| \\
+        Allowed Values & $0$ $<$ Real $<$ 1.0E30 \\
+        Default Value & $0$ \\
+        Units & kg
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Throttle logic mode:} Defines the logic in calculating the number of thrusters to use for a propulsion system. Defaults to minimum number of thrusters. Is overridden when using an {\tt .emtg\_spacecraftopt} file to define a spacecraft.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|throttle_logic_mode| \\
+        Data Type & \verb|(ThrottleLogic) enum| \\
+        Allowed Values & \verb|0: Maximum Number Of Thrusters,| \newline
+                        \verb|1: Minimum Number Of Thrusters| \\
+        Default Value & \verb|1: Minimum Number Of Thrusters| \\
+        \end{tabular}
+    \end{table}
+    
+    
+    \item \textbf{Throttle sharpness:} Defines how quickly the thruster transitions between different settings in some thruster modes. Additional detail is provided in Section \ref{sec:stage_block_data}. Is overridden when using an {\tt .emtg\_spacecraftopt} file to define a spacecraft.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|throttle_sharpness| \\
+        Data Type & \verb|double| \\
+        Allowed Values & $1$ $<$ Real $<$ 1.0E5 \\
+        Default Value & 1.0E2 \\
+        \end{tabular}
+    \end{table}
+    
+    \item \textbf{Power Source Decay Reference Epoch:} Defines the reference epoch used when calculating how the decay rate of the power supplied affects the actual generated power as compared to the expected nominal value. This calculation is described in further detail in Section \ref{sec:power_system}. This date may be set manually as a Julian date or set by the provided calendar in PyEMTG.
+    \begin{table}[H]
+        \hspace{2cm}
+        \begin{tabular}{lp{5cm}}
+        \ac{EMTG} Variable Name & \verb|power_system_decay_reference_epoch| \\
+        Data Type & \verb|double| \\
+        Allowed Values & $0$ $<$ Real $<$ 1.0E30 $\cdot 86400.0$ \\
+        Default Value & $51544.5 \cdot 86400.0$ \\
+        \end{tabular}
+    \end{table}
+\end{enumerate}

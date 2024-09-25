@@ -1,0 +1,480 @@
+\documentclass[11pt]{article}
+
+%% PACKAGES
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{url}
+\usepackage[printonlyused]{acronym}
+\usepackage[ruled]{algorithm}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{overpic}
+\usepackage{calc}
+\usepackage{color}
+%\usepackage{times}
+%\usepackage{ragged2e}
+ \usepackage[margin=1.0in]{geometry}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{textcomp}
+\usepackage{cite}
+\usepackage{mdwlist}
+\usepackage{subfiles}
+\usepackage{enumitem}
+\usepackage{calc}
+\usepackage{array}
+\usepackage{units}
+\usepackage{arydshln,leftidx,mathtools}
+\usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{relsize}
+\usepackage{float}
+\usepackage{makecell}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\makeatletter
+\let\@tmp\@xfloat
+\usepackage{fixltx2e}
+\let\@xfloat\@tmp
+\makeatother
+
+\usepackage[subfigure]{tocloft}
+\usepackage[singlespacing]{setspace}
+%\usepackage[nodisplayskipstretch]{setspace}
+%\setstretch{1.0}
+
+%\renewcommand\cftsecafterpnum{\vskip\baselineskip}
+%\renewcommand\cftsubsecafterpnum{\vskip\baselineskip}
+%\renewcommand\cftsubsubsecafterpnum{\vskip\baselineskip}
+
+%\usepackage{mathtools}
+%\usepackage[framed]{mcode}
+
+\usepackage{pgfplots}
+
+\usepackage{cancel}
+
+\usepackage{tikz}
+\usetikzlibrary{calc,patterns,decorations.pathmorphing,decorations.markings,fit,backgrounds}
+
+\usepackage[strict]{changepage} %use to manually place figs/tables to get them within the margins
+
+\makeatletter
+\g@addto@macro\normalsize{%
+  \setlength\abovedisplayskip{0.25pt}
+  \setlength\belowdisplayskip{0.25pt}
+  \setlength\abovedisplayshortskip{0.25pt}
+  \setlength\belowdisplayshortskip{0.25pt}
+}
+\makeatother
+
+
+
+\setlength{\parskip}{\baselineskip}
+
+
+%% TODO
+\newcommand{\todo}[1]{\vspace{5 mm}\par \noindent \framebox{\begin{minipage}[c]{0.98 \columnwidth} \ttfamily\flushleft \textcolor{red}{#1}\end{minipage}}\vspace{5 mm}\par}
+
+%% MACROS
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+\providecommand{\dualnorm}[1]{\norm{#1}_\ast}
+\providecommand{\set}[1]{\lbrace\,#1\,\rbrace}
+\providecommand{\cset}[2]{\lbrace\,{#1}\nobreak\mid\nobreak{#2}\,\rbrace}
+\providecommand{\onevect}{\mathbf{1}}
+\providecommand{\zerovect}{\mathbf{0}}
+\providecommand{\field}[1]{\mathbb{#1}}
+\providecommand{\C}{\field{C}}
+\providecommand{\R}{\field{R}}
+\providecommand{\polar}{\triangle}
+\providecommand{\Cspace}{\mathcal{Q}}
+\providecommand{\Fspace}{\mathcal{F}}
+\providecommand{\free}{\text{\{}\mathsf{free}\text{\}}}
+\providecommand{\iff}{\Leftrightarrow}
+\providecommand{\qstart}{q_\text{initial}}
+\providecommand{\qgoal}{q_\text{final}}
+\providecommand{\contact}[1]{\Cspace_{#1}}
+\providecommand{\feasible}[1]{\Fspace_{#1}}
+\providecommand{\prob}[2]{p(#1|#2)}
+\providecommand{\prior}[1]{p(#1)}
+\providecommand{\Prob}[2]{P(#1|#2)}
+\providecommand{\Prior}[1]{P(#1)}
+\providecommand{\parenth}[1] {\left(#1\right)}
+\providecommand{\braces}[1] {\left\{#1\right\}}
+\providecommand{\micron}{\hbox{\textmu m}}
+
+%% MATH FUNCTION NAMES
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\cone}{cone}
+\DeclareMathOperator{\homog}{homog}
+\DeclareMathOperator{\domain}{dom}
+\DeclareMathOperator{\range}{range}
+\DeclareMathOperator{\argmax}{arg\,max}
+\DeclareMathOperator{\argmin}{arg\,min}
+\DeclareMathOperator{\area}{area}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\mathspan}{span}
+\DeclareMathOperator{\sn}{sn}
+\DeclareMathOperator{\cn}{cn}
+\DeclareMathOperator{\dn}{dn}
+\DeclareMathOperator*{\minimize}{minimize}
+
+\DeclareMathOperator{\atan2}{atan2}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+%\setlength{\RaggedRightParindent}{2em}
+%\setlength{\RaggedRightRightskip}{0pt plus 3em}
+%\pagestyle{empty}
+
+
+
+
+\title{{\Huge EMTGv9 State Representations}}
+\vspace{0.5cm}
+\author
+{
+	Noble Hatten \thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Flight Dynamics and Mission Design Branch Code 595}
+}
+\vspace{0.5cm}
+
+\date{}
+
+\begin{document}
+
+\begin{titlepage}
+\maketitle
+%\thispagestyle{empty}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|}
+		\hline
+		\textbf{Revision Date} & \textbf{Author} & \textbf{Description of Change} \\ \hline
+		\date{April 28, 2022} & Noble Hatten & Initial creation \\
+		\hline
+	\end{tabular}
+\end{table}
+\end{titlepage}
+
+
+
+\newpage
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+\clearpage
+\setcounter{page}{1}
+
+\input{./acronymlist}
+
+\section{Overview}
+\label{sec:overview}
+
+\ac{EMTG} allows the user to specify a state at a boundary in multiple state representations. These state representations are described in the StateRepresentation section of the Software Design Document. Though EMTG changes are described first, all PyEMTG changes must also be made before attempting to test the EMTG changes.
+
+\section{How to Add a State Representation to EMTG}
+\label{sec:howToAddAStateRep}
+
+Adding a state representation to \ac{EMTG} consists of multiple steps and requires additions to both the \ac{EMTG} C++ code and the PyEMTG Python code.
+
+\subsection{Preliminaries}
+\label{subsec:preliminaries}
+
+Any new state representation requires a string name. This name will be used many times throughout \ac{EMTG} and PyEMTG. The convention for a name is Pascal case; that is, the first letter of each compound word in the string is capitalized, including the first. For example, ``IncomingBplane''.
+
+In addition, each individual element of the state representation must have string name. By convention, these strings are all caps. For example, for IncomingBplane, we have ``VINF'', ``RHA'', ``DHA'', ``BRADIUS'', ``BTHETA'', and ``TA''. The ordering of the string names is also meaningful and must be consistent across all uses.
+
+\subsection{State Transformation Equations}
+\label{subsec:stateTransformationEquations}
+
+Any new state representation must be transformable to and from a Cartesian state representation. Thus, the user must derive and code (and verify and document!) equations to transform from the new state representation to Cartesian, and from Cartesian to the new state representation. The Jacobians of both these transformations are also required. The gravitational parameter of the central body to which the state representation is referenced is available for use in the transformations. If another parameter is required, a larger change would be required to EMTG and PyEMTG than is currently discussed in this document.
+
+\subsection{EMTG Updates}
+\label{subsec:emtgUpdates}
+
+\subsubsection{New Files}
+\label{subsubsec:newEmtgFiles}
+
+A C++ source and header file must be created and placed in \texttt{src/Astrodynamics/StateRepresentations}. The convention is to name the source and header files the name of the new state representation appended with ``StateRepresentation''. For example, ``OutgoingBplaneStateRepresentation.cpp''.
+
+The easiest way to create the new files is to copy/paste the source/header files for an existing state representation and use them as a starting point. Following that paradigm, the following changes must be made to the new header file:
+
+\begin{itemize}
+	\item Change the name of the include-guard macro to reflect the name of the new file.
+	\item Change the name of the class to be the name of the new file.
+	\item Add any class properties deemed useful. Whether or not it is beneficial to add class properties may not be known until changes are made to the source file.
+\end{itemize}
+
+\noindent Note that all specific state representations are derived from the \texttt{StateRepresentationBase} class, so it may be beneficial to browse \texttt{StateRepresentationBase}.
+
+The following changes must be made to the new source file:
+
+\begin{itemize}
+	\item Change the name of the included header file to reflect the name of the header file for the new state representation.
+	\item Replace all instances of the old state representation class name with the name state representation class name.
+	\item In the constructor:
+	\begin{itemize}
+		\item Set the \texttt{name} property to the string name of the new state representation.
+		\item Set the \texttt{stateNames} property to the string names of the individual state representation element names (in order!).
+	\end{itemize}
+\item In the \texttt{convertFromRepresentationToCartesian} method:
+	\begin{itemize}
+		\item The purpose of this method is to convert from the new state representation to a Cartesian state representation. The Cartesian state must be placed in the \texttt{StateVectorCartesian} property.
+		\item In the \texttt{if (needG) \{\}} block, the Jacobian of the conversion must be calculated and placed in the \texttt{RepresentationToCartesianTransitionMatrix} property.
+	\end{itemize}
+\item In the \texttt{convertFromCartesianToRepresentation} method:
+	\begin{itemize}
+		\item The purpose of this method is to convert from a Cartesian state representation to the new state representation. The state in the new state representation must be placed in the \texttt{StateVectorThisRepresentation} property.
+		\item In the \texttt{if (needG) \{\}} block, the Jacobian of the conversion must be calculated and placed in the \texttt{CartesianToRepresentationTransitionMatrix} property.
+	\end{itemize}
+\end{itemize}
+
+\noindent All \texttt{double} variables should be declared as \texttt{doubleType} in order to maintain compatibility with \ac{GSAD}.
+
+\subsubsection{EMTG Enums}
+\label{subsubsec:emtgEnums}
+
+In \texttt{src/Core/EMTG\_enums.h}, there is an enum called \texttt{StateRepresentation}. The string name of the new state representation must be added to the end of this enum. Similarly, the string name \emph{as a string} must be added to the end of the variable \texttt{StateRepresentationStrings}.
+
+\subsubsection{StateRepresentationFactory}
+\label{subsubsec:stateRepresentationFactory}
+
+In \texttt{src/Astrodynamics/StateRepresentaton/StateRepresentationFactory.cpp}:
+
+\begin{itemize}
+	\item Add an \texttt{\#include} statement for the header file for the new state representation class.
+	\item Add an \texttt{else if \{\}} block for the new state representation, modeled after the blocks for the existing state representations.
+\end{itemize} 
+
+\subsubsection{FreePointBoundary}
+\label{subsubsec:freePointBoundary}
+
+In \texttt{src/Mission/Journey/Phase/BoundaryEvents/FreePointBoundary.cpp}:
+
+\begin{itemize}
+	\item In the \texttt{calcbounds\_event\_left\_side()} method, in the \texttt{switch (this->myStateRepresentationEnum) \{\}} block, add a \texttt{case} block for the new state representation, based on the existing \texttt{case} blocks. In a given \texttt{push\_back()}, the arguments are the string name of the state element, the scale factor for the state element, and whether or not the state element is an angle. Note that the string names for each state element do not have to be the same as the state names used in the new state representation's \texttt{stateNames} property. For example, IncomingBplane and OutgoingBplane have the same \texttt{stateNames} values, but have different string names in \texttt{FreePointBoundary->statesToRepresent}. \texttt{FreePointBoundary->statesToRepresent} sets the names for the states in the decision vector descriptions (i.e., what is written in the XFfile.csv).
+\end{itemize}
+
+\subsubsection{PeriapseBoundary}
+\label{subsubsec:periapseBoundary}
+
+In \texttt{src/Mission/Journey/Phase/BoundaryEvents/PeriapseBoundary.cpp}:
+
+\begin{itemize}
+	\item In the \texttt{initialize()} method, in the \texttt{//do we need the rdotv constraint? if\{\}} block, add the enum for the new state representation to the list of conditions \emph{if} the new state representation has a state that can be directly constrained to ensure a periapse. For example, classical orbital elements are included in the list of conditions because true anomaly is part of that state representation, and constraining true anomaly to be 0 is sufficient to ensure a periapse.
+	\item In the \texttt{initialize()} method, in the \texttt{//do we need the distance constraint? if\{\}} block, add the enum for the new state representation to the list of conditions \emph{if} the new state representation has a state that can be directly constrained to ensure a distance at periapse. For example, spherical state representations are included in the list of conditions because $r$ is part of the state representation.
+	\item In the \texttt{calcbounds\_event\_left\_side()} method, in the \texttt{switch (this->myStateRepresentationEnum) \{\}} block, add a \texttt{case} block for the new state representation, based on the existing \texttt{case} block. In a given \texttt{push\_back()}, the arguments are the lower bound and upper bound on each state element. The values selected are dependent on the state representation. However, there are important points:
+	\begin{itemize}
+		\item Angle bounds are in degrees.
+		\item For a state representation that directly constrains a periapse (e.g., with true anomaly), lower and upper bounds must be set to ensure a periapse. For example, for classical orbital elements, the upper and lower bounds on true anomaly are set to \texttt{math::SMALL} and \texttt{-math::SMALL}, respectively.
+		\item For a state representation that directly constrains periapse distance, lower and upper bounds must be set to ensure that distance. For example, for a spherical representation, the upper and lower bounds on $r$ must be set to \texttt{RadiusBounds[1]} and \texttt{RadiusBounds[0]}, respectively.
+		\item For a state representation that directly encodes $v_{\infty}$, the upper and lower bounds on that state must be set to \texttt{VelocityMagnitudeBounds[1]} and \texttt{VelocityMagnitudeBounds[0]}, respectively.
+	\end{itemize}
+\end{itemize}
+
+
+\subsubsection{Documentation}
+\label{subsubsec:emtgDocumentation}
+
+A new state representation must be accompanied by the following documentation:
+
+\begin{itemize}
+	\item Doxygen-compatible comments in source code.
+	\item A description of the new state representation in the StateRepresentation section of the \ac{EMTG} Software Design Document.
+	\item A mathematical specification for the new state representation in \texttt{docs/}.
+\end{itemize}
+
+\subsubsection{Testing}
+\label{subsubsec:emtgTesting}
+
+Verification that EMTG is acting appropriately includes:
+
+\begin{itemize}
+	\item Verifying the results of the state transformations.
+	\item Executing the missiontestbed when using the new state representation and ensuring that:
+	\begin{itemize}
+		\item The elements in the .emtgopt file and the XFfile are as expected
+		\item The derivatives in the Gout file match their automatic differentiation counterparts.
+		\item There are no elements in the missing entries file.
+	\end{itemize}
+\end{itemize}
+
+\subsection{CMAKE Updates}
+\label{subsec:cmakeUpdates}
+
+The new source and header files added to \ac{EMTG} must be added to the appropriate variables in \texttt{src/Astrodynamics/StateRepresentation/CMakeLists.txt}. Specifically, 
+
+\begin{verbatim}
+${CMAKE_CURRENT_SOURCE_DIR}/<NewFileName>.h
+\end{verbatim}
+
+\noindent must be added to \texttt{STATEREPRESENTATION\_HEADERS} and
+
+\begin{verbatim}
+${CMAKE_CURRENT_SOURCE_DIR}/<NewFileName>.cpp
+\end{verbatim}
+
+\noindent must be added to \texttt{STATEREPRESENTATION\_SOURCE}. This is a straightforward matter of following the conventions of the lists already present in the CMakeLists file.
+
+\subsection{PyEMTG Updates}
+\label{subsec:pyemtgUpdates}
+
+\subsubsection{The GUI}
+\label{subsubsec:theGui}
+
+The Journey Options panel and the Physics Options panel must both be updated. For the Journey Options panel:
+
+\begin{itemize}
+	\item In \texttt{PyEMTG/JourneyOptionsPanel/OrbitElementsPanel.py}, in the \texttt{OrbitElementsPanel} constructor, add the enum number and string name of the new state representation to \texttt{elements\_representation\_choices}.
+	\item In \texttt{PyEMTG/JourneyOptionsPanel/ArrivalElementsPanel.py}, in the \texttt{ArrivalElementsPanel.update()} method, add an \texttt{elif} block for the new state representation based on the existing blocks for existing representations.
+	\item In \texttt{PyEMTG/JourneyOptionsPanel/DepartureElementsPanel.py}, in the \texttt{DepartureElementsPanel.update()} method, add an \texttt{elif} block for the new state representation based on the existing blocks for existing representations.
+	\item In \texttt{PyEMTG/JourneyOptionsPanel/ArrivalElementsPanelToAEI.py}, in the \texttt{ArrivalElementsPanelToAEI.update()} method, add an \texttt{elif} block for the new state representation based on the existing blocks for existing representations.
+	\item In \texttt{PyEMTG/JourneyOptionsPanel/ArrivalElementsPanelToEnd.py}, in the \texttt{ArrivalElementsPanelToEnd.update()} method, add an \texttt{elif} block for the new state representation based on the existing blocks for existing representations.
+\end{itemize}
+
+For the Physics Options panel:
+
+\begin{itemize}
+	\item In \texttt{PyEMTG/PhysicsOptionsPanel.py}, add the string name of the new state representation to the \texttt{StateRepresentationChoices} assignment.
+\end{itemize}
+
+\subsubsection{StateConverter}
+\label{subsubsec:stateConverter}
+
+The \texttt{StateConverter} class is used to take a state in one representation and convert it to another representation. Currently, this is done by having a method for every possible permutation of input/output state representations, with the Cartesian representation used as a intermediary. Thus, when a new representation is added, new methods are required of the form:
+
+\begin{verbatim}
+def NewRepresentationtoCartesian(self, stateNewRepresentation, mu):
+	"""
+	Parameters
+	----------
+	stateNewRepresentation : 6-element list of floats
+		State in new representation: [state0Name, state1Name state2Name, 
+		state3Name, state4Name, state5Name]
+	mu : float
+		Gravitational parameter of central body
+	
+	Returns
+	-------
+	6-element list of floats
+		State in Cartesian: [x, y, z, vx, vy, vz]
+	"""
+	...Math...
+	return stateCartesian
+	
+def CartesiantoNewRepresentation(self, stateCartesian, mu):
+	"""
+	Parameters
+	----------
+	stateCartesian : 6-element list of floats
+	State in Cartesian: [x, y, z, vx, vy, vz]
+	mu : float
+	Gravitational parameter of central body
+	
+	Returns
+	-------
+	6-element list of floats
+	State in new representation: [state0Name, state1Name state2Name, 
+	state3Name, state4Name, state5Name]
+	"""
+	...Math...
+	return stateNewRepresentation
+\end{verbatim}
+
+For transformations to other representations, a template like the following is used:
+
+\begin{verbatim}
+def NewRepresentationtoCOE(self, stateNewRepresentation, mu):
+	stateCartesian = self.NewRepresentationToCartesian(stateNewRepresentation, mu)
+	return self.CartesiantoCOE(stateCartesian, mu)
+\end{verbatim}
+
+Currently, the required permutations are:
+
+\begin{itemize}
+	\item \texttt{NewRepresentationtoCartesian()}
+	\item \texttt{NewRepresentationtoCOE()}
+	\item \texttt{NewRepresentationtoSphericalAZFPA()}
+	\item \texttt{NewRepresentationtoSphericalRADEC()}
+	\item \texttt{NewRepresentationtoIncomingBplane()}
+	\item \texttt{NewRepresentationtoOutgoingBplane()}
+	\item \texttt{NewRepresentationtoIncomingBplaneRpTA()}
+	\item \texttt{NewRepresentationtoOutgoingBplaneRpTA()}
+	\item \texttt{CartesiantoNewRepresentation()}
+	\item \texttt{COEtoNewRepresentation()}
+	\item \texttt{SphericalAZFPAtoNewRepresentation()}
+	\item \texttt{SphericalRADECtoNewRepresentation()}
+	\item \texttt{IncomingBplanetoNewRepresentation()}
+	\item \texttt{OutgoingBplanetoNewRepresentation()}
+	\item \texttt{IncomingBplaneRpTAtoNewRepresentation()}
+	\item \texttt{OutgoingBplaneRpTAtoNewRepresentation()}
+\end{itemize}
+
+The \texttt{convertDecisionVector()} method must also be updated. This method is used to automatically convert elements on an \ac{EMTG} decision vector from one state representation to another. This is used, for example, in the HighFidelityConverter and when using the GUI to change the free point state parameterization. Specific changes required are described below. As always, use existing code as a template!
+
+\begin{itemize}
+	\item Add a list containing the names of the states of the state parameterization as they appear in the \ac{EMTG} decision vector. I.e., the same as the names written in \texttt{FreePointBoundary->statesToRepresent}.
+	\item Add an \texttt{elif} block to the \texttt{if 'left state x' in description:} block. The purpose of this \texttt{if} block is to determine, based on decision vector description strings, whether a state in a particular representation has been encountered. Thus, the \texttt{elif} condition must uniquely identify that a state in the new state representation has been encountered. The \texttt{elif} condition should start with \texttt{left state}, then include a string that is unique to the representation. For example, COE uses \texttt{elif 'left state SMA' in description}.
+	\begin{itemize}
+		\item In the case that the text used to uniquely identify the state representation is not in the zeroth element of the state, then this must be taken into account when stepping through the decision vector. See the use of the variable \texttt{delta} in the \texttt{elif 'left state TAin' in description} block. This \texttt{delta} may be reused for future state representations. Its value is set equal to the value that needs to be added to the current \texttt{Xindex} in order to access the zeroth element of the state. For example, if the unique text is located in the fifth element of the state (zero-indexed), then \texttt{delta = -5}. Note that the B plane state representation blocks are newer than the other state representation blocks and contain more maintainable code, particularly when use of \texttt{delta} is needed. As a result, it is recommended to start with one of these blocks when writing the new code block.
+		\item After the \texttt{elif} block is created, an interior \texttt{if} block based on \texttt{desiredStateRep} is used to call the appropriate method to transform the state to the correct representation. If \texttt{desiredStateRep} is the same as the current state rep, then no transformation is used, and \texttt{Xindex} is simply incremented. It is highly recommended that a copy/paste of an existing case be used as the basis for anew case.
+	\end{itemize}
+	\item In each of the previously existing outer \texttt{if/elif} blocks, inner \texttt{elif} blocks for state conversion if \texttt{desiredStateRep} is the new state representation must be added.
+\end{itemize}
+
+\subsubsection{Documentation}
+\label{subsubsec:pyemtgDocumentation}
+
+All new PyEMTG code must be commented using comments compatible with Sphinx automatic documentation generation.
+
+\subsubsection{Testing}
+\label{subsubsec:pyemtgTesting}
+
+Verification that PyEMTG is acting appropriately includes:
+
+\begin{itemize}
+	\item Verifying the results of the state transformations in \texttt{StateConverter}.
+	\item Verifying that the proper labels and fields appear in the GUI.
+	\item Verifying that switching state representations in the GUI and saving results in expected changes to decision variable values in the .emtgopt file.
+\end{itemize}
+
+\subsection{Journey Options Updates}
+\label{subsec:journeyOptionsUpdates}
+
+In OptionsOverhaul/list\_of\_journeyoptions.csv, update the rows whose ``name'' is:
+
+\begin{itemize}
+	\item departure\_elements\_state\_representation. Increase the value in the ``upperBound'' column by 1. Update the ``comment'' and ``description'' columns to reference the new state representation.
+	\item arrival\_elements\_state\_representation. Increase the value in the ``upperBound'' column by 1. Update the ``comment'' and ``description'' columns to reference the new state representation.
+	\item \textbf{NOTE: Code currently restricts probe entry element representations. DO NOT do this line until further checking is done.} Probe\_AEI\_elements\_state\_representation. Increase the value in the ``upperBound'' column by 1. Update the ``comment'' and ``description'' columns to reference the new state representation.
+	\item \textbf{NOTE: Code currently restricts probe entry element representations. DO NOT do this line until further checking is done.} Probe\_End\_elements\_reference\_epoch. Increase the value in the ``upperBound'' column by 1. Update the ``comment'' and ``description'' columns to reference the new state representation.
+\end{itemize}
+
+\subsection{Mission Options Updates}
+\label{subsec:missionOptionsUpdates}
+
+In OptionsOverhaul/list\_of\_missionoptions.csv, update the rows whose ``name'' is:
+
+\begin{itemize}
+	\item PeriapseBoundaryStateRepresentation. Increase the value in the ``upperBound'' column by 1. Update the ``comment'' and ``description'' columns to reference the new state representation.
+\end{itemize}
+
+\subsection{Execute Options Overhaul Script}
+\label{subsec:executeOptionsOverhaulScript}
+
+After performing the tasks in Sections~\ref{subsec:journeyOptionsUpdates} and~\ref{subsec:missionOptionsUpdates}, execute the Python script in PyEMTG/OptionsOverhaul/make\_EMTG\_missionoptions\_journeyoptions.py. This creates new Python scripts and C++ code, so EMTG will need to be rebuilt after executing this script. Note that the \texttt{EMTG\_path} variable must be edited to match the user's repository location.
+
+\subsection{Test System Updates}
+\label{subsec:testSystemUpdates}
+
+Relevant regression tests must be created and placed in testatron/tests/state\_representation\_tests/. These new tests plus all existing unit tests must be executed and results confirmed prior to acceptance of the new state representation.
+
+
+%\bibliographystyle{AAS_publication}
+%\bibliography{EMTGbib_Jacob_June_2014}
+
+
+
+\end{document}

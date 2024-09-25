@@ -1,0 +1,61 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsubsection{\ac{SNOPT}}
+%\label{sec:snopt}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Purpose}
+
+\noindent \ac{EMTG} depends on the commercial \ac{NLP} solver package \ac{SNOPT} to perform gradient-based optimization. \ac{EMTG} has interfaces known to work for \ac{SNOPT} versions 7.5, 7.6, and 7.7. 
+
+\subsubsection{Download Location}
+
+For more information on obtaining \ac{SNOPT}, see \url{http://www.sbsi-sol-optimize.com/asp/sol_product_snopt.htm}. The \ac{SNOPT} source code should be extracted to a folder on your local system, which will be referred to as \texttt{<SNOPT\_root\_dir>}. 
+
+\subsubsection{Dependency Installation Instructions}
+
+Once you have obtained \ac{SNOPT}, you must modify the \texttt{<SNOPT\_root\_dir>/src/sn87sopt.f} file for it to work correctly with \ac{EMTG}.
+
+\begin{enumerate}
+	\item Navigate to approximately line 2791 for \ac{SNOPT} 7.7 (line 2709 in \ac{SNOPT} 7.6) to find the following:
+		\begin{verbatim}
+		primalInf = primalInf/max(xNorm , one)
+		\end{verbatim} \\
+	\item Comment (Fortran uses the ! character for comments) out the line so it looks like the following:
+		\begin{verbatim}
+		! primalInf = primalInf/max(xNorm , one)
+		\end{verbatim} \\	
+	\emph{Leaving this line uncommented can incorrectly mark certain solutions as feasible in \ac{SNOPT}.}
+	\item Save and close the file
+
+	\item Build the library from the source code 
+	\begin{enumerate}
+		
+		\item Perform the steps below for \texttt{SNOPT-7.7}
+		\begin{enumerate}
+			\item Run the following commands:
+			\begin{verbatim}
+			cd <SNOPT_root_dir>
+
+			./configure --with-cpp
+
+			make install
+			\end{verbatim}
+		\end{enumerate}
+		
+		\item Perform the steps below for \texttt{SNOPT-7.5} and \texttt{SNOPT-7.6}
+		\begin{enumerate}
+			\item Run the following commands:
+			\begin{verbatim}
+			cd <SNOPT_root_dir>
+
+			./configure --with-cpp
+
+			make interface
+
+			make install
+			\end{verbatim}
+		\end{enumerate}
+		
+	\end{enumerate}
+
+\end{enumerate}

@@ -1,0 +1,28 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsubsection{Non-Standard CMake Options}
+%\label{sec:nonstandard_cmake_options}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+The CMake options described in this section are relevant to developers and testers only and are not relevant for normal day-to-day use of \ac{EMTG}. As with the other CMake options, after all CMake options have been set, the user must configure and generate the project in CMake, then build.
+
+\noindent The \ac{EMTG} Mission Testbed is primarily used when developing new code to check the accuracy of Jacobians against \ac{GSAD}. In order to use the Mission Testbed with \ac{GSAD}, the user must have set the GSAD\_PATH variable in the EMTG-Config.cmake file, as described in Section~\ref{sec:emtg_config_public_linux}. Then, in the CMake options, the user must:
+
+\begin{itemize}
+	\item Set ``RUN\_MISSION\_TESTBED'' \texttt{ON}.
+	\item Set ``BUILD\_EMTG\_TESTBED'' \texttt{ON}.
+	\item Set ``USE\_AD\_INSTRUMENTATION'' \texttt{ON}.
+\end{itemize}
+
+\noindent Note that you may have to press \texttt{t} (Toggle advanced mode) to see some settings.
+
+\noindent The \ac{EMTG} Acceleration Model Testbed is used to print to file all acceleration model contributions for debugging and for comparing the Jacobians of the acceleration model against \ac{GSAD}. In order to use the Acceleration Model Testbed with \ac{GSAD}, the user must have set the GSAD\_PATH variable in the EMTG-Config.cmake file, as described in Section~\ref{sec:emtg_config_public_linux}. Then, in the CMake options, the user must:
+
+\begin{itemize}
+	\item Set ``RUN\_ACCELERATION\_MODEL\_TESTBED'' \texttt{ON}.
+	\item Set ``BUILD\_EMTG\_TESTBED'' \texttt{ON}.
+	\item Set ``USE\_AD\_INSTRUMENTATION'' \texttt{ON}.
+\end{itemize}
+
+\noindent When building \ac{EMTG} with Propulator and PyHardware, there may be an error where the compiler cannot find \texttt{pyconfig.h}. In this case, the user must locate pyconfig.h on their machine (likely in the \texttt{/path/to/mambaforge/envs/PyEmtgEnv/include} directory) and copy the file to the \texttt{/path/to/mambaforge/envs/PyEmtgEnv/include/python3.7m} directory. This can be done using the command:
+
+\texttt{cp /path/to/mambaforge/envs/PyEmtgEnv/include/pyconfig.h /path/to/mambaforge/\newline\indent envs/PyEmtgEnv/include/python3.7m}

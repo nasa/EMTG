@@ -1,0 +1,13 @@
+\chapter{Introduction}
+\label{chap:intro}
+The \acf{EMTG} is a tool primarily designed for optimizing interplanetary trajectories. It can quickly and robustly find optimal trajectories involving multiple flybys using either low-thrust or high-thrust maneuvers, with significant flexibility in defining spacecraft for these maneuvers. \ac{EMTG} is extremely efficient at solving a wide range of problems but is not completely generic. It is well-suited for interplanetary trajectory design and allows modeling from low to relatively high-fidelity.
+
+\noindent \ac{EMTG} operates with minimal user intervention and is capable of running without a user provided initial guess. This is achieved through the usage of a stochastic global search algorithm called \ac{MBH}. \ac{MBH} randomly searches the solution space and then performs a local gradient-based search using the \ac{SNOPT} to obtain a local minimum. Each iteration of \ac{MBH} perturbs the resulting decision vector from \ac{SNOPT} and performs new local gradient-based searches, which helps to escape local minima and work towards a global optima. This process repeats until an ending condition of time or number of iterations is met. 
+
+\noindent \ac{EMTG} is built in C++ and is compatible with Windows and Linux computers. A \ac{GUI} allows convenient interface with the tool. Custom Python scripts also allow interfacing with \ac{EMTG} in a scripting environment. This user guide covers the general usage of the tool for and is based on \ac{EMTG} v9.02.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.2\textwidth]{../../shared_latex_inputs/images/EMTG_logo_clemonaut.png}
+    \caption{The EMTG logo featuring "Clementine", Jacob Englander's pet chinchilla}
+\end{figure}

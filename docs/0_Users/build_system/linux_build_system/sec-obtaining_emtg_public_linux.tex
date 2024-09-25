@@ -1,0 +1,26 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+% Downloading the EMTG Git Repository
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+The latest EMTG source is located at \url{https://github.com/nasa/EMTG/}. This document will point to a specific EMTG version but users can obtain other versions from the aforementioned github location.
+
+\begin{enumerate}
+	\item Navigate to your user home directory (e.g. /home/username/) in the Terminal window. If downloading to an alternate location, ensure that the directory has no spaces in the file path.
+	\item Download a zip of EMTG directly by using the following command: \\ 
+	
+	\texttt{curl -LO https://github.com/nasa/EMTG/archive/refs/tags/v9.01.zip \&\&\newline\indent unzip v9.01.zip}
+	
+	\begin{enumerate}
+		\item Alternatively a user can download EMTG by cloning the repository. \\ To clone the git repository, navigate to the directory where you want to place the \ac{EMTG} files, and run the following command: \\
+
+		\texttt{git clone https://github.com/nasa/EMTG.git}
+
+	\end{enumerate}
+	\item Locate the folder that contains the ‘EMTG-Config-template.cmake’ file. \\ For the remainder of this document, this folder will be identified as \textbf{\textless EMTG\_root\_dir\textgreater}	
+	\item Create the \textbf{\textless EMTG\_root\_dir\textgreater}/HardwareModels/ folder
+	\item Copy the default.emtg\_launchvehicleopt and empty.ThrottleTable files from the \\ \textbf{\textless EMTG\_root\_dir\textgreater}/testatron/HardwareModels/ to the \\ \textbf{\textless EMTG\_root\_dir\textgreater}/HardwareModels/ folder
+	\item Create the \textbf{\textless EMTG\_root\_dir\textgreater}/Universe/ folder
+	\item Create the \textbf{\textless EMTG\_root\_dir\textgreater}/Universe/ephemeris\_files/ folder
+	\item Copy the *.emtg\_universe files from the  \textbf{\textless EMTG\_root\_dir\textgreater}/testatron/universe/ folder to the \textbf{\textless EMTG\_root\_dir\textgreater}/Universe/ folder
+	\item Copy the default.emtg\_universe file from the \textbf{\textless EMTG\_root\_dir\textgreater}/PyEMTG/ folder to the \textbf{\textless EMTG\_root\_dir\textgreater}/Universe/ folder and rename to Sun\_barycenters.emtg\_universe
+\end{enumerate}

@@ -1,0 +1,43 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsection{CSPICE}
+%\label{sec:cspice}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Purpose}
+
+\ac{EMTG} depends on CSPICE for ephemeris-lookup utilities, and is known to work with CSPICE N0067. 
+
+\subsubsection{Download Location}
+
+The version of CSPICE that is known to be compatible with \ac{EMTG} can be found at \url{https://naif.jpl.nasa.gov/pub/naif/toolkit/C/}.
+
+\subsubsection{Dependency Installation Instructions}
+
+\begin{enumerate}
+	\item Navigate to the Utilities directory by executing the following command: \\
+
+	\texttt{cd /Utilities/}
+	\item Download CSPICE N0067 using the following command:
+
+	\texttt{curl -LO https://naif.jpl.nasa.gov/pub/naif/toolkit/C/PC\_Linux\_GCC\_64bit/packages\newline\indent /cspice.tar.Z}
+
+	\item Extract the tarball and navigate into the newly created directory using the following commands:
+	\begin{verbatim}
+	tar -xzf cspice.tar.Z
+
+	cd cspice
+	\end{verbatim}   
+
+	\item Build the final executable using the following command:
+	\begin{verbatim}
+	./makeall.csh
+	\end{verbatim}
+	\begin{itemize}
+		\item If you encounter an error when running the \texttt{makeall.csh} script, you will have to build each component individually by navigating to each of the subdirectories within the \texttt{cspice/src/} directory and running the make script there. For example, the following commands will make the cspice core:
+		\begin{verbatim}
+		cd cspice/src/cspice
+
+		./mkprodct.csh
+		\end{verbatim}
+	\end{itemize}
+\end{enumerate}

@@ -1,0 +1,64 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsection{Setting CMake Options}
+%\label{sec:setting_cmake_options}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+The CMake program is used to set additional options for the \ac{EMTG} build. \\
+The basic process to build \ac{EMTG} using CMake is: \\
+\emph{NOTE: For non-standard cmake options and troubeshooting see Section~\ref{sec:nonstandard_cmake_options}.}
+
+\begin{enumerate}
+	\item Prepare to use CMake to build EMTG:
+		\begin{verbatim}
+		cd <EMTG_root_dir>
+
+		mkdir build
+
+		cd build
+
+		ccmake ..
+		\end{verbatim}
+	
+	If a user is \emph{re}building \ac{EMTG}, then the user does not have to recreate the build directory.
+	\item The \texttt{ccmake ..} command brings up the CMake ``\ac{GUI}''
+	\item Press \texttt{c} to Configure.
+	\item Select the options you want for each ``Name'' in the ``Value'' column. For the build described in this document, make sure that the following options are set:
+		\begin{itemize}
+			\item Set SNOPT\_MINGW\_DLL \texttt{OFF}.
+			\item Set CMAKE\_BUILD\_TYPE \texttt{Release}.
+			\item Set BACKGROUND\_MODE \texttt{ON}.
+		\end{itemize}
+	\item Press \texttt{t} (Toggle advanced mode) to see the advanced settings.
+	\item Go down to the options below and set as indicated: \\
+	\emph{NOTE: In order to build Propulator and PyHardware utilities, the user must be sure that the Boost python library was built. (See Section~\ref{sec:boost}.) }
+	
+		\begin{itemize}
+			\item Set ``BUILD\_PROPULATOR'' \texttt{ON} 
+			\item Set ``BUILD\_PYHARDWARE'' \texttt{ON}
+			\item Set ``BUILT\_IN\_THRUSTERS'' \texttt{ON}
+			\item Set ``PROBEENTRYPHASE'' \texttt{ON}
+		\end{itemize}
+
+	\item Press \texttt{c} to Configure again.
+	\item Set the python library paths to those for the PyEmtgEnv set in Section~\ref{sec:mamba}, instead of the default Mamba python libraries. The following example will provide guidance on how to configure the python library paths: 
+
+		\begin{itemize}
+			\item Set ``PYTHON\_EXECUTABLE'' \texttt{/path/to/mambaforge/envs/PyEmtgEnv/bin/python3.7}
+			\item Set ``PYTHON\_INCLUDE\_DIR'' \texttt{/path/to/mambaforge/envs/PyEmtgEnv/include/python\newline 3.7m}
+			\item Set ``PYTHON\_LIBRARY'' \texttt{/path/to/mambaforge/envs/PyEmtgEnv/lib/libpython3.7m.\newline so}
+		\end{itemize}
+	
+	\item Press \texttt{c} to Configure again.
+	\item Press \texttt{g} to Generate. \\
+	\emph{NOTE: The ``\ac{GUI}'' exits automatically if everything works as expected.} \\
+	\emph{NOTE: The \ac{EMTG} executable is placed in \texttt{<EMTG\_root\_dir>/build/src}.}
+	
+	\begin{verbatim}
+	make -j <number-of-cores-available>
+
+	make install
+	\end{verbatim}
+	
+\end{enumerate}
+
+ 

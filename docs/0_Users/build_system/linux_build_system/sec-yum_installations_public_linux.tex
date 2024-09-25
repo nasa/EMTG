@@ -1,0 +1,27 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{System Package Manageer Installations}
+%\label{sec:yum_installations}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\noindent The \ac{RHEL} package manager yum is the utilized in this set of instructions for installing dependencies.
+
+
+\begin{enumerate}
+	\item Install the latest gcc compilers that will be used in future steps by executing the following command: \\
+	
+	\begin{verbatim}
+	yum install gcc
+	yum install gfortran
+	yum install gcc-c++
+	\end{verbatim}
+	
+	\item Install the following packages using the \texttt{yum install <package-name>-<version>} package management command:
+
+	\begin{itemize}
+		\item git (v 2.39.3)
+		\item tcsh (v 6.24.10)
+		\item lbzip2 (v 2.5)
+		\item zip (v 3.0)
+	\end{itemize}
+\end{enumerate}
+

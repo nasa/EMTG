@@ -1,0 +1,278 @@
+\documentclass[11pt]{article}
+
+%% PACKAGES
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{url}
+\usepackage[printonlyused]{acronym}
+\usepackage[ruled]{algorithm}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{overpic}
+\usepackage{calc}
+\usepackage{color}
+%\usepackage{times}
+%\usepackage{ragged2e}
+ \usepackage[margin=1.0in]{geometry}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{textcomp}
+\usepackage{cite}
+\usepackage{mdwlist}
+\usepackage{subfiles}
+\usepackage{enumitem}
+\usepackage{calc}
+\usepackage{array}
+\usepackage{units}
+\usepackage{arydshln,leftidx,mathtools}
+\usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{relsize}
+\usepackage{float}
+\usepackage{makecell}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\makeatletter
+\let\@tmp\@xfloat     
+\usepackage{fixltx2e}
+\let\@xfloat\@tmp                    
+\makeatother
+
+\usepackage[subfigure]{tocloft}
+\usepackage[singlespacing]{setspace}
+%\usepackage[nodisplayskipstretch]{setspace}
+%\setstretch{1.0}
+
+%\renewcommand\cftsecafterpnum{\vskip\baselineskip}
+%\renewcommand\cftsubsecafterpnum{\vskip\baselineskip}
+%\renewcommand\cftsubsubsecafterpnum{\vskip\baselineskip}
+
+%\usepackage{mathtools}
+%\usepackage[framed]{mcode}
+
+\usepackage{pgfplots}
+
+\usepackage{cancel}
+
+\usepackage{tikz}
+\usetikzlibrary{calc,patterns,decorations.pathmorphing,decorations.markings,fit,backgrounds}
+
+\usepackage[strict]{changepage} %use to manually place figs/tables to get them within the margins
+
+\makeatletter
+\g@addto@macro\normalsize{%
+  \setlength\abovedisplayskip{0.25pt}
+  \setlength\belowdisplayskip{0.25pt}
+  \setlength\abovedisplayshortskip{0.25pt}
+  \setlength\belowdisplayshortskip{0.25pt}
+}
+\makeatother
+
+
+
+\setlength{\parskip}{\baselineskip}
+
+%% GRAPHICS PATH
+\graphicspath{{../../../shared_latex_inputs/images}}
+
+%% TODO
+\newcommand{\todo}[1]{\vspace{5 mm}\par \noindent \framebox{\begin{minipage}[c]{0.98 \columnwidth} \ttfamily\flushleft \textcolor{red}{#1}\end{minipage}}\vspace{5 mm}\par}
+
+%% MACROS
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+\providecommand{\dualnorm}[1]{\norm{#1}_\ast}
+\providecommand{\set}[1]{\lbrace\,#1\,\rbrace}
+\providecommand{\cset}[2]{\lbrace\,{#1}\nobreak\mid\nobreak{#2}\,\rbrace}
+\providecommand{\onevect}{\mathbf{1}}
+\providecommand{\zerovect}{\mathbf{0}}
+\providecommand{\field}[1]{\mathbb{#1}}
+\providecommand{\C}{\field{C}}
+\providecommand{\R}{\field{R}}
+\providecommand{\polar}{\triangle}
+\providecommand{\Cspace}{\mathcal{Q}}
+\providecommand{\Fspace}{\mathcal{F}}
+\providecommand{\free}{\text{\{}\mathsf{free}\text{\}}}
+\providecommand{\iff}{\Leftrightarrow}
+\providecommand{\qstart}{q_\text{initial}}
+\providecommand{\qgoal}{q_\text{final}}
+\providecommand{\contact}[1]{\Cspace_{#1}}
+\providecommand{\feasible}[1]{\Fspace_{#1}}
+\providecommand{\prob}[2]{p(#1|#2)}
+\providecommand{\prior}[1]{p(#1)}
+\providecommand{\Prob}[2]{P(#1|#2)}
+\providecommand{\Prior}[1]{P(#1)}
+\providecommand{\parenth}[1] {\left(#1\right)}
+\providecommand{\braces}[1] {\left\{#1\right\}}
+\providecommand{\micron}{\hbox{\textmu m}}
+
+%% MATH FUNCTION NAMES
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\cone}{cone}
+\DeclareMathOperator{\homog}{homog}
+\DeclareMathOperator{\domain}{dom}
+\DeclareMathOperator{\range}{range}
+\DeclareMathOperator{\argmax}{arg\,max}
+\DeclareMathOperator{\argmin}{arg\,min}
+\DeclareMathOperator{\area}{area}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\mathspan}{span}
+\DeclareMathOperator{\sn}{sn}
+\DeclareMathOperator{\cn}{cn}
+\DeclareMathOperator{\dn}{dn}
+\DeclareMathOperator*{\minimize}{minimize}
+
+\DeclareMathOperator{\atan2}{atan2}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+%\setlength{\RaggedRightParindent}{2em}
+%\setlength{\RaggedRightRightskip}{0pt plus 3em}
+%\pagestyle{empty}
+
+
+\title{{\Huge MGAnDSMs Maneuver Monte Carlo Utility}}
+\vspace{0.5cm}
+\author{Donald H. Ellison \thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Flight Dynamics and Mission Design Branch Code 595}}
+\vspace{0.5cm}
+
+\date{}
+
+\begin{document}
+
+\begin{titlepage}
+\maketitle
+%\thispagestyle{empty}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|}
+		\hline
+		\textbf{Revision Date} & \textbf{Author} & \textbf{Description of Change} \\ \hline
+		\date{January 18, 2019} & Donald Ellison & Created document, initial description of software utility \\
+		\hline
+	\end{tabular}
+\end{table}
+\end{titlepage}
+
+
+
+\newpage
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+\clearpage
+\setcounter{page}{1}
+
+\input{./acronymlist}
+
+\section{MGAnDSMs Missed Maneuver Analysis Strategy}
+\label{sec:missedManeuverAnalysis}
+
+At a high level, missed maneuver analysis for EMTG's chemical transcription (\ac{MGAnDSMs}) involves re-optimization of a mission-to-go starting from an off-nominal state at a critical \ac{DSM}. The initial condition can take the form of a full off-nominal 7-state generated from a navigation Monte Carlo analysis performed on the mission up to the point of the critical \ac{DSM}], or just the epoch of the delayed \ac{DSM}, where the initial state is obtained by propagating the pre-burn state of the spacecraft along the optimal trajectory for the length of the maneuver delay.
+
+\section{MGAnDSMs Missed Maneuver Software Utility}
+
+The Python utility $\mathtt{PyEMTG/SimpleMonteCarlo/MGAnDSMs\_MissedManeuver.py}$ can be used to perform mission-to-go re-optimization for an existing \ac{MGAnDSMs} mission that has been converged in EMTG. The program generates an EMTG options file based on an existing EMTG MissionOptions and Mission object pair. Besides those two inputs, the user must provide an identification string for the burn that they wish to perform the analysis on (e.g. 'j3p0b1'), an initial state to start the optimization from (including the state representation and frame), a burn delay time if the analysis is for a pure delay along the nominal trajectory, initial wait time bounds and a flag indicating whether or not a monoprop TCM is desired following the missed maneuver event.
+
+\begin{itemize}
+	\item $\mathtt{\mathbf{original\_mission}}$: EMTG mission object corresponding to the nominal trajectory
+	\item $\mathtt{\mathbf{original\_options}}$: EMTG mission options object corresponding to the nominal trajectory
+	\item $\mathtt{\mathbf{burn\_id\_string}}$: String identifying the maneuver of interest. Must be of the form $\mathtt{`jXpYbZ'}$
+	\item $\mathtt{\mathbf{initial\_state}}$: Seven entry list containing initial spaceraft state $\left[x, y, z, vx, vy, vz, m, \text{epoch}\right]$
+	\item $\mathtt{\mathbf{initial\_state\_representation}}$: Integer corresponding to EMTG's state representation enums. One of $\{0: \text{Cartesian}, 1: \text{SphericalRADEC}, 2: \text{SphericalAZFPA}\}$
+	\item $\mathtt{\mathbf{initial\_state\_frame}}$: Integer corresponding to EMTG's frame enums. One of $\{0: \text{ICRF}, 1: \text{J2000\_BCI}, 2: \text{J2000\_BCF}, 3: \text{TrueOfDate\_BCI}, 4: \text{TrueOfDate\_BCF}, 5: \text{PrincipleAxes}, 6: \text{Topocentric}, 7: \text{Polar}\}$.
+	\item $\mathtt{\mathbf{burn\_delay}}$: Float indicating amount of time to delay maneuver. If > 0.0, maneuver is delayed and the initial state is determined by propagating the nominal pre-\ac{DSM} position/velocity. If < 0.0, maneuver is early and the initial state is determined by propagating backwards from the pre-\ac{DSM} position/velocity. If 0.0, then the initial state and burn epoch is fully determined by $\mathtt{\mathbf{initial\_state}}$.
+	\item $\mathtt{\mathbf{initial\_maneuver\_wait\_time\_bounds}}$: Two entry list containing the lower and upper bounds on the wait time allowed before performing the missed maneuver
+	\item $\mathtt{\mathbf{include\_TCM}}$: Boolean, if true, a monoprop TCM opportunity is inserted after the missed maneuver, before any subsequent \ac{DSM}s and before the journey right-hand boundary.
+\end{itemize}
+
+\section{Constructing an EMTG Options Object for a Missed Maneuver Scenario}
+
+The missed maneuver utility performs the following actions:
+
+\begin{enumerate}
+	\item Removes all JourneyOptions objects that occur prior to the missed maneuver event
+	\item Sets the first journey's departure class to a FreePoint and its type to a launch/direct insertion
+	\item Fixes the departure mass
+	\item Includes the departure maneuver in the optimization cost function
+	\item Sets the pre-departure maneuver state and frame
+	\item Sets the departure launch window opening and first journey wait times
+		\begin{enumerate}
+			\item If a pure delay is applied, the wait time lower bound is set to the delay duration, and the upper is set to the second entry in $\mathtt{\mathbf{initial\_maneuver\_wait\_time\_bounds}}$
+			\item If the delay is negative (i.e. the maneuver is happening early), then the upper wait time bound is set to the delay duration and the lower is set to the first entry in $\mathtt{\mathbf{initial\_maneuver\_wait\_time\_bounds}}$
+			\item If a full 7-state is provided, then both wait time bounds are taken from $\mathtt{\mathbf{initial\_maneuver\_wait\_time\_bounds}}$
+		\end{enumerate}
+	\item Computes a new trialX initial guess based on the missed maneuver scenario, accounting for the truncated first journey
+\end{enumerate}
+
+Figure \ref{fig:MGAnDSMs_missed_maneuver} depicts a four-\ac{DSM} MGAnDSMs phase, where labels marked with a superscript asterisk refer to objects and quantities associated with the nominal trajectory. The lower image depicts a missed maneuver event for $\text{DSM}^F_1$. The dashed line could represent a delay along the nominal trajectory or a more general off-nominal 7-state. For any missed maneuver analysis, the new EMTG mission will begin with a launch/direct insertion from a FreePoint, with the missed maneuver now handled as the phase departure maneuver. The $\mathtt{MGAnDSMs\_MissedManeuver.py}$ utility offers the ability to insert a monopropellant \ac{TCM} (maneuver $DSM_{F_0}$ in Fig. \ref{fig:MGAnDSMs_missed_maneuver}) before the first nominal main \ac{DSM} by setting $\mathtt{\mathbf{include\_TCM}}$ to true. The new initial guess will place the \ac{TCM} at the half-way point between the departure maneuver and the first remaining nominal \ac{DSM}.
+
+
+\begin{figure}[h!]
+	\centering
+	\includegraphics*[clip, trim=0.0cm 0.0cm 0.0cm 0.0cm, width=1.0\linewidth]{MGAnDSMsphase_Missed_Maneuver.png}
+	\caption{\label{fig:MGAnDSMs_missed_maneuver} MGAnDSMs missed maneuver.}
+\end{figure}
+
+It is clear from Fig. \ref{fig:MGAnDSMs_missed_maneuver}, that the structure of the journey in which the missed maneuver occurs can change quite a bit. As a result, $\mathtt{MGAnDSMs\_MissedManeuver.py}$ automatically recomputes an initial guess based on the nominal trajectory solution contained in the original MissionOptions.trialX container. Specifically, $\mathtt{MGAnDSMs\_MissedManeuver.py}$ will transfer the original initial guesses for the remaining DSM components to the new guess (Fig. \ref{fig:ManeuverList}), recalculate all of the burn indices in the journey-to-go and adjust the initial guesses for the phase propellant usage variables.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics*[clip, trim=0.0cm 0.0cm 0.0cm 0.0cm, width=0.8\linewidth]{ManeuverList.png}
+	\caption{\label{fig:ManeuverList} Transfer of maneuver initial guess information for the post-missed maneuver journey-to-go.}
+\end{figure}
+
+Computation of the new burn indices relies on two subroutines: $\mathtt{generateBurnIndexList}$ and $\mathtt{computeNewBurnIndices}$. The former takes the integer number of \ac{DSM}s allowed in an MGAnDSMs phase as an input and returns a list of burn index names for that phase in order starting at the left boundary and proceeding to the right boundary. The second subroutine returns a list of two-length lists where each two-length list contains the name of a journey-to-go burn index as the first entry and its floating point value as the second entry. The burn indices for the truncated first journey are re-computed using Eq. (\ref{eq:general_burn_index}), where $\Delta t_{\text{p}}$ is the flight time of the truncated journey-to-go and $\Delta t_{\text{p}}^*$ is the flight time of the entire nominal journey. Should the departure maneuver have some delay applied to it, then the first burn index $F_0$ is computed using Eq. (\ref{eq:departure_burn_index}).
+
+\begin{equation}
+\label{eq:general_burn_index}
+\alpha = \alpha^* \frac{\Delta t_{\text{p}}^*}{\Delta t_{\text{p}}}
+\end{equation}
+
+\begin{equation}
+\label{eq:departure_burn_index}
+\alpha_{F_0} = \frac{\alpha^* \Delta t_{\text{p}}^* + \Delta t_{\text{depart}}}{\Delta t_{\text{p}}}
+\end{equation}
+
+\noindent Initial guesses for the propellant tank (propellant consumption) variables are computed using Eq. (\ref{eq:oxidizer_mass_drop}) and (\ref{eq:fuel_mass_drop}):
+
+\begin{equation}
+\label{eq:oxidizer_mass_drop}
+ \Delta m_{o} = \sum_{k = 0}^{n - 1} m^{-}_k\left[1 - e^{\left(\frac{\Delta v_k}{g~I_{\text{sp}}}\right)}\right]\left(\frac{1}{1 + \frac{1}{r_{\text{m}}}}\right)
+\end{equation}
+
+\begin{equation}
+\label{eq:fuel_mass_drop}
+\Delta m_{f} = \sum_{k = 0}^{n - 1} m^{-}_k\left[1 - e^{\left(\frac{\Delta v_k}{g~I_{\text{sp}}}\right)}\right]\left(\frac{1}{1 + r_{\text{m}}}\right)
+\end{equation},
+
+\noindent where $m^-$ is the mass of the spacecraft immediately prior to the applied maneuver, $g$ is the standard acceleration due to gravity, $I_{\text{sp}}$ is the specific impulse of the chemical engine and $r_m$ is the mixture ratio.
+
+%\bibliographystyle{AAS_publication}
+%\bibliography{EMTGbib_Jacob_June_2014}
+
+
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

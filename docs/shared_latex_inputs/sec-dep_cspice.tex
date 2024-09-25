@@ -1,0 +1,26 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+% CSPICE
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Purpose}
+\noindent \ac{EMTG} depends on CSPICE for ephemeris-lookup utilities. \\ \ac{EMTG} is known to work with \hl{CSPICE N0067}. 
+
+\subsubsection{Download Location}
+\noindent The main page for the software distributions is in the following website: \\
+\url{https://naif.jpl.nasa.gov/naif/toolkit_C.html} 
+
+
+\noindent The software revision needed for the EMTG version indicated in this guide can be obtained from the following location: \\
+\emph{(In the event the url is no longer active, navigate to the aforementioned software website to find the specific version)} \\
+%\url{https://naif.jpl.nasa.gov/pub/naif/toolkit//C/PC_Windows_VisualC_64bit/packages/cspice.zip}
+
+\subsubsection{Dependency Installation Instructions}
+\begin{enumerate}
+	\item Once the zip file is downloaded, extract the contents of the zip file to a local folder with no space in the file path (e.g. C:\textbackslash SW\_Installs\textbackslash cspice) for usage later in these instructions.
+	\item In addition to the CSPICE toolkit itself, EMTG requires ephemeris files that can be read by CSPICE. In order to get started with EMTG as quickly as possible, it is recommended to download a few commonly required ephemeris files now.
+	\begin{enumerate}
+		\item Navigate to \url{https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/} and download the de430.bsp file to the \textbf{\textless EMTG\_root\_dir\textgreater}\textbackslash Universe\textbackslash ephemeris\_files\textbackslash \hspace{1pt} folder
+		\item Navigate to \url{https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/} and download the naif0012.tls file to the \textbf{\textless EMTG\_root\_dir\textgreater}\textbackslash Universe\textbackslash ephemeris\_files\textbackslash \hspace{1pt} folder
+		\item Navigate to \url{https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/} and download the pck00010.tpc and pck00011.tpc files to the \\ \textbf{\textless EMTG\_root\_dir\textgreater}\textbackslash Universe\textbackslash ephemeris\_files\textbackslash \hspace{1pt} folder
+	\end{enumerate}
+\end{enumerate}

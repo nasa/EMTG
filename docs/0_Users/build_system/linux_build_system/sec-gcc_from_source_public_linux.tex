@@ -1,0 +1,76 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsubsection{gcc}
+%\label{sec:gcc}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Purpose}
+
+\ac{GCC} is required for compiling C++ and Fortran code, but it takes a long time to build and requires you to have another C, C++, and Fortran compiler on your machine. Therefore, it is highly recommeneded to simply download \ac{GCC} using a package manager. \ac{GCC} version 9.5.0 is known to work with \ac{EMTG}. 
+
+\subsubsection{Download Location}
+
+The version of \ac{GCC} known to be compatible with \ac{EMTG} can be found at \url{https://sourceware.org/pub/gcc/releases/gcc-9.5.0/}
+
+\subsubsection{Dependency Installation Instructions}
+
+\begin{enumerate}
+	\item Create a directory to house various multi-user dependencies needed for EMTG: \\ 
+
+	\texttt{mkdir /Utilities/}
+	\item Navigate to the Utilities directory by executing the following command: \\
+
+	\texttt{cd /Utilities/}
+	\item Download the \ac{GCC} tarball using the following command: \\
+	
+	\texttt{curl -LO https://mirrorservice.org/sites/sourceware.org/pub/gcc/releases/gcc- \newline\indent 9.5.0/gcc-9.5.0.tar.gz}
+	
+	\item Extract the tarball by executing the following command: \\
+	
+	\texttt{tar -xzf gcc-9.5.0.tar.gz}
+	\item Rename the extracted directory in preparation of an out-of source build: \\
+	
+	\texttt{mv gcc-9.5.0 gcc-9.5.0-src}
+	\item Download the \ac{GCC} external prerequisite packages by executing the following commands: \\ 
+	\begin{verbatim}
+	cd gcc-9.5.0-src
+	./contrib/download_prerequisites
+	\end{verbatim}
+	
+	\textit{NOTE: The following prerequisites would have been downloaded if the download\_prerequisites script executed successfully:}
+	\begin{itemize}
+		\item \ac{GMP}: gmp-6.1.0.tar.bz2
+		\item \ac{MPFR}: mpfr-3.1.4.tar.bz2
+		\item \ac{MPC}: mpc-1.0.3.tar.gz
+		\item \ac{ISL}: isl-0.18.tar.bz2
+	\end{itemize}
+	
+	\textit{NOTE: If the download\_prerequisites script does not work, obtain the prerequisites manually by downloading them from the locations below, placing them in the \texttt{gcc-9.5.0-src/} directory, extracting them in that directory, then rerunning the download\_prerequisites script mentioned in this step:}
+	\begin{itemize}
+		\item \ac{GMP}: \url{https://gcc.gnu.org/pub/gcc/infrastructure/gmp-6.1.0.tar.bz2}
+		\item \ac{MPFR}: \url{https://gcc.gnu.org/pub/gcc/infrastructure/mpfr-3.1.4.tar.bz2}
+		\item \ac{MPC}: \url{https://gcc.gnu.org/pub/gcc/infrastructure/mpc-1.0.3.tar.gz}
+		\item \ac{ISL}: \url{https://gcc.gnu.org/pub/gcc/infrastructure//isl-0.18.tar.bz2}
+	\end{itemize}
+	
+	\item Create a directory for the out-of-source build to reside by executing the following commands:
+	\begin{verbatim}
+	mkdir /Utilities/gcc-9.5.0
+	cd /Utilities/gcc-9.5.0
+	\end{verbatim}
+	
+	\item Perform the out-of-source build by executing the following command: \\
+	\begin{verbatim}
+	../gcc-9.5.0-src/configure --prefix=/Utilities/gcc-9.5.0 --disable-multilib
+	--program-suffix=-9.5.0 --enable-languages=c,c++,fortran
+	\end{verbatim}
+	
+	\item Execute the following commands to build the final executable: \\
+	\textit{(\texttt{<number-of-cores-available>} is the integer number of cores to be used to perform the build.)}
+	\begin{verbatim}
+	make -j <number-of-cores-available>
+
+	make install -j <number-of-cores-available>
+	\end{verbatim}
+	
+	\textit{NOTE: Building GCC from source takes a long time (\textgreater 1 hour) so be prepared to let the process execute without interruptions.}
+\end{enumerate}

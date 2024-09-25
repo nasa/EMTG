@@ -1,0 +1,300 @@
+
+\documentclass[11pt]{report}
+
+%% PACKAGES
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{url}
+\usepackage[printonlyused]{acronym}
+\usepackage[ruled]{algorithm}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{overpic}
+\usepackage{calc}
+\usepackage{color}
+ \usepackage[margin=1.0in]{geometry}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{textcomp}
+\usepackage{cite}
+\usepackage{mdwlist}
+\usepackage{subfiles}
+\usepackage{enumitem}
+\usepackage{calc}
+\usepackage{array}
+\usepackage{units}
+\usepackage{arydshln,leftidx,mathtools}
+\usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{relsize}
+\usepackage{float}
+\usepackage{makecell}
+\usepackage{xr}
+\usepackage{multirow}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\usepackage{nicematrix,tikz}
+\NiceMatrixOptions
+{
+  cell-space-limits = 1.25pt, 
+  custom-line = 
+   {
+	 command = ThickHline ,
+	 letter = T ,
+	 tikz = { color = black, line width = 1.5 pt }
+   },
+   custom-line = 
+   {
+	 command = MedHline ,
+	 letter = I ,
+	 tikz = { color = black, line width = 1.25 pt }
+   }
+}
+
+
+
+\setcounter{secnumdepth}{3}
+
+\makeatletter
+\let\@tmp\@xfloat     
+\usepackage{fixltx2e}
+\let\@xfloat\@tmp                    
+\makeatother
+
+\usepackage[subfigure]{tocloft}
+\usepackage[singlespacing]{setspace}
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{cancel}
+
+\usepackage{tikz}
+\usetikzlibrary{calc,patterns,decorations.pathmorphing,decorations.markings,fit,backgrounds}
+
+\usepackage[strict]{changepage} %use to manually place figs/tables to get them within the margins
+
+\makeatletter
+\g@addto@macro\normalsize{%
+  \setlength\abovedisplayskip{0.25pt}
+  \setlength\belowdisplayskip{0.25pt}
+  \setlength\abovedisplayshortskip{0.25pt}
+  \setlength\belowdisplayshortskip{0.25pt}
+}
+\makeatother
+
+
+
+\setlength{\parskip}{\baselineskip}
+
+%% GRAPHICS PATH
+\graphicspath{{./pictures/pdf/}{./pictures/ps/}{./pictures/png/}}
+
+%% TODO
+\newcommand{\todo}[1]{\vspace{5 mm}\par \noindent \framebox{\begin{minipage}[c]{0.98 \columnwidth} \ttfamily\flushleft \textcolor{red}{#1}\end{minipage}}\vspace{5 mm}\par}
+
+
+%% MACROS
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+\providecommand{\dualnorm}[1]{\norm{#1}_\ast}
+\providecommand{\set}[1]{\lbrace\,#1\,\rbrace}
+\providecommand{\cset}[2]{\lbrace\,{#1}\nobreak\mid\nobreak{#2}\,\rbrace}
+\providecommand{\onevect}{\mathbf{1}}
+\providecommand{\zerovect}{\mathbf{0}}
+\providecommand{\field}[1]{\mathbb{#1}}
+\providecommand{\C}{\field{C}}
+\providecommand{\R}{\field{R}}
+\providecommand{\polar}{\triangle}
+\providecommand{\Cspace}{\mathcal{Q}}
+\providecommand{\Fspace}{\mathcal{F}}
+\providecommand{\free}{\text{\{}\mathsf{free}\text{\}}}
+\providecommand{\iff}{\Leftrightarrow}
+\providecommand{\qstart}{q_\text{initial}}
+\providecommand{\qgoal}{q_\text{final}}
+\providecommand{\contact}[1]{\Cspace_{#1}}
+\providecommand{\feasible}[1]{\Fspace_{#1}}
+\providecommand{\prob}[2]{p(#1|#2)}
+\providecommand{\prior}[1]{p(#1)}
+\providecommand{\Prob}[2]{P(#1|#2)}
+\providecommand{\Prior}[1]{P(#1)}
+\providecommand{\parenth}[1] {\left(#1\right)}
+\providecommand{\braces}[1] {\left\{#1\right\}}
+\providecommand{\micron}{\hbox{\textmu m}}
+
+%% MATH FUNCTION NAMES
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\cone}{cone}
+\DeclareMathOperator{\homog}{homog}
+\DeclareMathOperator{\domain}{dom}
+\DeclareMathOperator{\range}{range}
+\DeclareMathOperator{\argmax}{arg\,max}
+\DeclareMathOperator{\argmin}{arg\,min}
+\DeclareMathOperator{\area}{area}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\mathspan}{span}
+\DeclareMathOperator{\sn}{sn}
+\DeclareMathOperator{\cn}{cn}
+\DeclareMathOperator{\dn}{dn}
+\DeclareMathOperator*{\minimize}{minimize}
+
+\DeclareMathOperator{\atan2}{atan2}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+\hfuzz=200pt
+\newcommand{\STAB}[1]{\begin{tabular}{@{}c@{}}#1\end{tabular}}
+
+\usepackage{tcolorbox}
+\newtcolorbox{alertbox}[1]{colback=red!5!white,colframe=red!75!black,fonttitle=\bfseries,title=#1}
+
+
+%% KNOWN ISSUES COMMANDS
+\usepackage{tocloft}
+\newcommand{\listofknownissues}{List of Known Issues}
+\newlistof{emtgknownissue}{knownissue}{\listofknownissues}
+\newcommand{\emtgknownissue}[2]
+{
+	\refstepcounter{emtgknownissue}
+	\addcontentsline{knownissue}{emtgknownissue}
+	{\protect\numberline{\theemtgknownissue}#1}\par
+	% \hspace{0.05\linewidth}\begin{minipage}{0.9\linewidth}
+		\hyperlink{page.vi}{\textbf#2}
+	% \end{minipage}
+}
+
+%% Convenient listing format w/ minipages - avoids some inconsistent behavior with non-bulleted itemized lists.
+%% This version ensures the item remains on one page. Ideal for the smaller list items.
+\newcommand{\listitem}[2]
+{
+	\begin{minipage}{\linewidth}
+		\textbf{#1}: \\
+		\vspace{0.025in}
+			\hspace{0.25in}\begin{minipage}{0.85\linewidth}\vspace{0.05in}#2\end{minipage}
+		\vspace{0.075in}
+	\end{minipage}
+}
+%% Convenient listing format - avoids some inconsistent behavior with non-bulleted itemized lists.
+%% This version allows the item to span multiple pages. May be useful for the larger list items.
+\newcommand{\largelistitem}[2]
+{
+	\textbf{#1}: \\
+	\vspace{0.025in}
+		\hspace{0.25in}\begin{minipage}{0.85\linewidth}\vspace{0.05in}#2\end{minipage}
+	\vspace{0.075in}
+	\vspace{0.01in}
+}
+
+\title{{\Huge EMTG User Guide}}
+\vspace{0.5cm}
+\author
+{	 
+	Timothy Sullivan \thanks{Senior Member of the Technical Staff, The Aerospace Corporation, Trajectory Design and Optimization Department},
+	Adam Trask \thanks{Member of the Technical Staff, The Aerospace Corporation, Trajectory Design and Optimization Department}, 
+	Kyle Hughes\thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Navigation and Mission Design Branch Code 595}, 
+	Alec Mudek\thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Navigation and Mission Design Branch Code 595},
+	Edwin Dove\thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Navigation and Mission Design Branch Code 595}
+}
+\vspace{0.5cm}
+
+\date{}
+
+
+\begin{document}
+
+\begin{titlepage}
+\maketitle
+
+
+\pagenumbering{roman}
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.75\linewidth]{../../shared_latex_inputs/images/splashchilla.PNG}
+\end{figure}
+
+%\thispagestyle{empty}
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|l|l|}
+		\hline
+		\textbf{Revision Date} & \textbf{Author} & \textbf{Description of Change} \\ \hline
+		\date{April 1, 2024} & \makecell{Tim Sullivan and \\ Adam Trask} & Initial Document Release \\
+		\hline
+	\end{tabular}
+\end{table}
+\end{titlepage}
+
+
+\tableofcontents
+\clearpage
+\listoffigures
+\clearpage
+\listoftables
+\clearpage
+\listofemtgknownissue
+\clearpage
+\input{../../shared_latex_inputs/acronymlist}
+\clearpage
+
+\pagenumbering{arabic}
+\setcounter{page}{1}
+
+\input{./introduction/c-introduction.tex}
+
+\input{./force_models_and_propagation/c-force_model_propagation.tex}
+
+\input{./mission/c-mission_types.tex}
+
+\input{./boundaries/c-boundaries.tex}
+
+\input{./universe/c-universe.tex}
+
+\input{./options/c-options_file.tex}
+
+	\input{./options/s-global.tex}
+
+	\input{./options/s-spacecraft.tex}
+
+	\input{./options/s-journey.tex}
+
+	\input{./options/s-solver.tex}
+
+	\input{./options/s-physics.tex}
+
+	\input{./options/s-output.tex}
+
+\input{./config_files/c-config_files.tex}
+
+	\input{./config_files/s-launch_vehicle.tex}
+	\input{./config_files/s-spacecraft.tex}
+
+\input{./conversion/c-conversion.tex}
+
+\input{./other_resources/c-other_resources.tex}
+
+
+
+\bibliographystyle{AAS_publication}
+%\bibliography{EMTGbib}
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

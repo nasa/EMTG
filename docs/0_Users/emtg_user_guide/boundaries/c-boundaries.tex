@@ -1,0 +1,132 @@
+\chapter{Journey Boundaries}
+\label{chap:journey_boundaries}
+\ac{EMTG} missions consist of at least one Journey, each having a Departure and Arrival Boundary. A Boundary includes a Type (Arrival or Departure) that determines how the spacecraft arrives at or departs from the ephemeris body, and a Class that represents the spacecraft state relative to the ephemeris body. The Journey Options tab specifies the specific combination of Boundary Class and Type for each Journey's Arrival and Departure. Table \ref{tab:boundary_class_options} specifies the compatibility of the various Boundary Classes and Types.
+
+
+%% nicematrix version:
+\begin{table}[H]
+\makebox[1 \textwidth][c]{       %centering table
+\resizebox{1.1 \textwidth}{!}{   %resize table
+\begin{NiceTabular}{IlIp{0.325\linewidth}Ic|c|c|cI}
+    \Xhline{1.25pt}
+                                                                                                        &                                                                           & \multicolumn{4}{c}{\textbf{Boundary Classes}}                                                             \\ \Xcline{3-6}{1.25pt}
+                                                                                                        &                                                                           & Ephemeris-pegged          & Free Point            & Ephemeris-referenced          & Periapse              \\ 
+    \Xhline{1.25pt}
+    \multicolumn{1}{|l|}{\multirow{8.25}{*}{\STAB{\rotatebox[origin=c]{90}{\textbf{Departure Types}}}}} & Launch or Direct Insertion                                                & \textbf{x}                & \textbf{x}            &                               & \textbf{x}            \\ \cline{2-6} 
+                                                                                                        & Depart from Parking Orbit                                                 & \textbf{x}                &                       &                               &                       \\ \cline{2-6} 
+                                                                                                        & Free Direct Departure                                                     & \textbf{x}                & \textbf{x}            & \textbf{x}                    &                       \\ \cline{2-6} 
+                                                                                                        & Flyby                                                                     & \textbf{x}                &                       &                               &                       \\ \cline{2-6} 
+                                                                                                        & Flyby with Fixed V-Infinity out                                           &                           &                       &                               &                       \\ \cline{2-6} 
+                                                                                                        & Spiral-out from Circular Orbit                                            & \textbf{x}                &                       &                               &                       \\ \cline{2-6} 
+                                                                                                        & Zero Turn Flyby                                                           & \textbf{x}                &                       &                               &                       \\
+    \Xhline{1.25pt}
+    \multicolumn{1}{|l|}{\multirow{14}{*}{\STAB{\rotatebox[origin=c]{90}{\textbf{Arrival Types}}}}}     & \makecell[l]{Insertion into Parking Orbit \\ (use chemical Isp)}          & \textbf{x}                &                       &                               &                       \\ \cline{2-6} 
+                                                                                                        & \makecell[l]{Rendezvous \\ (with chemical maneuver)}                      & \textbf{x}                & \textbf{x}            &                               &                       \\ \cline{2-6} 
+                                                                                                        & Intercept with Bounded V-Infinity                                         & \textbf{x}                & \textbf{x}            & \textbf{x}                    & \textbf{x}            \\ \cline{2-6} 
+                                                                                                        & \makecell[l]{Rendezvous \\ (no maneuver)}                                 & \textbf{x}                & \textbf{x}            & \textbf{x}                    &                       \\ \cline{2-6} 
+                                                                                                        & \makecell[l]{Match Final V-Infinity Vector \\ (with chemical maneuver)}   &                           &                       &                               &                       \\ \cline{2-6} 
+                                                                                                        & \makecell[l]{Match Final V-Infinity Vector \\ (no maneuver)}              &                           &                       &                               &                       \\ \cline{2-6} 
+                                                                                                        & Capture Spiral                                                            & \textbf{x}                &                       &                               &                       \\ \cline{2-6} 
+                                                                                                        & Momentum Transfer                                                         & \textbf{x}                &                       &                               &                       \\  
+    \Xhline{1.25pt}
+\end{NiceTabular}
+} %close resize
+} %close centering
+\caption{Boundary Class and Type Compatibility}
+\label{tab:boundary_class_options}
+\end{table}     
+                                                                                                                                                                                           
+
+
+\section{Boundary Classes}
+\label{sec:boundary_class}
+
+    \subsection{Ephemeris-pegged}
+    \label{sec:ephem_pegged}
+    The Ephemeris-pegged Boundary Class represents a boundary at the center of an ephemeris body such as the center of mass of a planet. Typically this Boundary Class is only useful for initial mission design such as patched-conic models of planetary flybys. The ``ephemeris source'' setting on the Physics Options tab controls how \ac{EMTG} determines the location of the ephemeris body. See Section \ref{sec:physics_options}.
+
+    \subsection{Ephemeris-referenced}
+    \label{sec:ephem_referenced}
+    The Ephemeris-referenced Boundary Class defined relative to an ephemeris point but not on the ephemeris point. In other words, the boundary point is ``referenced'' to an ephemeris point and moves with it, but additional information is needed to define the boundary relative to the ephemeris point. In \ac{EMTG}, Ephemeris-referenced boundary conditions are defined as lying on a triaxial ellipsoid centered on an ephemeris point. For example, this could be the surface of the sphere of influence of a planet or a triaxial ellipsoid representing the surface of a non-spherical body like Ceres. The user provides the three semi-axes of the ellipsoid in the \ac{ICRF} where the center of the ellipsoid is the ephemeris body.
+
+    \subsection{Free Point}
+    \label{sec:free_point}
+    The Free Point Boundary Class represents a point in space that is defined as a cartesian, orbit element, spherical, or b-plane state relative to the central body. The user may choose to fix or vary within bounds any of the six elements of the position and velocity state on the left-hand side of the boundary. 
+
+    \subsection{Periapse}
+    \label{sec:periapse_boundary}
+    The Periapse Boundary Class represents events that happen at periapse of the spacecraft's orbit about the central body. In the current implementation, this class only guarantees that the spacecraft be at an apse, not necessarily the right one. Note that if a state representation that includes true anomaly (\ac{COE}, IncomingBplane, or OutgoingBplane) is chosen, then a periapse is guaranteed.
+
+\section{Departure Types}
+\label{sec:departure_boundaries}
+
+    \subsection{Launch or Direct Insertion}
+    \label{sec:launch_or_direct_insertion} 
+    This Departure Type models launch from a body or an impulsive departure using three decision variables, the magnitude of the departure $v_{\infty}$, and the right ascension and declination of the departure asymptote in the \ac{ICRF}. 
+
+    \subsection{Depart from Parking Orbit}
+    \label{sec:depart_from_park_orbit} 
+    Depart from a parking orbit around the departure body. Use a Free Point Boundary Class to specify parameters of the orbit. 
+
+    \subsection{Free Direct Departure}
+    \label{sec:free_direct_departure}
+    Free Direct Departure is a type of boundary event in which a spacecraft departs from a point in space that is defined as a cartesian or \ac{COE} state relative to the central body. The user may choose to fix any of the state elements relative to the central body or allow them to vary within specified bounds on the left-hand side of the boundary. 
+
+    \subsection{Flyby}
+    \label{sec:flyby}
+    A flyby is a trajectory segment in which a spacecraft passes close to a celestial body and uses the body's gravity to alter its trajectory. In \ac{EMTG}, flybys are modeled using patched-conic approximations, which divide the trajectory into segments based on the gravitational influence of each celestial body. The spacecraft's trajectory is approximated as a series of conic sections that are tangent at the points where they transition from one body's sphere of influence to another. At later phases of mission design, flybys are modeled at higher fidelity using other Boundary Event combinations to go from incoming \ac{SOI} crossing to periapse to outgoing \ac{SOI} crossing.
+
+    \subsection{Flyby with Fixed V-Infinity Out}
+    \label{sec:flyby_fixed_vinf_out}
+    Flyby with Fixed V-Infinity Out is a type of outgoing flyby used when the user wants to specify the value of $v_{\infty-out}$. This boundary event includes two equality constraints to guarantee that the magnitude and direction of $v_{\infty-out}$ match the user-specified values.
+
+    \subsection{Zero Turn Flyby}
+    \label{sec:zero_turn_flyby}
+    This Departure Type is used when the flyby is of a very small body and therefore the change in the direction of the spacecraft velocity due to the body is small enough to not be modeled. When zero turn flyby and ephemeris point are used together, \ac{EMTG} enforces the constraint that the spacecraft  $v_{\infty-out}$ matches $v_{\infty-in}$. Users must take care that the small body assumption is sufficient, as this will ignore any velocity change that would normally occur even if a larger planetary body is chosen as the start location for the journey.
+
+
+    \subsection{Spiral-out from Circular Orbit}
+    \label{sec:spiral_out}
+    Spiral-out from circular orbit is a technique used in \ac{EMTG} to approximate a many-revolution low-thrust spiral about a body in the current universe. For example, one may wish to spiral from \ac{LEO} to escape from the Earth, or from the edge of the Mars sphere of influence down to the orbital distance of Phobos or Deimos. Edelbaum's approximation provides a fast, sufficiently accurate model that allows spirals to be included with an \ac{EMTG} broad search without having to explicitly model and optimize the path of the spacecraft during the spiral. Edelbaum's approximation consists of modeling the initial and final orbits about the body as co-planar circles and then assuming that the thrust level is sufficiently low that the transfer orbit is also nearly circular.
+
+
+\section{Arrival Types}
+\label{sec:arrival_boundaries}
+
+    \subsection{Insertion into Parking Orbit (use chemical Isp)}
+    \label{sec:insert_parking_orbit} 
+    Specifies that \ac{EMTG} should solve for a maneuver that places the spacecraft into a parking orbit using its chemical thruster upon arrival at this body. Depending on the Boundary Class selected, users may specify only the \ac{SMA} and \ac{ECC} of the parking orbit (Ephemeris-pegged Class) or a full set of varying or specified state variables (Free Point Class). 
+
+    \subsection{Rendezvous (with chemical maneuver)}
+    \label{sec:rendezvous_arrival}
+    This arrival type specifies that the spacecraft perform a chemical maneuver upon reaching the arrival body to either match velocities with the body in the case of an Ephemeris-pegged Boundary Class or achieve a state relative to the ephemeris body when combined with another Boundary Class.
+
+    \subsection{Intercept with Bounded V-Infinity}
+    \label{sec:intercept_bounded_vinfty}
+    This arrival type specifies that the spacecraft arrive at the ephemeris body with some maximum magnitude of velocity at infinity, $v_{\infty}$, given by 
+
+        \begin{align}
+            v_{\infty} &= \sqrt{v^2 - \frac{2 \mu}{r}}.
+        \end{align}
+
+    \subsection{Rendezvous (no maneuver)}
+    \label{sec:rendezvous_no_maneuver}
+    This arrival type specifies that the spacecraft matches position and velocity with some point upon arrival. This point may be defined as some ephemeris point in the case of an Ephemeris-pegged Boundary Class, some point on the edge of the ephemeris bounding ellipse in the case of an Ephemeris-referenced Boundary Class, or some user defined Free Point in the case of the Free Point Boundary Class. This is generally intended for use explicitly with low-thrust transcriptions.
+
+    \subsection{Match Final V-Infinity Vector (with chemical maneuver)}
+    \label{sec:mathc_final_vinfty_vec_chemical_maneuver}
+    Arrival Type that forces the spacecraft to match a specified $v_{\infty}$ vector upon arrival using a chemical maneuver. Selecting this Arrival Type in the Journey Options tab reveals additional options to specify the $v_{\infty}$ vector. % #?? is this in \ac{ICRF}?
+
+    \subsection{Match Final V-Infinity Vector (no maneuver)}
+    \label{sec:mathc_final_vinfty_vec_no_maneuver}
+    Arrival Type that forces the spacecraft to match a specified $v_{\infty}$ vector upon arrival using a chemical maneuver. Selecting this Arrival Type in the Journey Options tab reveals additional options to specify the $v_{\infty}$ vector. % #?? is this in \ac{ICRF}?
+
+    \subsection{Capture Spiral}
+    \label{sec:capture_spiral}
+    Models a many-revolution low-thrust spiral capture about a body in the current universe similarly to the ``spiral-out from circular orbit'' Departure Type
+
+    \subsection{Momentum Transfer}
+    \label{sec:momentum_transfer}
+    Momentum Transfer is a specific type of Arrival Type used in unique scenarios where the spacecraft collides with the destination body, resulting in the transfer of momentum to the body.
+
+

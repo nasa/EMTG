@@ -1,0 +1,48 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsubsection{\ac{GSL}}
+%\label{sec:gsl}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Purpose}
+
+\ac{EMTG} depends on \ac{GSL} for cubic-splining utilities. \ac{EMTG} is known to work with \ac{GSL} 2.7.0.  If you already installed \ac{GSL} in Section~\ref{sec:setting_up_dependencies_with_management_capabilities}, skip this section. 
+
+\subsubsection{Download Location}
+
+There are multiple ways to get \ac{GSL}, but the method supported by the \ac{EMTG} build system is to obtain the AMPL version, which has a CMake-based build system. (For this reason, CMake must be installed before \ac{GSL}.) The version of \ac{GSL} known to be compatible with \ac{EMTG} is available at \url{https://github.com/ampl/gsl/releases/tag/20211111}. 
+
+\subsubsection{Dependency Installation Instructions}
+
+\begin{enumerate}
+	\item Navigate to the Utilities directory by executing the following command: \\
+
+	\texttt{cd /Utilities/}
+	\item Download AMPL \ac{GSL} 2.7.0 using the following command:\\
+
+	\texttt{curl -LO https://github.com/ampl/gsl/archive/refs/tags/20211111.tar.gz}
+
+	\item Extract the tarball using the following commands:
+	\begin{verbatim}
+	tar -xzf 20211111.tar.gz
+	\end{verbatim}
+	\item Rename the GSL directory and navigate into it using the following commands:
+	\begin{verbatim}
+	mv /Utilities/gsl-20211111/ /Utilities/gsl-2.7.0/	
+	cd gsl-2.7.0
+	\end{verbatim}
+
+	\item Create a build directory and navigate into it using the following commands:
+	\begin{verbatim}
+	mkdir build
+	cd build
+	\end{verbatim}
+	
+	\item Build the final executable using the following commands: \\
+	\textit{NOTE: \texttt{<number-of-cores-available>} is the integer number of cores to be used to perform the build.}
+	
+	\begin{verbatim}
+	cmake .. -DNO_AMPL_BINDINGS=1
+	make -j <number-of-cores-available>
+	\end{verbatim}
+	
+\end{enumerate}

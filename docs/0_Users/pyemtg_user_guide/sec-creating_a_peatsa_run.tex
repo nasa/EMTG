@@ -1,0 +1,149 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsection{Creating a PEATSA Run}
+%\label{sec:creating_a_peatsa_run}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+At the most fundamental level, three things are required to execute a \ac{PEATSA} run:
+
+\begin{itemize}
+	\item \ac{EMTG} options file: This is called the base case and must be able to produce a valid/feasible solution.
+	\item \ac{PEATSA} options file: This is a Python file that specifies the options to be used when executing the run. This is also known as the ``trade study options file''.
+	\item \ac{PEATSA} trade parameters file: This csv file sets the trade parameters of the \ac{PEATSA} run.
+\end{itemize}
+
+\noindent These three items are described in more detail in Sections~\ref{sec:peatsa_base_case}, \ref{sec:creating_the_peatsa_options_file}, \ref{sec:customizing_the_peatsa_options_file}, and \ref{sec:peatsa_trade_parameters_file}.
+
+\subsubsection{The Base Case}
+\label{sec:peatsa_base_case}
+
+The base case is an \ac{EMTG} options file that can produce a feasible solution. The purpose of the base case is to set the default values of the options for an \ac{EMTG} run that \ac{PEATSA} will then systematically change in order to perform the trade study. Once a problem requiring a \ac{PEATSA} run is identified, the most common workflow is to use the PyEMTG \ac{GUI} to create the base case. In this pre-\ac{PEATSA} phase, it is beneficial but not absolutely necessary to find a feasible solution for the base case and set the initial guess for the base case to be that feasible solution.
+
+\subsubsection{Creating the PEATSA Options File}
+\label{sec:creating_the_peatsa_options_file}
+
+The \ac{PEATSA} options file is a Python file that specifies the options to be used when executing the \ac{PEATSA} run. The \ac{PEATSA} options file uses Python syntax, but it is not actually an end-to-end script or function. Instead, it is a sequence of variable assignments that is evaluated by \ac{PEATSA}.
+
+\noindent A new \ac{PEATSA} options file is created by either duplicating and then modifying an existing \ac{PEATSA} options file or by using the PEATSA\_script\_generator.py utility script in \\ \textbf{\textless EMTG\_root\_dir\textgreater}/PyEMTG/PEATSA, where \textbf{\textless EMTG\_root\_dir\textgreater} is the top level directory of EMTG that has the /bin/ directory as a sub-directory. To create a new \ac{PEATSA} options file, execute the PEATSA\_script\_generator.py script in Python. The script prompts the user to answer a series of questions in order to create the desired \ac{PEATSA} options file for the run. (Some elements here are not described in detail yet; information will be added later, but the current contents are enough to create a new \ac{PEATSA} run.)
+
+\begin{enumerate}
+	\item \texttt{\# How should PEATSA start? ... Enter start\_type = }
+	\begin{itemize}
+		\item \texttt{Fresh}. Used when starting a new \ac{PEATSA} run. This is the most commonly used option.
+		\item \texttt{Warm}
+		\item \texttt{Hot}
+	\end{itemize}
+	\item \texttt{\# What type of PEATSA run is this? ... Enter PEATSA\_type = }
+	\begin{itemize}
+		\item \texttt{0}.
+		\item \texttt{1}.
+		\item \texttt{2}. A trade study. This is the option used to systematically vary \ac{EMTG} options to perform a trade study.
+		\item \texttt{3}.
+		\item \texttt{4}.
+		\item \texttt{5}.
+	\end{itemize}
+	\item \texttt{\# What is the objective type? ... Enter objective\_type = }
+	\begin{itemize}
+		\item \texttt{0}. A new feasible \ac{EMTG} solution is considered superior to an old solution if the new solution's \ac{PEATSA} objective function is better than the old solution's \ac{PEATSA} objective function.
+		\item \texttt{1}.
+	\end{itemize}
+	\item \texttt{\# Should the default plots be generated? ... Enter generate\_default\_plots = }
+	\begin{itemize}
+		\item \texttt{0}. Do not generate default plots. The default plots do not currently work, so this option should be chosen.
+		\item \texttt{1}.
+	\end{itemize}
+	\item \texttt{Enter filename: }
+	\begin{itemize}
+		\item Full path to and name of file in which to write the new \ac{PEATSA} script. Filename should end with .py.
+	\end{itemize}
+\end{enumerate}
+
+\noindent After the execution of PEATSA\_script\_generator.py, the filename entered by the user is populated with options that the user sets to customize the \ac{PEATSA} run. 
+
+\subsubsection{Customizing the PEATSA Options File}
+\label{sec:customizing_the_peatsa_options_file}
+
+A \ac{PEATSA} options file created by executing PEATSA\_script\_generator.py is not ready to be run. Some options have valid default values that the user may wish to change, while other options \emph{must} be set by the user prior to execution.  The listing of options below are a subset of the options available that are important to understand. Refer to the comments in the option file for information on all options available.
+
+\begin{itemize}
+	\item run\_name \\ Directory for \ac{PEATSA} to create, which it populates with the files it generates. This option sets the name of that directory. Do not use a file path here.
+	\item working\_directory \\ Full directory path to the location in which the run\_name directory will be created. The path does not need to end with a file separator.
+	\item nCores \\ A two element array associated with how \ac{PEATSA} will split up its processes. Leave the first element of the tuple set to 'local'. Set the second element of the tuple to the number of parallel processes you want \ac{PEATSA} to use.
+	\item emtg\_root\_directory \\  Full path to the \ac{EMTG} bin directory.
+	\item if\_run\_cases \\ Set this to 1 to execute the \ac{EMTG} cases.
+	\item trade\_study\_options\_files \\ The list is populated with 2-element tuples. The first element of each tuple is a string containing the full path to a trade parameter csv, and the second element is an integer specifying the type of the trade parameter csv. (See Section~\ref{sec:peatsa_trade_parameters_file}.)
+	\item killtime \\ This sets a maximum time in seconds that an \ac{EMTG} case is allowed to run before \ac{PEATSA} kills the process. The comments in the options file give best practices for setting this value.
+	\item objective\_formula \\ This sets the \ac{PEATSA} objective value; that is, how \ac{PEATSA} decides if one \ac{EMTG} run is better than another. The formula must be a function of data that is obtainable from a PyEMTG Mission object and MissionOptions object for a given \ac{EMTG} run.\footnote{The Mission object gives information that can only be evaluated \emph{after} an \ac{EMTG} case is executed, while a MissionOptions object gives information that is known \emph{prior} to \ac{EMTG} case execution.} These objects are accessed via `M.' and `MO.', respectively (e.g., `M.total\_deterministic\_deltav' gives the total deterministic $\Delta v$ of a solution). \\ Note that this objective value does not have to be the same as the objective function for a single \ac{EMTG} run.
+	\item max\_or\_min \\ Set whether the objective\_formula should be maximized or minimized.
+	\item peatsa\_goal\_objective \\ Set appropriately based on the objective\_formula. (See the comments in the options file give best practices for setting this value.)
+	\item fingerprint \\ The list of strings in the fingerprint defines a unique \ac{EMTG} case. A good starting point is to make the fingerprint a list of the trade parameter column headers (See Section~\ref{sec:peatsa_trade_parameters_file}). \\ Note: Disregard the ``Do not put any formulas that are already in the seed\_criteria list'' sentence in the option file comments for this option. It is WRONG.
+	\item seed\_folders \\ Seeds refers to \ac{EMTG} solution files (*.emtg files) that can be used as initial guesses for \ac{EMTG} cases generated by \ac{PEATSA}. A seed folder contains one or more of these solution files. The seed\_folders option is a list of tuples. The first element of the tuple is an integer describing the type of the folder.  The second element is a string containing the full path to the seed folder. (See the comments in the options file for additional details.)
+	\item seed\_from\_seed\_folders\_on\_fresh\_start \\ Set whether an external seed folder should be used before the first \ac{PEATSA} iteration. The default value is False, but it is usually more likely that a user wants to set it to True if using seed folders.
+	\item seed\_from\_cases\_that\_havent\_met\_target \\ Set whether cases that don't meet the \ac{PEATSA} goal criteria can be used as a seed in another case. The default value if 0, but it is likely that a user wants to set it to 1.
+	\item seed\_criteria \\ This option describes how an existing \ac{EMTG} solution may be used as an initial guess for a new \ac{EMTG} case with a similar, but not necessarily identical, set of trade parameters. seed\_criteria is a list of 4-element tuples. The first element is a string that is the criterion to be compared between an \ac{EMTG} case and a potential seed case. This should be a trade parameter as defined in the trade parameters csv file. (See Section~\ref{sec:peatsa_trade_parameters_file}.) The second element is a real number that is the maximum negative seed range. In other words, when evaluating a potential seed case, how much less than the current case can the seed criterion be for the seed case and still be considered a potential seed? The third element is a real number that is the maximum positive seed range. In other words, when evaluating a potential seed case, how much greater than the current case can the seed criterion be for the seed case and still be considered a potential seed? The fourth element is an integer and is the seed selection criterion. The choices are described fully in the comments of the \ac{PEATSA} options file. Additional notes about seed\_criteria:
+	\begin{itemize}
+		\item In order for case A to be a potential seed for case B, case A's fingerprint must be identical to case B's fingerprint except for the value of the seed\_criteria element under evaluation.
+		\item The elements of the seed\_criteria list are evaluated one at a time. In other words, there is no ``and'' or ``or'' logic. Each list element creates seeded cases independently of the others.
+	\end{itemize}
+	\item override\_options \\ A list of two-element tuples used to set \ac{EMTG} options that are different from the base case but are not trade parameters. The first element of a tuple is a logical condition that is evaluated to see if that specific override should be applied. The second element of a tuple is the formula for that specific override option, of the form `option = value'. A PyEMTG MissionOptions object is accessed via `MO'. If a string is required as part of the tuple, then use single quotes to enclose the entire tuple and double quotes to enclose the string element. 
+	
+	See the following examples of the most commonly used override options:
+	\begin{itemize}
+		\item (`1', `MO.HardwarePath = ``/path/to/HardwareModels/''')
+		\item (`1', `MO.universe\_folder = ``/path/to/universe/''')
+		\item (`1', `MO.MBH\_max\_run\_time = 120') \# or some other value
+		\item (`1', `MO.snopt\_max\_run\_time = 10') \# or some other value
+		\item (`1', `MO.quiet\_basinhopping = 1') \# or some other value
+		\item (`1', `MO.short\_output\_file\_names = 1') \# or some other value
+	\end{itemize}
+	\item extra\_csv\_column\_definitions \\ (See Section~\ref{sec:peatsa_outputs}) After each \ac{PEATSA} iteration, a summary csv file is created. There is a row for each unique \ac{EMTG} case, as defined by the \ac{PEATSA} fingerprint. There are columns with data about each case. The extra\_csv\_column\_definitions is used to define columns of the summary csv with data that the user is interested in for that particular \ac{PEATSA} run. A column is added by adding a two-element tuple to the extra\_csv\_column\_definitions. The first element is a string defining the column header. The second element is a string that may be evaluated for a given \ac{EMTG} run. Data must be obtainable from a PyEMTG Mission object and MissionOptions object for a given \ac{EMTG} run. These objects are accessed via `M.' and `MO.', respectively. Both Mission and MissionOptions have a `Journeys' list: a list of Journey objects for Mission and a list of JourneyOptions objects for MissionOptions. In addition, each Journey object has a list of missionevents objects. 
+	
+	See the following for examples of useful csv columns to include:
+	\begin{itemize}
+		\item (`LaunchVehicle', `MO.LaunchVehicleKey')
+		\item (`C3 (km2/s2)', `M.Journeys[0].missionevents[0].C3')
+		\item (`TotalDeltaV (km/s)', `M.total\_deterministic\_deltav')
+		\item (`DryMass (kg)', `M.spacecraft\_dry\_mass')
+		\item (`TotalFlightTime (years)', `(M.Journeys[-1].missionevents[-1].JulianDate - \\M.Journeys[0].missionevents[0].JulianDate)/365.25')
+		\item (`Flyby 0 GregorianDate (TDB)', \\`M.Journeys[0].getMGAPhaseUnpoweredFlyby(0).GregorianDate')
+		\item (`Phase 0 Arrival Sun Periapse Distance (au)', \\`M.Journeys[0].GetBoundaryConstraintOutputValueByName\\(``j0p0MGAnDSMsEphemerisPeggedFlybyIn periapse distance'', ``float'') / 1.49597870691e+8')
+	\end{itemize}
+\end{itemize}
+
+\subsubsection{The PEATSA Trade Parameters File}
+\label{sec:peatsa_trade_parameters_file}
+
+The \ac{PEATSA} trade parameters file contains the path to the base case and sets the trade parameters and their values for the \ac{PEATSA} run. The trade parameters file is a csv file, and it is recommended to view and edit the file using Microsoft Excel or another spreadsheet tool rather than a text editor.
+
+\noindent The first row of the csv contains the full path to the directory containing the base case. The path does not need to end with a file seperator. The path does not contain the name of the actual \ac{EMTG} options file itself --- just the path to the directory in which it resides.
+
+\noindent The second row of the csv contains the name of the \ac{EMTG} options file for the base case. This file must be inside the directory specified on the first row.
+
+\noindent The third row of the csv lists, as comma-seperated values, the names of the \ac{EMTG} options that are trade parameters. The trade parameters are accessed by accessing attributes of the PyEMTG MissionOptions class. Here, a MissionOptions instance for the base case is accessed via `MO'. For example, if it is desired to set the maximum total time of flight as a trade parameter, an element of row 3 would be `MO.total\_flight\_time\_bounds[1]'. In this example, the index 1 is used because the total\_flight\_time\_bounds attribute is a two-element list containing the lower bound and upper bound of the total time of flight. Another list attribute that is frequently used is `Journeys', which is a list of JourneyOptions objects, one for each Journey of the Mission. For example, `MO.Journeys[1].duty\_cycle' would make the duty cycle of Journey index 1 (the indexing starts from 0) a trade parameter.
+
+\noindent Rows four and below list the values of the trade parameters. The desired values for a given trade parameter are listed in the column in which the name of that trade parameter was written in row 3. Three different formats are available.
+
+\noindent The following are examples of different valid types of trade parameter files in \\ \textbf{\textless EMTG\_root\_dir\textgreater}/PyEMTG/PEATSA:
+
+\begin{itemize}
+	\item Type 0.
+	\begin{itemize}
+		\item Trade all values for a given trade parameter individually against the base-case values of all other trade parameters.
+		\item The number of rows for each column may be different.
+		\item The total number of cases is equal to the sum of the number of rows of each column, starting with row 4.
+		\item There is an example in \textbf{\textless EMTG\_root\_dir\textgreater}/PyEMTG/PEATSA/opt\_file\_type\_zero.csv.
+	\end{itemize}
+	\item Type 1.
+	\begin{itemize}
+		\item Trade all values of each variable against all values of all other variables. An \ac{EMTG} case is created for every permuation of the values listed in rows 4 and below.
+		\item The number of rows for each column may be different.
+		\item The total number of cases is equal to the product of the number of rows of each column, starting with row 4.
+		\item There is an example in \textbf{\textless EMTG\_root\_dir\textgreater}/PyEMTG/PEATSA/opt\_file\_type\_one.csv.
+	\end{itemize}
+	\item Type 2.
+	\begin{itemize}
+		\item The columns of each row represent a set of trade parameters that defines an \ac{EMTG} case to be run.
+		\item The number of rows for each column must be the same.
+		\item The total number of cases is equal to the number of rows, starting with row 4.
+		\item There is an example in \textbf{\textless EMTG\_root\_dir\textgreater}/PyEMTG/PEATSA/opt\_file\_type\_two.csv.
+	\end{itemize}
+\end{itemize}

@@ -1,0 +1,16 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\section{Preparing to Use the PyETMG \ac{GUI}}
+%\label{sec:pyemtg_gui_preparing_to_use}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+In the PyEMTG directory of the \ac{EMTG} repo, there is a file called PyEMTG-template.options. This file must be duplicated, and the copy must be renamed PyEMTG.options. The new PyEMTG.options file contents must be edited to reflect the user's system.
+
+\noindent The PyEMTG.options file consists of multiple lines of text. Each line consists of space-delimited name value pairs, where the left block of text is the name/variable and the right block of text is the value associated with that name/variable. The most important variable to set is \texttt{EMTG\_path}. \texttt{EMTG\_path} is important because setting it appropriately allows for the \ac{EMTG} executable to be executed by the PyEMTG \ac{GUI}. \texttt{EMTG\_path} must be set to the full path and name of the \ac{EMTG} executable file. All paths in the options file must use forward slashes as the file/folder separators. For example, if the \ac{EMTG} repo were located in C:\textbackslash emtg, then the user would type:
+
+\indent \verb|EMTG_path C:/emtg/bin/EMTGv9.exe|
+
+\noindent The other variables in the PyEMTG.options file are optional because the default values set in the PyEMTG.options file can be (and almost always are) overridden in the options file for a given \ac{EMTG} mission. However, it should be noted that the default \ac{EMTG} mission will not run unless either the default values in PyEMTG.options are set appropriately or the relevant values are set appropriately in the options file for the default mission.
+
+\noindent Once the PyEMTG.options file has the required EMTG executable configured, in the prompt the user would need to navigate to the PyEMTG folder, type the following, and then press enter to Launch PyEMTG:
+
+\verb|python PyEMTG.py|

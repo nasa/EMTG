@@ -1,0 +1,170 @@
+\documentclass[11pt]{article}
+
+%% PACKAGES
+\usepackage{graphicx}
+\usepackage[printonlyused]{acronym}
+\usepackage{float}
+\usepackage{tabularx}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{caption}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{tocloft}
+
+\makeatletter
+\g@addto@macro\normalsize{%
+  \setlength\abovedisplayskip{0.25pt}
+  \setlength\belowdisplayskip{0.25pt}
+  \setlength\abovedisplayshortskip{0.25pt}
+  \setlength\belowdisplayshortskip{0.25pt}
+}
+\makeatother
+
+\setlength{\parskip}{\baselineskip}
+
+%% GRAPHICS PATH
+\graphicspath{{../../../shared_latex_inputs/images}{../../../shared_latex_inputs/graphs}}
+
+\title{\Huge EMTG Tutorial: Introduction and Setup}
+\vspace{0.5cm}
+\author
+{
+	Tim Sullivan \thanks{Aerospace Engineer, The Aerospace Corporation}
+}
+\vspace{0.5cm}
+
+\newcommand{\listofknownissuesname}{\Large List of Known Issues}
+\newlistof{knownissues}{mcf}{\listofknownissuesname}
+
+\newcommand{\knownissue}[3]
+{
+	\refstepcounter{knownissues}
+	\par\noindent\textbf{\hyperref[#2_b]{\theknownissues\quad #1}}\label{#2_h}
+	\textbf{\hfill\pageref{#2_b}}
+	#3
+}
+
+\newcommand{\knownissuelabel}[2]
+{
+	 \phantomsection
+  	\hyperref[#2_h]{#1}\def\@currentlabel{\unexpanded{#1}}\label{#2_b}
+}
+
+\begin{document}
+
+\begin{titlepage}
+\maketitle
+\thispagestyle{empty}
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\textwidth}{|l|l|X|}
+		\hline
+		\textbf{Revision Date} & \textbf{Author} & \textbf{Description of Change} \\
+		\hline
+		\date{December 2, 2022} & Tim Sullivan & Initial revision.\\
+		\hline
+		\date{June 30, 2023} & Joseph Hauerstein & Conversion to \LaTeX.\\ 
+		\hline
+		\date{August 4, 2023} & Joseph Hauerstein & Addition of Known Issues section.\\ 
+		\hline
+	\end{tabularx}
+\end{table}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+\listofknownissues
+\thispagestyle{empty}
+
+
+\newpage
+\clearpage
+\setcounter{page}{1}
+\input{../../../shared_latex_inputs/acronymlist}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{sec:introduction}
+%%%%%%%%%%%%%%%%%%%%%
+
+Welcome to the tutorial series on \acs{NASA}’s \ac{EMTG}. \ac{EMTG} is a tool for the design of space missions using either high-thrust chemical or low-thrust electric propulsion and, optionally, planetary flyby maneuvers. \ac{EMTG} is capable of determining both the optimal flyby sequence (using a Python-based outer loop) and also the optimal trajectory (using a nonlinear programming solver and monotonic basin hopping). \ac{EMTG} can operate at multiple levels of modeling fidelity that are suitable for trade studies, some proposals, and use as initial guesses for flight-fidelity tools. \ac{EMTG} is not an operational tool like \acs{STK}, \acs{GMAT}, or \acs{MONTE}.
+
+\noindent \ac{EMTG} is composed of two components. The core \ac{EMTG} program is written in C++ and is driven by a text script interface. The second component is a \ac{GUI} written in Python called PyEMTG, which is used to process \ac{EMTG} input and output scripts. The two programs are independent but complementary.
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Learning Objectives}
+\label{sec:learning_objectives}
+%%%%%%%%%%%%%%%%%%%%%
+
+This tutorial series provides seven introductory lessons on \ac{EMTG}. Each tutorial focuses on a different aspect of \ac{EMTG}. Each lesson builds on one or more previous lessons, so it is highly recommended that the lessons be completed in order. The lessons begin with low-fidelity chemical and low-thrust missions. Each tutorial adds additional realism and details to the initial simplistic missions, similar to the way someone might design a real-world mission.
+
+\noindent The list of tutorials is provided below, in the order in which they should be performed. Each has an additional directory of the same name in the Tutorial\_EMTG\_Files directory with the accompanying \ac{EMTG} files the user will create during the tutorial and example \ac{EMTG} results. Each tutorial expects the user to have completed all the previous tutorials.
+
+\begin{enumerate}
+	\item \textbf{OSIRIS-REx:} Basic introduction to \ac{EMTG} chemical missions. Creates a low-fidelity, patched-conic, multi-phase mission similar to the OSIRIS-REx trajectory.
+	\item \textbf{LowSIRIS-REx:} Basic introduction to \ac{EMTG} low-thrust missions. Modifies the OSIRIS-REx mission for low-thrust and introduces two transcription methods for low-thrust missions in \ac{EMTG}.
+	\item \textbf{Boundary Types:} Explains how \ac{EMTG} models Journey Boundaries (departure and arrival states).
+	\item \textbf{Propagation and Force Models:} Provides additional details on \ac{EMTG} “Mission Types” or transcription methods, propagation options, and perturbing forces.
+	\item \textbf{Flybys:} Takes the user through the conversion of a low-fidelity patched conics mission to a high-fidelity mission with realistic flybys.
+	\item \textbf{Config Files:} Explains how to configure \ac{EMTG} spacecraft and launch vehicle text configuration files to model real-world hardware and vehicles.
+	\item \textbf{PEATSA:} Introduces the \ac{PEATSA}. \ac{PEATSA} allows users to explore the trade space of mission options and discover how different configurations affect the final trajectory.
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Conventions}
+\label{sec:conventions}
+%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%
+\subsection{Environment}
+\label{sec:environment}
+%%%%%%%%%%%%%%%%%%%%%
+
+All tutorials except the \ac{PEATSA} tutorial are conducted in a Windows environment using the \ac{EMTG} Python \ac{GUI}, PyEMTG, and, occasionally, a text editor such as Notepad++. \ac{PEATSA} runs are typically conducted on a Linux multi-CPU environment, so the \ac{PEATSA} tutorial is written assuming the user has access to a Linux workstation.
+
+\noindent \ac{EMTG} files include full paths in several locations. The \ac{EMTG} files provided were created assuming the working directory is located at \texttt{C:\textbackslash EMTG\textbackslash Tutorials\textbackslash NAME-OF-TUTORIAL}. For example, the files for the first tutorial, OSIRIS-REx, expect to be located inside \texttt{C:\textbackslash EMTG\textbackslash Tutorials\textbackslash OSIRIS-REx}. You are free to place your tutorial files wherever you want as long as you update paths appropriately.
+
+%%%%%%%%%%%%%%%%%%%%%
+\subsection{Formatting}
+\label{sec:formatting}
+%%%%%%%%%%%%%%%%%%%%%
+
+Throughout the tutorials, \ac{EMTG}-specific features and naming conventions such as Universes and Journeys will be capitalized. Specific items and values the user should input in PyEMTG will be in quotations, such as "Mission Types". When discussing text in a terminal or \ac{EMTG} text file, this tutorial series will use a \texttt{monospaced font}.
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Initial EMTG Setup}
+\label{sec:initial_emtg_setup}
+%%%%%%%%%%%%%%%%%%%%%
+
+These tutorials cover using \ac{EMTG} and assume that \ac{EMTG} and PyEMTG have already been installed and set up. For more information on these topics, see the files in \texttt{docs/0\_Users/build\_system} and \texttt{PyEMTG/docs}.
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Mission Directory Setup}
+\label{sec:mission_directory_setup}
+%%%%%%%%%%%%%%%%%%%%%
+
+\ac{EMTG} will utilize four main directories/folders when run: the directory in which the input text file is located, Universe, Hardware, and results. For these tutorials, a working or mission directory setup for each tutorial will be created like the OSIRIS-REx directory shown in Figure \ref{fig:folder_structure}. 
+
+\begin{figure}[H]
+	\centering
+	\fbox{\includegraphics[width=0.6\linewidth]{OSIRIS-REx_folder_structure.png}}
+	\caption{\label{fig:folder_structure}Example \ac{EMTG} Mission Directories.}
+\end{figure}
+
+\noindent This directory will contain the \ac{EMTG} options file itself, the spacecraft and launch vehicle hardware files in the directory \texttt{hardware\_models}, and the \ac{EMTG} results in the \texttt{results} directory. The other necessary directory is the universe directory containing the \ac{EMTG} Universe file and another directory \texttt{ephemeris\_files} containing all ephemeris files needed for the mission. More information on the Universe directory is provided in the next section and Tutorial 1: OSIRIS-REx. The \texttt{ephemeris\_files} directory name is specific to \ac{EMTG}. If any other name is used, \ac{EMTG} will not be able to find the necessary \ac{SPICE} files.
+
+%%%%%%%%%%%%%%%%%%%%%
+\subsection{Universe Directory}
+\label{sec:universe_directory}
+%%%%%%%%%%%%%%%%%%%%%
+
+Each \ac{EMTG} Journey (Journeys will be explained in detail in the tutorials) uses a \texttt{.emtg\_universe} file listing the relevant bodies (planets, moons, asteroids, etc.) for that mission, which is kept in a directory referenced by the \ac{EMTG} options (.etmgopt) file.
+
+\noindent \ac{EMTG} uses ephemeris files provided by the Jet Propulsion Laboratory Navigation and Ancillary Information Facility (JPL NAIF). The standard ephemeris files for any mission are \texttt{de430.bsp} (planetary ephemeris), \texttt{naif0012.tls} (leap seconds), and \texttt{pck00010.tpc} (frame), although other versions from JPL NAIF may be used. To use a body not in the DE430 ephemeris, include its \texttt{.bsp} file in the \texttt{ephemeris\_files} folder. The \ac{SPICE} ephemeris files can be found on the JPL NAIF site here: \href{https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/}{DE files}, \href{https://naif.jpl.nasa.gov/pub/naif/generic_kernels/pck/}{frames}, \href{https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/}{leap seconds}.
+
+\noindent This tutorial series will create two Universe directories and each tutorial will use one or the other.
+
+
+\end{document}

@@ -1,0 +1,146 @@
+\chapter{Universe File and Options}
+\label{chap:universe_options}
+
+\ac{EMTG} Universe files define all celestial body and ephemeris data required by \ac{EMTG}. This mostly consists of astrodynamics data pertaining to the central body. For a given Journey, the geometric center of the central body serves as the center of propagation in \ac{EMTG}. The file takes the extension {\tt .emtg\_universe} and consists of two major sections: the central body information and a menu of bodies which define the list of available flyby objects for the Journey. 
+
+\section{Central Body Definition}
+The central body information is used to define the central body for a given Journey, and thus multiple {\tt .emtg\_universe} files are required when multiple central bodies are needed in a mission. This information is listed first in an {\tt .emtg\_universe} file but is not contained in any specific block. The lines and expected data types are shown in Table \ref{tab:universe_centralbodyinfo}, with additional details following.
+
+\begin{table}[H]
+    \centering
+    % \begin{tabular}{l|l|l}
+    \begin{tabular}{llll}
+    \hline
+    \textbf{Line} & \textbf{Line Name} & \textbf{Data Type} \\
+    \hline
+    \textbf{1} & central\_body\_name & String \\
+    % \hline
+    \textbf{2} & central\_body\_SPICE\_ID & Integer \\
+    % \hline
+    \textbf{3} & central\_body\_radius & Real (km) \\
+    % \hline
+    \textbf{4} & central\_body\_J2 & Real \\
+    % \hline
+    \textbf{5} & central\_body\_J2\_reference\_radius & Real (km) \\
+    % \hline
+    \textbf{6} & central\_body\_flattening\_coefficient & Real \\
+    % \hline
+    \textbf{7} & mu & Real (km\textsuperscript{3}/s\textsuperscript{2}) \\
+    % \hline
+    \textbf{8} & LU & Real (km) \\
+    % \hline
+    \textbf{9} & reference\_angles & Real (degrees) \\
+    % \hline
+    \textbf{10} & r\_SOI & Real (km) \\
+    % \hline
+    \textbf{11} & minimum\_safe\_distance & Real (km)
+    \end{tabular}
+    \caption{Universe File Central Body Information}
+    \label{tab:universe_centralbodyinfo}
+\end{table}
+
+
+\noindent\listitem{central\_body\_name}{The name of the central body.}
+\listitem{central\_body\_SPICE\_ID}{The \ac{SPICE} ID associated with the central body.}
+\listitem{central\_body\_radius}{The radius of the central body.}
+\listitem{central\_body\_J2}{Optionally provided J2 value for the central body. Defaults to 0.}
+\listitem{central\_body\_J2\_reference\_radius}{Optionally provided J2 reference radius for the central body. Defaults to 0.}
+\listitem{central\_body\_flattening\_coefficient}{Optionally provided flattening coefficient to define oblateness of central body. Defaults to 0.}
+\listitem{mu}{Gravitational constant of central body.}
+\listitem{LU}{The characteristic length unit used in scaling the problem internally.}
+\listitem{reference\_angles}{Six space-delimited values: alpha0, alphadot, delta0, deltadot, W, Wdot. These angles define the local reference frame relative to \ac{ICRF}, in degrees and degrees per century. The angle alpha0 defines the right ascension angle used to describe the north pole of the central body relative to the invariable plane of the solar system. The angle delta0 defines the declination angle describing the angular distance of the central body's north pole from the celestial equator. The angle W defines the location of the prime meridian of the central body measured easterly along the body's equator from a node defined as an intersection of the body equator with the celestial equator. The angular rates alphadot, deltadot, and Wdot are the rates of change of the associated angles due to precession of the axis of rotation.}
+\listitem{r\_SOI}{Radius of the central body's sphere of influence.}
+\listitem{minimum\_safe\_distance}{The minimum safe distance from the central body, some value greater than the radius of the central body.}
+
+
+
+
+
+\section{Menu of Bodies Details}
+The menu of bodies details information similar to that of the central body, but instead for a list of bodies available for flybys or third body perturbation effects. The menu of bodies is attached to the {\tt .emtg\_universe} file much the same way as a central body, so for missions where multiple central bodies are used the menu of bodies must be present in each {\tt .emtg\_universe} file. Unlike the central body information however, each body has all of its information listed on one space delimited line. The indices, varibale names, and expected data types are shown in Table \ref{tab:universe_menuofbodiesinfo}, with additional details following.
+
+
+\begin{table}[H]
+    \centering
+    \begin{tabular}{lll}
+    \hline
+    \textbf{Index} & \textbf{Variable Name} & \textbf{Data Type} \\
+    \hline
+    \textbf{1} & Name & String \\
+    % \hline
+    \textbf{2} & Short Name & String \\
+    % \hline
+    \textbf{3} & Number & Integer \\
+    % \hline
+    \textbf{4} & \ac{SPICE}\_ID & Integer \\
+    % \hline
+    \textbf{5} & minimum\_flyby\_altitude & Real (km) \\
+    % \hline
+    \textbf{6} & GM & Real (km\textsuperscript{3}/s\textsuperscript{2}) \\
+    % \hline
+    \textbf{7} & Radius & Real (km) \\
+    % \hline
+    \textbf{8} & body\_flattening\_coefficient  & Real \\
+    % \hline
+    \textbf{9} & body\_J2 & Real \\
+    % \hline
+    \textbf{10} & body\_AbsoluteMagnitude & Real \\
+    % \hline
+    \textbf{11} & body\_albedo & Real \\
+    % \hline
+    \textbf{12} & ephemeris\_epoch & Real \\
+    % \hline
+    \textbf{13} & alpha0 & Real (degrees) \\
+    % \hline
+    \textbf{14} & alphadot & Real (degrees/century) \\
+    % \hline
+    \textbf{15} & delta0 & Real (degrees) \\
+    % \hline
+    \textbf{16} & deltadot & Real (degrees/century) \\
+    % \hline
+    \textbf{17} & W & Real (degrees) \\
+    % \hline
+    \textbf{18} & Wdot & Real (degrees/century) \\
+    % \hline
+    \textbf{19} & \acs{SMA} & Real (km) \\
+    % \hline
+    \textbf{20} & \acs{ECC} & Real \\
+    % \hline
+    \textbf{21} & \acs{INC} & Real (degrees) \\
+    % \hline
+    \textbf{22} & \acs{RAAN} & Real (degrees) \\
+    % \hline
+    \textbf{23} & \acs{AOP} & Real (degrees) \\
+    % \hline
+    \textbf{24} & \acs{MA} & Real (degrees) \\
+    % \hline
+    \end{tabular}
+    \caption{Universe File Menu Of Bodies Specifications}
+    \label{tab:universe_menuofbodiesinfo}
+\end{table}
+
+
+\noindent\listitem{Name}{Details a full name for a body appearing on the menu of bodies.}
+\listitem{Short Name}{A short hand call out to a body which is used to name results files. Often a single letter (e.g., J for Jupiter).}
+\listitem{Number}{A number associated with the body, used to set destination lists and flyby sequences as an easy to parse list of integers.}
+\listitem{\ac{SPICE}\_ID}{The \ac{SPICE} ID associated with the body being set. Lists of IDs are available at \href{https://naif.jpl.nasa.gov/pub/naif/toolkit_docs/C/req/naif_ids.html}{https://naif.jpl.nasa.gov/pub/naif/toolkit\_docs/C/req/naif\_ids.html}.}
+\listitem{minimum\_flyby\_altitude}{A lower bound on the safe flyby altitude for a body appearing on the list of available flyby objects. If the value is $\leq 0$, the object is not placed on the flyby menu.}
+\listitem{GM}{The gravitational parameter of the body.}
+\listitem{Radius}{The radius of the body.}
+\listitem{body\_flattening\_coefficient}{A flattening coefficient defining the oblateness of the body.}
+\listitem{body\_J2}{The J2 zonal harmonic term of the body.}
+\listitem{body\_AbsoluteMagnitude}{The brightness of the body. This is included for future use in a genetic algorithm to aid in defining a potentially interesting small body flyby.}
+\listitem{body\_albedo}{The fraction of light a body reflects. This is used with the body absolute magnitude to estimate the body radius.}
+\listitem{ephemeris\_epoch}{A reference epoch for the body provided as a modified Julian date, used to verify the body exists in the provided \ac{SPICE} ephemeris at this point.}
+\listitem{alpha0}{The right ascension angle used to define the pole of rotation that lies on the north side of the invariable plane of the solar system. This right ascension describes the angular distance from the Earth equinox at J2000 and the hour circle passing through the object, the hour circle being the great circle passing through a celestial object and the two celestial poles.}
+\listitem{alphadot}{The rate of change of the right ascension angle used to define the pole of rotation of the celestial body due to precession of the axis of rotation of the body.}
+\listitem{delta0}{The declination angle used to define the pole of rotation that lies on the north side of the invariable plane of the solar system. This declination describes the angular distance of said north pole to the celestial (\ac{ICRF}) equator.}
+\listitem{deltadot}{The rate of change of the declination angle used to define the pole of rotation of the celestial body due to precession of the axis of rotation of the body}
+\listitem{W}{The angle defining the location of the prime meridian of the celestial body, measured easterly along the body's equator from a node defined as an intersection of the body equator with the celestial (\ac{ICRF}) equator.}
+\listitem{Wdot}{The rate of change of the angle used to define the location of the prime meridian of the celestial body due to precession of the axis of rotation of the body}
+\listitem{SMA}{Semi-major axis of the body at the provided reference epoch with respect to the central body local reference frame. Overridden if ephemeris is drawn from \ac{SPICE}.}
+\listitem{ECC}{Eccentricity of the body at the provided reference epoch with respect to the central body local reference frame. Overridden if ephemeris is drawn from \ac{SPICE}.}
+\listitem{INC}{Inclination of the body at the provided reference epoch with respect to the central body local reference frame. Overridden if ephemeris is drawn from \ac{SPICE}.}
+\listitem{RAAN}{Right Ascension of the Ascending Node of the body at the provided reference epoch with respect to the central body local reference frame. Overridden if ephemeris is drawn from \ac{SPICE}.}
+\listitem{AOP}{Argument of Perigee of the body at the provided reference epoch with respect to the central body local reference frame. Overridden if ephemeris is drawn from \ac{SPICE}.}
+\listitem{MA}{Mean Anomaly of the body at the provided reference epoch with respect to the central body local reference frame. Overridden if ephemeris is drawn from \ac{SPICE}.}

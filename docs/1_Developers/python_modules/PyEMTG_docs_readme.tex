@@ -1,0 +1,271 @@
+\documentclass[11pt]{article}
+
+%% PACKAGES
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{url}
+\usepackage{xurl}
+\usepackage[printonlyused]{acronym}
+\usepackage[ruled]{algorithm}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{overpic}
+\usepackage{calc}
+\usepackage{color}
+%\usepackage{times}
+%\usepackage{ragged2e}
+\usepackage[margin=1.0in]{geometry}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{textcomp}
+\usepackage{cite}
+\usepackage{mdwlist}
+\usepackage{subfiles}
+\usepackage{enumitem}
+\usepackage{calc}
+\usepackage{array}
+\usepackage{units}
+\usepackage{arydshln,leftidx,mathtools}
+\usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{relsize}
+\usepackage{float}
+\usepackage{makecell}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\usepackage{tabularx}
+
+\makeatletter
+\let\@tmp\@xfloat
+\usepackage{fixltx2e}
+\let\@xfloat\@tmp
+\makeatother
+
+\usepackage[subfigure]{tocloft}
+\usepackage[singlespacing]{setspace}
+%\usepackage[nodisplayskipstretch]{setspace}
+%\setstretch{1.0}
+
+%\renewcommand\cftsecafterpnum{\vskip\baselineskip}
+%\renewcommand\cftsubsecafterpnum{\vskip\baselineskip}
+%\renewcommand\cftsubsubsecafterpnum{\vskip\baselineskip}
+
+%\usepackage{mathtools}
+%\usepackage[framed]{mcode}
+
+\usepackage{pgfplots}
+
+\usepackage{cancel}
+
+\usepackage{tikz}
+\usetikzlibrary{calc,patterns,decorations.pathmorphing,decorations.markings,fit,backgrounds}
+
+\usepackage[strict]{changepage} %use to manually place figs/tables to get them within the margins
+
+\makeatletter
+\g@addto@macro\normalsize{%
+	\setlength\abovedisplayskip{0.25pt}
+	\setlength\belowdisplayskip{0.25pt}
+	\setlength\abovedisplayshortskip{0.25pt}
+	\setlength\belowdisplayshortskip{0.25pt}
+}
+\makeatother
+
+
+
+\setlength{\parskip}{\baselineskip}
+
+%% GRAPHICS PATH
+\graphicspath{{./pictures/pdf/}{./pictures/ps/}{./pictures/png/}}
+
+%% TODO
+\newcommand{\todo}[1]{\vspace{5 mm}\par \noindent \framebox{\begin{minipage}[c]{0.98 \columnwidth} \ttfamily\flushleft \textcolor{red}{#1}\end{minipage}}\vspace{5 mm}\par}
+
+%% MACROS
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+\providecommand{\dualnorm}[1]{\norm{#1}_\ast}
+\providecommand{\set}[1]{\lbrace\,#1\,\rbrace}
+\providecommand{\cset}[2]{\lbrace\,{#1}\nobreak\mid\nobreak{#2}\,\rbrace}
+\providecommand{\onevect}{\mathbf{1}}
+\providecommand{\zerovect}{\mathbf{0}}
+\providecommand{\field}[1]{\mathbb{#1}}
+\providecommand{\C}{\field{C}}
+\providecommand{\R}{\field{R}}
+\providecommand{\polar}{\triangle}
+\providecommand{\Cspace}{\mathcal{Q}}
+\providecommand{\Fspace}{\mathcal{F}}
+\providecommand{\free}{\text{\{}\mathsf{free}\text{\}}}
+\providecommand{\iff}{\Leftrightarrow}
+\providecommand{\qstart}{q_\text{initial}}
+\providecommand{\qgoal}{q_\text{final}}
+\providecommand{\contact}[1]{\Cspace_{#1}}
+\providecommand{\feasible}[1]{\Fspace_{#1}}
+\providecommand{\prob}[2]{p(#1|#2)}
+\providecommand{\prior}[1]{p(#1)}
+\providecommand{\Prob}[2]{P(#1|#2)}
+\providecommand{\Prior}[1]{P(#1)}
+\providecommand{\parenth}[1] {\left(#1\right)}
+\providecommand{\braces}[1] {\left\{#1\right\}}
+\providecommand{\micron}{\hbox{\textmu m}}
+
+%% MATH FUNCTION NAMES
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\cone}{cone}
+\DeclareMathOperator{\homog}{homog}
+\DeclareMathOperator{\domain}{dom}
+\DeclareMathOperator{\range}{range}
+\DeclareMathOperator{\argmax}{arg\,max}
+\DeclareMathOperator{\argmin}{arg\,min}
+\DeclareMathOperator{\area}{area}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\mathspan}{span}
+\DeclareMathOperator{\sn}{sn}
+\DeclareMathOperator{\cn}{cn}
+\DeclareMathOperator{\dn}{dn}
+\DeclareMathOperator*{\minimize}{minimize}
+
+\DeclareMathOperator{\atan2}{atan2}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+%\setlength{\RaggedRightParindent}{2em}
+%\setlength{\RaggedRightRightskip}{0pt plus 3em}
+%\pagestyle{empty}
+
+\newcommand{\acposs}[1]{%
+	\expandafter\ifx\csname AC@#1\endcsname\AC@used
+	\acs{#1}'s%
+	\else
+	\aclu{#1}'s (\acs{#1}'s)%
+	\fi
+}
+
+
+\title{{\Huge PyEMTG Documentation Readme}}
+\vspace{0.5cm}
+\author
+{
+	Noble Hatten\thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Code 595}
+	Edwin Dove\thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Code 595}
+}
+\vspace{0.5cm}
+
+\date{}
+
+\begin{document}
+	
+\begin{titlepage}
+	\maketitle
+	%\thispagestyle{empty}
+	\begin{table}[H]
+		\centering
+		\begin{tabularx}{\textwidth}{|l|l|X|}
+			\hline
+			\textbf{Revision Date} & \textbf{Author} & \textbf{Description of Change} \\ \hline
+			\date{July 22, 2022} & Noble Hatten & Initial creation and migration of markdown content into this document.\\ \hline
+			\date{October 25, 2023} & Edwin Dove & Updated instructions to point to the new documentation location. \\ 
+			\hline
+		\end{tabularx}
+	\end{table}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+\clearpage
+\setcounter{page}{1}
+
+\input{../../shared_latex_inputs/acronymlist}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{sec:introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+The purpose of this document is to describe:
+
+\begin{itemize}
+	\item The available documentation for PyEMTG (Section~\ref{sec:pyemtg_documentation}).
+	\item How to add new documentation to PyEMTG (Section~\ref{sec:creating_new_pyemtg_rst_documentation}).
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{PyEMTG Documentation}
+\label{sec:pyemtg_documentation}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+PyEMTG documentation is located in the \ac{EMTG} git repo. 
+The following notation is used in this documentation to represent folder locations: 
+\begin{itemize}
+	\item \textbf{\textless EMTG\_root\_dir\textgreater} - EMTG git repo root directory
+	\item \textbf{\textless PyEMTG-autogen\_dir\textgreater} - root directory of the auto generated PyEMTG documentation and sphinx configuration files: \\ \textbf{\textless EMTG\_root\_dir\textgreater}/docs/1\_Developers/python\_modules/
+
+\end{itemize}
+
+\noindent The PyEMTG documentation consists of:
+\begin{itemize}
+	\item A \LaTeX-based user guide located in \textbf{\textless EMTG\_root\_dir\textgreater}/docs/0\_Users/PyEMTG\_User\_GuideUser/
+	\item Auto-generated \ac{rst} documentation based on specially formatted comments in PyEMTG .py scripts. \ac{rst} files may be used to produce multiple formats of end-user documentation. The \ac{EMTG} repo contains html versions of this documentation that may be accessed via \textbf{\textless PyEMTG-autogen\_dir\textgreater}/\_autogendocs/html/index.html. After opening this file in a web browser, the browser may be used to navigate between different pages of documentation.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Creating New PyEMTG Restructured Text Documentation}
+\label{sec:creating_new_pyemtg_rst_documentation}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Prequisites}
+\label{sec:prequisites_for_creating_rst_docs}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+PyEMTG documentation is generated using the Sphinx Python Documentation Generator (\url{https://www.sphinx-doc.org/en/master/index.html}). A user must have the sphinx package installed in their Python environment in order to build the documentation.
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Updating Documentation}
+\label{sec:updating_autogen_documentation}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+Documentation may be added directly to Python source files. For examples of the syntax of adding documentation, see \textbf{\textless EMTG\_root\_dir\textgreater}/PyEMTG/Journey.py and web sites like \url{https://eikonomega.medium.com/getting-started-with-sphinx-autodoc-part-1-2cebbbca5365}.
+
+\noindent If updating auto-generated documentation for the python files in \textbf{\textless EMTG\_root\_dir\textgreater}/PyEMTG/ that already contains the same names as the rst files in the \\ \textbf{\textless PyEMTG-autogen\_dir\textgreater}/ subdirectories, then all a user needs to do for updates to appear in the html documents is to rebuild the documentation. See Section~\ref{sec:building_rst_documentation}.
+
+\noindent If adding a new subdirectory to the \textbf{\textless EMTG\_root\_dir\textgreater}/PyEMTG/ directory, the following steps must be followed prior to rebuilding in order for documentation to be produced for Python files in the new subdirectory:
+
+\begin{enumerate}
+	\item Create a directory in \textbf{\textless PyEMTG-autogen\_dir\textgreater}/ with the name of the new directory that was created in \textbf{\textless EMTG\_root\_dir\textgreater}/PyEMTG/.
+	\item Open a terminal with access to the Python environment with sphinx.
+	\item In the terminal, execute \\ \texttt{sphinx-apidoc -o \textbf{\textless PyEMTG-autogen\_dir\textgreater}/<name of your new directory> \\ \textbf{\textless EMTG\_root\_dir\textgreater}/PyEMTG/<name of your new directory>/}
+	\item Copy the index.rst file from a pre-existing \\ \textbf{\textless PyEMTG-autogen\_dir\textgreater}/ subdirectory to \\ \textbf{\textless PyEMTG-autogen\_dir\textgreater}/\texttt{<name of your new directory>}.
+	\item Edit \textbf{\textless PyEMTG-autogen\_dir\textgreater}/\texttt{<name of your new directory>}/index.rst so the title header text above the equal (=) characters reads "\texttt{<name of your new directory>} documentation".
+	\item Add \texttt{sys.path.insert(0, os.path.abspath('../../../PyEMTG/<name of your new directory>/'))} to the \textbf{\textless PyEMTG-autogen\_dir\textgreater}/docs/\textless dir\textgreater/conf.py file.
+	\item Add \texttt{<name of your new directory>/index.rst} to the list of .rst files in /PyEMTG/docs/index.rst.
+	\item In the terminal, navigate to \textbf{\textless PyEMTG-autogen\_dir\textgreater}/.
+	\item In the terminal, execute \texttt{make html}. \\ \textit{There may be warnings but hopefully there are no errors.}
+\end{enumerate}
+
+\noindent Note: These instructions were adapted from \url{https://dev.to/dev0928/how-to-generate-professional-documentation-with-sphinx-4n78} and \url{https://stackoverflow.com/questions/13116155/sphinx-apidoc-usage-multiple-source-python-directories}.
+
+\noindent If \textbf{\textless EMTG\_root\_dir\textgreater}/PyEMTG/\texttt{<name of preexising directory>} already exists in the \textbf{\textless PyEMTG-autogen\_dir\textgreater}/ directory and documentation is needed for a new python module, the following steps provides guidance producing the documentation:
+\begin{enumerate}
+	\item Open a terminal with access to the Python environment with sphinx.
+	\item In the terminal, execute \\ \texttt{sphinx-apidoc -o \textbf{\textless PyEMTG-autogen\_dir\textgreater}/<name of preexising directory> \\ \textbf{\textless EMTG\_root\_dir\textgreater}/PyEMTG/<name of preexising directory>/}
+	\item In the terminal, navigate to \textbf{\textless PyEMTG-autogen\_dir\textgreater}/.
+	\item In the terminal, execute \texttt{make html}. \\ \textit{There may be warnings but hopefully there are no errors.}
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Building the Documentation}
+\label{sec:building_rst_documentation}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{enumerate}
+	\item Open a terminal with access to the Python environment with sphinx.
+	\item Navigate to the \textbf{\textless PyEMTG-autogen\_dir\textgreater}/ directory.
+	\item In the terminal, execute \texttt{make html} to produce the html-based documentation.
+\end{enumerate}
+
+
+\end{document}

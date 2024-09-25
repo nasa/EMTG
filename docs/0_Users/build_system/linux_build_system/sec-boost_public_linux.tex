@@ -1,0 +1,86 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsubsection{Boost}
+%\label{sec:boost}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Purpose}
+
+\ac{EMTG} depends on three components of Boost: filesystem, serialization, and system (and their dependencies). In addition, if a user wishes to build the \ac{EMTG} PyHardware and Propulator components, then the python component of Boost is required. (Installation of the python component of Boost is described later in this section.) The user may also simply install \emph{all} components of Boost; the only drawback of this approach is that Boost will use more hard drive space. If you already installed Boost in Section~\ref{sec:setting_up_dependencies_with_management_capabilities}, skip this section. 
+
+\subsubsection{Download Location}
+
+\ac{EMTG} is known to work with Boost 1.79.0, which is available at \url{https://boostorg.jfrog.io/artifactory/main/release/1.79.0/}.
+
+\subsubsection{Dependency Installation Instructions}
+\begin{enumerate}
+	\item Navigate to the user's home directory using the following command: \\
+	
+	\texttt{cd}
+	\item Create a ``user-config.jam'' file using the following command: \\
+	\textit{NOTE: This file is needed for building the Boost Python library}
+	
+	\verb|touch ~/user-config.jam|
+	\item Open the file in a text editor and modify it so that the contents are: \\
+	\textit{NOTE: Replace ''/path/to'' text with the path to your user mambaforge directory} \\
+	\textit{NOTE: The white space is important!}
+
+	\begin{verbatim}
+	using python : 3.7 : /path/to/mambaforge/envs/PyEmtgEnv/bin/python3.7 ;
+	\end{verbatim}
+	
+	\begin{itemize}
+		\item For additional information, see the Boost documentation at \url{https://www.boost.org/doc/libs/1_79_0/libs/python/doc/html/building/configuring_boost_build.html}.	
+	\end{itemize}
+	
+	\item Save and close the file once the changes are made
+	\item Navigate to the Utilities directory by executing the following command: \\
+
+	\texttt{cd /Utilities/}
+	\item Download Boost 1.79.0 by running the command: \\
+
+	\texttt{curl -LO https://boostorg.jfrog.io/artifactory/main/release/1.79.0/source/boost\_\newline\indent 1\_79\_0.tar.gz}
+
+	\item Extract the tarball, rename the directory, and navigate into the new directory using the following commands: 
+
+	\begin{verbatim}
+	tar -xzf boost_1_79_0.tar.gz
+
+	mv boost_1_79_0 boost-1.79.0
+
+	cd boost-1.79.0
+	\end{verbatim}
+	
+	\item Execute the bootstrap script that will prepare files for being built using the following command:
+	\begin{verbatim}
+	./bootstrap.sh
+	\end{verbatim}
+
+	\item Open the \texttt{boost-1.79.0/project-config.jam} file and look for the following lines: \\
+	\textit{NOTE: The white space is important!}
+
+	\begin{verbatim}
+	if ! gcc in [ feature.values <toolset> ]
+	{
+	   using gcc ; 
+	}
+	\end{verbatim}
+
+	\item Update the lines to read as followed to reflect the user's installation of \ac{GCC}:
+
+	\begin{verbatim}
+	if ! gcc in [ feature.values <toolset> ]
+	{
+	   using gcc : 9.5.0 : /Utilities/gcc-9.5.0/bin/gcc-9.5.0 ; 
+	}
+	\end{verbatim}
+
+	\item Build the final executable using the following command: \\
+	\textit{NOTE: The --with-python argument is needed for the \ac{EMTG} PyHardware and Propulator components} \\
+	\textit{NOTE: The --config argument is to force the build process to use the specific input configuration file in the event an install is being made with root}
+	
+	\begin{verbatim}
+	./b2 --with-filesystem --with-serialization --with-system --with-python 
+	--config="/path/to/usr/user-config.jam"
+	\end{verbatim}
+
+\end{enumerate}

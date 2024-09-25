@@ -1,0 +1,47 @@
+%%%%%%%%%%%%%%%%%%%%%%%%
+%\subsubsection{Linux Environment Variables}
+%\label{sec:linux_environment}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsubsection{Purpose}
+In order to make it easier to use \ac{EMTG} and PyEMTG, users frequently edit their \texttt{.bashrc} and/or \texttt{.bash\_profile} files, which are located in a user's home directory. For example, users might want to create aliases that point to the appropriate versions of compilers and add directories to library search paths. In particular, it is important that the paths to the \ac{GCC}, \ac{SNOPT}, and Boost libraries are on the \texttt{LD\_LIBRARY\_PATH}. The instructions in this section assume that the user will make use of the bash files.
+
+\begin{enumerate}
+	\item Create or update the \texttt{.bash\_profile} file in the user's home directory using the following example as a reference:\\
+	\textit{NOTE: The contents will vary depending on the user's setup. In this example, it is assumed that \ac{GCC}, and CMake were installed in \texttt{/Utilities}.}\\
+	\textit{NOTE: In later sections when  Boost, and \ac{SNOPT} are installed verify that the location used matches with the contents of the \texttt{.bash\_profile} file.}\\
+	\textit{NOTE: This \texttt{.bash\_profile} is given at this point in the procedure---that is, after \ac{GCC} and CMake have been installed but before other dependencies have been installed---to allow the user to place the newly installed \ac{GCC} and CMake on their \texttt{PATH} and \ac{GCC} on their \texttt{LD\_LIBRARY\_PATH} so that they may be used to build other dependencies.}
+
+	\begin{verbatim}
+	# Get the aliases and functions
+	if [ -f ~/.bashrc ]; then
+	. ~/.bashrc
+	fi
+	
+	# User specific environment and startup programs
+	
+	PATH=$PATH:$HOME/.local/bin:$HOME/bin
+	
+	export CC=/Utilities/gcc-9.5.0/bin/gcc-9.5.0
+	export CXX=/Utilities/gcc-9.5.0/bin/g++-9.5.0
+	export FC=/Utilities/gcc-9.5.0/bin/gfortran-9.5.0
+	
+	PATH=/Utilities/gcc-9.5.0/bin:/Utilities/cmake-3.23.2/bin:$PATH
+	LD_LIBRARY_PATH=/Utilities/gcc-9.5.0/lib:/Utilities/gcc-9.5.0/lib64:$LD_LIBRARY_PATH
+	LD_LIBRARY_PATH=/Utilities/snopt-7.6/lib/.libs:$LD_LIBRARY_PATH
+	LD_LIBRARY_PATH=/Utilities/boost-1.79.0/stage/lib:$LD_LIBRARY_PATH
+	
+	export PATH
+	export LD_LIBRARY_PATH
+	\end{verbatim}
+
+	\item Apply the changes to your terminal using the command below: \\
+	
+	\verb|source ~/.bash_profile|
+	
+	\item Verify that the LD\_LIBRARY\_PATH variable is properly initialized by executing the following command: \\
+	
+	\texttt{echo \$LD\_LIBRARY\_PATH}
+	
+	\item Close and reopen the Terminal window.
+\end{enumerate}

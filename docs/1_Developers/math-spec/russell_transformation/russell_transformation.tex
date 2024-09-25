@@ -1,0 +1,220 @@
+\documentclass[]{article}
+\usepackage{nomencl}
+\usepackage{hyperref}
+\hypersetup{pdffitwindow=true,
+	pdfpagemode=UseThumbs,
+	breaklinks=true,
+	colorlinks=true,
+	linkcolor=black,
+	citecolor=black,
+	filecolor=black,
+	urlcolor=black}
+
+\usepackage{verbatim}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}%
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{subfigure}
+\usepackage[makeroom]{cancel}
+\usepackage{indentfirst}
+\usepackage{color}
+\usepackage{bm}
+\usepackage{mathtools}
+
+\usepackage{rotating}
+\usepackage{comment}
+\usepackage{here}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{pdfpages}
+\usepackage{float}
+\usepackage[section]{placeins}
+
+\usepackage{array}
+
+% quotes
+\newcommand{\quotes}[1]{``#1''}
+
+% vectors and such
+\newcommand{\vb}[1]{\bm{#1}} % bold
+\newcommand{\vbd}[1]{\dot{\bm{#1}}} % dot
+\newcommand{\vbdd}[1]{\ddot{\bm{#1}}} % double dot
+\newcommand{\vbh}[1]{\hat{\bm{#1}}} % hat
+\newcommand{\vbt}[1]{\tilde{\bm{#1}}} % tilde
+\newcommand{\vbth}[1]{\hat{\tilde{\bm{#1}}}} % tilde hat
+\newcommand{\ddt}[1]{\frac{\mathrm{d} #1}{\mathrm{d} t}} % time derivative
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}} % partial derivative
+\newcommand{\crossmat}[1]{\left\{ {#1} \right\}^{\times}} % crossmat
+\newcommand{\xb}[0]{\vb{x}_b}
+\newcommand{\xc}[0]{\vb{x}_c}
+\newcommand{\diff}{\mathrm{d}}
+
+\makenomenclature
+\makeindex
+
+%opening
+\title{The Russell Transformation}
+\author{Noble Hatten}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+This document describes the ``Russell'' transformation, which is used to produce a fictitious independent variable for step-size control in $N$-body gravitational environments.
+
+\end{abstract}
+
+\tableofcontents
+
+\printnomenclature
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{The Russell Transformation}
+\label{sec:russell_transformation}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The transformation takes the form
+
+\begin{align}
+	\diff t &= g \diff s,
+\end{align}
+
+\nomenclature{$t$}{Time}
+\nomenclature{$s$}{Fictitious independent variable}
+\nomenclature{$g$}{$\diff t / \diff s$}
+
+\noindent where
+
+\begin{align}
+	g &= \prod_{i=1}^{N} \rho_i^{\alpha},
+\end{align}
+
+\nomenclature{$i$}{Index}
+\nomenclature{$N$}{Number of gravitating bodies}
+\nomenclature{$\alpha$}{User-tunable parameter; Sundman-like exponent}
+\nomenclature{$\rho$}{Term in transformation}
+
+\noindent where
+
+\begin{align}
+	\rho_i &= \frac{A^2 + A}{A + \left( \frac{A \left( 1 - C \right)}{C + A} \right)^{\frac{r_i}{B r_{H, i}}}} - A.
+\end{align}
+
+\nomenclature{$A$}{User-tunable parameter; scales how much time slows down at Hill-normalized distance from a body}
+\nomenclature{$B$}{User-tunable parameter; defines boundary in space at which time starts to slow down as spacecraft approaches a body}
+\nomenclature{$C$}{User-tunable parameter; defines values of $\rho$ when $r/r_H = B$}
+\nomenclature{$r_i$}{Distance from spacecraft to body $i$}
+\nomenclature{$r_H$}{Hill radius}
+
+\noindent Then, the equations of motion are written as
+
+\begin{align}
+	\vb{f}_s &= \frac{\diff \vb{x}}{\diff s} \\
+	&= \vb{f}_t \frac{\diff t}{\diff s} \\
+	&= \vb{f}_t g
+\end{align}
+
+\nomenclature{$\vb{f}_t$}{$\frac{\diff \vb{x}}{\diff t}$}
+\nomenclature{$\vb{f}_s$}{$\frac{\diff \vb{x}}{\diff s}$}
+\nomenclature{$\vb{x}$}{State vector}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Jacobian of the Russell Transformation}
+\label{sec:russell_transformation_jacobian}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+We require the Jacobians $\pd{\vb{f}_s}{\vb{x}}$ and $\pd{\vb{f}_s}{s}$.
+
+\begin{align}
+	\pd{\vb{f}_s}{\vb{x}} &= \pd{}{\vb{x}} \left[ \vb{f}_t g \right] \\
+	&= \pd{\vb{f}_t}{\vb{x}} g + \vb{f}_t \pd{g}{\vb{x}} \\
+	\pd{\vb{f}_s}{s} &= \pd{\vb{f}_s}{t} \frac{\diff t}{\diff s} \\
+	&= \pd{}{t} \left[ \vb{f}_t g \right] g \\
+	&= \pd{\vb{f}_t}{t} g^2 + \vb{f}_t \pd{g}{t} g
+\end{align}
+
+\noindent $\pd{\vb{f}_t}{\vb{x}}$ and $\pd{\vb{f}_t}{t}$ are the usual Jacobians for equations of motion when time is the independent variable, and $\vb{f}_t$ are the time equations of motion. Thus, the only terms that need to be derived are $\pd{g}{\vb{x}}$ and $\pd{g}{t}$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Jacobian of $\rho_i$}
+\label{sec:rhoi_jacobian}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+In $g$, the only non-constant terms are the $\rho_i$. Each $\rho_i$ is solely dependent on $r_i$. Using MATLAB symbolic math, we arrive at
+
+\begin{align}
+	\pd{\rho_i}{r_i} &= -\frac{A \gamma^{\frac{r_i}{B r_{H,i}}} \log \left( \gamma \right) \left(A + 1 \right)}{B r_{H, i} \left( A + \gamma^{\frac{r_i}{B r_{H,i}}} \right)^2} \\
+	\gamma &\triangleq \frac{A \left( 1 - C \right)}{C + A},
+\end{align}
+
+\noindent where $\gamma$ is a convenience function. Then, $r_i$ is only directly dependent on $\vb{r}_i$:
+
+\begin{align}
+	\pd{r_i}{\vb{x}} &= \pd{r_i}{\vb{r}_i} \pd{\vb{r}_i}{\vb{x}} \\
+	\pd{r_i}{\vb{r}_i} &= \frac{\vb{r}_i^T}{r_i}.
+\end{align}
+
+If we call $\vb{r}_i$ the vector from the spacecraft to body $i$ and $\vb{r}_{c, i}$ the vector from the central body of integration to body $i$, then
+
+\begin{align}
+	\vb{r}_i &= \vb{r}_{c, i} - \vb{r}.
+\end{align}
+
+\nomenclature{$\vb{r}$}{Postion vector of spacecraft}
+\nomenclature{$\vb{r}_i$}{Position vector from spacecraft to body $i$}
+\nomenclature{$\vb{r}_{c,i}$}{Position vector from central body to body $i$}
+
+The derivatives are
+
+\begin{align}
+	\label{eq:dridx}
+	\pd{\vb{r}_i}{\vb{x}} &= \pd{}{\vb{x}} \left( \vb{r}_{c,i} - \vb{r} \right).
+\end{align}
+
+\noindent In Eq.~\eqref{eq:dridx}, $\vb{r}_{c, i}$ depends only on time, and $\vb{r}$ depends only on the position state of the spacecraft. So,
+
+\begin{align}
+	\pd{\vb{r}_i}{t} &= \vb{v}_{c, i} \\
+	\pd{\vb{r}_i}{\vb{r}} &= - \vb{I}
+\end{align}
+
+\noindent and all other derivatives are zero.
+
+So,
+
+\begin{align}
+	\pd{\rho_i}{\vb{x}} &= \pd{\rho_i}{r_i} \pd{r_i}{\vb{x}} \pd{\vb{r}_i}{\vb{x}},
+\end{align}
+
+\noindent where we may assume that $t$ is part of the augmented state vector.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Jacobian of $g$}
+\label{sec:g_jacobian}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The derivative of $g$ with respect to each of the $\rho_i$ is
+
+\begin{align}
+	\pd{g}{\rho_i} &= \alpha \rho_i^{\alpha - 1} \prod_{\substack{j=1 \\ j \neq i}}^{N} \rho_j^\alpha.
+\end{align}
+
+\nomenclature{$j$}{Index}
+
+Then, if we concatenate all $\rho_i$ into the vector $\vb{\rho}$, we finally get
+
+\begin{align}
+	\pd{g}{\vb{x}} &= \pd{g}{\vb{\rho}} \pd{\vb{\rho}}{\vb{x}},
+\end{align}
+
+\noindent where we may assume that $t$ is part of the augmented state vector.
+
+
+%\bibliography{}
+%\bibliographystyle{plain}
+
+\end{document}

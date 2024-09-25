@@ -1,0 +1,254 @@
+\documentclass[11pt]{article}
+
+%% PACKAGES
+\usepackage{graphicx}
+\usepackage{verbatim}
+\usepackage{url}
+\usepackage[printonlyused]{acronym}
+\usepackage[ruled]{algorithm}
+\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{overpic}
+\usepackage{calc}
+\usepackage{color}
+%\usepackage{times}
+%\usepackage{ragged2e}
+\usepackage[margin=1.0in]{geometry}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{textcomp}
+\usepackage{cite}
+\usepackage{mdwlist}
+\usepackage{subfiles}
+\usepackage{enumitem}
+\usepackage{calc}
+\usepackage{array}
+\usepackage{units}
+\usepackage{arydshln,leftidx,mathtools}
+\usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{relsize}
+\usepackage{float}
+\usepackage{makecell}
+
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
+
+\usepackage{tabularx}
+
+\makeatletter
+\let\@tmp\@xfloat
+\usepackage{fixltx2e}
+\let\@xfloat\@tmp
+\makeatother
+
+\usepackage[subfigure]{tocloft}
+\usepackage[singlespacing]{setspace}
+%\usepackage[nodisplayskipstretch]{setspace}
+%\setstretch{1.0}
+
+%\renewcommand\cftsecafterpnum{\vskip\baselineskip}
+%\renewcommand\cftsubsecafterpnum{\vskip\baselineskip}
+%\renewcommand\cftsubsubsecafterpnum{\vskip\baselineskip}
+
+%\usepackage{mathtools}
+%\usepackage[framed]{mcode}
+
+\usepackage{pgfplots}
+
+\usepackage{cancel}
+
+\usepackage{tikz}
+\usetikzlibrary{calc,patterns,decorations.pathmorphing,decorations.markings,fit,backgrounds}
+
+\usepackage[strict]{changepage} %use to manually place figs/tables to get them within the margins
+
+\makeatletter
+\g@addto@macro\normalsize{%
+	\setlength\abovedisplayskip{0.25pt}
+	\setlength\belowdisplayskip{0.25pt}
+	\setlength\abovedisplayshortskip{0.25pt}
+	\setlength\belowdisplayshortskip{0.25pt}
+}
+\makeatother
+
+
+\setlength{\parskip}{\baselineskip}
+
+%% GRAPHICS PATH
+\graphicspath{{./pictures/pdf/}{./pictures/ps/}{./pictures/png/}}
+
+%% TODO
+\newcommand{\todo}[1]{\vspace{5 mm}\par \noindent \framebox{\begin{minipage}[c]{0.98 \columnwidth} \ttfamily\flushleft \textcolor{red}{#1}\end{minipage}}\vspace{5 mm}\par}
+
+%% MACROS
+\providecommand{\abs}[1]{\lvert#1\rvert}
+\providecommand{\norm}[1]{\lVert#1\rVert}
+\providecommand{\dualnorm}[1]{\norm{#1}_\ast}
+\providecommand{\set}[1]{\lbrace\,#1\,\rbrace}
+\providecommand{\cset}[2]{\lbrace\,{#1}\nobreak\mid\nobreak{#2}\,\rbrace}
+\providecommand{\onevect}{\mathbf{1}}
+\providecommand{\zerovect}{\mathbf{0}}
+\providecommand{\field}[1]{\mathbb{#1}}
+\providecommand{\C}{\field{C}}
+\providecommand{\R}{\field{R}}
+\providecommand{\polar}{\triangle}
+\providecommand{\Cspace}{\mathcal{Q}}
+\providecommand{\Fspace}{\mathcal{F}}
+\providecommand{\free}{\text{\{}\mathsf{free}\text{\}}}
+\providecommand{\iff}{\Leftrightarrow}
+\providecommand{\qstart}{q_\text{initial}}
+\providecommand{\qgoal}{q_\text{final}}
+\providecommand{\contact}[1]{\Cspace_{#1}}
+\providecommand{\feasible}[1]{\Fspace_{#1}}
+\providecommand{\prob}[2]{p(#1|#2)}
+\providecommand{\prior}[1]{p(#1)}
+\providecommand{\Prob}[2]{P(#1|#2)}
+\providecommand{\Prior}[1]{P(#1)}
+\providecommand{\parenth}[1] {\left(#1\right)}
+\providecommand{\braces}[1] {\left\{#1\right\}}
+\providecommand{\micron}{\hbox{\textmu m}}
+
+%% MATH FUNCTION NAMES
+\DeclareMathOperator{\conv}{conv}
+\DeclareMathOperator{\cone}{cone}
+\DeclareMathOperator{\homog}{homog}
+\DeclareMathOperator{\domain}{dom}
+\DeclareMathOperator{\range}{range}
+\DeclareMathOperator{\argmax}{arg\,max}
+\DeclareMathOperator{\argmin}{arg\,min}
+\DeclareMathOperator{\area}{area}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\mathspan}{span}
+\DeclareMathOperator{\sn}{sn}
+\DeclareMathOperator{\cn}{cn}
+\DeclareMathOperator{\dn}{dn}
+\DeclareMathOperator*{\minimize}{minimize}
+
+\DeclareMathOperator{\atan2}{atan2}
+
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+
+%\setlength{\RaggedRightParindent}{2em}
+%\setlength{\RaggedRightRightskip}{0pt plus 3em}
+%\pagestyle{empty}
+
+\newcommand{\acposs}[1]{%
+	\expandafter\ifx\csname AC@#1\endcsname\AC@used
+	\acs{#1}'s%
+	\else
+	\aclu{#1}'s (\acs{#1}'s)%
+	\fi
+}
+
+
+\title{{\Huge PyEMTG User Guide}}
+\vspace{0.5cm}
+\author
+{
+	Noble Hatten\thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Navigation and Mission Design Branch Code 595}, 
+	Edwin Dove\footnotemark[1]%\thanks{Aerospace Engineer, NASA Goddard Space Flight Center, Navigation and Mission Design Branch Code 595}
+}
+\vspace{0.5cm}
+
+\date{}
+
+\begin{document}
+	
+\begin{titlepage}
+	\maketitle
+	%\thispagestyle{empty}
+	\begin{table}[H]
+		\centering
+		\begin{tabularx}{\textwidth}{|l|l|X|}
+			\hline
+			\textbf{Revision Date} & \textbf{Author} & \textbf{Description of Change} \\ \hline
+			\date{July 22, 2022} & Noble Hatten & Initial creation.\\ \hline
+			\date{Sept. 19-20, 2022} & Noble Hatten & added PEATSA section.\\ \hline
+			\date{March 26, 2024} & Edwin Dove & Added PyEMTG GUI navigation text.\\ 
+			\hline
+		\end{tabularx}
+	\end{table}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+\clearpage
+\setcounter{page}{1}
+
+\input{../../../docs/shared_latex_inputs/acronymlist}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{sec:introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+The purpose of this document is to describe:
+
+\begin{itemize}
+	\item How to prepare to use the PyEMTG \ac{GUI} for \ac{EMTG}: Section~\ref{sec:pyemtg_gui_preparing_to_use}.
+	\item How to Navigate in the EMTG PyEMTG \ac{GUI}: Section~\ref{sec:pyemtg_gui}.
+	\item How to use the \ac{PEATSA} utility: Section~\ref{sec:peatsa}.
+\end{itemize}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{PyEMTG GUI}
+\label{sec:pyemtg_gui}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-pyemtg_gui}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Preparing to Use the PyETMG GUI}
+\label{sec:pyemtg_gui_preparing_to_use}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-pyemtg_gui_preparing_to_use}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Navigating the PyETMG GUI}
+\label{sec:pyemtg_gui_navigation}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-pyemtg_gui_navigation}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\section{PEATSA}
+\label{sec:peatsa}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-peatsa}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Creating a PEATSA Run}
+\label{sec:creating_a_peatsa_run}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-creating_a_peatsa_run}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Executing PEATSA}
+\label{sec:executing_peatsa}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-executing_a_peatsa_run}	
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{PEATSA Outputs}
+\label{sec:peatsa_outputs}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-peatsa_outputs}
+
+%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{PEATSA Tips and Tricks}
+\label{sec:peatsa_tips_and_tricks}
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{./sec-peatsa_tips_and_tricks}
+
+
+
+\end{document}

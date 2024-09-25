@@ -1,0 +1,184 @@
+\documentclass[11pt]{article}
+
+%% PACKAGES
+\usepackage{graphicx}
+\usepackage[printonlyused]{acronym}
+\usepackage{float}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{tocloft}
+\usepackage{listings}
+
+\lstset{basicstyle=\small\ttfamily,columns=flexible,breaklines=true,xleftmargin=0.5in,keepspaces=true}
+
+
+\makeatletter
+\g@addto@macro\normalsize{%
+  \setlength\abovedisplayskip{0.25pt}
+  \setlength\belowdisplayskip{0.25pt}
+  \setlength\abovedisplayshortskip{0.25pt}
+  \setlength\belowdisplayshortskip{0.25pt}
+}
+\makeatother
+
+\setlength{\parskip}{\baselineskip}
+
+%% GRAPHICS PATH
+\graphicspath{{../../shared_latex_inputs/images}{../../shared_latex_inputs/graphs}}
+
+\newcommand{\acposs}[1]{%
+	\expandafter\ifx\csname AC@#1\endcsname\AC@used
+	\acs{#1}'s%
+	\else
+	\aclu{#1}'s (\acs{#1}'s)%
+	\fi
+}
+
+\title{\Huge EMTG Testatron Tutorial: Creating a Test}
+
+\newcommand{\listofknownissuesname}{\Large List of Known Issues}
+\newlistof{knownissues}{mcf}{\listofknownissuesname}
+
+\newcommand{\knownissue}[3]
+{
+	\refstepcounter{knownissues}
+	\par\noindent\textbf{\hyperref[#2_b]{\theknownissues\quad #1}}\label{#2_h}
+	\textbf{\hfill\pageref{#2_b}}
+	#3
+}
+
+\newcommand{\knownissuelabel}[2]
+{
+	 \phantomsection
+  	\hyperref[#2_h]{#1}\def\@currentlabel{\unexpanded{#1}}\label{#2_b}
+}
+
+
+\begin{document}
+
+\begin{titlepage}
+\maketitle
+\thispagestyle{empty}
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\textwidth}{|l|l|X|}
+		\hline
+		\textbf{Revision Date} & \textbf{Author} & \textbf{Description of Change} \\
+		\hline
+		\date{June 30, 2023} & Joseph Hauerstein & Initial revision.\\ 
+		\hline
+	\end{tabularx}
+\end{table}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+\listofknownissues
+\thispagestyle{empty}
+
+\knownissue{Testatron does not update the paths of files in HardwareModels.}{hardware_options_file_paths_issue}
+
+\knownissue{The output produced by running Testatron is different from PyEMTG.}{testatron_changes_emtgopt_issue}
+
+\newpage
+\clearpage
+\setcounter{page}{1}
+\input{../../shared_latex_inputs/acronymlist}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{sec:introduction}
+%%%%%%%%%%%%%%%%%%%%%
+
+Welcome to the second \ac{EMTG} Testatron tutorial. The goal of this tutorial is to familiarize users with the process of creating a new test to use with the Testatron system. Before starting this tutorial, you should have completed the first tutorial on how to run Testatron. 
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Reason for Creating a Test}
+\label{sec:reason_for_creating_a_test}
+%%%%%%%%%%%%%%%%%%%%%
+
+Before creating a test, it is first important to consider whether creating a new test is necessary. At present, there should be tests for all \ac{EMTG} features, so there should not be a need to create tests for existing features. However, if you are adding a new feature to \ac{EMTG}, or discover that a test was not sufficient for an existing feature, you should create a test that makes sure that feature is working. Essentially, there should be an example case for each new feature that makes sure the feature is working properly. 
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Test Creation Process}
+\label{sec:test_creation_process}
+%%%%%%%%%%%%%%%%%%%%%
+
+If you need to create a test for a new feature, this section will explain the process of creating a test, and how to add the test to Testatron.
+
+%%%%%%%%%%%%%%%%%%%%%
+\subsection{Generating Files}
+\label{sec:generating_files}
+%%%%%%%%%%%%%%%%%%%%%
+
+The *.emtgopt and *.emtg files are the two required files to create a test for Testatron. This tutorial will use the OSIRIS-REx mission from the \ac{EMTG} Tutorials as an example to demonstrate the creation of a new test.
+
+\begin{enumerate}
+	\item Make a copy of the OSIRIS-REx.emtgopt file from the EMTG tutorials and move it to a new directory called OSIRIS-REx\_testatron. 
+	\item Open the file in PyEMTG and rename the mission to OSIRIS-Rex\_testatron. 
+	\item Navigate to the Solver Options page and change the following options as shown in Figure \ref{fig:solver_options}:
+	\begin{itemize}
+		\item\textbf{Inner-Loop Solver Mode:}`` \acs{NLP} with initial guess''
+		\begin{itemize}		
+			\item The test version of the OSIRIS-REx mission will not use \ac{MBH} because it is a stochastic optimizer. Instead, it will use the \ac{NLP} solver \acs{SNOPT}, which is deterministic, to propagate the solution. Using these settings ensures the test results are reproduceable. 
+		\end{itemize}
+		\item\textbf{Quiet NLP Solver:} ``Off''
+		\item\textbf{Trial decision vector or initial guess:} path to a previous run of the OSIRIS-REx mission
+	\end{itemize}
+
+\begin{figure}[H]
+	\centering
+	\fbox{\includegraphics[width=0.7\linewidth]{Testatron_OSIRIS-REx_solver_options.png}}
+	\caption{\label{fig:solver_options}OSIRIS-REx\_testatron Solver Options.}
+\end{figure}
+
+	\item Update the path to the working directory so that output will go into the new folder. Then, run the Mission using PyEMTG (File-\textgreater Run or Ctrl+r).
+
+Now that *.emtgopt and *.emtg files have been generated, they need to be placed into the correct Testatron test folder. Imagine that the OSIRIS-REx\_testatron.emtgopt file was using a new feature in the Solver Options tab. In this case, the new test would go in the ``solver\_options'' folder in the Testatron tests directory. 
+
+	\item Copy the *.emtgopt and *.emtg files files into \textless EMTG\_root\_dir\textgreater\textbackslash testatron\textbackslash tests\textbackslash solver\_opti-\newline\indent ons.
+
+NOTE: You should not copy tests into the ``tests\_that\_dont\_work'' folder as this folder is for tests that are expected to fail with the current build of \ac{EMTG}.
+
+	\item Copy the OSIRIS-REx mission default.emtg\_spacecraftopt and default.emtg\_propulsionsystem-\indent opt files from the OSIRIS-REx hardware\_models folder into the \textless EMTG\_root\_dir\textgreater\textbackslash testatron\textbackslash{} HardwareModels folder. All other required files in the hardware\_models folder and the Universe folder are already in the corresponding Testatron folders.
+
+NOTE: There is no need to change the paths to ``hardware\_models'' or the Universe folder in the *.emtgopt file, because Testatron will do this automatically.\knownissuelabel{However, if you use a *.emtg\_spacecraftopt or *.emtg\_propulsionsystemopt file that contains a path to another file, such as a *.ThrottleTable file, this path will need to be updated manually within the spacecraft or propulsion system options file.}{hardware_options_file_paths_issue}
+
+\end{enumerate}
+
+%%%%%%%%%%%%%%%%%%%%%
+\subsection{Running the New Test}
+\label{sec:running_the_new_test}
+%%%%%%%%%%%%%%%%%%%%%
+
+Now that all the required files are added, the new test can be run using the run test case command:
+
+\texttt{python testatron.py --emtg <EMTG\_root\_dir>\textbackslash bin\textbackslash EMTGv9.exe --pyemtg <EMTG\_root\_\newline\indent dir>\textbackslash PyEMTG\textbackslash{} -c <EMTG\_root\_dir>\textbackslash testatron\textbackslash tests\textbackslash solver\_options\textbackslash OSIRIS-REx\_test\newline\indent atron}
+
+\noindent The test should run quickly, but you will notice that it fails on the initial run as shown in Figure \ref{fig:osiris_testatron_initial_run}.
+
+\noindent\knownissuelabel{NOTE: This failure is due to Testatron slightly changes some of the numbers used in the OSIRIS-REx\_testatron.emtgopt file, which causes \ac{EMTG} to produce slightly different results. This is likely occurring from number to string conversions in python. A bug ticket has been created for this.}{testatron_changes_emtgopt_issue}
+
+\begin{figure}[H]
+	\centering
+	\fbox{\includegraphics[width=0.6\linewidth]{Testatron_OSIRIS-REx_initial_run.png}}
+	\caption{\label{fig:osiris_testatron_initial_run}Initial run output.}
+\end{figure}
+
+\noindent To address the slight numerical differences, navigate to the output folder for the test run (located in \textless EMTG\_root\_dir\textgreater\textbackslash testatron\textbackslash output\textbackslash{} \textless time-of-test\textgreater) and copying the OSIRIS-REx\_testatron.emtg file into the solver\_options folder. Run the test again using the same command and it should pass. Example output is shown in Figure \ref{fig:osiris_testatron_success}.
+
+\begin{figure}[H]
+	\centering
+	\fbox{\includegraphics[width=0.5\linewidth]{Testatron_OSIRIS-REx_fixed_run.png}}
+	\caption{\label{fig:osiris_testatron_success}Fixed run output.}
+\end{figure}
+
+\noindent Congratulations, you have successfully added a test to Testatron and completed the Testatron Tutorials!
+
+
+\end{document}

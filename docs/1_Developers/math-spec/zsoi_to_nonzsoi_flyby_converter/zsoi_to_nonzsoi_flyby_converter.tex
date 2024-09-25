@@ -1,0 +1,235 @@
+\documentclass[]{article}
+\usepackage{nomencl}
+\usepackage{hyperref}
+\hypersetup{pdffitwindow=true,
+	pdfpagemode=UseThumbs,
+	breaklinks=true,
+	colorlinks=true,
+	linkcolor=black,
+	citecolor=black,
+	filecolor=black,
+	urlcolor=black}
+
+\usepackage{verbatim}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}%
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{subfigure}
+\usepackage[makeroom]{cancel}
+\usepackage{indentfirst}
+\usepackage{color}
+\usepackage{bm}
+\usepackage{mathtools}
+
+\usepackage{rotating}
+\usepackage{comment}
+\usepackage{here}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{setspace}
+\usepackage{pdfpages}
+\usepackage{float}
+\usepackage[section]{placeins}
+\usepackage[nolist,nohyperlinks]{acronym}
+\usepackage{array}
+
+% quotes
+\newcommand{\quotes}[1]{``#1''}
+
+% vectors and such
+\newcommand{\vb}[1]{\bm{#1}} % bold
+\newcommand{\vbd}[1]{\dot{\bm{#1}}} % dot
+\newcommand{\vbdd}[1]{\ddot{\bm{#1}}} % double dot
+\newcommand{\vbh}[1]{\hat{\bm{#1}}} % hat
+\newcommand{\vbt}[1]{\tilde{\bm{#1}}} % tilde
+\newcommand{\vbth}[1]{\hat{\tilde{\bm{#1}}}} % tilde hat
+\newcommand{\ddt}[1]{\frac{\mathrm{d} #1}{\mathrm{d} t}} % time derivative
+\newcommand{\pd}[2]{\frac{\partial #1}{\partial #2}} % partial derivative
+\newcommand{\crossmat}[1]{\left\{ {#1} \right\}^{\times}} % crossmat
+\newcommand{\xb}[0]{\vb{x}_b}
+\newcommand{\xc}[0]{\vb{x}_c}
+\newcommand{\diff}{\mathrm{d}}
+
+% handle possessive acronyms
+\makeatletter
+\newcommand{\acposs}[1]{%
+	\expandafter\ifx\csname AC@#1\endcsname\AC@used
+	\acs{#1}'s%
+	\else
+	\aclu{#1}'s (\acs{#1})%
+	\fi
+}
+\makeatother
+
+% handle long acronyms that need to break across lines
+\makeatletter
+\renewcommand*\AC@acs[1]{%
+	\expandafter\AC@get\csname fn@#1\endcsname\@firstoftwo{#1}}
+\makeatother
+
+\makenomenclature
+\makeindex
+
+%opening
+\title{Converting a Zero-Sphere-of-Influence Flyby to a Non-Zero-Sphere-of-Influence Flyby in EMTG}
+\author{Noble Hatten}
+
+\begin{document}
+
+\maketitle
+\input{acronymlist}
+
+\begin{abstract}
+This document describes the method used by EMTG to convert a zero-sphere-of-influence flyby to a non-zero-sphere-of-influence flyby. EMTG implements this capability in the PyEMTG/HighFidelity Python scripts.
+
+\end{abstract}
+
+\tableofcontents
+
+\printnomenclature
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{ZSOI Flyby to Periapse Position and Velocity Vectors}
+\label{sec:zsoi_to_rv}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The principle is to take the known quantities from the feasible \ac{ZSOI} flyby to produce initial guesses for quantities used to parameterize the non-\ac{ZSOI} flyby. The known quantities are:
+
+\begin{itemize}
+	\item $\vb{v}_{\infty}^{-}$
+	\item $\vb{v}_{\infty}^{+}$
+	\item $r_p$
+	\item $r_{SOI}$ (set by the user for the flyby body in the \ac{EMTG} universe file)
+\end{itemize}
+
+\nomenclature{$\vb{v}_{\infty}^{-}$}{Incoming hyperbolic excess velocity vector}
+\nomenclature{$\vb{v}_{\infty}^{+}$}{Outgoing hyperbolic excess velocity vector}
+\nomenclature{$r_p$}{Periapse distance}
+\nomenclature{$r_{SOI}$}{Sphere of influence radius}
+
+The above data may be converted into a position and velocity at periapse of the flyby in the following manner. A unit vector pointing in the direction of periapse is obtained by
+
+\begin{align}
+	\vbh{r}_p &= \frac{\vb{v}_{\infty}^{-} - \vb{v}_{\infty}^{+}}{|| \vb{v}_{\infty}^{-} - \vb{v}_{\infty}^{+} ||}
+\end{align}
+
+\nomenclature{$\vb{r}_p$}{Position vector at periapse}
+
+\noindent The angular momentum direction is
+
+\begin{align}
+\vbh{h} &= \frac{\vb{v}_{\infty}^{-} \times \vb{v}_{\infty}^{+}}{|| \vb{v}_{\infty}^{-} \times \vb{v}_{\infty}^{+} ||}
+\end{align}
+
+\nomenclature{$\vb{h}$}{Angular velocity vector}
+
+\noindent The velocity direction at periapse is
+
+\begin{align}
+	\vbh{v}_p &= \frac{\vbh{h} \times \vbh{r}_p}{|| \vbh{h} \times \vbh{r}_p ||}
+\end{align}
+
+\nomenclature{$\vb{v}_p$}{Velocity vector at periapse}
+
+\noindent From energy considerations, the velocity magnitude at periapse is
+
+\begin{align}
+	v_p &= \left( \frac{2 \mu}{r_p} + \vb{v}_{\infty}^{-T} \vb{v}_{\infty}^{+} \right)^{1/2}
+\end{align}
+
+\nomenclature{$\mu$}{Gravitational parameter of central body}
+\nomenclature{$v_p$}{Magnitude of velocity at periapse}
+
+\noindent With the direction and magnitude of position and velocity known, we finally have
+
+\begin{align}
+	\vb{r}_p &= r_p \vbh{r}_p \\
+	\vb{v}_p &= v_p \vbh{v}_p
+\end{align}
+
+\noindent The preceding procedure is implemented in \ac{EMTG} in EphemerisPeggedFlybyOut::calculate\_flyby\_periapse\_state(). The flyby state is output for an ephemeris-pegged flyby in the section of the .emtg output file for the phase following the flyby.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Periapse Position and Velocity Vectors to Decision Variable Guesses}
+\label{sec:periapse_rv_to_dec_vars}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The Python converter scripts have the task of taking data obtained from the .emtg and .emtgopt files and converting them to guesses for the state at the \ac{SOI} boundaries, the state at periapse, and the \acp{TOF} between the \ac{SOI} boundaries and periapse (incoming and outgoing).
+
+The periapse position and velocity vectors, which are reported in the .emtg file, are converted to Keplerian orbital elements. The true anomalies at the incoming and outgoing \ac{SOI} boundaries, as well as the times of flight between the \ac{SOI} boundaries and periapse, are calculated assuming two-body motion.
+
+\begin{align}
+	H_{SOI} &= \mathrm{acosh} \left[ \frac{1}{e} \left( \frac{r_{SOI}}{-a} + 1 \right) \right] \\
+	N &= e \mathrm{sinh} H_{SOI} - H_{SOI} \\
+	\label{eq:tsoi}
+	\Delta t_{SOI} &= \frac{N}{ \left[ \frac{\mu}{-\left( a^3 \right)} \right]^{1/2}} \\
+	\nu_{SOI} &= 2 \mathrm{atan} \left[ \sqrt{\frac{e + 1}{e - 1}} \mathrm{tanh} \left( \frac{H_{SOI}}{2} \right) \right]
+\end{align}
+
+\nomenclature{$a$}{Semimajor axis}
+\nomenclature{$e$}{Eccentricity}
+\nomenclature{$H$}{Hyperbolic anomaly}
+\nomenclature{$t$}{Time}
+\nomenclature{$\nu$}{True anomaly}
+\nomenclature{$\Delta t_{SOI}$}{Time of flight from sphere of influence to periapse}
+
+\subsection{Incoming SOI Boundary}
+
+$\vb{v}_{\infty}^{-}$ for the \ac{ZSOI} flyby is obtained from the .emtgopt decision variables. The angular direction of $\vb{v}_{\infty}^{-}$ is
+
+\begin{align}
+v_{RA} &= \mathrm{atan2} \left( \vb{v}_{\infty, y}^{-}, \vb{v}_{\infty, x}^{-} \right) \\
+v_{DEC} &= \mathrm{asin} \left( \frac{\vb{v}_{\infty, z}^{-}}{v_{\infty}^{-}} \right)
+\end{align}
+
+\noindent The Cartesian position vector at the incoming \ac{SOI} boundary (calculated from the Keplerian elements, based on the periapse state) is used to calculate the spherical coordinates at the incoming \ac{SOI} boundary:
+
+\begin{align}
+r_{RA} &= \mathrm{atan2} \left( \vb{r}_{SOI, y}, \vb{r}_{SOI, x} \right) \\
+r_{DEC} &= \mathrm{asin} \left( \frac{\vb{r}_{SOI, z}}{r_{SOI}} \right)
+\end{align}
+
+The \ac{TOF} for the journey from the \ac{SOI} to periapse is taken from Eq.~\eqref{eq:tsoi}. The same amount of time is \emph{subtracted} from the \ac{TOF} of the journey that ends at the incoming \ac{SOI} boundary in order to keep the overall mission \ac{TOF} consistent.
+
+These actions are performed in HighFidelityJourney.CreateInitialGuess().
+
+\subsection{Periapse}
+
+The initial guess for the spacecraft state at periapse is taken directly from the periapse state written in the .emtg file. This action is performed in HighFidelityFlybyIn.CreateInitialGuess().
+
+\subsection{Outgoing SOI Boundary}
+
+$\vb{v}_{\infty}^{+}$ for the \ac{ZSOI} flyby is obtained from the .emtgopt decision variables. The angular direction of $\vb{v}_{\infty}^{+}$ is
+
+\begin{align}
+v_{RA} &= \mathrm{atan2} \left( \vb{v}_{\infty, y}^{+}, \vb{v}_{\infty, x}^{+} \right) \\
+v_{DEC} &= \mathrm{asin} \left( \frac{\vb{v}_{\infty, z}^{+}}{v_{\infty}^{+}} \right)
+\end{align}
+
+\noindent The Cartesian position vector at the outgoing \ac{SOI} boundary (calculated from the Keplerian elements, based on the periapse state) is used to calculate the spherical coordinates at the outgoing \ac{SOI} boundary:
+
+\begin{align}
+r_{RA} &= \mathrm{atan2} \left( \vb{r}_{SOI, y}, \vb{r}_{SOI, x} \right) \\
+r_{DEC} &= \mathrm{asin} \left( \frac{\vb{r}_{SOI, z}}{r_{SOI}} \right)
+\end{align}
+
+The \ac{TOF} for the journey from periapse to the \ac{SOI} is taken from Eq.~\eqref{eq:tsoi}. The same amount of time is \emph{subtracted} from the \ac{TOF} of the journey that starts at the outgoing \ac{SOI} boundary in order to keep the overall mission \ac{TOF} consistent.
+
+These actions are performed in HighFidelityFlybyOut.CreateInitialGuess().
+
+\nomenclature{$v_{RA}$}{Right ascension of velocity vector}
+\nomenclature{$v_{DEC}$}{Declination of velocity vector}
+\nomenclature{$r_{RA}$}{Right ascension of position vector}
+\nomenclature{$r_{DEC}$}{Declination of position vector}
+
+
+
+
+
+
+%\bibliography{}
+%\bibliographystyle{plain}
+
+\end{document}

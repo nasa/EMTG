@@ -1,0 +1,8 @@
+%\subsection{\ac{PEATSA} Tips and Tricks}
+%\label{sec:peatsa_tips_and_tricks}
+
+\begin{itemize}
+	\item Use the Linux `top' command to see what processes are currently active on a server. This can be used to make sure that a \ac{PEATSA} run is currently executing. This can also be used prior to kicking off a \ac{PEATSA} run to make sure that someone else is not already using the server.
+	\item Use the Linux `tail' command to observe live updates to the contents of a logfile or case output.
+	\item The python script \textbf{\textless EMTG\_root\_dir\textgreater}/PyEMTG/PEATSA/grab\_best\_peatsa\_results.py is used to take the full	results of a \ac{PEATSA} run and extract only the feasible case with the best value of the objective function for each unique trade case. This can be a great space-saver because it can allow the user to delete a full \ac{PEATSA} run without losing the best solutions. If desired, the best results can be used as seed cases for a new \ac{PEATSA} run to ``continue'' an old run, too. However, be careful, because this script does not save summary csv files, etc.
+\end{itemize}

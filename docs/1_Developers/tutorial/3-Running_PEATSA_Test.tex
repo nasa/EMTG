@@ -1,0 +1,131 @@
+\documentclass[11pt]{article}
+
+%% PACKAGES
+\usepackage{graphicx}
+\usepackage[printonlyused]{acronym}
+\usepackage{float}
+\usepackage[colorlinks=false]{hyperref}
+\usepackage{tabularx}
+\usepackage{caption}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{tocloft}
+\usepackage{listings}
+
+\lstset{basicstyle=\small\ttfamily,columns=flexible,breaklines=true,xleftmargin=0.5in,keepspaces=true}
+
+
+\makeatletter
+\g@addto@macro\normalsize{%
+  \setlength\abovedisplayskip{0.25pt}
+  \setlength\belowdisplayskip{0.25pt}
+  \setlength\abovedisplayshortskip{0.25pt}
+  \setlength\belowdisplayshortskip{0.25pt}
+}
+\makeatother
+
+\setlength{\parskip}{\baselineskip}
+
+%% GRAPHICS PATH
+\graphicspath{{../../shared_latex_inputs/images}{../../shared_latex_inputs/graphs}}
+
+\newcommand{\acposs}[1]{%
+	\expandafter\ifx\csname AC@#1\endcsname\AC@used
+	\acs{#1}'s%
+	\else
+	\aclu{#1}'s (\acs{#1}'s)%
+	\fi
+}
+
+\title{\Huge PEATSA Test Tutorial}
+
+\newcommand{\listofknownissuesname}{\Large List of Known Issues}
+\newlistof{knownissues}{mcf}{\listofknownissuesname}
+
+\newcommand{\knownissue}[3]
+{
+	\refstepcounter{knownissues}
+	\par\noindent\textbf{\hyperref[#2_b]{\theknownissues\quad #1}}\label{#2_h}
+	\textbf{\hfill\pageref{#2_b}}
+	#3
+}
+
+\newcommand{\knownissuelabel}[2]
+{
+	 \phantomsection
+  	\hyperref[#2_h]{#1}\def\@currentlabel{\unexpanded{#1}}\label{#2_b}
+}
+
+
+\begin{document}
+
+\begin{titlepage}
+\maketitle
+\thispagestyle{empty}
+\begin{table}[H]
+	\centering
+	\begin{tabularx}{\textwidth}{|l|l|X|}
+		\hline
+		\textbf{Revision Date} & \textbf{Author} & \textbf{Description of Change} \\
+		\hline
+		\date{April 25, 2024} & Alec Mudek & Initial revision.\\ 
+		\hline
+	\end{tabularx}
+\end{table}
+\end{titlepage}
+
+\newpage
+\tableofcontents
+\thispagestyle{empty}
+\newpage
+
+\listofknownissues
+\thispagestyle{empty}
+
+%\knownissue{An \acs{NLP} test is incorrectly listed as failed}{known_failing_test}
+%\knownissue{Some tests fail if EMTG is not in the C:\textbackslash emtg\textbackslash{} directory}{tests_require_specific_dir}
+
+\newpage
+\clearpage
+\setcounter{page}{1}
+\input{../../shared_latex_inputs/acronymlist}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{sec:introduction}
+%%%%%%%%%%%%%%%%%%%%%
+
+There is currently only 1 test for PEATSA that has been created and included in the repo. The instructions to run this test will likely change rapidly as we create an expanded testing system for PEATSA. This first instance of a PEATSA test consists of 3 files providing a base trajectory and the required inputs to create a PEATSA run. THe purpose of this document is to outline the steps required to run this single test.
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Running PEATSA Test}
+\label{sec:peatsa_test}
+%%%%%%%%%%%%%%%%%%%%%
+
+As of this writing, PEATSA is still only capable of running on Linux (not Windows). Accordingly, this first PEATSA test has not been built into Testatron and must be run on its own. To run the test, we must find the following 3 files in the EMTG repo (C:/emtg/testatron/peatsa\_test/):
+
+\begin{enumerate}
+	\item peatsa\_test.emtgopt
+	\item peatsa\_test\_input.csv
+	\item peatsa\_test\_input.py
+\end{enumerate}
+
+\noindent We must save a copy of these 3 files onto one of the Navlab servers where we wish to run the PEATSA test. Once placed, we must update the folder paths in peatsa\_test\_input.csv and peatsa\_test\_inputs.py (e.g. working\_directory and emtg\_rott\_directory in the .py file). Note that the hardware path and universe path for the EMTG input file will also need updating, but these can be done in the override\_options in peatsa\_test\_inputs.py.
+
+\noindent When everything is updated to reflect the files' location, run PEATSA with the command:
+
+nohup python /home/username/emtg/PyEMTG/PEATSA/PEATSA.py peatsa\_test\_inputs.py > terminal.out 2>\&1 \&
+
+\noindent Note that this command must be run in the input file's directory. PEATSA will take less than a minute to run (stops automatically after Iteration2 finishes), and the results will be placed in a newly created peatsa\_test/ subdirectory. 
+
+\noindent The test itself is conducted by the fourth script in the C:/emtg/testatron/peatsa\_test/ directory, PEATSATest.py. This script contains a function called PEATSATest which must be called. Either copy the output folder (peatsa\_test/) to your local machine or run Python on the server. The test can be run via the following Python lines:
+
+from PEATSATest import PEATSATest
+
+result, output = PEATSATest(`path/to/peatsa\_test\_inputs.py', `path/to/emtg/PyEMTG/')
+
+\noindent Note that PEATSATest assumes that the output folder from the PEATSA run (peatsa\_test/) is located in the same folder as peatsa\_test\_inputs.py. The PEATSATest function returns a boolean result reporting whether or not the test passed. The output is a dataframe summarizing the results. If the test passed, result will be True and output will be an empty dataframe. 
+
+
+
+
+\end{document}
