@@ -1,0 +1,9 @@
+#EMTG propulsion system specification (space or comma delimited)
+#SpacecraftThrusterMode choices are (0: ConstantThrustIsp, 1: FixedEfficiencyCSI, 2: FixedEfficiencyVSI, 3: Poly1D, 4: SteppedHThrust1D, 5: SteppedLMdot1D, 6: SteppedHIsp1D, 7: SteppedHefficiency1D, 8: SteppedFullSet1D, 8: Stepped2D, 9: Poly2D)
+#name ThrusterMode ThrottleTableFile MassPerString(kg) NumberOfStrings Pmin(kW) Pmax(kW) ConstantThrust(N) ConstantIsp(s) MinimumOrMonopropIsp/MonopropIsp(s) FixedEfficiency MixtureRatio ThrustScaleFactor ThrustCoefficients(mN)[0:6] MassFlowCoefficients(mg/s)[0:6]
+#
+defaultThruster                        3 none 0 1 0.525 2.6 0 1 0 0 0 1 26.337459 -51.694393 90.486509 -36.720293 5.145602 0 0 2.506 -5.3568 6.2539 -2.5372 0.36985 0 0
+DefaultChemicalPropulsionSystem        0 none 0 1 0.5 1.0 22.0 320.0 220.0 0.5 0.925 1.0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+WarpDrive                              0 none 0 1 0.5 1.0 22.0 1.0e+6 1.0e+6 0.5 0.925 1.0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+#EndHardwareBlock
+

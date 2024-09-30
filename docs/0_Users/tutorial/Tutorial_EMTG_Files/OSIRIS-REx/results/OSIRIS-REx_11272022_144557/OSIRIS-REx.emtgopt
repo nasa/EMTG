@@ -1,0 +1,215 @@
+#EMTGv9 .emtgopt file version 2
+
+#mission name
+mission_name OSIRIS-REx
+#objective function type
+#0: minimum deltaV
+#1: minimum time
+#2: maximum final mass
+#3: maximize initial mass
+#4: depart as late as possible in the window
+#5: depart as early as possible in the window
+#6: maximize orbit energy
+#7: minimize launch mass
+#8: arrive as early as possible
+#9: arrive as late as possible
+#10: <PLACEHOLDER FOR FUTURE OBJECTIVE FUNCTIONS>
+#11: maximum dry/wet ratio
+#12: maximum arrival kinetic energy
+#13: minimum BOL power
+#14: maximize log_10(final mass)
+#15: maximum log_e(final mass)
+#16: maximum dry mass margin
+#17: maximum dry mass
+#18: maximum log_10(dry mass)
+#19: maximum log_e(dry mass)
+#20: minimize chemical fuel
+#21: minimize chemical oxidizer
+#22: minimize electric propellant
+#23: minimize total propellant
+#24: minimize waypoint tracking error
+#25: minimize initial impulse magnitude
+#26: maximize distance from central body
+objective_type 0
+#launch window open date (MJD)
+launch_window_open_date 57388
+#flight time bounds (days)
+total_flight_time_bounds 0 2556.75
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable phase type
+#10: ProbeEntryPhase
+#11: ControlLawThrustPhase
+mission_type 6
+#Universe folder
+universe_folder C:\EMTG\Tutorials\OSIRIS_universe
+#Beginning of the SplineEphem data set
+earliestPossibleEpoch 57037
+#End of the SplineEphem data set
+latestPossibleEpoch 60079
+#maximum possible mass of the spacecraft (kg)
+maximum_mass 10000
+#specific impulse of the engine used for impulsive maneuvers
+IspChem 230
+#reference date when the power system begins to decay
+power_system_decay_reference_epoch 57388
+#HardwarePath
+HardwarePath C:\EMTG\Tutorials\OSIRIS-REx\hardware_models\
+#LaunchVehicleLibraryFile
+LaunchVehicleLibraryFile default.emtg_launchvehicleopt
+#LaunchVehicleKey
+LaunchVehicleKey ExampleRocket
+#Forced post-launch coast, in days
+forced_post_launch_coast 60
+#Forced pre-flyby coast, in days
+forced_pre_flyby_coast 45
+#Forced post-flyby coast, in days
+forced_post_flyby_coast 15
+#reference frame for output file (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar)
+output_file_frame 0
+#Override the working directory?
+override_working_directory 1
+#User-defined working directory
+forced_working_directory C:\EMTG\Tutorials\OSIRIS-REx\results
+#Shorten output file names?
+short_output_file_names 0
+#Field for taking notes
+user_data 
+
+
+BEGIN_JOURNEY
+#Journey name
+journey_name Earth_to_Bennu
+#Journey central body name
+journey_central_body Sun_OREx
+#destination list, as indices from the Universe file
+destination_list 3 11
+#flyby sequence, as indices from the Universe file
+sequence 3
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable (do not use)
+#10 ProbeEntryPhase
+#11 ControlLawThrustPhase
+phase_type 6
+#Journey wait time bounds (days)
+wait_time_bounds 0 365.25
+#what are the bounds on the initial impulse for each journey in km/s\
+#you can set a very high upper bound if you are using a launchy vehicle model - the optimizer will find the correct value
+initial_impulse_bounds 0 5.410199999999999676
+#journey arrival type
+#0: insertion into parking orbit (use chemical Isp)
+#1: rendezvous (use chemical Isp)
+#2: intercept with bounded V_infinity
+#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)
+#4: match final v-infinity vector
+#5: match final v-infinity vector (low-thrust)
+#6: capture spiral
+#7: momentum transfer (kinetic impactor)
+arrival_type 1
+#Which bodies are used for third-body perturbation?
+#Expressed as indices in the Universe file
+perturbation_bodies
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+END_TRIALX
+
+END_JOURNEY
+
+BEGIN_JOURNEY
+#Journey name
+journey_name Bennu_to_Earth
+#Journey central body name
+journey_central_body Sun_OREx
+#destination list, as indices from the Universe file
+destination_list 11 3
+#flyby sequence, as indices from the Universe file
+sequence
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable (do not use)
+#10 ProbeEntryPhase
+#11 ControlLawThrustPhase
+phase_type 6
+#Journey wait time bounds (days)
+wait_time_bounds 730.5 1461
+#what are the bounds on the initial impulse for each journey in km/s\
+#you can set a very high upper bound if you are using a launchy vehicle model - the optimizer will find the correct value
+initial_impulse_bounds 0 10
+#journey arrival type
+#0: insertion into parking orbit (use chemical Isp)
+#1: rendezvous (use chemical Isp)
+#2: intercept with bounded V_infinity
+#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)
+#4: match final v-infinity vector
+#5: match final v-infinity vector (low-thrust)
+#6: capture spiral
+#7: momentum transfer (kinetic impactor)
+arrival_type 2
+#Bounds on this journey's final velocity (in km/s)
+final_velocity 0 6 0
+#Which bodies are used for third-body perturbation?
+#Expressed as indices in the Universe file
+perturbation_bodies
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+END_TRIALX
+
+END_JOURNEY
+

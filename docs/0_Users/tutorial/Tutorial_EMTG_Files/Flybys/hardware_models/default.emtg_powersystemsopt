@@ -1,0 +1,32 @@
+#EMTG power system specification (space or comma delimited)" << std::endl;
+#Spacecraft_Power_Supply_Type choices are (0: Constant, 1: Solar)" << std::endl;
+#Spacecraft_Power_Supply_Curve_Type choices are (0: Sauer, 1: Polynomial)" << std::endl;
+#Spacecraft_Bus_Power_Type choices are (0: TypeA_Quadratic, 1: TypeB_Conditional)" << std::endl;
+#name Spacecraft_Power_Supply_Type Spacecraft_Power_Supply_Curve_Type Spacecraft_Bus_Power_Type P0 mass_per_kW(kg) decay_rate gamma[0:6] BusPower[0:2]
+#
+5kW_basic 1 0 0 5.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+10kW_basic 1 0 0 10.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+6kWarray_800Wbus 1 0 0 6.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.8 0.0 0.0
+10kWarray_800Wbus 1 0 0 10.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.8 0.0 0.0
+15kW_basic 1 0 0 15.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+20kW_basic 1 0 0 20.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+20kWarray_1kWbus 1 0 0 20.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 1.0 0.0 0.0
+150Warray_50Wbus_smallsat 1 0 0 0.15 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.05 0.0 0.0
+200Warray_50Wbus_smallsat 1 0 0 0.15 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.05 0.0 0.0
+375Warray_200Wbus_smallsat 1 0 0 0.375 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.2 0.0 0.0
+375Warray_150Wbus_smallsat 1 0 0 0.375 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.15 0.0 0.0
+500Warray_200Wbus_smallsat 1 0 0 0.5 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.2 0.0 0.0
+500Warray_100Wbus_smallsat 1 0 0 0.5 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 0.0 0.0
+600Warray_100Wbus_smallsat 1 0 0 0.6 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 0.0 0.0
+700Warray_100Wbus_smallsat 1 0 0 0.7 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 0.0 0.0
+800Warray_100Wbus_smallsat 1 0 0 0.8 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 0.0 0.0
+3kWarray_100Wbus_smallsat 1 0 0 3.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 0.0 0.0
+2kWarray_100Wbus_smallsat 1 0 0 2.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 0.0 0.0
+1kWarray_100Wbus_smallsat 1 0 0 1.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 0.0 0.0
+1.2kWarray_100Wbus_smallsat 1 0 0 1.2 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 0.0 0.0
+1.5kWarray_100Wbus_smallsat 1 0 0 1.5 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.1 0.0 0.0
+3kWarray_200Wbus_smallsat 1 0 0 3.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.2 0.0 0.0
+2kWarray_200Wbus_smallsat 1 0 0 2.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.2 0.0 0.0
+1.5kWarray_200Wbus_smallsat 1 0 0 1.5 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.2 0.0 0.0
+1kWarray_200Wbus_smallsat 1 0 0 1.0 0.0 0.0 1.0 0.0 0.0 0.0 0.0 0.0 0.0 0.2 0.0 0.0
+#EndHardwareBlock

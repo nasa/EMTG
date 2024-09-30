@@ -1,0 +1,2 @@
+Get from the NAIF website (https://naif.jpl.nasa.gov/pub/naif/generic_kernels/):
+   de430.bsp

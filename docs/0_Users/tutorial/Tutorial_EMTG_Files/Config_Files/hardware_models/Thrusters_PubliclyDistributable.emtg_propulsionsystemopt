@@ -1,0 +1,15 @@
+#EMTG propulsion system specification (space or comma delimited)
+#SpacecraftThrusterMode choices are (0: ConstantThrustIsp, 1: FixedEfficiencyCSI, 2: FixedEfficiencyVSI, 3: Poly1D, 4: SteppedHThrust1D, 5: SteppedLMdot1D, 6: Stepped2D)
+#name ThrusterMode ThrottleTableFile MassPerString(kg) NumberOfStrings Pmin(kW) Pmax(kW) ConstantThrust(N) ConstantIsp(s) MinimumOrMonopropIsp/MonopropIsp(s) FixedEfficiency MixtureRatio ThrustScaleFactor ThrustCoefficients(mN)[0:6] MassFlowCoefficients(mg/s)[0:6]
+#
+NSTAR                                  3 none 0 1 0.525 2.6 0 1 0 0 0 1 26.337459 -51.694393 90.486509 -36.720293 5.145602 0 0 2.506 -5.3568 6.2539 -2.5372 0.36985 0 0
+XIPS-25                                3 none 0 1 0.436 5.03 0 1 0 0 0 1 -0.3984 35.3591 1.4111 -0.4966 0.0367 0 0 0.8211 0.0426 0.5402 -0.1219 0.0091 0 0
+BPT-4000_High-Isp                      3 none 0 1 0.302 4.839 0 1 0 0 0 1 -7.181341 72.030104 -9.517167 1.637023 -0.095437 0 0 1.244345 3.743362 -0.80279 0.148511 -0.008432 0 0
+BPT-4000_High-Thrust                   3 none 0 1 0.302 4.839 0 1 0 0 0 1 -8.597025 77.342132 -2.118891 -1.15094 0.17387 0 0 0.352444 6.847936 -1.632373 0.235144 -0.011949 0 0
+BPT-4000_Ex-High-Isp                   3 none 0 1 0.302 4.839 0 1 0 0 0 1 1.454064 47.927765 19.422224 -10.102479 1.174296 0 0 1.653105 1.998082 1.328508 -0.72728 0.086106 0 0
+NEXTC_TT11_NewFrontiers_High_Thrust    3 none 51.8 1 0.64 7.36 0 1 0 0 0 1 1.19E+01 1.61E+01 11.4181412 -2.04053417 0.101855017 0 0 2.75956482 -1.71102132 1.21670237 -0.207253445 0.011021367 0 0
+NEXTC_TT11_NewFrontiers_High_Isp       3 none 51.8 1 0.64 7.36 0 1 0 0 0 1 3.68945763 40.543251 -7.91621814 1.72548416 -0.111563126 0 0 2.22052155 -0.180919262 0.027771576 0.029887398 -0.002913991 0 0
+NEXTC_TT11_NewFrontiers_ETL            3 none 51.8 1 0.64 7.36 0 1 0 0 0 1 -0.804281458 37.1873936 5.17797704 -1.42659172 0.085120672 0 0 1.40535083 0.534442545 0.535910391 -0.138009326 0.009019519 0 0
+DefaultChemicalPropulsionSystem        0 none 0 1 0.5 1.0 22.0 320.0 220.0 0.5 0.925 1.0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+#EndHardwareBlock
+

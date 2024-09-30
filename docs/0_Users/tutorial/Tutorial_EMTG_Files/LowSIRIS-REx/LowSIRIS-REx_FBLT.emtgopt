@@ -1,0 +1,343 @@
+#EMTGv9 .emtgopt file version 2
+
+#mission name
+mission_name LowSIRIS-REx_FBLT
+#launch window open date (MJD)
+launch_window_open_date 57388.0
+#flight time bounds (days)
+total_flight_time_bounds 0.0 2256.75
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable phase type
+#10: ProbeEntryPhase
+#11: ControlLawThrustPhase
+mission_type 3
+#Quiet NLP solver?
+quiet_NLP 0
+#maximum run time for MBH, in seconds
+MBH_max_run_time 120
+#NLP max run time (seconds)
+snopt_max_run_time 600
+#Universe folder
+universe_folder C:\EMTG\Tutorials\OSIRIS_universe
+#Beginning of the SplineEphem data set
+earliestPossibleEpoch 57388.0
+#End of the SplineEphem data set
+latestPossibleEpoch 60079.0
+#number of timesteps per phase
+num_timesteps 40
+#Allow the mass at the beginning of the first journey to vary up to the allowed maximum?
+allow_initial_mass_to_vary 1
+#maximum possible mass of the spacecraft (kg)
+maximum_mass 10000.0
+#specific impulse of the engine used for impulsive maneuvers
+IspChem 230.0
+#number of thruster systems (used to be called number of engines)
+number_of_electric_propulsion_systems 2
+#percentage of time that engine can operate
+engine_duty_cycle 0.9
+#Power at 1 AU (kW)
+power_at_1_AU 15.0
+#solar power coefficients gamma_1 through gamma_5, if all gamma = [1 0 0 0 0], then solar power is a simple 1/r^2
+solar_power_gamma 1.0 0.0 0.0 0.0 0.0 0.0 0.0
+#power margin (fraction)
+power_margin 0.15
+#Isp for TCMs
+TCM_Isp 230.0
+#HardwarePath
+HardwarePath C:\EMTG\Tutorials\LowSIRIS-REx\hardware_models\
+#LaunchVehicleLibraryFile
+LaunchVehicleLibraryFile default.emtg_launchvehicleopt
+#LaunchVehicleKey
+LaunchVehicleKey ExampleRocket
+#Forced post-launch coast, in days
+forced_post_launch_coast 60.0
+#Forced pre-flyby coast, in days
+forced_pre_flyby_coast 45.0
+#Forced post-flyby coast, in days
+forced_post_flyby_coast 15.0
+#Override the working directory?
+override_working_directory 1
+#User-defined working directory
+forced_working_directory C:\EMTG\Tutorials\LowSIRIS-REx\results
+#Shorten output file names?
+short_output_file_names 0
+#which inner loop solver to run?
+#0: none, evaluate trialX
+#1: run MBH
+#2: run constrained DE
+#3: run NLP using trialX as initial guess
+#4: filament walker
+run_inner_loop 3
+#Enter any user data that should be appended to the .emtg file.
+#This is typically used in python wrappers
+user_data 
+
+
+
+BEGIN_JOURNEY
+
+#Journey name
+journey_name Earth_to_Bennu
+#Journey central body name
+journey_central_body Sun_OREx
+#destination list, as indices from the Universe file
+destination_list 3 11
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable (do not use)
+#10 ProbeEntryPhase
+#11 ControlLawThrustPhase
+phase_type 3
+#Journey wait time bounds (days)
+wait_time_bounds 0.0 365.25
+#what are the bounds on the initial impulse for each journey in km/s\
+#you can set a very high upper bound if you are using a launchy vehicle model - the optimizer will find the correct value
+initial_impulse_bounds 0.0 5.4102
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+p0FBLTEphemerisPeggedLaunchDirectInsertion: event left state epoch,57644.00416240438062231988
+p0FBLTEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote,1.86462792315142156241
+p0FBLTEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote,-9.02716341672472566415
+p0FBLTEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote,0.87485148792858780098
+p0FBLTEphemerisPeggedLaunchDirectInsertion: initial mass multiplier,1.00000000000000000000
+p0FBLT: phase flight time,857.37092185729886750778
+p0FBLTEphemerisPeggedLTRendezvous: event left state mass,2405.70714254856648040004
+p0FBLT: virtual chemical fuel,0.00000000000000000000
+p0FBLT: virtual electric propellant,372.52952966062196082930
+p0FBLT: step 0 u_x,-0.91357874685947060289
+p0FBLT: step 0 u_y,0.07163489172602632848
+p0FBLT: step 0 u_z,0.40030318207223980487
+p0FBLT: step 1 u_x,-0.95509519271450793454
+p0FBLT: step 1 u_y,0.08428669786100573269
+p0FBLT: step 1 u_z,-0.28405813543247915298
+p0FBLT: step 2 u_x,-0.54861232571925921953
+p0FBLT: step 2 u_y,0.43239273936301003687
+p0FBLT: step 2 u_z,-0.71558458807227898202
+p0FBLT: step 3 u_x,-0.44483739087689933012
+p0FBLT: step 3 u_y,0.67294796750824592557
+p0FBLT: step 3 u_z,-0.59098306959150814777
+p0FBLT: step 4 u_x,-0.63336053869387243243
+p0FBLT: step 4 u_y,0.66067728420051174965
+p0FBLT: step 4 u_z,-0.40293974215499828162
+p0FBLT: step 5 u_x,-0.86897710203615441404
+p0FBLT: step 5 u_y,0.47921464302431671101
+p0FBLT: step 5 u_z,-0.12342076417071401462
+p0FBLT: step 6 u_x,-0.81000403612053595293
+p0FBLT: step 6 u_y,0.23121530598942952039
+p0FBLT: step 6 u_z,0.53891925093294812399
+p0FBLT: step 7 u_x,-0.40042961512073149688
+p0FBLT: step 7 u_y,0.24977494418737244963
+p0FBLT: step 7 u_z,0.88162906984288214041
+p0FBLT: step 8 u_x,-0.51617123352601790298
+p0FBLT: step 8 u_y,0.36571759729982500353
+p0FBLT: step 8 u_z,0.77447938940155935938
+p0FBLT: step 9 u_x,-0.86434661763932929546
+p0FBLT: step 9 u_y,0.24856674127429090326
+p0FBLT: step 9 u_z,0.43717222973166758315
+p0FBLT: step 10 u_x,-0.99230212812168472336
+p0FBLT: step 10 u_y,-0.06343350388059254552
+p0FBLT: step 10 u_z,-0.10636191984422360690
+p0FBLT: step 11 u_x,-0.73683656269097941305
+p0FBLT: step 11 u_y,-0.16365313756030808179
+p0FBLT: step 11 u_z,-0.65596490882090452423
+p0FBLT: step 12 u_x,-0.41691334714836369990
+p0FBLT: step 12 u_y,0.09500582823392522691
+p0FBLT: step 12 u_z,-0.90396780868769721629
+p0FBLT: step 13 u_x,-0.31860379492581381022
+p0FBLT: step 13 u_y,0.38713874362771072413
+p0FBLT: step 13 u_z,-0.86522623728149783418
+p0FBLT: step 14 u_x,-0.36613668683145839111
+p0FBLT: step 14 u_y,0.63130322005859662582
+p0FBLT: step 14 u_z,-0.68366818890265168562
+p0FBLT: step 15 u_x,-0.00081920847801664198
+p0FBLT: step 15 u_y,0.00177941342091991750
+p0FBLT: step 15 u_z,0.00036440655575642467
+p0FBLT: step 16 u_x,-0.01503530687305054681
+p0FBLT: step 16 u_y,0.60842134911977541201
+p0FBLT: step 16 u_z,0.79347364595031710799
+p0FBLT: step 17 u_x,-0.11145708271699528158
+p0FBLT: step 17 u_y,0.55288181446861495161
+p0FBLT: step 17 u_z,0.82577300316630197763
+p0FBLT: step 18 u_x,-0.44047674685587290266
+p0FBLT: step 18 u_y,0.54505622954667876101
+p0FBLT: step 18 u_z,0.71336869990043849654
+p0FBLT: step 19 u_x,-0.84254950856622967681
+p0FBLT: step 19 u_y,0.33892198472517676144
+p0FBLT: step 19 u_z,0.41862126416368528048
+END_TRIALX
+
+END_JOURNEY
+
+BEGIN_JOURNEY
+
+#Journey name
+journey_name Bennu_to_Earth
+#Journey central body name
+journey_central_body Sun_OREx
+#destination list, as indices from the Universe file
+destination_list 11 3
+#phase type
+#0: MGALTS
+#1: FBLTS
+#2: MGALT
+#3: FBLT
+#4: PSBI
+#5: PSFB
+#6: MGAnDSMs
+#7: CoastPhase
+#8: SundmanCoastPhase
+#9: variable (do not use)
+#10 ProbeEntryPhase
+#11 ControlLawThrustPhase
+phase_type 3
+#Journey wait time bounds (days)
+wait_time_bounds 730.5 1461.0
+#journey departure type
+#0: launch or direct insertion
+#1: depart from parking orbit (you can use this one in place of a launch vehicle model, and the departure burn will be done with the EDS motor)
+#2: free direct departure, i.e. do not burn to get the departure v_infinity (used for when operations about a small body are not modeled but the departure velocity is known)
+#3: flyby (only valid for successive journeys)
+#4: flyby with fixed v-infinity-out (only valid for successive journeys)
+#5: spiral-out from circular orbit (low-thrust missions only)
+#6: zero-turn flyby (for small bodies)
+departure_type 2
+#what are the bounds on the initial impulse for each journey in km/s\
+#you can set a very high upper bound if you are using a launchy vehicle model - the optimizer will find the correct value
+initial_impulse_bounds 0.0 10.0
+#journey arrival type
+#0: insertion into parking orbit (use chemical Isp)
+#1: rendezvous (use chemical Isp)
+#2: intercept with bounded V_infinity
+#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)
+#4: match final v-infinity vector
+#5: match final v-infinity vector (low-thrust)
+#6: capture spiral
+#7: momentum transfer (kinetic impactor)
+arrival_type 2
+#Bounds on this journey's final velocity (in km/s)
+final_velocity 0.0 6.0 0.0
+#Journey forced terminal coast (in days)
+forced_terminal_coast 90.0
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+#trial decision vector
+BEGIN_TRIALX
+p0FBLTEphemerisPeggedFreeDirectDeparture: wait time,730.50000000000000000000
+p0FBLTEphemerisPeggedFreeDirectDeparture: event left state mass,2405.70714254956646982464
+p0FBLT: phase flight time,643.90317944679179618106
+p0FBLTEphemerisPeggedIntercept: event left state mass,2176.06148899418622022495
+p0FBLTEphemerisPeggedIntercept: V_infinity_x,-5.20855462013777881225
+p0FBLTEphemerisPeggedIntercept: V_infinity_y,-1.18801236299007761943
+p0FBLTEphemerisPeggedIntercept: V_infinity_z,2.73122896805849713076
+p0FBLT: virtual chemical fuel,0.00000000099999999939
+p0FBLT: virtual electric propellant,229.64565355724113260294
+p0FBLT: step 0 u_x,0.61809308098512305563
+p0FBLT: step 0 u_y,0.78335867901056532858
+p0FBLT: step 0 u_z,0.06569854448290102233
+p0FBLT: step 1 u_x,0.32625851378157499916
+p0FBLT: step 1 u_y,0.92143714036342205809
+p0FBLT: step 1 u_z,0.21098403027170342661
+p0FBLT: step 2 u_x,-0.04054911554918683159
+p0FBLT: step 2 u_y,0.94464703884403933287
+p0FBLT: step 2 u_z,0.32557956978045288210
+p0FBLT: step 3 u_x,-0.44236153337773820304
+p0FBLT: step 3 u_y,0.81365605773859894789
+p0FBLT: step 3 u_z,0.37720473990864733516
+p0FBLT: step 4 u_x,-0.78315530824530332765
+p0FBLT: step 4 u_y,0.51606967962184291387
+p0FBLT: step 4 u_z,0.34690319940521763264
+p0FBLT: step 5 u_x,-0.95724202202153296781
+p0FBLT: step 5 u_y,0.12154978428901364040
+p0FBLT: step 5 u_z,0.26251543707869395838
+p0FBLT: step 6 u_x,-0.95135639758654633180
+p0FBLT: step 6 u_y,-0.24920134762758794356
+p0FBLT: step 6 u_z,0.18116493046180770499
+p0FBLT: step 7 u_x,-0.84177448965106160816
+p0FBLT: step 7 u_y,-0.52321662190504991674
+p0FBLT: step 7 u_z,0.13290020430801918749
+p0FBLT: step 8 u_x,-0.70917902475379879235
+p0FBLT: step 8 u_y,-0.69634528497995296092
+p0FBLT: step 8 u_z,0.11033053126125302867
+p0FBLT: step 9 u_x,-0.60239353406727280671
+p0FBLT: step 9 u_y,-0.79324014232804118674
+p0FBLT: step 9 u_z,0.08887658851361956991
+p0FBLT: step 10 u_x,-0.54814299595308679791
+p0FBLT: step 10 u_y,-0.83570434169711804717
+p0FBLT: step 10 u_z,0.03386789075013307837
+p0FBLT: step 11 u_x,-0.56518554367136952798
+p0FBLT: step 11 u_y,-0.81721197534305500820
+p0FBLT: step 11 u_z,-0.11288079750604118612
+p0FBLT: step 12 u_x,-0.00087528702766603850
+p0FBLT: step 12 u_y,-0.00090466754925577764
+p0FBLT: step 12 u_z,-0.00068580073513990758
+p0FBLT: step 13 u_x,-0.00263069513307745417
+p0FBLT: step 13 u_y,-0.00074929766429832068
+p0FBLT: step 13 u_z,-0.00335469714878378067
+p0FBLT: step 14 u_x,-0.01265809239655912855
+p0FBLT: step 14 u_y,0.00392403016787667980
+p0FBLT: step 14 u_z,-0.01863315279043376016
+p0FBLT: step 15 u_x,-0.35398130480853651214
+p0FBLT: step 15 u_y,0.26704106028255814032
+p0FBLT: step 15 u_z,-0.89632430085391245900
+p0FBLT: step 16 u_x,-0.28064164222709897523
+p0FBLT: step 16 u_y,0.33686404216097387554
+p0FBLT: step 16 u_z,-0.89876214095486350875
+p0FBLT: step 17 u_x,-0.22152008448425886122
+p0FBLT: step 17 u_y,0.36986076482376351038
+p0FBLT: step 17 u_z,-0.90229838490121339056
+p0FBLT: step 18 u_x,-0.16833715875112620353
+p0FBLT: step 18 u_y,0.38712147604376601073
+p0FBLT: step 18 u_z,-0.90653620271902290995
+p0FBLT: step 19 u_x,-0.11350351286797877304
+p0FBLT: step 19 u_y,0.39816289558728601428
+p0FBLT: step 19 u_z,-0.91026865860452921275
+END_TRIALX
+
+END_JOURNEY

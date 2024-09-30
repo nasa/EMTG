@@ -1,0 +1,50 @@
+#BeginSpacecraftBlock
+name default
+EnableGlobalElectricPropellantTankConstraint 0
+EnableGlobalChemicalPropellantTankConstraint 0
+EnableGlobalDryMassConstraint 0
+GlobalElectricPropellantTankCapacity 1000
+GlobalFuelTankCapacity 1000
+GlobalOxidizerTankCapacity 1000
+GlobalDryMassBounds 1000 1500
+
+
+#BeginStageBlock
+name default_stage
+BaseDryMass 0
+AdapterMass 0
+EnableElectricPropellantTankConstraint 0
+EnableChemicalPropellantTankConstraint 0
+EnableDryMassConstraint 0
+ElectricPropellantTankCapacity 1000
+ChemicalFuelTankCapacity 1000
+ChemicalOxidizerTankCapacity 1000
+ThrottleLogic 1
+ThrottleSharpness 100
+PowerSystem default_power_system
+ElectricPropulsionSystem default_electric_propulsion_system
+ChemicalPropulsionSystem default_chemical_propulsion_system
+
+#BeginStagePowerLibraryBlock
+#EMTG power system specification (space or comma delimited)
+#Spacecraft_Power_Supply_Type choices are (0: Constant, 1: Solar)
+#Spacecraft_Power_Supply_Curve_Type choices are (0: Sauer, 1: Polynomial)
+#Spacecraft_Bus_Power_Type choices are (0: TypeA_Quadratic, 1: TypeB_Conditional)
+#name Spacecraft_Power_Supply_Type Spacecraft_Power_Supply_Curve_Type Spacecraft_Bus_Power_Type P0 mass_per_kW(kg) decay_rate gamma[0:6] BusPower[0:2]
+#
+PowerFromMissionOptions 1 0 0 5 10 0 1.3207699999999999996 -0.1084799999999999931 -0.11665000000000000369 0.10842999999999999861 -0.012789999999999999286 0 0 0 0 0
+#EndHardwareBlock
+
+#BeginStagePropulsionLibraryBlock
+#EMTG propulsion system specification (space or comma delimited)
+#SpacecraftThrusterMode choices are (0: ConstantThrustIsp, 1: FixedEfficiencyCSI, 2: FixedEfficiencyVSI, 3: Poly1D, 4: SteppedHThrust1D, 5: SteppedLMdot1D, 6: SteppedHIsp1D, 7: SteppedHefficiency1D, 8: SteppedFullSet1D, 8: Stepped2D, 9: Poly2D)
+#name ThrusterMode ThrottleTableFile MassPerString(kg) NumberOfStrings Pmin(kW) Pmax(kW) ConstantThrust(N) ConstantIsp(s) MinimumIsp/MonopropIsp(s) FixedEfficiency MixtureRatio ThrustScaleFactor ThrustCoefficients(mN)[0:6] MassFlowCoefficients(mg/s)[0:6]
+#polynomial coefficients are in order from P^0 to P^5
+#
+ElectricPropulsionSystemFromMissionOptions 3 c:/Utilities/HardwareModels/empty.ThrottleTable 0 1 0.5250000000000000222 2.6000000000000000888 0.10000000000000000555 3000 1 0.69999999999999995559 1 1 26.337458999999999065 -51.69439299999999804 90.486508999999998082 -36.720292999999998074 5.1456020000000002312 0 0 2.5059999999999997833 -5.356799999999999784 6.2538999999999997925 -2.5371999999999998998 0.36985000000000001208 0 0
+ChemicalPropulsionFromMissionOptions 0 none 30 1 0 100000 0.10000000000000000555 320 200 0.69999999999999995559 0.92500000000000004441 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+#EndHardwareBlock
+
+
+#EndStageBlock
+#EndSpacecraftBlock

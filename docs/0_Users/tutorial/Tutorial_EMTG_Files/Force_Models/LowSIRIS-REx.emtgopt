@@ -1,0 +1,146 @@
+#EMTGv9 .emtgopt file version 2
+
+#mission name
+mission_name LowSIRIS-REx
+#launch window open date (MJD)
+launch_window_open_date 57388.0
+#flight time bounds (days)
+total_flight_time_bounds 0.0 2256.75
+#maximum run time for MBH, in seconds
+MBH_max_run_time 120
+#Universe folder
+universe_folder C:\EMTG\Tutorials\OSIRIS_universe
+#Beginning of the SplineEphem data set
+earliestPossibleEpoch 57388.0
+#End of the SplineEphem data set
+latestPossibleEpoch 60079.0
+#Allow the mass at the beginning of the first journey to vary up to the allowed maximum?
+allow_initial_mass_to_vary 1
+#maximum possible mass of the spacecraft (kg)
+maximum_mass 10000.0
+#specific impulse of the engine used for impulsive maneuvers
+IspChem 230.0
+#number of thruster systems (used to be called number of engines)
+number_of_electric_propulsion_systems 2
+#percentage of time that engine can operate
+engine_duty_cycle 0.9
+#Power at 1 AU (kW)
+power_at_1_AU 15.0
+#solar power coefficients gamma_1 through gamma_5, if all gamma = [1 0 0 0 0], then solar power is a simple 1/r^2
+solar_power_gamma 1.0 0.0 0.0 0.0 0.0 0.0 0.0
+#power margin (fraction)
+power_margin 0.15
+#Isp for TCMs
+TCM_Isp 230.0
+#HardwarePath
+HardwarePath C:\EMTG\Tutorials\Force_Models\hardware_models\
+#LaunchVehicleLibraryFile
+LaunchVehicleLibraryFile default.emtg_launchvehicleopt
+#LaunchVehicleKey
+LaunchVehicleKey ExampleRocket
+#Forced post-launch coast, in days
+forced_post_launch_coast 60.0
+#Forced pre-flyby coast, in days
+forced_pre_flyby_coast 45.0
+#Forced post-flyby coast, in days
+forced_post_flyby_coast 15.0
+#reference frame for output file (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar)
+output_file_frame 0
+#Override the working directory?
+override_working_directory 1
+#User-defined working directory
+forced_working_directory C:\EMTG\Tutorials\Force_Models\results
+#Shorten output file names?
+short_output_file_names 0
+#Enter any user data that should be appended to the .emtg file.
+#This is typically used in python wrappers
+user_data 
+
+
+
+BEGIN_JOURNEY
+
+#Journey name
+journey_name Earth_to_Bennu
+#Journey central body name
+journey_central_body Sun_OREx
+#destination list, as indices from the Universe file
+destination_list 3 11
+#Journey wait time bounds (days)
+wait_time_bounds 0.0 365.25
+#what are the bounds on the initial impulse for each journey in km/s\
+#you can set a very high upper bound if you are using a launchy vehicle model - the optimizer will find the correct value
+initial_impulse_bounds 0.0 5.4102
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+
+END_JOURNEY
+
+BEGIN_JOURNEY
+
+#Journey name
+journey_name Bennu_to_Earth
+#Journey central body name
+journey_central_body Sun_OREx
+#destination list, as indices from the Universe file
+destination_list 11 3
+#Journey wait time bounds (days)
+wait_time_bounds 730.5 1461.0
+#journey departure type
+#0: launch or direct insertion
+#1: depart from parking orbit (you can use this one in place of a launch vehicle model, and the departure burn will be done with the EDS motor)
+#2: free direct departure, i.e. do not burn to get the departure v_infinity (used for when operations about a small body are not modeled but the departure velocity is known)
+#3: flyby (only valid for successive journeys)
+#4: flyby with fixed v-infinity-out (only valid for successive journeys)
+#5: spiral-out from circular orbit (low-thrust missions only)
+#6: zero-turn flyby (for small bodies)
+departure_type 2
+#what are the bounds on the initial impulse for each journey in km/s\
+#you can set a very high upper bound if you are using a launchy vehicle model - the optimizer will find the correct value
+initial_impulse_bounds 0.0 10.0
+#journey arrival type
+#0: insertion into parking orbit (use chemical Isp)
+#1: rendezvous (use chemical Isp)
+#2: intercept with bounded V_infinity
+#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)
+#4: match final v-infinity vector
+#5: match final v-infinity vector (low-thrust)
+#6: capture spiral
+#7: momentum transfer (kinetic impactor)
+arrival_type 2
+#Bounds on this journey's final velocity (in km/s)
+final_velocity 0.0 6.0 0.0
+#Journey forced terminal coast (in days)
+forced_terminal_coast 90.0
+
+#Maneuver constraint code
+#Works for absolute and relative epochs and also magnitudes
+BEGIN_MANEUVER_CONSTRAINT_BLOCK
+END_MANEUVER_CONSTRAINT_BLOCK
+
+
+#Boundary constraint code
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
+
+#Phase distance constraint code
+BEGIN_PHASE_DISTANCE_CONSTRAINT_BLOCK
+END_PHASE_DISTANCE_CONSTRAINT_BLOCK
+
+
+END_JOURNEY

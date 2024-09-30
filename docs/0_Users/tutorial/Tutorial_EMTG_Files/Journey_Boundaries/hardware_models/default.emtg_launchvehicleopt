@@ -1,0 +1,10 @@
+#EMTG launch vehicle library (space delimited)
+#tokens are:
+#name ModelType DLA_lowerbound(degrees) DLA_upperbound(degrees) C3_lowerbound C3_upperbound coefficient[0] coefficient[1] ...
+#ModelType = 0 is the standard polynomial curve, with the ith coefficient corresponding to the ith power of C3
+#Additional ModelTypes may be implemented later
+#
+Fixed_Initial_Mass               0 -90.0 90.0 0 999.0 0.0 0.0
+Depart_With_Spacecraft_Thrusters 0 -90.0 90.0 0 999.0 0.0 0.0
+ExampleRocket                    0 -28.5 28.5 0 50    0.0 3000.0 -65.0 0.35 0.0 0.0 0.0
+#EndHardwareBlock
