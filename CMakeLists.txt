@@ -42,11 +42,16 @@ endif(NOT IS_DIRECTORY ${PROJECT_SOURCE_DIR}/bin)
 
 
 #compiler-time Define-level options  for EMTG
-option(QUIET_SNOPT "Makes SNOPT not print things." OFF)
+
+# Optional user override of the snopt directory specified in the EMTG-Config.cmake file
+set(SNOPTDIR_OVRD "${SNOPT_ROOT_DIR}" CACHE PATH "SNOPT Root Directory") # Do not use the FORCE command here so the value the user enters in GUI is preserved
+if (NOT (IS_DIRECTORY ${SNOPTDIR_OVRD}))
+	# Throw an error if the directory specified does not exist
+	message(FATAL_ERROR "SNOPT directory specified (${SNOPTDIR_OVRD}) does not exist")
+endif()
+
+option(QUIET_SNOPT "Minimizes the SNOPT output to the log." OFF)
 option(SAFE_SNOPT "Trap things that could blow up SNOPT" ON)
-option(SNOPT72 "Set SNOPT 7.2" OFF)
-option(SNOPT75 "Use SNOPT 7.5" OFF)
-option(SNOPT76 "Use SNOPT 7.6" ON)
 option(SNOPT_MINGW_DLL "Use SNOPT built with MINGW in Windows" ON)
 option(DEBUG_CHECK_VARIABLES_AND_CONSTRAINTS_IN_USER_FUNCTION "Check decision and objective/constraint vectors for NaN and inf" OFF)
 option(FAST_EMTG_MATRIX "Enable fast EMTG matrix class (removes bounds checking)" ON)
@@ -63,8 +68,8 @@ else()
 endif()
 
 #switches for files that open source users don't have access to
-option(HAS_PROBEENTRYPHASE "Build with ProbeEntryPhase?" OFF)
-option(HAS_BUILT_IN_THRUSTERS "Build with built-in thruster library?" OFF)
+option(HAS_PROBEENTRYPHASE "Build with ProbeEntryPhase?" ON)
+option(HAS_BUILT_IN_THRUSTERS "Build with built-in thruster library?" ON)
 mark_as_advanced(FORCE HAS_PROBEENTRYPHASE HAS_BUILT_IN_THRUSTERS BUILD_EMTG_TESTBED BUILD_PROPULATOR BUILD_PYHARDWARE SPLINE_EPHEM DEBUG_CHECK_VARIABLES_AND_CONSTRAINTS_IN_USER_FUNCTION FAST_EMTG_MATRIX)
 
 set(CMAKE_BUILD_TYPE "Release" CACHE STRING "Build in Debug or Release mode")
@@ -100,14 +105,6 @@ if(DEBUG_CHECK_VARIABLES_AND_CONSTRAINTS_IN_USER_FUNCTION)
 	add_definitions(-DDEBUG_CHECK_VARIABLES_AND_CONSTRAINTS_IN_USER_FUNCTION)
 endif(DEBUG_CHECK_VARIABLES_AND_CONSTRAINTS_IN_USER_FUNCTION)
 
-if(SNOPT75)
-    add_definitions(-DSNOPT75)
-endif(SNOPT75)
-
-if(SNOPT76)
-    add_definitions(-DSNOPT76)
-endif(SNOPT76)
-
 if(FAST_EMTG_MATRIX)
     add_definitions(-DFAST_EMTG_MATRIX)
 endif(FAST_EMTG_MATRIX)
@@ -142,8 +139,8 @@ if(SPLINE_EPHEM)
 	set(EMTG_LIBRARIES ${EMTG_LIBRARIES} ${GSL_LIBRARIES})
 endif(SPLINE_EPHEM)
 
-#----------------CSpice Work------------------------------------------------------
-message(STATUS "Now checking for CSpice...")
+#----------------CSpice Items------------------------------------------------------
+message(STATUS \n "Now checking for CSpice...")
 if (MSVC) # aka 'windows'
 	set(CSPICE_FILE_TO_BE_CORRECTED "${CSPICE_DIR}/src/cspice/mkprodct.bat")
 	set(CSPICE_MAKEFILE "makeall.bat")
@@ -178,23 +175,65 @@ set(EMTG_LIBRARIES ${EMTG_LIBRARIES} ${CSPICE_LIBRARY})
 include_directories("${CSPICE_DIR}/include")
 link_directories("${CSPICE_DIR}/lib")
 
-#----------------------------SNOPT Stuff-------------------------------------
-message(STATUS "Now checking on SNOPT...")
+#----------------------------SNOPT Items-------------------------------------
+message(STATUS \n "Now checking on SNOPT...")
 
-#assume newest version of SNOPT
-if (IS_DIRECTORY ${SNOPT_ROOT_DIR}/interfaces)
-	include_directories("${SNOPT_ROOT_DIR}/interfaces/include")
+# Check for the latest versions of SNOPT first
+if (IS_DIRECTORY ${SNOPTDIR_OVRD}/include OR IS_DIRECTORY ${SNOPTDIR_OVRD}/interfaces)
+
+	# Check for specific SNOPT version starting with the most used version
+	if (IS_DIRECTORY ${SNOPTDIR_OVRD}/interfaces AND NOT IS_DIRECTORY ${SNOPTDIR_OVRD}/cwrap)
+		# SNOPT 7.6
+		message(STATUS "SNOPT 7.6 found")
+		
+		add_definitions(-DSNOPT76)
+		set(SNOPT_75_PLUS_DIR ${SNOPTDIR_OVRD}/interfaces)
+		
+		message(STATUS "Directory containing SNOPT interface files: " ${SNOPT_75_PLUS_DIR}/include)
+		
+		include_directories("${SNOPT_75_PLUS_DIR}/include")
 	
-	set(SNOPT_INTERFACE_HEADERS ${SNOPT_ROOT_DIR}/interfaces/include/snoptProblem.hpp ${SNOPT_ROOT_DIR}/interfaces/include/snopt.h)
-	set(SNOPT_INTERFACE_SOURCE ${SNOPT_ROOT_DIR}/interfaces/src/snoptProblem.cpp)
+		set(SNOPT_INTERFACE_HEADERS ${SNOPT_75_PLUS_DIR}/include/snoptProblem.hpp ${SNOPT_75_PLUS_DIR}/include/snopt.h)
+		set(SNOPT_INTERFACE_SOURCE ${SNOPT_75_PLUS_DIR}/src/snoptProblem.cpp)
+	elseif 	(IS_DIRECTORY ${SNOPTDIR_OVRD}/include AND IS_DIRECTORY ${SNOPTDIR_OVRD}/ampl/solvers/snopt)
+		# SNOPT 7.7
+		message(STATUS "SNOPT 7.7 found")
+		
+		add_definitions(-DSNOPT76)
+		set(SNOPT_75_PLUS_DIR ${SNOPTDIR_OVRD})
+		
+		message(STATUS "Directory containing SNOPT interface files: " ${SNOPT_75_PLUS_DIR}/include)
+		
+		include_directories("${SNOPT_75_PLUS_DIR}/include")
+	
+		set(SNOPT_INTERFACE_HEADERS ${SNOPT_75_PLUS_DIR}/include/snoptProblem.hpp ${SNOPT_75_PLUS_DIR}/include/snopt.h)
+		set(SNOPT_INTERFACE_SOURCE ${SNOPT_75_PLUS_DIR}/src/snoptProblem.cpp)
+	
+		
+	elseif (IS_DIRECTORY ${SNOPTDIR_OVRD}/cwrap)
+		# SNOPT 7.5
+		
+		message(STATUS "SNOPT 7.5 found")
+		
+		add_definitions(-DSNOPT75)
+		set(SNOPT_75_PLUS_DIR ${SNOPTDIR_OVRD}/interfaces)
+		
+		message(STATUS "Directory containing SNOPT interface files: " ${SNOPT_75_PLUS_DIR}/include)
+		
+		include_directories("${SNOPT_75_PLUS_DIR}/include")
+	
+		set(SNOPT_INTERFACE_HEADERS ${SNOPT_75_PLUS_DIR}/include/snoptProblem.hpp ${SNOPT_75_PLUS_DIR}/include/snopt.h)
+		set(SNOPT_INTERFACE_SOURCE ${SNOPT_75_PLUS_DIR}/src/snoptProblem.cpp)
+	endif()
+
     
     if (MSVC AND SNOPT_MINGW_DLL)
     
-        set(SNOPT_LIBRARIES ${SNOPT_ROOT_DIR}/build/${CMAKE_CFG_INTDIR}/libsnopt.lib)
+        set(SNOPT_LIBRARIES ${SNOPTDIR_OVRD}/build/${CMAKE_CFG_INTDIR}/libsnopt.lib)
         
         add_library(snopt_interface STATIC IMPORTED)
-        set_property(TARGET snopt_interface PROPERTY IMPORTED_LOCATION "${SNOPT_ROOT_DIR}/build/${CMAKE_CFG_INTDIR}/snopt_interface.lib")
-        link_directories(${SNOPT_ROOT_DIR}/build/${CMAKE_CFG_INTDIR})
+        set_property(TARGET snopt_interface PROPERTY IMPORTED_LOCATION "${SNOPTDIR_OVRD}/build/${CMAKE_CFG_INTDIR}/snopt_interface.lib")
+        link_directories(${SNOPTDIR_OVRD}/build/${CMAKE_CFG_INTDIR})
         set(SNOPT_LIBRARIES ${SNOPT_LIBRARIES} snopt_interface)
     
     else()
@@ -203,23 +242,22 @@ if (IS_DIRECTORY ${SNOPT_ROOT_DIR}/interfaces)
         if (NOT MSVC)
             add_library(snopt SHARED IMPORTED)
             add_library(snopt_cpp SHARED IMPORTED)
-            set_property(TARGET snopt PROPERTY IMPORTED_LOCATION "${SNOPT_ROOT_DIR}/lib/.libs/libsnopt7.so")
-            set_property(TARGET snopt_cpp PROPERTY IMPORTED_LOCATION "${SNOPT_ROOT_DIR}/lib/.libs/libsnopt7_cpp.so")
+            set_property(TARGET snopt PROPERTY IMPORTED_LOCATION "${SNOPTDIR_OVRD}/lib/.libs/libsnopt7.so")
+            set_property(TARGET snopt_cpp PROPERTY IMPORTED_LOCATION "${SNOPTDIR_OVRD}/lib/.libs/libsnopt7_cpp.so")
         else(NOT MSVC)
             add_library(snopt STATIC IMPORTED)
-            set_property(TARGET snopt PROPERTY IMPORTED_LOCATION "${SNOPT_ROOT_DIR}/lib/snopt.lib")
+            set_property(TARGET snopt PROPERTY IMPORTED_LOCATION "${SNOPTDIR_OVRD}/lib/snopt.lib")
             set(EMTG_LIBRARIES ${EMTG_LIBRARIES} ifmodintr.lib)
             link_directories("${INTEL_FORTRAN_DIR}")
             
-        endif(NOT MSVC)
-        
+        endif(NOT MSVC)        
 
         if (MSVC)
             link_directories("${PROJECT_SOURCE_DIR}/lib")
-            link_directories(${SNOPT_ROOT_DIR}/lib)
+            link_directories(${SNOPTDIR_OVRD}/lib)
         else()
             link_directories("${PROJECT_SOURCE_DIR}/lib")
-            link_directories(${SNOPT_ROOT_DIR}/lib/.libs)
+            link_directories(${SNOPTDIR_OVRD}/lib/.libs)
         endif()
         add_library(snopt_interface ${SNOPT_INTERFACE_HEADERS} ${SNOPT_INTERFACE_SOURCE})
         if (MSVC)
@@ -233,14 +271,17 @@ if (IS_DIRECTORY ${SNOPT_ROOT_DIR}/interfaces)
         
     endif()
 
-	
-#okay, do we have an older version of SNOPT?
+elseif(IS_DIRECTORY ${SNOPTDIR_OVRD}/cppsrc)
+# SNOPT 7.2
 
-elseif(IS_DIRECTORY ${SNOPT_ROOT_DIR}/cppsrc)
-	include_directories("${SNOPT_ROOT_DIR}/cppsrc")
-	include_directories("${SNOPT_ROOT_DIR}/win32")
-	set(SNOPT_INTERFACE_HEADERS ${SNOPT_ROOT_DIR}/win32/f2c.h ${SNOPT_ROOT_DIR}/cppsrc/snoptProblem.hh ${SNOPT_ROOT_DIR}/cppsrc/snopt.hh ${SNOPT_ROOT_DIR}/cppsrc/snfilewrapper.hh)
-	set(SNOPT_INTERFACE_SOURCE ${SNOPT_ROOT_DIR}/cppsrc/snfilewrapper.c ${SNOPT_ROOT_DIR}/cppsrc/snoptProblem.cc)
+	message(STATUS "SNOPT 7.2 found")
+	
+	add_definitions(-DSNOPT72 "Use SNOPT 7.2-12 or older" ON)
+
+	include_directories("${SNOPTDIR_OVRD}/cppsrc")
+	include_directories("${SNOPTDIR_OVRD}/win32")
+	set(SNOPT_INTERFACE_HEADERS ${SNOPTDIR_OVRD}/win32/f2c.h ${SNOPTDIR_OVRD}/cppsrc/snoptProblem.hh ${SNOPTDIR_OVRD}/cppsrc/snopt.hh ${SNOPTDIR_OVRD}/cppsrc/snfilewrapper.hh)
+	set(SNOPT_INTERFACE_SOURCE ${SNOPTDIR_OVRD}/cppsrc/snfilewrapper.c ${SNOPTDIR_OVRD}/cppsrc/snoptProblem.cc)
 	
 	#PULL IN SNOPT.  THIS ASSUMES SNOPT HAS ALREADY BEEN COMPILED AND IS IN A VERY SPECIFIC SPOT.
 	add_library(f2c STATIC IMPORTED)
@@ -249,31 +290,29 @@ elseif(IS_DIRECTORY ${SNOPT_ROOT_DIR}/cppsrc)
 	add_library(snoptsnprint STATIC IMPORTED)
 	
 	if (NOT MSVC)
-		set_property(TARGET f2c PROPERTY IMPORTED_LOCATION "${SNOPT_ROOT_DIR}/lib/libf2c.a")
-		set_property(TARGET snopt_cpp PROPERTY IMPORTED_LOCATION "${SNOPT_ROOT_DIR}/lib/libsnopt_cpp.a")
-		set_property(TARGET snoptsnprint PROPERTY IMPORTED_LOCATION "${SNOPT_ROOT_DIR}/lib/libsnprint_c.a")
-		set_property(TARGET snopt_c PROPERTY IMPORTED_LOCATION "${SNOPT_ROOT_DIR}/lib/libsnopt_c.a")
+		set_property(TARGET f2c PROPERTY IMPORTED_LOCATION "${SNOPTDIR_OVRD}/lib/libf2c.a")
+		set_property(TARGET snopt_cpp PROPERTY IMPORTED_LOCATION "${SNOPTDIR_OVRD}/lib/libsnopt_cpp.a")
+		set_property(TARGET snoptsnprint PROPERTY IMPORTED_LOCATION "${SNOPTDIR_OVRD}/lib/libsnprint_c.a")
+		set_property(TARGET snopt_c PROPERTY IMPORTED_LOCATION "${SNOPTDIR_OVRD}/lib/libsnopt_c.a")
 		set(SNOPT_LIBRARIES snopt_c snoptsnprint snopt_cpp f2c)
 	else(NOT MSVC)
-		set_property(TARGET f2c PROPERTY IMPORTED_LOCATION "${SNOPT_ROOT_DIR}/win32/snopt_csrc/Release/vcf2c.lib")
-		set_property(TARGET snopt_c PROPERTY IMPORTED_LOCATION "${SNOPT_ROOT_DIR}/win32/snopt_csrc/Release/snopt.lib")
+		set_property(TARGET f2c PROPERTY IMPORTED_LOCATION "${SNOPTDIR_OVRD}/win32/snopt_csrc/Release/vcf2c.lib")
+		set_property(TARGET snopt_c PROPERTY IMPORTED_LOCATION "${SNOPTDIR_OVRD}/win32/snopt_csrc/Release/snopt.lib")
 		set(SNOPT_LIBRARIES snopt_c f2c)
 	endif(NOT MSVC)
 	
 	link_directories("${PROJECT_SOURCE_DIR}/lib")
-	
-	add_definitions(-DSNOPT72 "Use SNOPT 7.2-12 or older" ON)
 
-else(IS_DIRECTORY ${SNOPT_ROOT_DIR}/interfaces)
+else(IS_DIRECTORY ${SNOPTDIR_OVRD}/interfaces)
 	message(FATAL_ERROR "Could not find snopt")
-endif(IS_DIRECTORY ${SNOPT_ROOT_DIR}/interfaces)
+endif()
 
 include_directories(${SNOPT_INCLUDE_DIR})
 
 set(EMTG_LIBRARIES ${EMTG_LIBRARIES} ${SNOPT_LIBRARIES})
 
-#-------------------------Boost related work------------------------------
-message(STATUS "Now looking for BOOST..")
+#-------------------------Boost Items------------------------------
+message(STATUS \n "Now looking for BOOST..")
 include(FindBoost)
 if(MSVC)
 	Set(Boost_NAMESPACE libboost)

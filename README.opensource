@@ -3,72 +3,78 @@
  |  _| | |\/| | | || |  _ 
  | |___| |  | | | || |_| |
  |_____|_|  |_| |_| \____|                        
-======================================================================================================================================
+=============================================================================================================================
 Evolutionary Mission Trajectory Generator (EMTG) Open Source Release
 Originating author: Jacob Englander
 Mainainer: NASA Goddard Spaceflight Center (GSFC) Code 595 EMTG team (GSFC-DL-TrajOpt-Support@mail.nasa.gov)
-Version: 9.01
+Version: 9.02
 License: NASA Open Source Agreement (https://www.nasa.gov/open/open-source-development.html)
-======================================================================================================================================
+=============================================================================================================================
 ~~~~~~~~
 Purpose:
 ~~~~~~~~
 The contents of this NASA GSFC public software release distribution contains all of the source code and documentation for the 
-Evolutionary Mission Trajectory Generator (EMTG). No third-party code is included in this release. Users need to download and install 
-all third-party dependencies. 
+Evolutionary Mission Trajectory Generator (EMTG). No third-party code is included in this release. Users need to download and 
+install all third-party dependencies. 
 
 ~~~~~~~~~~~~~
 Dependencies:
 ~~~~~~~~~~~~~
-EMTG has several software dependencies but all, with the exception of the Sparse Nonlinear OPTimizer (SNOPT), are free software. 
+EMTG has several software dependencies but all, except the Sparse Nonlinear OPTimizer (SNOPT), are free software. 
 The current EMTG software is configured to work best with SNOPT 7.6. To acquire SNOPT visit their product page 
 (http://sbsi-sol-optimize.com/asp/sol_product_snopt.htm). 
+
+The following dependencies have been bundled with this release and files associated with them can be found in /depend/:
+-– Boost 1.79.0
+-– CSPICE 64bit
+-– GSL 2.4.0
+-- MinGW 7.2.0 [Windows only](variant: 64-bit, posix (threading), and seh (exception handler))
+-– randutils rev 2
 
 ~~~~~~~~~~~~~
 Installation:
 ~~~~~~~~~~~~~
-The GSFC EMTG team is primarily using Windows and the initial installation guide is written for Windows. EMTG is known to work for 
-Linux and should also work on Mac. 
+The GSFC EMTG team is primarily using Windows and Linux. Bothe Windows and Linux build guides are included.
 
-Navigate to the /docs/build_system/ directory for EMTG_*_build_system*.pdf documents detailing step-by-step instructions on how to 
-install the software dependencies and build EMTG. These documents are catered to specific software dependency versions. 
-Alternative versions may work but proceed at your own risk when deviating from the provided install guidance.
+Navigate to the /docs/build_system/ directory for EMTG_*_build_system*.pdf documents detailing step-by-step instructions on 
+how to install the software dependencies and build EMTG. These documents are catered to specific software dependency 
+versions. Alternative versions may work but proceed at your own risk when deviating from the provided install guidance.
 
 ~~~~~~~~~~~~~
 Disclaimer:
 ~~~~~~~~~~~~~
 
-EMTG is provided "as is" but is in a capable state. The US Government, NASA, and the EMTG developers cannot guarantee that the results
-you produce with EMTG are correct. EMTG is intended for use as a trade study tool and an initial guess generator for a flight 
-navigation tool. 
+EMTG is provided "as is" but is in a capable state. The US Government, NASA, and the EMTG developers cannot guarantee that 
+the results you produce with EMTG are correct. EMTG is intended for use as a trade study tool and an initial guess 
+generator for a flight navigation tool. 
 
-======================================================================================================================================
-**************************************************************************************************************************************
-The EMTG development team is pleased to share the fruits of our labors with you. We ask, but do not require, that if you do something 
-really awesome with it please publish your awesome accomplishments and cite us.
-**************************************************************************************************************************************
+=============================================================================================================================
+*****************************************************************************************************************************
+The EMTG development team is pleased to share the fruits of our labors with you. We ask, but do not require, that if you do 
+something really awesome with it please publish your awesome accomplishments and cite us.
+*****************************************************************************************************************************
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Frequently Asked Questions (FAQ)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Q: Is there a user manual?
-A: Not at the moment but work is being done to enhance the user documentation associated with EMTG. Future releases will add
-user documentation to the /docs/ directory.
+Q: Is there a user guide?
+A: Yes. There are a couple of User Guides is in the /docs/0_Users/ directory. 
 
 Q: Is there a reason the GUI has so many bugs?
-A: Due to limited staffing, core functionality was prioritized. This is an excellent opportunity for contribution from the open 
-source community.
+A: Due to limited staffing, core functionality was prioritized. This is an excellent opportunity for contribution from the 
+open source community.
 
 Q: Can you give me technical support for installing and operating EMTG?
-A: Feel free to reach out to the team contact information provided at the header of this file but be aware that the development team
-has limited availability to respond to all inquiries.
+A: Feel free to reach out to the team contact information provided at the header of this file but be aware that the 
+development team has limited availability to respond to all inquiries.
 
 Q: Will EMTG work on Linux?
-A: Yes, it will. Linux build instructions for the public are in development.
+A: Yes, it will. Linux build instructions are provided with this release.
 
 Q: Will EMTG work on a Mac? If so, why is there not a Mac build document?
-A: Yes EMTG should work on a Mac. The development team did not have access to a Mac to be able to do development/testing.
+A: Yes EMTG should work on a Mac. The development team did not have access to a Mac to be able to do development/testing 
+so additional steps would be needed to get EMTG functional on a Mac.
 
 Q: Will EMTG work on my smart phone?
 A: We are not pursuing getting EMTG to run on a smart phone, but if you try it and it works, we'd love to hear about it!
@@ -81,12 +87,13 @@ A: No. EMTG depends on a number of third-party packages and NASA does not have t
 
 Q: Why doesn't my PyEMTG work?
 A: The various Python packages and libraries change fast and the development team has limited resources. The build system 
-instructions are focused on specific package versions but may also work with other versions. Please make adjustments to PyEMTG 
-as-needed to make it work on your system.
+instructions are focused on specific Python package versions but may also work with other versions. Please make 
+adjustments to PyEMTG as-needed to make it work on your system.
 
 Q: I have a different SNOPT version than what is listed in the build system instructions. Will it work with EMTG?
-A: It is possible other version will work. Feel free to try it and if you succeed consider providing us with updates we can 
-incorporate in future releases. You can make changes to /src/InnerLoop/snoptProblemExtension.h to get it to talk to your SNOPT.
+A: It is possible other versions will work. Feel free to try it and if you succeed consider providing us with updates we 
+can incorporate in future releases. You can make changes to /src/InnerLoop/snoptProblemExtension.h to get it to talk to 
+your SNOPT.
 
 Q: Can I use this commercially?
 A: Yes.
@@ -95,6 +102,6 @@ Q: Can I teach a class with this?
 A: Absolutely!
 
 Q: I found a bug! How can I submit the bug so it can potentially be fixed in a future version?
-A: Thank you for finding the bug and wanting to improve future versions. Please email us about the bug so that we can fix it for 
-future versions!
+A: Thank you for finding the bug and wanting to improve future versions. Please email us about the bug so that we can fix 
+it for future versions!
 
