@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -67,6 +67,10 @@ namespace EMTG
                     throw std::invalid_argument("The target body universe file index (" + ConstraintDefinitionCell[3]  + ") for this detic elevation constraint is invalid. Constraint \"" + constraintDefinition + "\" in Journey " + std::to_string(journeyIndex));
                 }
 
+                int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+                this->target_body = &this->myUniverse->bodies[bodyIndex];
+                this->target_body_name = this->target_body->name;
+
                 std::string out1 = boost::algorithm::to_lower_copy(this->target_body_name);
                 std::string out2 = boost::algorithm::to_lower_copy(this->myUniverse->central_body_name);
 
@@ -74,10 +78,6 @@ namespace EMTG
                 {
                     throw std::invalid_argument("The target body name: " + this->target_body_name + " is the same as this Journey's central body: " + this->myUniverse->central_body_name + ". Constraint \"" + constraintDefinition + "\" in Journey " + std::to_string(journeyIndex));
                 }
-
-                int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
-                this->target_body = &this->myUniverse->bodies[bodyIndex];
-                this->target_body_name = this->target_body->name;
 
                 this->Flowerbounds->push_back(sin(std::stod(ConstraintDefinitionCell[4]) * math::PI / 180.0));
                 this->Fupperbounds->push_back(sin(std::stod(ConstraintDefinitionCell[5]) * math::PI / 180.0));
@@ -245,7 +245,7 @@ namespace EMTG
                     double fminus12 = (flattening - 1.0) * (flattening - 1.0);
                     double fminus14 = fminus12 * fminus12;
                     double a = spheroid_major_axis _GETVALUE;
-                    double a2 = (spheroid_major_axis * spheroid_major_axis) _GETVALUE;
+                    double a2 = a * a;
                     double a4 = a2 * a2;
 
                     // constraint partials w.r.t. spacecraft position (w.r.t. central body) in the constraint frame

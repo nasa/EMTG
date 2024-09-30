@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2014 - 2016 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -50,6 +50,8 @@
 #include "atmosphere.h"
 #include "ExponentialAtmosphere.h"
 
+#include "StateInTwoBodyRotatingFrame.h"
+
 
 // needed for GSAD 4B
 //size_t GSAD::adouble::reserve_size = 10;
@@ -68,8 +70,157 @@ int main(int argc, char* argv[])
     DoubleDistribution = boost::uniform_real<>(0.0, 0.55);
     RNG.seed(time(NULL));
 
+	// test state in two body rotating frame derivatives
+	doubleType time = 1.2;
+	size_t adIndex = 0;
+	time.setDerivative(adIndex++, 1.0);
+	EMTG::math::Matrix <doubleType> stateSCWrtCBInertial(6, 1, 0.0);
+	EMTG::math::Matrix <doubleType> stateB1WrtCBInertial(6, 1, 0.0);
+	EMTG::math::Matrix <doubleType> stateB2WrtCBInertial(6, 1, 0.0);
+	EMTG::math::Matrix <doubleType> stateB2WrtB1Inertial(6, 1, 0.0);
+	EMTG::math::Matrix <doubleType> accB1WrtCBInertial(3, 1, 0.0);
+	EMTG::math::Matrix <doubleType> accB2WrtCBInertial(3, 1, 0.0);
+	EMTG::math::Matrix <doubleType> accB2WrtB1Inertial(3, 1, 0.0);
+	EMTG::math::Matrix <doubleType> omega(3, 1, 0.0);
+	bool generateDerivatives = true;
+	EMTG::math::Matrix <doubleType> stateSCWrtB2Rot(6, 1, 0.0), dStateSCWrtB2RotDState(6, 6), dStateSCWrtB2RotDt(6, 1);
+	EMTG::math::Matrix <doubleType> dOmegaDt(3, 1, 0.0);
+	EMTG::math::Matrix <doubleType> unitVectors(3, 3, 0.0);
+	EMTG::math::Matrix <doubleType> dUnitVectorsDt(3, 3, 0.0);
+
+	// state of s/c w/r/t/ central body
+	stateSCWrtCBInertial(0) = 1.0;
+	stateSCWrtCBInertial(1) = 2.0;
+	stateSCWrtCBInertial(2) = -1.0;
+	stateSCWrtCBInertial(3) = -3.0;
+	stateSCWrtCBInertial(4) = 4.0;
+	stateSCWrtCBInertial(5) = 1.0;
+
+	// position, velocity, acceleration of bodies as arbitrary functions of time
+	// such that dr/dt = v and dv/dt = a
+	stateB1WrtCBInertial(0) = 3.0 * time * time;
+	stateB1WrtCBInertial(1) = time * time * time;
+	stateB1WrtCBInertial(2) = time * time + time;
+	stateB1WrtCBInertial(3) = 6.0 * time;
+	stateB1WrtCBInertial(4) = 3.0 * time * time;
+	stateB1WrtCBInertial(5) = 2.0 * time + 1.0;
+	accB1WrtCBInertial(0) = 6.0;
+	accB1WrtCBInertial(1) = 6.0 * time;
+	accB1WrtCBInertial(2) = 2.0;
+
+	stateB2WrtCBInertial(0) = - (time * time * time);
+	stateB2WrtCBInertial(1) = time * time - time;
+	stateB2WrtCBInertial(2) = 5.0 * time;
+	stateB2WrtCBInertial(3) = -3.0 * (time * time);
+	stateB2WrtCBInertial(4) = 2.0 * time - 1.0;
+	stateB2WrtCBInertial(5) = 5.0;
+	accB2WrtCBInertial(0) = -6.0 * time;
+	accB2WrtCBInertial(1) = 2.0;
+	accB2WrtCBInertial(2) = 0.0;
+
+	for (size_t i = 0; i < 6; ++i)
+	{
+		stateB2WrtB1Inertial(i) = stateB2WrtCBInertial(i) - stateB1WrtCBInertial(i);
+	}
+
+	for (size_t i = 0; i < 3; ++i)
+	{
+		accB2WrtB1Inertial(i) = accB2WrtCBInertial(i) - accB1WrtCBInertial(i);
+	}
+
+	//stateB2WrtB1Inertial(0) = 3.0;
+	//stateB2WrtB1Inertial(1) = 4.0;
+	//stateB2WrtB1Inertial(2) = -1.0;
+	//stateB2WrtB1Inertial(3) = -5.0;
+	//stateB2WrtB1Inertial(4) = 2.0;
+	//stateB2WrtB1Inertial(5) = 2.0;
+	//accB2WrtB1Inertial(0) = -1.0;
+	//accB2WrtB1Inertial(1) = 1.0;
+	//accB2WrtB1Inertial(2) = -2.0;
+
+	for (size_t adIndex = 0; adIndex < 6; ++adIndex)
+	{
+		stateSCWrtCBInertial(adIndex).setDerivative(adIndex + 1, 1.0);
+	}
+
+	//EMTG::Astrodynamics::TwoBodyRotatingFrame::B2WrtB1AngularVelocityVector(stateB2WrtB1Inertial, accB2WrtB1Inertial,
+	//	omega, generateDerivatives, dOmegaDt);
+
+	//std::cout << std::setprecision(16);
+	//std::cout << "\n\nd Omega / d t: Analytical - AD\n";
+	//for (size_t i = 0; i < 3; ++i)
+	//{
+	//		std::cout << "(" << i << "): " << dOmegaDt(i) - omega(i).getDerivative(0) << "\n";
+	//}
+
+	EMTG::Astrodynamics::TwoBodyRotatingFrame::TwoBodyRotatingFrameUnitVectors(stateB2WrtB1Inertial, accB2WrtB1Inertial,
+		unitVectors, generateDerivatives, dUnitVectorsDt);
+
+	EMTG::Astrodynamics::TwoBodyRotatingFrame::CalculateStateInRotatingFrameWrtB2(stateB1WrtCBInertial, accB1WrtCBInertial,
+		stateB2WrtCBInertial, accB2WrtCBInertial,
+		stateSCWrtCBInertial,
+		stateSCWrtB2Rot,
+		generateDerivatives, dStateSCWrtB2RotDState, dStateSCWrtB2RotDt);
+
+	//std::cout << "\n\nd unit vectors / d t: Analytical - AD\n";
+	//for (size_t i = 0; i < 3; ++i)
+	//{
+	//	for (size_t j = 0; j < 3; ++j)
+	//	{
+	//		std::cout << "(" << i << ", " << j << "): " << dUnitVectorsDt(i, j) - unitVectors(i, j).getDerivative(0) << "\n";
+	//	}
+	//}
+
+
+
+//	// test cross product derivative
+//	EMTG::math::Matrix <doubleType> r(3,1,0.0);
+//	EMTG::math::Matrix <doubleType> v(3, 1, 0.0);
+//	EMTG::math::Matrix <doubleType> h(3, 1, 0.0);
+//	EMTG::math::Matrix <doubleType> dhdx(6, 3, 0.0);
+//	EMTG::math::Matrix <doubleType> dhdr(3, 3, 0.0);
+//	EMTG::math::Matrix <doubleType> dhdv(3, 3, 0.0);
+//	r(0) = 5.0;
+//	r(1) = -2.0;
+//	r(2) = 1.5;
+//	v(0) = 2.6;
+//	v(1) = 2.0;
+//	v(2) = 14.0;
+//
+//#ifdef AD_INSTRUMENTATION
+//	size_t index = 0;
+//	r(0).setDerivative(index++, 1.0);
+//	r(1).setDerivative(index++, 1.0);
+//	r(2).setDerivative(index++, 1.0);
+//	v(0).setDerivative(index++, 1.0);
+//	v(1).setDerivative(index++, 1.0);
+//	v(2).setDerivative(index++, 1.0);
+//#endif
+//
+//	h = r.cross(v);
+//	dhdx = r.crossDerivative(v);
+//
+//	std::cout << "analytical derivatives:\n";
+//	for (size_t i = 0; i < 6; ++i)
+//	{
+//		for (size_t j = 0; j < 3; ++j)
+//		{
+//			std::cout << i << ", " << j << " = " << dhdx(i, j) << "\n";
+//		}
+//	}
+//	std::cout << "\nAD derivatives:\n";
+//	for (size_t i = 0; i < 6; ++i)
+//	{
+//		for (size_t j = 0; j < 3; ++j)
+//		{
+//			std::cout << i << ", " << j << " = " << h(j).getDerivative(i) << "\n";
+//		}
+//	}
+
+
     //parse the options file
-    std::string options_file_name;
+
+	std::string options_file_name;
     if (argc == 1)
         options_file_name = "default.emtgopt";
     else if (argc == 2)
@@ -421,6 +572,17 @@ int main(int argc, char* argv[])
                                                                              &mySpacecraft, 
                                                                              STM_size);
     
+    // initialize any required universe CentralBody HarmonicGravityFields
+    if (myMission.options.Journeys[0].perturb_central_body_gravity_harmonics)
+    {
+        std::string grav_file = myMission.options.Journeys[0].central_body_gravity_file;
+        const boost::filesystem::path grav_path = grav_file;
+        size_t degree = options.Journeys[0].central_body_gravity_degree;
+        size_t order = options.Journeys[0].central_body_gravity_order;
+        TheUniverse[0].central_body.harmonic_gravity_field = std::make_shared<EMTG::Astrodynamics::HarmonicGravityField>(degree, order);
+        TheUniverse[0].central_body.harmonic_gravity_field->parseSTKgrvFile(grav_file);
+    }
+
     doubleType test_launch_epoch = myMission.options.launch_window_open_date; // seconds past MJD J2000
     doubleType TOFprevious, TOF;
     if (options.mission_type == EMTG::PhaseType::SundmanCoastPhase)
@@ -454,7 +616,7 @@ int main(int argc, char* argv[])
     std::vector<double> x(8);
     double shit = test_epoch _GETVALUE - (51544.5 * 86400.0);
     //spkez_c(399, shit, "J2000", "NONE", 10, x.data(), &LT_dump);
-    spkez_c(504, test_epoch _GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", 599, x.data(), &LT_dump);
+    //spkez_c(504, test_epoch _GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", 599, x.data(), &LT_dump);
     //spkez_c(301, test_epoch _GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", 399, x.data(), &LT_dump);
     //spkez_c(499, test_epoch _GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", 4, x.data(), &LT_dump);
     //spkez_c(602, test_epoch _GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", 699, x.data(), &LT_dump);
@@ -472,12 +634,18 @@ int main(int argc, char* argv[])
     //x[3] = -0.1;
     //x[4] = 7.4;
     //x[5] = -0.5;
-	//x[0] = 6571.0;
-	//x[1] = 14.3;
-	//x[2] = 100.3;
-	//x[3] = -0.1;
-	//x[4] = 7.4;
-	//x[5] = -0.5;
+	x[0] = 121970282.81128040;
+	x[1] = 84928392.01559387;
+	x[2] = -2213.60904453;
+	x[3] = -13.94179597;
+	x[4] = 30.28321043;
+	x[5] = 0.70405862;
+	//x[0] = 3696.2;
+	//x[1] = 0.0;
+	//x[2] = 0.0;
+	//x[3] = 0.0;
+	//x[4] = 2.94794;
+	//x[5] = 1.70199;
     //x[6] = myMission.options.maximum_mass;
 
     //create perturbed initial state for TOF derivative use
@@ -530,9 +698,10 @@ int main(int argc, char* argv[])
     EMTG::math::Matrix<doubleType> control(4, 1, 0.0);
     for (size_t i = 0; i < 3; ++i)
     {
-        control(i) = DoubleDistribution(RNG);
-        //control(i).setValue(0.0);
+        //control(i) = DoubleDistribution(RNG);
+        
 #ifdef AD_INSTRUMENTATION
+        control(i).setValue(0.0);
         control(i).setDerivative(GSADindex++, 1.0);
 #endif
     }
@@ -567,24 +736,11 @@ int main(int argc, char* argv[])
     EMTG::math::Matrix <doubleType> state_left(state_vector_size, 1, 0.0);
     EMTG::math::Matrix <double> dstate_leftdTOF(10, 2, 0.0); // initial state partials w.r.t. previous and current TOF
     EMTG::math::Matrix <doubleType> state_right(state_vector_size, 1, 0.0);
-    EMTG::math::Matrix <double> dstate_rightdTOF(10, 2, 0.0); // final state partials w.r.t. previous and current TOF
     EMTG::math::Matrix <double> STM(STM_size, STM_size, 0.0);
     double BoundaryTarget_dStepSizedPropVar = 1.0 / options.num_timesteps;
 
     // insert true state
     state_left = test_state;
-
-    // seed derivatives for spacecraft state with respect to current and previous phase flight times
-    for (size_t i = 0; i < 3; i++)
-    {
-        //dstate_leftdTOF(i, 0) = dx_dTOFprevious[i];
-        //dstate_leftdTOF(i + 3, 0) = dx_dTOFprevious[i + 3];
-        dstate_leftdTOF(i, 0) = 0.0;
-        dstate_leftdTOF(i + 3, 0) = 0.0;
-        dstate_leftdTOF(i, 1) = 0.0;
-        dstate_leftdTOF(i + 3, 1) = 0.0;
-    }
-
 
     EMTG::Astrodynamics::PropagatorBase * integratedPropagator = EMTG::Astrodynamics::CreatePropagator(&options,
         &TheUniverse[0],
@@ -593,7 +749,7 @@ int main(int argc, char* argv[])
         state_left,
         state_right,
         STM,
-        dstate_leftdTOF,
+        dstate_leftdTOF, // dummy variable not needed for the integrators
         thing,
         &explicit_rk8,
         &BoundaryTarget_dStepSizedPropVar,
@@ -624,9 +780,7 @@ int main(int argc, char* argv[])
     integratedPropagator->propagate(TOF / options.num_timesteps, true);
     clock_t end = clock();
     double elapsed_secs = double(end - begin) / CLOCKS_PER_SEC;
-    std::cout << "Propagation time: " << std::setprecision(16) << elapsed_secs << " secs\n" << std::endl;
-
-    dstate_rightdTOF = dstate_leftdTOF;    
+    std::cout << "Propagation time: " << std::setprecision(16) << elapsed_secs << " secs\n" << std::endl;   
 
     std::cout << "Numerically integrated STM:" << std::endl;
     for (size_t i = 0; i < STM_size; ++i)

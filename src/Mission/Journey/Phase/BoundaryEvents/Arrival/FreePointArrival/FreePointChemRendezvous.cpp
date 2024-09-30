@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -190,7 +190,6 @@ namespace EMTG
 
             this->dChemicalFuel_ddeltavMagnitude = this->mySpacecraft->getdFuelConsumedThisManeuver_ddeltav();
             this->dChemicalOxidizer_ddeltavMagnitude = this->mySpacecraft->getdOxidizerConsumedThisManeuver_ddeltav();
-
            
             //derivatives
             if (needG)
@@ -221,11 +220,35 @@ namespace EMTG
             //Step 2: specialized entries
             std::get<2>(this->Derivatives_of_StateAfterEvent[this->dIndex_mass_wrt_encodedMass]) = this->ETM(6, 6);
 
+			// update state-after-event to take DV into account
+			// really, we are "un-updating" the state before the event
+			// because the state after the event is directly calculated
+			// from the state decision variables and Vinfinity_in
+			// is added to the state after the event to get the state before
+			// the event. However, in FreePointBoundary::process_event_right_side,
+			// which is called above, state_after_maneuver and its derivatives
+			// are set equal to state_before_maneuver and its derivatives, 
+			// so we need to rectify that.
+			for (size_t i = 0; i < 3; ++i)
+			{
+				this->state_after_event(i + 3) -= this->Vinfinity_in(i);
+			}
+
 
             for (size_t Vindex = 0; Vindex < 3; ++Vindex)
             {
+				// mass
                 std::get<2>(this->Derivatives_of_StateAfterEvent[this->dIndex_mass_after_event_wrt_v_infinity[Vindex]]) = this->ETM(6, 3 + Vindex)
                     * (this->state_after_event(6) / (this->state_after_event(6) + this->journey_end_propellant_used))_GETVALUE;
+
+				// derivative of velocity-after-event w.r.t. Vinfinity_in is 0
+				// because velocity-after-event is part of the decision vector.
+				// we need to set that here because
+				// in FreePointBoundary::process_event_right_side,
+				// which is called above, state_after_maneuver and its derivatives
+				// are set equal to state_before_maneuver and its derivatives, 
+				// so we need to rectify that.
+				std::get<2>(this->Derivatives_of_StateAfterEvent[dIndex_VbeforeEvent_dVinfinity_in[Vindex]]) = 0.0;
             }
         }//end process_event_right_side()
 

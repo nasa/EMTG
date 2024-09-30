@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -55,6 +55,8 @@ namespace EMTG
                 mySpacecraft,
                 myOptions);
 
+			this->isEphemerisReferencedArrivalInterior = true;
+
             //body needs to be the central body
             this->LeftBoundaryIsABody = false;
 
@@ -86,7 +88,9 @@ namespace EMTG
             //one can, after calling this, override the derivatives of mass if one wants to
 
             this->Derivatives_of_StateAfterEvent = this->Derivatives_of_state_on_interface_cartesian;
+			this->Derivatives_of_StateAfterEvent_central_body_unchanged = this->Derivatives_of_StateAfterEvent;
             this->Derivatives_of_StateAfterEvent_wrt_Time = this->Derivatives_of_state_on_interface_cartesian_wrt_Time;
+			this->Derivatives_of_StateAfterEvent_wrt_Time_central_body_unchanged = this->Derivatives_of_state_on_interface_cartesian_wrt_Time;
 
             //Step 2: additional derivative with respect to time
             for (size_t varIndex = 0; varIndex < this->Xindices_EventLeftEpoch.size(); ++varIndex)
@@ -131,6 +135,14 @@ namespace EMTG
             //Step 1: base class
             this->EphemerisReferencedArrival::process_event_right_side(X, Xindex, F, Findex, G, needG);
 
+			// version of state after event where we don't change to the next journey's central body
+			for (int i = 0; i < 8; ++i)
+			{
+				this->state_after_event_central_body_unchanged(i) = this->state_after_event(i);
+			}
+			this->Derivatives_of_StateAfterEvent_central_body_unchanged = this->Derivatives_of_StateAfterEvent;
+			//this->Derivatives_of_StateAfterEvent_wrt_Time_central_body_unchanged = this->Derivatives_of_StateAfterEvent_wrt_Time;
+
             //Step 2: compute the state offset vector
             //Step 2.1: central body with respect to the Sun
             doubleType offset_state[12];
@@ -170,6 +182,7 @@ namespace EMTG
                         std::get<2>(this->Derivatives_of_StateAfterEvent_wrt_Time[dIndex]) = offset_state[6 + stateIndex]_GETVALUE;
                 }
             }
+			
         }//end process_event_right_side()
     }//end namespace BoundaryEvents
 }//end namespace EMTG

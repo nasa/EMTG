@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -60,6 +60,8 @@ namespace EMTG
             inline doubleType getFinalMassIncrement() const { return this->final_mass_increment; }
 
             inline math::Matrix<doubleType>& get_state_after_event_raw() { return this->state_after_event_raw; }
+
+			inline bool getIsLastEventInMission() { return this->isLastEventInMission; }
 
         protected:
 

@@ -2,23 +2,24 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
-// Licensed under the NASA Open Source License (the "License"); 
-// You may not use this file except in compliance with the License. 
+// Licensed under the NASA Open Source License (the "License");
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at:
 // https://opensource.org/licenses/NASA-1.3
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
 // express or implied.   See the License for the specific language
 // governing permissions and limitations under the License.
 
 //header file for EMTG body class
 
 #include "body.h"
+#include "EMTG_defs.h"
 
 namespace EMTG
 {
@@ -27,7 +28,7 @@ namespace EMTG
         //constructor for default-Earth
         body::body(const missionoptions& options
 #ifdef SPLINE_EPHEM
-            , SplineEphem::universe* SplineEphemUniverse
+                   , SplineEphem::universe* SplineEphemUniverse
 #endif
         )
         {
@@ -36,7 +37,6 @@ namespace EMTG
 #endif
             std::vector<double> reference_angles;
             std::vector<double> orbit_elements;
-            frame LocalFrame;
             reference_angles.push_back(0.0);
             reference_angles.push_back(-0.641);
             reference_angles.push_back(90.0);
@@ -53,54 +53,46 @@ namespace EMTG
             this->reference_state.resize(6, 0.0);
 
             this->load_body_data(3,
-                "Earth",
-                "E",
-                399,
-                300,
-                3.986004418e+5,
-                6378.136,
-                0.0010826265,
-                6378.136,
-                1.0 / 298.257223563,
-                10.0,
-                0.367,
-                51544.5 * 86400.0,
-                reference_angles,
-                orbit_elements,
-                1.32712440018e+11,
-                10,
-                "Sun",
-                4379000.0,
-                149597870.691,
-                LocalFrame,
-                options);
+                                 "Earth",
+                                 "E",
+                                 399,
+                                 300,
+                                 3.986004418e+5,
+                                 6378.136,
+                                 0.0010826265,
+                                 6378.136,
+                                 1.0 / 298.257223563,
+                                 10.0,
+                                 0.367,
+                                 51544.5 * 86400.0,
+                                 reference_angles,
+                                 orbit_elements,
+                                 1.32712440018e+11,
+                                 10,
+                                 options);
         }
 
         //constructor takes in data and calls load_body_data()
         body::body(const int& ibody_code,
-            const std::string& iname,
-            const std::string& ishortname,
-            const int& ispice_ID,
-            const double& iminimum_altitude,
-            const double& imass,
-            const double& iradius,
-            const double& iJ2,
-            const double& iJ2_ref_radius,
-            const double& iflattening_coefficient,
-            const double& iAbsoluteMagnitude,
-            const double& ialbedo,
-            const double& iepoch,
-            std::vector<double>& ireference_angles,
-            std::vector<double>& iclassical_orbit_elements,
-            const double& iuniverse_mu,
-            const int& icentral_body_SPICE_ID,
-            const std::string& icentral_body_name,
-            const double& icentral_body_radius,
-            const double& icentral_body_LU,
-            frame& central_body_frame,
-            const missionoptions& options
+                   const std::string& iname,
+                   const std::string& ishortname,
+                   const int& ispice_ID,
+                   const double& iminimum_altitude,
+                   const double& imass,
+                   const double& iradius,
+                   const double& iJ2,
+                   const double& iJ2_ref_radius,
+                   const double& iflattening_coefficient,
+                   const double& iAbsoluteMagnitude,
+                   const double& ialbedo,
+                   const double& iepoch,
+                   std::vector<double>& ireference_angles,
+                   std::vector<double>& iclassical_orbit_elements,
+                   const double& iuniverse_mu,
+                   const int& icentral_body_SPICE_ID,
+                   const missionoptions& options
 #ifdef SPLINE_EPHEM
-            , SplineEphem::universe* SplineEphemUniverse
+                   , SplineEphem::universe* SplineEphemUniverse
 #endif
         )
         {
@@ -110,55 +102,47 @@ namespace EMTG
             this->reference_state.resize(6, 0.0);
 
             this->load_body_data(ibody_code,
-                iname,
-                ishortname,
-                ispice_ID,
-                iminimum_altitude,
-                imass,
-                iradius,
-                iJ2,
-                iJ2_ref_radius,
-                iflattening_coefficient,
-                iAbsoluteMagnitude,
-                ialbedo,
-                iepoch,
-                ireference_angles,
-                iclassical_orbit_elements,
-                iuniverse_mu,
-                icentral_body_SPICE_ID,
-                icentral_body_name,
-                icentral_body_radius,
-                icentral_body_LU,
-                central_body_frame,
-                options);
+                                 iname,
+                                 ishortname,
+                                 ispice_ID,
+                                 iminimum_altitude,
+                                 imass,
+                                 iradius,
+                                 iJ2,
+                                 iJ2_ref_radius,
+                                 iflattening_coefficient,
+                                 iAbsoluteMagnitude,
+                                 ialbedo,
+                                 iepoch,
+                                 ireference_angles,
+                                 iclassical_orbit_elements,
+                                 iuniverse_mu,
+                                 icentral_body_SPICE_ID,
+                                 options);
         }
 
         //destructor
         body::~body() {}
 
-
         //function to load new data into the body
         void body::load_body_data(const int& ibody_code,
-            const std::string& iname,
-            const std::string& ishortname,
-            const int& ispice_ID,
-            const double& imininum_altitude,
-            const double& imu,
-            const double& iradius,
-            const double& iJ2,
-            const double& iJ2_ref_radius,
-            const double& iflattening_coefficient,
-            const double& iAbsoluteMagnitude,
-            const double& ialbedo,
-            const double& iepoch,
-            std::vector<double>& ireference_angles,
-            std::vector<double>& iclassical_orbit_elements,
-            const double& iuniverse_mu,
-            const int& icentral_body_SPICE_ID,
-            const std::string& icentral_body_name,
-            const double& icentral_body_radius,
-            const double& icentral_body_LU,
-            frame& central_body_frame, const missionoptions& options)
+                                  const std::string& iname,
+                                  const std::string& ishortname,
+                                  const int& ispice_ID,
+                                  const double& imininum_altitude,
+                                  const double& imu,
+                                  const double& iradius,
+                                  const double& iJ2,
+                                  const double& iJ2_ref_radius,
+                                  const double& iflattening_coefficient,
+                                  const double& iAbsoluteMagnitude,
+                                  const double& ialbedo,
+                                  const double& iepoch,
+                                  std::vector<double>& ireference_angles,
+                                  std::vector<double>& iclassical_orbit_elements,
+                                  const double& iuniverse_mu,
+                                  const int& icentral_body_SPICE_ID,
+                                  const missionoptions& options)
         {
             //copy information from the inputs into the body
             this->name = iname;
@@ -166,9 +150,6 @@ namespace EMTG
             this->universe_mu = iuniverse_mu;
             this->body_code = ibody_code;
             this->central_body_spice_ID = icentral_body_SPICE_ID;
-            this->central_body_name = icentral_body_name;
-            this->central_body_radius = icentral_body_radius;
-            this->central_body_LU = icentral_body_LU;
 
             this->spice_ID = ispice_ID;
             this->minimum_safe_flyby_altitude = imininum_altitude;
@@ -184,7 +165,7 @@ namespace EMTG
 
             this->ephemeris_window_open = this->reference_epoch * 86400.0;
             this->ephemeris_window_close = 100000.0 * 86400.0;
-            
+
             this->SMA = iclassical_orbit_elements[0];
             this->ECC = iclassical_orbit_elements[1];
             this->INC = iclassical_orbit_elements[2] * EMTG::math::deg2rad;
@@ -192,7 +173,7 @@ namespace EMTG
             this->AOP = iclassical_orbit_elements[4] * EMTG::math::deg2rad;
             this->MA = iclassical_orbit_elements[5] * EMTG::math::deg2rad;
             this->Period = math::TwoPI * sqrt(SMA * SMA * SMA / this->universe_mu) / 86400.0;
-            
+
             //determine which ephemeris to draw from
             if (options.ephemeris_source == 0)
             {
@@ -242,29 +223,31 @@ namespace EMTG
 
                         this->getCoverageWindow();
                     }
-                }
+                    }
                 else
                 {
                     std::cout << "Warning, body " << this->name << " is not defined in the kernel pool at reference epoch " << this->reference_epoch / 86400.0 << std::endl;
                     reset_c();
                     this->body_ephemeris_source = 0; //use static ephemeris
                 }
-            }
+                }
 
-
-
-            this->body_frame.initialize(ireference_angles[0], ireference_angles[1], ireference_angles[2], ireference_angles[3], ireference_angles[4], ireference_angles[5]);
+            this->body_frame.initialize(ireference_angles[0] * math::deg2rad, 
+                                        ireference_angles[1] * math::deg2rad, 
+                                        ireference_angles[2] * math::deg2rad, 
+                                        ireference_angles[3] * math::deg2rad, 
+                                        ireference_angles[4] * math::deg2rad, 
+                                        ireference_angles[5] * math::deg2rad);
 
             //compute additional values
             this->mass = this->mu / options.G;
             this->r_SOI = this->SMA * (1.0 - this->ECC) * pow(this->mu / (3.0 * this->universe_mu), 0.333333333333333333333333);
             this->exclusion_radius = math::TwoPI * this->SMA * (1.0 - this->ECC) / 360.0;
-        }
+            }
 
         //function to find the body state vector at epoch
         int body::locate_body(const doubleType& epoch, doubleType* state, const bool& need_deriv, const EMTG::missionoptions& options) const
         {
-            
 #ifdef AD_INSTRUMENTATION
             double statedouble[12];
             std::vector<size_t> timevars;
@@ -273,83 +256,87 @@ namespace EMTG
             switch (body_ephemeris_source)
             {
 #ifdef SPLINE_EPHEM
-            case 2: //SplineEphem
+                case 2: //SplineEphem
 
 #ifdef AD_INSTRUMENTATION
-                this->MySplineUniverse->getBody6StateAndDerivative(this->spice_ID, this->central_body_spice_ID, epoch _GETVALUE, statedouble);
-                timevars = epoch.getDerivativeIndicies();
-                for (size_t stateindex = 0; stateindex < 6; ++stateindex)
-                {
-                    state[stateindex].setValue(statedouble[stateindex]);
-                    state[stateindex + 6].setValue(statedouble[stateindex + 6]);
-                    //loop over derivative indices
-                    for (size_t timeindex = 0; timeindex < timevars.size(); ++timeindex)
+                    this->MySplineUniverse->getBody6StateAndDerivative(this->spice_ID, this->central_body_spice_ID, epoch _GETVALUE, statedouble);
+                    timevars = epoch.getDerivativeIndicies();
+                    for (size_t stateindex = 0; stateindex < 6; ++stateindex)
                     {
-                        size_t timevar = timevars[timeindex];
+                        state[stateindex].setValue(statedouble[stateindex]);
+                        state[stateindex + 6].setValue(statedouble[stateindex + 6]);
+                        //loop over derivative indices
+                        for (size_t timeindex = 0; timeindex < timevars.size(); ++timeindex)
+                        {
+                            size_t timevar = timevars[timeindex];
 
-                        double timeScale = epoch.getDerivative(timevar) / this->X_scale_factors->operator[](timevar);
-
-                        state[stateindex].setDerivative(timevar, statedouble[stateindex + 6] * this->X_scale_factors->operator[](timevar) * timeScale);
-                        //state[stateindex].setDerivative(timevar, statedouble[stateindex + 6]);
-                    }
-                }
+                            
+#ifdef STM_TEST_TURN_OFF_SCALING
+							state[stateindex].setDerivative(timevar, statedouble[stateindex + 6]);
 #else
-                if (need_deriv)
-                    this->MySplineUniverse->getBody6StateAndDerivative(this->spice_ID, this->central_body_spice_ID, epoch, state);
+							double timeScale = epoch.getDerivative(timevar) / this->X_scale_factors->operator[](timevar);
+							state[stateindex].setDerivative(timevar, statedouble[stateindex + 6] * this->X_scale_factors->operator[](timevar) * timeScale);
+#endif
+                            
+                            
+                        }
+                    }
+#else
+                    if (need_deriv)
+                        this->MySplineUniverse->getBody6StateAndDerivative(this->spice_ID, this->central_body_spice_ID, epoch, state);
 
-                else
-                    this->MySplineUniverse->getBody6State(this->spice_ID, this->central_body_spice_ID, epoch, state);
+                    else
+                        this->MySplineUniverse->getBody6State(this->spice_ID, this->central_body_spice_ID, epoch, state);
 #endif
-                break;
+                    break;
 #endif
-            case 1: //SPICE
-                double LT_dump; 
-                double statepert[6];
+                case 1: //SPICE
+                    double LT_dump;
+                    double statepert[6];
 
 #ifdef AD_INSTRUMENTATION
-                spkez_c(this->spice_ID, (epoch)_GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", this->central_body_spice_ID, statedouble, &LT_dump);
-                spkez_c(this->spice_ID, (epoch)_GETVALUE - (51544.5 * 86400.0) + 10.0, "J2000", "NONE", this->central_body_spice_ID, statepert, &LT_dump);
-                timevars = epoch.getDerivativeIndicies();
-                for (size_t stateindex = 0; stateindex < 6; ++stateindex)
-                {
-                    state[stateindex].setValue(statedouble[stateindex]);
-                    state[stateindex + 6] = (statepert[stateindex] - state[stateindex]_GETVALUE) / 10.0;
-                    //loop over derivative indices
-                    for (size_t timeindex = 0; timeindex < timevars.size(); ++timeindex)
+                    spkez_c(this->spice_ID, (epoch)_GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", this->central_body_spice_ID, statedouble, &LT_dump);
+                    spkez_c(this->spice_ID, (epoch)_GETVALUE - (51544.5 * 86400.0) + 10.0, "J2000", "NONE", this->central_body_spice_ID, statepert, &LT_dump);
+                    timevars = epoch.getDerivativeIndicies();
+                    for (size_t stateindex = 0; stateindex < 6; ++stateindex)
                     {
-                        size_t timevar = timevars[timeindex];
-                        state[stateindex].setDerivative(timevar, (statepert[stateindex] - state[stateindex]_GETVALUE) / (10.0));
+                        state[stateindex].setValue(statedouble[stateindex]);
+                        state[stateindex + 6] = (statepert[stateindex] - state[stateindex]_GETVALUE) / 10.0;
+                        //loop over derivative indices
+                        for (size_t timeindex = 0; timeindex < timevars.size(); ++timeindex)
+                        {
+                            size_t timevar = timevars[timeindex];
+                            state[stateindex].setDerivative(timevar, (statepert[stateindex] - state[stateindex]_GETVALUE) / (10.0));
+                        }
                     }
-                }
 #else
-                spkez_c(this->spice_ID, (epoch) _GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", this->central_body_spice_ID, state, &LT_dump);
+                    spkez_c(this->spice_ID, (epoch)_GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", this->central_body_spice_ID, state, &LT_dump);
 
-                if (need_deriv)
-                {
-                    spkez_c(this->spice_ID, (epoch) _GETVALUE - (51544.5 * 86400.0) + 10.0, "J2000", "NONE", this->central_body_spice_ID, statepert, &LT_dump);
-                    state[6] = (statepert[0] - state[0]) / (10.0);
-                    state[7] = (statepert[1] - state[1]) / (10.0);
-                    state[8] = (statepert[2] - state[2]) / (10.0);
-                    state[9] = (statepert[3] - state[3]) / (10.0);
-                    state[10] = (statepert[4] - state[4]) / (10.0);
-                    state[11] = (statepert[5] - state[5]) / (10.0);
-                }
+                    if (need_deriv)
+                    {
+                        spkez_c(this->spice_ID, (epoch)_GETVALUE - (51544.5 * 86400.0) + 10.0, "J2000", "NONE", this->central_body_spice_ID, statepert, &LT_dump);
+                        state[6] = (statepert[0] - state[0]) / (10.0);
+                        state[7] = (statepert[1] - state[1]) / (10.0);
+                        state[8] = (statepert[2] - state[2]) / (10.0);
+                        state[9] = (statepert[3] - state[3]) / (10.0);
+                        state[10] = (statepert[4] - state[4]) / (10.0);
+                        state[11] = (statepert[5] - state[5]) / (10.0);
+                    }
 #endif
 
-                if (failed_c())//test for SPICE errors
-                {
-                    if (!options.quiet_NLP)
-                        std::cout << "SPICE error detected" << std::endl;
-                    reset_c();
-                    throw std::runtime_error("SPICE error detected. SPICE failed to find body " + std::to_string(this->spice_ID)
-                        + " with respect to " + std::to_string(this->central_body_spice_ID) + " on epoch " + std::to_string(epoch _GETVALUE / 86400.0) + ".");
-                }
-                break;
-            }
+                    if (failed_c())//test for SPICE errors
+                    {
+                        if (!options.quiet_NLP)
+                            std::cout << "SPICE error detected" << std::endl;
+                        reset_c();
+                        throw std::runtime_error("SPICE error detected. SPICE failed to find body " + std::to_string(this->spice_ID)
+                                                 + " with respect to " + std::to_string(this->central_body_spice_ID) + " on epoch " + std::to_string(epoch _GETVALUE / 86400.0) + ".");
+                    }
+                    break;
+                    }
 
             return 0;
-        }
-
+            }
 
         //function to print body to screen (for debug purposes)
         void body::print_body_to_screen(std::string filename) const
@@ -364,6 +351,7 @@ namespace EMTG
                 outputfile << "Minimum safe flyby altitude (km) " << this->minimum_safe_flyby_altitude << std::endl;
             outputfile << "mu (km^3/s^2): " << this->mu << std::endl;
             outputfile << "Radius (km): " << this->radius << std::endl;
+            outputfile << "Flattening coefficient: " << this->flattening_coefficient << std::endl;
             outputfile << "Ephemeris source: " << this->body_ephemeris_source << std::endl;
             outputfile << "R_SOI: " << this->r_SOI << std::endl;
             outputfile << "Reference Epoch (MJD): " << this->reference_epoch << std::endl;
@@ -381,9 +369,9 @@ namespace EMTG
         //function to locate a point on the surface in BCI coordinates
         //assumes a spherical cow
         void body::locate_point_on_surface(const doubleType& ETepoch,
-            const double& latitude,
-            const double& longitude,
-            math::Matrix<doubleType>& point_on_sphere_BCI)
+                                           const double& latitude,
+                                           const double& longitude,
+                                           math::Matrix<doubleType>& point_on_sphere_BCI)
         {
             //first locate the point in BCF coordinates
             math::Matrix<doubleType> point_on_sphere_BCF(3, 1, 0.0);
@@ -399,9 +387,9 @@ namespace EMTG
         //function to determine the latitude and longitude of a point in BCI coordinates
         //also assumes a spherical cow
         void body::determine_latitude_longitude_for_point_in_BCI(const doubleType& ETepoch,
-            const math::Matrix<doubleType>& point_on_sphere_BCI,
-            doubleType& latitude,
-            doubleType& longitude)
+                                                                 const math::Matrix<doubleType>& point_on_sphere_BCI,
+                                                                 doubleType& latitude,
+                                                                 doubleType& longitude)
         {
             //first convert the point from BCI to BCF
             math::Matrix<doubleType> point_on_sphere_BCF;
@@ -417,17 +405,17 @@ namespace EMTG
         //this assumes that the atmosphere is moving at the same angular rate as the body's spin
         //in BCI coordinates
         void body::determine_atmosphere_or_surface_velocity_vector(const doubleType& ETepoch,
-            const math::Matrix<doubleType>& position_BCI,
-            math::Matrix<doubleType>& atmosphere_or_surface_velocity)
+                                                                   const math::Matrix<doubleType>& position_BCI,
+                                                                   math::Matrix<doubleType>& atmosphere_or_surface_velocity)
         {
             //the angular velocity of the body is given in radians per day
             //we just need to find the distance from the spin axis at this altitude and latitude
             doubleType distance_from_body_center = position_BCI.norm();
             doubleType latitude = 0.0, longitude = 0.0;
             this->determine_latitude_longitude_for_point_in_BCI(ETepoch,
-                position_BCI,
-                latitude,
-                longitude);
+                                                                position_BCI,
+                                                                latitude,
+                                                                longitude);
 
             doubleType distance_from_spin_axis = distance_from_body_center * cos(latitude);
 
@@ -464,7 +452,6 @@ namespace EMTG
             const size_t  LNSIZE = 81;
             const size_t  MAXCOV = 100000;
             const size_t  WINSIZ = (2 * MAXCOV);
-            const size_t  TIMLEN = 51;
             const size_t MAXOBJ = 10000;
 
             SPICEDOUBLE_CELL(cover, WINSIZ);
@@ -500,14 +487,13 @@ namespace EMTG
             for (i = 0; i < count; ++i)
             {
                 kdata_c(i, "SPK", FILSIZ, LNSIZE, FILSIZ,
-                    file, type, source, &handle, &found);
-
+                        file, type, source, &handle, &found);
 
                 //let's see if the object we want is in this file
                 scard_c(0, &ids);
                 spkobj_c(file, &ids);
 
-                for (size_t j = 0; j < card_c(&ids); ++j)
+                for (SpiceInt j = 0; j < card_c(&ids); ++j)
                 {
                     if (SPICE_CELL_ELEM_I(&ids, j) == this->spice_ID)
                     {
@@ -517,7 +503,7 @@ namespace EMTG
 
                         niv = wncard_c(&cover);
                         FoundBody = true;
-                        for (size_t k = 0; k < niv; ++k)
+                        for (SpiceInt k = 0; k < niv; ++k)
                         {
                             //Get the endpoints of the ith interval.
                             wnfetd_c(&cover, k, &b, &e);
@@ -540,8 +526,6 @@ namespace EMTG
             {
                 std::cout << "The SPICE kernel pool does not contain enough information to create an ephemeris for body " << this->spice_ID << " with respect to " << this->central_body_spice_ID << "." << std::endl;
             }
-
         }
-
-    }//close namespace Astrodynamics
-}//close namespace EMTG
+        }//close namespace Astrodynamics
+        }//close namespace EMTG

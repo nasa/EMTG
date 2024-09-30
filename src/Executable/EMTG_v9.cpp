@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -29,6 +29,7 @@
 #include <fstream>
 #include <sstream>
 #include <exception>
+#include <unordered_map>
 
 #include "missionoptions.h"
 #include "mission.h"
@@ -46,6 +47,7 @@
 #include "body.h"
 #include "atmosphere.h"
 #include "ExponentialAtmosphere.h"
+#include "HarmonicGravityField.h"
 
 #include "boost/filesystem.hpp"
 #include "boost/filesystem/fstream.hpp"
@@ -200,6 +202,46 @@ int main(int argc, char* argv[])
             }
         }
 
+        // create a hash map of harmonic fields
+        // keys are unique combinations of <degree, order, field/grav file>
+        // If all Journeys requiring a specific field all use the same degree, order, then only one field needs to be created and shared amongst all of them
+        // If a different deg./ord. for the SAME field is required in two separate Journeys, then a new unique HarmonicGravityField will be created and stored
+        std::map<std::tuple<std::string, size_t, size_t>, std::shared_ptr<EMTG::Astrodynamics::HarmonicGravityField>> gravity_field_map;
+        for (size_t j = 0; j < options.number_of_journeys; ++j)
+        {
+            if (options.perturb_J2 && options.Journeys[j].perturb_central_body_gravity_harmonics)
+            {
+                throw std::invalid_argument("The global physics option perturb_J2 cannot be set if the perturb_central_body_gravity_harmonics option is set in any EMTG Journey. The latter is set in Journey " + options.Journeys[j].journey_name
+                    + ". The perturb_J2 global setting will be deprecated in the future.\n");
+            }
+
+            if (options.Journeys[j].perturb_central_body_gravity_harmonics)
+            {
+                // get the gravity file
+                std::string grav_file = options.Journeys[j].central_body_gravity_file;
+                const boost::filesystem::path grav_path = grav_file;
+                std::string field_name = grav_path.filename().string();
+                size_t degree = options.Journeys[j].central_body_gravity_degree;
+                size_t order = options.Journeys[j].central_body_gravity_order;
+
+                auto tup = std::make_tuple(field_name, degree, order);
+                std::map<std::tuple<std::string, size_t, size_t>, std::shared_ptr<EMTG::Astrodynamics::HarmonicGravityField>>::const_iterator itr = gravity_field_map.find(tup);
+
+                // If the harmonic field has not been registered in the hash map, then create it, and store it there, and in the Universe's CentralBody
+                if (itr == gravity_field_map.end())
+                {
+                    TheUniverse[j].central_body.harmonic_gravity_field = std::make_shared<EMTG::Astrodynamics::HarmonicGravityField>(degree, order);
+                    TheUniverse[j].central_body.harmonic_gravity_field->parseSTKgrvFile(grav_file);
+
+                    gravity_field_map.insert(std::make_pair(tup, TheUniverse[j].central_body.harmonic_gravity_field));
+                }
+                else // The harmonic field does exist in the hash map, so just point the Universe's CentralBody to it
+                {
+                    TheUniverse[j].central_body.harmonic_gravity_field = itr->second;
+                }                
+            }
+        }
+
 		//now that we have a Universe vector, we can set the atmosphere object for each universe
 		for (int j = 0; j < options.number_of_journeys; ++j)
 		{
@@ -252,7 +294,16 @@ int main(int argc, char* argv[])
                     && options.Journeys[j].departure_elements_frame != EMTG::ReferenceFrame::ObjectReferenced)
                 {
                     if (options.Journeys[j].destination_list[0] > 0)
+                    {
                         body_index_array.push_back(options.Journeys[j].destination_list[0] - 1);
+
+                        // perform a consistency check on the body_index_array
+                        if (body_index_array.back() >= TheUniverse[j].bodies.size())
+                        {
+                            throw std::invalid_argument("Body index " + std::to_string(options.Journeys[j].destination_list[0]) + " in destination list for Journey: " + options.Journeys[j].journey_name +
+                                " does not appear in the Universe file: " + options.universe_folder + "//" + options.Journeys[j].journey_central_body + ".emtg_universe");
+                        }
+                    }
                 }
 
                 //last boundary point
@@ -260,19 +311,49 @@ int main(int argc, char* argv[])
                     && options.Journeys[j].arrival_elements_frame != EMTG::ReferenceFrame::ObjectReferenced)
                 {
                     if (options.Journeys[j].destination_list[1] > 0)
+                    {
                         body_index_array.push_back(options.Journeys[j].destination_list[1] - 1);
+
+                        // perform a consistency check on the body_index_array
+                        if (body_index_array.back() >= TheUniverse[j].bodies.size())
+                        {
+                            throw std::invalid_argument("Body index " + std::to_string(options.Journeys[j].destination_list[1]) + " in destination list for Journey: " + options.Journeys[j].journey_name +
+                                " does not appear in the Universe file: " + options.universe_folder + "//" + options.Journeys[j].journey_central_body + ".emtg_universe");
+                        }
+                    }
                 }
 
                 //sequence
                 for (int body : options.Journeys[j].sequence)
+                {
                     if (body > 0)
+                    {
                         body_index_array.push_back(body - 1);
+
+                        if (body >= TheUniverse[j].bodies.size())
+                        {
+                            throw std::invalid_argument("Body index " + std::to_string(body) + " in the sequence list for Journey: " + options.Journeys[j].journey_name +
+                                " does not appear in the Universe file: " + options.universe_folder + "//" + options.Journeys[j].journey_central_body + ".emtg_universe");
+                        }
+
+                    }
+                }
 
                 //perturbation list
                 if (options.perturb_thirdbody)
                 {
                     for (size_t b = 0; b < TheUniverse[j].perturbation_menu.size(); ++b)
-                        body_index_array.push_back(TheUniverse[j].perturbation_menu[b]);
+                    {
+                        size_t pert_body = TheUniverse[j].perturbation_menu[b];
+
+                        body_index_array.push_back(pert_body);
+
+                        if (pert_body >= TheUniverse[j].bodies.size())
+                        {
+                            throw std::invalid_argument("Body index " + std::to_string(pert_body) + " in the perturbation body list for Journey: " + options.Journeys[j].journey_name +
+                                " does not appear in the Universe file: " + options.universe_folder + "//" + options.Journeys[j].journey_central_body + ".emtg_universe");
+                        }
+                    }
                 }
 
                 //distance constraint list
@@ -291,6 +372,170 @@ int main(int argc, char* argv[])
                         body_index_array.push_back(bodyIndex);
                     }
                 }
+
+				//boundary constraint list
+				//some, but not all, require new splines
+				for (std::string& constraint : options.Journeys[j].BoundaryConstraintDefinitions)
+				{
+					std::vector<std::string> ConstraintDefinitionCell;
+					boost::split(ConstraintDefinitionCell,
+						constraint,
+						boost::is_any_of("_"),
+						boost::token_compress_on);
+
+					// distance constraint
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("distanceconstraint") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// angular momentum reference angle
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("angularmomentumreferenceangle") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// elevation from ground station
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("deticelevationfromgroundstation") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// target body elevation
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("targetdeticelevation") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// RBP angle
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("rbp") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// RPB angle
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("rpb") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// RPR angle
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("rpr") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+
+						if (boost::to_lower_copy(ConstraintDefinitionCell[4]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[4]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// RRP angle
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("rrp") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+
+						if (boost::to_lower_copy(ConstraintDefinitionCell[4]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[4]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+                    
+                    // two-body rotating frame constraint
+                    if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("stateintwobodyrotatingframe") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[4]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[4]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+
+						if (boost::to_lower_copy(ConstraintDefinitionCell[5]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[5]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// velocity declination w/r/t/ any body constraint
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("velocitydeclinationanybody") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+				}
+
+				//maneuver constraint list
+				//some, but not all, require new splines
+				for (std::string& constraint : options.Journeys[j].ManeuverConstraintDefinitions)
+				{
+					std::vector<std::string> ConstraintDefinitionCell;
+					boost::split(ConstraintDefinitionCell,
+						constraint,
+						boost::is_any_of("_"),
+						boost::token_compress_on);
+
+					// PSFB body-probe-thrust angle
+					if (boost::to_lower_copy(ConstraintDefinitionCell[1]).find("bpt") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[2]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[2]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+				}
 
                 for (size_t b = 0; b < body_index_array.size(); ++b)
                 {
@@ -371,11 +616,8 @@ int main(int argc, char* argv[])
             std::cout << myError.what() << std::endl;
             std::cout << "Submit this error message to the EMTG development team, along with your .emtgopt, .emtg_universe file(s), your hardware model files, any relevant ephemeris files, and which branch you are using. This information will allow us to properly help you." << std::endl;
 #ifndef BACKGROUND_MODE //macro overrides if statement
-            if (!options.background_mode)
-            {
-                std::cout << "Press enter to close window." << std::endl;
-                std::cin.ignore();
-            }
+            std::cout << "Press enter to close window." << std::endl;
+            std::cin.ignore();
 #endif
             throw;
         }
@@ -538,7 +780,7 @@ int main(int argc, char* argv[])
     }
     catch (std::exception &exception)
     {
-        std::cout << "EMTG failed with error:" << std::endl;
+        std::cout << "\nEMTG failed with error:" << std::endl;
         std::cout << exception.what() << std::endl;
         std::cout << "Submit this error message to the EMTG development team, along with your .emtgopt, .emtg_universe file(s), your hardware model files, any relevant ephemeris files, and which branch you are using. This information will allow us to properly help you." << std::endl;
 #ifndef BACKGROUND_MODE //macro overrides if statement

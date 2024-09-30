@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -28,6 +28,7 @@
 #include "MaximizeLogeDryMassObjective.h"
 #include "MinimizeTimeObjective.h"
 #include "MaximizeInitialMassObjective.h"
+#include "MinimizeInitialMassObjective.h"
 #include "MaximizeLogeMassObjective.h"
 #include "MaximizeLog10MassObjective.h"
 #include "ArriveAsEarlyAsPossibleObjective.h"
@@ -75,6 +76,13 @@ namespace EMTG
                     myOptions,
                     myMission);
             }
+			case ObjectiveFunctionType::MINIMIZE_LAUNCH_MASS:
+			{
+				return new ObjectiveFunctions::MinimizeInitialMassObjective(Universe,
+					mySpacecraft,
+					myOptions,
+					myMission);
+			}
             case ObjectiveFunctionType::MINIMIZE_TIME:
             {
                 return new ObjectiveFunctions::MinimizeTimeObjective(Universe,

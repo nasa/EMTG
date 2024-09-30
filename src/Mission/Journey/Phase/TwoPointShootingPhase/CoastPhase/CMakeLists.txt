@@ -1,8 +1,5 @@
 add_subdirectory(SundmanCoastPhase)
-
-if(HAS_CONTROLLAWTHRUSTPHASE)
-    add_subdirectory(ControlLawThrustPhase)
-endif()
+add_subdirectory(ControlLawThrustPhase)
 
 set(COASTPHASE_HEADERS ${COASTPHASE_HEADERS} 
                        ${CMAKE_CURRENT_SOURCE_DIR}/CoastPhase.h)

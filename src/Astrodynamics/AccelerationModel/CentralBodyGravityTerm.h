@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -54,7 +54,7 @@ namespace EMTG
             
         protected:
             // fields
-            boost::ptr_vector< SphericalHarmonicTerm > gravitational_harmonic_terms;
+            std::shared_ptr<SphericalHarmonicTerm> spherical_harmonic_term;
 
         };
     }

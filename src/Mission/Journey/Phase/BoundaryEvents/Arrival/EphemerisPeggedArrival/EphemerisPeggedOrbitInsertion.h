@@ -3,7 +3,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -59,6 +59,8 @@ namespace EMTG
         private:
             void calcbounds_event_right_side();
 
+            //virtual void calcbounds_event_main(const std::vector< std::tuple<double, double> >& vinfBounds);
+
             void calcbounds_virtual_propellant_constraints();
 
             void calcbounds_deltav_contribution();//capture maneuver
@@ -100,11 +102,13 @@ namespace EMTG
             double dChemicalOxidizer_ddeltavMagnitude;
 
             std::vector<size_t> dIndex_mass_after_event_wrt_v_infinity;
-            std::vector<size_t> Gindices_dDeltav_dVinfinity;
+            std::vector<size_t> Gindices_dDeltav_dVinfinity; // G indices for the delta v contribution to the decision vector
             std::vector<size_t> Gindices_dVirtualChemicalFuel_dVinfinity;
             std::vector<size_t> Gindices_dVirtualChemicalOxidizer_dVinfinity;
             size_t Gindices_dVirtualChemicalFuel_dLeftMass;
             size_t Gindices_dVirtualChemicalOxidizer_dLeftMass;
+
+            std::vector<size_t> Gindices_orbit_insertion_deltav_constraint_wrt_Vinfinity_in; // G indices for the delta v constraint
         };
     }//end namespace BoundaryEvents
 }//end namespace EMTG

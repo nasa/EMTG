@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -35,27 +35,40 @@ namespace EMTG
         {
         public:
             // constructor
-            SphericalHarmonicTerm(SpacecraftAccelerationModel * acceleration_model_in, body * my_body_in, CentralBodyGravityTerm * parent_gravity_term_in, const size_t & degree_in, const size_t & order_in);
+            SphericalHarmonicTerm(SpacecraftAccelerationModel * acceleration_model_in, CentralBodyGravityTerm * parent_gravity_term_in);
 
             virtual ~SphericalHarmonicTerm();
 
             // methods
+
+            inline void setCentralBodyGM(const double & GM_in) { this->mu = GM_in; };
+            inline void setReferenceRadius(const double & ref_rad_in) { this->harmonic_field_reference_radius = ref_rad_in; };
+
             virtual void computeAccelerationTerm() override;
             virtual void computeAccelerationTerm(const bool & generate_derivatives) override;
+            void computeJ2Acceleration();
+            void computeJ2Acceleration(const bool& generate_derivatives);
             virtual void populateInstrumentationFile(std::ofstream & acceleration_model_file) override;
             inline SphericalHarmonicTerm* clone() const override { return new SphericalHarmonicTerm(*this); }
 
 
         protected:
+
+            void computeBodyFixedPosition();
+            void computeInertialAcceleration();
+            void populateStatePropagationMatrix();
+
             // fields
-            body * my_body;
             CentralBodyGravityTerm * parent_gravity_term;
-            size_t degree;
-            size_t order;
+
+            double mu;
+            double harmonic_field_reference_radius;
 
             math::Matrix<doubleType> r_body2sc_BCF;
             doubleType r_body2sc_BCF_norm;
             math::Matrix<doubleType> spherical_harmonic_term_acceleration_BCF;
+            math::Matrix<doubleType> accel_position_Jacobian_BCF;
+            math::Matrix<doubleType> accel_position_Jacobian_ICRF;
 
         };
     } // end Astrodynamics namespace

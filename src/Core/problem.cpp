@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -71,6 +71,12 @@ namespace EMTG
         {
             case InnerLoopSolverType::RUN_TRIALX: //run trialX
             {
+				clock_t startTime = clock(); // start a (precise) timer
+				this->timeToCompletionOfBestSolutionAttempt = -1.0; // start at -1; gets updated if we find a solution
+				this->numberOfSolutionAttempts = 1; // always the case
+				this->indexOfBestSolutionAttempt = 0; // start at 0, change to 1 if feasible
+				this->firstOptimizationFeasible = false; // overwrite later if trialx is feasible
+				this->firstOptimizationCost = EMTG::math::LARGE; // overwite later
                 this->options.current_trialX = this->construct_initial_guess();
 
                 this->Xopt.resize(this->total_number_of_NLP_parameters);
@@ -122,6 +128,7 @@ namespace EMTG
                         decision_variable_infeasibility);
 
                     std::cout << "J = " << this->F[0] << std::endl;
+					this->firstOptimizationCost = this->F[0] _GETVALUE;
                     if (normalized_feasibility > options.snopt_feasibility_tolerance || decision_variable_infeasibility > options.snopt_feasibility_tolerance)
                     {
                         this->what_the_heck_am_I_called(SolutionOutputType::FAILURE);
@@ -131,6 +138,10 @@ namespace EMTG
                     {
                         this->what_the_heck_am_I_called(SolutionOutputType::SUCCESS);
                         std::cout << "Acquired feasible point ";
+						this->firstOptimizationFeasible = true;
+						this->indexOfBestSolutionAttempt = 1; // start at 0, change to 1 if feasible
+						clock_t now = clock();
+						this->timeToCompletionOfBestSolutionAttempt = double(now - startTime) / double(CLOCKS_PER_SEC);
                     }
 
                     std::cout << "with feasibility " << normalized_feasibility << std::endl;
@@ -159,6 +170,7 @@ namespace EMTG
 #ifndef AD_INSTRUMENTATION
             case InnerLoopSolverType::MBH: //run MBH
             {
+				this->indexOfBestSolutionAttempt = 0; // start at 0, change to inside solver.run() if solution is found
                 Solvers::NLPoptions myNLPoptions(this->options);
 
                 Solvers::SNOPT_interface mySNOPT(this, myNLPoptions);
@@ -181,9 +193,19 @@ namespace EMTG
                 if (this->number_of_solutions == 0 || solver.getJGlobalIncumbent() > 1.0e+10)
                 {
                     this->Xopt = solver.getX_most_feasible(); //we store the unscaled Xcurrent
+					if (this->Xopt.size() == 0)
+					{
+						this->Xopt = this->construct_initial_guess();
+					}
 
                     options.outputfile = options.working_directory + "//FAILURE_" + options.mission_name + ".emtg";
-                }                
+                }
+				else if (this->number_of_solutions == NULL)
+				{
+					this->Xopt = this->construct_initial_guess();
+					options.outputfile = options.working_directory + "//FAILURE_" + options.mission_name + ".emtg";
+					std::cout << "WARNING: No SNOPT runs exited safely and/or no failed or successessful solutions exist. Writing out random FAILURE solution file." << std::endl;
+				}
 
                 try
                 {
@@ -237,6 +259,12 @@ namespace EMTG
                     //make an initial guess, 'cuz that's important and stuff
                     this->options.current_trialX = this->construct_initial_guess();
                 }
+				clock_t startTime = clock(); // start a timer
+				this->timeToCompletionOfBestSolutionAttempt = -1.0; // start at -1; gets updated if we find a solution
+				this->numberOfSolutionAttempts = 1; // always the case
+				this->indexOfBestSolutionAttempt = 0; // start at 0, change to 1 if feasible
+				this->firstOptimizationFeasible = false; // assume false, correct ourselves later if necessary
+				this->firstOptimizationCost = EMTG::math::LARGE; // default value, overwritten later
 
                 Solvers::NLPoptions myNLPoptions(this->options);
 
@@ -269,6 +297,7 @@ namespace EMTG
 						0);
 				}
 
+				mySNOPT.setJGlobalIncumbent(EMTG::math::LARGE);
                 mySNOPT.run_NLP(false);
 
                 this->Xopt = mySNOPT.getX_unscaled();
@@ -303,6 +332,7 @@ namespace EMTG
                         decision_variable_infeasibility);
 
                     std::cout << "J = " << this->F[0] << std::endl;
+					this->firstOptimizationCost = this->F[0] _GETVALUE; // first optimization is the only optimization
                     if (normalized_feasibility > options.snopt_feasibility_tolerance || decision_variable_infeasibility > options.snopt_feasibility_tolerance)
                     {
                         this->what_the_heck_am_I_called(SolutionOutputType::FAILURE);
@@ -312,6 +342,10 @@ namespace EMTG
                     {
                         this->what_the_heck_am_I_called(SolutionOutputType::SUCCESS);
                         std::cout << "Acquired feasible point ";
+						this->firstOptimizationFeasible = true; // the first optimization is the only optimization
+						this->indexOfBestSolutionAttempt = 1; // start at 0, change to 1 if feasible
+						clock_t now = clock();
+						this->timeToCompletionOfBestSolutionAttempt = double(now - startTime) / double(CLOCKS_PER_SEC);
                     }
 
                     std::cout << "with feasibility " << normalized_feasibility << std::endl;
@@ -452,6 +486,8 @@ namespace EMTG
 
                 if (calledFromNLP)
                 {
+					decision_variable_infeasibility = math::LARGE;
+					worst_decision_variable = Xindex;
                     throw std::runtime_error("nan alert: X[" + std::to_string(Xindex) + "]: " + this->Xdescriptions[Xindex]);
                 }
                 else
@@ -487,6 +523,9 @@ namespace EMTG
             {
                 if (calledFromNLP)
                 {
+					max_constraint_violation = math::LARGE;
+					normalized_max_constraint_violation = fabs(max_constraint_violation);
+					worst_constraint = Findex;
                     throw std::runtime_error("nan alert: F[" + std::to_string(Findex) + "]: " + this->Fdescriptions[Findex]);
                 }
                 else

@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -36,9 +36,23 @@ namespace EMTG
         CentralBodyGravityTerm::CentralBodyGravityTerm(SpacecraftAccelerationModel * acceleration_model_in, CentralBody * central_body_in) :
             GravityTerm::GravityTerm(acceleration_model_in, central_body_in)
         {
+            /*
             if (this->acceleration_model->my_options->perturb_J2 && std::abs(this->acceleration_model->my_universe->central_body_J2) > 0.0)
             {
-                this->gravitational_harmonic_terms.push_back(new SphericalHarmonicTerm(acceleration_model_in, this->my_body, this, 2, 0));
+                this->gravitational_harmonic_terms.push_back(new SphericalHarmonicTerm(acceleration_model_in, this));
+            }
+            */
+            if (this->acceleration_model->my_journey_options->perturb_central_body_gravity_harmonics)
+            {
+                this->spherical_harmonic_term = std::make_shared<SphericalHarmonicTerm>(acceleration_model_in, this);
+                this->spherical_harmonic_term->setCentralBodyGM(this->my_body->harmonic_gravity_field->getCentralBodyGM());
+                this->spherical_harmonic_term->setReferenceRadius(this->my_body->harmonic_gravity_field->getReferenceRadius());
+            }
+            else if (this->acceleration_model->my_options->perturb_J2)
+            {
+                this->spherical_harmonic_term = std::make_shared<SphericalHarmonicTerm>(acceleration_model_in, this);
+                this->spherical_harmonic_term->setCentralBodyGM(this->my_body->mu);
+                this->spherical_harmonic_term->setReferenceRadius(this->acceleration_model->my_universe->central_body_J2_reference_radius);
             }
         }
 
@@ -62,10 +76,13 @@ namespace EMTG
             bool generate_derivatives = false;
 
             this->computePointMassGravityAcceleration(generate_derivatives);
-
-            for (size_t k = 0; k < this->gravitational_harmonic_terms.size(); ++k)
+            if (this->acceleration_model->my_journey_options->perturb_central_body_gravity_harmonics)
             {
-                this->gravitational_harmonic_terms[k].computeAccelerationTerm();
+                this->spherical_harmonic_term->computeAccelerationTerm();
+            }
+            else if (this->acceleration_model->my_options->perturb_J2)
+            {
+                this->spherical_harmonic_term->computeJ2Acceleration();
             }
 
         }//end computeAccelerationTerm()
@@ -75,10 +92,13 @@ namespace EMTG
             this->computePointMassGravityAcceleration(generate_derivatives);
 
             this->computePointMassGravityDerivatives();
-
-            for (size_t k = 0; k < this->gravitational_harmonic_terms.size(); ++k)
+            if (this->acceleration_model->my_journey_options->perturb_central_body_gravity_harmonics)
             {
-                this->gravitational_harmonic_terms[k].computeAccelerationTerm(generate_derivatives);
+                this->spherical_harmonic_term->computeAccelerationTerm(generate_derivatives);
+            }
+            else if (this->acceleration_model->my_options->perturb_J2)
+            {
+                this->spherical_harmonic_term->computeJ2Acceleration(generate_derivatives);
             }
         } // end computeAccelerationTerm()
 
@@ -101,11 +121,8 @@ namespace EMTG
                 acceleration_model_file << "," << this->term_acceleration(k);
             }
 
-            // now request that all harmonic terms report their acceleration instrumentation
-            for (size_t k = 0; k < this->gravitational_harmonic_terms.size(); ++k)
-            {
-                this->gravitational_harmonic_terms[k].populateInstrumentationFile(acceleration_model_file);
-            }
+            // now request that the harmonic term report its acceleration instrumentation
+            this->spherical_harmonic_term->populateInstrumentationFile(acceleration_model_file);
         }
 
         //methods

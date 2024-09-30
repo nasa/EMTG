@@ -78,8 +78,12 @@ namespace EMTG
             epoch,
             State);
 
-        this->BdotR = BdotR;
-        this->BdotT = BdotT;
+        //if BdotR is nan, then we need to write out zeros because we are not on a hyperbolic orbit
+        if (std::isnan(BdotR _GETVALUE))
+        {
+            this->BdotR = 0;
+            this->BdotT = 0;
+        }
     }
 
     void target_spec_line::write(std::ofstream& outputfile)

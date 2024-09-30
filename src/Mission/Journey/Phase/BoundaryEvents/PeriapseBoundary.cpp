@@ -3,7 +3,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -63,6 +63,8 @@ namespace EMTG
             //do we need the rdotv constraint?
             if (this->myStateRepresentationEnum == StateRepresentation::IncomingBplane
                 || this->myStateRepresentationEnum == StateRepresentation::OutgoingBplane
+				|| this->myStateRepresentationEnum == StateRepresentation::IncomingBplaneRpTA
+				|| this->myStateRepresentationEnum == StateRepresentation::OutgoingBplaneRpTA
                 || this->myStateRepresentationEnum == StateRepresentation::COE
                 || this->myStateRepresentationEnum == StateRepresentation::SphericalAZFPA)
             {
@@ -75,7 +77,9 @@ namespace EMTG
 
             //do we need the distance constraint?
             if (this->myStateRepresentationEnum == StateRepresentation::SphericalAZFPA
-                || this->myStateRepresentationEnum == StateRepresentation::SphericalRADEC)
+                || this->myStateRepresentationEnum == StateRepresentation::SphericalRADEC
+				|| this->myStateRepresentationEnum == StateRepresentation::IncomingBplaneRpTA
+				|| this->myStateRepresentationEnum == StateRepresentation::OutgoingBplaneRpTA)
             {
                 this->need_distance_constraint = false;
             }
@@ -225,6 +229,40 @@ namespace EMTG
 
                     break;
                 }
+				case StateRepresentation::IncomingBplaneRpTA:
+				{
+					//VINF
+					stateBounds.push_back({ VelocityMagnitudeBounds[0], VelocityMagnitudeBounds[1] });
+					//RHA
+					stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
+					//DHA
+					stateBounds.push_back({ -90.0, 90.0 });
+					//RP
+					stateBounds.push_back({ RadiusBounds[0], RadiusBounds[1] });
+					//BTHETA
+					stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
+					//TA
+					stateBounds.push_back({ -math::SMALL, math::SMALL });
+
+					break;
+				}
+				case StateRepresentation::OutgoingBplaneRpTA:
+				{
+					//VINF
+					stateBounds.push_back({ VelocityMagnitudeBounds[0], VelocityMagnitudeBounds[1] });
+					//RHA
+					stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
+					//DHA
+					stateBounds.push_back({ -90.0, 90.0 });
+					//RP
+					stateBounds.push_back({ RadiusBounds[0], RadiusBounds[1] });
+					//BTHETA
+					stateBounds.push_back({ -360.0 * 4, 360.0 * 4 });
+					//TA
+					stateBounds.push_back({ -math::SMALL, math::SMALL });
+
+					break;
+				}
                 default:
                     throw std::invalid_argument("PeriapseBoundary does not recognize state representation " + std::to_string(this->myStateRepresentationEnum) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__) + ".");
             }

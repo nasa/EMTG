@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -54,6 +54,9 @@ namespace EMTG
                 this->dR_probe_ref1_dt = math::Matrix<double>(3, 1, 0.0);
                 this->dR_probe_ref2_dt = math::Matrix<double>(3, 1, 0.0);
 
+				this->R_cbJourney_cbEvent = math::Matrix<doubleType>(3, 1, 0.0);
+				this->dR_cbJourney_cbEvent_dt = math::Matrix<double>(3, 1, 0.0);
+
                 //derived class version of myBoundaryEvent has a different type than SpecializedBoundaryConstraintBase uses
                 this->myBoundaryEvent = myBoundaryEvent;
             }
@@ -66,16 +69,38 @@ namespace EMTG
                 std::string splitty_thing = boost::algorithm::to_lower_copy(this->constraintDefinition);
                 boost::split(ConstraintDefinitionCell, splitty_thing, boost::is_any_of("_"), boost::token_compress_on);
 
-                //Step 2: which bodies are we doing this with respect to?
+				/*Step 2: which bodies are we doing this with respect to?
+				calculation will actually change depending on whether we are doing departure or arrival,
+				at least with the current setup.
+				Changed this calculation to happen in a method of SpecializedBoundaryConstraintBase
+				because, really, every boundary constraint needs this.
+				*/
+				SetMyBoundaryEventBody(ConstraintDefinitionCell[1], 1); // the 1 indicates state is taken after event
+
+				//if (ConstraintDefinitionCell[1].find("arrival") < 1024
+				//	&& this->myJourneyOptions->arrival_class == EMTG::BoundaryClass::EphemerisReferenced
+				//	&& this->myJourneyOptions->arrival_type == EMTG::ArrivalType::INTERCEPT)
+				//{
+				//	this->myBoundaryEventBody = this->myBoundaryEvent->getBody();
+				//}
+				//else
+				//{
+				//	// nothing for departure because departure state is always w/r/t/ central body
+				//	// of journey because we are grabbing the state after the boundary event.
+				//	// the boundary event body is just the CB
+				//	this->myBoundaryEventBody = nullptr;
+				//}
+
+
                 //Step 2.1: reference 1
                 if (ConstraintDefinitionCell[3] == "cb")
                 {
-                    this->ref1IsCentralBody = true;
+                    this->ref1IsCentralBodyOfJourney = true;
                     this->ref1Name = this->myUniverse->central_body_name;
                 }
                 else
                 {
-                    this->ref1IsCentralBody = false;
+                    this->ref1IsCentralBodyOfJourney = false;
 
                     int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
                     this->myReference1 = &this->myUniverse->bodies[bodyIndex];
@@ -85,12 +110,12 @@ namespace EMTG
                 //Step 2.2: reference 2
                 if (ConstraintDefinitionCell[4] == "cb")
                 {
-                    this->ref2IsCentralBody = true;
+                    this->ref2IsCentralBodyOfJourney = true;
                     this->ref2Name = this->myUniverse->central_body_name;
                 }
                 else
                 {
-                    this->ref2IsCentralBody = false;
+                    this->ref2IsCentralBodyOfJourney = false;
 
                     int bodyIndex = std::stoi(ConstraintDefinitionCell[4]) - 1;
                     this->myReference2 = &this->myUniverse->bodies[bodyIndex];
@@ -157,7 +182,7 @@ namespace EMTG
                 }
 
                 //derivatives with respect to time variables that affect reference body position
-                if (!(this->ref1IsCentralBody || this->ref2IsCentralBody))
+				if (!(this->ref1IsCentralBodyOfJourney) || !(this->ref2IsCentralBodyOfJourney))
                 {
                     std::vector<size_t> timeVariables = this->myBoundaryEvent->get_Xindices_EventRightEpoch();
                     for (size_t Xindex : timeVariables)
@@ -178,11 +203,45 @@ namespace EMTG
             {
 
                 //Step 1: get the state relative to the central body
-                math::Matrix<doubleType>& SpacecraftStateRelativeToCentralBody = this->myBoundaryEvent->get_state_after_event();
+                math::Matrix<doubleType>& SpacecraftStateRelativeToCentralBodyOfEvent = this->myBoundaryEvent->get_state_after_event();
+				math::Matrix<doubleType> SpacecraftPositionRelativeToCentralBodyOfJourney(3, 1, 0.0);
+
+				// if boundary event body is not necessarily the same as the central body of the journey ...
+				if (this->myBoundaryEventBody)
+				{
+					doubleType temp_body_state[12];
+					// get state of boundary event central body w/r/t/ journey central body
+					this->myBoundaryEventBody->locate_body(SpacecraftStateRelativeToCentralBodyOfEvent(7),
+						temp_body_state,
+						needG,
+						*this->myOptions);
+
+					//Step 2.2: compute the vector from the journey central body to the event body
+					for (size_t stateIndex : {0, 1, 2})
+					{
+						this->R_cbJourney_cbEvent(stateIndex) = temp_body_state[stateIndex];
+						this->dR_cbJourney_cbEvent_dt(stateIndex) = temp_body_state[stateIndex + 6] _GETVALUE;
+					}
+				}
+				else
+				{
+					for (size_t stateIndex : {0, 1, 2})
+					{
+						this->R_cbJourney_cbEvent(stateIndex) = 0.0;
+						this->dR_cbJourney_cbEvent_dt(stateIndex) = 0.0;
+					}
+				}
+
+				// get state of s/c w/r/t/ journey central body instead of boundary event central body
+				// only actually updating position because that's all we use
+				for (size_t stateIndex : {0, 1, 2})
+				{
+					SpacecraftPositionRelativeToCentralBodyOfJourney(stateIndex) = SpacecraftStateRelativeToCentralBodyOfEvent(stateIndex) + this->R_cbJourney_cbEvent(stateIndex);
+				}
 
                 //Step 2: get the vector from the central body to the reference bodies
                 //Step 2.1: reference 1
-                if (this->ref1IsCentralBody) //is the reference body the central body?
+                if (this->ref1IsCentralBodyOfJourney) //is the reference body the central body?
                 {
                     for (size_t stateIndex : {0, 1, 2})
                         this->R_cb_ref1(stateIndex) = 0.0;
@@ -191,7 +250,7 @@ namespace EMTG
                 {
                     //Step 2.1: find the reference body relative to the central body
                     doubleType temp_body_state[12];
-                    this->myReference1->locate_body(SpacecraftStateRelativeToCentralBody(7),
+                    this->myReference1->locate_body(SpacecraftStateRelativeToCentralBodyOfEvent(7),
                         temp_body_state,
                         needG,
                         *this->myOptions);
@@ -204,7 +263,7 @@ namespace EMTG
                     }
                 }
                 //Step 2.2: reference 2
-                if (this->ref2IsCentralBody) //is the reference body the central body?
+                if (this->ref2IsCentralBodyOfJourney) //is the reference body the central body?
                 {
                     for (size_t stateIndex : {0, 1, 2})
                         this->R_cb_ref2(stateIndex) = 0.0;
@@ -213,7 +272,7 @@ namespace EMTG
                 {
                     //Step 2.1: find the reference body relative to the central body
                     doubleType temp_body_state[12];
-                    this->myReference2->locate_body(SpacecraftStateRelativeToCentralBody(7),
+                    this->myReference2->locate_body(SpacecraftStateRelativeToCentralBodyOfEvent(7),
                         temp_body_state,
                         needG,
                         *this->myOptions);
@@ -226,16 +285,16 @@ namespace EMTG
                     }
                 }
 
-                //Step 3: get the vector from reference 1 to reference 1
+                //Step 3: get the vector from reference 1 to probe
                 for (size_t stateIndex : {0, 1, 2})
                 {
-                    this->R_probe_ref1(stateIndex) = SpacecraftStateRelativeToCentralBody(stateIndex) - this->R_cb_ref1(stateIndex);
+                    this->R_probe_ref1(stateIndex) = SpacecraftPositionRelativeToCentralBodyOfJourney(stateIndex) - this->R_cb_ref1(stateIndex);
                 }
 
                 //Step 4: get the vector from reference 2 to the probe
                 for (size_t stateIndex : {0, 1, 2})
                 {
-                    this->R_probe_ref2(stateIndex) = SpacecraftStateRelativeToCentralBody(stateIndex) - this->R_cb_ref2(stateIndex);
+                    this->R_probe_ref2(stateIndex) = SpacecraftPositionRelativeToCentralBodyOfJourney(stateIndex) - this->R_cb_ref2(stateIndex);
                 }
 
                 //Step 5: compute the angle between the vectors
@@ -312,7 +371,7 @@ namespace EMTG
                         }
                     }//end loop over states
 
-                    //Step 6.4: derivative with respect to time
+					// derivatives with respect to time variables affecting state after boundary event
                     std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StateAfterEvent_wrt_Time = this->myBoundaryEvent->get_Derivatives_of_StateAfterEvent_wrt_Time();
 
                     for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
@@ -323,14 +382,31 @@ namespace EMTG
                             size_t Gindex = this->Gindex_constraint_wrt_PositionAfterEvent_time_variables[stateIndex][entryIndex];
                             size_t Xindex = this->jGvar->operator[](Gindex);
 
-                            double Gentry = this->dcosRPR_dR_probe_ref1(stateIndex) * (this->dR_cb_ref1_dt(stateIndex) - std::get<2>(Derivatives_of_StateAfterEvent_wrt_Time[dIndex]))
-                                + this->dcosRPR_dR_probe_ref2(stateIndex) * (this->dR_cb_ref2_dt(stateIndex) - std::get<2>(Derivatives_of_StateAfterEvent_wrt_Time[dIndex]));
-                                
-                            G[Gindex] -= this->X_scale_factors->operator[](Xindex)
-                                * Gentry;
+							double Gentry = (this->dcosRPR_dR_probe_ref1(stateIndex) + this->dcosRPR_dR_probe_ref2(stateIndex))
+								* std::get<2>(Derivatives_of_StateAfterEvent_wrt_Time[dIndex]);
 
+							G[Gindex] += this->X_scale_factors->operator[](Xindex)
+								* Gentry;
                         }
                     }//end loop over states
+
+					// derivatives of the body(ies) position(s) with respect to time variables
+					for (size_t entryIndex = 0; entryIndex < this->Gindex_constraint_wrt_time_variables.size(); ++entryIndex)
+					{
+						size_t Gindex = this->Gindex_constraint_wrt_time_variables[entryIndex];
+						size_t Xindex = this->jGvar->operator[](Gindex);
+
+						double Gentry = 0.0;
+
+						for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
+						{
+							Gentry += this->dcosRPR_dR_probe_ref1(stateIndex) * (this->dR_cb_ref1_dt(stateIndex) - this->dR_cbJourney_cbEvent_dt(stateIndex))
+								+ this->dcosRPR_dR_probe_ref2(stateIndex) * (this->dR_cb_ref2_dt(stateIndex) - this->dR_cbJourney_cbEvent_dt(stateIndex));
+						}
+
+						G[Gindex] -= this->X_scale_factors->operator[](Xindex)
+							* Gentry;
+					}
                 }//end derivatives
 
             }//end process_constraint()

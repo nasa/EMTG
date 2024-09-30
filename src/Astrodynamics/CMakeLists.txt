@@ -6,11 +6,13 @@ set(ASTRODYNAMICS_HEADERS  ${ASTRODYNAMICS_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/
                                                     ${CMAKE_CURRENT_SOURCE_DIR}/CentralBody.h
 							                        ${CMAKE_CURRENT_SOURCE_DIR}/bplane.h
                                                     ${CMAKE_CURRENT_SOURCE_DIR}/frame.h
+                                                    ${CMAKE_CURRENT_SOURCE_DIR}/HarmonicGravityField.h
                                                     ${CMAKE_CURRENT_SOURCE_DIR}/orbit_element_conversions.h
                                                     ${CMAKE_CURRENT_SOURCE_DIR}/universe.h
                                                     ${CMAKE_CURRENT_SOURCE_DIR}/atmosphere.h
                                                     ${CMAKE_CURRENT_SOURCE_DIR}/ExponentialAtmosphere.h
                                                     ${CMAKE_CURRENT_SOURCE_DIR}/BodydeticConversions.h
+                                                    ${CMAKE_CURRENT_SOURCE_DIR}/StateInTwoBodyRotatingFrame.h
                                                     )
 																	  
 set(ASTRODYNAMICS_SOURCE  ${ASTRODYNAMICS_SOURCE} ${CMAKE_CURRENT_SOURCE_DIR}/universe.cpp
@@ -18,6 +20,7 @@ set(ASTRODYNAMICS_SOURCE  ${ASTRODYNAMICS_SOURCE} ${CMAKE_CURRENT_SOURCE_DIR}/un
                                                   ${CMAKE_CURRENT_SOURCE_DIR}/bplane.cpp
                                                   ${CMAKE_CURRENT_SOURCE_DIR}/CentralBody.cpp
                                                   ${CMAKE_CURRENT_SOURCE_DIR}/frame.cpp
+                                                  ${CMAKE_CURRENT_SOURCE_DIR}/HarmonicGravityField.cpp
                                                   ${CMAKE_CURRENT_SOURCE_DIR}/atmosphere.cpp
                                                   ${CMAKE_CURRENT_SOURCE_DIR}/ExponentialAtmosphere.cpp
                                                   ${CMAKE_CURRENT_SOURCE_DIR}/BodydeticConversions.cpp
@@ -40,6 +43,7 @@ if (RUN_FBLT_TESTBED)
                                            ${CMAKE_CURRENT_SOURCE_DIR}/body.h
                                            ${CMAKE_CURRENT_SOURCE_DIR}/CentralBody.h
 							               ${CMAKE_CURRENT_SOURCE_DIR}/bplane.h
+                                           ${CMAKE_CURRENT_SOURCE_DIR}/engine_model.h
                                            ${CMAKE_CURRENT_SOURCE_DIR}/FBLT_acceleration_model.h
                                            ${CMAKE_CURRENT_SOURCE_DIR}/FBLT_EOM.h
                                            ${CMAKE_CURRENT_SOURCE_DIR}/frame.h
@@ -66,7 +70,9 @@ if (RUN_ACCELERATION_MODEL_TESTBED)
                                                          ${CMAKE_CURRENT_SOURCE_DIR}/body.h
                                                          ${CMAKE_CURRENT_SOURCE_DIR}/CentralBody.h
 							                             ${CMAKE_CURRENT_SOURCE_DIR}/bplane.h
+                                                         ${CMAKE_CURRENT_SOURCE_DIR}/engine_model.h
                                                          ${CMAKE_CURRENT_SOURCE_DIR}/frame.h
+                                                         ${CMAKE_CURRENT_SOURCE_DIR}/HarmonicGravityField.h
                                                          ${CMAKE_CURRENT_SOURCE_DIR}/orbit_element_conversions.h
                                                          ${CMAKE_CURRENT_SOURCE_DIR}/universe.h)
                                            
@@ -75,6 +81,7 @@ if (RUN_ACCELERATION_MODEL_TESTBED)
                                                         ${CMAKE_CURRENT_SOURCE_DIR}/bplane.cpp
                                                         ${CMAKE_CURRENT_SOURCE_DIR}/CentralBody.cpp
                                                         ${CMAKE_CURRENT_SOURCE_DIR}/frame.cpp
+                                                        ${CMAKE_CURRENT_SOURCE_DIR}/HarmonicGravityField.cpp
                                                         ${CMAKE_CURRENT_SOURCE_DIR}/universe.cpp)
                                            
     set(ACCELERATION_MODEL_TESTBED_ASTRODYNAMICS_FILES ${ACCELERATION_MODEL_TESTBED_ASTRODYNAMICS_FILES} 

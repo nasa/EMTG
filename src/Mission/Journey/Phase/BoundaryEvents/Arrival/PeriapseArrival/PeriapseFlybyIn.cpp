@@ -3,7 +3,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -174,6 +174,9 @@ namespace EMTG
                 myBplane.define_bplane(this->state_before_event);
                 BdotR = myBplane.getBdotR();
                 BdotT = myBplane.getBdotT();
+
+                BdotR = std::isnan(BdotR _GETVALUE) ? 0.0 : BdotR;
+                BdotT = std::isnan(BdotT _GETVALUE) ? 0.0 : BdotT;
             }
 
             write_output_line(outputfile,

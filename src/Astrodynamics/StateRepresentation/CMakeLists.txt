@@ -6,6 +6,8 @@ set(STATEREPRESENTATION_HEADERS  ${STATEREPRESENTATION_HEADERS} ${CMAKE_CURRENT_
                                                                 ${CMAKE_CURRENT_SOURCE_DIR}/MEEStateRepresentation.h
                                                                 ${CMAKE_CURRENT_SOURCE_DIR}/IncomingBplaneStateRepresentation.h
                                                                 ${CMAKE_CURRENT_SOURCE_DIR}/OutgoingBplaneStateRepresentation.h
+                                                                ${CMAKE_CURRENT_SOURCE_DIR}/IncomingBplaneRpTAStateRepresentation.h
+                                                                ${CMAKE_CURRENT_SOURCE_DIR}/OutgoingBplaneRpTAStateRepresentation.h
                                                                 ${CMAKE_CURRENT_SOURCE_DIR}/StateRepresentationFactory.h
                                                                 )
 																	  
@@ -17,6 +19,8 @@ set(STATEREPRESENTATION_SOURCE  ${STATEREPRESENTATION_SOURCE} ${CMAKE_CURRENT_SO
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/MEEStateRepresentation.cpp
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/IncomingBplaneStateRepresentation.cpp
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/OutgoingBplaneStateRepresentation.cpp
+                                                              ${CMAKE_CURRENT_SOURCE_DIR}/IncomingBplaneRpTAStateRepresentation.cpp
+                                                              ${CMAKE_CURRENT_SOURCE_DIR}/OutgoingBplaneRpTAStateRepresentation.cpp
                                                               ${CMAKE_CURRENT_SOURCE_DIR}/StateRepresentationFactory.cpp
                                                               )
     

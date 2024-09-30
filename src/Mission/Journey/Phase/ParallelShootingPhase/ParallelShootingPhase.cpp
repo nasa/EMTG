@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -1184,7 +1184,19 @@ namespace EMTG
 			// Reset the spacecraft
             this->mySpacecraft->setActiveStage(this->stageIndex);
 			
-            this->EphemerisOutputResolution = this->myOptions->integration_time_step_size;
+			if (this->myJourneyOptions->override_ephemeris_output_resolution)
+			{
+				this->EphemerisOutputResolution = this->myJourneyOptions->EphemerisOutputResolution;
+			}
+			else
+			{
+				if (this->myJourneyOptions->override_integration_step_size)
+					this->EphemerisOutputResolution = this->myJourneyOptions->integration_step_size;
+				else
+					this->EphemerisOutputResolution = this->myOptions->integration_time_step_size;
+			}
+            //this->EphemerisOutputResolution = this->myOptions->integration_time_step_size;
+			
 
             //Step 1: output the departure event
             this->myDepartureEvent->output_ephemeris(outputfile);

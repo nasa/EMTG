@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -34,6 +34,7 @@ namespace EMTG
             stageIndex(0),
             state_before_event(math::Matrix<doubleType>(8, 1, 0.0)),
             state_after_event(math::Matrix<doubleType>(8, 1, 0.0)),
+			state_after_event_central_body_unchanged(math::Matrix<doubleType>(8, 1, 0.0)),
             state_after_event_propagated(math::Matrix<doubleType>(8, 1, 0.0)),
             boundary_state(math::Matrix<doubleType>(8, 1, 0.0)),
             ETM(math::Matrix<double>(8, math::identity)),
@@ -53,7 +54,8 @@ namespace EMTG
             TCM_magnitude(0.0),
             hasTCM(false),
             ChemicalManeuverType(PropulsionSystemChoice::Biprop),
-            C3(0.0)
+            C3(0.0),
+			isEphemerisReferencedArrivalInterior(false)
             {
                 
             }//end default constructor
@@ -553,5 +555,77 @@ namespace EMTG
             }
             outputfile << std::endl;
         }//end print_state_after_event()
+
+		//------------------------------------------------------------------------------
+		// math::Matrix<doubleType>& BoundaryEventBase::get_state_before_or_after_event(int before_or_after)
+		//------------------------------------------------------------------------------
+		/**
+		* Return state before or after event, depending on value of input parameter
+		*
+		* @param before_or_after int. -1: Return state before event. 1: return state after event. Throws error otherwise.
+		* @return math::Matrix<doubleType> If before_or_after == -1: this->state_before_event. If before_or_after_event == 1: this->state_after_event;
+		*/
+		math::Matrix<doubleType>& BoundaryEventBase::get_state_before_or_after_event(int before_or_after)
+		{
+			switch (before_or_after)
+			{
+			case (-1):
+				return this->state_before_event;
+			case (1):
+				return this->state_after_event;
+			default:
+				throw std::runtime_error(this->name + " invalid argument to get_state_before_or_after_event"
+					+ " Should you choose to debug, place a breakpoint at " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+				break;
+			}
+		}
+
+		//------------------------------------------------------------------------------
+		// std::vector< std::tuple<size_t, size_t, double> >& BoundaryEventBase::get_Derivatives_of_StateBeforeOrAfterEvent(int before_or_after)
+		//------------------------------------------------------------------------------
+		/**
+		* Return derivatives of state w/r/t/ state before or after event, depending on value of input parameter
+		*
+		* @param before_or_after int. -1: Return derivatives of state before event. 1: return derivatives of state after event. Throws error otherwise.
+		* @return std::vector< std::tuple<size_t, size_t, double> > If before_or_after == -1: this->Derivatives_of_StateBeforeEvent. If before_or_after_event == 1: this->Derivatives_of_StateAfterEvent;
+		*/
+		std::vector< std::tuple<size_t, size_t, double> >& BoundaryEventBase::get_Derivatives_of_StateBeforeOrAfterEvent(int before_or_after)
+		{
+			switch (before_or_after)
+			{
+			case (-1):
+				return this->Derivatives_of_StateBeforeEvent;
+			case (1):
+				return this->Derivatives_of_StateAfterEvent;
+			default:
+				throw std::runtime_error(this->name + " invalid argument to get_Derivatives_of_StateBeforeOrAfterEvent"
+					+ " Should you choose to debug, place a breakpoint at " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+				break;
+			}
+		}
+
+		//------------------------------------------------------------------------------
+		// std::vector< std::tuple<size_t, size_t, double> >& BoundaryEventBase::get_Derivatives_of_StateBeforeOrAfterEvent_wrt_Time(int before_or_after)
+		//------------------------------------------------------------------------------
+		/**
+		* Return derivatives of state w/r/t/ time before or after event, depending on value of input parameter
+		*
+		* @param before_or_after int. -1: Return derivatives of state before event. 1: return derivatives of state after event. Throws error otherwise.
+		* @return std::vector< std::tuple<size_t, size_t, double> > If before_or_after == -1: this->Derivatives_of_StateBeforeEvent_wrt_Time. If before_or_after_event == 1: this->Derivatives_of_StateAfterEvent_wrt_Time;
+		*/
+		std::vector< std::tuple<size_t, size_t, double> >& BoundaryEventBase::get_Derivatives_of_StateBeforeOrAfterEvent_wrt_Time(int before_or_after)
+		{
+			switch (before_or_after)
+			{
+			case (-1):
+				return this->Derivatives_of_StateBeforeEvent_wrt_Time;
+			case (1):
+				return this->Derivatives_of_StateAfterEvent_wrt_Time;
+			default:
+				throw std::runtime_error(this->name + " invalid argument to get_Derivatives_of_StateBeforeOrAfterEvent_wrt_Time"
+					+ " Should you choose to debug, place a breakpoint at " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+				break;
+			}
+		}
     }//close namespace events
 }//close namespace EMTG

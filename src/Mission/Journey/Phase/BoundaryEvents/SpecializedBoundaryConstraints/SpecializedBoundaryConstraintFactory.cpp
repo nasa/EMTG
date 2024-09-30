@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -16,12 +16,13 @@
 // express or implied.   See the License for the specific language
 // governing permissions and limitations under the License.
 
-//boundary constraint factory for ephemeris pegged boundary events
+//boundary constraint factory
 //11-1-2017
 
 #include "SpecializedBoundaryConstraintFactory.h"
 
 #include "BoundaryDistanceConstraint.h"
+#include "BoundaryDeticElevationFromGroundStationConstraint.h"
 #include "BoundaryIsApseConstraint.h"
 #include "BoundaryMassConstraint.h"
 #include "BoundaryLongitudeConstraint.h"
@@ -30,6 +31,7 @@
 #include "BoundaryDeticAltitudeConstraint.h"
 #include "BoundaryOrbitalEnergyConstraint.h"
 #include "BoundaryVelocityDeclinationConstraint.h"
+#include "BoundaryVelocityDeclinationAnybodyConstraint.h"
 #include "BoundaryVelocityMagnitudeConstraint.h"
 #include "BoundaryVelocitySphericalAzimuthConstraint.h"
 #include "BoundaryRelativeVelocityMagnitudeConstraint.h"
@@ -51,6 +53,7 @@
 #include "RRP.h"
 #include "RPR.h"
 #include "angularMomentumReferenceAngle.h"
+#include "BoundaryStateInTwoBodyRotatingFrameConstraint.h"
 
 namespace EMTG
 {
@@ -428,7 +431,7 @@ namespace EMTG
                             throw std::invalid_argument("Reference frame must be specified for detic altitude boundary constraint " + name);
                         }
                     }
-                    else if (ConstraintDefinitionCell[2].find("deticelevation") < 1024)
+                    else if (ConstraintDefinitionCell[2].find("targetdeticelevation") < 1024)
                     {
                         // if a frame is specified, then inform the constraint what the user wants
                         // otherwise terminate program
@@ -441,7 +444,7 @@ namespace EMTG
                             }
                             else
                             {
-                                throw std::invalid_argument("Currently only TrueOfDateBCF frames are supported: detic elevation boundary constraint " + name);
+                                throw std::invalid_argument("Currently only TrueOfDateBCF frames are supported: target detic elevation boundary constraint " + name);
                             }
 
                             return new BoundaryTargetBodyDeticElevationConstraint(name,
@@ -457,9 +460,73 @@ namespace EMTG
                         }
                         else
                         {
-                            throw std::invalid_argument("Reference frame must be specified for detic elevation boundary constraint " + name);
+                            throw std::invalid_argument("Reference frame must be specified for target detic elevation boundary constraint " + name);
                         }
                     }
+                    else if (ConstraintDefinitionCell[2].find("deticelevationfromgroundstation") < 1024)
+                    {
+                        if (ConstraintDefinitionCell.size() == 9)
+                        {
+
+                            return new BoundaryDeticElevationFromGroundStationConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Detic elevation from a ground station boundary constraint syntax is: pP_arrival_DeticElevationFromGroundStation_bodyIndex_lat_lon_alt_lb_ub " + name);
+                        }
+                    }
+					else if (ConstraintDefinitionCell[2].find("velocitydeclinationanybody") < 1024)
+					{
+					// if a frame is specified, then inform the constraint what the user wants
+					// otherwise terminate program
+					if (ConstraintDefinitionCell.size() > 5)
+					{
+						ReferenceFrame user_specified_frame;
+						if (ConstraintDefinitionCell[6].find("icrf") < 1024)
+						{
+							user_specified_frame = ReferenceFrame::ICRF;
+						}
+						else if (ConstraintDefinitionCell[6].find("j2000bci") < 1024)
+						{
+							user_specified_frame = ReferenceFrame::J2000_BCI;
+						}
+						else if (ConstraintDefinitionCell[6].find("j2000bcf") < 1024)
+						{
+							user_specified_frame = ReferenceFrame::J2000_BCF;
+						}
+						else if (ConstraintDefinitionCell[6].find("trueofdatebci") < 1024)
+						{
+							user_specified_frame = ReferenceFrame::TrueOfDate_BCI;
+						}
+						else if (ConstraintDefinitionCell[6].find("trueofdatebcf") < 1024)
+						{
+							user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+						}
+						else
+						{
+							throw std::invalid_argument("Currently only ICRF, J2000BCI, J2000BCF, TrueOfDateBCI, and TrueOfDateBCF frames are supported: velocity declination boundary constraint " + name);
+						}
+
+						return new BoundaryVelocityDeclinationAnybodyConstraint(name,
+							journeyIndex,
+							phaseIndex,
+							stageIndex,
+							Universe,
+							mySpacecraft,
+							myOptions,
+							user_specified_frame,
+							myBoundaryEvent,
+							ConstraintDefinition);
+					}
+					}
                     else if (ConstraintDefinitionCell[2].find("velocitydeclination") < 1024)
                     {
                         // if a frame is specified, then inform the constraint what the user wants
@@ -768,6 +835,18 @@ namespace EMTG
                             myBoundaryEvent,
                             ConstraintDefinition);
                     }
+					else if (ConstraintDefinitionCell[2].find("stateintwobodyrotatingframe") < 1024)
+					{
+					return new BoundaryStateInTwoBodyRotatingFrameConstraint(name,
+						journeyIndex,
+						phaseIndex,
+						stageIndex,
+						Universe,
+						mySpacecraft,
+						myOptions,
+						myBoundaryEvent,
+						ConstraintDefinition);
+					}
                     else
                     {
                         throw std::invalid_argument("Invalid boundary constraint, " + ConstraintDefinition);
@@ -1128,7 +1207,7 @@ namespace EMTG
                             throw std::invalid_argument("Reference frame must be specified for detic altitude boundary constraint " + name);
                         }
                     }
-                    else if (ConstraintDefinitionCell[2].find("deticelevation") < 1024)
+                    else if (ConstraintDefinitionCell[2].find("targetdeticelevation") < 1024)
                     {
                         // if a frame is specified, then inform the constraint what the user wants
                         // otherwise terminate program
@@ -1141,7 +1220,7 @@ namespace EMTG
                             }
                             else
                             {
-                                throw std::invalid_argument("Currently only TrueOfDateBCF frames are supported: detic elevation boundary constraint " + name);
+                                throw std::invalid_argument("Currently only TrueOfDateBCF frames are supported: target detic elevation boundary constraint " + name);
                             }
 
                             return new BoundaryTargetBodyDeticElevationConstraint(name,
@@ -1157,7 +1236,71 @@ namespace EMTG
                         }
                         else
                         {
-                            throw std::invalid_argument("Reference frame must be specified for detic elevation boundary constraint " + name);
+                            throw std::invalid_argument("Reference frame must be specified for target detic elevation boundary constraint " + name);
+                        }
+                    }
+                    else if (ConstraintDefinitionCell[2].find("deticelevationfromgroundstation") < 1024)
+                    {
+                        if (ConstraintDefinitionCell.size() == 9)
+                        {
+
+                            return new BoundaryDeticElevationFromGroundStationConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
+                        }
+                        else
+                        {
+                            throw std::invalid_argument("Detic elevation from a ground station boundary constraint syntax is: pP_arrival_DeticElevationFromGroundStation_bodyIndex_lat_lon_alt_lb_ub " + name);
+                        }
+                    }
+					else if (ConstraintDefinitionCell[2].find("velocitydeclinationanybody") < 1024)
+                    {
+                        // if a frame is specified, then inform the constraint what the user wants
+                        // otherwise terminate program
+                        if (ConstraintDefinitionCell.size() > 5)
+                        {
+                            ReferenceFrame user_specified_frame;
+                            if (ConstraintDefinitionCell[6].find("icrf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::ICRF;
+                            }
+                            else if (ConstraintDefinitionCell[6].find("j2000bci") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCI;
+                            }
+                            else if (ConstraintDefinitionCell[6].find("j2000bcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::J2000_BCF;
+                            }
+                            else if (ConstraintDefinitionCell[6].find("trueofdatebci") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCI;
+                            }
+                            else if (ConstraintDefinitionCell[6].find("trueofdatebcf") < 1024)
+                            {
+                                user_specified_frame = ReferenceFrame::TrueOfDate_BCF;
+                            }
+                            else
+                            {
+                                throw std::invalid_argument("Currently only ICRF, J2000BCI, J2000BCF, TrueOfDateBCI, and TrueOfDateBCF frames are supported: velocity declination boundary constraint " + name);
+                            }
+
+                            return new BoundaryVelocityDeclinationAnybodyConstraint(name,
+                                journeyIndex,
+                                phaseIndex,
+                                stageIndex,
+                                Universe,
+                                mySpacecraft,
+                                myOptions,
+                                user_specified_frame,
+                                myBoundaryEvent,
+                                ConstraintDefinition);
                         }
                     }
                     else if (ConstraintDefinitionCell[2].find("velocitydeclination") < 1024)
@@ -1540,6 +1683,18 @@ namespace EMTG
                             myBoundaryEvent,
                             ConstraintDefinition);
                     }
+					else if (ConstraintDefinitionCell[2].find("stateintwobodyrotatingframe") < 1024)
+					{
+						return new BoundaryStateInTwoBodyRotatingFrameConstraint(name,
+							journeyIndex,
+							phaseIndex,
+							stageIndex,
+							Universe,
+							mySpacecraft,
+							myOptions,
+							myBoundaryEvent,
+							ConstraintDefinition);
+					}
                     else
                     {
                         throw std::invalid_argument("Invalid boundary constraint, " + ConstraintDefinition);

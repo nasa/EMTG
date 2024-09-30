@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -503,11 +503,24 @@ namespace EMTG
                 math::Matrix<doubleType> output_state = this->StateBeforeEventBeforePropagation;
 
                 //Step 1: set output resolution
-                double EphemerisOutputResolution;
-                if (this->myJourneyOptions->override_integration_step_size)
-                    EphemerisOutputResolution = this->myJourneyOptions->integration_step_size;
-                else
-                    EphemerisOutputResolution = this->myOptions->integration_time_step_size;
+                double EphemerisOutputResolution;				if (this->myJourneyOptions->override_ephemeris_output_resolution)
+				{
+					EphemerisOutputResolution = this->myJourneyOptions->EphemerisOutputResolution;
+				}
+				else
+				{
+					if (this->myJourneyOptions->override_integration_step_size)
+						EphemerisOutputResolution = this->myJourneyOptions->integration_step_size;
+					else
+						EphemerisOutputResolution = this->myOptions->integration_time_step_size;
+				}
+
+				//if (this->myJourneyOptions->override_integration_step_size)
+				//{
+				//	EphemerisOutputResolution = this->myJourneyOptions->integration_step_size;				//}
+				//else				//{
+				//	EphemerisOutputResolution = this->myOptions->integration_time_step_size;
+				//}
 
                 //Step 2: output the wait time - we'll do this by integrating forward in time and plotapussing
                 //Step 2.1: temporarily assign the initial coast propagator to the output state

@@ -2,17 +2,17 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
-// Licensed under the NASA Open Source License (the "License"); 
-// You may not use this file except in compliance with the License. 
+// Licensed under the NASA Open Source License (the "License");
+// You may not use this file except in compliance with the License.
 // You may obtain a copy of the License at:
 // https://opensource.org/licenses/NASA-1.3
 // Unless required by applicable law or agreed to in writing, software
 // distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either
 // express or implied.   See the License for the specific language
 // governing permissions and limitations under the License.
 
@@ -47,24 +47,22 @@
 #include <set>
 #endif
 
-
-
 namespace EMTG
 {
-    namespace Astrodynamics 
+    namespace Astrodynamics
     {
         class universe
         {
         public:
             //constructor
             universe(); //default constructor
-            universe(const size_t& j, 
-                std::string universefile,
-                const missionoptions& options
-    #ifdef SPLINE_EPHEM
-                , SplineEphem::universe* SplineEphemUniverse
-    #endif
-                );
+            universe(const size_t& j,
+                     std::string universefile,
+                     const missionoptions& options
+#ifdef SPLINE_EPHEM
+                     , SplineEphem::universe* SplineEphemUniverse
+#endif
+            );
 
             //destructor
             virtual ~universe();
@@ -74,14 +72,14 @@ namespace EMTG
 
             //get/set
             universe* get_nextUniverse() { return this->nextUniverse; }
-            void set_nextUniverse(universe& inextUniverse) 
+            void set_nextUniverse(universe& inextUniverse)
             {
-                this->nextUniverse = &inextUniverse; 
+                this->nextUniverse = &inextUniverse;
             }
 
             //set scale factor pointer
-            inline void set_X_scale_factors(std::vector<double>* X_scale_factors) 
-            { 
+            inline void set_X_scale_factors(std::vector<double>* X_scale_factors)
+            {
                 this->X_scale_factors = X_scale_factors;
 
                 for (body& thisBody : this->bodies)
@@ -96,12 +94,12 @@ namespace EMTG
 
             //method to return percent sun for a spacecraft orbiting the central body
             void get_percent_sun(math::Matrix<doubleType> spacecraft_state,
-                math::Matrix<doubleType> sun_state, 
-                const missionoptions& options,
-                doubleType& percent_sun);
+                                 math::Matrix<doubleType> sun_state,
+                                 const missionoptions& options,
+                                 doubleType& percent_sun);
 
-			// method to get central body reference angles
-			void get_central_body_reference_angles(std::vector<double>& central_body_reference_angles_out);
+            // method to get central body reference angles
+            void get_central_body_reference_angles(std::vector<double>& central_body_reference_angles_out);
 
             //**************************************
             //fields
@@ -117,7 +115,7 @@ namespace EMTG
             double LU;
             double r_SOI; //radius of the central body's sphere of influence
             double minimum_safe_distance; //minimum safe distance from the central body, in km
-            
+
             //the following fields are computed internal to the class
             double TU;
             CentralBody central_body;
@@ -129,18 +127,16 @@ namespace EMTG
             math::Matrix<double> continuity_constraint_scale_factors;
             math::Matrix<double> COE_scale_factors;
 
-			//boost::ptr_vector<EMTG::Astrodynamics::atmosphere> TheAtmosphere;
-			std::shared_ptr<atmosphere> TheAtmosphere;
-
-
+            //boost::ptr_vector<EMTG::Astrodynamics::atmosphere> TheAtmosphere;
+            std::shared_ptr<atmosphere> TheAtmosphere;
 
             //pointer to SplineEphem universe
-    #ifdef SPLINE_EPHEM
+#ifdef SPLINE_EPHEM
             SplineEphem::universe* MySplineEphemUniverse;
-    #endif
+#endif
         private:
             // creates the CentralBody object, which is required by the acceleration model
-            void createCentralBody(const missionoptions & options);
+            void createCentralBody(const missionoptions& options);
             std::vector<double> central_body_reference_angles;
 
         private:
@@ -156,7 +152,8 @@ namespace EMTG
             universe* nextUniverse;
             std::vector<double>* X_scale_factors;
 
-        };//end class universe
+            std::string central_body_gravity_file;
 
+        };//end class universe
     }//close namespace Astrodynamics
 }//close namespace EMTG

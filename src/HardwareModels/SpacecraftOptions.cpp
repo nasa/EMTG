@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -117,7 +117,12 @@ namespace EMTG
                         }
                         else if (linecell.front() == "GlobalDryMassBounds")
                         {
-                            this->setGlobalDryMassBounds(std::vector<double>(std::stod(linecell[1]), std::stod(linecell[2])));
+                            double lb = std::stod(linecell[1]);
+                            double ub = std::stod(linecell[2]);
+                            std::vector<double> input;
+                            input.push_back(lb);
+                            input.push_back(ub);
+                            this->setGlobalDryMassBounds(input);
                         }
                         else if (linecell.front() == "EnableGlobalElectricPropellantTankConstraint")
                         {

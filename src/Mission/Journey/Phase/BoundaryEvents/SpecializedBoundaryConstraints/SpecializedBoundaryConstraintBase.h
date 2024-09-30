@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -93,6 +93,10 @@ namespace EMTG
                     const bool& needG) = 0;
 
             protected:
+				//methods
+				void GetStateRelativeToCentralBodyOfJourney(const bool& needG);
+				void SetMyBoundaryEventBody(std::string arrivalOrDepartureString, int hardCodedBeforeOrAfterEvent);
+
                 //fields
                 std::string name;
                 size_t journeyIndex;
@@ -104,11 +108,19 @@ namespace EMTG
                 missionoptions* myOptions;
                 JourneyOptions* myJourneyOptions;
                 BoundaryEventBase* myBoundaryEvent;
+				Astrodynamics::body* myBoundaryEventBody;
                 std::string constraintDefinition;    
 
                 ReferenceFrame myReferenceFrame;
                 std::vector<std::string> ReferenceFrameStrings;
-            };
+
+				size_t departureOrArrival; // 0 for departure, 1 for arrival
+				int getStateAndDerivativesIndex; // index for whether constraint is imposed before or after boundary event (-1 for before, 1 for after)
+            
+				math::Matrix<doubleType> state_cbEvent_wrt_cbJourney; // position and velocity only
+				math::Matrix<double> d_state_cbEvent_wrt_cbJourney_dt; // position and velocity only
+				math::Matrix<doubleType> SpacecraftStateRelativeToCentralBodyOfJourney; // full 8-state with time and mass
+			};
         }//end namespace SpecializedConstraints
     }//end namespace BoundaryEvents
 }//end namespace EMTG

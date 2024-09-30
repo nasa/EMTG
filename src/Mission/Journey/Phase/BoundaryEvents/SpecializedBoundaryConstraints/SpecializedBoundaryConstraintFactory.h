@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -16,7 +16,7 @@
 // express or implied.   See the License for the specific language
 // governing permissions and limitations under the License.
 
-//boundary constraint factory for ephemeris pegged boundary events
+//boundary constraint factory
 //11-1-2017
 
 #pragma once

@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -93,13 +93,13 @@ namespace EMTG
             }
             else
             {
-                if (this->myBody->mu / this->myUniverse->mu < 1.0e+5)
+                if (this->myBody->mu / this->myUniverse->mu < 1.0e-5)
                     Flowerbounds->push_back(-20.0);
                 else
                     Flowerbounds->push_back(-300.0);
                 Fupperbounds->push_back(0.0);
             }
-            Fdescriptions->push_back(prefix + "flyby altitude constraint (above minimum altitude but below [10x/300x] altitude for [rocky/gas] planets");
+            Fdescriptions->push_back(prefix + "flyby altitude constraint (above minimum altitude but below [20x/300x] altitude for [rocky/gas] planets");
 
             this->Gindices_turn_angle.resize(3);
 

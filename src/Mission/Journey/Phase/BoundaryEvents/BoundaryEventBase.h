@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -94,6 +94,8 @@ namespace EMTG
             //get
             inline math::Matrix<doubleType>& get_state_before_event() { return this->state_before_event; }
             inline math::Matrix<doubleType>& get_state_after_event() { return this->state_after_event; }
+			inline math::Matrix<doubleType>& get_state_after_event_central_body_unchanged() { return this->state_after_event_central_body_unchanged; }
+			math::Matrix<doubleType>& get_state_before_or_after_event(int before_or_after);
             inline math::Matrix<doubleType> get_boundary_state() const { return this->boundary_state; }
 			inline math::Matrix<doubleType> get_orbit_elements_after_event(const ReferenceFrame & reference_frame) { return this->orbit_elements_after_event[reference_frame]; }
 			inline math::Matrix<doubleType> get_orbit_element_Jacobian_after_event(const ReferenceFrame & reference_frame) { return this->orbit_elements_after_event_partials_wrt_cartesian_state[reference_frame]; }
@@ -102,6 +104,11 @@ namespace EMTG
             inline std::vector< std::tuple<size_t, size_t, double> >& get_Derivatives_of_StateAfterEvent() { return this->Derivatives_of_StateAfterEvent; }
             inline std::vector< std::tuple<size_t, size_t, double> >& get_Derivatives_of_StateBeforeEvent_wrt_Time() { return this->Derivatives_of_StateBeforeEvent_wrt_Time; }
             inline std::vector< std::tuple<size_t, size_t, double> >& get_Derivatives_of_StateAfterEvent_wrt_Time() { return this->Derivatives_of_StateAfterEvent_wrt_Time; }
+			inline std::vector< std::tuple<size_t, size_t, double> >& get_Derivatives_of_StateAfterEvent_central_body_unchanged() { return this->Derivatives_of_StateAfterEvent_central_body_unchanged; }
+			inline std::vector< std::tuple<size_t, size_t, double> >& get_Derivatives_of_StateAfterEvent_wrt_Time_central_body_unchanged() { return this->Derivatives_of_StateAfterEvent_wrt_Time_central_body_unchanged; }
+			std::vector< std::tuple<size_t, size_t, double> >& get_Derivatives_of_StateBeforeOrAfterEvent(int before_or_after);
+			std::vector< std::tuple<size_t, size_t, double> >& get_Derivatives_of_StateBeforeOrAfterEvent_wrt_Time(int before_or_after);
+
             inline size_t getX_index_of_first_decision_variable_in_this_event() const { return this->X_index_of_first_decision_variable_in_this_event; }
             
             inline double get_StatisticalDeltav() const { return this->TCM_magnitude; }
@@ -188,6 +195,8 @@ namespace EMTG
 
             //!method to compute orbit elements at the right-hand side of the boundary event. This method is called by specialized orbit element constraints that are children of the boundary event
 			void compute_orbit_elements_after_event(const bool & generate_derivatives);
+
+			inline bool getIsEphemerisReferencedArrivalInterior() {return this->isEphemerisReferencedArrivalInterior; }
 
         protected:
             //!abstract prototype of calcbounds_event_left_side()
@@ -299,6 +308,7 @@ namespace EMTG
             std::vector<std::string> COENames;
             math::Matrix<doubleType> state_before_event;
             math::Matrix<doubleType> state_after_event;
+			math::Matrix<doubleType> state_after_event_central_body_unchanged; // needed for EphemerisReferencedArrivalInterior
             math::Matrix<doubleType> state_after_event_propagated;
             math::Matrix<doubleType> boundary_state;
             std::map<ReferenceFrame, math::Matrix<doubleType>> orbit_elements_after_event;
@@ -308,7 +318,9 @@ namespace EMTG
             std::vector< std::tuple<size_t, size_t, double> > Derivatives_of_StateAfterEvent;//Xindex, stateIndex, derivative value
             std::vector< std::tuple<size_t, size_t, double> > Derivatives_of_StateBeforeEvent_wrt_Time;//Xindex, stateIndex, derivative value
             std::vector< std::tuple<size_t, size_t, double> > Derivatives_of_StateAfterEvent_wrt_Time;//Xindex, stateIndex, derivative value
-            doubleType C3;
+			std::vector< std::tuple<size_t, size_t, double> > Derivatives_of_StateAfterEvent_central_body_unchanged;//Xindex, stateIndex, derivative value
+			std::vector< std::tuple<size_t, size_t, double> > Derivatives_of_StateAfterEvent_wrt_Time_central_body_unchanged;//Xindex, stateIndex, derivative value
+			doubleType C3;
 
             size_t dIndex_mass_wrt_encodedMass;
 
@@ -348,6 +360,8 @@ namespace EMTG
 
             //vector of specialized constraint objects
             boost::ptr_vector< SpecializedConstraints::SpecializedBoundaryConstraintBase > mySpecializedConstraints;
+
+			bool isEphemerisReferencedArrivalInterior;
         };
     }//close namespace events
 }//close namespace EMTG

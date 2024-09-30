@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -137,9 +137,18 @@ namespace EMTG
             //initialize the writey thing
             this->writey_thing::initialize(myOptions, Universe);
 
-            this->EphemerisOutputResolution = 2.0 * math::PI * sqrt(this->myUniverse->central_body.radius * this->myUniverse->central_body.radius * this->myUniverse->central_body.radius / this->myUniverse->central_body.mu) / 100.0;
-
-            //continuity constraint setup
+			// if we are NOT overriding the resolution, set it to the default value
+			// otherwise, set it to the journey's value
+			if (this->myJourneyOptions->override_ephemeris_output_resolution)
+			{
+				this->EphemerisOutputResolution = this->myJourneyOptions->EphemerisOutputResolution;
+			}
+			else
+			{
+				this->EphemerisOutputResolution = 2.0 * math::PI * sqrt(this->myUniverse->central_body.radius * this->myUniverse->central_body.radius * this->myUniverse->central_body.radius / this->myUniverse->central_body.mu) / 100.0;
+			}
+			
+			//continuity constraint setup
             this->numStatesToPropagate = numStatesToPropagate;
             this->numMatchConstraints = numMatchConstraints;
             this->continuity_constraint_scale_factors.resize(this->numMatchConstraints, 1);

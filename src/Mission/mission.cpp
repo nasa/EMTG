@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -1030,6 +1030,23 @@ namespace EMTG
         //skip 3 lines
         for (int k = 0; k < 3; ++k)
             outputfile << std::endl;
+
+		// number of solutions attempted and which one was best and how long it took to get there
+		outputfile << "Number of solution attempts: " << this->numberOfSolutionAttempts << std::endl;
+		outputfile << "Solution attempt that produced a feasible solution with the best objective value (0 if no feasible solutions): " << this->indexOfBestSolutionAttempt << std::endl;
+		outputfile << "Time to completion of solution attempt that produced a feasible solution with the best objective value (seconds) (-1 if no feasible solutions): " << this->timeToCompletionOfBestSolutionAttempt << std::endl;
+
+		//skip 3 lines
+		for (int k = 0; k < 3; ++k)
+			outputfile << std::endl;
+
+		// output from first NLP solve
+		outputfile << "Was first NLP solve feasible: " << int(this->firstOptimizationFeasible) << std::endl;
+		outputfile << "Objective function value from first NLP solve: " << this->firstOptimizationCost << std::endl;
+
+		//skip 3 lines
+		for (int k = 0; k < 3; ++k)
+			outputfile << std::endl;
     
 
         //finally, output the decision vector
@@ -1230,12 +1247,12 @@ namespace EMTG
                 acceleration_model_file << ", cb_point_mass_gravity_x";
                 acceleration_model_file << ", cb_point_mass_gravity_y";
                 acceleration_model_file << ", cb_point_mass_gravity_z";
-                if (this->options.perturb_J2)
+                if (this->options.Journeys[journeyIndex].perturb_central_body_gravity_harmonics)
                 {
-                    acceleration_model_file << ", cb_J2_gravity_norm";
-                    acceleration_model_file << ", cb_J2_gravity_x";
-                    acceleration_model_file << ", cb_J2_gravity_y";
-                    acceleration_model_file << ", cb_J2_gravity_z";
+                    acceleration_model_file << ", cb_harmonics_gravity_norm";
+                    acceleration_model_file << ", cb_harmonics_gravity_x";
+                    acceleration_model_file << ", cb_harmonics_gravity_y";
+                    acceleration_model_file << ", cb_harmonics_gravity_z";
                 }
                 if (this->options.perturb_thirdbody)
                 {
@@ -1326,7 +1343,7 @@ namespace EMTG
 
 		pyfile << "import clean_spiceicles " << std::endl;
 
-		pyfile << "clean_spiceicles.do_the_stuff(['" << boost::replace_all_copy(this->options.working_directory, "\\", "/") << "','" << options.mission_name << ".ephemeris','" << boost::replace_all_copy(this->options.universe_folder, "\\", "/") << "/ephemeris_files/']) " << std::endl;
+		pyfile << "clean_spiceicles.do_the_stuff(['" << boost::replace_all_copy(this->options.working_directory, "\\", "/") << "','" << options.mission_name << ".ephemeris','" << boost::replace_all_copy(this->options.universe_folder, "\\", "/") << "/ephemeris_files/', " << this->options.forward_integrated_ephemeris_minimum_timestep_kept << "])"  << std::endl;
 		
 		
         pyfile << "if os.path.exists('" << options.mission_name << ".bsp') :" << std::endl;

@@ -4,7 +4,8 @@ set(CORE_HEADERS ${CORE_HEADERS} ${CMAKE_CURRENT_SOURCE_DIR}/chinchilla.h
 								 ${CMAKE_CURRENT_SOURCE_DIR}/EMTG_enums.h
 								 ${CMAKE_CURRENT_SOURCE_DIR}/journeyoptions.h
 								 ${CMAKE_CURRENT_SOURCE_DIR}/missionoptions.h
-								 ${CMAKE_CURRENT_SOURCE_DIR}/problem.h)
+								 ${CMAKE_CURRENT_SOURCE_DIR}/problem.h
+                                 ${CMAKE_CURRENT_SOURCE_DIR}/EMTG_defs.h)
 						
 set(CORE_SOURCE ${CORE_SOURCE} ${CMAKE_CURRENT_SOURCE_DIR}/journeyoptions.cpp
 							   ${CMAKE_CURRENT_SOURCE_DIR}/missionoptions.cpp
@@ -18,7 +19,8 @@ if (RUN_FBLT_TESTBED)
                                   ${CMAKE_CURRENT_SOURCE_DIR}/doubleType.h
                                   ${CMAKE_CURRENT_SOURCE_DIR}/EMTG_enums.h
 								  ${CMAKE_CURRENT_SOURCE_DIR}/journeyoptions.h
-								  ${CMAKE_CURRENT_SOURCE_DIR}/missionoptions.h)
+								  ${CMAKE_CURRENT_SOURCE_DIR}/missionoptions.h
+                                  ${CMAKE_CURRENT_SOURCE_DIR}/EMTG_defs.h)
                                   
     set(FBLT_TESTBED_CORE_SOURCE ${FBLT_TESTBED_CORE_SOURCE} 
                                  ${CMAKE_CURRENT_SOURCE_DIR}/journeyoptions.cpp
@@ -35,7 +37,8 @@ if (RUN_ACCELERATION_MODEL_TESTBED)
                                                 ${CMAKE_CURRENT_SOURCE_DIR}/doubleType.h
                                                 ${CMAKE_CURRENT_SOURCE_DIR}/EMTG_enums.h
 								                ${CMAKE_CURRENT_SOURCE_DIR}/journeyoptions.h
-								                ${CMAKE_CURRENT_SOURCE_DIR}/missionoptions.h)
+								                ${CMAKE_CURRENT_SOURCE_DIR}/missionoptions.h
+                                                ${CMAKE_CURRENT_SOURCE_DIR}/EMTG_defs.h)
                                   
     set(ACCELERATION_MODEL_TESTBED_CORE_SOURCE ${ACCELERATION_MODEL_TESTBED_CORE_SOURCE} 
                                                ${CMAKE_CURRENT_SOURCE_DIR}/journeyoptions.cpp

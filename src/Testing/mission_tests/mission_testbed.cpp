@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -23,6 +23,9 @@
 #include <sstream>
 #include <string>
 #include <random>
+
+#include "boost/filesystem.hpp"
+#include "boost/filesystem/fstream.hpp"
 
 #include "mission.h"
 
@@ -65,6 +68,28 @@ void missionTestbed(EMTG::missionoptions& options,
 
     //********************************************************************************print stuff
     //print XF
+
+    //create the working directory
+
+    std::string root_directory = boost::filesystem::current_path().string() + "/tests";
+
+
+    try
+    {
+        boost::filesystem::path p(root_directory);
+        boost::filesystem::create_directories(p);
+    }
+    catch (std::exception& e)
+    {
+        //std::cerr << "Error " << e.what() << ": Directory creation failed" << std::endl;
+#ifdef _WIN32
+        std::cout << "Perhaps the output directory path is too long?" << std::endl;
+#endif
+        throw;
+    }
+
+
+
     myMission.output_problem_bounds_and_descriptions("tests/Mission_XFout.csv");
 
     //print (sparse) nonlinear Jacobian

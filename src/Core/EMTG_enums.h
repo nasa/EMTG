@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -35,8 +35,8 @@ namespace EMTG
     enum PhaseType {MGALTS, FBLTS, MGALT, FBLT, PSBI, PSFB, MGAnDSMs, CoastPhase, SundmanCoastPhase, VARIABLE_PHASE_TYPE, ProbeEntryPhase, ControlLawThrustPhase};
     const std::vector<std::string> PhaseTypeStrings({ "MGALTS", "FBLTS", "MGALT", "FBLT", "PSBI", "PSFB", "MGAnDSMs", "CoastPhase", "SundmanCoastPhase", "VARIABLE_PHASE_TYPE", "ProbeEntryPhase", "ControlLawThrustPhase" });
 
-    enum StateRepresentation {Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane };
-    const std::vector<std::string> StateRepresentationStrings({ "Cartesian", "SphericalRADEC", "SphericalAZFPA", "COE", "MEE", "IncomingBplane", "OutgoingBplane" });
+    enum StateRepresentation {Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane, IncomingBplaneRpTA, OutgoingBplaneRpTA };
+    const std::vector<std::string> StateRepresentationStrings({ "Cartesian", "SphericalRADEC", "SphericalAZFPA", "COE", "MEE", "IncomingBplane", "OutgoingBplane", "IncomingBplaneRpTA", "OutgoingBplaneRpTA" });
 
     enum ConstraintStateRepresentation {CartesianConstraint, Native}; //"native" means "use the same state representation as the encoded states"
     const std::vector<std::string> ConstraintStateRepresentationStrings({ "CartesianConstraint", "NativeConstraint" });

@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -23,6 +23,8 @@
 #include "MEEStateRepresentation.h"
 #include "IncomingBplaneStateRepresentation.h"
 #include "OutgoingBplaneStateRepresentation.h"
+#include "IncomingBplaneRpTAStateRepresentation.h"
+#include "OutgoingBplaneRpTAStateRepresentation.h"
 
 //#include "IncomingAsymptoteStateRepresentation.h"
 #include "EMTG_enums.h"
@@ -62,6 +64,14 @@ namespace EMTG
             {
                 return new OutgoingBplaneStateRepresentation(mu);
             }
+			else if (state_representation == StateRepresentation::IncomingBplaneRpTA)
+			{
+				return new IncomingBplaneRpTAStateRepresentation(mu);
+			}
+			else if (state_representation == StateRepresentation::OutgoingBplaneRpTA)
+			{
+				return new OutgoingBplaneRpTAStateRepresentation(mu);
+			}
             else
             {
                 throw std::runtime_error("State representation '" + StateRepresentationStrings[state_representation] + "' has not been implemented.");

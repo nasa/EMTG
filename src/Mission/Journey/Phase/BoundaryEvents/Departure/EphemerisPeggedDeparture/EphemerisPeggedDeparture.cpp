@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -291,7 +291,16 @@ namespace EMTG
                 math::Matrix<doubleType> output_state(8, 1, 0.0);
 
                 ////Step 1: output the wait time - we do this by looking up the position of the body and printing it
-                double EphemerisOutputResolution = 2.0 * math::PI * sqrt(this->myUniverse->central_body.radius * this->myUniverse->central_body.radius * this->myUniverse->central_body.radius / this->myUniverse->central_body.mu);
+				double EphemerisOutputResolution;
+				if (this->myJourneyOptions->override_ephemeris_output_resolution)
+				{
+					EphemerisOutputResolution = this->myJourneyOptions->EphemerisOutputResolution;
+				}
+				else
+				{
+					EphemerisOutputResolution = 2.0 * math::PI * sqrt(this->myUniverse->central_body.radius * this->myUniverse->central_body.radius * this->myUniverse->central_body.radius / this->myUniverse->central_body.mu);
+				}
+                //double EphemerisOutputResolution = 2.0 * math::PI * sqrt(this->myUniverse->central_body.radius * this->myUniverse->central_body.radius * this->myUniverse->central_body.radius / this->myUniverse->central_body.mu);
 
                 double lookBackTime = this->EventWaitTime _GETVALUE - EphemerisOutputResolution;
                 while (lookBackTime > EphemerisOutputResolution)

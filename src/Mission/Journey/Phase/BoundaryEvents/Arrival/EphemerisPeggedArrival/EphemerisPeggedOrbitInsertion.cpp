@@ -3,7 +3,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -62,8 +62,7 @@ namespace EMTG
 
             this->calcbounds_virtual_propellant_constraints();
 
-            if (this->myOptions->objective_type == ObjectiveFunctionType::MINIMIZE_DELTAV)
-                this->calcbounds_deltav_contribution();
+            this->calcbounds_deltav_contribution();
 
             this->calcbounds_specialized_constraints();
         }//end calcbounds()
@@ -122,12 +121,29 @@ namespace EMTG
         
         void EphemerisPeggedOrbitInsertion::calcbounds_deltav_contribution()
         {
-            //add derivatives with respect to incoming v-infinity
+            // delta v magnitude constraint is always needed
+            Flowerbounds->push_back(this->myJourneyOptions->ephemeris_pegged_orbit_insertion_dv_bounds[0] - this->myJourneyOptions->ephemeris_pegged_orbit_insertion_dv_bounds[1]);
+            Fupperbounds->push_back(0.0);
+            Fdescriptions->push_back(prefix + "ephemeris pegged orbit insertion Delta v");
+
+            // Orbit insertion Delta v is a function of the incoming v infinity vector (only)
             for (size_t Vindex = 0; Vindex < 3; ++Vindex)
             {
-                this->create_sparsity_entry(0,
+                this->create_sparsity_entry(Fdescriptions->size() - 1,
                     std::get<0>(this->Derivatives_of_StateBeforeEvent[dIndex_VbeforeEvent_dVinfinity_in[Vindex]]),
-                    this->Gindices_dDeltav_dVinfinity);
+                    this->Gindices_orbit_insertion_deltav_constraint_wrt_Vinfinity_in);
+            }
+
+            // contribution to objective function only if minimizing delta v is the objective function
+            //add derivatives with respect to incoming v-infinity
+            if (this->myOptions->objective_type == ObjectiveFunctionType::MINIMIZE_DELTAV)
+            {
+                for (size_t Vindex = 0; Vindex < 3; ++Vindex)
+                {
+                    this->create_sparsity_entry(0,
+                        std::get<0>(this->Derivatives_of_StateBeforeEvent[dIndex_VbeforeEvent_dVinfinity_in[Vindex]]),
+                        this->Gindices_dDeltav_dVinfinity);
+                }
             }
         }//end calcbounds_virtual_deltav_constraint()
 
@@ -314,19 +330,37 @@ namespace EMTG
             //add the event delta-v
             this->EventDeterministicDeltav = this->ArrivalDeltavMagnitude;
 
-            //event-specific
-            if (this->myOptions->objective_type == ObjectiveFunctionType::MINIMIZE_DELTAV
-                && needG)
+            // constraint on delta v magnitude
+            F[Findex++] = this->ArrivalDeltavMagnitude - this->myJourneyOptions->ephemeris_pegged_orbit_insertion_dv_bounds[1];
+
+            // derivatives
+            if (needG)
             {
                 size_t Xindex, Gindex;
+
+                // constraint on delta v magnitude
                 for (size_t Vindex = 0; Vindex < 3; ++Vindex)
                 {
                     //derivatives with respect to v-infinity
                     double ddvMag_dVinfinity = (this->Vinfinity_in(Vindex) / this->VinfinityInNorm * this->ddvArrival_dVinfinityIn) _GETVALUE;
 
-                    Gindex = this->Gindices_dDeltav_dVinfinity[Vindex];
+                    Gindex = this->Gindices_orbit_insertion_deltav_constraint_wrt_Vinfinity_in[Vindex];
                     Xindex = this->jGvar->operator[](Gindex);
                     G[Gindex] = this->X_scale_factors->operator[](Xindex) * ddvMag_dVinfinity;
+                }
+
+                // delta v contribution to objective function
+                if (this->myOptions->objective_type == ObjectiveFunctionType::MINIMIZE_DELTAV)
+                {
+                    for (size_t Vindex = 0; Vindex < 3; ++Vindex)
+                    {
+                        //derivatives with respect to v-infinity
+                        double ddvMag_dVinfinity = (this->Vinfinity_in(Vindex) / this->VinfinityInNorm * this->ddvArrival_dVinfinityIn) _GETVALUE;
+
+                        Gindex = this->Gindices_dDeltav_dVinfinity[Vindex];
+                        Xindex = this->jGvar->operator[](Gindex);
+                        G[Gindex] = this->X_scale_factors->operator[](Xindex) * ddvMag_dVinfinity;
+                    }
                 }
             }
         }//end process_virtual_deltav_constraint()

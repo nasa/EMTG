@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -148,7 +148,12 @@ namespace EMTG
                 myElectricPropulsionSystemOptions.setPmin(options.engine_input_power_bounds[0]);
                 myElectricPropulsionSystemOptions.setPmax(options.engine_input_power_bounds[1]);
 				myElectricPropulsionSystemOptions.setSharpness(options.throttle_sharpness);
-                
+
+                //the following settings are set differently depending on which thruster model is used
+                std::vector<double> temp_thrust_coefficients(7, 0.0);
+                std::vector<double> temp_mass_flow_coefficients(7, 0.0);
+                double temp_minP, temp_maxP;
+
                 switch (options.engine_type)
                 {
                     case 0:
@@ -192,10 +197,6 @@ namespace EMTG
 
 #ifdef HAS_BUILT_IN_THRUSTERS
                         //recover coefficients from hard-coded models, but remember that the coefficients were in the reverse order back then
-                        std::vector<double> temp_thrust_coefficients(7, 0.0);
-                        std::vector<double> temp_mass_flow_coefficients(7, 0.0);
-                        double temp_minP, temp_maxP;
-
                         myElectricPropulsionSystemOptions.setThrusterMode(EMTG::SpacecraftThrusterMode::Poly1D);
 
                         EMTG::Astrodynamics::get_thruster_coefficients_from_library(options,

@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -178,28 +178,31 @@ namespace EMTG
         {
             //note that this delta-v happens AFTER any staging that might occur at the end of the arrival
 
-            //Step 1: perform the delta-v
-            this->mySpacecraft->computeChemicalPropulsionPerformance(this->myJourneyOptions->journey_end_deltav,
-                this->state_after_event(6),
-                false,
-                this->myJourneyOptions->journey_end_propulsion_system);
+			if (this->isLastEventInJourney)
+			{
+				//Step 1: perform the delta-v
+				this->mySpacecraft->computeChemicalPropulsionPerformance(this->myJourneyOptions->journey_end_deltav,
+					this->state_after_event(6),
+					true,
+					this->myJourneyOptions->journey_end_propulsion_system);
 
-            if (this->myJourneyOptions->journey_end_propulsion_system == PropulsionSystemChoice::Monoprop)
-            {
-                this->journey_end_propellant_used = this->mySpacecraft->getChemFuelConsumedThisManeuver();
-                this->state_after_event(6) -= this->journey_end_propellant_used;
+				if (this->myJourneyOptions->journey_end_propulsion_system == PropulsionSystemChoice::Monoprop)
+				{
+					this->journey_end_propellant_used = this->mySpacecraft->getChemFuelConsumedThisManeuver();
+					this->state_after_event(6) -= this->journey_end_propellant_used;
 
-                //I really should make this come out of the monoprop tank, too
-                //will need to add to virtual chemical tank?
+					//I really should make this come out of the monoprop tank, too
+					//will need to add to virtual chemical tank?
 
-                this->ETM(6, 6) *= (this->state_after_event(6) / (this->state_after_event(6) + this->journey_end_propellant_used))_GETVALUE;
-            }
-            else// if (this->myJourneyOptions->journey_end_propulsion_system == PropulsionSystemChoice::Biprop)
-            {
-                throw std::invalid_argument("At the current time, journey_end_deltav has to be done with a monoprop system. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
-            }
+					this->ETM(6, 6) *= (this->state_after_event(6) / (this->state_after_event(6) + this->journey_end_propellant_used))_GETVALUE;
+				}
+				else// if (this->myJourneyOptions->journey_end_propulsion_system == PropulsionSystemChoice::Biprop)
+				{
+					throw std::invalid_argument("At the current time, journey_end_deltav has to be done with a monoprop system. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
+				}
 
-            //Step 2: derivatives - just need to modify mass w.r.t. mass
+				//Step 2: derivatives - just need to modify mass w.r.t. mass
+			}
         }//end process_post_arrival_deltav()
         
         //******************************************output methods

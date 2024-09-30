@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -440,9 +440,6 @@ namespace EMTG
             //eq 15:
             doubleType VINF = sqrt(v * v - 2.0 * mu / r);
 
-            //eq 16:
-            doubleType rp = mu * (ECC - 1.0) / VINF * VINF;
-
             //eq 17
             doubleType RHA = atan2(Shat(1), Shat(0));
 
@@ -632,11 +629,6 @@ namespace EMTG
                 //derivatives of BdotR
                 //eq 31
                 this->dBdotR_dx_cartesian = Rhat.transpose() * dBvec_dx + Bvec.transpose() * dRhat_dx;
-
-                //derivatives of rp
-                //eq 28
-                math::Matrix<doubleType> drp_dx = (Ehat.transpose() * dEvec_dx / VINF / VINF - dVINF_dx * 2.0 * (ECC - 1.0) / VINF / VINF / VINF) / mu;
-
 
                 //derivatives of BTHETA
                 //eq 29

@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -48,6 +48,30 @@ namespace EMTG
                 this->u_y = this->acceleration_model->control(1);
                 this->u_z = this->acceleration_model->control(2);
                 this->u_command = this->acceleration_model->control.get_n() > 3 ? this->acceleration_model->control(3) : 0.0; //TODO this could be faster
+            }
+            else if (this->control_law == ThrustControlLaw::Velocity)
+            {
+                this->u_x = this->v_cb2sc(0) / this->v_cb2sc_norm;
+                this->u_y = this->v_cb2sc(1) / this->v_cb2sc_norm;
+                this->u_z = this->v_cb2sc(2) / this->v_cb2sc_norm;
+                this->u_command = 0.0;
+
+                this->acceleration_model->control(0) = this->u_x;
+                this->acceleration_model->control(1) = this->u_y;
+                this->acceleration_model->control(2) = this->u_z;
+                this->acceleration_model->control_norm = sqrt(this->u_x * this->u_x + this->u_y * this->u_y + this->u_z * this->u_z);
+            }
+            else if (this->control_law == ThrustControlLaw::AntiVelocity)
+            {
+                this->u_x = -this->v_cb2sc(0) / this->v_cb2sc_norm;
+                this->u_y = -this->v_cb2sc(1) / this->v_cb2sc_norm;
+                this->u_z = -this->v_cb2sc(2) / this->v_cb2sc_norm;
+                this->u_command = 0.0;
+
+                this->acceleration_model->control(0) = this->u_x;
+                this->acceleration_model->control(1) = this->u_y;
+                this->acceleration_model->control(2) = this->u_z;
+                this->acceleration_model->control_norm = sqrt(this->u_x * this->u_x + this->u_y * this->u_y + this->u_z * this->u_z);
             }
             else
             {
@@ -220,6 +244,86 @@ namespace EMTG
                 this->acceleration_model->fx(9, 10) += (du_normdux * D_mdot) _GETVALUE;
                 this->acceleration_model->fx(9, 11) += (du_normduy * D_mdot) _GETVALUE;
                 this->acceleration_model->fx(9, 12) += (du_normduz * D_mdot) _GETVALUE;
+            }
+            else if (this->control_law == ThrustControlLaw::Velocity)
+            {
+                doubleType v_norm3 = this->v_cb2sc_norm * this->v_cb2sc_norm * this->v_cb2sc_norm;
+                double dacceleration_du = (this->max_thrust / this->acceleration_model->spacecraft_mass) _GETVALUE;
+                double dux_dvx = ((this->v_cb2sc(1) * this->v_cb2sc(1) + this->v_cb2sc(2) * this->v_cb2sc(2)) / v_norm3) _GETVALUE;
+                double dux_dvy = (-(this->v_cb2sc(0) * this->v_cb2sc(1)) / v_norm3) _GETVALUE;
+                double dux_dvz = (-(this->v_cb2sc(0) * this->v_cb2sc(2)) / v_norm3) _GETVALUE;
+                double duy_dvx = (-(this->v_cb2sc(1) * this->v_cb2sc(0)) / v_norm3) _GETVALUE;
+                double duy_dvy = ((this->v_cb2sc(0) * this->v_cb2sc(0) + this->v_cb2sc(2) * this->v_cb2sc(2)) / v_norm3) _GETVALUE;
+                double duy_dvz = (-(this->v_cb2sc(1) * this->v_cb2sc(2)) / v_norm3) _GETVALUE;
+                double duz_dvx = (-(this->v_cb2sc(2) * this->v_cb2sc(0)) / v_norm3) _GETVALUE;
+                double duz_dvy = (-(this->v_cb2sc(2) * this->v_cb2sc(1)) / v_norm3) _GETVALUE;
+                double duz_dvz = ((this->v_cb2sc(0) * this->v_cb2sc(0) + this->v_cb2sc(1) * this->v_cb2sc(1)) / v_norm3) _GETVALUE;
+                this->acceleration_model->fx(3, 3) = (dacceleration_du * dux_dvx);
+                this->acceleration_model->fx(3, 4) = (dacceleration_du * dux_dvy);
+                this->acceleration_model->fx(3, 5) = (dacceleration_du * dux_dvz);
+                this->acceleration_model->fx(4, 3) = (dacceleration_du * duy_dvx);
+                this->acceleration_model->fx(4, 4) = (dacceleration_du * duy_dvy);
+                this->acceleration_model->fx(4, 5) = (dacceleration_du * duy_dvz);
+                this->acceleration_model->fx(5, 3) = (dacceleration_du * duz_dvx);
+                this->acceleration_model->fx(5, 4) = (dacceleration_du * duz_dvy);
+                this->acceleration_model->fx(5, 5) = (dacceleration_du * duz_dvz);
+
+                // A34 dmdotdv
+                double dmdot_du_norm = this->max_mass_flow_rate _GETVALUE;
+                //double dunorm_dvx = du_normdux * dux_dvx + du_normduy * duy_dvx + du_normduz * duz_dvx;
+                //double dunorm_dvy = du_normdux * dux_dvy + du_normduy * duy_dvy + du_normduz * duz_dvy;
+                //double dunorm_dvz = du_normdux * dux_dvz + du_normduy * duy_dvz + du_normduz * duz_dvz;
+                double dunorm_dvx = 0.0;
+                double dunorm_dvy = 0.0;
+                double dunorm_dvz = 0.0;
+                this->acceleration_model->fx(6, 3) += (-dmdot_du_norm * dunorm_dvx);
+                this->acceleration_model->fx(6, 4) += (-dmdot_du_norm * dunorm_dvy);
+                this->acceleration_model->fx(6, 5) += (-dmdot_du_norm * dunorm_dvz);
+
+                // dVirtualElectricPropellantdv
+                this->acceleration_model->fx(9, 3) += (dmdot_du_norm * dunorm_dvx);
+                this->acceleration_model->fx(9, 4) += (dmdot_du_norm * dunorm_dvy);
+                this->acceleration_model->fx(9, 5) += (dmdot_du_norm * dunorm_dvz);
+            }
+            else if (this->control_law == ThrustControlLaw::AntiVelocity)
+            {
+                doubleType v_norm3 = this->v_cb2sc_norm * this->v_cb2sc_norm * this->v_cb2sc_norm;
+                double dacceleration_du = (this->max_thrust / this->acceleration_model->spacecraft_mass) _GETVALUE;
+                double dux_dvx = ((this->v_cb2sc(1) * this->v_cb2sc(1) + this->v_cb2sc(2) * this->v_cb2sc(2)) / v_norm3) _GETVALUE;
+                double dux_dvy = (-(this->v_cb2sc(0) * this->v_cb2sc(1)) / v_norm3) _GETVALUE;
+                double dux_dvz = (-(this->v_cb2sc(0) * this->v_cb2sc(2)) / v_norm3) _GETVALUE;
+                double duy_dvx = (-(this->v_cb2sc(1) * this->v_cb2sc(0)) / v_norm3) _GETVALUE;
+                double duy_dvy = ((this->v_cb2sc(0) * this->v_cb2sc(0) + this->v_cb2sc(2) * this->v_cb2sc(2)) / v_norm3) _GETVALUE;
+                double duy_dvz = (-(this->v_cb2sc(1) * this->v_cb2sc(2)) / v_norm3) _GETVALUE;
+                double duz_dvx = (-(this->v_cb2sc(2) * this->v_cb2sc(0)) / v_norm3) _GETVALUE;
+                double duz_dvy = (-(this->v_cb2sc(2) * this->v_cb2sc(1)) / v_norm3) _GETVALUE;
+                double duz_dvz = ((this->v_cb2sc(0) * this->v_cb2sc(0) + this->v_cb2sc(1) * this->v_cb2sc(1)) / v_norm3) _GETVALUE;
+                this->acceleration_model->fx(3, 3) = -(dacceleration_du * dux_dvx);
+                this->acceleration_model->fx(3, 4) = -(dacceleration_du * duy_dvy);
+                this->acceleration_model->fx(3, 5) = -(dacceleration_du * duz_dvz);
+                this->acceleration_model->fx(4, 3) = -(dacceleration_du * duy_dvx);
+                this->acceleration_model->fx(4, 4) = -(dacceleration_du * duy_dvy);
+                this->acceleration_model->fx(4, 5) = -(dacceleration_du * duy_dvz);
+                this->acceleration_model->fx(5, 3) = -(dacceleration_du * duz_dvx);
+                this->acceleration_model->fx(5, 4) = -(dacceleration_du * duz_dvy);
+                this->acceleration_model->fx(5, 5) = -(dacceleration_du * duz_dvz);
+
+                // A34 dmdotdu
+                double dmdot_du_norm = this->max_mass_flow_rate _GETVALUE;
+                //double dunorm_dvx = du_normdux * dux_dvx + du_normduy * duy_dvx + du_normduz * duz_dvx;
+                //double dunorm_dvy = du_normdux * dux_dvy + du_normduy * duy_dvy + du_normduz * duz_dvy;
+                //double dunorm_dvz = du_normdux * dux_dvz + du_normduy * duy_dvz + du_normduz * duz_dvz;
+                double dunorm_dvx = 0.0;
+                double dunorm_dvy = 0.0;
+                double dunorm_dvz = 0.0;
+                this->acceleration_model->fx(6, 3) += (-dmdot_du_norm * dunorm_dvx);
+                this->acceleration_model->fx(6, 4) += (-dmdot_du_norm * dunorm_dvy);
+                this->acceleration_model->fx(6, 5) += (-dmdot_du_norm * dunorm_dvz);
+
+                // dVirtualElectricPropellantdu
+                this->acceleration_model->fx(9, 3) += (dmdot_du_norm * dunorm_dvx);
+                this->acceleration_model->fx(9, 4) += (dmdot_du_norm * dunorm_dvy);
+                this->acceleration_model->fx(9, 5) += (dmdot_du_norm * dunorm_dvz);
             }
 
         }// end computeAccelerationTerm(bool)

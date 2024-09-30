@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -25,6 +25,7 @@
 #include <ctime>
 #include <algorithm>
 #include <math.h>
+#include <iomanip> // std::setprecision
 
 #include "problem.h"
 #include "monotonic_basin_hopping.h"
@@ -86,6 +87,8 @@ namespace EMTG { namespace Solvers {
         //clear the scores
         this->Jincumbent = EMTG::math::LARGE;
         this->JGlobalIncumbent = EMTG::math::LARGE;
+		this->mySNOPT->setJGlobalIncumbent(EMTG::math::LARGE);
+
         this->FeasibilityIncumbent = EMTG::math::LARGE;
 
         //reset the Jacobian printed flag
@@ -252,6 +255,10 @@ namespace EMTG { namespace Solvers {
             else if (this->X_after_hop[k] < Xmin)
                 this->X_after_hop[k] = Xmin;
         }
+
+		// set the unscaled X
+		for (size_t Xindex = 0; Xindex < this->myProblem->total_number_of_NLP_parameters; ++Xindex)
+			this->X_after_hop_unscaled[Xindex] = this->X_after_hop[Xindex] * this->myProblem->X_scale_factors[Xindex];
     }
 
     //function to perform a "time hop" operation
@@ -274,6 +281,9 @@ namespace EMTG { namespace Solvers {
                     this->X_after_hop[k] = Xmax;
                 else if (this->X_after_hop[k] < Xmin)
                     this->X_after_hop[k] = Xmin;
+
+				// set the unscaled state at this index
+				this->X_after_hop_unscaled[k] = this->X_after_hop[k] * this->myProblem->X_scale_factors[k];
             }
         }
     }
@@ -330,7 +340,6 @@ namespace EMTG { namespace Solvers {
 						this->myProblem->G,
 						0);
 				}
-
                 this->mySNOPT->run_NLP(false);
 
                 this->X_after_slide_unscaled = this->mySNOPT->getX_unscaled();
@@ -352,8 +361,17 @@ namespace EMTG { namespace Solvers {
 
                 std::cout << "SNOPT has crashed on mission " << myProblem->options.description << ". Creating dumpfile." << std::endl;
                 std::stringstream dumpstream;
-                dumpstream << myProblem->options.working_directory << "//" << myProblem->options.mission_name << "_" << myProblem->options.description << ".SNOPTcrash";
-                std::ofstream dumpfile(dumpstream.str().c_str(), std::ios::out | std::ios::trunc);
+				if (myProblem->options.short_output_file_names)
+				{
+					dumpstream << myProblem->options.working_directory << "//" << myProblem->options.mission_name << ".SNOPTcrash";
+
+				}
+				else
+				{
+					dumpstream << myProblem->options.working_directory << "//" << myProblem->options.mission_name << "_" << myProblem->options.description << ".SNOPTcrash";
+				}
+
+				std::ofstream dumpfile(dumpstream.str().c_str(), std::ios::out | std::ios::trunc);
                 dumpfile << "SNOPT crashed, caught by MBH try-catch block, on mission " << myProblem->options.mission_name << "_" << myProblem->options.description << std::endl;
                 dumpfile << "After " << this->number_of_solutions << std::endl;
                 dumpfile.precision(20);
@@ -439,7 +457,11 @@ namespace EMTG { namespace Solvers {
         this->number_of_solutions = 0;
         this->number_of_resets = 0;
         this->number_of_attempts = 1;
-        bool continue_flag = true;
+		this->myProblem->numberOfSolutionAttempts = 0; // NH: keeping this separately from number_of_attempts, which starts at 1 instead of 0 for some reason
+		this->myProblem->timeToCompletionOfBestSolutionAttempt = -1.0; // start at -1; gets updated if we find a solution
+		bool continue_flag = true;
+		this->myProblem->firstOptimizationFeasible = false; // assume failure to start, then override if we are proven wrong
+		this->myProblem->firstOptimizationCost = EMTG::math::LARGE; // default value, let it be overwritten later
 
         //print the archive header
         std::string archive_file;
@@ -452,10 +474,12 @@ namespace EMTG { namespace Solvers {
             print_archive_header(archive_file);
 
         this->MBH_start_time = time(NULL);
+		clock_t MBHStartTimePrecise = clock();
 
         do
         {
             ++this->number_of_attempts;
+			++this->myProblem->numberOfSolutionAttempts;
             if (new_point)
             {
                 //Step 1: generate a random new point
@@ -484,6 +508,83 @@ namespace EMTG { namespace Solvers {
                     std::cout << error.what() << std::endl;
                 }
 			}
+
+			if (this->myProblem->options.checkFeasibilityTolInMBHToSkipNLP)
+			{
+				// need to do a feasibility check
+				double feasibility, normalized_feasibility, distance_from_equality_filament, decision_variable_infeasibility;
+				size_t worst_decision_variable;
+
+				this->myProblem->check_feasibility(this->X_after_hop_unscaled,
+					this->myProblem->F,
+					worst_decision_variable,
+					worst_constraint,
+					feasibility,
+					normalized_feasibility,
+					distance_from_equality_filament,
+					decision_variable_infeasibility);
+
+				// if feasibility is too bad, don't even try SNOPT.
+				// just cut ourselves off here and go do a hop
+                if (normalized_feasibility > this->myProblem->options.feasibilityTolInMBHToSkipNLP)
+                {
+                    if (!myProblem->options.quiet_basinhopping)
+                    {
+                        std::cout << "MBH: Skipping NLP solve because feasibility is greater than specified initial tolerance. (" << normalized_feasibility << " > " << this->myProblem->options.feasibilityTolInMBHToSkipNLP << ")" << std::endl;
+                    }
+                    ++this->number_of_failures_since_last_improvement; // it's a failure
+                    seeded_step = false; //if seeding MBH, only the first step runs from the seed. After that hopping occurs.
+                    
+                    if (this->feasible_point_finder_active && best_feasibility >= this->myProblem->options.snopt_feasibility_tolerance)
+                    {
+                        //if we have not yet found our first feasible point and the ACE feasible point finder is enabled
+                        //then we should see if this point is "more feasible" than best one we have so far
+                        // This helps prevent MBH from going from something that is slightly more infeasible than this->myProblem->options.feasibilityTolInMBHToSkipNLP
+                        // to something that is crazy infeasible from which it will never find anything good.
+                        if (fmax(normalized_feasibility, decision_variable_infeasibility) < best_feasibility)
+                        {
+                            if (!myProblem->options.quiet_basinhopping)
+                            {
+                                std::cout << "Acquired slightly less infeasible point with constraint feasibility " << normalized_feasibility << std::endl;
+                                std::cout << "and decision variable feasibility " << decision_variable_infeasibility << std::endl;
+
+                            }
+
+                            this->Jincumbent = this->myProblem->F[0];
+                            this->X_incumbent = this->X_after_hop;
+                            myProblem->Xopt = this->X_after_hop_unscaled; //we store the unscaled Xcurrent
+                            best_feasibility = fmax(normalized_feasibility, decision_variable_infeasibility);
+                            this->X_most_feasible = this->X_after_hop_unscaled;
+                            new_point = false;
+
+                            if (this->myProblem->options.MBH_write_every_improvement)
+                            {
+                                this->myProblem->what_the_heck_am_I_called(SolutionOutputType::HOP, this->number_of_attempts);
+                                this->myProblem->output(this->myProblem->options.outputfile);
+                            }
+                        }
+                        ++this->number_of_failures_since_last_improvement;
+                    }
+                    else
+                    {
+                        ++this->number_of_failures_since_last_improvement;
+
+                        if (fmax(normalized_feasibility, decision_variable_infeasibility) < this->FeasibilityIncumbent)
+                        {
+                            this->FeasibilityIncumbent = fmax(normalized_feasibility, decision_variable_infeasibility);
+                            this->X_most_feasible = this->X_after_hop_unscaled;
+                        }
+                    }
+
+                    // get a completely random point, i.e., not an MBH perturbation, if we have tried too many points near the current feasible point we are hopping from
+                    if (this->number_of_failures_since_last_improvement >= myProblem->options.MBH_max_not_improve_with_NLP_skip)
+                    {
+                        new_point = true;
+                    }
+                    continue;
+                }
+
+            }
             
             //if seeding MBH, only the first step runs from the seed. After that hopping occurs.
             seeded_step = false;
@@ -543,8 +644,20 @@ namespace EMTG { namespace Solvers {
                     isFeasible = true;
             }
 
+			// save the first cost value regardless of feasibility
+			if (this->number_of_attempts == 2)
+			{
+				this->myProblem->firstOptimizationCost = ObjectiveFunctionValue;
+			}
+
             if (isFeasible)
             {
+				// if this was the first NLP solve, save the fact that it found a feasible point
+				if (this->number_of_attempts == 2)
+				{
+					this->myProblem->firstOptimizationFeasible = true;
+				}
+
                 //Step 3.1: if the trial point is feasible, add it to the archive. Also disable the feasible point finder
                 this->feasible_point_finder_active = false;
 
@@ -618,9 +731,15 @@ namespace EMTG { namespace Solvers {
                 if (ObjectiveFunctionValue < this->JGlobalIncumbent)
                 {
                     this->JGlobalIncumbent = ObjectiveFunctionValue;
+					this->mySNOPT->setJGlobalIncumbent(ObjectiveFunctionValue);
                     this->X_global_incumbent = this->X_after_slide;
                     myProblem->Xopt = this->X_after_slide_unscaled;
                     myProblem->best_cost = this->JGlobalIncumbent;
+					this->myProblem->indexOfBestSolutionAttempt = this->myProblem->numberOfSolutionAttempts;
+
+					// how long from the start of the MBH run did it take us to get here?
+					clock_t now = clock();
+					this->myProblem->timeToCompletionOfBestSolutionAttempt = double(now - MBHStartTimePrecise) / double(CLOCKS_PER_SEC);
                     
 
                     if (!myProblem->options.quiet_basinhopping)

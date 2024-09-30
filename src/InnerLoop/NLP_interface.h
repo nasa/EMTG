@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -59,6 +59,9 @@ namespace EMTG
             inline doubleType getfeasibility_metric() const { return this->feasibility_metric; }
             inline doubleType getfeasibility_metric_NLP_incumbent() const { return this->feasibility_metric_NLP_incumbent; }
 
+			inline void setJGlobalIncumbent(const doubleType J) { this->JGlobalIncumbent = J; }
+			inline doubleType getJGlobalIncumbent() { return this->JGlobalIncumbent; }
+
 
             //run NLP
             virtual void run_NLP(const bool& X0_is_scaled = true) = 0;
@@ -106,6 +109,7 @@ namespace EMTG
             problem* myProblem;
             NLPoptions myOptions;
             time_t NLP_start_time;
+			time_t mostRecentNLPWriteTime;
             size_t movie_frame_count = 0;
 
             std::vector<doubleType> X0_scaled;
@@ -146,6 +150,9 @@ namespace EMTG
             std::vector<double> G_NLP_incumbent;
 			
 			bool first_feasibility;
+			bool newBestIncumbent;
+
+			doubleType JGlobalIncumbent;
         };//end class NLP_interface
 }//end namespace Solvers
 }//end namespace EMTG

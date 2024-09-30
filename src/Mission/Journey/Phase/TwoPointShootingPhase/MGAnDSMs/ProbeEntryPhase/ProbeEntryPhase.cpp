@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -62,6 +62,17 @@ namespace EMTG
 
             //derivative truth table override
             {
+                // first copy the phase level (MGAnDSMs) TruthTable
+                this->TruthTable_Forward_MatchConstraints_Derivative_wrt_EncodedStates_first_subphase = this->TruthTable_Forward_MatchConstraints_Derivative_wrt_EncodedStates;
+
+                // the probe mass is a user-defined option, and does not affect the forward match-point
+                // partials for the FIRST SUB-PHASE ONLY (the second subphase behaves like normal CoastPhase essentially)
+                for (size_t constraintIndex = 0; constraintIndex < 7; ++constraintIndex)
+                {
+                    this->TruthTable_Forward_MatchConstraints_Derivative_wrt_EncodedStates_first_subphase[constraintIndex][6] = false; //mass variables
+                }
+
+                /*
                 //Probe separation impulse is dependent on spacecraft mass. Therefore match point constraints are dependent on spacecraft mass.
                 for (size_t stateIndex = 0; stateIndex < 6; ++stateIndex)
                 {
@@ -72,11 +83,13 @@ namespace EMTG
                 this->TruthTable_Backward_MatchConstraints_Derivative_wrt_EncodedStates[6][7] = true; //epoch
 
                 //mass variables do not affect other constraints
-                for (size_t constraintIndex = 0; constraintIndex < 6; ++constraintIndex)
+                for (size_t constraintIndex = 0; constraintIndex < 7; ++constraintIndex)
                 {
                     this->TruthTable_Forward_MatchConstraints_Derivative_wrt_EncodedStates[constraintIndex][6] = true; //mass variables
                     this->TruthTable_Backward_MatchConstraints_Derivative_wrt_EncodedStates[constraintIndex][6] = true; //mass variables
                 }
+                */
+
             }//end truth table
 
 
@@ -119,7 +132,7 @@ namespace EMTG
             this->probe_separation_to_AEI_MissionOptions.Journeys[this->journeyIndex].final_velocity = this->probe_separation_to_AEI_MissionOptions.Journeys[this->journeyIndex].probe_AEI_velocity;
 
             //initialize the boundary itself
-            this->probeEntryArrivalEvent = new BoundaryEvents::FreePointIntercept(name + "ProbeAEIFreePointIntercept",
+            this->probeEntryArrivalEvent = new BoundaryEvents::FreePointLTRendezvous(name + "ProbeAEIFreePointLTRendezvous",
                 this->journeyIndex,
                 this->phaseIndex,
                 stageIndex,
@@ -160,7 +173,7 @@ namespace EMTG
                 this->probe_AEI_to_end_MissionOptions.Journeys[this->journeyIndex].final_velocity = this->probe_AEI_to_end_MissionOptions.Journeys[this->journeyIndex].probe_end_velocity;
 
                 //initialize the boundary itself
-                this->probeEndEvent = new BoundaryEvents::FreePointIntercept(name + "ProbeEndOfMissionFreePointIntercept",
+                this->probeEndEvent = new BoundaryEvents::FreePointLTRendezvous(name + "ProbeEndOfMissionFreePointLTRendezvous",
                     this->journeyIndex,
                     this->phaseIndex,
                     stageIndex,
@@ -285,8 +298,8 @@ namespace EMTG
             else //integrated propagator
             {
                 //separation to AEI
-                this->probe_separation_to_AEI_ForwardSTM = math::Matrix<double>(14, math::identity);
-                this->probe_separation_to_AEI_BackwardSTM = math::Matrix<double>(14, math::identity);
+                this->probe_separation_to_AEI_ForwardSTM = math::Matrix<double>(10, math::identity);
+                this->probe_separation_to_AEI_BackwardSTM = math::Matrix<double>(10, math::identity);
                 this->probe_separation_to_AEI_Forward_dPropagatedStatedIndependentVariable.resize(this->numStatesToPropagate, 2, 0.0);
                 this->probe_separation_to_AEI_Backward_dPropagatedStatedIndependentVariable.resize(this->numStatesToPropagate, 2, 0.0);
 
@@ -296,7 +309,7 @@ namespace EMTG
                     this->myUniverse,
                     this->Xdescriptions,
                     this->mySpacecraft,
-                    11);
+                    10);
 
                 this->probe_separation_to_AEI_SpacecraftAccelerationModel->setDutyCycle(this->PhaseDutyCycle);
 
@@ -304,12 +317,12 @@ namespace EMTG
                 this->probe_separation_to_AEI_EOM.setSpacecraftAccelerationModel(this->probe_separation_to_AEI_SpacecraftAccelerationModel);
 
                 //integration scheme
-                this->probe_separation_to_AEI_IntegrationScheme = CreateIntegrationScheme(&this->probe_separation_to_AEI_EOM, 10, 11);
+                this->probe_separation_to_AEI_IntegrationScheme = CreateIntegrationScheme(&this->probe_separation_to_AEI_EOM, 9, 10);
 
                 this->probe_separation_to_AEI_ForwardHalfPhasePropagator = CreatePropagator(&this->probe_separation_to_AEI_MissionOptions,
                     this->myUniverse,
+                    9,
                     10,
-                    11,
                     this->probe_state_after_separation,
                     this->probe_first_subphase_match_point_state_minus,
                     this->probe_separation_to_AEI_ForwardSTM,
@@ -321,8 +334,8 @@ namespace EMTG
 
                 this->probe_separation_to_AEI_BackwardHalfPhasePropagator = CreatePropagator(&this->probe_separation_to_AEI_MissionOptions,
                     this->myUniverse,
+                    9,
                     10,
-                    11,
                     this->probe_state_at_AEI_arrival,
                     this->probe_first_subphase_match_point_state_plus,
                     this->probe_separation_to_AEI_BackwardSTM,
@@ -335,8 +348,8 @@ namespace EMTG
                 //AEI to mission end
                 if (this->myJourneyOptions->ModelProbeSecondPhase)
                 {
-                    this->probe_AEI_to_end_ForwardSTM = math::Matrix<double>(14, math::identity);
-                    this->probe_AEI_to_end_BackwardSTM = math::Matrix<double>(14, math::identity);
+                    this->probe_AEI_to_end_ForwardSTM = math::Matrix<double>(10, math::identity);
+                    this->probe_AEI_to_end_BackwardSTM = math::Matrix<double>(10, math::identity);
                     this->probe_AEI_to_end_Forward_dPropagatedStatedIndependentVariable.resize(this->numStatesToPropagate, 2, 0.0);
                     this->probe_AEI_to_end_Backward_dPropagatedStatedIndependentVariable.resize(this->numStatesToPropagate, 2, 0.0);
 
@@ -633,8 +646,20 @@ namespace EMTG
 
         void ProbeEntryPhase::calcbounds_separation()
         {
-            std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_probe_StateAtEnd = this->probeEndEvent->get_Derivatives_of_StateBeforeEvent();//Xindex, stateIndex, derivative value
-            std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_probe_StateAtEnd_wrt_Time = this->probeEndEvent->get_Derivatives_of_StateBeforeEvent_wrt_Time();//Xindex, stateIndex, derivative value
+            std::vector< std::tuple<size_t, size_t, double> > Derivatives_of_probe_StateAtEnd;
+            std::vector< std::tuple<size_t, size_t, double> > Derivatives_of_probe_StateAtEnd_wrt_Time;
+            
+            if (this->myJourneyOptions->ModelProbeSecondPhase)
+            {
+                Derivatives_of_probe_StateAtEnd = this->probeEndEvent->get_Derivatives_of_StateBeforeEvent();//Xindex, stateIndex, derivative value
+                Derivatives_of_probe_StateAtEnd_wrt_Time = this->probeEndEvent->get_Derivatives_of_StateBeforeEvent_wrt_Time();//Xindex, stateIndex, derivative value
+            }
+            else
+            {
+                Derivatives_of_probe_StateAtEnd = this->probeEntryArrivalEvent->get_Derivatives_of_StateBeforeEvent();//Xindex, stateIndex, derivative value
+                Derivatives_of_probe_StateAtEnd_wrt_Time = this->probeEntryArrivalEvent->get_Derivatives_of_StateBeforeEvent_wrt_Time();//Xindex, stateIndex, derivative value
+            }
+
             for (size_t velocityIndex : {0, 1, 2})
             {
                 //Step 1: variables defining the separation impulse direction
@@ -806,7 +831,7 @@ namespace EMTG
                         size_t stateIndex = std::get<1>(Derivatives_of_StateBeforePhase[dIndex]);
 
                         //hooray, this variable affects the constraint. Make the Jacobian entry!
-                        if (this->TruthTable_Forward_MatchConstraints_Derivative_wrt_EncodedStates[constraintIndex][stateIndex])
+                        if (this->TruthTable_Forward_MatchConstraints_Derivative_wrt_EncodedStates_first_subphase[constraintIndex][stateIndex])
                         {
                             constraint_LeftBoundaryVariableAffectsMatchConstraint[varIndex] = true;
                             break;
@@ -867,7 +892,7 @@ namespace EMTG
                         size_t stateIndex = std::get<1>(Derivatives_of_StateBeforePhase_wrt_Time[dIndex]);
 
                         //hooray, this variable affects the constraint. Make the Jacobian entry!
-                        if (this->TruthTable_Forward_MatchConstraints_Derivative_wrt_EncodedStates[constraintIndex][stateIndex])
+                        if (this->TruthTable_Forward_MatchConstraints_Derivative_wrt_EncodedStates_first_subphase[constraintIndex][stateIndex])
                         {
                             constraint_LeftBoundaryTimeVariableAffectsMatchConstraint[varIndex] = true;
                             break;
@@ -940,13 +965,13 @@ namespace EMTG
             std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StateAfterAEI_wrt_Time = this->probeEntryDepartureEvent->get_Derivatives_of_StateAfterEvent_wrt_Time();//Xindex, stateIndex, derivative value
             std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_probe_StateAtEnd_wrt_Time = this->probeEndEvent->get_Derivatives_of_StateBeforeEvent_wrt_Time();//Xindex, stateIndex, derivative value
 
-            //Step 1: make a list of variables affecting the right boundary of the subphase from separation to AEI
+            //Step 1: make a list of variables affecting the right boundary of the subphase from AEI to end
             {
                 //Step 1.1: The left boundary is drawn from the second subphase's departure event
                 for (size_t dIndex = 0; dIndex < Derivatives_of_probe_StateAfterAEI.size(); ++dIndex)
                 {
                     bool alreadyListed = false;
-                    size_t Xindex = std::get<0>(Derivatives_of_probe_StateAtEnd[dIndex]);
+                    size_t Xindex = std::get<0>(Derivatives_of_probe_StateAfterAEI[dIndex]);
                     for (size_t listIndex = 0; listIndex < this->ListOfVariablesAffectingLeftBoundary_probe_AEI_to_end.size(); ++listIndex)
                     {
                         if (this->ListOfVariablesAffectingLeftBoundary_probe_AEI_to_end[listIndex] == Xindex)
@@ -1011,13 +1036,13 @@ namespace EMTG
                 }
             }//end non-time variables
 
-            //Step 2: make a list of time variables affecting both boundaries of the subphase from separation to AEI
+            //Step 2: make a list of time variables affecting both boundaries of the subphase from AEI to end
             {
                 //Step 2.1: The left boundary is drawn from the second subphase's departure event
                 for (size_t dIndex = 0; dIndex < Derivatives_of_StateAfterAEI_wrt_Time.size(); ++dIndex)
                 {
                     bool alreadyListed = false;
-                    size_t Xindex = std::get<0>(Derivatives_of_probe_StateAtEnd_wrt_Time[dIndex]);
+                    size_t Xindex = std::get<0>(Derivatives_of_StateAfterAEI_wrt_Time[dIndex]);
                     for (size_t listIndex = 0; listIndex < this->ListOfTimeVariablesAffectingLeftBoundary_probe_AEI_to_end.size(); ++listIndex)
                     {
                         if (this->ListOfTimeVariablesAffectingLeftBoundary_probe_AEI_to_end[listIndex] == Xindex)
@@ -1222,7 +1247,7 @@ namespace EMTG
                 this->RightBoundaryTimeVariableAffectsMatchConstraint_probe_AEI_to_end.push_back(constraint_RightBoundaryTimeVariableAffectsMatchConstraint);
             }
 
-            //Step 4: derivatives of the match point from separation to AEI due to probe separation impulse
+            //Step 4: derivatives of the match point from AEI to end due to probe separation impulse
             for (size_t constraintIndex = 0; constraintIndex < this->numMatchConstraints_probe; ++constraintIndex)
             {
                 std::vector<size_t> stateGindex_probe_match_point_constraints_wrt_separation_impulse;
@@ -1378,20 +1403,21 @@ namespace EMTG
             for (size_t stateIndex = 0; stateIndex < 8; ++stateIndex)
                 this->probe_state_at_AEI_arrival(stateIndex) = AEI_arrival_state(stateIndex);
 
-            //Step 2: probe AEI departure event
-            //Step 2.1: call the event
-            this->probeEntryDepartureEvent->reset_ETM();
-            this->probeEntryDepartureEvent->process_event(X, Xindex, F, Findex, G, needG);
-
-            //Step 2.2: extract the states
-            math::Matrix<doubleType>& AEI_departure_state = this->probeEntryDepartureEvent->get_state_before_event();
-            for (size_t stateIndex = 0; stateIndex < 8; ++stateIndex)
-                this->probe_state_at_AEI_departure(stateIndex) = AEI_departure_state(stateIndex);
 
             //if modeling the second subphase
             if (this->myJourneyOptions->ModelProbeSecondPhase)
             {
-                //Step 3: probe AEI departure event
+                //Step 2: probe AEI departure event
+                //Step 2.1: call the event
+                this->probeEntryDepartureEvent->reset_ETM();
+                this->probeEntryDepartureEvent->process_event(X, Xindex, F, Findex, G, needG);
+
+                //Step 2.2: extract the states
+                math::Matrix<doubleType>& AEI_departure_state = this->probeEntryDepartureEvent->get_state_before_event();
+                for (size_t stateIndex = 0; stateIndex < 8; ++stateIndex)
+                this->probe_state_at_AEI_departure(stateIndex) = AEI_departure_state(stateIndex);
+
+                //Step 3: probe end event
                 //Step 3.1: call the event
                 this->probeEndEvent->reset_ETM();
                 this->probeEndEvent->process_event(X, Xindex, F, Findex, G, needG);
@@ -1458,7 +1484,16 @@ namespace EMTG
             //Step 3.1: extract sparse representation of separation direction
             //and apply the velocity match constraints to force the separation impulse to match the probe entry velocity unit vector
             math::Matrix<doubleType> separation_unit_vector(3, 1, 0.0);
-            math::Matrix<doubleType> probe_entry_velocity_unit_vector = this->probe_state_at_end_of_phase.getSubMatrix1D(3, 5).unitize();
+            math::Matrix<doubleType> probe_entry_velocity_unit_vector;
+            
+            if (this->myJourneyOptions->ModelProbeSecondPhase)
+            {
+                probe_entry_velocity_unit_vector = this->probe_state_at_end_of_phase.getSubMatrix1D(3, 5).unitize();
+            }
+            else
+            {
+                probe_entry_velocity_unit_vector = this->probe_state_at_AEI_arrival.getSubMatrix1D(3, 5).unitize();
+            }
             for (size_t velocityIndex : {0, 1, 2})
             {
                 //Step 3.1.1: extract the separation impulse component
@@ -1486,9 +1521,23 @@ namespace EMTG
             {
                 //This constraint enforces that the separation impulse components match the *unit vector* of the probe's inertial entry velocity
                 //because that's where the nose points, so the spacecraft slews to that inertial attitude before releasing the probe
-                math::Matrix<doubleType> dProbeEntryVelocityUnit_dVelocityComponents = separation_unit_vector.unitDerivative(this->probe_state_at_end_of_phase.getSubMatrix1D(3, 5));
-                std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_probe_StateAtEnd = this->probeEndEvent->get_Derivatives_of_StateBeforeEvent();//Xindex, stateIndex, derivative value
-                std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_probe_StateAtEnd_wrt_Time = this->probeEndEvent->get_Derivatives_of_StateBeforeEvent_wrt_Time();//Xindex, stateIndex, derivative value
+                math::Matrix<doubleType> dProbeEntryVelocityUnit_dVelocityComponents;             
+
+                std::vector< std::tuple<size_t, size_t, double> > Derivatives_of_probe_StateAtEnd;
+                std::vector< std::tuple<size_t, size_t, double> > Derivatives_of_probe_StateAtEnd_wrt_Time;
+
+                if (this->myJourneyOptions->ModelProbeSecondPhase)
+                {
+                    dProbeEntryVelocityUnit_dVelocityComponents = separation_unit_vector.unitDerivative(this->probe_state_at_end_of_phase.getSubMatrix1D(3, 5));
+                    Derivatives_of_probe_StateAtEnd = this->probeEndEvent->get_Derivatives_of_StateBeforeEvent();//Xindex, stateIndex, derivative value
+                    Derivatives_of_probe_StateAtEnd_wrt_Time = this->probeEndEvent->get_Derivatives_of_StateBeforeEvent_wrt_Time();//Xindex, stateIndex, derivative value
+                }
+                else
+                {
+                    dProbeEntryVelocityUnit_dVelocityComponents = separation_unit_vector.unitDerivative(this->probe_state_at_AEI_arrival.getSubMatrix1D(3, 5));
+                    Derivatives_of_probe_StateAtEnd = this->probeEntryArrivalEvent->get_Derivatives_of_StateBeforeEvent();//Xindex, stateIndex, derivative value
+                    Derivatives_of_probe_StateAtEnd_wrt_Time = this->probeEntryArrivalEvent->get_Derivatives_of_StateBeforeEvent_wrt_Time();//Xindex, stateIndex, derivative value
+                }
                 
                 for (size_t velocityIndex : {0, 1, 2})
                 {
@@ -1644,7 +1693,7 @@ namespace EMTG
                     }
                     else //integrated propagator
                     {
-                        this->probe_separation_to_AEI_ForwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->probe_separation_to_AEI_ForwardSTM(i, 13);
+                        this->probe_separation_to_AEI_ForwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->probe_separation_to_AEI_ForwardSTM(i, 9);
                     }
                 }
 
@@ -1692,7 +1741,7 @@ namespace EMTG
                     }
                     else //integrated propagator
                     {
-                        this->probe_separation_to_AEI_BackwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->probe_separation_to_AEI_BackwardSTM(i, 13);
+                        this->probe_separation_to_AEI_BackwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->probe_separation_to_AEI_BackwardSTM(i, 9);
                     }
                 }
 
@@ -1967,7 +2016,7 @@ namespace EMTG
                     }
                     else //integrated propagator
                     {
-                        this->probe_AEI_to_end_ForwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->probe_AEI_to_end_ForwardSTM(i, 13);
+                        this->probe_AEI_to_end_ForwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->probe_AEI_to_end_ForwardSTM(i, 9);
                     }
                 }
 
@@ -2015,7 +2064,7 @@ namespace EMTG
                     }
                     else //integrated propagator
                     {
-                        this->probe_AEI_to_end_BackwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->probe_AEI_to_end_BackwardSTM(i, 13);
+                        this->probe_AEI_to_end_BackwardSPTM(i, this->stateIndex_phase_propagation_variable) = this->probe_AEI_to_end_BackwardSTM(i, 9);
                     }
                 }
 
@@ -2251,9 +2300,9 @@ namespace EMTG
                 double xsc = this->state_at_end_of_phase(0)_GETVALUE;
                 double ysc = this->state_at_end_of_phase(1)_GETVALUE;
                 double zsc = this->state_at_end_of_phase(2)_GETVALUE;
-                double xp = this->probe_state_at_end_of_phase(0)_GETVALUE;
-                double yp = this->probe_state_at_end_of_phase(1)_GETVALUE;
-                double zp = this->probe_state_at_end_of_phase(2)_GETVALUE;
+                double xp = this->probe_state_at_AEI_arrival(0)_GETVALUE;
+                double yp = this->probe_state_at_AEI_arrival(1)_GETVALUE;
+                double zp = this->probe_state_at_AEI_arrival(2)_GETVALUE;
                 double dr_dxsc = (-xp + xsc) / r;
                 double dr_dysc = (-yp + ysc) / r;
                 double dr_dzsc = (-zp + zsc) / r;
@@ -2303,7 +2352,7 @@ namespace EMTG
                             / this->myJourneyOptions->probe_communication_distance_bounds[1];
                     }//end loop over derivative entries
 
-                    //Step 3.4: derivatives with respect to non-time varibales that affect the probe
+                    //Step 3.4: derivatives with respect to non-time variables that affect the probe
                     for (size_t entryIndex = 0; entryIndex < this->dIndex_probe_communication_distanceconstraint_with_respect_to_probeStateAtEntry[stateIndex].size(); ++entryIndex)
                     {
                         size_t dIndex = this->dIndex_probe_communication_distanceconstraint_with_respect_to_probeStateAtEntry[stateIndex][entryIndex];
@@ -2739,117 +2788,72 @@ namespace EMTG
             //Step 7: probe AEI arrival event
             this->probeEntryArrivalEvent->output(outputfile, this->LaunchDate _GETVALUE, eventcount);
 
-            //Step 8: forward half phase for descent
+            if (this->myJourneyOptions->ModelProbeSecondPhase)
             {
-                this->probe_AEI_to_end_ForwardHalfPhasePropagator->setStateRight(output_state);
-
-                for (size_t step = 0; step < this->myOptions->num_timesteps / 2; ++step)
+                //Step 8: forward half phase for descent
                 {
-                    //propagate to the halfway point of this step
-                    this->probe_AEI_to_end_Forward_dPropagatedStatedIndependentVariable.assign_zeros();
-                    this->probe_AEI_to_end_ForwardHalfPhasePropagator->setCurrentEpoch(this->probe_state_at_AEI_departure(7));
-                    this->probe_AEI_to_end_ForwardHalfPhasePropagator->setIndexOfEpochInStateVec(7);
-                    this->probe_AEI_to_end_ForwardHalfPhasePropagator->setCurrentIndependentVariable(this->probe_state_at_AEI_departure(7));
-                    this->probe_AEI_to_end_ForwardHalfPhasePropagator->propagate(ForwardOutputTimestep_AEI_to_end * (step + 0.5), false);
+                    this->probe_AEI_to_end_ForwardHalfPhasePropagator->setStateRight(output_state);
 
-                    if (this->isKeplerian)
+                    for (size_t step = 0; step < this->myOptions->num_timesteps / 2; ++step)
                     {
-                        output_state(6) = this->probe_state_at_AEI_departure(6);
-                        output_state(7) = this->probe_state_at_AEI_departure(7) + ForwardOutputTimestep_AEI_to_end * (step + 0.5);
+                        //propagate to the halfway point of this step
+                        this->probe_AEI_to_end_Forward_dPropagatedStatedIndependentVariable.assign_zeros();
+                        this->probe_AEI_to_end_ForwardHalfPhasePropagator->setCurrentEpoch(this->probe_state_at_AEI_departure(7));
+                        this->probe_AEI_to_end_ForwardHalfPhasePropagator->setIndexOfEpochInStateVec(7);
+                        this->probe_AEI_to_end_ForwardHalfPhasePropagator->setCurrentIndependentVariable(this->probe_state_at_AEI_departure(7));
+                        this->probe_AEI_to_end_ForwardHalfPhasePropagator->propagate(ForwardOutputTimestep_AEI_to_end * (step + 0.5), false);
+
+                        if (this->isKeplerian)
+                        {
+                            output_state(6) = this->probe_state_at_AEI_departure(6);
+                            output_state(7) = this->probe_state_at_AEI_departure(7) + ForwardOutputTimestep_AEI_to_end * (step + 0.5);
+                        }
+
+                        //print
+                        this->write_output_line(outputfile,//outputfile
+                            eventcount,//eventcount
+                            "coast",//event_type
+                            "deep-space",//event_location
+                            ForwardOutputTimestep_AEI_to_end / 86400.0,// timestep_size,
+                            -1,//flyby_altitude,
+                            0,//BdotR
+                            0,//BdotT
+                            0,//angle1
+                            0,//angle2
+                            0,//C3
+                            output_state,//state
+                            empty3,//delta-v
+                            empty3,//ThrustVector
+                            0.0,//dVmag
+                            0.0,//Thrust
+                            0.0,//Isp
+                            0.0,//AvailPower
+                            0.0,//mdot
+                            0,//number_of_active_engines
+                            0.0, //active_power
+                            "none");
                     }
 
-                    //print
-                    this->write_output_line(outputfile,//outputfile
-                        eventcount,//eventcount
-                        "coast",//event_type
-                        "deep-space",//event_location
-                        ForwardOutputTimestep_AEI_to_end / 86400.0,// timestep_size,
-                        -1,//flyby_altitude,
-                        0,//BdotR
-                        0,//BdotT
-                        0,//angle1
-                        0,//angle2
-                        0,//C3
-                        output_state,//state
-                        empty3,//delta-v
-                        empty3,//ThrustVector
-                        0.0,//dVmag
-                        0.0,//Thrust
-                        0.0,//Isp
-                        0.0,//AvailPower
-                        0.0,//mdot
-                        0,//number_of_active_engines
-                        0.0, //active_power
-                        "none");
+                    //reset the propagator to go where it is supposed to
+                    this->probe_AEI_to_end_ForwardHalfPhasePropagator->setStateRight(this->probe_second_subphase_match_point_state_minus);
                 }
 
-                //reset the propagator to go where it is supposed to
-                this->probe_AEI_to_end_ForwardHalfPhasePropagator->setStateRight(this->probe_second_subphase_match_point_state_minus);
-            }
-
-            //Step 9: descent match point
-            {
-                phase::write_output_line(outputfile,//outputfile
-                    eventcount,//eventcount
-                    "match_point",//event_type
-                    "deep-space",//event_location
-                    0.0,// timestep_size,
-                    -1,//flyby_altitude,
-                    0,//BdotR
-                    0,//BdotT
-                    0,//angle1
-                    0,//angle2
-                    0,//C3
-                    this->probe_second_subphase_match_point_state_minus,//state
-                    math::Matrix<doubleType>(3, 1, 0.0),//dV
-                    math::Matrix<doubleType>(3, 1, 0.0),//ThrustVector
-                    0.0,//dVmag
-                    0.0,//Thrust
-                    0.0,//Isp
-                    0.0,//AvailPower
-                    0.0,//mdot
-                    0,//number_of_active_engines
-                    0.0,
-                    "none");//active_power
-            }
-
-            //Step 10: backward half phase for descent
-            {
-                //set the propagator temporarily to dump into the output state
-                this->probe_AEI_to_end_BackwardHalfPhasePropagator->setStateRight(output_state);
-
-                for (size_t step = 0; step < this->myOptions->num_timesteps / 2; ++step)
+                //Step 9: descent match point
                 {
-                    size_t backstep = this->myOptions->num_timesteps / 2 - step - 1;
-
-                    //propagate to the halfway point of this step
-                    this->probe_AEI_to_end_Backward_dPropagatedStatedIndependentVariable.assign_zeros();
-                    this->probe_AEI_to_end_BackwardHalfPhasePropagator->setCurrentEpoch(this->probe_state_at_end_of_phase(7));
-                    this->probe_AEI_to_end_BackwardHalfPhasePropagator->setIndexOfEpochInStateVec(7);
-                    this->probe_AEI_to_end_BackwardHalfPhasePropagator->setCurrentIndependentVariable(this->probe_state_at_end_of_phase(7));
-                    this->probe_AEI_to_end_BackwardHalfPhasePropagator->propagate(-BackwardOutputTimestep_AEI_to_end * (backstep + 0.5), false);
-
-                    if (this->isKeplerian)
-                    {
-                        output_state(6) = this->probe_state_at_end_of_phase(6);
-                        output_state(7) = this->probe_state_at_end_of_phase(7) - BackwardOutputTimestep_AEI_to_end * (backstep + 0.5);
-                    }
-
-                    //print
-                    this->write_output_line(outputfile,//outputfile
+                    phase::write_output_line(outputfile,//outputfile
                         eventcount,//eventcount
-                        "coast",//event_type
+                        "match_point",//event_type
                         "deep-space",//event_location
-                        BackwardOutputTimestep_AEI_to_end / 86400.0,// timestep_size,
+                        0.0,// timestep_size,
                         -1,//flyby_altitude,
                         0,//BdotR
                         0,//BdotT
                         0,//angle1
                         0,//angle2
                         0,//C3
-                        output_state,//state
-                        empty3,//delta-v
-                        empty3,//ThrustVector
+                        this->probe_second_subphase_match_point_state_minus,//state
+                        math::Matrix<doubleType>(3, 1, 0.0),//dV
+                        math::Matrix<doubleType>(3, 1, 0.0),//ThrustVector
                         0.0,//dVmag
                         0.0,//Thrust
                         0.0,//Isp
@@ -2860,13 +2864,60 @@ namespace EMTG
                         "none");//active_power
                 }
 
-                //reset the propagator to go where it is supposed to
-                this->probe_AEI_to_end_BackwardHalfPhasePropagator->setStateRight(this->probe_second_subphase_match_point_state_plus);
-            }
+                //Step 10: backward half phase for descent
+                {
+                    //set the propagator temporarily to dump into the output state
+                    this->probe_AEI_to_end_BackwardHalfPhasePropagator->setStateRight(output_state);
 
-            //Step 11: probe end event
-            this->probeEndEvent->output(outputfile, this->LaunchDate _GETVALUE, eventcount);
+                    for (size_t step = 0; step < this->myOptions->num_timesteps / 2; ++step)
+                    {
+                        size_t backstep = this->myOptions->num_timesteps / 2 - step - 1;
 
+                        //propagate to the halfway point of this step
+                        this->probe_AEI_to_end_Backward_dPropagatedStatedIndependentVariable.assign_zeros();
+                        this->probe_AEI_to_end_BackwardHalfPhasePropagator->setCurrentEpoch(this->probe_state_at_end_of_phase(7));
+                        this->probe_AEI_to_end_BackwardHalfPhasePropagator->setIndexOfEpochInStateVec(7);
+                        this->probe_AEI_to_end_BackwardHalfPhasePropagator->setCurrentIndependentVariable(this->probe_state_at_end_of_phase(7));
+                        this->probe_AEI_to_end_BackwardHalfPhasePropagator->propagate(-BackwardOutputTimestep_AEI_to_end * (backstep + 0.5), false);
+
+                        if (this->isKeplerian)
+                        {
+                            output_state(6) = this->probe_state_at_end_of_phase(6);
+                            output_state(7) = this->probe_state_at_end_of_phase(7) - BackwardOutputTimestep_AEI_to_end * (backstep + 0.5);
+                        }
+
+                        //print
+                        this->write_output_line(outputfile,//outputfile
+                            eventcount,//eventcount
+                            "coast",//event_type
+                            "deep-space",//event_location
+                            BackwardOutputTimestep_AEI_to_end / 86400.0,// timestep_size,
+                            -1,//flyby_altitude,
+                            0,//BdotR
+                            0,//BdotT
+                            0,//angle1
+                            0,//angle2
+                            0,//C3
+                            output_state,//state
+                            empty3,//delta-v
+                            empty3,//ThrustVector
+                            0.0,//dVmag
+                            0.0,//Thrust
+                            0.0,//Isp
+                            0.0,//AvailPower
+                            0.0,//mdot
+                            0,//number_of_active_engines
+                            0.0,
+                            "none");//active_power
+                    }
+
+                    //reset the propagator to go where it is supposed to
+                    this->probe_AEI_to_end_BackwardHalfPhasePropagator->setStateRight(this->probe_second_subphase_match_point_state_plus);
+                }
+
+                //Step 11: probe end event
+                this->probeEndEvent->output(outputfile, this->LaunchDate _GETVALUE, eventcount);
+            }//end probe second half phase
             //Step 12: probe boundary states
             {
                 outputfile << std::endl;
@@ -2910,25 +2961,32 @@ namespace EMTG
                 outputfile << std::endl;
 
                 //End
-                outputfile << "Boundary 3: ";
-                r = this->probe_state_at_end_of_phase.getSubMatrix1D(0, 2);
-                v = this->probe_state_at_end_of_phase.getSubMatrix1D(3, 5);
+                if (this->myJourneyOptions->ModelProbeSecondPhase)
+                {
+                    outputfile << "Boundary 3: ";
+                    r = this->probe_state_at_end_of_phase.getSubMatrix1D(0, 2);
+                    v = this->probe_state_at_end_of_phase.getSubMatrix1D(3, 5);
 
-                this->myUniverse->LocalFrame.rotate_frame_to_frame(ReferenceFrame::ICRF, r, this->myOptions->output_file_frame, disp_r);
-                this->myUniverse->LocalFrame.rotate_frame_to_frame(ReferenceFrame::ICRF, v, this->myOptions->output_file_frame, disp_v);
+                    this->myUniverse->LocalFrame.rotate_frame_to_frame(ReferenceFrame::ICRF, r, this->myOptions->output_file_frame, disp_r);
+                    this->myUniverse->LocalFrame.rotate_frame_to_frame(ReferenceFrame::ICRF, v, this->myOptions->output_file_frame, disp_v);
 
-                for (int j = 0; j < 3; ++j)
-                    outputfile << " " << disp_r(j) _GETVALUE;
-                for (int j = 0; j < 3; ++j)
-                    outputfile << " " << disp_v(j) _GETVALUE;
-                outputfile << std::endl;
+                    for (int j = 0; j < 3; ++j)
+                        outputfile << " " << disp_r(j) _GETVALUE;
+                    for (int j = 0; j < 3; ++j)
+                        outputfile << " " << disp_v(j) _GETVALUE;
+                    outputfile << std::endl;
+                }//end probe end event, only if we are modeling the second half-phase
             }
 
             //Step 13: probe constraints
             outputfile << std::endl;
             this->probeEntryArrivalEvent->output_specialized_constraints(outputfile);
-            this->probeEntryDepartureEvent->output_specialized_constraints(outputfile);
-            this->probeEndEvent->output_specialized_constraints(outputfile);
+            
+            if (this->myJourneyOptions->ModelProbeSecondPhase)
+            {
+                this->probeEntryDepartureEvent->output_specialized_constraints(outputfile);
+                this->probeEndEvent->output_specialized_constraints(outputfile);
+            }
 
             //Step 14: close the file
             outputfile.close();
@@ -3081,8 +3139,8 @@ namespace EMTG
                 pyfile << "sys.path.append('" << boost::replace_all_copy(this->myOptions->pyemtg_path, "\\", "/") << "/SpiceyPy_Utilities') " << std::endl;
 
                 pyfile << "import clean_spiceicles " << std::endl;
-
-                pyfile << "clean_spiceicles.do_the_stuff(['" << boost::replace_all_copy(this->myOptions->working_directory, "\\", "/") << "','" << this->myOptions->mission_name << "_probe.ephemeris','" << boost::replace_all_copy(this->myOptions->universe_folder, "\\", "/") << "/ephemeris_files/']) " << std::endl;
+				pyfile << "clean_spiceicles.do_the_stuff(['" << boost::replace_all_copy(this->myOptions->working_directory, "\\", "/") << "','" << this->myOptions->mission_name << "_probe.ephemeris','" << boost::replace_all_copy(this->myOptions->universe_folder, "\\", "/") << "/ephemeris_files/', " << this->myOptions->forward_integrated_ephemeris_minimum_timestep_kept << "])" << std::endl;
+                //pyfile << "clean_spiceicles.do_the_stuff(['" << boost::replace_all_copy(this->myOptions->working_directory, "\\", "/") << "','" << this->myOptions->mission_name << "_probe.ephemeris','" << boost::replace_all_copy(this->myOptions->universe_folder, "\\", "/") << "/ephemeris_files/']) " << std::endl;
 
 
                 pyfile << "if os.path.exists('" << this->myOptions->mission_name << "_probe.bsp') :" << std::endl;
@@ -3094,8 +3152,21 @@ namespace EMTG
             }
             
             // output the departure event
-            this->myDepartureEvent->output_ephemeris(ephemeris_file);
+            //this->probeEntryDepartureEvent->output_ephemeris(ephemeris_file);
 
+            // we need to manually write the initial probe state after the separation impulse has been applied
+            // since the probe itself does not have a departure event (only the carrier does)
+            this->write_ephemeris_line(ephemeris_file,
+                this->probe_state_after_separation,
+                math::Matrix<doubleType>(3, 1, 0.0),//control vector
+                0.0,
+                0.0,
+                0.0,
+                0,
+                0.0,
+                "none");
+
+            //first half-phase departure event
             if (this->myOptions->generate_acceleration_model_instrumentation_file && !this->isKeplerian)
             {
                 this->temp_state = this->myDepartureEvent->get_state_before_event();
@@ -3113,33 +3184,38 @@ namespace EMTG
                 this->temp_state = this->probe_state_after_separation;
 
                 // propagate and print, skipping the first entry
+                double cumulative_time_propagated = this->EphemerisOutputResolution;
                 double timeToPropagate = this->EphemerisOutputResolution;
-                double propagated_time = 0;
+                double propagated_time = 0.0;
                 while (propagated_time < this->PhaseFlightTime)
                 {
                     // propagate
-                    this->probe_separation_to_AEI_Forward_dPropagatedStatedIndependentVariable.assign_zeros();
                     this->probe_separation_to_AEI_ForwardHalfPhasePropagator->setCurrentEpoch(this->temp_state(7));
                     this->probe_separation_to_AEI_ForwardHalfPhasePropagator->setCurrentIndependentVariable(this->temp_state(7));
                     this->probe_separation_to_AEI_ForwardHalfPhasePropagator->propagate(timeToPropagate, false);
-                    this->temp_state = output_state;
-                    propagated_time += timeToPropagate;
 
                     if (this->isKeplerian)
                     {
-                        output_state(6) = this->probe_state_after_separation(6);
-                        output_state(7) = this->probe_state_after_separation(7) + propagated_time;
+                        this->output_state(6) = this->probe_state_after_separation(6);
+                        this->output_state(7) = this->probe_state_after_separation(7) + cumulative_time_propagated;
                     }
+
+                    // keep a temp state that is not converted to heliocentric
+                    this->temp_state = this->output_state;
+					propagated_time += timeToPropagate;
+					cumulative_time_propagated += timeToPropagate;
 
                     // convert to Sun-centered if necessary
                     if (this->myUniverse->central_body.spice_ID != this->myOptions->forward_integrated_ephemeris_central_body_SPICE_ID)
                     {
                         double LT_dump;
                         double bodyStateDouble[6];
-                        spkez_c(this->myUniverse->central_body.spice_ID, output_state(7)_GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", this->myOptions->forward_integrated_ephemeris_central_body_SPICE_ID, bodyStateDouble, &LT_dump);
+                        spkez_c(this->myUniverse->central_body.spice_ID, this->output_state(7)_GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", this->myOptions->forward_integrated_ephemeris_central_body_SPICE_ID, bodyStateDouble, &LT_dump);
 
                         for (size_t stateIndex = 0; stateIndex < 6; ++stateIndex)
-                            output_state(stateIndex) += bodyStateDouble[stateIndex];
+                        {
+                            this->output_state(stateIndex) += bodyStateDouble[stateIndex];
+                        }
                     }
 
                     // populate probe acceleration model file if applicable
@@ -3170,13 +3246,102 @@ namespace EMTG
                 this->probe_separation_to_AEI_ForwardHalfPhasePropagator->setStateRight(this->probe_first_subphase_match_point_state_minus);
             }
 
-            // output the arrival event
-            this->myArrivalEvent->output_ephemeris(ephemeris_file);
-            this->temp_state = this->myArrivalEvent->get_state_before_event();
+            // output the first half-phase arrival event
+            this->probeEntryArrivalEvent->output_ephemeris(ephemeris_file);
+            this->temp_state = this->probeEntryArrivalEvent->get_state_before_event();
             if (this->myOptions->generate_acceleration_model_instrumentation_file && !this->isKeplerian)
             {
                 this->probe_separation_to_AEI_SpacecraftAccelerationModel->populateInstrumentationFile(probe_acceleration_model_file, this->temp_state, this->temp_state(7));
             }
+
+            // output the probe's trajectory inside the atmosphere
+            if (this->myJourneyOptions->ModelProbeSecondPhase)
+            {
+                //probe second half-phase departure event
+                if (this->myOptions->generate_acceleration_model_instrumentation_file && !this->isKeplerian)
+                {
+                    this->temp_state = this->probeEntryDepartureEvent->get_state_before_event();
+                    this->probe_AEI_to_end_SpacecraftAccelerationModel->populateInstrumentationFile(probe_acceleration_model_file, this->temp_state, this->temp_state(7));
+                }
+
+
+                // we'll need an output vector
+                this->temp_state = this->output_state;
+                // temporarily assign the propagator to the output state
+                this->probe_AEI_to_end_ForwardHalfPhasePropagator->setStateLeft(this->temp_state);
+                this->probe_AEI_to_end_ForwardHalfPhasePropagator->setStateRight(output_state);
+                this->probe_AEI_to_end_ForwardHalfPhasePropagator->setIndexOfEpochInStateVec(7);
+                this->temp_state = this->probe_state_at_AEI_departure;
+
+                // propagate and print, skipping the first entry
+                double cumulative_time_propagated = this->EphemerisOutputResolution;
+                double timeToPropagate = this->EphemerisOutputResolution;
+                double propagated_time = 0.0;
+                while (propagated_time < this->PhaseFlightTime)
+                {
+                    // propagate
+                    this->probe_AEI_to_end_ForwardHalfPhasePropagator->setCurrentEpoch(this->temp_state(7));
+                    this->probe_AEI_to_end_ForwardHalfPhasePropagator->setCurrentIndependentVariable(this->temp_state(7));
+                    this->probe_AEI_to_end_ForwardHalfPhasePropagator->propagate(timeToPropagate, false);
+
+                    if (this->isKeplerian)
+                    {
+                        this->output_state(6) = this->probe_state_at_AEI_departure(6);
+                        this->output_state(7) = this->probe_state_at_AEI_departure(7) + cumulative_time_propagated;
+                    }
+
+                    // keep a temp state that is not converted to heliocentric
+                    this->temp_state = this->output_state;
+                    propagated_time += timeToPropagate;
+
+                    // convert to Sun-centered if necessary
+                    if (this->myUniverse->central_body.spice_ID != this->myOptions->forward_integrated_ephemeris_central_body_SPICE_ID)
+                    {
+                        double LT_dump;
+                        double bodyStateDouble[6];
+                        spkez_c(this->myUniverse->central_body.spice_ID, this->output_state(7)_GETVALUE - (51544.5 * 86400.0), "J2000", "NONE", this->myOptions->forward_integrated_ephemeris_central_body_SPICE_ID, bodyStateDouble, &LT_dump);
+
+                        for (size_t stateIndex = 0; stateIndex < 6; ++stateIndex)
+                        {
+                            this->output_state(stateIndex) += bodyStateDouble[stateIndex];
+                        }
+                    }
+
+                    // populate probe acceleration model file if applicable
+                    if (this->myOptions->generate_acceleration_model_instrumentation_file && !this->isKeplerian)
+                    {
+                        this->probe_AEI_to_end_SpacecraftAccelerationModel->populateInstrumentationFile(probe_acceleration_model_file, this->temp_state, this->temp_state(7));
+                    }
+
+                    // write line to ephemeris file
+                    this->write_ephemeris_line(ephemeris_file,
+                        output_state,
+                        math::Matrix<doubleType>(3, 1, 0.0),//control vector
+                        0.0,
+                        0.0,
+                        0.0,
+                        0,
+                        0.0,
+                        "none");
+
+                    // increment propagatedEpoch
+                    timeToPropagate = (this->PhaseFlightTime _GETVALUE - propagated_time) > this->EphemerisOutputResolution
+                        ? this->EphemerisOutputResolution
+                        : (this->PhaseFlightTime _GETVALUE - propagated_time);
+                }
+
+                // reset the propagator to its original state vectors
+                this->probe_AEI_to_end_ForwardHalfPhasePropagator->setStateLeft(this->probe_state_at_AEI_departure);
+                this->probe_AEI_to_end_ForwardHalfPhasePropagator->setStateRight(this->probe_second_subphase_match_point_state_minus);
+
+                // output the arrival event at the end of the mission
+                this->probeEndEvent->output_ephemeris(ephemeris_file);
+                this->temp_state = this->probeEndEvent->get_state_before_event();
+                if (this->myOptions->generate_acceleration_model_instrumentation_file && !this->isKeplerian)
+                {
+                    this->probe_AEI_to_end_SpacecraftAccelerationModel->populateInstrumentationFile(probe_acceleration_model_file, this->temp_state, this->temp_state(7));
+                }
+            } // end output in-atmosphere .ephemeris file lines
 
             //Step 6: close the files
             ephemeris_file.close();
@@ -3191,8 +3356,12 @@ namespace EMTG
             //Step 2: probe
             this->probe_separation_to_AEI_ForwardSTM.print_to_file(this->myOptions->working_directory + "//" + boost::replace_all_copy(this->prefix, ": ", "") + "_probe_separation_to_AEI_STM_0_forward.stm");
             this->probe_separation_to_AEI_BackwardSTM.print_to_file(this->myOptions->working_directory + "//" + boost::replace_all_copy(this->prefix, ": ", "") + "_probe_separation_to_AEI_STM_1_backward.stm");
-            this->probe_AEI_to_end_ForwardSTM.print_to_file(this->myOptions->working_directory + "//" + boost::replace_all_copy(this->prefix, ": ", "") + "_probe_AEI_to_end_STM_0_forward.stm");
-            this->probe_AEI_to_end_BackwardSTM.print_to_file(this->myOptions->working_directory + "//" + boost::replace_all_copy(this->prefix, ": ", "") + "_probe_AEI_to_end_STM_1_backward.stm");
+            
+            if (this->myJourneyOptions->ModelProbeSecondPhase)
+            {
+                this->probe_AEI_to_end_ForwardSTM.print_to_file(this->myOptions->working_directory + "//" + boost::replace_all_copy(this->prefix, ": ", "") + "_probe_AEI_to_end_STM_0_forward.stm");
+                this->probe_AEI_to_end_BackwardSTM.print_to_file(this->myOptions->working_directory + "//" + boost::replace_all_copy(this->prefix, ": ", "") + "_probe_AEI_to_end_STM_1_backward.stm");
+            }
         }//end output_STMs()
 
         void ProbeEntryPhase::output_maneuver_and_target_spec(std::ofstream& maneuver_spec_file, std::ofstream& target_spec_file, bool& haveManeuverNeedTarget)
@@ -3204,19 +3373,38 @@ namespace EMTG
             this->myDepartureEvent->output_maneuver_and_target_spec(maneuver_spec_file, target_spec_file, haveManeuverNeedTarget);
 
             //Step 3: the target of the departure maneuver (or previous maneuver if there wasn't a departure maneuver) is the *probe entry state*
-            if (haveManeuverNeedTarget)
-            {
-                //reset the flag that tells us we need a target spec line
-                haveManeuverNeedTarget = false;
 
-                //Step 1.1: configure target spec
+            // we need to print the AEI target if:
+            // a) a previous maneuver requires a target
+            // b) the user requests it regardless of whether or not a previous maneuver needs a target
+            // An example of b) is a DSM targets AEI, but then the user requests that the separation FreePoint target be printed.
+            // In this scenario normally a target would NOT be printed here, but if the user requests it, we print it any way
+            if (haveManeuverNeedTarget || this->myJourneyOptions->Probe_AEI_print_target_spec)
+            {
+                target_spec_line myTargetSpecLine(this->name,
+                    "EME2000",
+                    this->myUniverse->central_body.name,
+                    this->probe_state_at_AEI_arrival(7),
+                    this->probe_state_at_AEI_arrival);
+
+                // write target spec object
+                myTargetSpecLine.write(target_spec_file);
+            }
+
+            // reset the flag that tells us we need a target spec line
+            haveManeuverNeedTarget = false;
+
+            // We only print the probe end state if we are modeling the second sub-phase and the user requests a target here
+            // Normally a probe's in-atmosphere state is not targeted, but we may want this target data regardless
+            if (this->myJourneyOptions->ModelProbeSecondPhase && this->myJourneyOptions->Probe_end_print_target_spec)
+            {
                 target_spec_line myTargetSpecLine(this->name,
                     "EME2000",
                     this->myUniverse->central_body.name,
                     this->probe_state_at_end_of_phase(7),
                     this->probe_state_at_end_of_phase);
 
-                //Step 1.2: write target spec object
+                // write target spec object
                 myTargetSpecLine.write(target_spec_file);
             }
 

@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -23,6 +23,7 @@
 #include "IntegrationSchemeFactory.h"
 #include "Forward_MGAnDSMs_subphase.h"
 #include "Backward_MGAnDSMs_subphase.h"
+#include "PhaseDistanceConstraintFactory.h"
 
 
 namespace EMTG
@@ -129,10 +130,10 @@ namespace EMTG
             this->SpacecraftStateBackward.resize(this->numberOfBackwardSubphases - 1, math::Matrix<doubleType>(this->numStatesToPropagate, 1, 0.0));
 
             //size the SPTM vectors
-            this->ForwardSPTM.resize(this->numberOfForwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 3, math::identity));
-            this->BackwardSPTM.resize(this->numberOfBackwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 3, math::identity));
-            this->CumulativeForwardSPTM.resize(this->numberOfForwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 3, math::identity));
-            this->CumulativeBackwardSPTM.resize(this->numberOfBackwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 3, math::identity));
+            this->ForwardSPTM.resize(this->numberOfForwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 2, math::identity));
+            this->BackwardSPTM.resize(this->numberOfBackwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 2, math::identity));
+            this->CumulativeForwardSPTM.resize(this->numberOfForwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 2, math::identity));
+            this->CumulativeBackwardSPTM.resize(this->numberOfBackwardSubphases, math::Matrix<double>(this->numStatesToPropagate + 2, math::identity));
             this->Forward_dPropagatedState_dIndependentVariable = this->myPropagatorType == PropagatorType::IntegratedPropagator ? math::Matrix<double>( 10, 2, 0.0) : math::Matrix<double>(6, 1, 0.0);
             this->Backward_dPropagatedState_dIndependentVariable = this->myPropagatorType == PropagatorType::IntegratedPropagator ? math::Matrix<double>(10, 2, 0.0) : math::Matrix<double>(6, 1, 0.0);
 
@@ -212,7 +213,38 @@ namespace EMTG
 
 
             //size the TCM transition matrix
-            this->TCMTM = math::Matrix<double>(this->numStatesToPropagate + 3, math::identity);
+            this->TCMTM = math::Matrix<double>(this->numStatesToPropagate + 2, math::identity);
+
+            //distance contraint
+            std::string shortprefix = "p" + std::to_string(this->phaseIndex);
+
+            for (std::string& constraint : this->myJourneyOptions->PhaseDistanceConstraintDefinitions)
+            {
+                if (constraint.find("#") != 0
+                    && (constraint.find(shortprefix) < 1024 || (constraint.find("pEnd") < 1024 && this->isLastPhaseInJourney)))
+                {
+                    this->distance_constraint_definitions.push_back(CreatePhaseDistanceConstraint(constraint, this->myOptions, this->myUniverse));
+                }
+            }
+            this->number_of_distance_constraints = this->distance_constraint_definitions.size();
+
+            if (this->number_of_distance_constraints > 0)
+            {
+
+                this->distance_constraint_relative_position.resize(this->numberOfDSMs, std::vector< math::Matrix<doubleType> >(this->number_of_distance_constraints, math::Matrix<doubleType>(3, 1, 0.0))); //step, constraint, state variable
+                this->distance_constraint_body_position_time_derivatives.resize(this->numberOfDSMs, std::vector< math::Matrix<double> >(this->number_of_distance_constraints, math::Matrix<double>(3, 1, 0.0))); //step, constraint, state 
+                this->distance_from_body.resize(this->numberOfDSMs, std::vector<doubleType>(this->number_of_distance_constraints, 0.0)); //step, constraint
+
+                //derivative indices
+                this->G_indices_distance_constraints_wrt_ForwardControl.resize(this->numberOfForwardSubphases, std::vector< std::vector< std::vector<size_t> > >(this->number_of_distance_constraints)); //step, constraint, controlstep, control variable
+                this->G_indices_distance_constraints_wrt_BackwardControl.resize(this->numberOfBackwardSubphases - 1, std::vector< std::vector< std::vector<size_t> > >(this->number_of_distance_constraints)); //step, constraint, controlstep, control variable
+                this->G_indices_distance_constraints_wrt_LeftBoundaryState.resize(this->numberOfForwardSubphases, std::vector< std::vector<size_t> >(this->number_of_distance_constraints)); //step, constraint, state variable
+                this->G_indices_distance_constraints_wrt_RightBoundaryState.resize(this->numberOfBackwardSubphases - 1, std::vector< std::vector<size_t> >(this->number_of_distance_constraints)); //step, constraint, state variable
+                this->G_indices_distance_constraints_wrt_LeftBoundaryTime.resize(this->numberOfForwardSubphases, std::vector< std::vector<size_t> >(this->number_of_distance_constraints)); //step, constraint, state variable
+                this->G_indices_distance_constraints_wrt_RightBoundaryTime.resize(this->numberOfBackwardSubphases - 1, std::vector< std::vector<size_t> >(this->number_of_distance_constraints)); //step, constraint, state variable
+                this->G_indices_distance_constraints_wrt_PhaseFlightTime.resize(this->numberOfDSMs, std::vector<size_t>(this->number_of_distance_constraints));
+                this->G_indices_distance_constraints_wrt_BurnIndex.resize(this->numberOfDSMs, std::vector< std::vector<size_t> >(this->number_of_distance_constraints));
+            }
         }//end constructor
 
         MGAnDSMs_phase::~MGAnDSMs_phase()
@@ -307,6 +339,11 @@ namespace EMTG
             this->calcbounds_subphases();
 
             this->calcbounds_match_point_constraints();
+
+            if (this->number_of_distance_constraints > 0)
+            {
+                this->calcbounds_distance_constraints();
+            }
 
             this->calcbounds_burnindex_sum_constraint();
 
@@ -447,6 +484,150 @@ namespace EMTG
                 this->Gindex_dVirtualChemicalOxidizerConstraint_dVirtualChemicalOxidizer);
         }//end calcbounds_match_point_constraints()
 
+        void MGAnDSMs_phase::calcbounds_distance_constraints()
+        {
+            //create constraints
+            for (size_t stepIndex = 0; stepIndex < this->numberOfDSMs; ++stepIndex)
+            {
+                for (size_t constraintIndex = 0; constraintIndex < this->number_of_distance_constraints; ++constraintIndex)
+                {
+                    //create the constraint
+                    this->Flowerbounds->push_back((std::get<1>(this->distance_constraint_definitions[constraintIndex]) - std::get<2>(this->distance_constraint_definitions[constraintIndex])) / this->myUniverse->LU);
+                    this->Fupperbounds->push_back(0.0);
+                    int bodyIndex = std::get<0>(this->distance_constraint_definitions[constraintIndex]);
+                    if (bodyIndex == -2)
+                    {
+                        this->Fdescriptions->push_back(prefix + " maneuver " + std::to_string(stepIndex) + " distance from " + this->myUniverse->central_body.name);
+                    }
+                    else
+                    {
+                        this->Fdescriptions->push_back(prefix + " maneuver " + std::to_string(stepIndex) + " distance from " + this->myUniverse->bodies[bodyIndex - 1].name);
+                    }
+
+                    //derivatives with respect to boundary states
+                    for (size_t encodedStateIndex = 0; encodedStateIndex < 8; ++encodedStateIndex)
+                    {
+                        if (stepIndex < this->numberOfForwardSubphases) //left half-phase
+                        {
+                            for (size_t varIndex = 0; varIndex < this->ListOfVariablesAffectingLeftBoundary.size(); ++varIndex)
+                            {
+                                size_t Xindex = this->ListOfVariablesAffectingLeftBoundary[varIndex];
+
+                                this->create_sparsity_entry(Fdescriptions->size() - 1,
+                                    Xindex,
+                                    this->G_indices_distance_constraints_wrt_LeftBoundaryState[stepIndex][constraintIndex]);
+                            }
+
+                            for (size_t varIndex = 0; varIndex < this->ListOfTimeVariablesAffectingLeftBoundary.size(); ++varIndex)
+                            {
+                                size_t Xindex = this->ListOfTimeVariablesAffectingLeftBoundary[varIndex];
+
+                                this->create_sparsity_entry(Fdescriptions->size() - 1,
+                                    Xindex,
+                                    this->G_indices_distance_constraints_wrt_LeftBoundaryTime[stepIndex][constraintIndex]);
+                            }
+                        }//end forward case
+                        else //right half-phase
+                        {
+                            //back_burnIndex is the number of burns removed from the right-hand boundary
+                            //note that the first backward subphase does not have a maneuver, so the "zeroth" backward maneuver actually corresponds to the second backward subphase
+                            size_t back_burnIndex = this->numberOfDSMs - stepIndex - 1;
+
+                            for (size_t varIndex = 0; varIndex < this->ListOfVariablesAffectingRightBoundary.size(); ++varIndex)
+                            {
+                                size_t Xindex = this->ListOfVariablesAffectingRightBoundary[varIndex];
+
+                                this->create_sparsity_entry(Fdescriptions->size() - 1,
+                                    Xindex,
+                                    this->G_indices_distance_constraints_wrt_RightBoundaryState[back_burnIndex][constraintIndex]);
+                            }
+
+                            for (size_t varIndex = 0; varIndex < this->ListOfTimeVariablesAffectingRightBoundary.size(); ++varIndex)
+                            {
+                                size_t Xindex = this->ListOfTimeVariablesAffectingRightBoundary[varIndex];
+
+                                this->create_sparsity_entry(Fdescriptions->size() - 1,
+                                    Xindex,
+                                    this->G_indices_distance_constraints_wrt_RightBoundaryTime[back_burnIndex][constraintIndex]);
+                            }
+                        }//end backward case
+                    }//end loop over state variables
+
+                    //derivatives with respect to control - this is a triangle!
+                    if (stepIndex < this->numberOfForwardSubphases)
+                    {
+                        //derivative with respect to all previous control variables
+                        for (size_t controlstep = 0; controlstep < stepIndex; ++controlstep)
+                        {
+                            std::vector<size_t> controlstep_G_indices_distance_constraints_wrt_Control;
+
+                            for (size_t controlIndex : {0, 1, 2})
+                            {
+                                this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                                    this->ForwardSubPhases[controlstep].getXindex_DSM_components()[controlIndex],
+                                    controlstep_G_indices_distance_constraints_wrt_Control);
+                            }
+
+                            this->G_indices_distance_constraints_wrt_ForwardControl[stepIndex][constraintIndex].push_back(controlstep_G_indices_distance_constraints_wrt_Control);
+                        }
+                    }//end forward control
+                    else
+                    {
+                        //back_burnIndex is the number of burns removed from the right-hand boundary
+                        //note that the first backward subphase does not have a maneuver, so the "zeroth" backward maneuver actually corresponds to the second backward subphase
+                        size_t back_burnIndex = this->numberOfDSMs - stepIndex - 1;
+
+                        //derivative with respect to all previous control variables (backward subphases)
+                        //note that the zeroth backward subphase does not have a maneuver
+                        for (size_t controlstep = 1; controlstep <= back_burnIndex; ++controlstep)
+                        {
+                            std::vector<size_t> controlstep_G_indices_distance_constraints_wrt_Control;
+
+                            for (size_t controlIndex : {0, 1, 2})
+                            {
+                                this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                                    this->BackwardSubPhases[controlstep].getXindex_DSM_components()[controlIndex],
+                                    controlstep_G_indices_distance_constraints_wrt_Control);
+                            }
+
+                            this->G_indices_distance_constraints_wrt_BackwardControl[back_burnIndex][constraintIndex].push_back(controlstep_G_indices_distance_constraints_wrt_Control);
+                        }
+                    }//end backward control
+
+                    //derivatives with respect to phase flight time
+                    this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                        this->Xindex_PhaseFlightTime,
+                        this->G_indices_distance_constraints_wrt_PhaseFlightTime[stepIndex][constraintIndex]);
+
+                    //derivatives with respect to burn index
+                    //fortunately the subphases already do the accounting for us
+                    if (stepIndex < this->numberOfForwardSubphases)
+                    {
+                        for (size_t Xindex : this->ForwardSubPhases[stepIndex].getXindex_burnIndex())
+                        {
+                            this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                                Xindex,
+                                this->G_indices_distance_constraints_wrt_BurnIndex[stepIndex][constraintIndex]);
+                        }
+                    }//end forward case
+                    else
+                    {
+                        //back_burnIndex is the number of burns removed from the right-hand boundary
+                        //note that the first backward subphase does not have a maneuver, so the "zeroth" backward maneuver actually corresponds to the second backward subphase
+                        size_t back_burnIndex = this->numberOfDSMs - stepIndex - 1;
+
+                        for (size_t Xindex : this->BackwardSubPhases[back_burnIndex].getXindex_burnIndex())
+                        {
+                            this->create_sparsity_entry(this->Fdescriptions->size() - 1,
+                                Xindex,
+                                this->G_indices_distance_constraints_wrt_BurnIndex[stepIndex][constraintIndex]);
+                        }
+                    }//end backward case
+
+                }//end loop over distance constraints
+            }//end loop over maneuvers
+        }//end calcbounds_distance_constraints
+
         void MGAnDSMs_phase::calcbounds_burnindex_sum_constraint()
         {
             this->Flowerbounds->push_back(-1.0e-13);
@@ -583,6 +764,11 @@ namespace EMTG
 
             this->process_match_point_constraints(X, Xindex, F, Findex, G, needG);
 
+            if (this->number_of_distance_constraints > 0)
+            {
+                this->process_distance_constraints(X, Xindex, F, Findex, G, needG);
+            }
+
             this->process_burnindex_sum_constraint(X, Xindex, F, Findex, G, needG);
 
             this->process_deltav_contribution(X, Xindex, F, Findex, G, needG);
@@ -702,8 +888,8 @@ namespace EMTG
             if (needG)
             {
                 //Step 4: derivatives with respect to control
-                math::Matrix<double> dStateNow_dDecisionVariable(this->numStatesToPropagate + 3, 1, 0.0);
-                math::Matrix<double> dMatchPointState_dDecisionVariable(this->numStatesToPropagate + 3, 1, 0.0);
+                math::Matrix<double> dStateNow_dDecisionVariable(this->numStatesToPropagate + 2, 1, 0.0);
+                math::Matrix<double> dMatchPointState_dDecisionVariable(this->numStatesToPropagate + 2, 1, 0.0);
                 size_t constraintIndex_start = 0; //we need this to control for the fact that the last DSM before the match point does not affect position
 
                 //Step 4.1: Forward Control
@@ -927,6 +1113,456 @@ namespace EMTG
                     * this->continuity_constraint_scale_factors(8);
             }
         }//end derivatives
+
+        void MGAnDSMs_phase::process_distance_constraints(const std::vector<doubleType>& X,
+            size_t& Xindex,
+            std::vector<doubleType>& F,
+            size_t& Findex,
+            std::vector<double>& G,
+            const bool& needG)
+        {
+            std::vector< std::vector<doubleType> > body_state_check(this->numberOfDSMs, { 0.0, 0.0, 0.0 });
+
+            //Step 1: apply the distance constraints
+            for (size_t stepIndex = 0; stepIndex < this->numberOfDSMs; ++stepIndex)
+            {
+                //which state are we constraining?
+                math::Matrix<doubleType>& state_vector = stepIndex < this->numberOfForwardSubphases
+                    ? (stepIndex == this->numberOfForwardSubphases - 1 ? this->match_point_state_minus : this->SpacecraftStateForward[stepIndex])
+                    : this->SpacecraftStateBackward[this->numberOfDSMs - stepIndex - 1];
+
+                for (size_t body = 0; body < this->number_of_distance_constraints; ++body)
+                {
+                    //Step 1.1: get the position vector of the spacecraft relative to the body
+                    if (std::get<0>(this->distance_constraint_definitions[body]) == -2)
+                    {
+                        for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
+                        {
+                            this->distance_constraint_relative_position[stepIndex][body](stateIndex) = state_vector(stateIndex);
+                            this->distance_constraint_body_position_time_derivatives[stepIndex][body](stateIndex) = 0.0;
+                        }
+                    }
+                    else
+                    {
+                        doubleType body_state[12];
+                        this->myUniverse->bodies[std::get<0>(this->distance_constraint_definitions[body]) - 1].locate_body(
+                            state_vector(7),
+                            body_state,
+                            (needG),
+                            *this->myOptions);
+                        for (size_t stateIndex = 0; stateIndex < 3; ++stateIndex)
+                        {
+                            this->distance_constraint_relative_position[stepIndex][body](stateIndex) = state_vector(stateIndex) - body_state[stateIndex];
+                            this->distance_constraint_body_position_time_derivatives[stepIndex][body](stateIndex) = body_state[6 + stateIndex] _GETVALUE;
+                            body_state_check[stepIndex][stateIndex] = body_state[stateIndex];
+                        }
+                    }
+
+                    //Step 1.2: apply the constraint
+                    this->distance_from_body[stepIndex][body] = this->distance_constraint_relative_position[stepIndex][body].norm();
+                    F[Findex] = (this->distance_from_body[stepIndex][body] - std::get<2>(this->distance_constraint_definitions[body])) / this->myUniverse->LU;
+                    ++Findex;
+                }
+            }//end loop over steps
+
+            //Step 2: derivatives
+            if (needG)
+            {
+                //holder vectors
+                math::Matrix<double> dStateAtDecision_dDecisionVariable(this->ForwardHPTM.get_n(), 1, 0.0);
+                math::Matrix<double> dStateAtConstraint_dDecisionVariable(this->ForwardHPTM.get_n(), 1, 0.0);
+
+                //references to boundary derivatives
+                std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StateBeforePhase = this->myDepartureEvent->get_Derivatives_of_StateAfterEvent();//Xindex, stateIndex, derivative value
+                std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StateAfterPhase = this->myArrivalEvent->get_Derivatives_of_StateBeforeEvent();//Xindex, stateIndex, derivative value
+                std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StateBeforePhase_wrt_Time = this->myDepartureEvent->get_Derivatives_of_StateAfterEvent_wrt_Time();//Xindex, stateIndex, derivative value
+                std::vector< std::tuple<size_t, size_t, double> >& Derivatives_of_StateAfterPhase_wrt_Time = this->myArrivalEvent->get_Derivatives_of_StateBeforeEvent_wrt_Time();//Xindex, stateIndex, derivative value
+
+                //Step 2.1: assemble chains of SPTMs
+                for (size_t distanceStep = 0; distanceStep < this->numberOfDSMs; ++distanceStep)
+                {
+                    if (distanceStep < this->numberOfForwardSubphases)
+                    {
+                        for (int controlStep = distanceStep; controlStep >= 0; --controlStep)
+                        {
+                            if (controlStep == distanceStep)
+                            {
+                                this->STM_to_maneuver[distanceStep][controlStep] = this->ForwardSPTM[distanceStep];
+
+                                //The maneuver is on the right-hand side of the step, so it hasn't happened yet. Remove the mass entries.
+                                this->STM_to_maneuver[distanceStep][controlStep](6, 6) = 1.0;
+                                this->STM_to_maneuver[distanceStep][controlStep](8, 6) = 1.0;
+                                this->STM_to_maneuver[distanceStep][controlStep](9, 6) = 1.0;
+                            }
+                            else
+                            {
+                                this->STM_to_maneuver[distanceStep][controlStep] = this->STM_to_maneuver[distanceStep][controlStep + 1] * this->ForwardSPTM[controlStep];
+                            }
+                        }
+
+                        //boundary STM
+                        this->Boundary_STM_to_maneuver[distanceStep] = this->STM_to_maneuver[distanceStep][0] * this->TCMTM;
+                    }//end forward
+                    else
+                    {
+                        //back_burnIndex is the number of burns removed from the right-hand boundary
+                        //note that the first backward subphase does not have a maneuver, so the "zeroth" backward maneuver actually corresponds to the second backward subphase
+                        size_t back_burnIndex = this->numberOfDSMs - distanceStep;
+
+                        for (int controlStep = distanceStep; controlStep <= this->numberOfDSMs; ++controlStep)
+                        {
+                            if (controlStep == distanceStep)
+                            {
+                                //backward subphases have their maneuver on the right hand side so the first "STM" is just an identify mapping
+                                this->STM_to_maneuver[distanceStep][controlStep] = math::Matrix<double>(this->BackwardHPTM.get_n(), math::MatrixType::identity);
+                            }
+                            else
+                            {
+                                this->STM_to_maneuver[distanceStep][controlStep] = this->STM_to_maneuver[distanceStep][controlStep - 1] * this->BackwardSPTM[this->numberOfDSMs - controlStep];
+                            }
+                        }
+
+                        //boundary STM
+                        this->Boundary_STM_to_maneuver[distanceStep] = this->STM_to_maneuver[distanceStep][this->numberOfDSMs - 1] * this->BackwardSPTM[0];
+                    }//end backward case
+                }//end loop over distance steps
+
+                //Step 2.2: compute and apply the derivatives themselves
+                for (size_t distanceStep = 0; distanceStep < this->numberOfDSMs; ++distanceStep)
+                {
+                    if (distanceStep < this->numberOfForwardSubphases)
+                    {
+                        //control derivatives
+                        for (size_t controlStep = 0; controlStep < distanceStep; ++controlStep)
+                        {
+                            Forward_MGAnDSMs_subphase& myManuever = this->ForwardSubPhases[controlStep];
+
+                            math::Matrix<double> dMassAfterManeuver_dDeltaVcomponent = myManuever.get_dMassAfterTCM_dDSMcomponents();
+                            math::Matrix<double> dChemicalFuel_dDeltaVcomponent = myManuever.get_dFuel_dDSMcomponents();
+                            math::Matrix<double> dOxidizer_dDeltaVcomponent = myManuever.get_dOxidizer_dDSMcomponents();
+
+                            for (size_t controlIndex : {0, 1, 2})
+                            {
+
+                                dStateAtDecision_dDecisionVariable.assign_zeros();
+                                dStateAtDecision_dDecisionVariable(3 + controlIndex) = 1.0;
+                                dStateAtDecision_dDecisionVariable(6) = dMassAfterManeuver_dDeltaVcomponent(controlIndex);
+                                dStateAtDecision_dDecisionVariable(8) = dChemicalFuel_dDeltaVcomponent(controlIndex);
+                                dStateAtDecision_dDecisionVariable(9) = dOxidizer_dDeltaVcomponent(controlIndex);
+
+                                //forward maneuver occurs on the right-hand side of segment, so use the next step's STM
+                                dStateAtConstraint_dDecisionVariable = this->STM_to_maneuver[distanceStep][controlStep + 1] * dStateAtDecision_dDecisionVariable;
+
+                                for (size_t constraintIndex = 0; constraintIndex < this->number_of_distance_constraints; ++constraintIndex)
+                                {
+                                    size_t Gindex = this->G_indices_distance_constraints_wrt_ForwardControl[distanceStep][constraintIndex][controlStep][controlIndex];
+
+                                    size_t Xindex = this->jGvar->operator[](Gindex);
+
+                                    math::Matrix<double>& STM = this->STM_to_maneuver[distanceStep][controlStep];
+
+                                    G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                                        / this->distance_from_body[distanceStep][constraintIndex] _GETVALUE
+                                        * (   this->distance_constraint_relative_position[distanceStep][constraintIndex](0) * dStateAtConstraint_dDecisionVariable(0)
+                                            + this->distance_constraint_relative_position[distanceStep][constraintIndex](1) * dStateAtConstraint_dDecisionVariable(1)
+                                            + this->distance_constraint_relative_position[distanceStep][constraintIndex](2) * dStateAtConstraint_dDecisionVariable(2)) _GETVALUE
+                                        / this->myUniverse->LU;
+                                }//end loop over constraints
+                            }
+                        }//end loop over control steps
+
+                        //boundary state
+                        for (size_t varIndex = 0; varIndex < this->DerivativesOfLeftBoundaryByVariable.size(); ++varIndex)
+                        {
+                            dStateAtDecision_dDecisionVariable.assign_zeros();
+
+                            for (size_t entryIndex = 0; entryIndex < this->DerivativesOfLeftBoundaryByVariable[varIndex].size(); ++entryIndex)
+                            {
+                                size_t dIndex = this->DerivativesOfLeftBoundaryByVariable[varIndex][entryIndex];
+                                size_t stateIndex = std::get<1>(Derivatives_of_StateBeforePhase[dIndex]);
+
+                                dStateAtDecision_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StateBeforePhase[dIndex]);
+                            }
+
+                            dStateAtConstraint_dDecisionVariable = this->Boundary_STM_to_maneuver[distanceStep] * dStateAtDecision_dDecisionVariable;
+
+                            for (size_t bodyIndex = 0; bodyIndex < this->number_of_distance_constraints; ++bodyIndex)
+                            {
+                                size_t Gindex = this->G_indices_distance_constraints_wrt_LeftBoundaryState[distanceStep][bodyIndex][varIndex];
+                                size_t Xindex = this->jGvar->operator[](Gindex);
+
+                                G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                                    / this->distance_from_body[distanceStep][bodyIndex] _GETVALUE
+                                    * (   this->distance_constraint_relative_position[distanceStep][bodyIndex](0) * dStateAtConstraint_dDecisionVariable(0)
+                                        + this->distance_constraint_relative_position[distanceStep][bodyIndex](1) * dStateAtConstraint_dDecisionVariable(1)
+                                        + this->distance_constraint_relative_position[distanceStep][bodyIndex](2) * dStateAtConstraint_dDecisionVariable(2)) _GETVALUE
+                                    / this->myUniverse->LU;
+                            }
+                        }
+
+                        //boundary epoch
+                        for (size_t varIndex = 0; varIndex < this->DerivativesOfLeftBoundaryByTimeVariable.size(); ++varIndex)
+                        {
+                            dStateAtDecision_dDecisionVariable.assign_zeros();
+
+                            for (size_t entryIndex = 0; entryIndex < this->DerivativesOfLeftBoundaryByTimeVariable[varIndex].size(); ++entryIndex)
+                            {
+                                size_t dIndex = this->DerivativesOfLeftBoundaryByTimeVariable[varIndex][entryIndex];
+                                size_t stateIndex = std::get<1>(Derivatives_of_StateBeforePhase_wrt_Time[dIndex]);
+
+                                dStateAtDecision_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StateBeforePhase_wrt_Time[dIndex]);
+                            }
+
+                            dStateAtConstraint_dDecisionVariable = this->Boundary_STM_to_maneuver[distanceStep] * dStateAtDecision_dDecisionVariable;
+
+                            double timeScale = dStateAtConstraint_dDecisionVariable(7);
+
+                            for (size_t bodyIndex = 0; bodyIndex < this->number_of_distance_constraints; ++bodyIndex)
+                            {
+                                size_t Gindex = this->G_indices_distance_constraints_wrt_LeftBoundaryTime[distanceStep][bodyIndex][varIndex];
+                                size_t Xindex = this->jGvar->operator[](Gindex);
+
+                                G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                                    / this->distance_from_body[distanceStep][bodyIndex] _GETVALUE
+                                    * (   this->distance_constraint_relative_position[distanceStep][bodyIndex](0) * (dStateAtConstraint_dDecisionVariable(0) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](0) * timeScale)
+                                        + this->distance_constraint_relative_position[distanceStep][bodyIndex](1) * (dStateAtConstraint_dDecisionVariable(1) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](1) * timeScale)
+                                        + this->distance_constraint_relative_position[distanceStep][bodyIndex](2) * (dStateAtConstraint_dDecisionVariable(2) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](2) * timeScale)) _GETVALUE
+                                    / this->myUniverse->LU;
+                            }
+                        }
+
+                        //phase flight time
+                        {
+                            dStateAtDecision_dDecisionVariable.assign_zeros();
+                            dStateAtDecision_dDecisionVariable(this->stateIndex_phase_propagation_variable) = 1.0;
+
+                            dStateAtConstraint_dDecisionVariable = this->Boundary_STM_to_maneuver[distanceStep] * dStateAtDecision_dDecisionVariable;
+
+                            for (size_t bodyIndex = 0; bodyIndex < this->number_of_distance_constraints; ++bodyIndex)
+                            {
+                                size_t Gindex = this->G_indices_distance_constraints_wrt_PhaseFlightTime[distanceStep][bodyIndex];
+                                size_t Xindex = this->jGvar->operator[](Gindex);
+
+                                double timeScale = dStateAtConstraint_dDecisionVariable(7);
+
+                                G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                                    / this->distance_from_body[distanceStep][bodyIndex] _GETVALUE
+                                    * (   this->distance_constraint_relative_position[distanceStep][bodyIndex](0) * (dStateAtConstraint_dDecisionVariable(0) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](0) * timeScale)
+                                        + this->distance_constraint_relative_position[distanceStep][bodyIndex](1) * (dStateAtConstraint_dDecisionVariable(1) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](1) * timeScale)
+                                        + this->distance_constraint_relative_position[distanceStep][bodyIndex](2) * (dStateAtConstraint_dDecisionVariable(2) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](2) * timeScale)) _GETVALUE
+                                    / this->myUniverse->LU;
+                            }
+                        }
+
+                        //burn index
+                        {
+                            dStateAtDecision_dDecisionVariable.assign_zeros();
+                            dStateAtDecision_dDecisionVariable(this->stateIndex_phase_propagation_variable + 1) = 1.0;
+
+                            const auto& Xindex_burnIndex = this->ForwardSubPhases[distanceStep].getXindex_burnIndex();
+                            for (size_t controlStep = 0; controlStep <= distanceStep; ++controlStep)
+                            {
+                                //multiply the first SPTM
+                                dStateAtConstraint_dDecisionVariable = this->ForwardSPTM[controlStep] * dStateAtDecision_dDecisionVariable;
+
+                                //if the burn index of interest is not associated with the step of interest, clear the burnIndex before you multiply the rest
+                                if (distanceStep != controlStep)
+                                {
+                                    dStateAtConstraint_dDecisionVariable(this->stateIndex_phase_propagation_variable + 1) = 0.0;
+
+                                    //multiply to the step of interest
+                                    dStateAtConstraint_dDecisionVariable = this->STM_to_maneuver[distanceStep][controlStep + 1] * dStateAtConstraint_dDecisionVariable;
+                                }
+
+                                double timeScale = this->PhaseFlightTime _GETVALUE;
+
+                                for (size_t bodyIndex = 0; bodyIndex < this->number_of_distance_constraints; ++bodyIndex)
+                                {
+                                    const size_t Gindex = this->G_indices_distance_constraints_wrt_BurnIndex[distanceStep][bodyIndex][controlStep];
+                                    const size_t Xindex = Xindex_burnIndex[controlStep];
+
+                                    G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                                        / this->distance_from_body[distanceStep][bodyIndex] _GETVALUE
+                                        * (this->distance_constraint_relative_position[distanceStep][bodyIndex](0) * (dStateAtConstraint_dDecisionVariable(0) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](0) * timeScale)
+                                            + this->distance_constraint_relative_position[distanceStep][bodyIndex](1) * (dStateAtConstraint_dDecisionVariable(1) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](1) * timeScale)
+                                            + this->distance_constraint_relative_position[distanceStep][bodyIndex](2) * (dStateAtConstraint_dDecisionVariable(2) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](2) * timeScale)) _GETVALUE
+                                        / this->myUniverse->LU;
+                                }
+                            }
+                        }
+                    }//end forward case
+                    else
+                    {
+                        //back_burnIndex is the number of burns removed from the right-hand boundary
+                        //note that the first backward subphase does not have a maneuver, so the "zeroth" backward maneuver actually corresponds to the second backward subphase
+                        size_t back_maneuverIndex = this->numberOfDSMs - distanceStep - 1;
+
+                        //control derivatives
+                        for (size_t controlStep = distanceStep + 1; controlStep < this->numberOfDSMs; ++controlStep)
+                        {
+                            size_t controlBackStep = this->numberOfDSMs - controlStep - 1;
+
+                            Backward_MGAnDSMs_subphase& myManuever = this->BackwardSubPhases[this->numberOfDSMs - controlStep];
+
+                            math::Matrix<double> dMassBeforeManeuver_dDeltaVcomponent = myManuever.get_dMassBeforeDSM_dDSMcomponents();
+                            math::Matrix<double> dChemicalFuel_dDeltaVcomponent = myManuever.get_dFuel_dDSMcomponents();
+                            math::Matrix<double> dOxidizer_dDeltaVcomponent = myManuever.get_dOxidizer_dDSMcomponents();
+
+                            for (size_t controlIndex : {0, 1, 2})
+                            {
+
+                                dStateAtDecision_dDecisionVariable.assign_zeros();
+                                dStateAtDecision_dDecisionVariable(3 + controlIndex) = -1.0;
+                                dStateAtDecision_dDecisionVariable(6) = -dMassBeforeManeuver_dDeltaVcomponent(controlIndex);
+                                dStateAtDecision_dDecisionVariable(8) = -dChemicalFuel_dDeltaVcomponent(controlIndex);
+                                dStateAtDecision_dDecisionVariable(9) = -dOxidizer_dDeltaVcomponent(controlIndex);
+
+                                dStateAtConstraint_dDecisionVariable = this->STM_to_maneuver[distanceStep][controlStep] * dStateAtDecision_dDecisionVariable;
+
+                                for (size_t constraintIndex = 0; constraintIndex < this->number_of_distance_constraints; ++constraintIndex)
+                                {
+                                    size_t Gindex = this->G_indices_distance_constraints_wrt_BackwardControl[back_maneuverIndex][constraintIndex][controlBackStep][controlIndex];
+
+                                    size_t Xindex = this->jGvar->operator[](Gindex);
+
+                                    G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                                        / this->distance_from_body[distanceStep][constraintIndex] _GETVALUE
+                                        * (   this->distance_constraint_relative_position[distanceStep][constraintIndex](0) * dStateAtConstraint_dDecisionVariable(0)
+                                            + this->distance_constraint_relative_position[distanceStep][constraintIndex](1) * dStateAtConstraint_dDecisionVariable(1)
+                                            + this->distance_constraint_relative_position[distanceStep][constraintIndex](2) * dStateAtConstraint_dDecisionVariable(2)) _GETVALUE
+                                        / this->myUniverse->LU;
+                                }//end loop over constraints
+                            }
+                        }//end loop over control steps
+
+                        //boundary state
+                        for (size_t varIndex = 0; varIndex < this->DerivativesOfRightBoundaryByVariable.size(); ++varIndex)
+                        {
+                            dStateAtDecision_dDecisionVariable.assign_zeros();
+
+                            for (size_t entryIndex = 0; entryIndex < this->DerivativesOfRightBoundaryByVariable[varIndex].size(); ++entryIndex)
+                            {
+                                size_t dIndex = this->DerivativesOfRightBoundaryByVariable[varIndex][entryIndex];
+                                size_t stateIndex = std::get<1>(Derivatives_of_StateAfterPhase[dIndex]);
+
+                                dStateAtDecision_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StateAfterPhase[dIndex]);
+                            }
+
+                            dStateAtConstraint_dDecisionVariable = this->Boundary_STM_to_maneuver[distanceStep] * dStateAtDecision_dDecisionVariable;
+
+                            for (size_t bodyIndex = 0; bodyIndex < this->number_of_distance_constraints; ++bodyIndex)
+                            {
+                                size_t Gindex = this->G_indices_distance_constraints_wrt_RightBoundaryState[back_maneuverIndex][bodyIndex][varIndex];
+                                size_t Xindex = this->jGvar->operator[](Gindex);
+
+                                G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                                    / this->distance_from_body[distanceStep][bodyIndex] _GETVALUE
+                                    * (   this->distance_constraint_relative_position[distanceStep][bodyIndex](0) * dStateAtConstraint_dDecisionVariable(0)
+                                        + this->distance_constraint_relative_position[distanceStep][bodyIndex](1) * dStateAtConstraint_dDecisionVariable(1)
+                                        + this->distance_constraint_relative_position[distanceStep][bodyIndex](2) * dStateAtConstraint_dDecisionVariable(2)) _GETVALUE
+                                    / this->myUniverse->LU;
+                            }
+                        }
+                        //boundary epoch
+                        for (size_t varIndex = 0; varIndex < this->DerivativesOfRightBoundaryByTimeVariable.size(); ++varIndex)
+                        {
+                            dStateAtDecision_dDecisionVariable.assign_zeros();
+
+                            for (size_t entryIndex = 0; entryIndex < this->DerivativesOfRightBoundaryByTimeVariable[varIndex].size(); ++entryIndex)
+                            {
+                                size_t dIndex = this->DerivativesOfRightBoundaryByTimeVariable[varIndex][entryIndex];
+                                size_t stateIndex = std::get<1>(Derivatives_of_StateAfterPhase_wrt_Time[dIndex]);
+
+                                dStateAtDecision_dDecisionVariable(stateIndex) = std::get<2>(Derivatives_of_StateAfterPhase_wrt_Time[dIndex]);
+                            }
+
+                            dStateAtConstraint_dDecisionVariable = this->Boundary_STM_to_maneuver[distanceStep] * dStateAtDecision_dDecisionVariable;
+
+                            double timeScale = dStateAtConstraint_dDecisionVariable(7);
+
+                            for (size_t bodyIndex = 0; bodyIndex < this->number_of_distance_constraints; ++bodyIndex)
+                            {
+                                size_t Gindex = this->G_indices_distance_constraints_wrt_RightBoundaryTime[back_maneuverIndex][bodyIndex][varIndex];
+                                size_t Xindex = this->jGvar->operator[](Gindex);
+                                
+                                G[Gindex] = this->X_scale_factors->operator[](Xindex)
+                                    / this->distance_from_body[distanceStep][bodyIndex] _GETVALUE
+                                    * (   this->distance_constraint_relative_position[distanceStep][bodyIndex](0) * (dStateAtConstraint_dDecisionVariable(0) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](0) * timeScale)
+                                        + this->distance_constraint_relative_position[distanceStep][bodyIndex](1) * (dStateAtConstraint_dDecisionVariable(1) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](1) * timeScale)
+                                        + this->distance_constraint_relative_position[distanceStep][bodyIndex](2) * (dStateAtConstraint_dDecisionVariable(2) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](2) * timeScale)) _GETVALUE
+                                    / this->myUniverse->LU;
+                            }
+                        }
+
+                        //phase flight time (this has to be a += because phase flight time is also a right boundary time variable)
+                        {
+                            dStateAtDecision_dDecisionVariable.assign_zeros();
+                            dStateAtDecision_dDecisionVariable(this->stateIndex_phase_propagation_variable) = 1.0;
+
+                            dStateAtConstraint_dDecisionVariable = this->Boundary_STM_to_maneuver[distanceStep] * dStateAtDecision_dDecisionVariable;
+
+                            for (size_t bodyIndex = 0; bodyIndex < this->number_of_distance_constraints; ++bodyIndex)
+                            {
+                                size_t Gindex = this->G_indices_distance_constraints_wrt_PhaseFlightTime[distanceStep][bodyIndex];
+                                size_t Xindex = this->jGvar->operator[](Gindex);
+
+                                double timeScale = dStateAtConstraint_dDecisionVariable(7);
+
+                                G[Gindex] += this->X_scale_factors->operator[](Xindex)
+                                    / this->distance_from_body[distanceStep][bodyIndex] _GETVALUE
+                                    * (   this->distance_constraint_relative_position[distanceStep][bodyIndex](0) * (dStateAtConstraint_dDecisionVariable(0) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](0) * timeScale)
+                                        + this->distance_constraint_relative_position[distanceStep][bodyIndex](1) * (dStateAtConstraint_dDecisionVariable(1) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](1) * timeScale)
+                                        + this->distance_constraint_relative_position[distanceStep][bodyIndex](2) * (dStateAtConstraint_dDecisionVariable(2) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](2) * timeScale)) _GETVALUE
+                                    / this->myUniverse->LU;
+                            }
+                        }
+                        //burn index
+                        {
+                            //distanceBackStep is the number of burns removed from the right-hand boundary
+                            //note that the first backward subphase does not have a maneuver, so the "zeroth" backward maneuver actually corresponds to the second backward subphase
+                            size_t distanceBackStep = this->numberOfDSMs - distanceStep - 1;
+
+                            dStateAtDecision_dDecisionVariable.assign_zeros();
+                            dStateAtDecision_dDecisionVariable(this->stateIndex_phase_propagation_variable + 1) = 1.0;
+
+                            const auto& Xindex_burnIndex = this->BackwardSubPhases[back_maneuverIndex].getXindex_burnIndex();
+                            for (size_t controlStep = distanceStep; controlStep < this->numberOfDSMs; ++controlStep)
+                            {
+                                size_t controlBackStep = this->numberOfDSMs - controlStep - 1;
+                                size_t varIndex = Xindex_burnIndex.size() - controlBackStep - 1; //varIndex is index in Xindex_burnIndex. The current burnIndex is always the last one as we move backwards in the list
+
+                                //multiply the first SPTM
+                                dStateAtConstraint_dDecisionVariable = this->BackwardSPTM[controlBackStep] * dStateAtDecision_dDecisionVariable;
+
+                                //if the burn index of interest is not associated with the step of interest, clear the burnIndex before you multiply the rest
+                                if (distanceBackStep != controlBackStep)
+                                {
+                                    dStateAtConstraint_dDecisionVariable(this->stateIndex_phase_propagation_variable + 1) = 0.0;
+
+                                    //multiply to the step of interest
+                                    dStateAtConstraint_dDecisionVariable = this->STM_to_maneuver[distanceStep][controlStep] * dStateAtConstraint_dDecisionVariable;
+                                }
+
+                                double timeScale = this->PhaseFlightTime _GETVALUE;
+
+                                for (size_t bodyIndex = 0; bodyIndex < this->number_of_distance_constraints; ++bodyIndex)
+                                {
+                                    const size_t Gindex = this->G_indices_distance_constraints_wrt_BurnIndex[distanceStep][bodyIndex][controlBackStep];
+                                    const size_t Xindex = Xindex_burnIndex[controlBackStep];
+
+                                    G[Gindex] = -this->X_scale_factors->operator[](Xindex)
+                                        / this->distance_from_body[distanceStep][bodyIndex] _GETVALUE
+                                        * (   this->distance_constraint_relative_position[distanceStep][bodyIndex](0) * (dStateAtConstraint_dDecisionVariable(0) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](0) * timeScale)
+                                            + this->distance_constraint_relative_position[distanceStep][bodyIndex](1) * (dStateAtConstraint_dDecisionVariable(1) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](1) * timeScale)
+                                            + this->distance_constraint_relative_position[distanceStep][bodyIndex](2) * (dStateAtConstraint_dDecisionVariable(2) - this->distance_constraint_body_position_time_derivatives[distanceStep][bodyIndex](2) * timeScale)) _GETVALUE
+                                        / this->myUniverse->LU;
+                                }
+                            }
+                        }
+                    }//end backward case
+                }//end loop over steps
+            }//end derivatives
+        }//end process_distance_constraints()
         
         void MGAnDSMs_phase::process_burnindex_sum_constraint(const std::vector<doubleType>& X,
             size_t& Xindex,

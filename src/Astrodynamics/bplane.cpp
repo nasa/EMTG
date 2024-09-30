@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -203,7 +203,8 @@ namespace EMTG
         //function to compute the outbound V-infinity vector and periapse distance from BdotR and BdotT
         void bplane::compute_Vinfinity_out_from_BdotR_BdotT(const double& mu, const doubleType& BdotR, const doubleType& BdotT, math::Matrix<doubleType>& V_infinity_out, doubleType& rp)
         {
-            throw std::runtime_error("bplane::compute_Vinfinity_out_from_BdotR_BdotT is not yet implemented!");
+            std::cout << "bplane::compute_Vinfinity_out_from_BdotR_BdotT is not yet implemented!" << std::endl;
+            std::cin.ignore();
 
             //basically, compute B_hat and negate the component of V_infinity_in in the direction of Bhat
             //i.e. (V_infinity_in dot B_hat) = (V_infinity_out dot B_hat)

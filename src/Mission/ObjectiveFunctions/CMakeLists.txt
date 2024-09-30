@@ -7,6 +7,7 @@ set(OBJECTIVE_FUNCTIONS_HEADERS  ${OBJECTIVE_FUNCTIONS_HEADERS}
                                  ${CMAKE_CURRENT_SOURCE_DIR}/MaximizeLog10MassObjective.h
                                  ${CMAKE_CURRENT_SOURCE_DIR}/MinimizeTimeObjective.h
                                  ${CMAKE_CURRENT_SOURCE_DIR}/MaximizeInitialMassObjective.h
+                                 ${CMAKE_CURRENT_SOURCE_DIR}/MinimizeInitialMassObjective.h
                                  ${CMAKE_CURRENT_SOURCE_DIR}/ObjectiveFunctionBase.h
                                  ${CMAKE_CURRENT_SOURCE_DIR}/ArriveAsEarlyAsPossibleObjective.h
                                  ${CMAKE_CURRENT_SOURCE_DIR}/ArriveAsLateAsPossibleObjective.h
@@ -31,6 +32,7 @@ set(OBJECTIVE_FUNCTIONS_SOURCE  ${OBJECTIVE_FUNCTIONS_SOURCE}
                                 ${CMAKE_CURRENT_SOURCE_DIR}/MaximizeLog10MassObjective.cpp
                                 ${CMAKE_CURRENT_SOURCE_DIR}/MinimizeTimeObjective.cpp
                                 ${CMAKE_CURRENT_SOURCE_DIR}/MaximizeInitialMassObjective.cpp
+                                ${CMAKE_CURRENT_SOURCE_DIR}/MinimizeInitialMassObjective.cpp
                                 ${CMAKE_CURRENT_SOURCE_DIR}/ObjectiveFunctionBase.cpp
                                 ${CMAKE_CURRENT_SOURCE_DIR}/ArriveAsEarlyAsPossibleObjective.cpp
                                 ${CMAKE_CURRENT_SOURCE_DIR}/ArriveAsLateAsPossibleObjective.cpp

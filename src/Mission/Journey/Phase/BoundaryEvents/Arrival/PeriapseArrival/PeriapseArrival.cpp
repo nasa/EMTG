@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -53,15 +53,23 @@ namespace EMTG
             //set this boundary's state representation
             this->myStateRepresentationEnum = myOptions->PeriapseBoundaryStateRepresentation;
 
-            //periapse arrival cannot use IncomingBplane
-            if (this->myStateRepresentationEnum == StateRepresentation::OutgoingBplane)
-            {
-                std::cout << "In Journey " << this->journeyIndex << "'s arrival event, the state representation is set to "
-                    << StateRepresentationStrings[this->myStateRepresentationEnum == StateRepresentation::OutgoingBplane]
-                    << ". PeriapseArrival automatically switches this to "
-                    << StateRepresentationStrings[this->myStateRepresentationEnum == StateRepresentation::IncomingBplane] << std::endl;
-                this->myStateRepresentationEnum = StateRepresentation::IncomingBplane;
-            }
+   //         //periapse arrival cannot use OutgoingBplane
+   //         if (this->myStateRepresentationEnum == StateRepresentation::OutgoingBplane)
+   //         {
+   //             std::cout << "In Journey " << this->journeyIndex << "'s arrival event, the state representation is set to "
+   //                 << StateRepresentationStrings[this->myStateRepresentationEnum == StateRepresentation::OutgoingBplane]
+   //                 << ". PeriapseArrival automatically switches this to "
+   //                 << StateRepresentationStrings[this->myStateRepresentationEnum == StateRepresentation::IncomingBplane] << std::endl;
+   //             this->myStateRepresentationEnum = StateRepresentation::IncomingBplane;
+   //         }
+			//else if (this->myStateRepresentationEnum == StateRepresentation::OutgoingBplaneRpTA)
+			//{
+			//	std::cout << "In Journey " << this->journeyIndex << "'s arrival event, the state representation is set to "
+			//		<< StateRepresentationStrings[this->myStateRepresentationEnum == StateRepresentation::OutgoingBplaneRpTA]
+			//		<< ". PeriapseArrival automatically switches this to "
+			//		<< StateRepresentationStrings[this->myStateRepresentationEnum == StateRepresentation::IncomingBplaneRpTA] << std::endl;
+			//	this->myStateRepresentationEnum = StateRepresentation::IncomingBplaneRpTA;
+			//}
 
             this->myStateRepresentation = Astrodynamics::CreateStateRepresentation(this->myStateRepresentationEnum, Universe->mu);
 

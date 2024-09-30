@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -233,6 +233,10 @@ namespace EMTG
 
             //run SNOPT
             this->NLP_start_time = time(NULL);
+			// set most recent write time to the starting time so that we have something meaningful to compare against
+			// before any writes have been made
+			this->mostRecentNLPWriteTime = time(NULL); 
+			this->newBestIncumbent = false; // initialize this to false. it will be changed to true in the user function if necessary
             this->feasibility_metric_NLP_incumbent = 1.0e+101;
             this->J_NLP_incumbent = math::LARGE;
             this->movie_frame_count = 0;
@@ -415,6 +419,7 @@ namespace EMTG
                 SNOPT_G[Gindex] = self->G[Gindex];
 
             //Step 6: NLP chaperone
+			bool wroteToFile = false; // keep track of whether or not we've written output
             if (*needG && self->myOptions.get_enable_NLP_chaperone())
             {
                 //first compute the current feasibility
@@ -465,8 +470,7 @@ namespace EMTG
                 //if the current point is feasible and better than the incumbent
                 //raw pointer math for speed
                 if (fmax(f_current, decision_variable_feasibility_metric) < self->myOptions.get_feasibility_tolerance()
-                    && self->feasibility_metric_NLP_incumbent < self->myOptions.get_feasibility_tolerance()
-                    && decision_variable_feasibility_metric == 0.0)
+                    && self->feasibility_metric_NLP_incumbent < self->myOptions.get_feasibility_tolerance())
                 {
                     // Both the incumbent and the current point are feasible
                     if (self->F.front() < self->J_NLP_incumbent)
@@ -478,6 +482,14 @@ namespace EMTG
                         self->X_NLP_incumbent_unscaled = self->X_unscaled;
                         self->X_NLP_incumbent_scaled = self->X_scaled;
                         self->F_NLP_incumbent = self->F;
+
+						// if this solution is also a GLOBAL best, then we want to update the global incumbent
+						// and flip the flag to write it to file the next time we have a chance
+						if (self->J_NLP_incumbent < self->JGlobalIncumbent)
+						{
+							self->newBestIncumbent = true;
+							self->JGlobalIncumbent = self->J_NLP_incumbent; // update global value for comparison
+						}
                     }
 					
 					// Check if this is the first time things have been feasible. It shouldnt be, because the incumbent was already feasible
@@ -485,17 +497,29 @@ namespace EMTG
 					if (self->first_feasibility == false)
 					{
 						self->first_feasibility = true;
-						self->myProblem->Xopt = self->X_NLP_incumbent_unscaled;
-						self->myProblem->F = self->F_NLP_incumbent;
-	                    self->myProblem->evaluate(self->X_NLP_incumbent_unscaled, self->F_NLP_incumbent, self->G, false);
 
-                        self->myProblem->what_the_heck_am_I_called(SolutionOutputType::SUCCESS);
-						self->myProblem->output(self->myProblem->options.outputfile);
+						// write to file if better than best solution from any previous NLP solve
+						if (self->J_NLP_incumbent < self->JGlobalIncumbent) // better than best solution from any previous NLP solves?
+						{
+							self->newBestIncumbent = true;
+							self->JGlobalIncumbent = self->J_NLP_incumbent; // update global value for comparison
+
+							self->myProblem->Xopt = self->X_NLP_incumbent_unscaled;
+							self->myProblem->F = self->F_NLP_incumbent;
+							self->myProblem->evaluate(self->X_NLP_incumbent_unscaled, self->F_NLP_incumbent, self->G, false);
+
+							self->myProblem->what_the_heck_am_I_called(SolutionOutputType::SUCCESS);
+							self->myProblem->output(self->myProblem->options.outputfile);
+							wroteToFile = true;
+							self->mostRecentNLPWriteTime = time(NULL); // reset the most recent write time
+							self->newBestIncumbent = false; // reset bool telling us we have a new best solution to write out
+						}
 					}
                 }
                 //if the current point is more feasible than the incumbent
                 else if (fmax(f_current, decision_variable_feasibility_metric) < self->feasibility_metric_NLP_incumbent)
                 {
+					// update the incumbent to be the current point
                     self->J_NLP_incumbent = self->F.front();
                     self->feasibility_metric_NLP_incumbent = fmax(f_current, decision_variable_feasibility_metric);
 
@@ -503,17 +527,63 @@ namespace EMTG
                     self->X_NLP_incumbent_scaled = self->X_scaled;
                     self->F_NLP_incumbent = self->F;
 					
-					if (fmax(f_current, decision_variable_feasibility_metric) < self->myOptions.get_feasibility_tolerance() && self->first_feasibility == false)
+					// if the current point is feasible and it is the first feasible point of this NLP solve, set the first_feasibility flag to true
+					if (fmax(f_current, decision_variable_feasibility_metric) < self->myOptions.get_feasibility_tolerance() && // are we feasible?
+						self->first_feasibility == false) // first feasible solution from this NLP solve?
 					{
-						self->first_feasibility = true;
-						self->myProblem->Xopt = self->X_NLP_incumbent_unscaled;
-						self->myProblem->F = self->F_NLP_incumbent;
-	                    self->myProblem->evaluate(self->X_NLP_incumbent_unscaled, self->F_NLP_incumbent, self->G, false);
+						self->first_feasibility = true; // update this flag regardless of if the solution is better than the best solution from any previous NLP solve
+						
+						// write to file if better than best solution from any previous NLP solve
+						if (self->J_NLP_incumbent < self->JGlobalIncumbent) // better than best solution from any previous NLP solves?
+						{
+							self->newBestIncumbent = true;
+							self->JGlobalIncumbent = self->J_NLP_incumbent; // update global value for comparison
 
-                        self->myProblem->what_the_heck_am_I_called(SolutionOutputType::SUCCESS);
-                        self->myProblem->output(self->myProblem->options.outputfile);
+							self->myProblem->Xopt = self->X_NLP_incumbent_unscaled;
+							self->myProblem->F = self->F_NLP_incumbent;
+							self->myProblem->evaluate(self->X_NLP_incumbent_unscaled, self->F_NLP_incumbent, self->G, false);
+
+							self->myProblem->what_the_heck_am_I_called(SolutionOutputType::SUCCESS);
+							self->myProblem->output(self->myProblem->options.outputfile);
+
+							wroteToFile = true;
+							self->mostRecentNLPWriteTime = time(NULL); // reset the most recent write time
+							self->newBestIncumbent = false; // reset bool telling us we have a new best solution to write out
+						}
 					}
                 }
+
+				// check the timer and write to file if we have an incumbent solution with better value of objective function than our most recent write-to-file
+				time_t now = time(NULL);
+				bool checkSolutionToOutput;
+				if ((now - self->mostRecentNLPWriteTime) > self->myProblem->options.NLP_write_output_check_time)
+				{
+					checkSolutionToOutput = true;
+				}
+				else
+				{
+					checkSolutionToOutput = false;
+				}
+				if (checkSolutionToOutput && // true if it has been long enough that we should look for a new solution
+					self->newBestIncumbent && // true if we have found a new solution that needs to be printed
+					!wroteToFile) // don't write to file if we already wrote it to file this time through the code
+				{
+					// write to file
+					self->myProblem->Xopt = self->X_NLP_incumbent_unscaled;
+					self->myProblem->F = self->F_NLP_incumbent;
+					self->myProblem->evaluate(self->X_NLP_incumbent_unscaled, self->F_NLP_incumbent, self->G, false);
+					self->myProblem->what_the_heck_am_I_called(SolutionOutputType::SUCCESS);
+					self->myProblem->output(self->myProblem->options.outputfile);
+					wroteToFile = true;
+
+					if (!self->myOptions.get_quiet_NLP()) // check if we should write to screen
+					{
+						std::cout << "Intermediate NLP solution written to file with new best J = " << self->JGlobalIncumbent << "." << std::endl;
+					}
+
+					self->mostRecentNLPWriteTime = time(NULL); // reset the most recent write time
+					self->newBestIncumbent = false; // reset bool telling us we have a new best solution to write out
+				}
             }//end NLP chaperone
 
             //Step 7: print movie frames

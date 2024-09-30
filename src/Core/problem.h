@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -141,6 +141,26 @@ namespace EMTG
 
         //vector of synodic periods for any periodic variables
         std::vector<double> synodic_periods;
+
+		// set to true if first NLP solve was feasible. set to false otherwise
+		bool firstOptimizationFeasible;
+
+		// value of cost function achieved by first NLP solve (regardless of whether it was a feasible solution)
+		double firstOptimizationCost;
+
+		// number of solution attempts
+		// always 1 for trialx and nlp solve
+		// >= 1 for MBH
+		size_t numberOfSolutionAttempts;
+
+		// which solution attempt produced a feasible solution with the best value of the cost function?
+		// set to 0 if no feasible solutions were found
+		size_t indexOfBestSolutionAttempt;
+
+		// how long did it take from the start of the run to achieve the feasible solution
+		// with the best value of the cost function? (seconds)
+		// set to -1 if no feasible solutions were found
+		double timeToCompletionOfBestSolutionAttempt;
     };
 
 } /* namespace EMTG */

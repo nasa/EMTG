@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -72,9 +72,10 @@ namespace EMTG
                 math::Matrix<doubleType> R_probe_ref2;
                 Astrodynamics::body* myReference1;
                 Astrodynamics::body* myReference2;
+				//Astrodynamics::body* myBoundaryEventBody;
 
-                bool ref1IsCentralBody;
-                bool ref2IsCentralBody;
+                bool ref1IsCentralBodyOfJourney;
+                bool ref2IsCentralBodyOfJourney;
                 std::string ref1Name;
                 std::string ref2Name;
                 math::Matrix<double> dcosRPR_dR_probe_ref1;
@@ -83,6 +84,9 @@ namespace EMTG
                 math::Matrix<double> dR_cb_ref2_dt;
                 math::Matrix<double> dR_probe_ref1_dt;
                 math::Matrix<double> dR_probe_ref2_dt;
+
+				math::Matrix<doubleType> R_cbJourney_cbEvent;
+				math::Matrix<double> dR_cbJourney_cbEvent_dt;
 
                 //this constraint has derivatives with respect to any non-time variable that affects spacecraft position and velocity
                 //spacecraft position is used for "Body" vector

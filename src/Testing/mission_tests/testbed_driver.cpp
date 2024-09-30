@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -268,6 +268,170 @@ int main(int argc, char* argv[])
                     }
                 }
 
+				//boundary constraint list
+				//some, but not all, require new splines
+				for (std::string& constraint : options.Journeys[j].BoundaryConstraintDefinitions)
+				{
+					std::vector<std::string> ConstraintDefinitionCell;
+					boost::split(ConstraintDefinitionCell,
+						constraint,
+						boost::is_any_of("_"),
+						boost::token_compress_on);
+
+					// distance constraint
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("distanceconstraint") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// angular momentum reference angle
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("angularmomentumreferenceangle") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// elevation from ground station
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("deticelevationfromgroundstation") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// target body elevation
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("targetdeticelevation") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// RBP angle
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("rbp") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// RPB angle
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("rpb") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// RPR angle
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("rpr") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+
+						if (boost::to_lower_copy(ConstraintDefinitionCell[4]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[4]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// RRP angle
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("rrp") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+
+						if (boost::to_lower_copy(ConstraintDefinitionCell[4]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[4]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+                    
+                    // two-body rotating frame constraint
+                    if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("stateintwobodyrotatingframe") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[4]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[4]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+
+						if (boost::to_lower_copy(ConstraintDefinitionCell[5]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[5]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+
+					// velocity declination w/r/t/ any body constraint
+					if (boost::to_lower_copy(ConstraintDefinitionCell[2]).find("velocitydeclinationanybody") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[3]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[3]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+				}
+                
+				//maneuver constraint list
+				//some, but not all, require new splines
+				for (std::string& constraint : options.Journeys[j].ManeuverConstraintDefinitions)
+				{
+					std::vector<std::string> ConstraintDefinitionCell;
+					boost::split(ConstraintDefinitionCell,
+						constraint,
+						boost::is_any_of("_"),
+						boost::token_compress_on);
+
+					// PSFB body-probe-thrust angle
+					if (boost::to_lower_copy(ConstraintDefinitionCell[1]).find("bpt") < 1024)
+					{
+						if (boost::to_lower_copy(ConstraintDefinitionCell[2]) != "cb")
+						{
+							int bodyIndex = std::stoi(ConstraintDefinitionCell[2]) - 1;
+
+							body_index_array.push_back(bodyIndex);
+						}
+					}
+				}
+
                 for (size_t b = 0; b < body_index_array.size(); ++b)
                 {
                     //do we already have this body?
@@ -372,33 +536,27 @@ int main(int argc, char* argv[])
             if (j > 0) //if not the first journey, insert an underscore
                 options.description.append("_");
             options.description.append(TheUniverse[j].central_body_name + "(");
-
-            if (options.Journeys[j].departure_class == EMTG::BoundaryClass::EphemerisPegged)
+            switch (options.Journeys[j].sequence[0])
             {
-                options.description.append(TheUniverse[j].bodies[options.Journeys[j].sequence[0] - 1].short_name);
+            case -1: //begin at SOI
+            {
+                options.description.append("s");
+                break;
             }
-            else if (options.Journeys[j].departure_class == EMTG::BoundaryClass::EphemerisReferenced)
+            case 0: //begin at central body
             {
-                if (options.Journeys[j].sequence[0] == -1) //SOI
-                {
-                    options.description.append("s");
-                }
-                else if (options.Journeys[j].sequence[0] == 0) //central body
-                {
-                    options.description.append("c");
-                }
-                else //body in the universe
-                {
-                    options.description.append(TheUniverse[j].bodies[options.Journeys[j].sequence[0] - 1].short_name);
-                }
+                options.description.append("c");
+                break;
             }
-            else if (options.Journeys[j].departure_class == EMTG::BoundaryClass::Periapse)
-            {
-                options.description.append("c"); //always the central body
-            }
-            else //free point
-            {
-                options.description.append("f");
+            default:
+				if (options.Journeys[j].departure_class == EMTG::BoundaryClass::FreePoint)
+				{
+					options.description.append("f");
+				}
+				else
+				{
+					options.description.append(TheUniverse[j].bodies[options.Journeys[j].sequence[0] - 1].short_name);
+				}
             }
 
             //first, how many phases are there in the journey?
@@ -424,33 +582,28 @@ int main(int argc, char* argv[])
             options.Journeys[j].sequence.push_back(options.Journeys[j].destination_list[1]);
 
 
-            if (options.Journeys[j].arrival_class == EMTG::BoundaryClass::EphemerisPegged)
+            switch (options.Journeys[j].sequence.back())
             {
-                options.description.append(TheUniverse[j].bodies[options.Journeys[j].sequence.back() - 1].short_name);
-            }
-            else if (options.Journeys[j].arrival_class == EMTG::BoundaryClass::EphemerisReferenced)
+            case -1: //begin at SOI
             {
-                if (options.Journeys[j].sequence.back() == -1) //SOI
-                {
-                    options.description.append("s");
-                }
-                else if (options.Journeys[j].sequence.back() == 0) //central body
-                {
-                    options.description.append("c");
-                }
-                else //body in the universe
-                {
-                    options.description.append(TheUniverse[j].bodies[options.Journeys[j].sequence.back() - 1].short_name);
-                }
+                options.description.append("s");
+                break;
             }
-            else if (options.Journeys[j].arrival_class == EMTG::BoundaryClass::Periapse)
+            case 0: //begin at central body
             {
-                options.description.append("c"); //always the central body
+                options.description.append("c");
+                break;
             }
-            else //free point
-            {
-                options.description.append("f");
-            }
+			default:
+				if (options.Journeys[j].arrival_class == EMTG::BoundaryClass::FreePoint)
+				{
+					options.description.append("f");
+				}
+				else
+				{
+					options.description.append(TheUniverse[j].bodies[options.Journeys[j].sequence.back() - 1].short_name);
+				}
+			}
             options.description.append(")");
 
             options.Journeys[j].number_of_phases = options.Journeys[j].sequence.size() - 1;

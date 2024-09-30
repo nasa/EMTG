@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -36,6 +36,7 @@ namespace EMTG
             dIndex_StateBeforeEvent_wrt_EncodedState(7)
         {
             this->LeftBoundaryIsABody = false;
+            this->myStateRepresentation = nullptr;
         }
 
         FreePointBoundary::FreePointBoundary(const std::string& name,
@@ -47,6 +48,7 @@ namespace EMTG
             missionoptions* myOptions) :
             FreePointBoundary::FreePointBoundary()
         {
+            this->myStateRepresentation = nullptr;
             this->initialize(name,
                              journeyIndex,
                              phaseIndex,
@@ -146,7 +148,10 @@ namespace EMTG
 
         FreePointBoundary::~FreePointBoundary()
         {
-            delete this->myStateRepresentation;
+            if (this->myStateRepresentation != nullptr)
+            {
+                delete this->myStateRepresentation;
+            }
 
             if (this->AllowStateToPropagate)
             {
@@ -249,6 +254,28 @@ namespace EMTG
 
                     break;
                 }
+				case StateRepresentation::IncomingBplaneRpTA:
+				{
+					statesToRepresent.push_back({ "VINFin",  this->myUniverse->LU / this->myUniverse->TU, false });
+					statesToRepresent.push_back({ "RHAin",  1.0, true });
+					statesToRepresent.push_back({ "DHAin",  1.0, true });
+					statesToRepresent.push_back({ "RPin", this->myUniverse->LU, false });
+					statesToRepresent.push_back({ "BTHETAin", 1.0, true });
+					statesToRepresent.push_back({ "TAin",  1.0, true });
+
+					break;
+				}
+				case StateRepresentation::OutgoingBplaneRpTA:
+				{
+					statesToRepresent.push_back({ "VINFout",  this->myUniverse->LU / this->myUniverse->TU, false });
+					statesToRepresent.push_back({ "RHAout",  1.0, true });
+					statesToRepresent.push_back({ "DHAout",  1.0, true });
+					statesToRepresent.push_back({ "RPout", this->myUniverse->LU, false });
+					statesToRepresent.push_back({ "BTHETAout", 1.0, true });
+					statesToRepresent.push_back({ "TAout",  1.0, true });
+
+					break;
+				}
                 default:
                     throw std::invalid_argument("FreePointBoundary does not recognize state representation " + std::to_string(this->myStateRepresentationEnum) + ". Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__) + ".");
             }

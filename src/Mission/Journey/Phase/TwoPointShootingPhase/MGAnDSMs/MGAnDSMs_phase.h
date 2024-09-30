@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -102,6 +102,8 @@ namespace EMTG
 
             virtual void calcbounds_match_point_constraints();
 
+            virtual void calcbounds_distance_constraints(); //TwoPointShootingLowThrustPhase can do the sparsity pattern except for Sundman phases
+
             void calcbounds_burnindex_sum_constraint();
 
             void calcbounds_virtual_propellant_tanks();
@@ -131,6 +133,13 @@ namespace EMTG
                 const bool& needG);
 
             virtual void process_match_point_constraints(const std::vector<doubleType>& X,
+                size_t& Xindex,
+                std::vector<doubleType>& F,
+                size_t& Findex,
+                std::vector<double>& G,
+                const bool& needG);
+
+            virtual void process_distance_constraints(const std::vector<doubleType>& X,
                 size_t& Xindex,
                 std::vector<doubleType>& F,
                 size_t& Findex,
@@ -189,6 +198,25 @@ namespace EMTG
             std::vector< std::vector<size_t> > Gindices_deltav_wrt_BackwardControl;
 
             std::vector<size_t> Gindices_BurnIndexSumConstraint;
+
+            //distance constraint
+            size_t number_of_distance_constraints;
+            std::vector < std::tuple<int, double, double> > distance_constraint_definitions; //body, lower bound in km, upper bound in km
+            std::vector < std::vector < math::Matrix<doubleType> > > distance_constraint_relative_position; //step, constraint, state variable
+            std::vector < std::vector < math::Matrix<double> > > distance_constraint_body_position_time_derivatives;
+            std::vector< std::vector<doubleType> > distance_from_body; //step, constraint
+
+            std::unordered_map< size_t, std::unordered_map<size_t, math::Matrix<double> > > STM_to_maneuver; //[toStepIndex][fromStepIndex]
+            std::unordered_map< size_t, math::Matrix<double> > Boundary_STM_to_maneuver; //[toStepIndex]
+
+            std::vector< std::vector< std::vector< std::vector<size_t> > > > G_indices_distance_constraints_wrt_ForwardControl; //step, constraint, controlstep, control variable
+            std::vector< std::vector< std::vector< std::vector<size_t> > > > G_indices_distance_constraints_wrt_BackwardControl; //step, constraint, controlstep, control variable
+            std::vector< std::vector< std::vector<size_t> > > G_indices_distance_constraints_wrt_LeftBoundaryState; //step, constraint, variable
+            std::vector< std::vector< std::vector<size_t> > > G_indices_distance_constraints_wrt_RightBoundaryState; //step, constraint, variable
+            std::vector< std::vector< std::vector<size_t> > > G_indices_distance_constraints_wrt_LeftBoundaryTime; //step, constraint, variable
+            std::vector< std::vector< std::vector<size_t> > > G_indices_distance_constraints_wrt_RightBoundaryTime; //step, constraint, variable
+            std::vector< std::vector< size_t> > G_indices_distance_constraints_wrt_PhaseFlightTime;
+            std::vector< std::vector< std::vector<size_t> > > G_indices_distance_constraints_wrt_BurnIndex;//[distanceStep][constraint][variable]
         };
     }//close namespace Phases
 }//close namespace EMTG

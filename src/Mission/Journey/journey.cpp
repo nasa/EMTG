@@ -2,7 +2,7 @@
 // An open-source global optimization tool for preliminary mission design
 // Provided by NASA Goddard Space Flight Center
 //
-// Copyright (c) 2013 - 2020 United States Government as represented by the
+// Copyright (c) 2013 - 2024 United States Government as represented by the
 // Administrator of the National Aeronautics and Space Administration.
 // All Other Rights Reserved.
 
@@ -32,13 +32,10 @@
 #include "MGAnDSMs_phase.h"
 #include "CoastPhase.h"
 #include "SundmanCoastPhase.h"
+#include "ControlLawThrustPhase.h"
 
 #ifdef HAS_PROBEENTRYPHASE
 #include "ProbeEntryPhase.h"
-#endif
-
-#ifdef HAS_CONTROLLAWTHRUSTPHASE
-#include "ControlLawThrustPhase.h"
 #endif
 
 #include "journey.h"
@@ -244,7 +241,6 @@ namespace EMTG
                 case EMTG ::PhaseType::ControlLawThrustPhase:
                 {
                     //this phase is a SundmanCoastPhase
-#ifdef HAS_CONTROLLAWTHRUSTPHASE
                     this->phases.push_back(new Phases::ControlLawThrustPhase(PhaseName,
                         this->journeyIndex,
                         phaseIndex,
@@ -254,9 +250,6 @@ namespace EMTG
                         this->mySpacecraft,
                         this->myLaunchVehicle,
                         this->myOptions));
-#else
-                    throw std::invalid_argument("The ControlLawThrustPhase phase type is not included in this version of EMTG. Place a breakpoint in " + std::string(__FILE__) + ", line " + std::to_string(__LINE__));
-#endif
                     break;
                 }
                 case EMTG::PhaseType::VARIABLE_PHASE_TYPE:
@@ -813,11 +806,13 @@ namespace EMTG
 
         //print any information about specialized constraints
 
+		outputfile << std::endl << "BEGIN_BOUNDARY_CONSTRAINT_BLOCK" << std::endl;
         for (size_t phaseIndex = 0; phaseIndex < this->number_of_phases; ++phaseIndex)
         {
             this->phases[phaseIndex].getDepartureEvent()->output_specialized_constraints(outputfile);
             this->phases[phaseIndex].getArrivalEvent()->output_specialized_constraints(outputfile);
         }
+		outputfile << "END_BOUNDARY_CONSTRAINT_BLOCK" << std::endl;
 
         //skip a line, print the flight time, and skip one more line
         outputfile << std::endl;
