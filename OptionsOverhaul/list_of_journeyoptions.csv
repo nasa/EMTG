@@ -1,122 +1,131 @@
-dataType,name,scale,length,defaultValue,lowerBound,upperBound,comment,description
-std::string,journey_name,,,default,,,Journey name,Journey name
-std::string,journey_central_body,,,Sun,,,Journey central body name,Journey central body name
-std::vector<int>,destination_list,,2,"[3, 4]","[-1, -1]","[inf, inf]","destination list, as indices from the Universe file","destination list, as indices from the Universe file"
-std::vector<int>,sequence,,inf,[],1,inf,"flyby sequence, as indices from the Universe file","flyby sequence, as indices from the Universe file"
-PhaseType,phase_type,,,2,0,11,"mission type, #0: MGALTS, #1: FBLTS, #2: MGALT, #3: FBLT, #4: PSBI, #5: PSFB, #6: MGAnDSMs, #7: CoastPhase, #8: SundmanCoastPhase, #9: variable (do not use), #10: ProbeEntryPhase, #11 ControlLawThrustPhase",phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable (do not use)\n#10 ProbeEntryPhase\n#11 ControlLawThrustPhase
-size_t,impulses_per_phase,,,1,0,inf,impulses per phase,impulses per phase
-ThrustControlLaw,thrust_control_law,,,1,1,2,"Thrust control law,#0: Cartesian, #1: Velocity direction, #2: anti-velocity direction",Thrust control law\n#0: Cartesian\n#1: Velocity direction\n1#2: anti-velocity direction
-ControlMagnitudeType,force_unit_magnitude_control,,,0,0,2,"Force unit magnitude control?,#0: free control magnitude,#1: force unit magnitude,#2: force zero magnitude",Force unit magnitude control?\n#0: free control magnitude\n#1: force unit magnitude\n#2: force zero magnitude
-bool,force_fixed_inertial_control,,,0,0,1,Force fixed inertial control? All control vectors in a phase must be identical if this is selected.,Force fixed inertial control? All control vectors in a phase must be identical if this is selected.
-bool,override_num_steps,,,0,0,1,Override this journey's number of steps?,Override this journey's number of steps?
-size_t,number_of_steps,,,20,1,inf,"Number of time steps for this journey, if overriden","Number of time steps for this journey, if overriden"
-bool,override_duty_cycle,,,0,0,1,Journey override global duty cycle,Journey override global duty cycle
-double,duty_cycle,,,1,0,1,Journey duty cycle,Journey duty cycle
-bool,override_PropagatorType,,,0,0,1,override propagator type?,override propagator type?
-PropagatorType,propagatorType,,,1,0,1,propagator type,propagator type
-bool,override_integration_step_size,,,0,0,1,Override global integration step size?,Override global integration step size?
-double,integration_step_size,,,86400,0,1000000,integration step size (s),integration step size (s)
-bool,override_flyby_altitude_bounds,,,0,0,1,Override journey flyby altitude?,Override journey flyby altitude?
-std::vector<double>,flyby_altitude_bounds,,2,"[300.0, 1.0e+6]","[0.0, 1.0]","[inf, inf]","Lower and upper bound on journey flyby altitude (only applies to the departure flyby, if there is one)","Lower and upper bound on journey flyby altitude (only applies to the departure flyby, if there is one)"
-bool,PeriapseArrival_override_altitude,,,1,0,1,Override journey flyby altitude?,Override journey flyby altitude?
-std::vector<double>,PeriapseArrival_altitude_bounds,,2,"[300.0, 1.0e+6]","[0.0, 1.0]","[inf, inf]",Lower and upper bound on journey flyby altitude (km),Lower and upper bound on journey flyby altitude (km)
-std::vector<double>,PeriapseDeparture_altitude_bounds,,2,"[185.0, 185.0]","[0.0, 1.0]","[inf, inf]",PeriapseDeparture altitude bounds (in km),PeriapseDeparture altitude bounds (in km)
-size_t,num_interior_control_points,,,1,1,inf,number of interior control points for parallel shooting phase types,number of interior control points for parallel shooting phase types
-double,CoastPhaseMatchPointFraction,,,0.5,0,1,coast phase match point fraction,coast phase match point fraction
-double,CoastPhaseForwardIntegrationStepLength,,,86400,0,1000000,coast phase forward integration step length (seconds),coast phase forward integration step length (seconds)
-double,CoastPhaseBackwardIntegrationStepLength,,,86400,0,1000000,coast phase backward integration step length (seconds),coast phase backward integration step length (seconds)
-double,journey_end_TCM,,,0,0,inf,Journey-end TCM magnitude (km/s),Journey-end TCM magnitude (km/s)
-bool,enable_periapse_burns,,,0,0,1,Enable periapse burns in ephemeris pegged flybys?,Enable periapse burns in ephemeris pegged flybys?
-bool,bounded_departure_date,,,0,0,1,Bound the departure epoch?,Bound the departure epoch?
-int,timebounded,,,0,0,3,"0: unbounded, 1: bounded flight time, 2: bounded arrival date",does the journey have time bounds?\n#0: unbounded\n#1: bounded flight time\n#2: bounded arrival date\n#3: bounded aggregate flight time
-std::vector<double>,departure_date_bounds,86400,2,"[0.0, 0.0]",0,inf,MJD,"Journey departure epoch bounds (MJD, two entries)"
-std::vector<double>,wait_time_bounds,86400,2,"[0.0, 1000.0]",-inf,inf,days,Journey wait time bounds (days)
-std::vector<double>,flight_time_bounds,86400,2,"[0.0, 0.0]",0,inf,days,Journey flight time bounds (days)
-std::vector<double>,arrival_date_bounds,86400,2,"[51544.5, 60000.0]",0,inf,MJD,"Journey arrival date bounds (MJD, two entries)"
-DepartureType,departure_type,,,0,0,6,"journey departure type, #0: launch or direct insertion, #1: depart from parking orbit (you can use this one in place of a launch vehicle model, and the departure burn will be done with the EDS motor), #2: free direct departure, i.e. do not burn to get the departure v_infinity (used for when operations about a small body are not modeled but the departure velocity is known), #3: flyby (only valid for successive journeys), #4: flyby with fixed v-infinity-out (only valid for successive journeys), #5: spiral-out from circular orbit (low-thrust missions only), #6: zero-turn flyby (for small bodies)","journey departure type\n#0: launch or direct insertion\n#1: depart from parking orbit (you can use this one in place of a launch vehicle model, and the departure burn will be done with the EDS motor)\n#2: free direct departure, i.e. do not burn to get the departure v_infinity (used for when operations about a small body are not modeled but the departure velocity is known)\n#3: flyby (only valid for successive journeys)\n#4: flyby with fixed v-infinity-out (only valid for successive journeys)\n#5: spiral-out from circular orbit (low-thrust missions only)\n#6: zero-turn flyby (for small bodies)"
-std::vector<double>,initial_impulse_bounds,,2,"[0.0, 6.97]",0,inf,what are the bounds on the initial impulse for each journey in km/s,what are the bounds on the initial impulse for each journey in km/s\\\n#you can set a very high upper bound if you are using a launchy vehicle model - the optimizer will find the correct value
-bool,force_free_point_direct_insertion_along_velocity_vector,,,0,0,1,Force free point direct insertion burn to be along the inertial velocity vector?,Force free point direct insertion burn to be along the inertial velocity vector?
-std::vector<bool>,departure_elements_vary_flag,,6,"[0,0,0,0,0,0]",0,1,one entry for each element,one entry for each element
-std::vector<double>,departure_elements,,6,"[0.0,0.0,0.0,0.0,0.0,0.0]",-inf,inf,"cartesian state or SMA, ECC, INC, RAAN, AOP, TA","cartesian state or SMA, ECC, INC, RAAN, AOP, TA"
-std::vector<double>,departure_elements_bounds,,12,"[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]",-inf,inf,"bounds on elements or state components, two entries for each element","bounds on elements or state components, two entries for each element"
-double,departure_elements_reference_epoch,86400,,51544.5,0,inf,MJD,Reference epoch (MJD) for journey departure elements
-StateRepresentation,departure_elements_state_representation,,,0,0,6,"departure free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)","arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)"
-ReferenceFrame,departure_elements_frame,,,0,0,9,"reference frame for journey departure elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)","reference frame for journey departure elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)"
-bool,AllowJourneyFreePointDepartureToPropagate,,,0,0,1,Allow journey departure free point boundary to propagate (otherwise it is a fixed waypoint),Allow journey departure free point boundary to propagate (otherwise it is a fixed waypoint)
-double,maximum_starting_mass_increment,,,0,-inf,inf,negative number indicates mass drop,upper bound on starting mass increment (negative number indicates mass drop) [kg]
-double,minimum_starting_mass_increment,,,0,-inf,inf,negative number indicates mass drop,lower bound on starting mass increment (negative number indicates mass drop) [kg]
-double,fixed_starting_mass_increment,,,0,-inf,inf,negative number indicates mass drop,starting mass increment (negative number indicates mass drop) [kg]
-double,fixed_ending_mass_increment,,,0,-inf,inf,negative number indicates mass drop,ending mass increment (negative number indicates mass drop) [kg]
-bool,variable_mass_increment,,,0,0,1,Vary initial mass increment?,Vary initial mass increment?
-bool,constrain_initial_mass,,,0,0,1,Constrain initial mass?,Constrain initial mass?
-double,maximum_initial_mass,,,0,0,inf,"If initial mass for this journey is constrained, enter the constraint value here.","If initial mass for this journey is constrained, enter the constraint value here."
-BoundaryClass,departure_class,,,0,0,3,"journey departure boundary class, #0: Ephemeris-pegged (default EMTG), #1: Free point, #2: Ephemeris-referenced, #3: Periapse",journey departure boundary class\n#0: Ephemeris-pegged (default EMTG)\n#1: Free point\n#2: Ephemeris-referenced\n#3: Periapse
-std::vector<double>,departure_ellipsoid_axes,,3,"[1e-8,1e-8,1e-8]",0,inf,journey departure ellipsoid axes (3),journey departure ellipsoid axes (3)
-ArrivalType,arrival_type,,,3,0,7,"journey arrival type, #0: insertion into parking orbit (use chemical Isp), #1: rendezvous (use chemical Isp), #2: intercept with bounded V_infinity, #3: low-thrust rendezvous (does not work if terminal phase is not low-thrust), #4: match final v-infinity vector, #5: match final v-infinity vector (low-thrust), #6: capture spiral, #7: momentum transfer (kinetic impactor)",journey arrival type\n#0: insertion into parking orbit (use chemical Isp)\n#1: rendezvous (use chemical Isp)\n#2: intercept with bounded V_infinity\n#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)\n#4: match final v-infinity vector\n#5: match final v-infinity vector (low-thrust)\n#6: capture spiral\n#7: momentum transfer (kinetic impactor)
-std::vector<bool>,arrival_elements_vary_flag,,6,"[0,0,0,0,0,0]",0,1,one entry for each element,one entry for each element
-std::vector<double>,arrival_elements,,6,"[0.0,0.0,0.0,0.0,0.0,0.0]",-inf,inf,"cartesian state or SMA, ECC, INC, RAAN, AOP, TA","cartesian state or SMA, ECC, INC, RAAN, AOP, TA"
-std::vector<double>,arrival_elements_bounds,,12,"[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]",-inf,inf,"bounds on elements or state components, two entries for each element","bounds on elements or state components, two entries for each element"
-double,arrival_elements_reference_epoch,86400,,51544.5,0,inf,MJD,Reference epoch (MJD) for journey arrival elements
-StateRepresentation,arrival_elements_state_representation,,,0,0,6,"arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)","arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)"
-ReferenceFrame,arrival_elements_frame,,,0,0,9,"reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)","reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)"
-bool,AllowJourneyFreePointArrivalToPropagate,,,0,0,1,Allow journey arrival free point boundary to propagate (otherwise it is a fixed waypoint),Allow journey arrival free point boundary to propagate (otherwise it is a fixed waypoint)
-std::vector<double>,final_velocity,,3,"[0.0, 20.0, 0.0]",0,inf,Bounds on this journey's final velocity (in km/s),Bounds on this journey's final velocity (in km/s)
-double,forced_terminal_coast,86400,,0,0,inf,Journey forced terminal coast (in days),Journey forced terminal coast (in days)
-double,forced_initial_coast,86400,,0,0,inf,Journey forced initial coast (in days),Journey forced initial coast (in days)
-BoundaryClass,arrival_class,,,0,0,3,"journey arrival boundary class, #0: Ephemeris-pegged (default EMTG), #1: Free point, #2: Ephemeris-referenced, #3: Periapse",journey arrival boundary class\n#0: Ephemeris-pegged (default EMTG)\n#1: Free point\n#2: Ephemeris-referenced\n#3: Periapse
-std::vector<double>,arrival_ellipsoid_axes,,3,"[1e-8,1e-8,1e-8]",0,inf,journey arrival ellipsoid axes (3),journey arrival ellipsoid axes (3)
-double,zero_turn_flyby_distance,,,1000,0,inf,encounter distance (from center of object) for a zero-turn flyby (km),encounter distance (from center of object) for a zero-turn flyby (km)
-double,terminal_intercept_flyby_distance,,,1000,0,inf,encounter distance (from center of object) for an ephemeris-pegged intercept (km),encounter distance (from center of object) for an ephemeris-pegged intercept (km)
-double,escape_spiral_starting_radius,,,6678,0,inf,Starting orbital radius for an Edelbaum escape spiral (km),Starting orbital radius for an Edelbaum escape spiral (km)
-double,escape_spiral_final_radius,,,6678,0,inf,Final orbit radius for an Edelbaum escape spiral (km),Final orbit radius for an Edelbaum capture spiral (km)
-double,capture_spiral_final_radius,,,6678,0,inf,Final orbit radius for an Edelbaum capture spiral (km),Final orbit radius for an Edelbaum capture spiral (km)
-double,capture_spiral_starting_radius,,,6678,0,inf,Starting orbital radius for an Edelbaum capture spiral (km),Starting orbital radius for an Edelbaum capture spiral (km)
-bool,FreePointArrival_print_target_spec,,,1,0,1,Print a target spec for free point arrival at the end of this journey?,Print a target spec for free point arrival at the end of this journey?
-double,journey_end_deltav,,,0,0,inf,Journey-end delta-v (km/s),Journey-end delta-v (km/s)
-PropulsionSystemChoice,journey_end_propulsion_system,,,0,0,1,"Propulsion system for journey-end maneuver, #0: Monoprop chemical, #1: Biprop chemical, #2: Electric",Propulsion system for journey-end maneuver\n#0: Monoprop chemical\n#1: Biprop chemical\n#2: Electric
-std::vector<size_t>,perturbation_bodies,,inf,[],1,inf,Universe file indices of each perturbation body,Which bodies are used for third-body perturbation?\n#Expressed as indices in the Universe file
-bool,stage_after_departure,,,0,0,1,Stage after departure?,Stage after departure?
-bool,stage_before_arrival,,,0,0,1,Stage before arrival?,Stage before arrival?
-bool,stage_after_arrival,,,0,0,1,Stage after arrival?,Stage after arrival?
-bool,freeze_decision_variables,,,0,0,1,Freeze this journey's decision variables?,Freeze this journey's decision variables?
-double,ephemeris_pegged_orbit_insertion_SMA,,,6678,0,inf,SMA (in km) for ephemeris pegged orbit insertion,SMA (in km) for ephemeris pegged orbit insertion
-double,ephemeris_pegged_orbit_insertion_ECC,,,0,0,inf,ECC for ephemeris pegged orbit insertion,ECC for ephemeris pegged orbit insertion
-double,impact_momentum_enhancement_factor,,,1,0.0,inf,Impact momentum enhancement factor for planetary defense (also called beta),Impact momentum enhancement factor for planetary defense (also called beta)
-bool,perturb_drag,,,0,0,1,Aerodynamic drag?,Aerodynamic drag?
-double,spacecraft_drag_area,,,70,0,inf,"spacecraft area (for aerodynamic drag, in m^2)","spacecraft area (for aerodynamic drag, in m^2)"
-double,coefficient_of_drag,,,2.2,0,inf,"coefficient of drag, i.e. Cd (unitless)","coefficient of drag, i.e. Cd (unitless)"
-std::string,AtmosphericDensityModelKey,,,Exponential,,,Atmospheric density model,Atmospheric density model
-std::string,AtmosphericDensityModelDataFile,,,DoesNotExist.emtg_densityopt,,,File defining atmospheric density model,File defining atmospheric density model
-double,probe_separation_impulse,,,1,0,inf,Probe separation impulse (Ns),Probe separation impulse (Ns)
-double,probe_mass,,,100.0,1e-13,inf,Probe mass (kg),Probe mass (kg)
-std::vector<bool>,Probe_AEI_elements_vary_flag,,6,"[0,0,0,0,0,0]",0,1,one entry for each element,one entry for each element
-std::vector<double>,Probe_AEI_elements,,6,"[0.0,0.0,0.0,0.0,0.0,0.0]",-inf,inf,"cartesian state or SMA, ECC, INC, RAAN, AOP, TA","cartesian state or SMA, ECC, INC, RAAN, AOP, TA"
-std::vector<double>,Probe_AEI_elements_bounds,,12,"[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]",-inf,inf,"bounds on elements or state components, two entries for each element","bounds on elements or state components, two entries for each element"
-double,Probe_AEI_elements_reference_epoch,86400,,51544.5,0,inf,MJD,Reference epoch (MJD) for journey probe arrival elements
-StateRepresentation,Probe_AEI_elements_state_representation,,,0,0,3,"probe arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)","probe arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)"
-ReferenceFrame,Probe_AEI_elements_frame,,,0,0,8,"reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)","reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)"
-std::vector<bool>,Probe_End_elements_vary_flag,,6,"[0,0,0,0,0,0]",0,1,one entry for each element,one entry for each element
-std::vector<double>,Probe_End_elements,,6,"[0.0,0.0,0.0,0.0,0.0,0.0]",-inf,inf,"cartesian state or SMA, ECC, INC, RAAN, AOP, TA","cartesian state or SMA, ECC, INC, RAAN, AOP, TA"
-std::vector<double>,Probe_End_elements_bounds,,12,"[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]",-inf,inf,"bounds on elements or state components, two entries for each element","bounds on elements or state components, two entries for each element"
-double,Probe_End_elements_reference_epoch,86400,,51544.5,0,inf,MJD,Reference epoch (MJD) for journey probe arrival elements
-StateRepresentation,Probe_End_elements_state_representation,,,0,0,3,"probe arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)","probe arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)"
-ReferenceFrame,Probe_End_elements_frame,,,0,0,8,"reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)","reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)"
+dataType,name,scale,length,defaultValue,lowerBound,upperBound,comment,description,,
+std::string,journey_name,,,default,,,Journey name,Journey name,,
+std::string,journey_central_body,,,Sun,,,Journey central body name,Journey central body name,,
+std::vector<int>,destination_list,,2,"[3, 4]","[-1, -1]","[inf, inf]","destination list, as indices from the Universe file","destination list, as indices from the Universe file",,
+std::vector<int>,sequence,,inf,[],1,inf,"flyby sequence, as indices from the Universe file","flyby sequence, as indices from the Universe file",,
+PhaseType,phase_type,,,2,0,11,"mission type. Choices are 0 - MGALTS, 1 - FBLTS, 2 - MGALT, 3 - FBLT, 4 - PSBI, 5 - PSFB, 6 - MGAnDSMs, 7 - CoastPhase, 8 - SundmanCoastPhase, 9 - variable (do not use), 10 - ProbeEntryPhase, 11 - ControlLawThrustPhase.",phase type\n#0: MGALTS\n#1: FBLTS\n#2: MGALT\n#3: FBLT\n#4: PSBI\n#5: PSFB\n#6: MGAnDSMs\n#7: CoastPhase\n#8: SundmanCoastPhase\n#9: variable (do not use)\n#10 ProbeEntryPhase\n#11 ControlLawThrustPhase,,
+size_t,impulses_per_phase,,,1,0,inf,impulses per phase,impulses per phase,,
+ThrustControlLaw,thrust_control_law,,,1,1,2,"Thrust control law. Choices are 0 - Cartesian (not implemented), 1 - velocity direction, 2 - anti-velocity direction.",Thrust control law\n#0: Cartesian (not implemented)\n#1: velocity direction\n#2: anti-velocity direction,,
+ControlMagnitudeType,force_unit_magnitude_control,,,0,0,2,"Force unit magnitude control? Choices are 0 - free control magnitude, 1 - force unit magnitude, 2 - force zero magnitude.",Force unit magnitude control?\n#0: free control magnitude\n#1: force unit magnitude\n#2: force zero magnitude,,
+bool,force_fixed_inertial_control,,,0,0,1,Force fixed inertial control? All control vectors in a phase must be identical if this is selected.,Force fixed inertial control? All control vectors in a phase must be identical if this is selected.,,
+bool,override_num_steps,,,0,0,1,Override this journey's number of steps?,Override this journey's number of steps?,,
+size_t,number_of_steps,,,20,1,inf,"Number of time steps for this journey, if overriden","Number of time steps for this journey, if overriden",,
+bool,override_duty_cycle,,,0,0,1,Journey override global duty cycle,Journey override global duty cycle,,
+double,duty_cycle,,,1,0,1,Journey duty cycle,Journey duty cycle,,
+bool,override_PropagatorType,,,0,0,1,override propagator type?,override propagator type?,,
+PropagatorType,propagatorType,,,1,0,1,propagator type,propagator type,,
+bool,override_integration_step_size,,,0,0,1,Override global integration step size?,Override global integration step size?,,
+double,integration_step_size,,,86400,0,1000000,integration step size (s),integration step size (s),,
+bool,override_flyby_altitude_bounds,,,0,0,1,Override journey flyby altitude?,Override journey flyby altitude?,,
+std::vector<double>,flyby_altitude_bounds,,2,"[300.0, 1.0e+6]","[0.0, 1.0]","[inf, inf]","Lower and upper bound on journey flyby altitude, if override is active (only applies to the departure flyby, if there is one)","Lower and upper bound on journey flyby altitude, if override is active (only applies to the departure flyby, if there is one)",,
+bool,PeriapseArrival_override_altitude,,,0,0,1,Override journey periapse arrival altitude?,Override journey periapse arrival altitude?,,
+std::vector<double>,PeriapseArrival_altitude_bounds,,2,"[300.0, 1.0e+6]","[0.0, 1.0]","[inf, inf]","Lower and upper bound on journey periapse arrival altitude, if override is active (km)","Lower and upper bound on journey periapse arrival altitude, if override is active (km)",,
+std::vector<double>,PeriapseDeparture_altitude_bounds,,2,"[185.0, 185.0]","[0.0, 1.0]","[inf, inf]",PeriapseDeparture altitude bounds (in km),PeriapseDeparture altitude bounds (in km),,
+size_t,num_interior_control_points,,,1,1,inf,number of interior control points for parallel shooting phase types,number of interior control points for parallel shooting phase types,,
+double,CoastPhaseMatchPointFraction,,,0.5,0,1,coast phase match point fraction,coast phase match point fraction,,
+double,CoastPhaseForwardIntegrationStepLength,,,86400,0,1000000,coast phase forward integration step length (seconds),coast phase forward integration step length (seconds),,
+double,CoastPhaseBackwardIntegrationStepLength,,,86400,0,1000000,coast phase backward integration step length (seconds),coast phase backward integration step length (seconds),,
+double,journey_end_TCM,,,0,0,inf,Journey-end TCM magnitude (km/s),Journey-end TCM magnitude (km/s),,
+bool,enable_periapse_burns,,,0,0,1,Enable periapse burns in ephemeris pegged flybys?,Enable periapse burns in ephemeris pegged flybys?,,
+bool,bounded_departure_date,,,0,0,1,Bound the departure epoch?,Bound the departure epoch?,,
+int,timebounded,,,0,0,3,"Choices are 0 - unbounded, 1 - bounded flight time, 2 - bounded arrival date.",does the journey have time bounds?\n#0: unbounded\n#1: bounded flight time\n#2: bounded arrival date\n#3: bounded aggregate flight time,,
+std::vector<double>,departure_date_bounds,86400,2,"[0.0, 0.0]",0,inf,MJD,"Journey departure epoch bounds (MJD, two entries)",,
+std::vector<double>,wait_time_bounds,86400,2,"[0.0, 1000.0]",minf,inf,days,Journey wait time bounds (days),,
+std::vector<double>,flight_time_bounds,86400,2,"[0.0, 0.0]",0,inf,days,Journey flight time bounds (days),,
+std::vector<double>,arrival_date_bounds,86400,2,"[51544.5, 60000.0]",0,inf,MJD,"Journey arrival date bounds (MJD, two entries)",,
+DepartureType,departure_type,,,0,0,6,"journey departure type. Choices are 0 - launch or direct insertion, 1 - depart from parking orbit (you can use this one in place of a launch vehicle model, and the departure burn will be done with the EDS motor), 2 - free direct departure, i.e. do not burn to get the departure v_infinity (used for when operations about a small body are not modeled but the departure velocity is known), 3 - flyby (only valid for successive journeys), 4 - flyby with fixed v-infinity-out (only valid for successive journeys), 5 - spiral-out from circular orbit (low-thrust missions only), 6 - zero-turn flyby (for small bodies)","journey departure type\n#0: launch or direct insertion\n#1: depart from parking orbit (you can use this one in place of a launch vehicle model, and the departure burn will be done with the EDS motor)\n#2: free direct departure, i.e. do not burn to get the departure v_infinity (used for when operations about a small body are not modeled but the departure velocity is known)\n#3: flyby (only valid for successive journeys)\n#4: flyby with fixed v-infinity-out (only valid for successive journeys)\n#5: spiral-out from circular orbit (low-thrust missions only)\n#6: zero-turn flyby (for small bodies)",,
+std::vector<double>,initial_impulse_bounds,,2,"[0.0, 6.97]",0,inf,what are the bounds on the initial impulse for each journey in km/s,what are the bounds on the initial impulse for each journey in km/s\\\n#you can set a very high upper bound if you are using a launchy vehicle model - the optimizer will find the correct value,,
+bool,force_free_point_direct_insertion_along_velocity_vector,,,0,0,1,Force free point direct insertion burn to be along the inertial velocity vector?,Force free point direct insertion burn to be along the inertial velocity vector?,,
+std::vector<bool>,departure_elements_vary_flag,,6,"[0,0,0,0,0,0]",0,1,one entry for each element,one entry for each element,,
+std::vector<double>,departure_elements,,6,"[0.0,0.0,0.0,0.0,0.0,0.0]",minf,inf,"cartesian state or SMA, ECC, INC, RAAN, AOP, TA","cartesian state or SMA, ECC, INC, RAAN, AOP, TA",,
+std::vector<double>,departure_elements_bounds,,12,"[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]",minf,inf,"bounds on elements or state components, two entries for each element","bounds on elements or state components, two entries for each element",,
+double,departure_elements_reference_epoch,86400,,51544.5,0,inf,MJD,Reference epoch (MJD) for journey departure elements,,
+StateRepresentation,departure_elements_state_representation,,,0,0,8,"departure free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane, IncomingBplaneRpTA, OutgoingBplaneRpTA)","departure free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane, IncomingBplaneRpTA, OutgoingBplaneRpTA)",,
+ReferenceFrame,departure_elements_frame,,,0,0,9,"reference frame for journey departure elements. Choices are 0 - J2000_ICRF, 1 - J2000_BCI, 2 - J2000_BCF, 3 - TrueOfDate_BCI, 4 - TrueOfDate_BCF, 5 - Principle Axes, 6 - Topocentric, 7 - Polar, 8 - SAM, 9 - ObjectReferenced.","reference frame for journey departure elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)",,
+bool,AllowJourneyFreePointDepartureToPropagate,,,0,0,1,Allow journey departure free point boundary to propagate (otherwise it is a fixed waypoint),Allow journey departure free point boundary to propagate (otherwise it is a fixed waypoint),,
+double,maximum_starting_mass_increment,,,0,minf,inf,negative number indicates mass drop,upper bound on starting mass increment (negative number indicates mass drop) [kg],,
+double,minimum_starting_mass_increment,,,0,minf,inf,negative number indicates mass drop,lower bound on starting mass increment (negative number indicates mass drop) [kg],,
+double,fixed_starting_mass_increment,,,0,minf,inf,negative number indicates mass drop,starting mass increment (negative number indicates mass drop) [kg],,
+double,fixed_ending_mass_increment,,,0,minf,inf,negative number indicates mass drop,ending mass increment (negative number indicates mass drop) [kg],,
+bool,variable_mass_increment,,,0,0,1,Vary initial mass increment?,Vary initial mass increment?,,
+bool,constrain_initial_mass,,,0,0,1,Constrain initial mass?,Constrain initial mass?,,
+double,maximum_initial_mass,,,0,0,inf,"If initial mass for this journey is constrained, enter the constraint value here.","If initial mass for this journey is constrained, enter the constraint value here.",,
+BoundaryClass,departure_class,,,0,0,3,"journey departure boundary class. Choices are 0 - Ephemeris-pegged (default EMTG), 1 - Free point, 2 - Ephemeris-referenced, 3 - Periapse.",journey departure boundary class\n#0: Ephemeris-pegged (default EMTG)\n#1: Free point\n#2: Ephemeris-referenced\n#3: Periapse,,
+std::vector<double>,departure_ellipsoid_axes,,3,"[1e-8,1e-8,1e-8]",0,inf,journey departure ellipsoid axes (3),journey departure ellipsoid axes (3),,
+ArrivalType,arrival_type,,,3,0,7,"journey arrival type. Choices are 0 - insertion into parking orbit (use chemical Isp), 1 - rendezvous (use chemical Isp), 2 - intercept with bounded V_infinity, 3 - low-thrust rendezvous (does not work if terminal phase is not low-thrust), 4 - match final v-infinity vector, 5 - match final v-infinity vector (low-thrust), 6 - capture spiral, 7 - momentum transfer (kinetic impactor).",journey arrival type\n#0: insertion into parking orbit (use chemical Isp)\n#1: rendezvous (use chemical Isp)\n#2: intercept with bounded V_infinity\n#3: low-thrust rendezvous (does not work if terminal phase is not low-thrust)\n#4: match final v-infinity vector\n#5: match final v-infinity vector (low-thrust)\n#6: capture spiral\n#7: momentum transfer (kinetic impactor),,
+std::vector<bool>,arrival_elements_vary_flag,,6,"[0,0,0,0,0,0]",0,1,one entry for each element,one entry for each element,,
+std::vector<double>,arrival_elements,,6,"[0.0,0.0,0.0,0.0,0.0,0.0]",minf,inf,"cartesian state or SMA, ECC, INC, RAAN, AOP, TA","cartesian state or SMA, ECC, INC, RAAN, AOP, TA",,
+std::vector<double>,arrival_elements_bounds,,12,"[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]",minf,inf,"bounds on elements or state components, two entries for each element","bounds on elements or state components, two entries for each element",,
+double,arrival_elements_reference_epoch,86400,,51544.5,0,inf,MJD,Reference epoch (MJD) for journey arrival elements,,
+StateRepresentation,arrival_elements_state_representation,,,0,0,8,"arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane, IncomingBplaneRpTA, OutgoingBplaneRpTA)","arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane, IncomingBplaneRpTA, OutgoingBplaneRpTA)",,
+ReferenceFrame,arrival_elements_frame,,,0,0,9,"reference frame for journey arrival elements. Choices are 0 - J2000_ICRF, 1 - J2000_BCI, 2 - J2000_BCF, 3 - TrueOfDate_BCI, 4 - TrueOfDate_BCF, 5 - Principle Axes, 6 - Topocentric, 7 - Polar, 8 - SAM, 9 - ObjectReferenced.","reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)",,
+bool,AllowJourneyFreePointArrivalToPropagate,,,0,0,1,Allow journey arrival free point boundary to propagate (otherwise it is a fixed waypoint),Allow journey arrival free point boundary to propagate (otherwise it is a fixed waypoint),,
+std::vector<double>,final_velocity,,3,"[0.0, 20.0, 0.0]",0,inf,Bounds on this journey's final velocity (in km/s),Bounds on this journey's final velocity (in km/s),,
+double,forced_terminal_coast,86400,,0,0,inf,Journey forced terminal coast (in days),Journey forced terminal coast (in days),,
+double,forced_initial_coast,86400,,0,0,inf,Journey forced initial coast (in days),Journey forced initial coast (in days),,
+BoundaryClass,arrival_class,,,0,0,3,"journey arrival boundary class. Choices are 0 - Ephemeris-pegged (default EMTG), 1 - Free point, 2 - Ephemeris-referenced, 3 - Periapse.",journey arrival boundary class\n#0: Ephemeris-pegged (default EMTG)\n#1: Free point\n#2: Ephemeris-referenced\n#3: Periapse,,
+std::vector<double>,arrival_ellipsoid_axes,,3,"[1e-8,1e-8,1e-8]",0,inf,journey arrival ellipsoid axes (3),journey arrival ellipsoid axes (3),,
+double,zero_turn_flyby_distance,,,1000,0,inf,encounter distance (from center of object) for a zero-turn flyby (km),encounter distance (from center of object) for a zero-turn flyby (km),,
+double,terminal_intercept_flyby_distance,,,1000,0,inf,encounter distance (from center of object) for an ephemeris-pegged intercept (km),encounter distance (from center of object) for an ephemeris-pegged intercept (km),,
+double,escape_spiral_starting_radius,,,6678,0,inf,Starting orbital radius for an Edelbaum escape spiral (km),Starting orbital radius for an Edelbaum escape spiral (km),,
+double,escape_spiral_final_radius,,,6678,0,inf,Final orbit radius for an Edelbaum escape spiral (km),Final orbit radius for an Edelbaum capture spiral (km),,
+double,capture_spiral_final_radius,,,6678,0,inf,Final orbit radius for an Edelbaum capture spiral (km),Final orbit radius for an Edelbaum capture spiral (km),,
+double,capture_spiral_starting_radius,,,6678,0,inf,Starting orbital radius for an Edelbaum capture spiral (km),Starting orbital radius for an Edelbaum capture spiral (km),,
+bool,FreePointArrival_print_target_spec,,,1,0,1,Print a target spec for free point arrival at the end of this journey?,Print a target spec for free point arrival at the end of this journey?,,
+double,journey_end_deltav,,,0,0,inf,Journey-end delta-v (km/s),Journey-end delta-v (km/s),,
+PropulsionSystemChoice,journey_end_propulsion_system,,,0,0,1,"Propulsion system for journey-end maneuver. Choices are 0 - Monoprop chemical, 1 - Biprop chemical, 2 - Electric.",Propulsion system for journey-end maneuver\n#0: Monoprop chemical\n#1: Biprop chemical\n#2: Electric,,
+std::vector<size_t>,perturbation_bodies,,inf,[],1,inf,Universe file indices of each perturbation body,Which bodies are used for third-body perturbation?\n#Expressed as indices in the Universe file,,
+bool,stage_after_departure,,,0,0,1,Stage after departure?,Stage after departure?,,
+bool,stage_before_arrival,,,0,0,1,Stage before arrival?,Stage before arrival?,,
+bool,stage_after_arrival,,,0,0,1,Stage after arrival?,Stage after arrival?,,
+bool,freeze_decision_variables,,,0,0,1,Freeze this journey's decision variables?,Freeze this journey's decision variables?,,
+double,ephemeris_pegged_orbit_insertion_SMA,,,6678,0,inf,SMA (in km) for ephemeris pegged orbit insertion,SMA (in km) for ephemeris pegged orbit insertion,,
+double,ephemeris_pegged_orbit_insertion_ECC,,,0,0,inf,ECC for ephemeris pegged orbit insertion,ECC for ephemeris pegged orbit insertion,,
+std::vector<double>,ephemeris_pegged_orbit_insertion_dv_bounds,,2,"[0,100]","[0,1e-8]","[inf,inf]",Lower and upper bounds for ephemeris pegged orbit insertion Delta v (km/s),Lower and upper bounds for ephemeris pegged orbit insertion Delta v (km/s),,
+double,impact_momentum_enhancement_factor,,,1,0,inf,Impact momentum enhancement factor for planetary defense (also called beta),Impact momentum enhancement factor for planetary defense (also called beta),,
+bool,perturb_drag,,,0,0,1,Aerodynamic drag?,Aerodynamic drag?,,
+double,spacecraft_drag_area,,,70,0,inf,"spacecraft area (for aerodynamic drag, in m^2)","spacecraft area (for aerodynamic drag, in m^2)",,
+double,coefficient_of_drag,,,2.2,0,inf,"coefficient of drag, i.e. Cd (unitless)","coefficient of drag, i.e. Cd (unitless)",,
+std::string,AtmosphericDensityModelKey,,,Exponential,,,Atmospheric density model,Atmospheric density model,,
+std::string,AtmosphericDensityModelDataFile,,,DoesNotExist.emtg_densityopt,,,File defining atmospheric density model,File defining atmospheric density model,,
+bool,perturb_central_body_gravity_harmonics,,,0,0,1,Include central body gravitational harmonics perturbations?,Include central body gravitational harmonics perturbations?,,
+size_t,central_body_gravity_degree,,,2,0,inf,Maximum degree to include for central body gravitational harmonics,Maximum degree to include for central body gravitational harmonics,,
+size_t,central_body_gravity_order,,,0,0,inf,Maximum order to include for central body gravitational harmonics,Maximum order to include for central body gravitational harmonics,,
+std::string,central_body_gravity_file,,,DoesNotExist.grv,,,STK .grv style gravity model file,STK .grv style gravity model file,,
+double,probe_separation_impulse,,,1,0,inf,Probe separation impulse (Ns),Probe separation impulse (Ns),,
+double,probe_mass,,,100,1.00E-13,inf,Probe mass (kg),Probe mass (kg),,
+std::vector<bool>,Probe_AEI_elements_vary_flag,,6,"[0,0,0,0,0,0]",0,1,one entry for each element,one entry for each element,,
+std::vector<double>,Probe_AEI_elements,,6,"[0.0,0.0,0.0,0.0,0.0,0.0]",minf,inf,"cartesian state or SMA, ECC, INC, RAAN, AOP, TA","cartesian state or SMA, ECC, INC, RAAN, AOP, TA",,
+std::vector<double>,Probe_AEI_elements_bounds,,12,"[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]",minf,inf,"bounds on elements or state components, two entries for each element","bounds on elements or state components, two entries for each element",,
+double,Probe_AEI_elements_reference_epoch,86400,,51544.5,0,inf,MJD,Reference epoch (MJD) for journey probe arrival elements,,
+StateRepresentation,Probe_AEI_elements_state_representation,,,0,0,3,"probe arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)","probe arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)",,
+ReferenceFrame,Probe_AEI_elements_frame,,,0,0,8,"reference frame for journey arrival elements. Choices are 0 - J2000_ICRF, 1 - J2000_BCI, 2 - J2000_BCF, 3 - TrueOfDate_BCI, 4 - TrueOfDate_BCF, 5 - Principle Axes, 6 - Topocentric, 7 - Polar, 8 - SAM.","reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)",,
+std::vector<bool>,Probe_End_elements_vary_flag,,6,"[0,0,0,0,0,0]",0,1,one entry for each element,one entry for each element,,
+std::vector<double>,Probe_End_elements,,6,"[0.0,0.0,0.0,0.0,0.0,0.0]",minf,inf,"cartesian state or SMA, ECC, INC, RAAN, AOP, TA","cartesian state or SMA, ECC, INC, RAAN, AOP, TA",,
+std::vector<double>,Probe_End_elements_bounds,,12,"[0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]",minf,inf,"bounds on elements or state components, two entries for each element","bounds on elements or state components, two entries for each element",,
+double,Probe_End_elements_reference_epoch,86400,,51544.5,0,inf,MJD,Reference epoch (MJD) for journey probe arrival elements,,
+StateRepresentation,Probe_End_elements_state_representation,,,0,0,3,"probe arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)","probe arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE)",,
+ReferenceFrame,Probe_End_elements_frame,,,0,0,8,"reference frame for journey arrival elements. Choices are 0 - J2000_ICRF, 1 - J2000_BCI, 2 - J2000_BCF, 3 - TrueOfDate_BCI, 4 - TrueOfDate_BCF, 5 - Principle Axes, 6 - Topocentric, 7 - Polar, 8 - SAM.","reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)",,
 bool,ModelProbeSecondPhase,,,0,0,1,Model the probe's descent phase, or just final approach?,Model the probe's descent phase, or just final approach?
-bool,AllowJourneyProbeAEIToPropagate,,,0,0,1,Allow probe AEI free point boundary to propagate (otherwise it is a fixed waypoint),Allow probe AEI free point boundary to propagate (otherwise it is a fixed waypoint)
-bool,AllowJourneyProbeEndToPropagate,,,0,0,1,Allow probe end free point boundary to propagate (otherwise it is a fixed waypoint),Allow probe end free point boundary to propagate (otherwise it is a fixed waypoint)
-std::vector<double>,probe_communication_distance_bounds,,2,"[2000.0, 10000.0]",0.0,inf,Probe-spacecraft communication distance constraint (km),Probe-spacecraft communication distance constraint (km)
-bool,perturb_drag_probe_separation_to_AEI,,,0,0,1,Aerodynamic drag on probe from separation to AEI?,Aerodynamic drag on probe from separation to AEI?
-bool,perturb_drag_probe_AEI_to_end,,,0,0,1,Aerodynamic drag on probe from AEI to end of probe mission?,Aerodynamic drag on probe from AEI to end of probe mission?
-double,probe_drag_area_probe_separation_to_AEI,,,70,0,inf,"probe area prior to AEI (for aerodynamic drag, in m^2)","probe area prior to AEI (for aerodynamic drag, in m^2)"
-double,probe_drag_area_probe_AEI_to_end,,,70,0,inf,"probe area after AEI (for aerodynamic drag, in m^2)","probe area after AEI (for aerodynamic drag, in m^2)"
-double,probe_coefficient_of_drag_probe_separation_to_AEI,,,2.2,0,inf,"probe coefficient of drag prior to AEI, i.e. Cd (unitless)","probe coefficient of drag prior to AEI, i.e. Cd (unitless)"
-double,probe_coefficient_of_drag_probe_AEI_to_end,,,2.2,0,inf,"probe coefficient of drag after AEI, i.e. Cd (unitless)","probe coefficient of drag after AEI, i.e. Cd (unitless)"
-std::vector<double>,probe_AEI_velocity,,3,"[0.0, 20.0, 0.0]",0,inf,"Bounds on the probe's final velocity at AEI (in km/s)","Bounds on the probe's final velocity at AEI (in km/s)"
-std::vector<double>,probe_end_velocity,,3,"[0.0, 20.0, 0.0]",0,inf,"Bounds on the probe's final velocity at end of mission (in km/s)","Bounds on the probe's final velocity at end of mission (in km/s)"
-double,ProbeSeparationToAEI_MatchPointFraction,,,0.5,0,1,probe separation to AEI match point fraction,probe separation to AEI match point fraction
-double,ProbeSeparationToAEI_ForwardIntegrationStepLength,,,86400,0,1000000,probe separation to AEI forward integration step length (seconds),probe separation to AEI forward integration step length (seconds)
-double,ProbeSeparationToAEI_BackwardIntegrationStepLength,,,86400,0,1000000,probe separation to AEI backward integration step length (seconds),probe separation to AEI backward integration step length (seconds)
-double,ProbeAEI_to_end_MatchPointFraction,,,0.5,0,1,probe AEI to end match point fraction,probe AEI to end match point fraction
-double,ProbeAEI_to_end_ForwardIntegrationStepLength,,,86400,0,1000000,probe AEI to end forward integration step length (seconds),probe AEI to end forward integration step length (seconds)
-double,ProbeAEI_to_end_BackwardIntegrationStepLength,,,86400,0,1000000,probe AEI to end backward integration step length (seconds),probe AEI to end backward integration step length (seconds)
-bool,print_this_journey_options_no_matter_what,,,0,0,1,"Always print this journey's options to the .emtgopt file?","Always print this journey's options to the .emtgopt file?"
+bool,AllowJourneyProbeAEIToPropagate,,,0,0,1,Allow probe AEI free point boundary to propagate (otherwise it is a fixed waypoint),Allow probe AEI free point boundary to propagate (otherwise it is a fixed waypoint),,
+bool,AllowJourneyProbeEndToPropagate,,,0,0,1,Allow probe end free point boundary to propagate (otherwise it is a fixed waypoint),Allow probe end free point boundary to propagate (otherwise it is a fixed waypoint),,
+std::vector<double>,probe_communication_distance_bounds,,2,"[2000.0, 10000.0]",0,inf,Probe-spacecraft communication distance constraint (km),Probe-spacecraft communication distance constraint (km),,
+bool,perturb_drag_probe_separation_to_AEI,,,0,0,1,Aerodynamic drag on probe from separation to AEI?,Aerodynamic drag on probe from separation to AEI?,,
+bool,perturb_drag_probe_AEI_to_end,,,0,0,1,Aerodynamic drag on probe from AEI to end of probe mission?,Aerodynamic drag on probe from AEI to end of probe mission?,,
+double,probe_drag_area_probe_separation_to_AEI,,,70,0,inf,"probe area prior to AEI (for aerodynamic drag, in m^2)","probe area prior to AEI (for aerodynamic drag, in m^2)",,
+double,probe_drag_area_probe_AEI_to_end,,,70,0,inf,"probe area after AEI (for aerodynamic drag, in m^2)","probe area after AEI (for aerodynamic drag, in m^2)",,
+double,probe_coefficient_of_drag_probe_separation_to_AEI,,,2.2,0,inf,"probe coefficient of drag prior to AEI, i.e. Cd (unitless)","probe coefficient of drag prior to AEI, i.e. Cd (unitless)",,
+double,probe_coefficient_of_drag_probe_AEI_to_end,,,2.2,0,inf,"probe coefficient of drag after AEI, i.e. Cd (unitless)","probe coefficient of drag after AEI, i.e. Cd (unitless)",,
+std::vector<double>,probe_AEI_velocity,,3,"[0.0, 100.0, 0.0]",0,inf,Bounds on the probe's final velocity at AEI (in km/s),Bounds on the probe's final velocity at AEI (in km/s),,
+std::vector<double>,probe_end_velocity,,3,"[0.0, 100.0, 0.0]",0,inf,Bounds on the probe's final velocity at end of mission (in km/s),Bounds on the probe's final velocity at end of mission (in km/s),,
+double,ProbeSeparationToAEI_MatchPointFraction,,,0.5,0,1,probe separation to AEI match point fraction,probe separation to AEI match point fraction,,
+double,ProbeSeparationToAEI_ForwardIntegrationStepLength,,,86400,0,1000000,probe separation to AEI forward integration step length (seconds),probe separation to AEI forward integration step length (seconds),,
+double,ProbeSeparationToAEI_BackwardIntegrationStepLength,,,86400,0,1000000,probe separation to AEI backward integration step length (seconds),probe separation to AEI backward integration step length (seconds),,
+double,ProbeAEI_to_end_MatchPointFraction,,,0.5,0,1,probe AEI to end match point fraction,probe AEI to end match point fraction,,
+double,ProbeAEI_to_end_ForwardIntegrationStepLength,,,86400,0,1000000,probe AEI to end forward integration step length (seconds),probe AEI to end forward integration step length (seconds),,
+double,ProbeAEI_to_end_BackwardIntegrationStepLength,,,86400,0,1000000,probe AEI to end backward integration step length (seconds),probe AEI to end backward integration step length (seconds),,
+bool,Probe_AEI_print_target_spec,,,1,0,1,Print a target spec for the probe state at the end of the first sub-phase?,Print a target spec for the probe state at the end of the first sub-phase?,,
+bool,Probe_end_print_target_spec,,,1,0,1,Print a target spec for the probe state at the end of the second sub-phase?,Print a target spec for the probe state at the end of the second sub-phase?,,
+bool,print_this_journey_options_no_matter_what,,,0,0,1,Always print this journey's options to the .emtgopt file?,Always print this journey's options to the .emtgopt file?,,
+bool,override_ephemeris_output_resolution,,,0,0,1,Override default ephemeris output resolution?,Override default ephemeris output resolution?,,
+double,EphemerisOutputResolution,,,1,1.00E-03,inf,"If overriding default ephemeris output resolution, this is the overriding value (seconds)","If overriding default ephemeris output resolution, this is the overriding value (seconds)",,
