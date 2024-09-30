@@ -2,14 +2,14 @@
 #An open-source global optimization tool for preliminary mission design
 #Provided by NASA Goddard Space Flight Center
 #
-#Copyright (c) 2014 - 2018 United States Government as represented by the
+#Copyright (c) 2014 - 2024 United States Government as represented by the
 #Administrator of the National Aeronautics and Space Administration.
 #All Other Rights Reserved.
 #
 #Licensed under the NASA Open Source License (the "License"); 
 #You may not use this file except in compliance with the License. 
 #You may obtain a copy of the License at:
-#https://opensource.org/licenses/NASA-1.3
+#https://opensource.org/license/nasa1-3-php
 #Unless required by applicable law or agreed to in writing, software
 #distributed under the License is distributed on an "AS IS" BASIS,
 #WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
@@ -28,7 +28,6 @@ class ConventionalHardwarePanel(wx.Panel):
         self.parent = parent
         
         wx.Panel.__init__(self, parent)
-        self.btnSetDefaultLibraries = wx.Button(self, -1, "Reset to default library files")
 
         #path selector
         
@@ -53,6 +52,8 @@ class ConventionalHardwarePanel(wx.Panel):
         self.lblLaunchVehicleKey = wx.StaticText(self, -1, "Launch vehicle")
         self.LaunchVehicleChoices = [self.missionoptions.LaunchVehicleKey]
         self.cmbLaunchVehicleKey = wx.ComboBox(self, -1, choices=self.LaunchVehicleChoices, style=wx.CB_READONLY)
+
+        self.btnSetDefaultLibraries = wx.Button(self, -1, "Reset to default library files")
 
         LaunchVehicleGrid.AddMany([self.lblHardwarePath, HardwarePathSizerSizer,
                                    self.lblLaunchVehicleLibraryFile, LaunchVehicleLibraryFileSizer,
@@ -95,6 +96,16 @@ class ConventionalHardwarePanel(wx.Panel):
         self.lbluser_defined_engine_efficiency = wx.StaticText(self, -1, "Thruster efficiency")
         self.txtuser_defined_engine_efficiency = wx.TextCtrl(self, -1, "user_defined_engine_efficiency")
 
+        self.lblengine_input_power_bounds = wx.StaticText(self, -1, "Thruster input power bounds")
+        self.txtengine_input_power_bounds_lower = wx.TextCtrl(self, -1, "engine_input_power_bounds[0]")
+        self.txtengine_input_power_bounds_upper = wx.TextCtrl(self, -1, "engine_input_power_bounds[1]")
+
+        self.lblthrottle_table = wx.StaticText(self, -1, "Throttle table file")
+        self.txtthrottle_table = wx.TextCtrl(self, -1, "throttle_table", size=(500,-1))
+        self.btnthrottle_table_default = wx.Button(self, -1, "Default")
+        throttle_table_box = wx.BoxSizer(wx.HORIZONTAL)
+        throttle_table_box.AddMany([self.txtthrottle_table, self.btnthrottle_table_default])
+
         self.lblengine_coefficient_spacer = wx.StaticText(self, -1, "")
         self.lblengine_coefficient0 = wx.StaticText(self, -1, "1.0")
         self.lblengine_coefficient1 = wx.StaticText(self, -1, "P")
@@ -122,17 +133,8 @@ class ConventionalHardwarePanel(wx.Panel):
         self.txtengine_input_mass_flow_rate_coefficients5 = wx.TextCtrl(self, -1, "engine_input_mass_flow_rate_coefficients[5]")
         self.txtengine_input_mass_flow_rate_coefficients6 = wx.TextCtrl(self, -1, "engine_input_mass_flow_rate_coefficients[6]")
 
-        self.lblengine_input_power_bounds = wx.StaticText(self, -1, "Thruster input power bounds")
-        self.txtengine_input_power_bounds_lower = wx.TextCtrl(self, -1, "engine_input_power_bounds[0]")
-        self.txtengine_input_power_bounds_upper = wx.TextCtrl(self, -1, "engine_input_power_bounds[1]")
         enginepowerbox = wx.BoxSizer(wx.HORIZONTAL)
         enginepowerbox.AddMany([self.txtengine_input_power_bounds_lower, self.txtengine_input_power_bounds_upper])
-
-        self.lblthrottle_table = wx.StaticText(self, -1, "Throttle table file")
-        self.txtthrottle_table = wx.TextCtrl(self, -1, "throttle_table", size=(500,-1))
-        self.btnthrottle_table_default = wx.Button(self, -1, "Default")
-        throttle_table_box = wx.BoxSizer(wx.HORIZONTAL)
-        throttle_table_box.AddMany([self.txtthrottle_table, self.btnthrottle_table_default])
 
         customthrustergrid = wx.FlexGridSizer(3, 8, 5, 5)
         customthrustergrid.AddMany([self.lblengine_coefficient_spacer, self.lblengine_coefficient0, self.lblengine_coefficient1, self.lblengine_coefficient2, self.lblengine_coefficient3, self.lblengine_coefficient4, self.lblengine_coefficient5, self.lblengine_coefficient6,
@@ -245,6 +247,8 @@ class ConventionalHardwarePanel(wx.Panel):
         self.txtIspLT.Bind(wx.EVT_KILL_FOCUS, self.ChangeIspLT)
         self.txtIspLT_minimum.Bind(wx.EVT_KILL_FOCUS, self.ChangeIspLT_minimum)
         self.txtuser_defined_engine_efficiency.Bind(wx.EVT_KILL_FOCUS, self.Changeuser_defined_engine_efficiency)
+        self.txtengine_input_power_bounds_lower.Bind(wx.EVT_KILL_FOCUS, self.Changeengine_input_power_bounds_lower)
+        self.txtengine_input_power_bounds_upper.Bind(wx.EVT_KILL_FOCUS, self.Changeengine_input_power_bounds_upper)
         self.txtengine_input_thrust_coefficients0.Bind(wx.EVT_KILL_FOCUS, self.Changeengine_input_thrust_coefficients0)
         self.txtengine_input_thrust_coefficients1.Bind(wx.EVT_KILL_FOCUS, self.Changeengine_input_thrust_coefficients1)
         self.txtengine_input_thrust_coefficients2.Bind(wx.EVT_KILL_FOCUS, self.Changeengine_input_thrust_coefficients2)
@@ -259,8 +263,6 @@ class ConventionalHardwarePanel(wx.Panel):
         self.txtengine_input_mass_flow_rate_coefficients4.Bind(wx.EVT_KILL_FOCUS, self.Changeengine_input_mass_flow_rate_coefficients4)
         self.txtengine_input_mass_flow_rate_coefficients5.Bind(wx.EVT_KILL_FOCUS, self.Changeengine_input_mass_flow_rate_coefficients5)
         self.txtengine_input_mass_flow_rate_coefficients6.Bind(wx.EVT_KILL_FOCUS, self.Changeengine_input_mass_flow_rate_coefficients6)
-        self.txtengine_input_power_bounds_lower.Bind(wx.EVT_KILL_FOCUS, self.Changeengine_input_power_bounds_lower)
-        self.txtengine_input_power_bounds_upper.Bind(wx.EVT_KILL_FOCUS, self.Changeengine_input_power_bounds_upper)
         self.txtthrottle_table.Bind(wx.EVT_KILL_FOCUS, self.Changethrottle_table)
         self.btnthrottle_table_default.Bind(wx.EVT_BUTTON, self.ClickThrottleTableDefaultButton)
         self.txtpower_at_1_AU.Bind(wx.EVT_KILL_FOCUS, self.Changepower_at_1_AU)
@@ -316,6 +318,8 @@ class ConventionalHardwarePanel(wx.Panel):
         self.txtIspLT.SetValue(str(self.missionoptions.IspLT))
         self.txtIspLT_minimum.SetValue(str(self.missionoptions.IspLT_minimum))
         self.txtuser_defined_engine_efficiency.SetValue(str(self.missionoptions.user_defined_engine_efficiency))
+        self.txtengine_input_power_bounds_lower.SetValue(str(self.missionoptions.engine_input_power_bounds[0]))
+        self.txtengine_input_power_bounds_upper.SetValue(str(self.missionoptions.engine_input_power_bounds[1]))
         self.txtengine_input_thrust_coefficients0.SetValue(str(self.missionoptions.engine_input_thrust_coefficients[0]))
         self.txtengine_input_thrust_coefficients1.SetValue(str(self.missionoptions.engine_input_thrust_coefficients[1]))
         self.txtengine_input_thrust_coefficients2.SetValue(str(self.missionoptions.engine_input_thrust_coefficients[2]))
@@ -330,8 +334,6 @@ class ConventionalHardwarePanel(wx.Panel):
         self.txtengine_input_mass_flow_rate_coefficients4.SetValue(str(self.missionoptions.engine_input_mass_flow_rate_coefficients[4]))
         self.txtengine_input_mass_flow_rate_coefficients5.SetValue(str(self.missionoptions.engine_input_mass_flow_rate_coefficients[5]))
         self.txtengine_input_mass_flow_rate_coefficients6.SetValue(str(self.missionoptions.engine_input_mass_flow_rate_coefficients[6]))
-        self.txtengine_input_power_bounds_lower.SetValue(str(self.missionoptions.engine_input_power_bounds[0]))
-        self.txtengine_input_power_bounds_upper.SetValue(str(self.missionoptions.engine_input_power_bounds[1]))
         self.txtthrottle_table.SetValue(self.missionoptions.ThrottleTableFile)
         self.txtpower_at_1_AU.SetValue(str(self.missionoptions.power_at_1_AU))
         self.cmbpower_source_type.SetSelection(self.missionoptions.power_source_type)
@@ -387,6 +389,8 @@ class ConventionalHardwarePanel(wx.Panel):
             self.txtIspLT.Show(False)
             self.txtIspLT_minimum.Show(False)
             self.txtuser_defined_engine_efficiency.Show(False)
+            self.txtengine_input_power_bounds_lower.Show(False)
+            self.txtengine_input_power_bounds_upper.Show(False)
             self.txtengine_input_thrust_coefficients0.Show(False)
             self.txtengine_input_thrust_coefficients1.Show(False)
             self.txtengine_input_thrust_coefficients2.Show(False)
@@ -401,8 +405,6 @@ class ConventionalHardwarePanel(wx.Panel):
             self.txtengine_input_mass_flow_rate_coefficients4.Show(False)
             self.txtengine_input_mass_flow_rate_coefficients5.Show(False)
             self.txtengine_input_mass_flow_rate_coefficients6.Show(False)
-            self.txtengine_input_power_bounds_lower.Show(False)
-            self.txtengine_input_power_bounds_upper.Show(False)
             self.txtpower_at_1_AU.Show(False)
             self.cmbpower_source_type.Show(False)
             self.lblsolar_power_model_type.Show(False)
@@ -460,6 +462,8 @@ class ConventionalHardwarePanel(wx.Panel):
                 self.txtIspLT.Show(True)
                 self.txtIspLT_minimum.Show(False)
                 self.txtuser_defined_engine_efficiency.Show(False)
+                self.txtengine_input_power_bounds_lower.Show(False)
+                self.txtengine_input_power_bounds_upper.Show(False)
                 self.txtengine_input_thrust_coefficients0.Show(False)
                 self.txtengine_input_thrust_coefficients1.Show(False)
                 self.txtengine_input_thrust_coefficients2.Show(False)
@@ -474,8 +478,6 @@ class ConventionalHardwarePanel(wx.Panel):
                 self.txtengine_input_mass_flow_rate_coefficients4.Show(False)
                 self.txtengine_input_mass_flow_rate_coefficients5.Show(False)
                 self.txtengine_input_mass_flow_rate_coefficients6.Show(False)
-                self.txtengine_input_power_bounds_lower.Show(False)
-                self.txtengine_input_power_bounds_upper.Show(False)
                 self.txtpower_at_1_AU.Show(False)
                 self.cmbpower_source_type.Show(False)
                 self.txtsolar_power_gamma0.Show(False)
@@ -527,6 +529,8 @@ class ConventionalHardwarePanel(wx.Panel):
                 self.txtIspLT.Show(True)
                 self.txtIspLT_minimum.Show(False)
                 self.txtuser_defined_engine_efficiency.Show(True)
+                self.txtengine_input_power_bounds_lower.Show(False)
+                self.txtengine_input_power_bounds_upper.Show(False)
                 self.txtengine_input_thrust_coefficients0.Show(False)
                 self.txtengine_input_thrust_coefficients1.Show(False)
                 self.txtengine_input_thrust_coefficients2.Show(False)
@@ -541,8 +545,6 @@ class ConventionalHardwarePanel(wx.Panel):
                 self.txtengine_input_mass_flow_rate_coefficients4.Show(False)
                 self.txtengine_input_mass_flow_rate_coefficients5.Show(False)
                 self.txtengine_input_mass_flow_rate_coefficients6.Show(False)
-                self.txtengine_input_power_bounds_lower.Show(False)
-                self.txtengine_input_power_bounds_upper.Show(False)
                 self.txtpower_at_1_AU.Show(False)
                 self.cmbpower_source_type.Show(False)
                 self.txtsolar_power_gamma0.Show(False)
@@ -619,6 +621,8 @@ class ConventionalHardwarePanel(wx.Panel):
                     self.txtIspLT.Show(True)
                     self.txtIspLT_minimum.Show(True)
                     self.txtuser_defined_engine_efficiency.Show(True)
+                    self.txtengine_input_power_bounds_lower.Show(True)
+                    self.txtengine_input_power_bounds_upper.Show(True)
                     self.lblengine_coefficient_spacer.Show(False)
                     self.lblengine_coefficient0.Show(False)
                     self.lblengine_coefficient1.Show(False)
@@ -641,8 +645,6 @@ class ConventionalHardwarePanel(wx.Panel):
                     self.txtengine_input_mass_flow_rate_coefficients4.Show(False)
                     self.txtengine_input_mass_flow_rate_coefficients5.Show(False)
                     self.txtengine_input_mass_flow_rate_coefficients6.Show(False)
-                    self.txtengine_input_power_bounds_lower.Show(True)
-                    self.txtengine_input_power_bounds_upper.Show(True)
                     self.lblthrottle_table.Show(False)
                     self.txtthrottle_table.Show(False)
                     self.btnthrottle_table_default.Show(False)
@@ -665,6 +667,8 @@ class ConventionalHardwarePanel(wx.Panel):
                     self.txtIspLT.Show(True)
                     self.txtIspLT_minimum.Show(False)
                     self.txtuser_defined_engine_efficiency.Show(True)
+                    self.txtengine_input_power_bounds_lower.Show(True)
+                    self.txtengine_input_power_bounds_upper.Show(True)
                     self.lblengine_coefficient_spacer.Show(False)
                     self.lblengine_coefficient0.Show(False)
                     self.lblengine_coefficient1.Show(False)
@@ -687,8 +691,6 @@ class ConventionalHardwarePanel(wx.Panel):
                     self.txtengine_input_mass_flow_rate_coefficients4.Show(False)
                     self.txtengine_input_mass_flow_rate_coefficients5.Show(False)
                     self.txtengine_input_mass_flow_rate_coefficients6.Show(False)
-                    self.txtengine_input_power_bounds_lower.Show(True)
-                    self.txtengine_input_power_bounds_upper.Show(True)
                     self.lblthrottle_table.Show(False)
                     self.txtthrottle_table.Show(False)
                     self.btnthrottle_table_default.Show(False)
@@ -711,6 +713,8 @@ class ConventionalHardwarePanel(wx.Panel):
                     self.txtIspLT.Show(True)
                     self.txtIspLT_minimum.Show(True)
                     self.txtuser_defined_engine_efficiency.Show(True)
+                    self.txtengine_input_power_bounds_lower.Show(True)
+                    self.txtengine_input_power_bounds_upper.Show(True)
                     self.lblengine_coefficient_spacer.Show(False)
                     self.lblengine_coefficient0.Show(False)
                     self.lblengine_coefficient1.Show(False)
@@ -733,8 +737,6 @@ class ConventionalHardwarePanel(wx.Panel):
                     self.txtengine_input_mass_flow_rate_coefficients4.Show(False)
                     self.txtengine_input_mass_flow_rate_coefficients5.Show(False)
                     self.txtengine_input_mass_flow_rate_coefficients6.Show(False)
-                    self.txtengine_input_power_bounds_lower.Show(True)
-                    self.txtengine_input_power_bounds_upper.Show(True)
                     self.lblthrottle_table.Show(False)
                     self.txtthrottle_table.Show(False)
                     self.btnthrottle_table_default.Show(False)
@@ -756,6 +758,8 @@ class ConventionalHardwarePanel(wx.Panel):
                     self.txtIspLT.Show(False)
                     self.txtIspLT_minimum.Show(False)
                     self.txtuser_defined_engine_efficiency.Show(False)
+                    self.txtengine_input_power_bounds_lower.Show(True)
+                    self.txtengine_input_power_bounds_upper.Show(True)
                     self.lblengine_coefficient_spacer.Show(True)
                     self.lblengine_coefficient0.Show(True)
                     self.lblengine_coefficient1.Show(True)
@@ -778,8 +782,6 @@ class ConventionalHardwarePanel(wx.Panel):
                     self.txtengine_input_mass_flow_rate_coefficients4.Show(True)
                     self.txtengine_input_mass_flow_rate_coefficients5.Show(True)
                     self.txtengine_input_mass_flow_rate_coefficients6.Show(True)
-                    self.txtengine_input_power_bounds_lower.Show(True)
-                    self.txtengine_input_power_bounds_upper.Show(True)
                     self.lblthrottle_table.Show(False)
                     self.txtthrottle_table.Show(False)
                     self.btnthrottle_table_default.Show(False)
@@ -800,6 +802,8 @@ class ConventionalHardwarePanel(wx.Panel):
                     self.txtIspLT.Show(False)
                     self.txtIspLT_minimum.Show(False)
                     self.txtuser_defined_engine_efficiency.Show(False)
+                    self.txtengine_input_power_bounds_lower.Show(False)
+                    self.txtengine_input_power_bounds_upper.Show(False)
                     self.lblengine_coefficient_spacer.Show(False)
                     self.lblengine_coefficient0.Show(False)
                     self.lblengine_coefficient1.Show(False)
@@ -822,8 +826,6 @@ class ConventionalHardwarePanel(wx.Panel):
                     self.txtengine_input_mass_flow_rate_coefficients4.Show(False)
                     self.txtengine_input_mass_flow_rate_coefficients5.Show(False)
                     self.txtengine_input_mass_flow_rate_coefficients6.Show(False)
-                    self.txtengine_input_power_bounds_lower.Show(False)
-                    self.txtengine_input_power_bounds_upper.Show(False)
 
                     #throttle table options
                     if self.missionoptions.engine_type in [29, 30, 31, 32]:
@@ -834,7 +836,7 @@ class ConventionalHardwarePanel(wx.Panel):
                         self.lblthrottle_table.Show(False)
                         self.txtthrottle_table.Show(False)
                         self.btnthrottle_table_default.Show(False)
-            
+           
             needChemIsp = False
             for Journey in self.missionoptions.Journeys:
                 if Journey.arrival_type in [1, 4, 0]:

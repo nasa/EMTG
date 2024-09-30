@@ -2,14 +2,14 @@
 #An open-source global optimization tool for preliminary mission design
 #Provided by NASA Goddard Space Flight Center
 #
-#Copyright (c) 2014 - 2018 United States Government as represented by the
+#Copyright (c) 2014 - 2024 United States Government as represented by the
 #Administrator of the National Aeronautics and Space Administration.
 #All Other Rights Reserved.
 #
 #Licensed under the NASA Open Source License (the "License"); 
 #You may not use this file except in compliance with the License. 
 #You may obtain a copy of the License at:
-#https://opensource.org/licenses/NASA-1.3
+#https://opensource.org/license/nasa1-3-php
 #Unless required by applicable law or agreed to in writing, software
 #distributed under the License is distributed on an "AS IS" BASIS,
 #WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
@@ -62,14 +62,87 @@ class PhysicsOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.lblearliestPossibleEpoch = wx.StaticText(self, -1, "Earliest possible SplineEphem epoch")
         self.txtearliestPossibleEpoch = wx.TextCtrl(self, -1, "earliestPossibleEpoch")
         self.earliestPossibleEpochCalendar = wx.adv.CalendarCtrl(self, -1)
+        self.earliestPossibleEpochCalendar.Bind(wx.EVT_KEY_DOWN, self.onTab)
         earliestcalendarbox = wx.BoxSizer(wx.HORIZONTAL)
         earliestcalendarbox.AddMany([self.txtearliestPossibleEpoch, self.earliestPossibleEpochCalendar])
 
         self.lbllatestPossibleEpoch = wx.StaticText(self, -1, "latest possible SplineEphem epoch")
         self.txtlatestPossibleEpoch = wx.TextCtrl(self, -1, "latestPossibleEpoch")
         self.latestPossibleEpochCalendar = wx.adv.CalendarCtrl(self, -1)
+        self.latestPossibleEpochCalendar.Bind(wx.EVT_KEY_DOWN, self.onTab)
         latestcalendarbox = wx.BoxSizer(wx.HORIZONTAL)
         latestcalendarbox.AddMany([self.txtlatestPossibleEpoch, self.latestPossibleEpochCalendar])
+
+        self.lblspiral_segments = wx.StaticText(self, -1, "Number of spiral segments")
+        self.txtspiral_segments = wx.TextCtrl(self, -1, "spiral_segments")
+
+        self.lblintegrator_tolerance = wx.StaticText(self, -1, "Integrator tolerance")
+        self.txtintegrator_tolerance = wx.TextCtrl(self, -1, "integrator_tolerance")
+
+        self.lblpropagatorType = wx.StaticText(self, -1, "Propagator type")
+        propagatorType_choices = ["Keplerian", "Integrator"]
+        self.cmbpropagatorType = wx.ComboBox(self, -1, choices=propagatorType_choices, style=wx.CB_READONLY)
+
+        ephemerisgrid.AddMany([self.lblephemeris_source, self.cmbephemeris_source,
+                              self.lblSPICE_leap_seconds_kernel, self.txtSPICE_leap_seconds_kernel,
+                              self.lblSPICE_reference_frame_kernel, self.txtSPICE_reference_frame_kernel,
+                              self.lbluniverse_folder, UniverseButtonSizer,
+                              self.lblSplineEphem_points_per_period, self.txtSplineEphem_points_per_period,
+                              self.lblSplineEphem_non_central_body_sun_points_per_period, self.txtSplineEphem_non_central_body_sun_points_per_period,
+                              self.lblSplineEphem_truncate_ephemeris_at_maximum_mission_epoch, self.chkSplineEphem_truncate_ephemeris_at_maximum_mission_epoch,
+                              self.lblearliestPossibleEpoch, earliestcalendarbox,
+                              self.lbllatestPossibleEpoch, latestcalendarbox])
+
+
+        lblLeftTitle = wx.StaticText(self, -1, "Ephemeris settings")
+        vboxleft = wx.BoxSizer(wx.VERTICAL)
+        vboxleft.AddMany([lblLeftTitle, ephemerisgrid])
+
+        font = self.GetFont()
+        font.SetWeight(wx.FONTWEIGHT_BOLD)
+        lblLeftTitle.SetFont(font)
+
+        lblBottomTitle = wx.StaticText(self, -1, "Spiral settings")
+        lblBottomTitle.SetFont(font)
+
+        self.lblintegratorType = wx.StaticText(self, -1, "Integrator type")
+        integratorType_choices = ["rk8 fixed step"]
+        self.cmbintegratorType = wx.ComboBox(self, -1, choices=integratorType_choices, style=wx.CB_READONLY)
+
+        self.lblintegration_time_step_size = wx.StaticText(self, -1, "Integrator time step size (seconds)")
+        self.txtintegration_time_step_size = wx.TextCtrl(self, -1, "integration_time_step_size")
+
+        spiralgrid = wx.GridSizer(2,2,5,5)
+        spiralgrid.AddMany([self.lblspiral_segments, self.txtspiral_segments])
+
+        vboxspiral = wx.BoxSizer(wx.VERTICAL)
+        vboxspiral.AddMany([lblBottomTitle, spiralgrid])
+
+        integratorgrid.AddMany([self.lblintegrator_tolerance, self.txtintegrator_tolerance,
+                                self.lblpropagatorType, self.cmbpropagatorType,
+                                self.lblintegratorType, self.cmbintegratorType,
+                                self.lblintegration_time_step_size, self.txtintegration_time_step_size])
+
+        StateRepresentationgrid = wx.GridSizer(3,2,5,5)
+        StateRepresentationChoices = ['Cartesian', 'SphericalRADEC', 'SphericalAZFPA', 'COE', 'MEE', "IncomingBplane", "OutgoingBplane", "IncomingBplaneRpTA", "OutgoingBplaneRpTA"]
+        self.lblPeriapseBoundaryStateRepresentation = wx.StaticText(self, -1, "PeriapseBoundary state representation")
+        self.cmbPeriapseBoundaryStateRepresentation = wx.ComboBox(self, -1, choices=StateRepresentationChoices, style=wx.CB_READONLY)
+        self.lblParallelShootingStateRepresentation = wx.StaticText(self, -1, "Parallel shooting decision variable state representation")
+        self.cmbParallelShootingStateRepresentation = wx.ComboBox(self, -1, choices=StateRepresentationChoices[0:5], style=wx.CB_READONLY) #parallel shooting can't use the asymptotic coordinate sets
+        self.lblParallelShootingConstraintStateRepresentation = wx.StaticText(self, -1, "Parallel shooting constraint state representation")
+        self.cmbParallelShootingConstraintStateRepresentation = wx.ComboBox(self, -1, choices=['Cartesian','same as encoded state representation'], style=wx.CB_READONLY)
+        StateRepresentationgrid.AddMany([self.lblPeriapseBoundaryStateRepresentation, self.cmbPeriapseBoundaryStateRepresentation,
+                                         self.lblParallelShootingStateRepresentation, self.cmbParallelShootingStateRepresentation,
+                                         self.lblParallelShootingConstraintStateRepresentation, self.cmbParallelShootingConstraintStateRepresentation])
+        lblStateRepresentationBottomTitle = wx.StaticText(self, -1, "State Representation settings")
+        lblStateRepresentationBottomTitle.SetFont(font)
+        vboxStateRepresentation = wx.BoxSizer(wx.VERTICAL)
+        vboxStateRepresentation.AddMany([lblStateRepresentationBottomTitle, StateRepresentationgrid])
+
+        lblRightTitle = wx.StaticText(self, -1, "Perturbation settings")
+        lblRightTitle.SetFont(font)
+        vboxright = wx.BoxSizer(wx.VERTICAL)
+        vboxright.AddMany([lblRightTitle, perturbgrid])
 
         self.lblperturb_SRP = wx.StaticText(self, -1, "Enable SRP")
         self.chkperturb_SRP = wx.CheckBox(self, -1)
@@ -95,29 +168,6 @@ class PhysicsOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.lblspeed_of_light_vac = wx.StaticText(self, -1, "Speed of light in a vacuum (m/s)")
         self.txtspeed_of_light_vac = wx.TextCtrl(self, -1, "speed_of_light_vac")
 
-        self.lblintegrator_tolerance = wx.StaticText(self, -1, "Integrator tolerance")
-        self.txtintegrator_tolerance = wx.TextCtrl(self, -1, "integrator_tolerance")
-
-        self.lblpropagatorType = wx.StaticText(self, -1, "Propagator type")
-        propagatorType_choices = ["Keplerian", "Integrator"]
-        self.cmbpropagatorType = wx.ComboBox(self, -1, choices=propagatorType_choices, style=wx.CB_READONLY)
-
-        self.lblintegratorType = wx.StaticText(self, -1, "Integrator type")
-        integratorType_choices = ["rk7813M adaptive step", "rk8 fixed step"]
-        self.cmbintegratorType = wx.ComboBox(self, -1, choices=integratorType_choices, style=wx.CB_READONLY)
-
-        self.lblintegration_time_step_size = wx.StaticText(self, -1, "Integrator time step size (seconds)")
-        self.txtintegration_time_step_size = wx.TextCtrl(self, -1, "integration_time_step_size")
-
-        ephemerisgrid.AddMany([self.lblephemeris_source, self.cmbephemeris_source,
-                              self.lblSPICE_leap_seconds_kernel, self.txtSPICE_leap_seconds_kernel,
-                              self.lblSPICE_reference_frame_kernel, self.txtSPICE_reference_frame_kernel,
-                              self.lbluniverse_folder, UniverseButtonSizer,
-                              self.lblSplineEphem_points_per_period, self.txtSplineEphem_points_per_period,
-                              self.lblSplineEphem_non_central_body_sun_points_per_period, self.txtSplineEphem_non_central_body_sun_points_per_period,
-                              self.lblSplineEphem_truncate_ephemeris_at_maximum_mission_epoch, self.chkSplineEphem_truncate_ephemeris_at_maximum_mission_epoch,
-                              self.lblearliestPossibleEpoch, earliestcalendarbox,
-                              self.lbllatestPossibleEpoch, latestcalendarbox])
         perturbgrid.AddMany([ self.lblperturb_SRP, self.chkperturb_SRP,
                               self.lblperturb_thirdbody, self.chkperturb_thirdbody,
                               self.lblperturb_J2, self.chkperturb_J2,
@@ -127,57 +177,11 @@ class PhysicsOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
                               self.lblsolar_flux, self.txtsolar_flux,
                               self.lblspeed_of_light_vac, self.txtspeed_of_light_vac
                               ])
-
-        integratorgrid.AddMany([self.lblintegrator_tolerance, self.txtintegrator_tolerance,
-                                self.lblpropagatorType, self.cmbpropagatorType,
-                                self.lblintegratorType, self.cmbintegratorType,
-                                self.lblintegration_time_step_size, self.txtintegration_time_step_size])
-
-
-        lblLeftTitle = wx.StaticText(self, -1, "Ephemeris settings")
-        vboxleft = wx.BoxSizer(wx.VERTICAL)
-        vboxleft.AddMany([lblLeftTitle, ephemerisgrid])
-
-        lblRightTitle = wx.StaticText(self, -1, "Perturbation settings")
-        vboxright = wx.BoxSizer(wx.VERTICAL)
-        vboxright.AddMany([lblRightTitle, perturbgrid])
-
-        font = self.GetFont()
-        font.SetWeight(wx.FONTWEIGHT_BOLD)
-        lblLeftTitle.SetFont(font)
-        lblRightTitle.SetFont(font)
-
         self.mainbox = wx.BoxSizer(wx.HORIZONTAL)
         
         self.mainbox.Add(vboxleft)
         self.mainbox.AddSpacer(20)
         self.mainbox.Add(vboxright)
-
-
-        spiralgrid = wx.GridSizer(2,2,5,5)
-        self.lblspiral_segments = wx.StaticText(self, -1, "Number of spiral segments")
-        self.txtspiral_segments = wx.TextCtrl(self, -1, "spiral_segments")
-        spiralgrid.AddMany([self.lblspiral_segments, self.txtspiral_segments])
-        lblBottomTitle = wx.StaticText(self, -1, "Spiral settings")
-        lblBottomTitle.SetFont(font)
-        vboxspiral = wx.BoxSizer(wx.VERTICAL)
-        vboxspiral.AddMany([lblBottomTitle, spiralgrid])
-
-        StateRepresentationgrid = wx.GridSizer(3,2,5,5)
-        StateRepresentationChoices = ['Cartesian', 'SphericalRADEC', 'SphericalAZFPA', 'COE', 'MEE', "IncomingBplane", "OutgoingBplane"]
-        self.lblPeriapseBoundaryStateRepresentation = wx.StaticText(self, -1, "PeriapseBoundary state representation")
-        self.cmbPeriapseBoundaryStateRepresentation = wx.ComboBox(self, -1, choices=StateRepresentationChoices, style=wx.CB_READONLY)
-        self.lblParallelShootingStateRepresentation = wx.StaticText(self, -1, "Parallel shooting decision variable state representation")
-        self.cmbParallelShootingStateRepresentation = wx.ComboBox(self, -1, choices=StateRepresentationChoices[0:5], style=wx.CB_READONLY) #parallel shooting can't use the asymptotic coordinate sets
-        self.lblParallelShootingConstraintStateRepresentation = wx.StaticText(self, -1, "Parallel shooting constraint state representation")
-        self.cmbParallelShootingConstraintStateRepresentation = wx.ComboBox(self, -1, choices=['Cartesian','same as encoded state representation'], style=wx.CB_READONLY)
-        StateRepresentationgrid.AddMany([self.lblPeriapseBoundaryStateRepresentation, self.cmbPeriapseBoundaryStateRepresentation,
-                                         self.lblParallelShootingStateRepresentation, self.cmbParallelShootingStateRepresentation,
-                                         self.lblParallelShootingConstraintStateRepresentation, self.cmbParallelShootingConstraintStateRepresentation])
-        lblStateRepresentationBottomTitle = wx.StaticText(self, -1, "State Representation settings")
-        lblStateRepresentationBottomTitle.SetFont(font)
-        vboxStateRepresentation = wx.BoxSizer(wx.VERTICAL)
-        vboxStateRepresentation.AddMany([lblStateRepresentationBottomTitle, StateRepresentationgrid])
 
         self.mainvbox = wx.BoxSizer(wx.VERTICAL)
         self.mainvbox.Add(self.mainbox)
@@ -244,7 +248,10 @@ class PhysicsOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.txtspiral_segments.SetValue(str(self.missionoptions.spiral_segments))
         self.txtintegrator_tolerance.SetValue(str(self.missionoptions.integrator_tolerance))
         self.cmbpropagatorType.SetSelection(self.missionoptions.propagatorType)
-        self.cmbintegratorType.SetSelection(self.missionoptions.integratorType)
+        # convert the integrator type to correspond to the dropdown
+        # EMTG integrator types 0, 1
+        pyemtg_integrator_types_conversion = [-1, 0]
+        self.cmbintegratorType.SetSelection(pyemtg_integrator_types_conversion[self.missionoptions.integratorType])
         self.txtintegration_time_step_size.SetValue(str(self.missionoptions.integration_time_step_size))
         self.cmbPeriapseBoundaryStateRepresentation.SetSelection(self.missionoptions.PeriapseBoundaryStateRepresentation)
         self.cmbParallelShootingStateRepresentation.SetSelection(self.missionoptions.ParallelShootingStateRepresentation)
@@ -309,6 +316,13 @@ class PhysicsOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.Layout()
         if platform.system() == 'Windows':
             self.SetupScrolling(scrollToTop=False)
+
+    def onTab(self, event):
+       if event.GetKeyCode() == wx.WXK_TAB and not event.ShiftDown():
+           event.EventObject.Navigate()
+       if event.GetKeyCode() == wx.WXK_TAB and event.ShiftDown(): 
+           event.EventObject.Navigate(flags=wx.NavigationKeyEvent.IsBackward)
+       event.Skip()
 
     #event handlers for physics options
     def Changeephemeris_source(self, e):
@@ -430,7 +444,10 @@ class PhysicsOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         e.Skip()
 
     def ChangeintegratorType(self, e):
-        self.missionoptions.integratorType = self.cmbintegratorType.GetSelection()
+        # convert the integrator type back from the dropdown
+        # PyEMTG integrator types -1, 0
+        emtg_integrator_types_conversion = [1, 0]
+        self.missionoptions.integratorType = emtg_integrator_types_conversion[self.cmbintegratorType.GetSelection()]
         self.parent.update()
         e.Skip()
 

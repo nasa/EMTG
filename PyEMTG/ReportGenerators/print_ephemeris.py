@@ -46,7 +46,7 @@ if os.path.exists(seedfilename):
     #set up SPICE writer
     myOptions.spice_utilities_path = '/Utilities/cspice/exe/'
     myOptions.spice_utility_extension ='' #Linux
-    myOptions.pyemtg_path = '/home/jaengla2/emtg/PyEMTG/'
+    myOptions.pyemtg_path = '/Utilities/emtg/PyEMTG/'
 
     #trialX mode
     myOptions.run_inner_loop = 0

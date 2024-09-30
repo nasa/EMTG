@@ -80,6 +80,38 @@ def secSinceJ20002Greg(secSinceJ2000):
 
     return spice.timout(secSinceJ2000, "YYYY Mon DD ::TDB HR:MN:SC.###### TDB")
 
+def computeC3(spacecraft_state, epoch_string, mu):
+
+    elements = spice.oscelt(spacecraft_state, spice.str2et(epoch_string), mu)
+    SMA = elements[0] / (1.0 - elements[1])
+    C3 = -mu / SMA
+
+    return C3
+
+def computeC3RLADLA(spacecraft_state, epoch_string, mu):
+
+    import numpy as np
+
+    C3 = computeC3(spacecraft_state, epoch_string, mu)
+
+    rvec = spacecraft_state[0:3]
+    vvec = spacecraft_state[3:6]
+    r = np.linalg.norm(rvec)
+    v = np.linalg.norm(vvec)
+    ECCvec = np.multiply((np.multiply((v*v - mu / r), rvec) - np.multiply(np.dot(rvec, vvec), vvec)), 1.0 / mu)
+    hvec = np.cross(rvec, vvec)
+    h = np.linalg.norm(hvec)
+
+    shat = (1.0 / (1.0 + C3 * (h / mu)**2)) * ((np.sqrt(C3) / mu) * np.cross(hvec, ECCvec) - ECCvec)
+    
+    RLA = np.arctan2(shat[1], shat[0]) * 180.0 / np.pi
+    if RLA < 0.0:
+        RLA += 360.0
+    DLA = np.arcsin(shat[2]) * 180.0 / np.pi
+
+    return C3, RLA, DLA
+
+
 class OccultationEvent(object):
     def __init__(self):
         self.start = 0
@@ -106,15 +138,17 @@ class OccultingBody(object):
         self.search_end_ET_seconds = 0.0  
         
 class OccultationDetector(object):
-    def __init__(self, ephem_directory_in):
+    def __init__(self, ephem_directory_in=""):
         #load SPICE  
         try:
             import spiceypy as spice
             import spiceypy.utils.support_types as stypes
         except:
-            print("spiceypy not available")      
-        self.mySPICEdriver = SpiceHandler(ephem_directory_in)
-        self.mySPICEdriver.loadSpiceFiles()
+            print("spiceypy not available")
+        self.ephemDirectory = ephem_directory_in
+        if ephem_directory_in != "":
+            self.mySPICEdriver = SpiceHandler(self.ephemDirectory)
+            self.mySPICEdriver.loadSpiceFiles()
         self.TDBFMT = 'DD-MON-YYYY HR:MN:SC.###### TDB ::TDB'
         self.start = 0
         self.stop = 0
@@ -130,7 +164,8 @@ class OccultationDetector(object):
         self.cumulative_results = {}
 
     def __del__(self):
-        self.mySPICEdriver.unloadSpiceFiles()
+        if self.ephemDirectory != "":
+            self.mySPICEdriver.unloadSpiceFiles()
 
     def computeOccultations(self, observer_in, occultation_bodies_in, target_in, target_shape_in, target_frame_in, step_size_in, aberration_correction_in, greg_format_string_in):
 
@@ -221,6 +256,10 @@ class OccultationDetector(object):
                                 type = 'Partial'
                             report_writer.writerow([type, '{:s}'.format(event.start), '{:s}'.format(event.stop ), str(event.start_JD), str(event.stop_JD), str(event.duration)])
                         elif event.type == 'ANNULAR' or event.type == 'Annular' or event.type == 'annular':
+                            if self.target == 'SUN' or self.target == 'sun' or self.target == '10':
+                                type = 'Annular'
+                            else:
+                                type = 'Annular'
                             report_writer.writerow([type, '{:s}'.format(event.start), '{:s}'.format(event.stop ), str(event.start_JD), str(event.stop_JD), str(event.duration)])
                 report_writer.writerow('\n \n')
 
@@ -363,10 +402,12 @@ class GeometryComputer(object):
             current_epoch = data_frame.start_epoch
             current_epoch = spice.str2et(current_epoch)
             stop_epoch = spice.str2et(data_frame.stop_epoch)
+    
             time_remaining = stop_epoch - current_epoch
 
             while time_remaining >= 0.0:
                 greg_date_string = spice.timout(current_epoch, self.greg_format_string)
+                #JD_date = greg2Julian(greg_date_string)
                 JD_date = spice.timout(current_epoch, self.julian_format_string)
                 for body_pair in data_frame.body_pairs:
                     # get target body state
@@ -386,7 +427,7 @@ class GeometryComputer(object):
                 if time_remaining == 0.0:
                     break
                 else:
-                    if time_remaining >= data_frame.time_step:
+                    if time_remaining > data_frame.time_step:
                         current_epoch += data_frame.time_step
                         time_remaining -= data_frame.time_step    
                     else:            
@@ -462,3 +503,46 @@ class GeometryComputer(object):
                         eclipse_type = "partial"
 
             occlt.data.append([greg_date_string, JD_date, eclipse_percentage, eclipse_type])
+            
+def computeSEPandSPEangles(current_epoch, spacecraft_SPICE_ID):
+    import numpy as np
+    
+    # get position of object w.r.t. Earth
+    spacecraft_state_wrt_Earth, light_times = spice.spkez(spacecraft_SPICE_ID, current_epoch, "J2000", 'NONE', 399)
+
+    # get position of Sun w.r.t. Earth
+    sun_state_wrt_Earth, light_times = spice.spkez(10, current_epoch, "J2000", 'NONE', 399)
+
+    Earth_state_wrt_spacecraft = [ -x for x in spacecraft_state_wrt_Earth]
+    sun_state_wrt_spacecraft = sun_state_wrt_Earth - spacecraft_state_wrt_Earth
+
+    cosAngle_SEP = np.dot(sun_state_wrt_Earth[0:3], spacecraft_state_wrt_Earth[0:3])/np.linalg.norm(sun_state_wrt_Earth[0:3])/np.linalg.norm(spacecraft_state_wrt_Earth[0:3])
+    cosAngle_SPE = np.dot(sun_state_wrt_spacecraft[0:3], Earth_state_wrt_spacecraft[0:3])/np.linalg.norm(sun_state_wrt_spacecraft[0:3])/np.linalg.norm(Earth_state_wrt_spacecraft[0:3])
+
+    SEP_angle = np.arccos(cosAngle_SEP) * 180.0/np.pi
+    SPE_angle = np.arccos(cosAngle_SPE) * 180.0/np.pi
+
+    return SEP_angle, SPE_angle
+            
+
+if __name__ == '__main__':
+
+    import numpy as np
+    SPICE_ephem_directory = "C:/emtg/missions/Mission1/universe/ephemeris_files/"
+    spice_handler = SpiceHandler(SPICE_ephem_directory)
+    spice_handler.loadSpiceFiles()
+
+    print(spice.timout(spice.str2et('13-DEC-2026 19:24:24.412248611 TDB'), 'DD-MON-YYYY HR:MN:SC.###### UTC ::UTC'))
+
+    print(greg2Julian("10 Apr 2028 07:51:26.7 UTC") - greg2Julian("10 Apr 2028 07:47:38.595 UTC"))
+
+    
+    state_carrier, light_times = spice.spkez(-123, spice.str2et("10-APR-2028 10:17:05.353 UTC"), "J2000", 'NONE', 299)
+    state_probe, light_times   = spice.spkez(-124, spice.str2et("10-APR-2028 10:17:05.353 UTC"), "J2000", 'NONE', 299)
+    for entry in state_carrier:
+        print('{:.16f}'.format(entry))
+    
+    for entry in state_probe:
+        print('{:.16f}'.format(entry))
+    
+    spice_handler.unloadSpiceFiles()

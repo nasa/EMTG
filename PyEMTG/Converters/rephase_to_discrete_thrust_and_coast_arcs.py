@@ -2,14 +2,14 @@
 #An open-source global optimization tool for preliminary mission design
 #Provided by NASA Goddard Space Flight Center
 #
-#Copyright (c) 2014 - 2020 United States Government as represented by the
+#Copyright (c) 2014 - 2024 United States Government as represented by the
 #Administrator of the National Aeronautics and Space Administration.
 #All Other Rights Reserved.
 #
 #Licensed under the NASA Open Source License (the "License"); 
 #You may not use this file except in compliance with the License. 
 #You may obtain a copy of the License at:
-#https://opensource.org/licenses/NASA-1.3
+#https://opensource.org/license/nasa1-3-php
 #Unless required by applicable law or agreed to in writing, software
 #distributed under the License is distributed on an "AS IS" BASIS,
 #WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
@@ -242,10 +242,10 @@ class phaseBlock(object):
         newJourney.forced_terminal_coast = 0.0
         
         #step 9: journey time bounds and post-journey delta-v
-        if isLast:
+        if isLast and not isFirst: #don't mess with stand-alone thrust arcs
             if newJourney.timebounded == 1:# if the journey has time bounds, as opposed to arrival date bounds or aggregate time bounds
                 newJourney.timebounded = 0
-        else: #if this isn't the last phase of the journey, turn off all time bounds and post-journey delta-v
+        elif (not isLast and not isFirst): #if this isn't the last phase of the journey, turn off all time bounds and post-journey delta-v
             newJourney.timebounded = 0
             newJourney.journey_end_TCM = 0.0
             newJourney.journey_end_deltav = 0.0
@@ -344,9 +344,9 @@ def rephase_to_discrete_thrust_and_coast_arcs(originalOptions, originalMission):
                 
                 #finish off the current phase
                 currentPhase.endEpoch = previousEvent.JulianDate + previousEvent.TimestepLength / 2
-                currentPhase.endMass = previousEvent.Mass
+                currentPhase.endMass = (event.Mass + previousEvent.Mass) / 2
                 currentPhase.phaseFlightTime = currentPhase.endEpoch - currentPhase.beginEpoch
-                currentPhase.endState = previousEvent.SpacecraftState
+                currentPhase.endState = list((np.array(event.SpacecraftState) + np.array(previousEvent.SpacecraftState)) / 2)
                 
                 #add the current phase to the stack
                 phaseStack.append(copy.deepcopy(currentPhase))
@@ -365,9 +365,9 @@ def rephase_to_discrete_thrust_and_coast_arcs(originalOptions, originalMission):
                     
                     #finish off the current phase
                     currentPhase.endEpoch = previousEvent.JulianDate + previousEvent.TimestepLength / 2
-                    currentPhase.endMass = previousEvent.Mass
+                    currentPhase.endMass = (event.Mass + previousEvent.Mass) / 2
                     currentPhase.phaseFlightTime = currentPhase.endEpoch - currentPhase.beginEpoch
-                    currentPhase.endState = previousEvent.SpacecraftState
+                    currentPhase.endState = list((np.array(event.SpacecraftState) + np.array(previousEvent.SpacecraftState)) / 2)
                     
                     #add the current phase to the stack
                     phaseStack.append(copy.deepcopy(currentPhase))
@@ -405,7 +405,10 @@ def rephase_to_discrete_thrust_and_coast_arcs(originalOptions, originalMission):
         #Step 4: we now have a stack of phase objects. Let's make them into journeys.
         phaseIndex = 0
         #Step 4.1: the first coast/thrust phase of the journey (which may also be the last
-        firstJourney, phaseIndex = phaseStack[0].makeJourney(baseJourney = oldJourneyOptions, phaseIndex = phaseIndex, isFirst = True, mission_time_step_size = originalOptions.integration_time_step_size)
+        if len(phaseStack) == 1:
+            firstJourney, phaseIndex = phaseStack[0].makeJourney(baseJourney = oldJourneyOptions, phaseIndex = phaseIndex, isFirst = True, isLast = True, mission_time_step_size = originalOptions.integration_time_step_size)
+        else:
+            firstJourney, phaseIndex = phaseStack[0].makeJourney(baseJourney = oldJourneyOptions, phaseIndex = phaseIndex, isFirst = True, mission_time_step_size = originalOptions.integration_time_step_size)
         newOptions.Journeys.append(firstJourney)
         
         #Step 4.2: intermediate coast/thrust phases (if the journey has more than two)

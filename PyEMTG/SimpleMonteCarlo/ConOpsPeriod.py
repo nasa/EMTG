@@ -219,7 +219,7 @@ class EphemerisFileReader(object):
 
         # now write out a new, clean .ephemeris file suitable for .bsp conversion by SPICE
         splitty = os.path.split(os.path.abspath(self.ephemeris_file))
-        with open(splitty[0]+'/'+splitty[1].split('.')[0]+'_clean'+'.ephemeris', 'w') as clean_ephem_file:
+        with open(splitty[0]+'/'+splitty[1].split('.ephemeris')[0]+'_clean'+'.ephemeris', 'w') as clean_ephem_file:
             for row in clean_ephem_file_rows:
                 clean_ephem_file.write(row.gregorian_date.split('TDB')[0] + ',' + "{:.15E}".format(row.spacecraft_position_x) + ','
                                                + "{:.15E}".format(row.spacecraft_position_y) + ','
@@ -438,14 +438,15 @@ class TargetSpecFileReader(object):
         return target_event_data
 
 if __name__ == '__main__':
-    #you need to modify this to make it do anything
-    my_mission_options = MO.MissionOptions("stuff.emtgopt")
-    SPICE_ephem_directory = "C:/emtg/testatron/universe/ephemeris_files/"
+    # In order for the code in this section to work, a user would need to update the variables
+    
+    my_mission_options = MO.MissionOptions("C:/emtg/missions/Mission1/mission1.emtgopt")
+    SPICE_ephem_directory = "C:/utilities/Universes/Default/ephemeris_files/"
+    dir = "C:/missions/Mission2/"
+    mission_name = "myMission"   
+    
     spice_handler = SpiceyUtil.SpiceHandler(SPICE_ephem_directory)
     spice_handler.loadSpiceFiles()
-    
-    dir = "somewhere"
-    mission_name = "myMission"   
     
     my_maneuver_spec_reader = ManeuverSpecFileReader()
     maneuver_spec_file_data = my_maneuver_spec_reader.parseEMTGmaneuverSpecFile(dir + mission_name + ".mission_maneuver_spec")        

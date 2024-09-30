@@ -52,7 +52,23 @@
 #MEEtoCartesian                             XXXXXXXXXX
 
 class StateConverter(object):
-    def COEtoCartesian(self, stateCOE, mu=1.0):
+    def COEtoCartesian(self, stateCOE, mu):
+        """
+        Convert from classical orbital elements to Cartesian state representation.
+        Any units can be used, but must be consistent.
+        
+        Parameters
+        ----------
+        stateCOE : 6-element list of floats
+            State in classical orbital elements: [SMA, ECC, INC, RAAN, AOP, TA]
+        mu : float
+            Gravitational parameter of central body
+        
+        Returns
+        -------
+        6-element list of floats
+            State in Cartesian: [x, y, z, vx, vy, vz]
+        """
         #  import statements
         from math  import cos, sin, sqrt
         from numpy import matrix, array, zeros
@@ -90,7 +106,7 @@ class StateConverter(object):
     
         return stateCartesian
 
-    def CartesiantoCOE(self, stateCartesian,mu=1.0):
+    def CartesiantoCOE(self, stateCartesian,mu):
         from kepler import safe_acos
         from math  import pi, acos
         from numpy import linalg, cross, dot, array
@@ -287,7 +303,7 @@ class StateConverter(object):
 
         return [r, RA, DEC, v, AZ, FPA]
 
-    def CartesiantoIncomingBplane(self, stateCartesian, mu=1.0):
+    def CartesiantoIncomingBplane(self, stateCartesian, mu):
         import numpy as np
         r = np.array([stateCartesian[0], stateCartesian[1], stateCartesian[2]])
         v = np.array([stateCartesian[3], stateCartesian[4], stateCartesian[5]])
@@ -295,17 +311,8 @@ class StateConverter(object):
         from posVel2BPlane import posVel2BPlane
         bplane = posVel2BPlane()
 
-        e = bplane.eVector(r, v, mu)
-        h = bplane.hVector(r, v)
-        S = bplane.sVector(r, v, mu)
-        B = bplane.bVector(r, v, mu)
-        R = bplane.rVector(r, v, mu)
-        T = bplane.tVector(r, v, mu)
-        BR = bplane.bDotR(r, v, mu)
-        BT = bplane.bDotT(r, v, mu)
         theta = bplane.bTheta(r, v, mu)
         Bmag = bplane.bScalar(r, v, mu)
-        rp = bplane.rPeri(r, v, mu)
         vinf = bplane.vInfMag(r, v, mu)
         RA = bplane.vInfRA(r, v, mu)
         Dec = bplane.vInfDec(r, v, mu)
@@ -313,7 +320,7 @@ class StateConverter(object):
 
         return [vinf, RA, Dec, Bmag, theta, trueAnomaly]
 
-    def CartesiantoOutgoingBplane(self, stateCartesian, mu=1.0):
+    def CartesiantoOutgoingBplane(self, stateCartesian, mu):
         import numpy as np
         r = np.array([stateCartesian[0], stateCartesian[1], stateCartesian[2]])
         v = np.array([stateCartesian[3], stateCartesian[4], stateCartesian[5]])
@@ -321,73 +328,83 @@ class StateConverter(object):
         from posVel2BPlaneOut import posVel2BPlaneOut
         bplane = posVel2BPlaneOut()
 
-        e = bplane.eVector(r, v, mu)
-        h = bplane.hVector(r, v)
-        S = bplane.sVector(r, v, mu)
-        B = bplane.bVector(r, v, mu)
-        R = bplane.rVector(r, v, mu)
-        T = bplane.tVector(r, v, mu)
-        BR = bplane.bDotR(r, v, mu)
-        BT = bplane.bDotT(r, v, mu)
         theta = bplane.bTheta(r, v, mu)
         Bmag = bplane.bScalar(r, v, mu)
-        rp = bplane.rPeri(r, v, mu)
         vinf = bplane.vInfMag(r, v, mu)
         RA = bplane.vInfRA(r, v, mu)
         Dec = bplane.vInfDec(r, v, mu)
         trueAnomaly = bplane.trueAnomaly(r, v, mu)
 
         return [vinf, RA, Dec, Bmag, theta, trueAnomaly]
+    
+    def CartesiantoIncomingBplaneRpTA(self, stateCartesian, mu):
+        import numpy as np
+        r = np.array([stateCartesian[0], stateCartesian[1], stateCartesian[2]])
+        v = np.array([stateCartesian[3], stateCartesian[4], stateCartesian[5]])
+
+        from posVel2BPlane import posVel2BPlane
+        bplane = posVel2BPlane()
+
+        theta = bplane.bTheta(r, v, mu)
+        rp = bplane.rPeri(r, v, mu)
+        vinf = bplane.vInfMag(r, v, mu)
+        RA = bplane.vInfRA(r, v, mu)
+        Dec = bplane.vInfDec(r, v, mu)
+        trueAnomaly = bplane.trueAnomaly(r, v, mu)
+
+        return [vinf, RA, Dec, rp, theta, trueAnomaly]
+    
+    def CartesiantoOutgoingBplaneRpTA(self, stateCartesian, mu):
+        import numpy as np
+        r = np.array([stateCartesian[0], stateCartesian[1], stateCartesian[2]])
+        v = np.array([stateCartesian[3], stateCartesian[4], stateCartesian[5]])
+
+        from posVel2BPlaneOut import posVel2BPlaneOut
+        bplane = posVel2BPlaneOut()
+
+        theta = bplane.bTheta(r, v, mu)
+        rp = bplane.rPeri(r, v, mu)
+        vinf = bplane.vInfMag(r, v, mu)
+        RA = bplane.vInfRA(r, v, mu)
+        Dec = bplane.vInfDec(r, v, mu)
+        trueAnomaly = bplane.trueAnomaly(r, v, mu)
+        return [vinf, RA, Dec, rp, theta, trueAnomaly]
 
     def CartesiantoMEE(self, stateCartesian, mu=1.0):
         stateCOE = self.CartesiantoCOE(stateCartesian, mu)
 
         return self.COEtoMEE(stateCOE, mu)
 
-    def IncomingBplanetoCartesian(self, stateIncomingBplane, mu=1.0):
-        import numpy as np
+    def IncomingBplanetoCartesian(self, stateIncomingBplane, mu):
         from BPlane2PosVel import BPlane2PosVel
         bplane = BPlane2PosVel()
     
-        eMag = bplane.eMag(stateIncomingBplane, mu)
-        s = bplane.sVector(stateIncomingBplane)
-        hMag = bplane.hMag(stateIncomingBplane)
-        t = bplane.tVector(stateIncomingBplane)
-        r = bplane.rVector(stateIncomingBplane)
-        BR = bplane.bDotR(stateIncomingBplane)
-        BT = bplane.bDotT(stateIncomingBplane)
-        B = bplane.bVector(stateIncomingBplane)
-        hUnit = bplane.hUnit(stateIncomingBplane)
-        h = bplane.hVector(stateIncomingBplane)
-        e = bplane.eVector(stateIncomingBplane, mu)
-        rp = bplane.positionVector(stateIncomingBplane, mu)
-        vp = bplane.velocityVector(stateIncomingBplane, mu)
         r = bplane.positionVector(stateIncomingBplane, mu)
         v = bplane.velocityVector(stateIncomingBplane, mu)
 
         return [r[0], r[1], r[2], v[0], v[1], v[2]]
 
-    def OutgoingBplanetoCartesian(self, stateOutgoingBplane, mu=1.0):
-        import numpy as np
+    def OutgoingBplanetoCartesian(self, stateOutgoingBplane, mu):
         from BPlane2PosVelOut import BPlane2PosVelOut
         bplane = BPlane2PosVelOut()
     
-        eMagBack = bplane.eMag(stateOutgoingBplane, mu)
-        sBack = bplane.sVector(stateOutgoingBplane)
-        hMagBack = bplane.hMag(stateOutgoingBplane)
-        tBack = bplane.tVector(stateOutgoingBplane)
-        rBack = bplane.rVector(stateOutgoingBplane)
-        BRBack = bplane.bDotR(stateOutgoingBplane)
-        BTBack = bplane.bDotT(stateOutgoingBplane)
-        BBack = bplane.bVector(stateOutgoingBplane)
-        hUnitBack = bplane.hUnit(stateOutgoingBplane)
-        hBack = bplane.hVector(stateOutgoingBplane)
-        eBack = bplane.eVector(stateOutgoingBplane, mu)
-        rpBack = bplane.positionVector(stateOutgoingBplane, mu)
-        vpBack = bplane.velocityVector(stateOutgoingBplane, mu)
         r = bplane.positionVector(stateOutgoingBplane, mu)
         v = bplane.velocityVector(stateOutgoingBplane, mu)
 
+        return [r[0], r[1], r[2], v[0], v[1], v[2]]
+    
+    def IncomingBplaneRpTAtoCartesian(self, stateIncomingBplaneRpTA, mu):
+        from BPlaneRpTA2PosVel import BPlaneRpTA2PosVel
+        bplane = BPlaneRpTA2PosVel()
+        r = bplane.positionVector(stateIncomingBplaneRpTA, mu)
+        v = bplane.velocityVector(stateIncomingBplaneRpTA, mu)
+        return [r[0], r[1], r[2], v[0], v[1], v[2]]
+    
+    def OutgoingBplaneRpTAtoCartesian(self, stateOutgoingBplaneRpTA, mu):
+        from BPlaneRpTA2PosVelOut import BPlaneRpTA2PosVelOut
+        bplane = BPlaneRpTA2PosVelOut()
+        r = bplane.positionVector(stateOutgoingBplaneRpTA, mu)
+        v = bplane.velocityVector(stateOutgoingBplaneRpTA, mu)
         return [r[0], r[1], r[2], v[0], v[1], v[2]]
 
     def MEEtoCOE(self, stateMEE, mu=1.0, prograde=True):
@@ -422,7 +439,7 @@ class StateConverter(object):
 
         return [SMA, ECC, INC, RAAN, AOP, TA]
 
-    def COEtoMEE(self, stateCOE, mu=1.0):
+    def COEtoMEE(self, stateCOE, mu):
         from math import sin, cos, tan
         SMA =  stateCOE[0]
         ECC =  stateCOE[1]
@@ -447,35 +464,49 @@ class StateConverter(object):
 
         return [P, F, G, H, K, L]
 
-    def COEtoSphericalAZFPA(self, stateCOE, mu=1.0):
+    def COEtoSphericalAZFPA(self, stateCOE, mu):
         stateCartesian = self.COEtoCartesian(stateCOE, mu)
 
         stateSphericalAZFPA = self.CartesiantoSphericalAZFPA(stateCartesian)
 
         return stateSphericalAZFPA
 
-    def COEtoSphericalRADEC(self, stateCOE, mu=1.0):
+    def COEtoSphericalRADEC(self, stateCOE, mu):
         stateCartesian = self.COEtoCartesian(stateCOE, mu)
 
         stateSphericalRADEC = self.CartesiantoSphericalRADEC(stateCartesian)
 
         return stateSphericalRADEC
 
-    def COEtoIncomingBplane(self, stateCOE, mu=1.0):
+    def COEtoIncomingBplane(self, stateCOE, mu):
         stateCartesian = self.COEtoCartesian(stateCOE, mu)
 
         stateIncomingBplane = self.CartesiantoIncomingBplane(stateCartesian, mu)
     
         return stateIncomingBplane
 
-    def COEtoOutgoingBplane(self, stateCOE, mu=1.0):
+    def COEtoOutgoingBplane(self, stateCOE, mu):
         stateCartesian = self.COEtoCartesian(stateCOE, mu)
 
         stateOutgoingBplane = self.CartesiantoOutgoingBplane(stateCartesian, mu)
     
         return stateOutgoingBplane
+    
+    def COEtoIncomingBplaneRpTA(self, stateCOE, mu):
+        stateCartesian = self.COEtoCartesian(stateCOE, mu)
 
-    def SphericalAZFPAtoCOE(self, stateSphericalAZFPA, mu=1.0):
+        stateIncomingBplaneRpTA = self.CartesiantoIncomingBplaneRpTA(stateCartesian, mu)
+    
+        return stateIncomingBplaneRpTA
+
+    def COEtoOutgoingBplaneRpTA(self, stateCOE, mu):
+        stateCartesian = self.COEtoCartesian(stateCOE, mu)
+
+        stateOutgoingBplaneRpTA = self.CartesiantoOutgoingBplaneRpTA(stateCartesian, mu)
+    
+        return stateOutgoingBplaneRpTA
+
+    def SphericalAZFPAtoCOE(self, stateSphericalAZFPA, mu):
         stateCartesian = self.SphericalAZFPAtoCartesian(stateSphericalAZFPA)
 
         stateCOE = self.CartesiantoCOE(stateCartesian, mu)
@@ -489,26 +520,40 @@ class StateConverter(object):
 
         return stateSphericalRADEC
 
-    def SphericalAZFPAtoIncomingBplane(self, stateSphericalAZFPA, mu=1.0):
-        stateCartesian = self.SphericalAZFPAtoCartesian(stateSphericalAZFPA, mu)
+    def SphericalAZFPAtoIncomingBplane(self, stateSphericalAZFPA, mu):
+        stateCartesian = self.SphericalAZFPAtoCartesian(stateSphericalAZFPA)
 
         stateIncomingBplane = self.CartesiantoIncomingBplane(stateCartesian, mu)
     
         return stateIncomingBplane
 
-    def SphericalAZFPAtoOutgoingBplane(self, stateSphericalAZFPA, mu=1.0):
+    def SphericalAZFPAtoOutgoingBplane(self, stateSphericalAZFPA, mu):
         stateCartesian = self.SphericalAZFPAtoCartesian(stateSphericalAZFPA)
 
         stateOutgoingBplane = self.CartesiantoOutgoingBplane(stateCartesian, mu)
     
         return stateOutgoingBplane
     
-    def SphericalAZFPAtoMEE(self, stateSphericalAZFPA, mu=1.0):
+    def SphericalAZFPAtoIncomingBplaneRpTA(self, stateSphericalAZFPA, mu):
+        stateCartesian = self.SphericalAZFPAtoCartesian(stateSphericalAZFPA)
+
+        stateIncomingBplaneRpTA = self.CartesiantoIncomingBplaneRpTA(stateCartesian, mu)
+    
+        return stateIncomingBplaneRpTA
+
+    def SphericalAZFPAtoOutgoingBplaneRpTA(self, stateSphericalAZFPA, mu):
+        stateCartesian = self.SphericalAZFPAtoCartesian(stateSphericalAZFPA)
+
+        stateOutgoingBplaneRpTA = self.CartesiantoOutgoingBplaneRpTA(stateCartesian, mu)
+    
+        return stateOutgoingBplaneRpTA
+    
+    def SphericalAZFPAtoMEE(self, stateSphericalAZFPA, mu):
         stateCOE = self.SphericalAZFPAtoCOE(stateSphericalAZFPA, mu)
 
         return self.COEtoMEE(stateCOE, mu)
 
-    def SphericalRADECtoCOE(self, stateSphericalRADEC, mu=1.0):
+    def SphericalRADECtoCOE(self, stateSphericalRADEC, mu):
         stateCartesian = self.SphericalRADECtoCartesian(stateSphericalRADEC)
 
         stateCOE = self.CartesiantoCOE(stateCartesian, mu)
@@ -522,123 +567,261 @@ class StateConverter(object):
 
         return stateSphericalAZFPA
 
-    def SphericalRADECtoIncomingBplane(self, stateSphericalRADEC, mu=1.0):
+    def SphericalRADECtoIncomingBplane(self, stateSphericalRADEC, mu):
         stateCartesian = self.SphericalRADECtoCartesian(stateSphericalRADEC)
 
         stateIncomingBplane = self.CartesiantoIncomingBplane(stateCartesian, mu)
     
         return stateIncomingBplane
 
-    def SphericalRADECtoOutgoingBplane(self, stateSphericalRADEC, mu=1.0):
+    def SphericalRADECtoOutgoingBplane(self, stateSphericalRADEC, mu):
         stateCartesian = self.SphericalRADECtoCartesian(stateSphericalRADEC)
 
         stateOutgoingBplane = self.CartesiantoOutgoingBplane(stateCartesian, mu)
     
         return stateOutgoingBplane
     
-    def SphericalRADECtoMEE(self, stateSphericalRADEC, mu=1.0):
+    def SphericalRADECtoIncomingBplaneRpTA(self, stateSphericalRADEC, mu):
+        stateCartesian = self.SphericalRADECtoCartesian(stateSphericalRADEC)
+
+        stateIncomingBplaneRpTA = self.CartesiantoIncomingBplaneRpTA(stateCartesian, mu)
+    
+        return stateIncomingBplaneRpTA
+
+    def SphericalRADECtoOutgoingBplaneRpTA(self, stateSphericalRADEC, mu):
+        stateCartesian = self.SphericalRADECtoCartesian(stateSphericalRADEC)
+
+        stateOutgoingBplaneRpTA = self.CartesiantoOutgoingBplaneRpTA(stateCartesian, mu)
+    
+        return stateOutgoingBplaneRpTA
+    
+    def SphericalRADECtoMEE(self, stateSphericalRADEC, mu):
         stateCOE = self.SphericalRADECtoCOE(stateSphericalRADEC, mu)
 
         return self.COEtoMEE(stateCOE, mu)
 
-    def IncomingBplanetoCOE(self, stateIncomingBplane, mu=1.0):
+    def IncomingBplanetoCOE(self, stateIncomingBplane, mu):
         stateCartesian = self.IncomingBplanetoCartesian(stateIncomingBplane, mu)
 
         stateCOE = self.CartesiantoCOE(stateCartesian, mu)
     
         return stateCOE
 
-    def IncomingBplanetoSphericalAZFPA(self, stateIncomingBplane, mu=1.0):
+    def IncomingBplanetoSphericalAZFPA(self, stateIncomingBplane, mu):
         stateCartesian = self.IncomingBplanetoCartesian(stateIncomingBplane, mu)
 
         stateSphericalAZFPA = self.CartesiantoSphericalAZFPA(stateCartesian)
     
         return stateSphericalAZFPA
 
-    def IncomingBplanetoSphericalRADEC(self, stateIncomingBplane, mu=1.0):
+    def IncomingBplanetoSphericalRADEC(self, stateIncomingBplane, mu):
         stateCartesian = self.IncomingBplanetoCartesian(stateIncomingBplane, mu)
 
         stateSphericalRADEC = self.CartesiantoSphericalRADEC(stateCartesian)
     
         return stateSphericalRADEC
-
-    def IncomingBplanetoOutgoingBplane(self, stateIncomingBplane, mu=1.0):
+    
+    def IncomingBplanetoIncomingBplaneRpTA(self, stateIncomingBplane, mu):
         stateCartesian = self.IncomingBplanetoCartesian(stateIncomingBplane, mu)
 
-        stateOutgoingBplane = self.CartesiantoOutgoingBplane(stateCartesian)
+        stateIncomingBplaneRpTA = self.CartesiantoIncomingBplaneRpTA(stateCartesian, mu)
+    
+        return stateIncomingBplaneRpTA
+
+    def IncomingBplanetoOutgoingBplane(self, stateIncomingBplane, mu):
+        stateCartesian = self.IncomingBplanetoCartesian(stateIncomingBplane, mu)
+
+        stateOutgoingBplane = self.CartesiantoOutgoingBplane(stateCartesian, mu)
     
         return stateOutgoingBplane    
+    
+    def IncomingBplanetoOutgoingBplaneRpTA(self, stateIncomingBplane, mu):
+        stateCartesian = self.IncomingBplanetoCartesian(stateIncomingBplane, mu)
 
-    def IncomingBplanetoMEE(self, stateIncomingBplane, mu=1.0):
+        stateOutgoingBplaneRpTA = self.CartesiantoOutgoingBplaneRpTA(stateCartesian, mu)
+    
+        return stateOutgoingBplaneRpTA
+
+    def IncomingBplanetoMEE(self, stateIncomingBplane, mu):
         stateCOE = self.IncomingBplanetoCOE(stateIncomingBplane, mu)
 
         return self.COEtoMEE(stateCOE, mu)
 
-    def OutgoingBplanetoCOE(self, stateOutgoingBplane, mu=1.0):
+    def OutgoingBplanetoCOE(self, stateOutgoingBplane, mu):
         stateCartesian = self.OutgoingBplanetoCartesian(stateOutgoingBplane, mu)
 
         stateCOE = self.CartesiantoCOE(stateCartesian, mu)
     
         return stateCOE
 
-    def OutgoingBplanetoSphericalAZFPA(self, stateOutgoingBplane, mu=1.0):
+    def OutgoingBplanetoSphericalAZFPA(self, stateOutgoingBplane, mu):
         stateCartesian = self.OutgoingBplanetoCartesian(stateOutgoingBplane, mu)
 
         stateSphericalAZFPA = self.CartesiantoSphericalAZFPA(stateCartesian)
     
         return stateSphericalAZFPA
 
-    def OutgoingBplanetoSphericalRADEC(self, stateOutgoingBplane, mu=1.0):
+    def OutgoingBplanetoSphericalRADEC(self, stateOutgoingBplane, mu):
         stateCartesian = self.OutgoingBplanetoCartesian(stateOutgoingBplane, mu)
 
         stateSphericalRADEC = self.CartesiantoSphericalRADEC(stateCartesian)
     
         return stateSphericalRADEC
 
-    def OutgoingBplanetoIncomingBplane(self, stateOutgoingBplane, mu=1.0):
+    def OutgoingBplanetoIncomingBplane(self, stateOutgoingBplane, mu):
         stateCartesian = self.OutgoingBplanetoCartesian(stateOutgoingBplane, mu)
 
-        stateIncomingBplane = self.CartesiantoIncomingBplane(stateCartesian)
+        stateIncomingBplane = self.CartesiantoIncomingBplane(stateCartesian, mu)
     
         return stateIncomingBplane
     
-    def OutgoingBplanetoMEE(self, stateOutgoingBplane, mu=1.0):
+    def OutgoingBplanetoIncomingBplaneRpTA(self, stateOutgoingBplane, mu):
+        stateCartesian = self.OutgoingBplanetoCartesian(stateOutgoingBplane, mu)
+
+        stateIncomingBplaneRpTA = self.CartesiantoIncomingBplaneRpTA(stateCartesian, mu)
+    
+        return stateIncomingBplaneRpTA
+    
+    def OutgoingBplanetoOutgoingBplaneRpTA(self, stateOutgoingBplane, mu):
+        stateCartesian = self.OutgoingBplanetoCartesian(stateOutgoingBplane, mu)
+
+        stateOutgoingBplaneRpTA = self.CartesiantoOutgoingBplaneRpTA(stateCartesian, mu)
+    
+        return stateOutgoingBplaneRpTA
+    
+    def OutgoingBplanetoMEE(self, stateOutgoingBplane, mu):
         stateCOE = self.OutgoingBplanetoCOE(stateOutgoingBplane, mu)
 
         return self.COEtoMEE(stateCOE, mu)
     
-    def MEEtoCartesian(self, stateMEE, mu=1.0, prograde=True):
+    def IncomingBplaneRpTAtoCOE(self, stateIncomingBplaneRpTA, mu):
+        stateCartesian = self.IncomingBplaneRpTAtoCartesian(stateIncomingBplaneRpTA, mu)
+
+        stateCOE = self.CartesiantoCOE(stateCartesian, mu)
+    
+        return stateCOE
+
+    def IncomingBplaneRpTAtoSphericalAZFPA(self, stateIncomingBplaneRpTA, mu):
+        stateCartesian = self.IncomingBplaneRpTAtoCartesian(stateIncomingBplaneRpTA, mu)
+
+        stateSphericalAZFPA = self.CartesiantoSphericalAZFPA(stateCartesian)
+    
+        return stateSphericalAZFPA
+
+    def IncomingBplaneRpTAtoSphericalRADEC(self, stateIncomingBplaneRpTA, mu):
+        stateCartesian = self.IncomingBplaneRpTAtoCartesian(stateIncomingBplaneRpTA, mu)
+
+        stateSphericalRADEC = self.CartesiantoSphericalRADEC(stateCartesian)
+    
+        return stateSphericalRADEC
+    
+    def IncomingBplaneRpTAtoIncomingBplane(self, stateIncomingBplaneRpTA, mu):
+        stateCartesian = self.IncomingBplaneRpTAtoCartesian(stateIncomingBplaneRpTA, mu)
+
+        stateIncomingBplane = self.CartesiantoIncomingBplane(stateCartesian, mu)
+    
+        return stateIncomingBplane
+
+    def IncomingBplaneRpTAtoOutgoingBplane(self, stateIncomingBplaneRpTA, mu):
+        stateCartesian = self.IncomingBplaneRpTAtoCartesian(stateIncomingBplaneRpTA, mu)
+
+        stateOutgoingBplane = self.CartesiantoOutgoingBplane(stateCartesian, mu)
+    
+        return stateOutgoingBplane
+    
+    def IncomingBplaneRpTAtoOutgoingBplaneRpTA(self, stateIncomingBplaneRpTA, mu):
+        stateCartesian = self.IncomingBplaneRpTAtoCartesian(stateIncomingBplaneRpTA, mu)
+
+        stateOutgoingBplaneRpTA = self.CartesiantoOutgoingBplaneRpTA(stateCartesian, mu)
+    
+        return stateOutgoingBplaneRpTA
+
+    def IncomingBplaneRpTAtoMEE(self, stateIncomingBplaneRpTA, mu):
+        stateCOE = self.IncomingBplaneRpTAtoCOE(stateIncomingBplaneRpTA, mu)
+
+        return self.COEtoMEE(stateCOE, mu)
+
+    def OutgoingBplaneRpTAtoCOE(self, stateOutgoingBplaneRpTA, mu):
+        stateCartesian = self.OutgoingBplaneRpTAtoCartesian(stateOutgoingBplaneRpTA, mu)
+
+        stateCOE = self.CartesiantoCOE(stateCartesian, mu)
+    
+        return stateCOE
+
+    def OutgoingBplaneRpTAtoSphericalAZFPA(self, stateOutgoingBplaneRpTA, mu):
+        stateCartesian = self.OutgoingBplaneRpTAtoCartesian(stateOutgoingBplaneRpTA, mu)
+
+        stateSphericalAZFPA = self.CartesiantoSphericalAZFPA(stateCartesian)
+    
+        return stateSphericalAZFPA
+
+    def OutgoingBplaneRpTAtoSphericalRADEC(self, stateOutgoingBplaneRpTA, mu):
+        stateCartesian = self.OutgoingBplaneRpTAtoCartesian(stateOutgoingBplaneRpTA, mu)
+
+        stateSphericalRADEC = self.CartesiantoSphericalRADEC(stateCartesian)
+    
+        return stateSphericalRADEC
+
+    def OutgoingBplaneRpTAtoIncomingBplane(self, stateOutgoingBplaneRpTA, mu):
+        stateCartesian = self.OutgoingBplaneRpTAtoCartesian(stateOutgoingBplaneRpTA, mu)
+
+        stateIncomingBplane = self.CartesiantoIncomingBplane(stateCartesian, mu)
+    
+        return stateIncomingBplane
+    
+    def OutgoingBplaneRpTAtoIncomingBplaneRpTA(self, stateOutgoingBplaneRpTA, mu):
+        stateCartesian = self.OutgoingBplaneRpTAtoCartesian(stateOutgoingBplaneRpTA, mu)
+
+        stateIncomingBplaneRpTA = self.CartesiantoIncomingBplaneRpTA(stateCartesian, mu)
+    
+        return stateIncomingBplaneRpTA
+    
+    def OutgoingBplaneRpTAtoOutgoingBplane(self, stateOutgoingBplaneRpTA, mu):
+        stateCartesian = self.OutgoingBplaneRpTAtoCartesian(stateOutgoingBplaneRpTA, mu)
+
+        stateOutgoingBplane = self.CartesiantoOutgoingBplane(stateCartesian, mu)
+    
+        return stateOutgoingBplane
+    
+    def OutgoingBplaneRpTAtoMEE(self, stateOutgoingBplaneRpTA, mu):
+        stateCOE = self.OutgoingBplaneRpTAtoCOE(stateOutgoingBplaneRpTA, mu)
+
+        return self.COEtoMEE(stateCOE, mu)
+    
+    def MEEtoCartesian(self, stateMEE, mu, prograde=True):
         stateCOE = self.MEEtoCOE(stateMEE, mu, prograde)
 
         return self.COEtoCartesian(stateCOE, mu)
 
-    def MEEtoSphericalRADEC(self, stateMEE, mu=1.0, prograde=True):
+    def MEEtoSphericalRADEC(self, stateMEE, mu, prograde=True):
         stateCOE = self.MEEtoCOE(stateMEE, mu, prograde)
 
         return self.COEtoSphericalRADEC(stateCOE, mu)
     
-    def MEEtoSphericalAZFPA(self, stateMEE, mu=1.0, prograde=True):
+    def MEEtoSphericalAZFPA(self, stateMEE, mu, prograde=True):
         stateCOE = self.MEEtoCOE(stateMEE, mu, prograde)
 
         return self.COEtoSphericalAZFPA(stateCOE, mu)
     
-    def MEEtoIncomingAsymptote(self, stateMEE, mu=1.0, prograde=True):
+    def MEEtoIncomingAsymptote(self, stateMEE, mu, prograde=True):
         stateCOE = self.MEEtoCOE(stateMEE, mu, prograde)
 
         return self.COEtoIncomingAsymptote(stateCOE, mu)
     
-    def MEEtoOutgoingAsymptote(self, stateMEE, mu=1.0, prograde=True):
+    def MEEtoOutgoingAsymptote(self, stateMEE, mu, prograde=True):
         stateCOE = self.MEEtoCOE(stateMEE, mu, prograde)
 
         return self.COEtoOutgoingAsymptote(stateCOE, mu)
     ################################################################################
-    def convertDecisionVector(self, X, desiredStateRep, keywords, mu=1.0): #X is the decision vector, keywords is a list of strings that may include 'and' or 'or', desiredStateRep is a string, mu is mu
+    def convertDecisionVector(self, X, desiredStateRep, keywords, mu, exceptions=[]): #X is the decision vector, keywords is a list of strings that may include 'and' or 'or', desiredStateRep is a string, mu is mu
         CartesianNames = ['x','y','z','vx','vy','vz']
         COENames = ['SMA','ECC','INC','RAAN','AOP','TA']
         SphericalRADECNames = ['r','RA','DEC','v','vRA','vDEC']
         SphericalAZFPANames = ['r','RA','DEC','v','AZ','FPA']
         IncomingBplaneNames= ['VINFin','RHAin','DHAin','BRADIUSin','BTHETAin','TAin']
         OutgoingBplaneNames= ['VINFout','RHAout','DHAout','BRADIUSout','BTHETAout','TAout']
+        IncomingBplaneRpTANames= ['VINFin','RHAin','DHAin','RPin','BTHETAin','TAin']
+        OutgoingBplaneRpTANames= ['VINFout','RHAout','DHAout','RPout','BTHETAout','TAout']
         MEENames = ['P', 'F', 'G', 'H', 'K', 'L']
 
         #set the counter to zero
@@ -648,7 +831,9 @@ class StateConverter(object):
             description = X[Xindex][0]                                                                                    
             prefix = description.split(':')[0]
 
-            if any(keyword in description for keyword in keywords) and not 'PeriapseLaunch' in description: #don't convert PeriapseLaunch
+            if any(keyword in description for keyword in keywords) \
+                and not 'PeriapseLaunch' in description \
+                and not any(exception in description for exception in exceptions): #don't convert PeriapseLaunch
                 #something to do here
                 if 'left state x' in description: #it's cartesian
                     stateCartesian = [float(X[Xindex][1]), float(X[Xindex+1][1]), float(X[Xindex+2][1]), float(X[Xindex+3][1]), float(X[Xindex+4][1]), float(X[Xindex+5][1])]
@@ -692,6 +877,18 @@ class StateConverter(object):
                             X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + CartesianNames[i], 'left state ' + OutgoingBplaneNames[i])
                             X[Xindex + i][1] = stateOutgoingBplane[i]
                         Xindex += 6
+                    elif desiredStateRep == 'IncomingBplaneRpTA':
+                        stateIncomingBplaneRpTA = self.CartesiantoIncomingBplaneRpTA(stateCartesian, mu)
+                        for i in range(0, 6):
+                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + CartesianNames[i], 'left state ' + IncomingBplaneRpTANames[i])
+                            X[Xindex + i][1] = stateIncomingBplaneRpTA[i]
+                        Xindex += 6
+                    elif desiredStateRep == 'OutgoingBplaneRpTA':
+                        stateOutgoingBplaneRpTA = self.CartesiantoOutgoingBplaneRpTA(stateCartesian, mu)
+                        for i in range(0, 6):
+                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + CartesianNames[i], 'left state ' + OutgoingBplaneRpTANames[i])
+                            X[Xindex + i][1] = stateOutgoingBplaneRpTA[i]
+                        Xindex += 6
                         
                 elif 'left state AZ' in description: #it's SphericalAZFPA, but we actually have to step back four indices
                     stateSphericalAZFPA = [float(X[Xindex-4][1]), float(X[Xindex-3][1]), float(X[Xindex-2][1]), float(X[Xindex-1][1]), float(X[Xindex][1]), float(X[Xindex+1][1])]
@@ -722,6 +919,18 @@ class StateConverter(object):
                         for i in range(-4, 2):
                             X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + SphericalAZFPANames[i + 4], 'left state ' + OutgoingBplaneNames[i + 4])
                             X[Xindex + i][1] = stateOutgoingBplane[i + 4]
+                        Xindex += 2
+                    elif desiredStateRep == 'IncomingBplaneRpTA':
+                        stateIncomingBplaneRpTA = self.SphericalAZFPAtoIncomingBplaneRpTA(stateSphericalAZFPA, mu)
+                        for i in range(-4, 2):
+                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + SphericalAZFPANames[i + 4], 'left state ' + IncomingBplaneRpTANames[i + 4])
+                            X[Xindex + i][1] = stateIncomingBplaneRpTA[i + 4]
+                        Xindex += 2
+                    elif desiredStateRep == 'OutgoingBplaneRpTA':
+                        stateOutgoingBplaneRpTA = self.SphericalAZFPAtoOutgoingBplaneRpTA(stateSphericalAZFPA, mu)
+                        for i in range(-4, 2):
+                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + SphericalAZFPANames[i + 4], 'left state ' + OutgoingBplaneRpTANames[i + 4])
+                            X[Xindex + i][1] = stateOutgoingBplaneRpTA[i + 4]
                         Xindex += 2
                     elif desiredStateRep == 'Cartesian':
                         stateCartesian = self.SphericalAZFPAtoCartesian(stateSphericalAZFPA)
@@ -765,6 +974,18 @@ class StateConverter(object):
                         for i in range(-4, 2):
                             X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + SphericalRADECNames[i + 4], 'left state ' + OutgoingBplaneNames[i + 4])
                             X[Xindex + i][1] = stateOutgoingBplane[i + 4]
+                        Xindex += 2
+                    elif desiredStateRep == 'IncomingBplaneRpTA':
+                        stateIncomingBplaneRpTA = self.SphericalRADECtoIncomingBplaneRpTA(stateSphericalRADEC, mu)
+                        for i in range(-4, 2):
+                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + SphericalRADECNames[i + 4], 'left state ' + IncomingBplaneRpTANames[i + 4])
+                            X[Xindex + i][1] = stateIncomingBplaneRpTA[i + 4]
+                        Xindex += 2
+                    elif desiredStateRep == 'OutgoingBplaneRpTA':
+                        stateOutgoingBplaneRpTA = self.SphericalRADECtoOutgoingBplaneRpTA(stateSphericalRADEC, mu)
+                        for i in range(-4, 2):
+                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + SphericalRADECNames[i + 4], 'left state ' + OutgoingBplaneRpTANames[i + 4])
+                            X[Xindex + i][1] = stateOutgoingBplaneRpTA[i + 4]
                         Xindex += 2
                     elif desiredStateRep == 'Cartesian':
                         stateCartesian = self.SphericalRADECtoCartesian(stateSphericalRADEC)
@@ -821,91 +1042,162 @@ class StateConverter(object):
                             X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + COENames[i], 'left state ' + OutgoingBplaneNames[i])
                             X[Xindex + i][1] = stateOutgoingBplane[i]
                         Xindex += 6
-
-                elif 'left state VINFin' in description: #it's IncomingBplane
-                    stateIncomingBplane = [float(X[Xindex][1]), float(X[Xindex+1][1]), float(X[Xindex+2][1]), float(X[Xindex+3][1]), float(X[Xindex+4][1]), float(X[Xindex+5][1])]
-                    if desiredStateRep == 'IncomingBplane':
-                        Xindex += 6
-                        continue
-                    elif desiredStateRep == 'COE':
-                        stateCOE = self.IncomingBplanetoCOE(stateIncomingBplane, mu)
+                    elif desiredStateRep == 'IncomingBplaneRpTA':
+                        stateIncomingBplaneRpTA = self.COEtoIncomingBplaneRpTA(stateCOE, mu)
                         for i in range(0, 6):
-                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + IncomingBplaneNames[i], 'left state ' + COENames[i])
-                            X[Xindex + i][1] = stateCOE[i]
+                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + COENames[i], 'left state ' + IncomingBplaneRpTANames[i])
+                            X[Xindex + i][1] = stateIncomingBplaneRpTA[i]
                         Xindex += 6
-                    elif desiredStateRep == 'SphericalRADEC':
-                        stateSphericalRADEC = self.IncomingBplanetoSphericalRADEC(stateIncomingBplane, mu)
+                    elif desiredStateRep == 'OutgoingBplaneRpTA':
+                        stateOutgoingBplaneRpTA = self.COEtoOutgoingBplaneRpTA(stateCOE, mu)
                         for i in range(0, 6):
-                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + IncomingBplaneNames[i], 'left state ' + SphericalRADECNames[i])
-                            X[Xindex + i][1] = stateSphericalRADEC[i]
-                        Xindex += 6
-                    elif desiredStateRep == 'SphericalAZFPA':
-                        stateSphericalAZFPA = self.IncomingBplanetoSphericalAZFPA(stateIncomingBplane, mu)
-                        for i in range(0, 6):
-                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + IncomingBplaneNames[i], 'left state ' + SphericalAZFPANames[i])
-                            X[Xindex + i][1] = stateSphericalAZFPA[i]
-                        Xindex += 6
-                    elif desiredStateRep == 'MEE':
-                        stateMEE = self.IncomingBplanetoMEEtoMEE(stateIncomingBplane, mu)
-                        for i in range(0, 6):
-                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + IncomingBplaneNames[i], 'left state ' + MEENames[i])
-                            X[Xindex + i][1] = stateMEE[i]
-                        Xindex += 6
-                    elif desiredStateRep == 'Cartesian':
-                        stateCartesian = self.IncomingBplanetoCartesian(stateIncomingBplane, mu)
-                        for i in range(0, 6):
-                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + IncomingBplaneNames[i], 'left state ' + CartesianNames[i])
-                            X[Xindex + i][1] = stateCartesian[i]
-                        Xindex += 6
-                    elif desiredStateRep == 'OutgoingBplane':
-                        stateOutgoingBplane = self.IncomingBplanetoOutgoingBplane(stateIncomingBplane, mu)
-                        for i in range(0, 6):
-                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + IncomingBplaneNames[i], 'left state ' + OutgoingBplaneNames[i])
-                            X[Xindex + i][1] = stateOutgoingBplane[i]
-                        Xindex += 6
-            
-                elif 'left state VINFout' in description: #it's OutgoingBplane
-                    stateOutgoingBplane = [float(X[Xindex][1]), float(X[Xindex+1][1]), float(X[Xindex+2][1]), float(X[Xindex+3][1]), float(X[Xindex+4][1]), float(X[Xindex+5][1])]
-                    if desiredStateRep == 'OutgoingBplane':
-                        Xindex += 6
-                        continue
-                    elif desiredStateRep == 'COE':
-                        stateCOE = self.OutgoingBplanetoCOE(stateOutgoingBplane, mu)
-                        for i in range(0, 6):
-                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + OutgoingBplaneNames[i], 'left state ' + COENames[i])
-                            X[Xindex + i][1] = stateCOE[i]
-                        Xindex += 6
-                    elif desiredStateRep == 'SphericalRADEC':
-                        stateSphericalRADEC = self.OutgoingBplanetoSphericalRADEC(stateOutgoingBplane, mu)
-                        for i in range(0, 6):
-                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + OutgoingBplaneNames[i], 'left state ' + SphericalRADECNames[i])
-                            X[Xindex + i][1] = stateSphericalRADEC[i]
-                        Xindex += 6
-                    elif desiredStateRep == 'SphericalAZFPA':
-                        stateSphericalAZFPA = self.OutgoingBplanetoSphericalAZFPA(stateOutgoingBplane, mu)
-                        for i in range(0, 6):
-                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + OutgoingBplaneNames[i], 'left state ' + SphericalAZFPANames[i])
-                            X[Xindex + i][1] = stateSphericalAZFPA[i]
-                        Xindex += 6
-                    elif desiredStateRep == 'MEE':
-                        stateMEE = self.OutgoingBplanetoMEEtoMEE(stateOutgoingBplane, mu)
-                        for i in range(0, 6):
-                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + OutgoingBplaneNames[i], 'left state ' + MEENames[i])
-                            X[Xindex + i][1] = stateMEE[i]
-                        Xindex += 6
-                    elif desiredStateRep == 'Cartesian':
-                        stateCartesian = self.OutgoingBplanetoCartesian(stateOutgoingBplane, mu)
-                        for i in range(0, 6):
-                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + OutgoingBplaneNames[i], 'left state ' + CartesianNames[i])
-                            X[Xindex + i][1] = stateCartesian[i]
-                        Xindex += 6
-                    elif desiredStateRep == 'IncomingBplane':
-                        stateIncomingBplane = self.OutgoingBplanetoIncomingBplane(stateOutgoingBplane, mu)
-                        for i in range(0, 6):
-                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + OutgoingBplaneNames[i], 'left state ' + IncomingBplaneNames[i])
-                            X[Xindex + i][1] = stateIncomingBplane[i]
+                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + COENames[i], 'left state ' + OutgoingBplaneRpTANames[i])
+                            X[Xindex + i][1] = stateOutgoingBplaneRpTA[i]
                         Xindex += 6
 
+                elif 'left state TAin' in description:
+                    # it's an incoming b plane rep.
+                    # we actually have to step back 5 indices.
+                    delta = -5
+                    # first, need to figure out which incoming b plane rep it is.
+                    if 'left state BRADIUSin' in X[Xindex-2][0]: # it's incoming b plane with bmag
+                        stateIncomingBplane = [float(X[Xindex + delta][1]), float(X[Xindex + delta+1][1]), float(X[Xindex + delta+2][1]), float(X[Xindex + delta+3][1]), float(X[Xindex + delta+4][1]), float(X[Xindex + delta+5][1])]
+                        if desiredStateRep == 'IncomingBplane':
+                            Xindex += 6 + delta
+                            continue
+                        elif desiredStateRep == 'COE':
+                            newStates = self.IncomingBplanetoCOE(stateIncomingBplane, mu)
+                            newNames = COENames
+                        elif desiredStateRep == 'SphericalRADEC':
+                            newStates = self.IncomingBplanetoSphericalRADEC(stateIncomingBplane, mu)
+                            newNames = SphericalRADECNames
+                        elif desiredStateRep == 'SphericalAZFPA':
+                            newStates = self.IncomingBplanetoSphericalAZFPA(stateIncomingBplane, mu)
+                            newNames = SphericalAZFPANames
+                        elif desiredStateRep == 'MEE':
+                            newStates = self.IncomingBplanetoMEEtoMEE(stateIncomingBplane, mu)
+                            newNames = MEENames
+                        elif desiredStateRep == 'Cartesian':
+                            newStates = self.IncomingBplanetoCartesian(stateIncomingBplane, mu)
+                            newNames = CartesianNames
+                        elif desiredStateRep == 'OutgoingBplane':
+                            newStates = self.IncomingBplanetoOutgoingBplane(stateIncomingBplane, mu)
+                            newNames = OutgoingBplaneNames
+                        elif desiredStateRep == 'IncomingBplaneRpTA':
+                            newStates = self.IncomingBplanetoIncomingBplaneRpTA(stateIncomingBplane, mu)
+                            newNames = IncomingBplaneRpTANames
+                        elif desiredStateRep == 'OutgoingBplaneRpTA':
+                            newStates = self.IncomingBplanetoOutgoingBplaneRpTA(stateIncomingBplane, mu)
+                            newNames = OutgoingBplaneRpTANames
+                        for i in range(0 + delta, 6 + delta):
+                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + IncomingBplaneNames[i - delta], 'left state ' + newNames[i - delta])
+                            X[Xindex + i][1] = newStates[i - delta]
+                        Xindex += 6 + delta
+                    elif 'left state RPin' in X[Xindex-2][0]: # it's incoming b plane with rp
+                        stateIncomingBplaneRpTA = [float(X[Xindex + delta][1]), float(X[Xindex + delta+1][1]), float(X[Xindex + delta+2][1]), float(X[Xindex + delta+3][1]), float(X[Xindex + delta+4][1]), float(X[Xindex + delta+5][1])]
+                        if desiredStateRep == 'IncomingBplaneRpTA':
+                            Xindex += 6 + delta
+                            continue
+                        elif desiredStateRep == 'COE':
+                            newStates = self.IncomingBplaneRpTAtoCOE(stateIncomingBplaneRpTA, mu)
+                            newNames = COENames
+                        elif desiredStateRep == 'SphericalRADEC':
+                            newStates = self.IncomingBplaneRpTAtoSphericalRADEC(stateIncomingBplaneRpTA, mu)
+                            newNames = SphericalRADECNames
+                        elif desiredStateRep == 'SphericalAZFPA':
+                            newStates = self.IncomingBplaneRpTAtoSphericalAZFPA(stateIncomingBplaneRpTA, mu)
+                            newNames = SphericalAZFPANames
+                        elif desiredStateRep == 'MEE':
+                            newStates = self.IncomingBplaneRpTAtoMEEtoMEE(stateIncomingBplaneRpTA, mu)
+                            newNames = MEENames
+                        elif desiredStateRep == 'Cartesian':
+                            newStates = self.IncomingBplaneRpTAtoCartesian(stateIncomingBplaneRpTA, mu)
+                            newNames = CartesianNames
+                        elif desiredStateRep == 'IncomingBplane':
+                            newStates = self.IncomingBplaneRpTAtoIncomingBplane(stateIncomingBplaneRpTA, mu)
+                            newNames = IncomingBplaneNames
+                        elif desiredStateRep == 'OutgoingBplane':
+                            newStates = self.IncomingBplaneRpTAtoOutgoingBplane(stateIncomingBplaneRpTA, mu)
+                            newNames = OutgoingBplaneNames
+                        elif desiredStateRep == 'OutgoingBplaneRpTA':
+                            newStates = self.IncomingBplaneRpTAtoOutgoingBplaneRpTA(stateIncomingBplaneRpTA, mu)
+                            newNames = OutgoingBplaneRpTANames
+                        for i in range(0 + delta, 6 + delta):
+                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + IncomingBplaneRpTANames[i - delta], 'left state ' + newNames[i - delta])
+                            X[Xindex + i][1] = newStates[i - delta]
+                        Xindex += 6 + delta            
+                elif 'left state TAout' in description:
+                    # it's an outgoing b plane rep.
+                    # we actually have to step back 5 indices.
+                    delta = -5
+                    # first, need to figure out which outgoing b plane rep it is.
+                    if 'left state BRADIUSout' in X[Xindex-2][0]: # it's outgoing b plane with bmag
+                        stateOutgoingBplane = [float(X[Xindex + delta][1]), float(X[Xindex + delta+1][1]), float(X[Xindex + delta+2][1]), float(X[Xindex + delta+3][1]), float(X[Xindex + delta+4][1]), float(X[Xindex + delta+5][1])]
+                        if desiredStateRep == 'OutgoingBplane':
+                            Xindex += 6 + delta
+                            continue
+                        elif desiredStateRep == 'COE':
+                            newStates = self.OutgoingBplanetoCOE(stateOutgoingBplane, mu)
+                            newNames = COENames
+                        elif desiredStateRep == 'SphericalRADEC':
+                            newStates = self.OutgoingBplanetoSphericalRADEC(stateOutgoingBplane, mu)
+                            newNames = SphericalRADECNames
+                        elif desiredStateRep == 'SphericalAZFPA':
+                            newStates = self.OutgoingBplanetoSphericalAZFPA(stateOutgoingBplane, mu)
+                            newNames = SphericalAZFPANames
+                        elif desiredStateRep == 'MEE':
+                            newStates = self.OutgoingBplanetoMEEtoMEE(stateOutgoingBplane, mu)
+                            newNames = MEENames
+                        elif desiredStateRep == 'Cartesian':
+                            newStates = self.OutgoingBplanetoCartesian(stateOutgoingBplane, mu)
+                            newNames = CartesianNames
+                        elif desiredStateRep == 'IncomingBplane':
+                            newStates = self.OutgoingBplanetoIncomingBplane(stateOutgoingBplane, mu)
+                            newNames = IncomingBplaneNames
+                        elif desiredStateRep == 'IncomingBplaneRpTA':
+                            newStates = self.OutgoingBplanetoIncomingBplaneRpTA(stateOutgoingBplane, mu)
+                            newNames = IncomingBplaneRpTANames
+                        elif desiredStateRep == 'OutgoingBplaneRpTA':
+                            newStates = self.OutgoingBplanetoOutgoingBplaneRpTA(stateOutgoingBplane, mu)
+                            newNames = OutgoingBplaneRpTANames
+                        for i in range(0 + delta, 6 + delta):
+                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + OutgoingBplaneNames[i - delta], 'left state ' + newNames[i - delta])
+                            X[Xindex + i][1] = newStates[i - delta]
+                        Xindex += 6 + delta
+                    elif 'left state RPout' in X[Xindex-2][0]: # it's Outgoing b plane with rp
+                        stateOutgoingBplaneRpTA = [float(X[Xindex + delta][1]), float(X[Xindex + delta+1][1]), float(X[Xindex + delta+2][1]), float(X[Xindex + delta+3][1]), float(X[Xindex + delta+4][1]), float(X[Xindex + delta+5][1])]
+                        if desiredStateRep == 'OutgoingBplaneRpTA':
+                            Xindex += 6 + delta
+                            continue
+                        elif desiredStateRep == 'COE':
+                            newStates = self.OutgoingBplaneRpTAtoCOE(stateOutgoingBplaneRpTA, mu)
+                            newNames = COENames
+                        elif desiredStateRep == 'SphericalRADEC':
+                            newStates = self.OutgoingBplaneRpTAtoSphericalRADEC(stateOutgoingBplaneRpTA, mu)
+                            newNames = SphericalRADECNames
+                        elif desiredStateRep == 'SphericalAZFPA':
+                            newStates = self.OutgoingBplaneRpTAtoSphericalAZFPA(stateOutgoingBplaneRpTA, mu)
+                            newNames = SphericalAZFPANames
+                        elif desiredStateRep == 'MEE':
+                            newStates = self.OutgoingBplaneRpTAtoMEEtoMEE(stateOutgoingBplaneRpTA, mu)
+                            newNames = MEENames
+                        elif desiredStateRep == 'Cartesian':
+                            newStates = self.OutgoingBplaneRpTAtoCartesian(stateOutgoingBplaneRpTA, mu)
+                            newNames = CartesianNames
+                        elif desiredStateRep == 'IncomingBplane':
+                            newStates = self.OutgoingBplaneRpTAtoIncomingBplane(stateOutgoingBplaneRpTA, mu)
+                            newNames = IncomingBplaneNames
+                        elif desiredStateRep == 'IncomingBplaneRpTA':
+                            newStates = self.OutgoingBplaneRpTAtoIncomingBplaneRpTA(stateOutgoingBplaneRpTA, mu)
+                            newNames = IncomingBplaneRpTANames
+                        elif desiredStateRep == 'OutgoingBplane':
+                            newStates = self.OutgoingBplaneRpTAtoOutgoingBplane(stateOutgoingBplaneRpTA, mu)
+                            newNames = OutgoingBplaneNames
+                        
+                        for i in range(0 + delta, 6 + delta):
+                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + OutgoingBplaneRpTANames[i - delta], 'left state ' + newNames[i - delta])
+                            X[Xindex + i][1] = newStates[i - delta]
+                        Xindex += 6 + delta          
                 elif 'left state P' in description: #it's MEE
                     stateMEE = [float(X[Xindex][1]), float(X[Xindex+1][1]), float(X[Xindex+2][1]), float(X[Xindex+3][1]), float(X[Xindex+4][1]), float(X[Xindex+5][1])]
                 
@@ -947,6 +1239,18 @@ class StateConverter(object):
                         for i in range(0, 6):
                             X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + MEENames[i], 'left state ' + OutgoingBplaneNames[i])
                             X[Xindex + i][1] = stateOutgoingBplane[i]
+                        Xindex += 6
+                    elif desiredStateRep == 'IncomingBplaneRpTA':
+                        stateIncomingBplaneRpTA = self.MEEtoIncomingBplaneRpTA(stateMEE, mu)
+                        for i in range(0, 6):
+                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + MEENames[i], 'left state ' + IncomingBplaneRpTANames[i])
+                            X[Xindex + i][1] = stateIncomingBplaneRpTA[i]
+                        Xindex += 6
+                    elif desiredStateRep == 'OutgoingBplaneRpTA':
+                        stateOutgoingBplaneRpTA = self.MEEtoOutgoingBplaneRpTA(stateMEE, mu)
+                        for i in range(0, 6):
+                            X[Xindex + i][0] = X[Xindex + i][0].replace('left state ' + MEENames[i], 'left state ' + OutgoingBplaneRpTANames[i])
+                            X[Xindex + i][1] = stateOutgoingBplaneRpTA[i]
                         Xindex += 6
 
                 else:#Not a 6-state. Nothing to see here, so just advance

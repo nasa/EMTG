@@ -27,7 +27,7 @@ class BodyDistanceReport(object):
     def parseEphemerisFile(self, ephemerisfilename, optionsfilename):
         import EMTG_ephemeris_reader
         import sys
-        sys.path.append('C:/Users/delliso2/NASA/EMTG')
+        sys.path.append('C:/emtg')
 
         leapsecondspath = self.myOptions.universe_folder + '/ephemeris_files/' + self.myOptions.SPICE_leap_seconds_kernel
 
@@ -100,9 +100,9 @@ class BodyDistanceReport(object):
 
 if __name__ == '__main__':
 
-    ephemeris_filename = "C:/Discovery/MAGIC/high_fidelity/Launch_to_Callisto_SOI_HighFidelity_July_2025_AtlasV401/Launch_to_Callisto_SOI_HighFidelity_July_2025_AtlasV401_10172018_161254/Launch_to_Callisto_SOI_HighFidelity_July_2025_AtlasV401.ephemeris"
-    options_filename = "C:/Discovery/MAGIC/high_fidelity/Launch_to_Callisto_SOI_HighFidelity_July_2025_AtlasV401/Launch_to_Callisto_SOI_HighFidelity_July_2025_AtlasV401_10172018_161254/Launch_to_Callisto_SOI_HighFidelity_July_2025_AtlasV401.emtgopt"
+    ephemeris_filename = "C:/emtg/missions/Mission1.ephemeris"
+    options_filename = "C:/emtg/missions/Mission1.emtgopt"
     myBodyDistanceReport = BodyDistanceReport(ephemeris_filename, options_filename)
 
-    report_filename = "C:/Discovery/MAGIC/high_fidelity/Launch_to_Callisto_SOI_HighFidelity_July_2025_AtlasV401/Launch_to_Callisto_SOI_HighFidelity_July_2025_AtlasV401_10172018_161254/distance_from_the_Sun.csv"
+    report_filename = "C:/emtg/missions/Mission1/myReport.csv"
     myBodyDistanceReport.printReport(10, report_filename, "AU")

@@ -2,14 +2,14 @@
 #An open-source global optimization tool for preliminary mission design
 #Provided by NASA Goddard Space Flight Center
 #
-#Copyright (c) 2014 - 2018 United States Government as represented by the
+#Copyright (c) 2014 - 2024 United States Government as represented by the
 #Administrator of the National Aeronautics and Space Administration.
 #All Other Rights Reserved.
 #
 #Licensed under the NASA Open Source License (the "License"); 
 #You may not use this file except in compliance with the License. 
 #You may obtain a copy of the License at:
-#https://opensource.org/licenses/NASA-1.3
+#https://opensource.org/license/nasa1-3-php
 #Unless required by applicable law or agreed to in writing, software
 #distributed under the License is distributed on an "AS IS" BASIS,
 #WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
@@ -28,6 +28,14 @@ class OrbitElementsPanel(wx.Panel):
         wx.Panel.__init__(self, parent)
 
         #custom  elements
+        self.lblelements_representation = wx.StaticText(self, -1, "Journey elements state representation")
+        elements_representation_choices = ['0: Cartesian', '1: SphericalRADEC', '2: SphericalAZFPA', '3: COE', '4: MEE', '5: IncomingBplane', '6: OutgoingBplane', '7: IncomingBplaneRpTA', '8: OutgoingBplaneRpTA']
+        self.cmbelements_representation = wx.ComboBox(self, -1, choices = elements_representation_choices, style=wx.CB_READONLY)
+        self.elements_representation_box = wx.BoxSizer(wx.HORIZONTAL)
+        self.elements_representation_box.Add(self.lblelements_representation)
+        self.elements_representation_box.AddSpacer(5)
+        self.elements_representation_box.Add(self.cmbelements_representation)
+
         self.lblelements_frame = wx.StaticText(self, -1, "Journey elements frame")
         elements_frame_choices = ['0: ICRF', '1: J2000_BCI', '2: J2000_BCF', '3: TrueOfDate_BCI', '4: TrueOfDate_BCF', '5: Principle Axes', '6: Topocentric','7: Polar', '8: SAM', '9: ObjectReferenced']
         self.cmbelements_frame = wx.ComboBox(self, -1, choices = elements_frame_choices, style=wx.CB_READONLY)
@@ -35,14 +43,6 @@ class OrbitElementsPanel(wx.Panel):
         self.elements_frame_box.Add(self.lblelements_frame)
         self.elements_frame_box.AddSpacer(5)
         self.elements_frame_box.Add(self.cmbelements_frame)
-
-        self.lblelements_representation = wx.StaticText(self, -1, "Journey elements state representation")
-        elements_representation_choices = ['0: Cartesian', '1: SphericalRADEC', '2: SphericalAZFPA', '3: COE', '4: MEE', '5: IncomingBplane', '6: OutgoingPlane']
-        self.cmbelements_representation = wx.ComboBox(self, -1, choices = elements_representation_choices, style=wx.CB_READONLY)
-        self.elements_representation_box = wx.BoxSizer(wx.HORIZONTAL)
-        self.elements_representation_box.Add(self.lblelements_representation)
-        self.elements_representation_box.AddSpacer(5)
-        self.elements_representation_box.Add(self.cmbelements_representation)
 
         self.elements_epoch_box = wx.BoxSizer(wx.HORIZONTAL)
         self.lblelements_reference_epoch = wx.StaticText(self, -1, "Reference epoch")
@@ -66,26 +66,26 @@ class OrbitElementsPanel(wx.Panel):
         self.lblAOP = wx.StaticText(self, -1, "AOP (degrees)")
         self.lblMA = wx.StaticText(self, -1, "MA (degrees)")
         self.chkSMA = wx.CheckBox(self, -1)
-        self.chkECC = wx.CheckBox(self, -1)
-        self.chkINC = wx.CheckBox(self, -1)
-        self.chkRAAN = wx.CheckBox(self, -1)
-        self.chkAOP = wx.CheckBox(self, -1)
-        self.chkMA = wx.CheckBox(self, -1)
         self.txtSMA = wx.TextCtrl(self, -1, "SMA_val")
         self.txtSMA0 = wx.TextCtrl(self, -1, "SMA_val0")
         self.txtSMA1 = wx.TextCtrl(self, -1, "SMA_val1")
+        self.chkECC = wx.CheckBox(self, -1)
         self.txtECC = wx.TextCtrl(self, -1, "ECC_val")
         self.txtECC0 = wx.TextCtrl(self, -1, "ECC_val0")
         self.txtECC1 = wx.TextCtrl(self, -1, "ECC_val1")
+        self.chkINC = wx.CheckBox(self, -1)
         self.txtINC = wx.TextCtrl(self, -1, "INC_val")
         self.txtINC0 = wx.TextCtrl(self, -1, "INC_val0")
         self.txtINC1 = wx.TextCtrl(self, -1, "INC_val1")
+        self.chkRAAN = wx.CheckBox(self, -1)
         self.txtRAAN = wx.TextCtrl(self, -1, "RAAN_val")
         self.txtRAAN0 = wx.TextCtrl(self, -1, "RAAN_val0")
         self.txtRAAN1 = wx.TextCtrl(self, -1, "RAAN_val1")
+        self.chkAOP = wx.CheckBox(self, -1)
         self.txtAOP = wx.TextCtrl(self, -1, "AOP_val")
         self.txtAOP0 = wx.TextCtrl(self, -1, "AOP_val0")
         self.txtAOP1 = wx.TextCtrl(self, -1, "AOP_val1")
+        self.chkMA = wx.CheckBox(self, -1)
         self.txtMA = wx.TextCtrl(self, -1, "MA_val")
         self.txtMA0 = wx.TextCtrl(self, -1, "MA_val0")
         self.txtMA1 = wx.TextCtrl(self, -1, "MA_val1")

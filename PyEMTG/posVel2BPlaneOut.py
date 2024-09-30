@@ -11,7 +11,7 @@ Revision history
 """
 
 from mathUtilities import mathUtilities
-import numpy as np # use the autograd version of np
+import numpy as np
 
 class posVel2BPlaneOut(object):
     def __init__(self):

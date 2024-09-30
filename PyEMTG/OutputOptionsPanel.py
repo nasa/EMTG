@@ -2,14 +2,14 @@
 #An open-source global optimization tool for preliminary mission design
 #Provided by NASA Goddard Space Flight Center
 #
-#Copyright (c) 2014 - 2018 United States Government as represented by the
+#Copyright (c) 2014 - 2024 United States Government as represented by the
 #Administrator of the National Aeronautics and Space Administration.
 #All Other Rights Reserved.
 #
 #Licensed under the NASA Open Source License (the "License"); 
 #You may not use this file except in compliance with the License. 
 #You may obtain a copy of the License at:
-#https://opensource.org/licenses/NASA-1.3
+#https://opensource.org/license/nasa1-3-php
 #Unless required by applicable law or agreed to in writing, software
 #distributed under the License is distributed on an "AS IS" BASIS,
 #WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
@@ -28,7 +28,7 @@ class OutputOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
         wx.lib.scrolledpanel.ScrolledPanel.__init__(self, parent)
 
-        self.mainbox = wx.FlexGridSizer(30,2,5,5)
+        self.mainbox = wx.FlexGridSizer(31,2,5,5)
 
         self.lblprint_only_non_default_options = wx.StaticText(self, -1, "Print only non-default options to .emtgopt file?")
         self.chkprint_only_non_default_options = wx.CheckBox(self, -1)
@@ -66,6 +66,9 @@ class OutputOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
         self.lblgenerate_forward_integrated_ephemeris = wx.StaticText(self, -1, "Generate forward-integrated ephemeris")
         self.chkgenerate_forward_integrated_ephemeris = wx.CheckBox(self, -1)
+        
+        self.lblforward_integrated_ephemeris_minimum_timestep_kept = wx.StaticText(self, -1, "Consecutive lines in ephemeris file separated by less than this amount of time will be removed when the clean ephemeris file is created. (Seconds)")
+        self.txtforward_integrated_ephemeris_minimum_timestep_kept = wx.TextCtrl(self, -1, "forward_integrated_ephemeris_minimum_timestep_kept")
 
         self.lblforward_integrated_ephemeris_central_body_SPICE_ID = wx.StaticText(self, -1, "SPICE ID of central body for forward integrated ephemeris")
         self.txtforward_integrated_ephemeris_central_body_SPICE_ID = wx.TextCtrl(self, -1, "forward_integrated_ephemeris_central_body_SPICE_ID")
@@ -91,11 +94,11 @@ class OutputOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.lblappend_number_of_active_engines_to_ephemeris_output = wx.StaticText(self, -1, "Append number of active engines to forward integrated ephemeris?")
         self.chkappend_number_of_active_engines_to_ephemeris_output = wx.CheckBox(self, -1)
         
-        self.lblappend_throttle_level_to_ephemeris_output = wx.StaticText(self, -1, "Append throttle level to forward integrated ephemeris?")
-        self.chkappend_throttle_level_to_ephemeris_output = wx.CheckBox(self, -1)         
-        
         self.lblappend_active_power_to_ephemeris_output = wx.StaticText(self, -1, "Append active_power to forward integrated ephemeris?")
         self.chkappend_active_power_to_ephemeris_output = wx.CheckBox(self, -1)
+
+        self.lblappend_throttle_level_to_ephemeris_output = wx.StaticText(self, -1, "Append throttle level to forward integrated ephemeris?")
+        self.chkappend_throttle_level_to_ephemeris_output = wx.CheckBox(self, -1)         
         
         self.lblspacecraft_SPICE_ID = wx.StaticText(self, -1, "Spacecraft SPICE ID")
         self.txtspacecraft_SPICE_ID = wx.TextCtrl(self, -1, "spacecraft_SPICE_ID", size=(300,-1))
@@ -104,28 +107,28 @@ class OutputOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.txtpyemtg_path = wx.TextCtrl(self, -1, "pyemtg_path", size=(600,-1))
         self.btnpyemtg_path = wx.Button(self, -1, "...")
         PyEMTG_path_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        PyEMTG_path_sizer.AddMany([self.txtpyemtg_path, self.btnpyemtg_path])
-        
-        self.lblspice_utility_extension = wx.StaticText(self, -1, "File extension for SPICE utilities")
-        self.txtspice_utility_extension = wx.TextCtrl(self, -1, "spice_utility_extension", size=(300,-1))      
+        PyEMTG_path_sizer.AddMany([self.txtpyemtg_path, self.btnpyemtg_path])     
                 
         self.lblspice_utilities_path = wx.StaticText(self, -1, "Path to SPICE utilities (brief, mkspk, etc.)")
         self.txtspice_utilities_path = wx.TextCtrl(self, -1, "spice_utilities_path", size=(600,-1))
         self.btnspice_utilities_path = wx.Button(self, -1, "...")
         spice_utilities_path_sizer = wx.BoxSizer(wx.HORIZONTAL)
-        spice_utilities_path_sizer.AddMany([self.txtspice_utilities_path, self.btnspice_utilities_path])  
+        spice_utilities_path_sizer.AddMany([self.txtspice_utilities_path, self.btnspice_utilities_path])
+
+        self.lblspice_utility_extension = wx.StaticText(self, -1, "File extension for SPICE utilities")
+        self.txtspice_utility_extension = wx.TextCtrl(self, -1, "spice_utility_extension", size=(300,-1)) 
 
         self.lblcall_system_to_generate_bsp = wx.StaticText(self, -1, "Perform a system call to write a binary SPICE kernel?")
         self.chkcall_system_to_generate_bsp = wx.CheckBox(self, -1)
-        
-        self.lblbackground_mode = wx.StaticText(self, -1, "Enable background mode")
-        self.chkbackground_mode = wx.CheckBox(self, -1)
 
         self.lbloutput_STMs = wx.StaticText(self, -1, "Write STMs?")
         self.chkoutput_STMs = wx.CheckBox(self, -1)
 
         self.lbloutput_maneuver_and_target_spec_files = wx.StaticText(self, -1, "Write maneuver and target spec files?")
         self.chkoutput_maneuver_and_target_spec_files = wx.CheckBox(self, -1)
+
+        self.lblbackground_mode = wx.StaticText(self, -1, "Enable background mode")
+        self.chkbackground_mode = wx.CheckBox(self, -1)
 
         self.mainbox.AddMany([  self.lblprint_only_non_default_options, self.chkprint_only_non_default_options,
                                 self.lbloutput_file_frame, self.cmboutput_file_frame,
@@ -137,6 +140,7 @@ class OutputOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
                                 self.lblforced_mission_subfolder, mission_subfolder_sizer,
                                 self.lblshort_output_file_names, self.chkshort_output_file_names,
                                 self.lblgenerate_forward_integrated_ephemeris, self.chkgenerate_forward_integrated_ephemeris,
+                                self.lblforward_integrated_ephemeris_minimum_timestep_kept, self.txtforward_integrated_ephemeris_minimum_timestep_kept,
                                 self.lblforward_integrated_ephemeris_central_body_SPICE_ID, self.txtforward_integrated_ephemeris_central_body_SPICE_ID,
                                 self.lbladd_control_switch_line_to_ephemeris, self.chkadd_control_switch_line_to_ephemeris,
                                 self.lblappend_mass_to_ephemeris_output, self.chkappend_mass_to_ephemeris_output,
@@ -175,6 +179,7 @@ class OutputOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.btnforced_mission_subfolder.Bind(wx.EVT_BUTTON, self.Clickforced_mission_subfolder_button)
         self.chkshort_output_file_names.Bind(wx.EVT_CHECKBOX, self.Changeshort_output_file_names)
         self.chkgenerate_forward_integrated_ephemeris.Bind(wx.EVT_CHECKBOX, self.Changegenerate_forward_integrated_ephemeris)
+        self.txtforward_integrated_ephemeris_minimum_timestep_kept.Bind(wx.EVT_KILL_FOCUS, self.Changeforward_integrated_ephemeris_minimum_timestep_kept)
         self.txtforward_integrated_ephemeris_central_body_SPICE_ID.Bind(wx.EVT_KILL_FOCUS, self.Changeforward_integrated_ephemeris_central_body_SPICE_ID)
         self.chkadd_control_switch_line_to_ephemeris.Bind(wx.EVT_CHECKBOX, self.Changeadd_control_switch_line_to_ephemeris)
         self.chkappend_mass_to_ephemeris_output.Bind(wx.EVT_CHECKBOX, self.Changeappend_mass_to_ephemeris_output)
@@ -209,6 +214,7 @@ class OutputOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.txtforced_working_directory.SetValue(self.missionoptions.forced_working_directory)
         self.chkshort_output_file_names.SetValue(self.missionoptions.short_output_file_names)
         self.chkgenerate_forward_integrated_ephemeris.SetValue(self.missionoptions.generate_forward_integrated_ephemeris)
+        self.txtforward_integrated_ephemeris_minimum_timestep_kept.SetValue(str(self.missionoptions.forward_integrated_ephemeris_minimum_timestep_kept))
         self.txtforward_integrated_ephemeris_central_body_SPICE_ID.SetValue(str(self.missionoptions.forward_integrated_ephemeris_central_body_SPICE_ID))
         self.chkadd_control_switch_line_to_ephemeris.SetValue(self.missionoptions.add_control_switch_line_to_ephemeris)
         self.chkappend_mass_to_ephemeris_output.SetValue(self.missionoptions.append_mass_to_ephemeris_output)
@@ -231,6 +237,8 @@ class OutputOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.chkbackground_mode.SetValue(self.missionoptions.background_mode)
 
         if self.missionoptions.generate_forward_integrated_ephemeris:
+            self.lblforward_integrated_ephemeris_minimum_timestep_kept.Show(True)
+            self.txtforward_integrated_ephemeris_minimum_timestep_kept.Show(True)
             self.lblforward_integrated_ephemeris_central_body_SPICE_ID.Show(True)
             self.txtforward_integrated_ephemeris_central_body_SPICE_ID.Show(True)
             self.lbladd_control_switch_line_to_ephemeris.Show(True)
@@ -264,6 +272,8 @@ class OutputOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.lblcall_system_to_generate_bsp.Show(True)
             self.chkcall_system_to_generate_bsp.Show(True)
         else:
+            self.lblforward_integrated_ephemeris_minimum_timestep_kept.Show(False)
+            self.txtforward_integrated_ephemeris_minimum_timestep_kept.Show(False)
             self.lblforward_integrated_ephemeris_central_body_SPICE_ID.Show(False)
             self.txtforward_integrated_ephemeris_central_body_SPICE_ID.Show(False)
             self.lbladd_control_switch_line_to_ephemeris.Show(False)
@@ -389,10 +399,18 @@ class OutputOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.missionoptions.short_output_file_names = int(self.chkshort_output_file_names.GetValue())
 
     def Changegenerate_forward_integrated_ephemeris(self, e):
+        e.Skip()
         self.missionoptions.generate_forward_integrated_ephemeris = int(self.chkgenerate_forward_integrated_ephemeris.GetValue())
         self.update()
+        
+    def Changeforward_integrated_ephemeris_minimum_timestep_kept(self, e):
+        e.Skip()
+        self.missionoptions.forward_integrated_ephemeris_minimum_timestep_kept = float(self.txtforward_integrated_ephemeris_minimum_timestep_kept.GetValue())
+        self.update()
+        return
 
     def Changeforward_integrated_ephemeris_central_body_SPICE_ID(self, e):
+        e.Skip()
         self.missionoptions.forward_integrated_ephemeris_central_body_SPICE_ID = int(self.txtforward_integrated_ephemeris_central_body_SPICE_ID.GetValue())
         self.update()
 

@@ -2,14 +2,14 @@
 #An open-source global optimization tool for preliminary mission design
 #Provided by NASA Goddard Space Flight Center
 #
-#Copyright (c) 2014 - 2018 United States Government as represented by the
+#Copyright (c) 2014 - 2024 United States Government as represented by the
 #Administrator of the National Aeronautics and Space Administration.
 #All Other Rights Reserved.
 #
 #Licensed under the NASA Open Source License (the "License"); 
 #You may not use this file except in compliance with the License. 
 #You may obtain a copy of the License at:
-#https://opensource.org/licenses/NASA-1.3
+#https://opensource.org/license/nasa1-3-php
 #Unless required by applicable law or agreed to in writing, software
 #distributed under the License is distributed on an "AS IS" BASIS,
 #WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
@@ -129,7 +129,7 @@ class ProbeArrivalElementsPanelToEnd(OrbitElementsPanel.OrbitElementsPanel):
             self.lblRAAN.SetLabel("RAAN (degrees)")
             self.lblAOP.SetLabel("AOP (degrees)")
             self.lblMA.SetLabel("TA (degrees)")
-        elif self.missionoptions.Journeys[self.missionoptions.ActiveJourney].arrival_elements_state_representation == 4:
+        elif self.missionoptions.Journeys[self.missionoptions.ActiveJourney].Probe_End_elements_state_representation == 4:
             self.lblSMA.SetLabel("P (km)")
             self.lblECC.SetLabel("F")
             self.lblINC.SetLabel("G")
@@ -141,6 +141,13 @@ class ProbeArrivalElementsPanelToEnd(OrbitElementsPanel.OrbitElementsPanel):
             self.lblECC.SetLabel("RHA (degrees)")
             self.lblINC.SetLabel("DHA (degrees)")
             self.lblRAAN.SetLabel("bradius (km)")
+            self.lblAOP.SetLabel("btheta (degrees)")
+            self.lblMA.SetLabel("TA (degrees)")
+        elif self.missionoptions.Journeys[self.missionoptions.ActiveJourney].Probe_End_elements_state_representation in [7, 8]:
+            self.lblSMA.SetLabel("vinf (km/s)")
+            self.lblECC.SetLabel("RHA (degrees)")
+            self.lblINC.SetLabel("DHA (degrees)")
+            self.lblRAAN.SetLabel("Rp (km)")
             self.lblAOP.SetLabel("btheta (degrees)")
             self.lblMA.SetLabel("TA (degrees)")
 

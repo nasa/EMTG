@@ -716,3 +716,63 @@ def replaceEMTGwSPICE(mission_data, spacecraft_SPICE_ID, bsp_file):
             mission_data.Journeys[journey_index].missionevents[event_index].SpacecraftState = state
 
     spice.unload(bsp_file)
+    
+            
+
+if __name__ == '__main__':
+
+    
+    launch_open_mission =   Mission.Mission("C:/emtg/missions/Mission1_open.emtg")
+    launch_middle_mission = Mission.Mission("C:/emtg/missions/Mission1_middle.emtg")
+    launch_close_mission =  Mission.Mission("C:/emtg/missions/Mission1_close.emtg")
+    launch_file_name = "C:/emtg/missions/tables/primary_launch_parameter_data.tex"
+    launch_table_caption = "Launch data for the primary launch period."
+    launch_table_label = "primary_launch_parameter_data"
+    flyby_comparison_file_name = "C:/emtg/missions/tables/primary_flyby_comparison_data.tex"
+    flyby_comparison_caption = "Interplanetary cruise flyby data for the primary launch period."
+    flyby_comparison_label = "primary_flyby_comparison_data"
+    maneuver_comparison_file_name = "C:/emtg/missions/tables/primary_maneuver_comparison_data.tex"
+    maneuver_comparison_caption = "Interplanetary cruise deterministic maneuver data for the primary launch period."
+    maneuver_comparison_label = "primary_maneuver_comparison_data"
+
+
+    # tour captions and labels
+
+    SPICE_ephem_directory = "C:/utilities/Universes/Default/ephemeris_files/"
+    spice_handler = SpiceyUtil.SpiceHandler(SPICE_ephem_directory)
+    spice_handler.loadSpiceFiles() 
+
+
+    open_launch_event_data, open_periapse_event_data, open_maneuver_event_data = generateMissionData(launch_open_mission)
+    middle_launch_event_data, middle_periapse_event_data, middle_maneuver_event_data = generateMissionData(launch_middle_mission)
+    close_launch_event_data, close_periapse_event_data, close_maneuver_event_data = generateMissionData(launch_close_mission)
+    
+    # filter out maneuvers that are small
+    #end_to_end_maneuver_event_data = [(i) for i in end_to_end_maneuver_event_data if i[0].DVmagorThrottle > 0.00001]
+    open_maneuver_event_data, middle_maneuver_event_data, close_maneuver_event_data = filterManeuvers(open_maneuver_event_data, middle_maneuver_event_data, close_maneuver_event_data)
+
+    generateLaunchParameterTable(launch_file_name,
+                                 launch_table_caption,
+                                 launch_table_label,
+                                 open_launch_event_data,
+                                 middle_launch_event_data,
+                                 close_launch_event_data)
+    
+    generateFlybyComparisonTable(flyby_comparison_file_name,
+                                 flyby_comparison_caption,
+                                 flyby_comparison_label,
+                                 open_periapse_event_data,
+                                 middle_periapse_event_data,
+                                 close_periapse_event_data)
+    
+    generateManeuverComparisonTable(maneuver_comparison_file_name,
+                                    maneuver_comparison_caption,
+                                    maneuver_comparison_label,
+                                    open_maneuver_event_data,
+                                    middle_maneuver_event_data,
+                                    close_maneuver_event_data)
+
+    
+    spice_handler.unloadSpiceFiles()
+    
+    print("nothing")

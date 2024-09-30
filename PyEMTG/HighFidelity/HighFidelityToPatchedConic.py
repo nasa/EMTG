@@ -1,9 +1,9 @@
 import sys
-sys.path.append("/Users/jknittel/EMTG/PyEMTG")
-sys.path.append("/Users/jknittel/EMTG/PyEMTG/PEATSA")
+sys.path.append("/Utilities/emtg/PyEMTG")
+sys.path.append("/Utilities/emtg/PyEMTG/PEATSA")
 import MissionOptions
 
-MO = MissionOptions.MissionOptions("CAESAR_3952kg_launch_open_307kg_SRC_CustomReturnSC.emtgopt")
+MO = MissionOptions.MissionOptions("myOrbit1.emtgopt")
 
 import PEATSAchef
 

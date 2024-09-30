@@ -76,7 +76,7 @@ import NLPframe
 
 import os
 
-workdir = 'C:/emtg/EMTG_v9_results/CAESAR_HighFidelity_Sharp100_9propmargin_1em5_RADEC_7262018_185740/'
+workdir = 'C:/emtg/output/Mission1/'
 
 for filename in os.listdir(workdir):
     if 'NLP_frame' in filename and filename.endswith('.csv'):

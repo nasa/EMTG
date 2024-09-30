@@ -24,6 +24,7 @@ class PlotOptions(object):
         self.PlotPower = False
         self.PlotGamma = False
         self.PlotDelta = False
+        self.PlotVelocityThrustAngle = False
         self.PlotArray_Thrust_Angle = False
         self.PlotMass = False
         self.PlotNumberOfEngines = False
@@ -80,6 +81,7 @@ class PlotOptions(object):
         missionpanel.chkPlotNumberOfEngines.SetValue(self.PlotNumberOfEngines)
         missionpanel.chkPlotGamma.SetValue(self.PlotGamma)
         missionpanel.chkPlotDelta.SetValue(self.PlotDelta)
+        missionpanel.chkPlotVelocityThrustAngle.SetValue(self.PlotVelocityThrustAngle)
         missionpanel.chkPlotArray_Thrust_Angle.SetValue(self.PlotArray_Thrust_Angle)
         missionpanel.chkPlotMass.SetValue(self.PlotMass)
         missionpanel.chkPlotNumberOfEngines.SetValue(self.PlotNumberOfEngines)

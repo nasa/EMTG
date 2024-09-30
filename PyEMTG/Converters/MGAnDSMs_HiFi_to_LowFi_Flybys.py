@@ -301,11 +301,11 @@ if __name__ == '__main__':
     import MissionOptions
 
     # First read in an existing options file that has high-fidelity flybys
-    high_fidelity_options_file = "C:/Discovery/MAGIC/high_fidelity/Multiple_Maneuvers/Launch_to_Callisto_SOI_HighFidelity_July_2025_AtlasV401_10172018_161254/Launch_to_Callisto_SOI_HighFidelity_July_2025_AtlasV401.emtgopt"
+    high_fidelity_options_file = "C:/emtg/missions/Mission1/myOrbit1.emtgopt"
     MO_high_fidelity = MissionOptions.MissionOptions(high_fidelity_options_file)
 
     # convert the high-fidelity script to zero-radius SOI flybys
     MO_low_fidelity = MGAnDSMs_3D_Flybys_to_PatchedConic(MO_high_fidelity)
 
-    low_fidelity_options_file = "C:/Discovery/MAGIC/high_fidelity/Multiple_Maneuvers/SOI_to_GCCCCCCCCC_zero_radius.emtgopt"
+    low_fidelity_options_file = "C:/emtg/missions/Mission1/myOrbit2.emtgopt"
     MO_low_fidelity.write_options_file(low_fidelity_options_file)

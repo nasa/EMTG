@@ -1,3 +1,10 @@
+"""
+Journey.py
+========================
+This file contains the Journey class.
+
+"""
+
 import MissionEvent
 import EOM
 import AstroFunctions
@@ -11,24 +18,62 @@ import os
 import warnings
 
 class Journey(object):
+    """
+    Contains attributes and methods related to the 'output' of an EMTG journey.
+
+    Parameters
+    ----------
+    parent : Mission object
+        The Mission of which this Journey is a member.
+
+    Returns
+    -------
+    None.
+
+    """
+
     def __init__(self, parent):
+        """
+        Constructor for Journey class.
+
+        Parameters
+        ----------
+        parent : `:class:Mission` object
+            The Mission of which this Journey is a member.
+
+        Returns
+        -------
+        None.
+
+        """
         self.parent = parent
+        """The Mission of which this Journey is a member."""
 
         self.missionevents = []
+        """List of missionevents for this Journey"""
         self.journey_name = "AJourney"
+        """Journey name"""
         self.journey_number = 0
+        """Journey number, 0-indexed"""
         self.central_body = "Sun"
+        """Journey central body (a string)"""
         self.central_body_radius = 4.379e+6
+        """Radius of central body, km"""
         self.mu = 132712440017.99
+        """Gravitational parameter of central body, km^3/s2"""
         self.LU = 1.49597870691e+8
+        """Length unit for this journey, used for scaling"""
         self.TU = 5022642.890912973
+        """Time unit for this journey, used for scaling"""
         self.boundary_states = []
+        """Boundary states for this journey (a list)"""
         self.flyby_periapse_states = [[0.0]*6]
         self.thruster_duty_cycle = 1.0
         self.journey_post_arrival_deltav = 0.0
         self.journey_post_arrival_propellant_used = 0.0
         self.journey_initial_mass_increment = 0.0
         self.journey_final_mass_increment = 0.0
+        self.journey_flight_time_days = 0.0
 
         #default values for entry things
         self.journey_entryinterface_velocity_with_respect_to_rotating_atmosphere = 0.0
@@ -40,9 +85,63 @@ class Journey(object):
         self.state_frame = ''
         self.alpha0 = 0.0
         self.delta0 = 0.0
+        
+        self.BoundaryConstraintOutputs = []
+        
+        return
+    
+    def GetBoundaryConstraintOutputValueByName(self, stringIn, floatOrStringOut = "string"):
+        """
+        Return float value of boundary constraint. Which boundary constraint
+        is determined by looking for input string in self.BoundaryConstraintOutputs.
+        The first time string is found, the value of that boundary constraint is returned
+        as the type specified by floatOrStringOut.
+        If string is never found, then None is returned
+        
+        Parameters
+        ----------
+        stringIn : string 
+            string to search for in the "left-hand sides" of self.BoundaryConstraintOutputs
+        floatOrStringOut : string, optional
+            how to output the returned value: "string" or "float"
+        """
+        if len(self.BoundaryConstraintOutputs) == 0:
+            # there are not boundary constraint outputs to parse
+            return None
+        
+        for bc in self.BoundaryConstraintOutputs:
+            # get the text part of the boundary constraint output
+            text = bc.split(":")[0]
+            
+            # look for string
+            if stringIn in text:
+                value = bc.split(":")[-1].rstrip(" ").lstrip(" ")
+                if floatOrStringOut == "string":
+                    return value
+                elif floatOrStringOut == "float":
+                    return float(value)
+            
+        # if we made it this far, we didn't find it, so return None
+        return None
 
     def PlotJourney(self, JourneyAxes, PlotOptions, CustomLabels = None):
-        #plot each mission event
+        """
+        Plot each mission event
+
+        Parameters
+        ----------
+        JourneyAxes : Matplotlib axes
+            Matplotlib axes on which to plot
+        PlotOptions : PlotOptions object
+            Options for plotting
+        CustomLabels : List of lists, optional
+            [[eventNumber, labelstring], ...]. The default is None.
+
+        Returns
+        -------
+        None.
+
+        """
         BeforeMatchPoint = True
         if PlotOptions.ShowMissionEvents:
             for event in self.missionevents:
@@ -417,6 +516,24 @@ class Journey(object):
             else:
                 DataAxesRight.plot(shortDateVector, deltavector, c='LightGreen', lw=2, ls='--')
 
+        #plot PlotVelocityThrustAngle
+        if PlotOptions.PlotVelocityThrustAngle:
+            PlotVelocityThrustAngleVector = []
+            shortDateVector = []
+
+            for event in self.missionevents:
+                if event.EventType in ['SFthrust', 'SSFthrust', 'FBLTSthrust', 'FBLTthrust', 'PSBIthrust', 'PSFBthrust', 'LT_spiral']:
+                    v = math.sqrt(event.SpacecraftState[3]**2 + event.SpacecraftState[4]**2 + event.SpacecraftState[5]**2)
+                    AppliedThrust = math.sqrt(event.Thrust[0]**2 + event.Thrust[1]**2 + event.Thrust[2]**2)                    
+                    VdotT = event.SpacecraftState[3]*event.Thrust[0] + event.SpacecraftState[4]*event.Thrust[1] + event.SpacecraftState[5]*event.Thrust[2]
+                    PlotVelocityThrustAngleVector.append( math.acos( VdotT / (v * AppliedThrust) ) * 180.0 / math.pi)
+                    shortDateVector.append(datetime.datetime.strptime(event.GregorianDate,'%m/%d/%Y').date())
+
+            if firstpass:
+                DataAxesRight.plot(shortDateVector, PlotVelocityThrustAngleVector, c='orchid', lw=2, ls='--', label=r'velocity to thrust angle (degrees)')
+            else:
+                DataAxesRight.plot(shortDateVector, PlotVelocityThrustAngleVector, c='orchid', lw=2, ls='--')
+
 
         #plot central body to thrust vector angle
         if PlotOptions.PlotArray_Thrust_Angle:
@@ -618,6 +735,8 @@ class Journey(object):
             reportfile.write(', in-plane control angle (degrees)')
         if PlotOptions.PlotDelta:
             reportfile.write(', out-of-plane control angle (degrees)')
+        if PlotOptions.PlotVelocityThrustAngle:
+            reportfile.write(', velocity to thrust angle (degrees)')
         if PlotOptions.PlotArray_Thrust_Angle:
             reportfile.write(', Array to thrust angle (degrees)')
         if PlotOptions.PlotMass:
@@ -712,6 +831,16 @@ class Journey(object):
                     reportfile.write(', ' + str(math.asin(event.Thrust[2] / AppliedThrust) * 180.0 / math.pi))
                 else:
                     reportfile.write(', ' + str(0.0))
+
+            if PlotOptions.PlotVelocityThrustAngle:
+                if event.EventType in ['SFthrust', 'SSFthrust', 'FBLTSthrust', 'FBLTthrust', 'PSBIthrust', 'PSFBthrust', 'LT_spiral']:
+                    v = math.sqrt(event.SpacecraftState[3]**2 + event.SpacecraftState[4]**2 + event.SpacecraftState[5]**2)
+                    AppliedThrust = math.sqrt(event.Thrust[0]**2 + event.Thrust[1]**2 + event.Thrust[2]**2)                                        
+                    VdotT = event.SpacecraftState[3]*event.Thrust[0] + event.SpacecraftState[4]*event.Thrust[1] + event.SpacecraftState[5]*event.Thrust[2]
+                    reportfile.write(', ' + str( math.acos( VdotT / (v * AppliedThrust) ) * 180.0 / math.pi))
+                else:
+                    reportFile.write(', ' + str(0.0))
+
             if PlotOptions.PlotArray_Thrust_Angle:
                 if event.EventType in ['SFthrust', 'SSFthrust','FBLTSthrust','FBLTthrust','PSBIthrust','PSFBthrust','LT_spiral']:
                     r = math.sqrt(event.SpacecraftState[0]**2 + event.SpacecraftState[1]**2 + event.SpacecraftState[2]**2)
@@ -802,13 +931,15 @@ class Journey(object):
         #since phase boundaries are always upwr_flyby or pwr_flyby, this isn't too hard!
         phaseCount = 0
         maneuverCount = 0
-        for event in self.missionevents:
-            if event.EventType in ['pwr_flyby','upwr_flyby']:
+        for index, event in enumerate(self.missionevents):
+            if (event.EventType in ['pwr_flyby','upwr_flyby']) and (index != 0):
+                # don't increment phaseCount if index == 0 because that just means we are starting the journey with
+                # a flyby -- we are still on phase 0
                 phaseCount += 1
                 maneuverCount = 0
 
             if event.EventType == 'chem_burn':
-                if maneuverCount == maneuverIndex:
+                if maneuverCount == maneuverIndex and phaseCount == phaseIndex:
                     #this is the maneuver that we want, so return it
                     return event
                 
@@ -831,3 +962,32 @@ class Journey(object):
                 r_min = r
 
         return r_min / scale
+    
+    def getMGAPhaseUnpoweredFlyby(self, index = 0):
+        """
+        Method returns missionevent object for an unpowered flyby in an MGA phase.
+
+        Parameters
+        ----------
+        index : Integer, optional
+            The index of the unpowered flyby to return. The default is 0.
+
+        Returns
+        -------
+        None.
+
+        """
+        
+        # search through the journey to find the right event
+        flybyCount = 0
+        for event in self.missionevents:
+            if event.EventType == 'upwr_flyby':
+                if flybyCount == index:
+                    # we found what we are looking for
+                    return event
+                else:
+                    # not yet!
+                    flybyCount += 1
+        
+        # if we got this far, then the event the user requrested does not exist
+        return None

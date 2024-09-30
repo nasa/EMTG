@@ -13,7 +13,9 @@ class Mission(object):
     def __init__(self, input_file_name):
         #default values, set as garbage so that if a .emtg file is not fully populated for some reason then bad cases will be thrown out by any filter
         self.mission_name = 'bob'
+        """Mission name (string)"""
         self.total_deterministic_deltav = 1.0e+20
+        """Total deterministic Delta v, km/s"""
         self.total_statistical_deltav = 1.0e+20
         self.total_flight_time_years = 1.0e+20
         self.first_thrust_event = 1      
@@ -26,6 +28,7 @@ class Mission(object):
         self.chemical_oxidizer_used = 1.0e+20
         self.total_electric_propellant_used = 1.0e+20
         self.spacecraft_dry_mass_margin = -1.0e+20
+        self.spacecraft_mass_data = {}
         self.DecisionVector = []
         self.Xdescriptions = []
         self.Xlowerbounds = []
@@ -34,6 +37,11 @@ class Mission(object):
         self.worst_constraint = ""
         self.worst_violation = 0.0
         self.objective_value = 1.0e+20
+        self.objective_value_first_nlp_solve = 1.0e+20
+        self.first_nlp_solve_feasible = 0
+        self.number_of_solution_attempts = 0
+        self.solution_attempt_index_that_produced_best_feasible_solution = 0
+        self.timeToCompletionOfBestSolutionAttempt = -1.0
 
         #now read the file
         self.parse_mission_file(input_file_name)
@@ -55,10 +63,13 @@ class Mission(object):
         self.Journeys = []
         self.mu = 0
         linenumber = 0
+        grabbingBoundaryConstraintOutput = False
+        spacecraft_mass_data_mode = False
         for line in inputfile:
             linenumber += 1
             #split the line by colons
-            linecell = line.rstrip(" \r\n").split(':')
+            lineStripped = line.rstrip(" \r\n")
+            linecell = lineStripped.split(':')
 
             if linecell[0] == "Mission":
                 self.mission_name = linecell[1].strip('\n')
@@ -159,6 +170,7 @@ class Mission(object):
 
             if self.ActiveJourney >= 0:
                 self.Journeys[self.ActiveJourney].journey_number = self.ActiveJourney
+                
                 if linecell[0] == "Journey name":
                     self.Journeys[self.ActiveJourney].journey_name = linecell[1].strip()
                 elif linecell[0] == "Central Body":
@@ -195,6 +207,8 @@ class Mission(object):
                     self.Journeys[self.ActiveJourney].journey_mass_increment = float(linecell[1].split(' ')[1])
                 elif linecell[0] == "Journey final mass increment":
                     self.Journeys[self.ActiveJourney].journey_mass_increment = float(linecell[1].split(' ')[1])
+                elif linecell[0] == "Journey flight time (days)":
+                    self.Journeys[self.ActiveJourney].journey_flight_time_days = float(linecell[1].split(' ')[1])
 
                 elif "Journey post-arrival delta-v" in linecell[0]:
                     self.Journeys[self.ActiveJourney].journey_post_arrival_deltav = float(linecell[1].split(' ')[1])
@@ -218,7 +232,13 @@ class Mission(object):
                     self.Journeys[self.ActiveJourney].journey_electric_propellant_used = float(linecell[1].split(' ')[1])
                 elif linecell[0] == "Journey chemical propellant used":
                     self.Journeys[self.ActiveJourney].journey_chemical_propellant_used = float(linecell[1].split(' ')[1])
-
+                elif linecell[0] == "BEGIN_BOUNDARY_CONSTRAINT_BLOCK":
+                    grabbingBoundaryConstraintOutput = True
+                    self.Journeys[self.ActiveJourney].BoundaryConstraintOutputs = []
+                elif linecell[0] == "END_BOUNDARY_CONSTRAINT_BLOCK":
+                    grabbingBoundaryConstraintOutput = False
+                elif grabbingBoundaryConstraintOutput == True:
+                    self.Journeys[self.ActiveJourney].BoundaryConstraintOutputs.append(lineStripped)
                 else:
                     #parse event lines
                     inputcell = line.split('|')
@@ -236,6 +256,8 @@ class Mission(object):
 
             elif linecell[0] == "Flight time (y)":
                 self.total_flight_time_years = float(linecell[1])
+
+                spacecraft_mass_data_mode = True
                 
             elif linecell[0] == "First thrusting in control step":
                 self.first_thrust_event = float(linecell[1])        
@@ -245,37 +267,96 @@ class Mission(object):
 
             elif "with violation" in linecell[0]:
                 self.worst_violation = float(line.split("violation ")[1])
+                
+            
+            if spacecraft_mass_data_mode:
+                #start a loop
+                incumbent_stage_name = ''
 
-            elif linecell[0] == "Spacecraft":
-                if linecell[1].lstrip(" ") == "Dry mass (kg)":
-                    self.spacecraft_dry_mass = float(linecell[2])
+                class stage_mass_data:
+                    def __init__(self):
+                        self.final_mass_including_propellant_margin = 1.0e+20
+                        self.chemical_fuel_with_margin = 1.0e+20
+                        self.chemical_oxidizer_with_margin = 1.0e+20
+                        self.chemical_fuel_used = 1.0e+20
+                        self.chemical_oxidizer_used = 1.0e+20
+                        self.total_electric_propellant_including_margin = 1.0e+20
+                        self.total_electric_propellant_used = 1.0e+20
+                        self.spacecraft_dry_mass_margin = 1.0e+20
+                        self.spacecraft_dry_mass = 1.0e+20
+                        self.total_pressurant = 1.0e+20
 
-                elif linecell[1].lstrip(" ") == "Final mass including propellant margin (kg)":
-                    self.final_mass_including_propellant_margin = float(linecell[2]) 
+                while not linecell[0].startswith('Objective function is'):
+                    linecell = next(inputfile).split(':')
 
-                elif linecell[1].lstrip(" ") == "Total chemical fuel (kg)":
-                    self.chemical_fuel_with_margin = float(linecell[2]) 
-                    
-                elif linecell[1].lstrip(" ") == "Total chemical oxidizer (kg)":
-                    self.chemical_oxidizer_with_margin = float(linecell[2])
-                    
-                elif linecell[1].lstrip(" ") == "Chemical fuel used (kg)":
-                    self.chemical_fuel_used = float(linecell[2]) 
-                    
-                elif linecell[1].lstrip(" ") == "Chemical oxidizer used (kg)":
-                    self.chemical_oxidizer_used = float(linecell[2])
-                    
-                elif linecell[1].lstrip(" ") == "Total electric propellant (kg)":
-                    self.total_electric_propellant_including_margin = float(linecell[2]) 
-                    
-                elif linecell[1].lstrip(" ") == "Electric propellant used (kg)":
-                    self.total_electric_propellant_used = float(linecell[2]) 
-                    
-                elif linecell[1].lstrip(" ") == "Dry mass margin":
-                    self.spacecraft_dry_mass_margin = float(linecell[1])
+                    if len(linecell) < 3:
+                        continue
+
+                    stage_name = linecell[0]
+
+                    if stage_name != incumbent_stage_name:
+                        incumbent_stage_name = stage_name
+                        self.spacecraft_mass_data[stage_name] = stage_mass_data()
+
+                    if linecell[1].lstrip(" ") == "Dry mass (kg)":
+                        self.spacecraft_mass_data[stage_name].spacecraft_dry_mass = float(linecell[2])
+
+                    elif linecell[1].lstrip(" ") == "Final mass including propellant margin (kg)":
+                        self.spacecraft_mass_data[stage_name].final_mass_including_propellant_margin = float(linecell[2])
+
+                    elif linecell[1].lstrip(" ") == "Total chemical fuel (kg)":
+                        self.spacecraft_mass_data[stage_name].chemical_fuel_with_margin = float(linecell[2])
+
+                    elif linecell[1].lstrip(" ") == "Total chemical oxidizer (kg)":
+                        self.spacecraft_mass_data[stage_name].chemical_oxidizer_with_margin = float(linecell[2])
+
+                    elif linecell[1].lstrip(" ") == "Chemical fuel used (kg)":
+                        self.spacecraft_mass_data[stage_name].chemical_fuel_used = float(linecell[2])
+
+                    elif linecell[1].lstrip(" ") == "Chemical oxidizer used (kg)":
+                        self.spacecraft_mass_data[stage_name].chemical_oxidizer_used = float(linecell[2])
+
+                    elif linecell[1].lstrip(" ") == "Total electric propellant (kg)":
+                        self.spacecraft_mass_data[stage_name].total_electric_propellant_including_margin = float(linecell[2])
+
+                    elif linecell[1].lstrip(" ") == "Electric propellant used (kg)":
+                        self.spacecraft_mass_data[stage_name].total_electric_propellant_used = float(linecell[2])
+
+                    elif linecell[1].lstrip(" ") == "Dry mass margin":
+                        self.spacecraft_mass_data[stage_name].spacecraft_dry_mass_margin = float(linecell[2])
+
+                    elif linecell[1].lstrip(" ") == "Dry mass (kg)":
+                        self.spacecraft_mass_data[stage_name].spacecraft_dry_mass = float(linecell[2])
+
+                    elif linecell[1].lstrip(" ") == 'Total pressurant (kg)':
+                        self.spacecraft_mass_data[stage_name].total_pressurant = float(linecell[2])
+                #out of the loop, so set mass mode to false
+                spacecraft_mass_data_mode = False
+
+                #now populate the global data fields
+                self.spacecraft_dry_mass = self.spacecraft_mass_data['Spacecraft'].spacecraft_dry_mass
+                self.final_mass_including_propellant_margin = self.spacecraft_mass_data['Spacecraft'].final_mass_including_propellant_margin
+                self.chemical_fuel_with_margin = self.spacecraft_mass_data['Spacecraft'].chemical_fuel_with_margin
+                self.chemical_oxidizer_with_margin = self.spacecraft_mass_data['Spacecraft'].chemical_oxidizer_with_margin
+                self.chemical_fuel_used = self.spacecraft_mass_data['Spacecraft'].chemical_fuel_used
+                self.chemical_oxidizer_used = self.spacecraft_mass_data['Spacecraft'].chemical_oxidizer_used
+                self.total_electric_propellant_including_margin = self.spacecraft_mass_data['Spacecraft'].total_electric_propellant_including_margin
+                self.total_electric_propellant_used = self.spacecraft_mass_data['Spacecraft'].total_electric_propellant_used
+                self.spacecraft_dry_mass_margin = self.spacecraft_mass_data['Spacecraft'].spacecraft_dry_mass_margin
+                self.total_pressurant = self.spacecraft_mass_data['Spacecraft'].total_pressurant
                 
             elif line[0:4] == 'J = ':
                 self.objective_value = float(line.replace('J = ',''))
+            elif "Was first NLP solve feasible" in linecell[0]:
+                self.first_nlp_solve_feasible = float(linecell[1])
+            elif "Objective function value from first NLP solve" in linecell[0]:
+                self.objective_value_first_nlp_solve = float(linecell[1])
+            elif "Number of solution attempts" in linecell[0]:
+                self.number_of_solution_attempts = float(linecell[1])
+            elif "Solution attempt that produced a feasible solution" in linecell[0] and "Time" not in linecell[0]:
+                self.solution_attempt_index_that_produced_best_feasible_solution = float(linecell[1])
+            elif "Time to completion of solution attempt that produced a feasible solution" in linecell[0]:
+                self.timeToCompletionOfBestSolutionAttempt = float(linecell[1])
         
         inputfile.close()
 
@@ -541,7 +622,7 @@ class Mission(object):
             l2 = []
             
             
-            if PlotOptions.PlotGamma or PlotOptions.PlotDelta or PlotOptions.PlotArray_Thrust_Angle or PlotOptions.PlotSunSpacecraftEarthAngle or PlotOptions.PlotCB_thrust_angle or PlotOptions.PlotSunBoresightAngle:
+            if PlotOptions.PlotGamma or PlotOptions.PlotDelta or PlotOptions.PlotVelocityThrustAngle or PlotOptions.PlotArray_Thrust_Angle or PlotOptions.PlotSunSpacecraftEarthAngle or PlotOptions.PlotCB_thrust_angle or PlotOptions.PlotSunBoresightAngle:
                 h2, l2 = self.DataAxesRight.get_legend_handles_labels()
                 self.DataAxesRight.set_ylabel('Angle Metric', fontdict=font)
                 self.DataAxesRight.xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(format_date))
@@ -578,7 +659,7 @@ class Mission(object):
             self.DataFigure.show()
 
     def WriteDataReport(self, PlotOptions, reportfilename):
-        if PlotOptions.PlotR or PlotOptions.PlotV or PlotOptions.PlotThrust or PlotOptions.PlotIsp or PlotOptions.PlotMdot or PlotOptions.PlotEfficiency or PlotOptions.PlotThrottle or PlotOptions.PlotPower or PlotOptions.PlotGamma or PlotOptions.PlotDelta or PlotOptions.PlotArray_Thrust_Angle or PlotOptions.PlotMass or PlotOptions.PlotNumberOfEngines or PlotOptions.PlotActivePower or PlotOptions.PlotWasteHeat or PlotOptions.PlotEarthDistance or PlotOptions.PlotSunSpacecraftEarthAngle or PlotOptions.PlotSpacecraftViewingAngle or PlotOptions.PlotThrottleLevel:
+        if PlotOptions.PlotR or PlotOptions.PlotV or PlotOptions.PlotThrust or PlotOptions.PlotIsp or PlotOptions.PlotMdot or PlotOptions.PlotEfficiency or PlotOptions.PlotThrottle or PlotOptions.PlotPower or PlotOptions.PlotGamma or PlotOptions.PlotDelta or PlotOptions.PlotVelocityThrustAngle or PlotOptions.PlotArray_Thrust_Angle or PlotOptions.PlotMass or PlotOptions.PlotNumberOfEngines or PlotOptions.PlotActivePower or PlotOptions.PlotWasteHeat or PlotOptions.PlotEarthDistance or PlotOptions.PlotSunSpacecraftEarthAngle or PlotOptions.PlotSpacecraftViewingAngle or PlotOptions.PlotThrottleLevel:
             
             reportfile = open(reportfilename, 'w')
             reportfile.write('#EMTG systems report file\n')
@@ -1155,175 +1236,337 @@ class Mission(object):
         #if you get this far, something went wrong                                                                 
         raise Exception("Journey '" + journeyNameString + "' not found.")  
         
-    def Comparatron(self,baseline_path,csv_file_name=None,full_output=False,tolerance_dict={},default_tolerance=1e-15):
-        '''
-        NOTE FOR JACOB:
-        The lines commented out near the end of the script (starting at line 1250)
-        I left in because they may be useful if you decide you do not want the 
-        entire dataframe showing up in the failFile. If you want to change this, 
-        remove the "output.to_csv(outputdir + '/failed_tests.csv', mode='a', index=False)" 
-        line from testatron.py (line ___) and go back to writing the separate 
-        output file in this script. Whatever aspects of comparison you want to 
-        write to the failFile can be returned to the driver as comp_return in this script.
-        '''
-        #Compare just constraint and decision vectors
-        import pandas as pd
-        #baseline_path is the file location of the emtg case to compare against. This is the only required argument.
-        #csv_file_name can specify the output file name. A csv file is only output if there are mismatches between cases. By default, it uses the mission name as the name for the csv output file
-        #full_output determines whether all cases that disagree between self and the baseline will be saved to csv. If True, all cases that are not in exact agreement will be saved. If False, only cases that do not meet the tolerance will be saved to the csv output.
-        #tolerance_dict is a dictionary of tolerences that, if provided, will override the default value. Provide a dictionary with the attribute name as the key and the alternate tolerance as the value (i.e. {'total_statistical_deltav':1e-6,'Declination':1e-8})
-        #default_tolerance is the tolerance value used for all attributes that do not appear in the tolerance_dict
+    def Comparatron(self, baseline_path, csv_file_name=None, full_output=False, tolerance_dict={}, default_tolerance=1e-15,
+                    attributes_to_ignore = []):
+        """
+        baseline_path: the file location of the emtg case to compare against. This is the only required argument.
+        csv_file_name: can specify the output file name. A csv file is only output if there are mismatches between cases. By default, it uses the mission name as the name for the csv output file
+        full_output: determines whether all cases that disagree between self and the baseline will be saved to csv. If True, all cases that are not in exact agreement will be saved. If False, only cases that do not meet the tolerance will be saved to the csv output.
+        tolerance_dict: a dictionary of tolerences that, if provided, will override the default value. Provide a dictionary with the attribute name as the key and the alternate tolerance as the value (i.e. {'total_statistical_deltav':1e-6,'Declination':1e-8})
+        default_tolerance: the tolerance value used for all attributes that do not appear in the tolerance_dict
+        attributes_to_ignore: list of attributes that should not be compared between the baseline and self. i.e., we do not care if the values are different.
+        prepend Mission attributes with M., Journey attributes with J., and MissionEvent attributes with E.
+        """
+
+        from pandas import DataFrame, Series, concat, merge
+        from numbers import Number
+        from numpy import frompyfunc
+
         
+        if csv_file_name == None:
+            csv_file_name = self.mission_name + '_comparison.csv'
+		
         #Create mission object for baseline case to compare against, create empty dataframe to store comparison
         baseline = Mission(baseline_path)
-        comparison = pd.DataFrame(columns=['Output Name','Baseline Value','New Value','Error','Match'])
+        comparison = DataFrame(columns=['Output Name','Baseline Value','New Value','Error','Match'])
         #This comparison df is what is written to the csv output file. The Output Name corresponds to the attribute name within the Mission, Journey, or Mission Event objects. Error is the absolute error 
         
         #can I test the current mission? did it actually load anything? if not, return
         if not hasattr(self, 'Journeys'):
+            comparison = comparison.append({'Output Name' : 'No Journeys!', 'Match' : False}, ignore_index = True)
+            comparison.to_csv(csv_file_name, index = False)
+            return False, comparison
+			
+        
+        #Make sure the number of journeys are the same between both cases (if they aren't then the missions are set up differently and a comparison is likely meaningless)
+        #NOTE: The number of mission events may vary between solutions with the same journey structure so we worry about mission event mismatches later.
+        if len(baseline.Journeys) != len(self.Journeys):
+            comparison = comparison.append({'Output Name' : 'Journey Mismatch!', 'Match' : False}, ignore_index = True)
+            comparison.to_csv(csv_file_name, index=False)
             return False, comparison
 
-        if csv_file_name==None:
-            csv_file_name = self.mission_name + '_comparison.csv'
+        #Some attributes we will always want to ignore in our comparisons (and some of these, e.g. 'parent', appear at more than one Mission/Journey/MissionEvent level)
+        universal_ignore_list = ['user_data', 'Journeys', 'timeToCompletionOfBestSolutionAttempt', 'parent', 'missionevents']
+        #NOTE: Do NOT specify the level ('M.', 'J.', or 'E.') in this universal ignore list. They will be applied at all levels.
+        #NOTE: 'Journeys' and 'missionevents' appearing in this list doesn't mean we're ignoring them, we will still iterate through all of them. We just don't want to compare the top-level Journey/missionevent objects.
+
         
-        #Make sure the number of journeys and mission events are the same between both cases
-        if len(baseline.Journeys) != len(self.Journeys):
-            pd.DataFrame(columns=['Journey Mismatch!']).to_csv(csv_file_name,index=False)
-            return False, comparison
-        for i in range(len(baseline.Journeys)): 
-            if len(baseline.Journeys[i].missionevents) != len(self.Journeys[i].missionevents):
-                pd.DataFrame(columns=['Journey ' + str(i) + ' Mission Events Mismatch']).to_csv(csv_file_name,index=False)
-                return False, comparison
+        #Now extract the user-provided attributes_to_ignore and combine with the universal_ignore_list.
+        #Need to have a per-level (Mission, Journey, etc.) list of attributes to ignore.
+        mission_attrs_to_ignore = ['M.' + attr for attr in universal_ignore_list] + [attr for attr in attributes_to_ignore if attr.upper().startswith('M.')] #using the upper command so the attributes_to_ignore user input can be case-insensitive
+        journey_attrs_to_ignore = ['J.' + attr for attr in universal_ignore_list] + [attr for attr in attributes_to_ignore if attr.upper().startswith('J.')]
+        mevent_attrs_to_ignore  = ['E.' + attr for attr in universal_ignore_list] + [attr for attr in attributes_to_ignore if attr.upper().startswith('E.')]
         
-        #Check that all attributes agree between self and the baseline case. Any disagreements are added to the end of the csv output file
-        all_baseline_attributes = ['Mission.'+a for a in dir(baseline)] + ['Journey.'+a for a in dir(baseline.Journeys[0])] + ['MissionEvent.'+a for a in dir(baseline.Journeys[0].missionevents[0])]
-        all_new_attributes = ['Mission.'+a for a in dir(self)] + ['Journey.'+a for a in dir(self.Journeys[0])] + ['MissionEvent.'+a for a in dir(self.Journeys[0].missionevents[0])]
-        attributes_only_in_baseline = list(set(all_baseline_attributes).difference(all_new_attributes))
-        baseline_mission_attr_to_ignore = [a.strip('Mission.') for a in attributes_only_in_baseline if a[7]=='.']
-        baseline_journey_attr_to_ignore = [a.strip('Journey.') for a in attributes_only_in_baseline if a[0]=='J']
-        baseline_mevent_attr_to_ignore = [a.strip('MissionEvent.') for a in attributes_only_in_baseline if a[7]=='E']
-        attributes_only_in_new = list(set(all_new_attributes).difference(all_baseline_attributes))
-        new_mission_attr_to_ignore = [a.strip('Mission.') for a in attributes_only_in_new if a[7]=='.']
-        new_journey_attr_to_ignore = [a.strip('Journey.') for a in attributes_only_in_new if a[0]=='J']
-        new_mevent_attr_to_ignore = [a.strip('MissionEvent.') for a in attributes_only_in_new if a[7]=='E']
-        attr_check = len(attributes_only_in_baseline) + len(attributes_only_in_new) #If this is greater than zero than attributes are not in complete agreement between baseline and new        
         
-        #The following function takes the dataframes provided by subtracting the self and baseline dataframes and removes all nan/blank values
-        def getDiff(df,correct_difference):
-            finaldf = df.loc[(df != correct_difference).any(axis=1)]
-            finaldf = finaldf.transpose()
-            finaldf = finaldf.loc[(finaldf != correct_difference).any(axis=1)]
-            return finaldf
+        #Need a few temporary/intermediary variables to use while unpacking the mission data
+        pending_attrs = DataFrame(columns = ['attr', 'val', 'full_str']) #only need one of these since we unpack one (baseline or new) at a time
+        number_attrs = {'baseline' : [], 'new' : []}
+        str_attrs = {'baseline' : [], 'new' : []}
         
-        #The following function unpacks lists of lists
-        def unpackLists(df):
-            finaldf=df.copy()
-            for col in finaldf.columns:
-                if isinstance(finaldf[col][0], list): #checks if the seris is populated by lists
-                    for i in range(0, finaldf[col].count()):
-                        finaldf[col+str(i)]=pd.Series(finaldf[col][i])
-                    finaldf=finaldf.drop([col],axis=1)
-            return finaldf
         
-        #Store all relevant mission values and find the values that are not in agreement
-        baseline_mission_attributes = pd.DataFrame(dict([(k,pd.Series(v)) for k,v in vars(baseline).items() if k not in ['user_data','Journeys'] + baseline_mission_attr_to_ignore]))
-        new_mission_attributes = pd.DataFrame(dict([(k,pd.Series(v)) for k,v in vars(self).items() if k not in ['user_data','Journeys'] + new_mission_attr_to_ignore]))
+        #Need a universal unpacking function
+        def unpackDef(owning_attr, object_of_interest, baseline_or_new, level, ranking, full_attr_str):
+
+            nonlocal pending_attrs, number_attrs, str_attrs
+
+            unpacked = []
+            if isinstance(object_of_interest, Number): #NOTE: This will also catch nan values
+                number_attrs[baseline_or_new].append({'attr' : full_attr_str, 'val' : object_of_interest,
+                                                      'attr_internal' : level + owning_attr, 'rank' : ranking})
+                return
+
+            elif type(object_of_interest) == str:
+                str_attrs[baseline_or_new].append({'attr' : full_attr_str, 'val' : object_of_interest,
+                                                   'attr_internal' : level + owning_attr, 'rank' : ranking})
+                return
+
+            elif (type(object_of_interest) == list) or (type(object_of_interest) == tuple):
+                for (ix, elem) in enumerate(object_of_interest):
+                    unpacked.append({'attr' : owning_attr, 'val' : elem, 'full_str' : full_attr_str + '[' + str(ix) + ']'})
+
+            elif type(object_of_interest) == dict:
+                for key in object_of_interest.keys():
+                    unpacked.append({'attr' : owning_attr, 'val' : object_of_interest[key],
+                                     'full_str' : full_attr_str  + '[' + key + ']'})
+
+            #assuming that None values correspond to string attributes (using a blank string as the comparison value)
+            elif object_of_interest is None:
+                str_attrs[baseline_or_new].append({'attr' : full_attr_str, 'val' : '',
+                                                   'attr_internal' : level + owning_attr, 'rank' : ranking})
+
+            #otherwise, we're dealing with a custom class object
+            else:
+                class_attr_dict = vars(object_of_interest)
+                for attr in class_attr_dict.keys():
+                    unpacked.append({'attr' : attr, 'val' : class_attr_dict[attr], 'full_str' : full_attr_str + '.' + attr})
+
+            unpacked = DataFrame(unpacked)
+            pending_attrs = concat([pending_attrs, unpacked])
+            return
+        unpack = frompyfunc(unpackDef, 6, 0)
         
-        temp_num = new_mission_attributes.select_dtypes(include=[np.number]).subtract(baseline_mission_attributes.select_dtypes(include=[np.number])).fillna(0)
-        temp_str = new_mission_attributes.select_dtypes(include=['object']).fillna('') == baseline_mission_attributes.select_dtypes(include=['object']).fillna('')
-        mission_attr_diff = getDiff(temp_num,0)
-        mission_str_diff = getDiff(temp_str,True)
+        #Store all relevant mission values
+        baseline_mission_attributes = DataFrame(columns = ['attr', 'val', 'full_str'])
+        new_mission_attributes = DataFrame(columns = ['attr', 'val', 'full_str'])
+
+        #Populate the baseline information
+        baseline_mission_attributes['attr'] = vars(baseline).keys()
+        baseline_mission_attributes['val'] = vars(baseline).values()
+        baseline_mission_attributes['full_str'] = 'Mission.' + baseline_mission_attributes['attr']
+
+        #The following line is a little long but performing this step in 1 line instead of multiple is a significant enough performance improvement
+        # to be worth the decreased readability. All this line is doing is filtering out the attributes we wish to ignore.
+        baseline_mission_attributes = baseline_mission_attributes.loc[~('M.' + baseline_mission_attributes['attr']).isin(mission_attrs_to_ignore)]
+
+        #Now populate our own information
+        new_mission_attributes['attr'] = vars(self).keys()
+        new_mission_attributes['val'] = vars(self).values()
+        new_mission_attributes['full_str'] = 'Mission.' + new_mission_attributes['attr']
+
+        new_mission_attributes = new_mission_attributes.loc[~('M.' + new_mission_attributes['attr']).isin(mission_attrs_to_ignore)]
+
         
-        #Store all disagreements into comparison dataframe
-        for ix in mission_attr_diff.index:
-            for col in mission_attr_diff.columns:
-                if not np.isnan(mission_attr_diff.at[ix,col]):
-                    if ix not in tolerance_dict.keys():
-                        tolerance = default_tolerance
-                    else:
-                        tolerance = tolerance_dict[ix]
-                    if abs(mission_attr_diff.at[ix,col]) <= tolerance:
-                        match = True
-                    else:
-                        match = False
-                    comparison = comparison.append({'Output Name':ix+'['+str(col)+']','Baseline Value':baseline_mission_attributes.at[col,ix],'New Value':new_mission_attributes.at[col,ix],'Error':mission_attr_diff.at[ix,col],'Tolerance':tolerance,'Match':match},ignore_index=True)
-        for ix in mission_str_diff.index:
-            for col in mission_str_diff.columns:
-                if mission_str_diff.at[ix,col] != '':
-                    comparison = comparison.append({'Output Name':ix+'['+str(col)+']','Baseline Value':baseline_mission_attributes.at[col,ix],'New Value':new_mission_attributes.at[col,ix],'Match':mission_str_diff.at[ix,col]},ignore_index=True)
-        
-        #Repeat for Journey objects
+        #Now we need to unpack the mission_attributes dataframes into their numeric and string components
+        #Start with unpacking the baseline data
+        unpack(baseline_mission_attributes['attr'].values, baseline_mission_attributes['val'].values, 'baseline',
+               'M.', 0, baseline_mission_attributes['full_str'].values)
+        #NOTE: If there were nothing but strings and numbers, we would already be done. However, there are also lists, dictionaries,
+        #       and custom class objects to unpack. These were stored in the pending_attrs dataframe in the unpack function.
+        #       We now need to recursively step through the levels in the data structure until all the data has been unpacked.
+        while len(pending_attrs) > 0:
+            current_attrs = pending_attrs.copy()
+            pending_attrs = DataFrame(columns = ['attr', 'val', 'full_str'])
+
+            unpack(current_attrs['attr'].values, current_attrs['val'].values, 'baseline', 'M.', 0, current_attrs['full_str'].values)
+
+        #Now repeat the process for our own data
+        unpack(new_mission_attributes['attr'].values, new_mission_attributes['val'].values, 'new', 'M.', 0,
+               new_mission_attributes['full_str'].values)
+        while len(pending_attrs) > 0:
+            current_attrs = pending_attrs.copy()
+            pending_attrs = DataFrame(columns = ['attr', 'val', 'full_str'])
+
+            unpack(current_attrs['attr'].values, current_attrs['val'].values, 'new', 'M.', 0, current_attrs['full_str'].values)
+
+
+        #now we need to unpack the Journey & MissionEvent Data
         for i in range(len(baseline.Journeys)):
-            baseline_journey_attributes = pd.DataFrame(dict([(k,pd.Series(v)) for k,v in vars(baseline.Journeys[i]).items() if k not in ['parent','missionevents']+baseline_journey_attr_to_ignore]))
-            new_journey_attributes = pd.DataFrame(dict([(k,pd.Series(v)) for k,v in vars(self.Journeys[i]).items() if k not in ['parent','missionevents']+new_journey_attr_to_ignore]))
-            
-            temp_num = new_journey_attributes.select_dtypes(include=[np.number]).subtract(baseline_journey_attributes.select_dtypes(include=[np.number])).fillna(0)
-            temp_str = new_journey_attributes.select_dtypes(include=['object']).fillna('') == baseline_journey_attributes.select_dtypes(include=['object']).fillna('')
-            journey_attr_diff = getDiff(temp_num,0)
-            journey_str_diff = getDiff(temp_str,True)
-            for ix in journey_attr_diff.index:
-                for col in journey_attr_diff.columns:
-                    if not np.isnan(journey_attr_diff.at[ix,col]):
-                        if ix not in tolerance_dict.keys():
-                            tolerance = default_tolerance
-                        else:
-                            tolerance = tolerance_dict[ix]
-                        if abs(journey_attr_diff.at[ix,col]) <= tolerance:
-                            match = True
-                        else:
-                            match = False
-                        comparison = comparison.append({'Output Name':'Journey '+str(i)+' '+ix+'['+str(col)+']','Baseline Value':baseline_journey_attributes.at[col,ix],'New Value':new_journey_attributes.at[col,ix],'Error':journey_attr_diff.at[ix,col],'Tolerance':tolerance,'Match':match},ignore_index=True)
-            for ix in journey_str_diff.index:
-                for col in journey_str_diff.columns:
-                    if journey_str_diff.at[ix,col] != '':
-                        comparison = comparison.append({'Output Name':'Journey '+str(i)+' '+ix+'['+str(col)+']','Baseline Value':baseline_journey_attributes.at[col,ix],'New Value':new_journey_attributes.at[col,ix],'Match':journey_str_diff.at[ix,col]},ignore_index=True)
-            
-            #Repeat for Mission Events
-            for j in range(len(baseline.Journeys[i].missionevents)):
-                baseline_missionevent_attributes = pd.DataFrame(dict([(k,pd.Series(v)) for k,v in vars(baseline.Journeys[i].missionevents[j]).items() if k not in ['parent']+baseline_mevent_attr_to_ignore]))
-                baseline_missionevent_attributes['ThrottleLevel'] = baseline_missionevent_attributes['ThrottleLevel'].astype(str).replace('0.0','-')
-                new_missionevent_attributes = pd.DataFrame(dict([(k,pd.Series(v)) for k,v in vars(self.Journeys[i].missionevents[j]).items() if k not in ['parent']+new_mevent_attr_to_ignore]))
-                new_missionevent_attributes['ThrottleLevel'] = new_missionevent_attributes['ThrottleLevel'].astype(str).replace('0.0','-')                
+            journey_str = 'Mission.Journey[' + str(i) + '].'
+
+            baseline_journey_attributes = DataFrame(columns = ['attr', 'val', 'full_str'])
+            new_journey_attributes = DataFrame(columns = ['attr', 'val', 'full_str'])
+
+            baseline_journey_attributes['attr'] = vars(baseline.Journeys[i]).keys()
+            baseline_journey_attributes['val'] = vars(baseline.Journeys[i]).values()
+            #NOTE: The full string is no longer just a copy of the 'attr' columns. We need to know which Journey each value
+            #       belongs to.
+            baseline_journey_attributes['full_str'] = journey_str + baseline_journey_attributes['attr']
+
+            new_journey_attributes['attr'] = vars(self.Journeys[i]).keys()
+            new_journey_attributes['val'] = vars(self.Journeys[i]).values()
+            new_journey_attributes['full_str'] = journey_str + new_journey_attributes['attr']
+
+            baseline_journey_attributes = baseline_journey_attributes.loc[~('J.' + baseline_journey_attributes['attr']).isin(journey_attrs_to_ignore)]
+            new_journey_attributes = new_journey_attributes.loc[~('J.' + new_journey_attributes['attr']).isin(journey_attrs_to_ignore)]
+
+            unpack(baseline_journey_attributes['attr'].values, baseline_journey_attributes['val'].values, 'baseline', 'J.', 1,
+                   baseline_journey_attributes['full_str'].values)
+            while len(pending_attrs) > 0:
+                current_attrs = pending_attrs.copy()
+                pending_attrs = DataFrame(columns = ['attr', 'val', 'full_str'])
+
+                unpack(current_attrs['attr'].values, current_attrs['val'].values, 'baseline', 'J.', 1, current_attrs['full_str'].values)
+
+            unpack(new_journey_attributes['attr'].values, new_journey_attributes['val'].values, 'new', 'J.', 1,
+                   new_journey_attributes['full_str'].values)
+            while len(pending_attrs) > 0:
+                current_attrs = pending_attrs.copy()
+                pending_attrs = DataFrame(columns = ['attr', 'val', 'full_str'])
+
+                unpack(current_attrs['attr'].values, current_attrs['val'].values, 'new', 'J.', 1, current_attrs['full_str'].values)
+
+            #repeat for the mission events
+            # first we need to check if the number of mission events match between cases
+            n_baseline_mevents = len(baseline.Journeys[i].missionevents)
+            n_new_mevents = len(self.Journeys[i].missionevents)
+
+            n_mevents = n_baseline_mevents
+            if (n_baseline_mevents != n_new_mevents):
+                comparison = comparison.append({'Output Name': 'Journey[' + str(i) + '] MissionEvent Mismatch',
+                                                'Baseline Value': n_baseline_mevents, 'New Value': n_new_mevents,
+                                                'Error': abs(n_new_mevents - n_baseline_mevents), 'Match': False})
+                n_mevents = min([n_baseline_mevents, n_new_mevents])
+
+            for j in range(n_mevents):
+                mevent_str = journey_str + 'MissionEvent[' + str(j) + '].'
+
+                baseline_mevent_attributes = DataFrame(columns = ['attr', 'val', 'full_str'])
+                new_mevent_attributes = DataFrame(columns = ['attr', 'val', 'full_str'])
+
+                baseline_mevent_attributes['attr'] = vars(baseline.Journeys[i].missionevents[j]).keys()
+                baseline_mevent_attributes['val'] = vars(baseline.Journeys[i].missionevents[j]).values()
+                baseline_mevent_attributes['full_str'] = mevent_str + baseline_mevent_attributes['attr']
+                #need to make sure ThrottleLevel is handled as a string. First need to know where it is in the df.
+                throttle_level_ix = baseline_mevent_attributes.loc[baseline_mevent_attributes['attr'] == 'ThrottleLevel'].index[0]
+                #now convert it to a string (and replace "0" with "-" because, reasons)
+                baseline_mevent_attributes.at[throttle_level_ix, 'val'] = str(baseline_mevent_attributes.at[throttle_level_ix, 'val']).replace('0.0', '-')
                 
-                temp_num = new_missionevent_attributes.select_dtypes(include=[np.number]).subtract(baseline_missionevent_attributes.select_dtypes(include=[np.number])).fillna(0)
-                temp_str = new_missionevent_attributes.select_dtypes(include=['object']).fillna('')==baseline_missionevent_attributes.select_dtypes(include=['object']).fillna('')
-                mevent_attr_diff = getDiff(temp_num,0)
-                mevent_str_diff = getDiff(temp_str,True)
-                for ix in mevent_attr_diff.index:
-                    for col in mevent_attr_diff.columns:
-                        if not np.isnan(mevent_attr_diff.at[ix,col]):
-                            if ix not in tolerance_dict.keys():
-                                tolerance = default_tolerance
-                            else:
-                                tolerance = tolerance_dict[ix]
-                            if abs(mevent_attr_diff.at[ix,col]) <= tolerance:
-                                match = True
-                            else:
-                                match = False
-                            comparison = comparison.append({'Output Name':'Journey '+str(i)+' Mission Event '+str(j)+' '+ix+'['+str(col)+']','Baseline Value':baseline_missionevent_attributes.at[col,ix],'New Value':new_missionevent_attributes.at[col,ix],'Error':mevent_attr_diff.at[ix,col],'Tolerance':tolerance,'Match':match},ignore_index=True)
-                for ix in mevent_str_diff.index:
-                    for col in mevent_str_diff.columns:
-                        if mevent_str_diff.at[ix,col] != '':
-                            comparison = comparison.append({'Output Name':'Journey '+str(i)+' Mission Event '+str(j)+' '+ix+'['+str(col)+']','Baseline Value':baseline_missionevent_attributes.at[col,ix],'New Value':new_missionevent_attributes.at[col,ix],'Match':mevent_str_diff.at[ix,col]},ignore_index=True)
-                
+                new_mevent_attributes['attr'] = vars(self.Journeys[i].missionevents[j]).keys()
+                new_mevent_attributes['val'] = vars(self.Journeys[i].missionevents[j]).values()
+                new_mevent_attributes['full_str'] = mevent_str + new_mevent_attributes['attr']
+                throttle_level_ix = new_mevent_attributes.loc[new_mevent_attributes['attr'] == 'ThrottleLevel'].index[0]
+                new_mevent_attributes.at[throttle_level_ix, 'val'] = str(new_mevent_attributes.at[throttle_level_ix, 'val']).replace('0.0', '-')
+
+                baseline_mevent_attributes = baseline_mevent_attributes.loc[~('E.' + baseline_mevent_attributes['attr']).isin(mevent_attrs_to_ignore)]
+                new_mevent_attributes = new_mevent_attributes.loc[~('E.' + new_mevent_attributes['attr']).isin(mevent_attrs_to_ignore)]
+
+                unpack(baseline_mevent_attributes['attr'].values, baseline_mevent_attributes['val'].values, 'baseline', 'E.', 2,
+                       baseline_mevent_attributes['full_str'].values)
+                while len(pending_attrs) > 0:
+                    current_attrs = pending_attrs.copy()
+                    pending_attrs = DataFrame(columns = ['attr', 'val', 'full_str'])
+
+                    unpack(current_attrs['attr'].values, current_attrs['val'].values, 'baseline', 'E.', 2, current_attrs['full_str'].values)
+
+                unpack(new_mevent_attributes['attr'].values, new_mevent_attributes['val'].values, 'new', 'E.', 2,
+                       new_mevent_attributes['full_str'].values)
+                while len(pending_attrs) > 0:
+                    current_attrs = pending_attrs.copy()
+                    pending_attrs = DataFrame(columns = ['attr', 'val', 'full_str'])
+
+                    unpack(current_attrs['attr'].values, current_attrs['val'].values, 'new', 'E.', 2, current_attrs['full_str'].values)
+
+        
+        #Convert the numerical and string data in number_attrs & str_attrs into dataframes
+        baseline_numbers = DataFrame(number_attrs['baseline'])
+        baseline_numbers.rename({'val' : 'Baseline Value'}, axis = 1, inplace = True) #need to rename these columns for when we merge the baseline + new dfs
+
+        baseline_strs = DataFrame(str_attrs['baseline'])
+        baseline_strs.rename({'val' : 'Baseline Value'}, axis = 1, inplace = True)
+
+        new_numbers = DataFrame(number_attrs['new'])
+        new_numbers.rename({'val' : 'New Value'}, axis = 1, inplace = True)
+
+        new_strs = DataFrame(str_attrs['baseline'])
+        new_strs.rename({'val' : 'New Value'}, axis = 1, inplace = True)
+        
+            
+        #We can now work out if any attributes appear in only 1 mission/journey/missionevent object and not the other, but don't
+        # want to use any of the existing columns to compare. We want to have a per-journey, per-missionevent comparison so we
+        # can't use the attr_internal column as is. We also don't want to be comparing each individual element/entry of a list/dict so
+        # we can't use the 'attr' column as is. For example, let's look at the Journey[0] boundary constraints. If one of the mission
+        # objects is missing this particular attribute for Journey[0], we don't want to see:
+        #     "Missing Mission.Journey[0].boundary_state[0][0], Mission.Journey[0].boundary_states[0][1], ... , Mission.Journey[0].boundary_states[1][5]
+        # in the comparatron output. We want instead want to see:
+        #    "Missing Mission.Journey[0].boundary_state
+        # We'll have to perform a couple string operations to get the desired values.
+        baseline_numbers['for_compare'] = baseline_numbers['attr'].str.split('.').str[:-1].str.join('.') + '.' + baseline_numbers['attr_internal'].str.split('.').str[-1]
+        baseline_strs['for_compare']    = baseline_strs['attr'].str.split('.').str[:-1].str.join('.') + '.' + baseline_strs['attr_internal'].str.split('.').str[-1]
+
+        new_numbers['for_compare'] = new_numbers['attr'].str.split('.').str[:-1].str.join('.') + '.' + new_numbers['attr_internal'].str.split('.').str[-1]
+        new_strs['for_compare']    = new_strs['attr'].str.split('.').str[:-1].str.join('.') + '.' + new_strs['attr_internal'].str.split('.').str[-1]
+
+        #Now we can pull the unique values for each string in the new 'for_compare' columns.
+        baseline_numerical_attrs = baseline_numbers['for_compare'].unique()
+        baseline_string_attrs    = baseline_strs['for_compare'].unique()
+
+        new_numerical_attrs = new_numbers['for_compare'].unique()
+        new_string_attrs    = new_strs['for_compare'].unique()
+
+        #And use these strings to identify missing attributes
+        attrs_only_in_baseline = list(set(baseline_numerical_attrs) - set(new_numerical_attrs)) + list(set(baseline_string_attrs) - set(new_string_attrs))
+        attrs_only_in_new      = list(set(new_numerical_attrs) - set(baseline_numerical_attrs)) + list(set(new_string_attrs) - set(baseline_string_attrs))
+        attr_check = len(attrs_only_in_baseline) + len(attrs_only_in_new)
+
+        #Now change gears. Need to know the correct tolerance values to use for each attribute in the numerical data.
+        #First we need to work out what (unique) attributes are shared between the baseline and new data sets (want to use the
+        # 'attr_internal' columns for this since we don't have per-journey or per-missionevent custom tolerances).
+        #Can pull the unique values by using the df['column'].unique() function. By converting the unique column values into sets,
+        # we can use python's intersection() function to determine the shared attributes between baseline and new.
+        numerical_attributes = set(baseline_numbers['attr_internal'].unique()).intersection(set(new_numbers['attr_internal'].unique()))
+
+        #Then create a default dictionary that assigns the default tolerance to all numerical attributes.
+        default_tolerance_dict = dict(zip(numerical_attributes, [default_tolerance]*len(numerical_attributes)))
+
+        #And merge in the user-provided, per-attribute tolerance values
+        all_tolerances = {**default_tolerance_dict, **tolerance_dict}
+        #^Any attributes that appear in tolerance_dict will overwrite the defaults when they are merged.
+        #This dictionary will get mapped to our combined (baseline + new) dataframe of numerical data.
+
+
+        #Now ready to merge baseline data with new data into combined dataframes (1 df for numerical data, 1 df for strings)
+        #Start with the numerical df. Using an inner join so that only attributes that appear in both baseline and new are kept.
+        numbers_df = merge(baseline_numbers, new_numbers[['attr', 'New Value']], how = 'inner', on = 'attr', copy = False)
+        #NOTE: For some reason the merge function is makeing 36 duplicates of every row. Must be a bug but to avoid this
+        #       crap we can just use the drop_duplicates function. Whenever this gets fixed we won't care about the unnecessary
+        #       drop_duplicates() call.
+        numbers_df.drop_duplicates(keep = 'first', inplace = True)
+        numbers_df.rename({'attr' : 'Output Name'}, axis = 1, inplace = True) #So that the column names match the old comparatron output
+
+        #The dfs as they exist at this point are missing required columns for the output: Error, Tolerance, & Match.
+        #We have everything we need to fill these columns in here.
+        numbers_df['Error'] = abs(numbers_df['New Value'] - numbers_df['Baseline Value'])
+        numbers_df['Tolerance'] = numbers_df['attr_internal'].map(all_tolerances)
+        numbers_df['Match'] = numbers_df['Error'] <= numbers_df['Tolerance']
+
+        strs_df = merge(baseline_strs, new_strs, how = 'inner', on = 'attr', copy = False)
+        strs_df.drop_duplicates(keep = 'first', inplace = True)
+        strs_df.rename({'attr' : 'Output Name'}, axis = 1, inplace = True)
+
+        strs_df['Error'] = Series(dtype = float) #these need to be type float for compatibility with the numbers_df when we combine everything together into the comparison df for output
+        strs_df['Tolerance'] = Series(dtype = float)
+        strs_df['Match'] = strs_df['Baseline Value'] == strs_df['New Value']
+
+        comparison = concat([numbers_df.loc[numbers_df['Error'] > 0], strs_df.loc[~strs_df['Match']]])
+        comparison = comparison[['Output Name', 'Baseline Value','New Value','Error','Tolerance','Match']]
+            
         #If there are any attributes in the attributes_only_in_xxx lists then append them to comparison df
-        if len(attributes_only_in_baseline) != 0:
-            comparison = comparison.append({'Output Name':'Attributes only in Baseline','Baseline Value':attributes_only_in_baseline,'Match':False},ignore_index=True)
-        if len(attributes_only_in_new) != 0:
-            comparison = comparison.append({'Output Name':'Attributes only in New','New Value':attributes_only_in_new,'Match':False},ignore_index=True)
-        
-        #pdb.set_trace()
-        
+        if len(attrs_only_in_baseline) != 0:
+            comparison = comparison.append({'Output Name':'Attributes only in Baseline','Baseline Value':attributes_only_in_baseline,'Match':False}, ignore_index = True)
+        if len(attrs_only_in_new) != 0:
+            comparison = comparison.append({'Output Name':'Attributes only in New','New Value':attributes_only_in_new,'Match':False}, ignore_index = True)
+
+                   
         #Return a value of True if the missions are in complete agreement
-        if len(comparison.loc[comparison['Match']==False]) == 0 and attr_check == 0:
+        if comparison.loc[comparison['Match'] == False].empty:
             return True, comparison;
+			
         else:
 #            comp_return=list(comparison.loc[comparison['Match']==False]['Output Name'])
             if full_output: #if full_output=True, save all values present in comparison to a csv
-                comparison = comparison[['Output Name','Baseline Value','New Value','Error','Tolerance','Match']]
                 comparison.to_csv(csv_file_name,index=False)
                 return False, comparison;
             else: #if full_output=False, save only values that are not within the tolerance to a csv
-                comparison = comparison[['Output Name','Baseline Value','New Value','Error','Tolerance','Match']]
-                comparison.loc[comparison['Match']==False].to_csv(csv_file_name,index=False)
+                comparison.loc[~comparison['Match']].to_csv(csv_file_name, index = False)
                 return False, comparison;
+                

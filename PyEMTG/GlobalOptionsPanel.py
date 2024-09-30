@@ -2,14 +2,14 @@
 #An open-source global optimization tool for preliminary mission design
 #Provided by NASA Goddard Space Flight Center
 #
-#Copyright (c) 2014 - 2018 United States Government as represented by the
+#Copyright (c) 2014 - 2024 United States Government as represented by the
 #Administrator of the National Aeronautics and Space Administration.
 #All Other Rights Reserved.
 #
 #Licensed under the NASA Open Source License (the "License"); 
 #You may not use this file except in compliance with the License. 
 #You may obtain a copy of the License at:
-#https://opensource.org/licenses/NASA-1.3
+#https://opensource.org/license/nasa1-3-php
 #Unless required by applicable law or agreed to in writing, software
 #distributed under the License is distributed on an "AS IS" BASIS,
 #WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
@@ -33,7 +33,7 @@ class GlobalOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.txtMissionName = wx.TextCtrl(self, -1, "mission_name", size=(500,-1))
 
         self.lblMissionType = wx.StaticText(self, -1, "Mission Type")
-        phasetypes = ['MGALTS (not yet implemented)', 'FBLTS (not yet implemented)', 'MGALT', 'FBLT', 'PSBI', 'PSFB', 'MGAnDSMs', 'CoastPhase', 'SundmanCoastPhase', 'Variable phase type', 'ProbeEntryPhase', 'ControlLawThrustPhase']
+        phasetypes = ['MGALT', 'FBLT', 'PSBI', 'PSFB', 'MGAnDSMs', 'CoastPhase', 'SundmanCoastPhase', 'Variable phase type', 'ProbeEntryPhase', 'ControlLawThrustPhase']
         self.cmbMissionType = wx.ComboBox(self, -1, choices=phasetypes, style=wx.CB_READONLY)
 
         self.lblobjective_type = wx.StaticText(self, -1, "Objective function")
@@ -47,9 +47,6 @@ class GlobalOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
                           '24: minimize waypoint tracking error', '25: minimize initial impulse magnitude', 
                           '26: maximize distance from central body']
         self.cmbobjective_type = wx.ComboBox(self, -1, choices=objectivetypes, style = wx.CB_READONLY)
-
-        self.lblinclude_initial_impulse_in_cost = wx.StaticText(self, -1, "Include initial impulse in total deterministic delta-v")
-        self.chkinclude_initial_impulse_in_cost = wx.CheckBox(self, -1)
         
         self.lblobjective_journey = wx.StaticText(self,-1,"Which journey to optimize?")
         self.txtobjective_journey = wx.TextCtrl(self,-1,"objective_journey")
@@ -65,10 +62,14 @@ class GlobalOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.btncovariance_file_path = wx.Button(self, -1, "...")
         CovarianceSizer = wx.BoxSizer(wx.HORIZONTAL)
         CovarianceSizer.AddMany([self.txtcovariance_file_path, self.btncovariance_file_path])
+
+        self.lblinclude_initial_impulse_in_cost = wx.StaticText(self, -1, "Include initial impulse in total deterministic delta-v")
+        self.chkinclude_initial_impulse_in_cost = wx.CheckBox(self, -1)
         
         self.lbllaunch_window_open_date = wx.StaticText(self, -1, "Launch window open date")
         self.txtlaunch_window_open_date = wx.TextCtrl(self, -1, "launch_window_open_date", size=(450, -1))
-        self.LaunchDateCalendar = wx.adv.CalendarCtrl(self, -1)
+        self.LaunchDateCalendar = wx.adv.CalendarCtrl(self, -1, style=wx.TAB_TRAVERSAL)
+        self.LaunchDateCalendar.Bind(wx.EVT_KEY_DOWN, self.onTab)
         CalendarSpacer = wx.StaticText(self, -1, "")
         
         self.lblnum_timesteps = wx.StaticText(self, -1, "Number of time-steps")
@@ -218,7 +219,10 @@ class GlobalOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
 
     def update(self):
         self.txtMissionName.SetValue(self.missionoptions.mission_name)
-        self.cmbMissionType.SetSelection(self.missionoptions.mission_type)
+        # convert the mission type to correspond to the dropdown
+        # EMTG mission types 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11
+        pyemtg_mission_types_conversion = [-2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+        self.cmbMissionType.SetSelection(pyemtg_mission_types_conversion[self.missionoptions.mission_type])
         self.cmbobjective_type.SetSelection(self.missionoptions.objective_type)
         self.chkinclude_initial_impulse_in_cost.SetValue(self.missionoptions.include_initial_impulse_in_cost)
         self.txtlaunch_window_open_date.SetValue(str(self.missionoptions.launch_window_open_date))
@@ -302,6 +306,13 @@ class GlobalOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         if platform.system() == 'Windows':
             self.SetupScrolling(scrollToTop=False)
 
+    def onTab(self, event):
+       if event.GetKeyCode() == wx.WXK_TAB and not event.ShiftDown():
+           event.EventObject.Navigate()
+       if event.GetKeyCode() == wx.WXK_TAB and event.ShiftDown(): 
+           event.EventObject.Navigate(flags=wx.NavigationKeyEvent.IsBackward)
+       event.Skip()
+
     #event handlers for global mission options    
     def ChangeMissionName(self, e):
         e.Skip()
@@ -310,11 +321,14 @@ class GlobalOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         
         
     def ChangeMissionType(self, e):
-        self.missionoptions.mission_type = self.cmbMissionType.GetSelection()
+        # convert the mission type back from the dropdown
+        # PyEMTG mission types -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
+        emtg_mission_types_conversion = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 0, 1] 
+        self.missionoptions.mission_type = emtg_mission_types_conversion[self.cmbMissionType.GetSelection()]
 
         if self.missionoptions.mission_type != 9:
             for journey in self.missionoptions.Journeys:
-                journey.phase_type = self.missionoptions.mission_type       
+                journey.phase_type = self.missionoptions.mission_type      
                 
         self.missionoptions.DisassembleMasterDecisionVector()
         self.missionoptions.ConvertDecisionVector()

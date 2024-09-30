@@ -120,16 +120,16 @@ class DistanceReportGenerator(object):
 
 
 if __name__ == '__main__':
-    CAESAR_open_ephem_file = "C:/Users/delliso2/NASA/New_Frontiers/CAESAR/CAESAR_OMC_MIRAGE_renders_10192018/CAESAR_launch_open.ephemeris"
-    SPICE_ephem_directory = "C:/Users/delliso2/Utilities/Universes/CAESAR/ephemeris_files/"
+    Mission_open_ephem_file = "C:/emtg/missions/Mission1/myOrbit.ephemeris"
+    SPICE_ephem_directory = "C:/Utilities/Universes/Mission1/ephemeris_files/"
     spice_handler = ConOps.SpiceHandler(SPICE_ephem_directory)
     spice_handler.loadSpiceFiles()
 
     distance_report_generator = DistanceReportGenerator()
 
-    ephemeris_file_data = distance_report_generator.ephemeris_file_reader.parseEMTGephemerisFile(CAESAR_open_ephem_file)
+    ephemeris_file_data = distance_report_generator.ephemeris_file_reader.parseEMTGephemerisFile(Mission_open_ephem_file)
   
-    close_approach_output_file = "C:/Users/delliso2/NASA/New_Frontiers/CAESAR/CAESAR_OMC_MIRAGE_renders_10192018/distance.report"
+    close_approach_output_file = "C:/emtg/missions/Mission1/distance.report"
     spacecraft_SPICE_ID = -123
     target_body_SPICE_ID = 399
     target_body_radius = 6378.136

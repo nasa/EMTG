@@ -2,14 +2,14 @@
 #An open-source global optimization tool for preliminary mission design
 #Provided by NASA Goddard Space Flight Center
 #
-#Copyright (c) 2014 - 2018 United States Government as represented by the
+#Copyright (c) 2014 - 2024 United States Government as represented by the
 #Administrator of the National Aeronautics and Space Administration.
 #All Other Rights Reserved.
 #
 #Licensed under the NASA Open Source License (the "License"); 
 #You may not use this file except in compliance with the License. 
 #You may obtain a copy of the License at:
-#https://opensource.org/licenses/NASA-1.3
+#https://opensource.org/license/nasa1-3-php
 #Unless required by applicable law or agreed to in writing, software
 #distributed under the License is distributed on an "AS IS" BASIS,
 #WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
@@ -28,9 +28,11 @@ if len(sys.argv) < 4:
         raise Exception("Unknown number of command line options!\n\
                          Syntax: python HighFidelityDriver.py source_emtgopt source_emtg outputFilePath\n")
                          
-originalOptionsFile = sys.argv[1]
-originalMissionFile = sys.argv[2]
-outputFilePath = sys.argv[3]
+originalOptionsFile = os.path.expanduser(sys.argv[1])
+originalMissionFile = os.path.expanduser(sys.argv[2])
+outputFilePath = os.path.expanduser(sys.argv[3])
+
+originalMissionName = os.path.basename(originalMissionFile)
 
 myHighFidelityTrajectory = HighFidelityTrajectory.HighFidelityTrajectory(originalMissionPath=originalMissionFile,
                                                                          originalOptionsPath=originalOptionsFile,
@@ -43,7 +45,7 @@ newOptions = myHighFidelityTrajectory.getMissionOptions()
 newOptions.short_output_file_names = 1
 newOptions.mission_type = 9 #variable phase type
 newOptions.MBH_time_hop_probability = 0.0
-newOptions.mission_name = originalMissionFile.replace('.emtg', '') + '_HighFidelity'
+newOptions.mission_name = originalMissionName.replace('.emtg', '') + '_HighFidelity'
 newOptions.DisassembleMasterConstraintVectors()
 newOptions.DisassembleMasterDecisionVector()
 

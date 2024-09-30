@@ -2,14 +2,14 @@
 #An open-source global optimization tool for preliminary mission design
 #Provided by NASA Goddard Space Flight Center
 #
-#Copyright (c) 2014 - 2018 United States Government as represented by the
+#Copyright (c) 2014 - 2024 United States Government as represented by the
 #Administrator of the National Aeronautics and Space Administration.
 #All Other Rights Reserved.
 #
 #Licensed under the NASA Open Source License (the "License"); 
 #You may not use this file except in compliance with the License. 
 #You may obtain a copy of the License at:
-#https://opensource.org/licenses/NASA-1.3
+#https://opensource.org/license/nasa1-3-php
 #Unless required by applicable law or agreed to in writing, software
 #distributed under the License is distributed on an "AS IS" BASIS,
 #WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either 
@@ -64,22 +64,22 @@ class SpacecraftOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         margingrid = wx.FlexGridSizer(20,2,5,5)
         margingridtitle = wx.StaticText(self, -1, "Margins")
 
-        self.lblpower_margin = wx.StaticText(self, -1, "Power margin (fraction)")
-        self.txtpower_margin = wx.TextCtrl(self, -1, "power_margin")
-
         self.lblLV_margin = wx.StaticText(self, -1, "Launch vehicle margin (fraction)")
         self.txtLV_margin = wx.TextCtrl(self, -1, "LV_margin")
 
-        self.lblelectric_propellant_margin = wx.StaticText(self, -1, "Electric propulsion propellant margin")
-        self.txtelectric_propellant_margin = wx.TextCtrl(self, -1, "txtelectric_propellant_margin")
-        self.lblchemical_propellant_margin = wx.StaticText(self, -1, "Chemical propulsion propellant margin")
-        self.txtchemical_propellant_margin = wx.TextCtrl(self, -1, "txtchemical_propellant_margin")
+        self.lblpower_margin = wx.StaticText(self, -1, "Power margin (fraction)")
+        self.txtpower_margin = wx.TextCtrl(self, -1, "power_margin")
 
         self.lblengine_duty_cycle = wx.StaticText(self, -1, "Thruster duty cycle")
         self.txtengine_duty_cycle = wx.TextCtrl(self, -1, "engine_duty_cycle")
 
         self.lblduty_cycle_type = wx.StaticText(self, -1, "Duty cycle type")
         self.cmbduty_cycle_type = wx.ComboBox(self, -1, choices=['0: Averaged','1: Realistic'], style=wx.CB_READONLY)
+
+        self.lblelectric_propellant_margin = wx.StaticText(self, -1, "Electric propulsion propellant margin")
+        self.txtelectric_propellant_margin = wx.TextCtrl(self, -1, "txtelectric_propellant_margin")
+        self.lblchemical_propellant_margin = wx.StaticText(self, -1, "Chemical propulsion propellant margin")
+        self.txtchemical_propellant_margin = wx.TextCtrl(self, -1, "txtchemical_propellant_margin")
 
         margingrid.AddMany([self.lblLV_margin, self.txtLV_margin,
                             self.lblpower_margin, self.txtpower_margin,
@@ -129,6 +129,7 @@ class SpacecraftOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.lblpower_system_decay_reference_epoch = wx.StaticText(self, -1, "Power Source Decay Reference Epoch")
         self.txtpower_system_decay_reference_epoch = wx.TextCtrl(self, -1, "power_system_decay_reference_epoch")
         self.powerdecayCalendar = wx.adv.CalendarCtrl(self, -1)
+        self.powerdecayCalendar.Bind(wx.EVT_KEY_DOWN, self.onTab)
 
         Decaygrid.AddMany([self.lblpower_system_decay_reference_epoch, self.txtpower_system_decay_reference_epoch, self.powerdecayCalendar])
 
@@ -197,7 +198,6 @@ class SpacecraftOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
             self.ConventionalHardwarePanel.Show(True)
             self.LibraryHardwarePanel.Show(False)
             self.ConventionalHardwarePanel.update()
-
         else:
             self.ConventionalHardwarePanel.Show(False)
             self.LibraryHardwarePanel.Show(True)
@@ -225,6 +225,13 @@ class SpacecraftOptionsPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.Layout()
         if platform.system() == 'Windows':
             self.SetupScrolling(scrollToTop=False)
+
+    def onTab(self, event):
+       if event.GetKeyCode() == wx.WXK_TAB and not event.ShiftDown():
+           event.EventObject.Navigate()
+       if event.GetKeyCode() == wx.WXK_TAB and event.ShiftDown(): 
+           event.EventObject.Navigate(flags=wx.NavigationKeyEvent.IsBackward)
+       event.Skip()
 
     #event handlers for spacecraft options
     def Changemaximum_mass(self, e):

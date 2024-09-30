@@ -81,26 +81,27 @@ class MissionPanel(wx.lib.scrolledpanel.ScrolledPanel):
         DataPlotSizer = wx.StaticBoxSizer(self.DataPlotBox, wx.VERTICAL)
 
         self.chkPlotR = wx.CheckBox(self, -1, "distance from central body")
-        self.chkPlotV = wx.CheckBox(self, -1, "velocity magnitude with respect to central body")
         self.chkPlotThrust = wx.CheckBox(self, -1, "applied thrust (N)")
-        self.chkPlotIsp = wx.CheckBox(self, -1, "specific impulse (s)")
         self.chkPlotMdot = wx.CheckBox(self, -1, "mass flow rate (kg/s)")
-        self.chkPlotEfficiency = wx.CheckBox(self, -1, "propulsion system efficiency")
         self.chkPlotThrottle = wx.CheckBox(self, -1, "control magnitude")
-        self.chkPlotPower = wx.CheckBox(self, -1, "power produced by spacecraft (kW)")
         self.chkPlotGamma = wx.CheckBox(self, -1, "in-plane control angle (degrees)")
-        self.chkPlotDelta = wx.CheckBox(self, -1, "out-of-plane control angle (degrees)")
-        self.chkPlotArray_Thrust_Angle = wx.CheckBox(self, -1, "angle between solar array and thrust vector")
+        self.chkPlotVelocityThrustAngle = wx.CheckBox(self, -1, "velocity-to-thrust angle (degrees)")
         self.chkPlotMass = wx.CheckBox(self, -1, "mass (kg)")
         self.chkPlotNumberOfEngines = wx.CheckBox(self, -1, "number of active thrusters")
-        self.chkPlotActivePower = wx.CheckBox(self, -1, "power used by propulsion system (kW)")
         self.chkPlotWasteHeat = wx.CheckBox(self, -1, "propulsion system waste heat (kW)")
-        self.chkPlotCriticalEvents = wx.CheckBox(self, -1, "mark critical events")
         self.chkPlotEarthDistance = wx.CheckBox(self, -1, "distance from Earth")
-        self.chkPlotSpacecraftViewingAngle = wx.CheckBox(self, -1, "Latitude of Earth-Spacecraft viewing angle")
-        self.chkPlotSunSpacecraftEarthAngle = wx.CheckBox(self, -1, "Sun-Spacecraft-Earth angle")
-        self.chkPlotThrottleLevel = wx.CheckBox(self, -1, "Throttle level")
         self.chkPlotSunBoresightAngle = wx.CheckBox(self, -1, "Sun-Boresight angle")
+        self.chkPlotV = wx.CheckBox(self, -1, "velocity magnitude with respect to central body")
+        self.chkPlotIsp = wx.CheckBox(self, -1, "specific impulse (s)")
+        self.chkPlotEfficiency = wx.CheckBox(self, -1, "propulsion system efficiency")
+        self.chkPlotPower = wx.CheckBox(self, -1, "power produced by spacecraft (kW)")
+        self.chkPlotDelta = wx.CheckBox(self, -1, "out-of-plane control angle (degrees)")
+        self.chkPlotArray_Thrust_Angle = wx.CheckBox(self, -1, "angle between solar array and thrust vector")
+        self.chkPlotActivePower = wx.CheckBox(self, -1, "power used by propulsion system (kW)")
+        self.chkPlotThrottleLevel = wx.CheckBox(self, -1, "Throttle level")
+        self.chkPlotCriticalEvents = wx.CheckBox(self, -1, "mark critical events")
+        self.chkPlotSunSpacecraftEarthAngle = wx.CheckBox(self, -1, "Sun-Spacecraft-Earth angle")
+        self.chkPlotSpacecraftViewingAngle = wx.CheckBox(self, -1, "Latitude of Earth-Spacecraft viewing angle")
         
 
 
@@ -110,12 +111,12 @@ class MissionPanel(wx.lib.scrolledpanel.ScrolledPanel):
                                 self.chkPlotMdot, self.chkPlotEfficiency,
                                 self.chkPlotThrottle, self.chkPlotPower,
                                 self.chkPlotGamma, self.chkPlotDelta,
-                                self.chkPlotArray_Thrust_Angle, self.chkPlotMass,
-                                self.chkPlotNumberOfEngines, self.chkPlotActivePower,
+                                self.chkPlotVelocityThrustAngle, self.chkPlotArray_Thrust_Angle, 
+                                self.chkPlotMass, self.chkPlotActivePower,
+                                self.chkPlotNumberOfEngines, self.chkPlotThrottleLevel,
                                 self.chkPlotWasteHeat, self.chkPlotCriticalEvents,
                                 self.chkPlotEarthDistance, self.chkPlotSunSpacecraftEarthAngle,
-                                self.chkPlotThrottleLevel, self.chkPlotSunBoresightAngle,
-                                self.chkPlotSpacecraftViewingAngle])
+                                self.chkPlotSunBoresightAngle, self.chkPlotSpacecraftViewingAngle])
 
         self.btnGenerateDataPlot = wx.Button(self, -1, "Generate plot")
         self.btnWriteDataReport = wx.Button(self, -1, "Write report")
@@ -198,8 +199,8 @@ class MissionPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.cmbThrottleSetChoices = wx.ComboBox(self, -1, style=wx.CB_READONLY, choices=['high-Thrust set','high-Isp set','full throttle box'])
         self.cmbThrottleSetChoices.SetSelection(self.plotoptions.throttlesetmode)
 
-        self.btnGenerateThrottleHistogram = wx.Button(self, -1, "Generate throttle histogram")
         self.btnGenerateThrottleReport    = wx.Button(self, -1, "Generate throttle report")
+        self.btnGenerateThrottleHistogram = wx.Button(self, -1, "Generate throttle histogram")
         self.btnGenerateThrottlePlot      = wx.Button(self, -1, "Generate throttle plot")
 
         ThrottleGrid = wx.GridSizer(4, 2, 10, 10)
@@ -269,6 +270,7 @@ class MissionPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.chkPlotPower.Bind(wx.EVT_CHECKBOX, self.ChangePlotPower)
         self.chkPlotGamma.Bind(wx.EVT_CHECKBOX, self.ChangePlotGamma)
         self.chkPlotDelta.Bind(wx.EVT_CHECKBOX, self.ChangePlotDelta)
+        self.chkPlotVelocityThrustAngle.Bind(wx.EVT_CHECKBOX, self.ChangePlotVelocityThrustAngle)
         self.chkPlotArray_Thrust_Angle.Bind(wx.EVT_CHECKBOX, self.ChangePlotArray_Thrust_Angle)
         self.chkPlotMass.Bind(wx.EVT_CHECKBOX, self.ChangePlotMass)
         self.chkPlotNumberOfEngines.Bind(wx.EVT_CHECKBOX, self.ChangePlotNumberOfEngines)
@@ -469,6 +471,10 @@ class MissionPanel(wx.lib.scrolledpanel.ScrolledPanel):
         e.Skip()
         self.plotoptions.PlotDelta = self.chkPlotDelta.GetValue()
 
+    def ChangePlotVelocityThrustAngle(self, e):
+        e.Skip()
+        self.plotoptions.PlotVelocityThrustAngle = self.chkPlotVelocityThrustAngle.GetValue()
+
     def ChangePlotArray_Thrust_Angle(self, e):
         e.Skip()
         self.plotoptions.PlotArray_Thrust_Angle = self.chkPlotArray_Thrust_Angle.GetValue()
@@ -514,7 +520,7 @@ class MissionPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.plotoptions.PlotSunBoresightAngle = self.chkPlotSunBoresightAngle.GetValue()
 
     def ChangeIncludeStateVectorInReport(self, e):
-        e.skip()
+        e.Skip()
         self.plotoptions.IncludeStateVectorInReport = self.chkIncludeStateVectorInReport.GetValue()
 
     def ChangeFontSize(self, e):
@@ -522,6 +528,7 @@ class MissionPanel(wx.lib.scrolledpanel.ScrolledPanel):
         self.plotoptions.FontSize = self.spnctrlFontSizeControl.GetValue()
 
     def ChangeBubbleSearchFile(self, e):
+        e.Skip()
         self.bubbleoptions.smallbodyfile = self.txtBubbleSearchFile.GetValue()
     
     def ClickBubbleSearchFileButton(self, e):
