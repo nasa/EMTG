@@ -1,0 +1,30 @@
+cmake_minimum_required(VERSION 3.8.2)
+
+project(winsnopt)
+
+include(CMakeAddFortranSubdirectory)
+
+cmake_add_fortran_subdirectory(src 
+		PROJECT SNOPT 
+		LIBRARIES snopt
+		LINK_LIBRARIES
+		LINK_LIBS snopt
+		CMAKE_COMMAND_LINE ""
+		NO_EXTERNAL_INSTALL)
+
+include_directories(interfaces/include)
+ 		
+add_library(snopt_interface interfaces/src/snoptProblem.cpp interfaces/include/snoptProblem.hpp interfaces/include/snopt.h)
+STRING(REGEX REPLACE "/" "\\\\" SNOPT_DLL_ORIGIN "${CMAKE_CURRENT_BINARY_DIR}\\src\\libsnopt.dll")
+STRING(REGEX REPLACE "/" "\\\\" SNOPT_LIB_ORIGIN "${CMAKE_CURRENT_BINARY_DIR}\\src\\libsnopt.lib")
+STRING(REGEX REPLACE "/" "\\\\" SNOPT_DLL_DESTINATION "${CMAKE_CURRENT_BINARY_DIR}\\${CMAKE_CFG_INTDIR}\\libsnopt.dll")
+STRING(REGEX REPLACE "/" "\\\\" SNOPT_LIB_DESTINATION "${CMAKE_CURRENT_BINARY_DIR}\\${CMAKE_CFG_INTDIR}\\libsnopt.lib")
+message(STATUS ${BUILD_DESTINATION})
+add_custom_command(TARGET snopt_interface POST_BUILD COMMAND copy /Y ${SNOPT_LIB_ORIGIN} ${SNOPT_LIB_DESTINATION} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+add_custom_command(TARGET snopt_interface POST_BUILD COMMAND copy /Y ${SNOPT_DLL_ORIGIN} ${SNOPT_DLL_DESTINATION} WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
+target_link_libraries(snopt_interface ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/libsnopt.lib)
+
+
+link_directories(${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR})
+add_executable(SNOPT_TOY_A ${CMAKE_SOURCE_DIR}/interfaces/cppexamples/sntoya.cpp)
+target_link_libraries(SNOPT_TOY_A ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/snopt_interface.lib ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/libsnopt.lib)

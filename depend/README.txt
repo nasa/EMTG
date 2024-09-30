@@ -1,0 +1,1 @@
+All dependencies in this /depend/ folder contains license agreements associated with each dependency.

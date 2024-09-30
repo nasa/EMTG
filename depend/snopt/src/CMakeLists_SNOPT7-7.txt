@@ -1,0 +1,29 @@
+cmake_minimum_required(VERSION 3.8.2)
+
+project(snopt Fortran)
+
+#file(GLOB SNOPT_FILES *.f)
+
+set(SNOPT_FILES ${SNOPT_FILES} ../src/snopt_wrapper.f90
+                               ../src/sqopt_wrapper.f90)
+
+
+set(SNOPT_FILES ${SNOPT_FILES} snblas.f snfilewrapper.f
+			 sqopt.f    snoptq.f   sq02lib.f  sn03prnt.f sn04wrap.f sn04stats.f sn10mach.f
+             sn12ampl.f sn17util.f sn20amat.f sn25bfac.f sn27lu.f
+             sn30spec.f sn35mps.f  sn37wrap.f sn40bfil.f sn50lp.f sn55qp.f
+             sn56qncg.f sn57qopt.f sn65rmod.f)
+			 
+set(SNOPT_FILES ${SNOPT_FILES} 
+             sqopt.f    snopta.f   snoptb.f   snoptc.f    snoptch.f
+             snoptq.f   npopt.f    snctrl.f
+             sq02lib.f  sn02lib.f  np02lib.f  sn04wrap.f  sn04stats.f
+			 sn02slib.f sn02tlib.f sq02slib.f sq02tlib.f sn01dum.f 
+             sn05wrpa.f sn05wrpb.f sn05wrpc.f sn05wrpch.f sn05wrpn.f sn10mach.f
+             sn12ampl.f sn17util.f sn20amat.f sn25bfac.f  sn27lu.f
+             sn30spec.f sn35mps.f  sn37wrap.f sn40bfil.f  sn50lp.f    sn55qp.f
+             sn56qncg.f sn57qopt.f sn60srch.f sn65rmod.f  sn70nobj.f  sn80ncon.f
+             sn82qn.f  sn83bfgs.f sn87sopt.f snfilewrapper.f)
+
+add_library(snopt ${SNOPT_FILES})
+target_link_libraries(snopt gfortran)
