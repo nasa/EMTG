@@ -112,6 +112,12 @@ testatron/~\$EMTGv9_test_matrix\.xlsx
 *.doctree
 /docs/1_Developers/python_modules/_autogendocs/doctrees/*
 
+################
+# Dependencies 
+################
+
+/depend/boost/stage/*
+
 #######
 # Other
 #######
