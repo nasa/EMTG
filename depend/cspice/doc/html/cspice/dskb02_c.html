@@ -1,0 +1,424 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+
+<HEAD>
+   <TITLE>dskb02_c</TITLE>
+</HEAD>
+
+<BODY style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+<A name="TOP"></A>
+
+<table style="text-align: left; margin-left: auto; margin-right: auto; width: 800px;"
+ border="0" cellpadding="5" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153); vertical-align: middle; text-align: center;">
+      <div align="right"> 
+      <small><small><a href="index.html">Index Page</a></small></small>
+      </div>
+      <b>dskb02_c</b> </td>
+    </tr>
+
+    <tr>
+      <td style="vertical-align: top;">
+
+<small><div align="center">
+<A HREF="index.html#A">A</A>&nbsp;
+<A HREF="index.html#B">B</A>&nbsp;
+<A HREF="index.html#C">C</A>&nbsp;
+<A HREF="index.html#D">D</A>&nbsp;
+<A HREF="index.html#E">E</A>&nbsp;
+<A HREF="index.html#F">F</A>&nbsp;
+<A HREF="index.html#G">G</A>&nbsp;
+<A HREF="index.html#H">H</A>&nbsp;
+<A HREF="index.html#I">I</A>&nbsp;
+<A HREF="index.html#J">J</A>&nbsp;
+<A HREF="index.html#K">K</A>&nbsp;
+<A HREF="index.html#L">L</A>&nbsp;
+<A HREF="index.html#M">M</A>&nbsp;
+<A HREF="index.html#N">N</A>&nbsp;
+<A HREF="index.html#O">O</A>&nbsp;
+<A HREF="index.html#P">P</A>&nbsp;
+<A HREF="index.html#Q">Q</A>&nbsp;
+<A HREF="index.html#R">R</A>&nbsp;
+<A HREF="index.html#S">S</A>&nbsp;
+<A HREF="index.html#T">T</A>&nbsp;
+<A HREF="index.html#U">U</A>&nbsp;
+<A HREF="index.html#V">V</A>&nbsp;
+<A HREF="index.html#W">W</A>&nbsp;
+<A HREF="index.html#X">X</A>&nbsp;
+</div></small>
+       <br>
+       <table style="text-align: left; width: 60%; margin-left: auto; margin-right: auto;"
+       border="0" cellspacing="2" cellpadding="2">
+        <tbody>
+          <tr>
+            <td style="width: 33%; text-align: center;">
+            <small>
+              <a href="#Procedure">Procedure<br></a>
+              <a href="#Abstract">Abstract<br></a>
+              <a href="#Required_Reading">Required_Reading<br></a>
+              <a href="#Keywords">Keywords<br></a>
+              <a href="#Brief_I/O">Brief_I/O<br></a>
+              <a href="#Detailed_Input">Detailed_Input<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Detailed_Output">Detailed_Output<br></a>
+              <a href="#Parameters">Parameters<br></a>
+              <a href="#Exceptions">Exceptions<br></a>
+              <a href="#Files">Files<br></a>
+              <a href="#Particulars">Particulars<br></a>
+              <a href="#Examples">Examples<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Restrictions">Restrictions<br></a>
+              <a href="#Literature_References">Literature_References<br></a>
+              <a href="#Author_and_Institution">Author_and_Institution<br></a>
+              <a href="#Version">Version<br></a>
+              <a href="#Index_Entries">Index_Entries<br></a>
+             </small>
+            </td>
+          </tr>
+        </tbody>
+</table>
+
+<h4><a name="Procedure">Procedure</a></h4>
+<PRE>
+   void dskb02_c ( SpiceInt               handle,
+                   ConstSpiceDLADescr   * dladsc,
+                   SpiceInt             * nv,
+                   SpiceInt             * np,
+                   SpiceInt             * nvxtot,
+                   SpiceDouble            vtxbds  [3][2],
+                   SpiceDouble          * voxsiz,
+                   SpiceDouble            voxori  [3],
+                   SpiceInt               vgrext  [3],
+                   SpiceInt             * cgscal,
+                   SpiceInt             * vtxnpl,
+                   SpiceInt             * voxnpt,
+                   SpiceInt             * voxnpl          )
+
+</PRE>
+<h4><a name="Abstract">Abstract</a></h4>
+<PRE>
+ 
+   Return bookkeeping data from a DSK type 2 segment.
+ </PRE>
+<h4><a name="Required_Reading">Required_Reading</a></h4>
+<PRE>
+ 
+   <a href="../req/das.html">DAS</a> 
+   <a href="../req/dsk.html">DSK</a> 
+ </PRE>
+<h4><a name="Keywords">Keywords</a></h4>
+<PRE>
+ 
+   DAS 
+   DSK 
+   FILES 
+ 
+
+</PRE>
+<h4><a name="Brief_I/O">Brief_I/O</a></h4>
+<PRE>
+ 
+   Variable  I/O  Description 
+   --------  ---  -------------------------------------------------- 
+   handle     I   DSK file handle. 
+   dladsc     I   DLA descriptor. 
+   nv         O   Number of vertices in model. 
+   np         O   Number of plates in model. 
+   nvxtot     O   Number of voxels in fine grid. 
+   vtxbds     O   Vertex bounds. 
+   voxsiz     O   Fine voxel edge length. 
+   voxori     O   Fine voxel grid origin. 
+   vgrext     O   Fine voxel grid exent. 
+   cgscal     O   Coarse voxel grid scale. 
+   vtxnpl     O   Size of vertex-plate correspondence list. 
+   voxnpt     O   Size of voxel-plate pointer list. 
+   voxnpl     O   Size of voxel-plate correspondence list. 
+ </PRE>
+<h4><a name="Detailed_Input">Detailed_Input</a></h4>
+<PRE>
+ 
+   handle         is the handle of a DSK file containing a type 2 
+                  segment from which data are to be fetched. 
+ 
+   dladsc         is the DLA descriptor associated with the segment 
+                  from which data are to be fetched.  
+ </PRE>
+<h4><a name="Detailed_Output">Detailed_Output</a></h4>
+<PRE>
+ 
+   nv         Number of vertices in model. 
+ 
+   np         Number of plates in model. 
+ 
+   nvxtot     Total number of voxels in fine grid. 
+ 
+   vtxbds     Vertex bounds. This is an array of six values giving 
+              the minimum and maximum values of each component of 
+              the vertex set.  `vtxbds' has dimensions [3][2]. 
+              Units are km. 
+ 
+   voxsiz     Fine grid voxel size.  DSK voxels are cubes; the edge 
+              length of each cube is given by the voxel size.  This 
+              size applies to the fine voxel grid.  Units are km. 
+ 
+   voxori     Voxel grid origin.  This is the location of the voxel 
+              grid origin in the body-fixed frame associated with 
+              the target body.  Units are km. 
+ 
+   vgrext     Voxel grid extent.  This extent is an array of three
+              integers indicating the number of voxels in the X, Y, and
+              Z directions in the fine voxel grid.
+ 
+   cgscal     Coarse voxel grid scale.  The extent of the fine voxel
+              grid is related to the extent of the coarse voxel grid by
+              this scale factor.
+ 
+   vtxnpl     Vertex-plate correspondence list size.
+ 
+   voxnpt     Size of the voxel-to-plate pointer list.
+ 
+   voxnpl     Voxel-plate correspondence list size. 
+ 
+ </PRE>
+<h4><a name="Parameters">Parameters</a></h4>
+<PRE>
+ 
+   See the header files  
+ 
+      SpiceDLA.h
+      SpiceDSK.h
+ </PRE>
+<h4><a name="Exceptions">Exceptions</a></h4>
+<PRE>
+ 
+   1) If the input handle is invalid, the error will be diagnosed by 
+      routines in the call tree of this routine.  
+ 
+   2) If a file read error occurs, the error will be diagnosed by 
+      routines in the call tree of this routine. 
+ 
+   3) If the input DLA descriptor is invalid, the effect of this 
+      routine is undefined. The error *may* be diagnosed by routines 
+      in the call tree of this routine, but there are no 
+      guarantees. 
+ </PRE>
+<h4><a name="Files">Files</a></h4>
+<PRE>
+ 
+   See input argument `handle'. 
+ </PRE>
+<h4><a name="Particulars">Particulars</a></h4>
+<PRE>
+ 
+   This routine supports computations involving bookkeeping information
+   stored in DSK type 2 segments. User applications typically will not
+   need to call this routine.
+ 
+   DSK files are built using the DLA low-level format and the DAS
+   architecture; DLA files are a specialized type of DAS file in which
+   data are organized as a doubly linked list of segments.  Each
+   segment's data belong to contiguous components of character, double
+   precision, and integer type.
+ </PRE>
+<h4><a name="Examples">Examples</a></h4>
+<PRE>
+   
+   The numerical results shown for this example may differ across 
+   platforms. The results depend on the SPICE kernels used as 
+   input, the compiler and supporting libraries, and the machine  
+   specific arithmetic implementation.  
+
+
+   1) Dump several parameters from the first DLA segment of  
+      a DSK file. The segment is assumed to be of type 2. 
+ 
+      Example code begins here. 
+
+         #include &lt;stdio.h&gt;
+         #include &quot;SpiceUsr.h&quot;
+         #include &quot;SpiceDLA.h&quot;
+         #include &quot;SpiceDSK.h&quot;
+
+         int main()
+         {   
+            /.
+            Constants 
+            ./
+            #define FILSIZ          256
+
+            /.
+            Local variables 
+            ./
+            SpiceBoolean            found;
+
+            SpiceChar               dsk  [ FILSIZ ];
+
+            SpiceDLADescr           dladsc;
+
+            SpiceDouble             voxori [3];
+            SpiceDouble             voxsiz;
+            SpiceDouble             vtxbds [3][2];
+
+            SpiceInt                cgscal;
+            SpiceInt                handle;
+            SpiceInt                np;
+            SpiceInt                nv;
+            SpiceInt                nvxtot;
+            SpiceInt                vgrext [3];
+            SpiceInt                voxnpl;
+            SpiceInt                voxnpt;
+            SpiceInt                vtxnpl;
+
+            /.
+            Prompt for the name of DSK to read.
+            ./
+            <a href="prompt_c.html">prompt_c</a> ( &quot;Enter DSK name &gt; &quot;, FILSIZ, dsk );
+
+            /.
+            Open the DSK file for read access. We use the 
+            DAS-level interface for this function.
+            ./
+            <a href="dasopr_c.html">dasopr_c</a> ( dsk, &amp;handle );
+
+            /.
+            Begin a forward search through the kernel. In 
+            this example, it's a very short search.
+            ./
+            <a href="dlabfs_c.html">dlabfs_c</a> ( handle, &amp;dladsc, &amp;found );
+
+            if ( !found )
+            { 
+               <a href="setmsg_c.html">setmsg_c</a> ( &quot;No segment found in file #.&quot; );
+               <a href="errch_c.html">errch_c</a>  ( &quot;#&quot;,  dsk                     );
+               <a href="sigerr_c.html">sigerr_c</a> ( &quot;SPICE(NOSEGMENT)&quot;            );
+            }
+
+            /.
+            If we made it this far, DLADSC is the
+            DLA descriptor of the first segment.
+            Read and display type 2 bookkeeping data.
+            ./
+            <b>dskb02_c</b> ( handle,  &amp;dladsc, &amp;nv,    &amp;np,    &amp;nvxtot,
+                       vtxbds,  &amp;voxsiz, voxori, vgrext, &amp;cgscal,
+                       &amp;vtxnpl, &amp;voxnpt, &amp;voxnpl                 );
+
+            printf ( &quot;\n&quot; 
+                     &quot;Number of vertices:                 %d\n&quot;
+                     &quot;Number of plates:                   %d\n&quot;
+                     &quot;Number of voxels:                   %d\n&quot;
+                     &quot;Vertex bounds in X direction (km):  %f : %f\n&quot;
+                     &quot;Vertex bounds in Y direction (km):  %f : %f\n&quot;
+                     &quot;Vertex bounds in Z direction (km):  %f : %f\n&quot;
+                     &quot;Voxel edge length (km):             %f\n&quot;
+                     &quot;Voxel grid origin (km):           ( %f %f %f )\n&quot;
+                     &quot;Voxel grid extents:                 %d %d %d\n&quot;
+                     &quot;Coarse voxel grid scale:            %d\n&quot;
+                     &quot;Size of vertex-plate list:          %d\n&quot;
+                     &quot;Size of voxel-plate pointer array:  %d\n&quot;
+                     &quot;Size of voxel-plate list:           %d\n&quot;,
+                     (int)nv,
+                     (int)np,
+                     (int)nvxtot,          
+                     vtxbds[0][0], vtxbds[0][1],
+                     vtxbds[1][0], vtxbds[1][1],
+                     vtxbds[2][0], vtxbds[2][1],
+                     voxsiz,
+                     voxori[0], voxori[1], voxori[2],
+                     (int)vgrext[0], (int)vgrext[1], (int)vgrext[2],
+                     (int)cgscal,
+                     (int)vtxnpl,
+                     (int)voxnpt,
+                     (int)voxnpl                                       );
+            /.
+            Close the kernel.  This isn't necessary in a stand-
+            alone program, but it's good practice in subroutines
+            because it frees program and system resources.
+            ./
+            <a href="dascls_c.html">dascls_c</a> ( handle );
+
+            return ( 0 );
+         }
+
+   When this program was executed on a PC/Linux/gcc/64bit 
+   platform, using a DSK file representing a regular icosahedron, 
+   the output was:  
+
+      Number of vertices:                 12
+      Number of plates:                   20
+      Number of voxels:                   512
+      Vertex bounds in X direction (km):  -1.051460 : 1.051460
+      Vertex bounds in Y direction (km):  -1.000000 : 1.000000
+      Vertex bounds in Z direction (km):  -1.175570 : 1.175570
+      Voxel edge length (km):             0.901744
+      Voxel grid origin (km):           ( -3.606976 -3.606976 -3.606976 )
+      Voxel grid extents:                 8 8 8
+      Coarse voxel grid scale:            2
+      Size of vertex-plate list:          72
+      Size of voxel-plate pointer array:  64
+      Size of voxel-plate list:           288
+</PRE>
+<h4><a name="Restrictions">Restrictions</a></h4>
+<PRE>
+  
+   1) The caller must verify that the segment associated with 
+      the input DLA descriptor is a DSK type 2 segment. 
+ </PRE>
+<h4><a name="Literature_References">Literature_References</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Author_and_Institution">Author_and_Institution</a></h4>
+<PRE>
+ 
+   N.J. Bachman    (JPL) 
+ </PRE>
+<h4><a name="Version">Version</a></h4>
+<PRE>
+ 
+   -CSPICE Version 2.1.0, 11-JUL-2016 (NJB)
+
+      Edit to example program to use &quot;%d&quot; with explicit casts
+      to int for printing SpiceInts with printf.
+
+      Removed unnecessary include statements. Updated
+      header.
+
+   -DSKLIB_C Version 2.0.1, 11-JUL-2014 (NJB)
+
+      Added example program to header.
+
+   -DSKLIB_C Version 2.0.0, 13-MAY-2010 (NJB)
+
+      Updated for compatibility with new DSK type 2 design.
+      Name has been changed from <a href="dskp02_c.html">dskp02_c</a> to <b>dskb02_c</b>.
+
+   -DSKLIB_C Version 1.0.0, 11-FEB-2010 (NJB)
+</PRE>
+<h4><a name="Index_Entries">Index_Entries</a></h4>
+<PRE>
+ 
+   fetch parameters from a type 2 dsk segment 
+ </PRE>
+<h4>Link to routine dskb02_c source file <a href='../../../src/cspice/dskb02_c.c'>dskb02_c.c</a> </h4>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+   <pre>Wed Apr  5 17:54:32 2017</pre>
+
+</body>
+</html>
+

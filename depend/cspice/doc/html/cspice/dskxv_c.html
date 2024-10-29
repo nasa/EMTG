@@ -1,0 +1,856 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+
+<HEAD>
+   <TITLE>dskxv_c</TITLE>
+</HEAD>
+
+<BODY style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+<A name="TOP"></A>
+
+<table style="text-align: left; margin-left: auto; margin-right: auto; width: 800px;"
+ border="0" cellpadding="5" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153); vertical-align: middle; text-align: center;">
+      <div align="right"> 
+      <small><small><a href="index.html">Index Page</a></small></small>
+      </div>
+      <b>dskxv_c</b> </td>
+    </tr>
+
+    <tr>
+      <td style="vertical-align: top;">
+
+<small><div align="center">
+<A HREF="index.html#A">A</A>&nbsp;
+<A HREF="index.html#B">B</A>&nbsp;
+<A HREF="index.html#C">C</A>&nbsp;
+<A HREF="index.html#D">D</A>&nbsp;
+<A HREF="index.html#E">E</A>&nbsp;
+<A HREF="index.html#F">F</A>&nbsp;
+<A HREF="index.html#G">G</A>&nbsp;
+<A HREF="index.html#H">H</A>&nbsp;
+<A HREF="index.html#I">I</A>&nbsp;
+<A HREF="index.html#J">J</A>&nbsp;
+<A HREF="index.html#K">K</A>&nbsp;
+<A HREF="index.html#L">L</A>&nbsp;
+<A HREF="index.html#M">M</A>&nbsp;
+<A HREF="index.html#N">N</A>&nbsp;
+<A HREF="index.html#O">O</A>&nbsp;
+<A HREF="index.html#P">P</A>&nbsp;
+<A HREF="index.html#Q">Q</A>&nbsp;
+<A HREF="index.html#R">R</A>&nbsp;
+<A HREF="index.html#S">S</A>&nbsp;
+<A HREF="index.html#T">T</A>&nbsp;
+<A HREF="index.html#U">U</A>&nbsp;
+<A HREF="index.html#V">V</A>&nbsp;
+<A HREF="index.html#W">W</A>&nbsp;
+<A HREF="index.html#X">X</A>&nbsp;
+</div></small>
+       <br>
+       <table style="text-align: left; width: 60%; margin-left: auto; margin-right: auto;"
+       border="0" cellspacing="2" cellpadding="2">
+        <tbody>
+          <tr>
+            <td style="width: 33%; text-align: center;">
+            <small>
+              <a href="#Procedure">Procedure<br></a>
+              <a href="#Abstract">Abstract<br></a>
+              <a href="#Required_Reading">Required_Reading<br></a>
+              <a href="#Keywords">Keywords<br></a>
+              <a href="#Brief_I/O">Brief_I/O<br></a>
+              <a href="#Detailed_Input">Detailed_Input<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Detailed_Output">Detailed_Output<br></a>
+              <a href="#Parameters">Parameters<br></a>
+              <a href="#Exceptions">Exceptions<br></a>
+              <a href="#Files">Files<br></a>
+              <a href="#Particulars">Particulars<br></a>
+              <a href="#Examples">Examples<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Restrictions">Restrictions<br></a>
+              <a href="#Literature_References">Literature_References<br></a>
+              <a href="#Author_and_Institution">Author_and_Institution<br></a>
+              <a href="#Version">Version<br></a>
+              <a href="#Index_Entries">Index_Entries<br></a>
+             </small>
+            </td>
+          </tr>
+        </tbody>
+</table>
+
+<h4><a name="Procedure">Procedure</a></h4>
+<PRE>
+   void dskxv_c ( SpiceBoolean         pri,
+                  ConstSpiceChar     * target,
+                  SpiceInt             nsurf,
+                  ConstSpiceInt        srflst[],
+                  SpiceDouble          et,
+                  ConstSpiceChar     * fixref,
+                  SpiceInt             nrays,
+                  ConstSpiceDouble     vtxarr[][3],
+                  ConstSpiceDouble     dirarr[][3],
+                  SpiceDouble          xptarr[][3],
+                  SpiceBoolean         fndarr[]     )
+</PRE>
+<h4><a name="Abstract">Abstract</a></h4>
+<PRE>
+ 
+   Compute ray-surface intercepts for a set of rays, using data 
+   provided by multiple loaded DSK segments. 
+ </PRE>
+<h4><a name="Required_Reading">Required_Reading</a></h4>
+<PRE>
+ 
+   <a href="../req/ck.html">CK</a> 
+   <a href="../req/dsk.html">DSK</a> 
+   <a href="../req/frames.html">FRAMES</a> 
+   <a href="../req/pck.html">PCK</a> 
+   <a href="../req/spk.html">SPK</a> 
+   <a href="../req/time.html">TIME</a> 
+ </PRE>
+<h4><a name="Keywords">Keywords</a></h4>
+<PRE>
+ 
+   GEOMETRY 
+   INTERCEPT 
+   SURFACE 
+   TOPOGRAPHY 
+ 
+
+</PRE>
+<h4><a name="Brief_I/O">Brief_I/O</a></h4>
+<PRE>
+ 
+   VARIABLE  I/O  DESCRIPTION 
+   --------  ---  -------------------------------------------------- 
+   pri        I   Data prioritization flag.  
+   target     I   Target body name. 
+   nsurf      I   Number of surface IDs in list. 
+   srflst     I   Surface ID list. 
+   et         I   Epoch, expressed as seconds past J2000 TDB. 
+   fixref     I   Name of target body-fixed reference frame. 
+   nrays      I   Number of rays. 
+   vtxarr     I   Array of vertices of rays. 
+   dirarr     I   Array of direction vectors of rays. 
+   xptarr     O   Intercept point array. 
+   fndarr     O   Found flag array. 
+ </PRE>
+<h4><a name="Detailed_Input">Detailed_Input</a></h4>
+<PRE>
+ 
+   pri        is a logical flag indicating whether to perform 
+              a prioritized or unprioritized DSK segment search. 
+              In an unprioritized search, no segment masks another: 
+              data from all specified segments are used to   
+              define the surface of interest. 
+ 
+              The search is unprioritized if and only if `pri'  
+              is set to SPICEFALSE. In the N0066 SPICE Toolkit, this 
+              is the only allowed value. 
+ 
+ 
+   target     is the name of the target body on which a surface 
+              intercept is sought. 
+ 
+ 
+   nsurf, 
+   srflst     are, respectively, a count of surface ID codes in a 
+              list and an containing the list. Only DSK segments for 
+              for the body designated by `target' and having surface 
+              IDs in this list will considered in the intercept 
+              computation. If the list is empty, all DSK segments 
+              for `target' will be considered. 
+ 
+ 
+   et         is the epoch of the intersection computation, 
+              expressed as seconds past J2000 TDB. This epoch is 
+              used only for DSK segment selection. Segments used 
+              the intercept computation must include `et' in their 
+              time coverage intervals. 
+ 
+ 
+   fixref     is the name of a body-fixed, body-centered reference 
+              frame associated with the target. The input ray vectors 
+              are specified in this frame, as is the output intercept 
+              point. 
+     
+              The frame designated by `fixref' must have a fixed 
+              orientation relative to the frame of any DSK segment 
+              used in the computation. 
+ 
+
+   nrays, 
+   vtxarr,  
+   dirarr     are, respectively, a count of rays, an array containing 
+              the vertices of rays, and an array containing the 
+              direction vectors of the rays. 
+ 
+              The ray's vertices are considered to represent offsets 
+              from the center of the target body. 
+ 
+              The rays' vertices and direction vectors are 
+              represented in the reference frame designated by 
+              `fixref'. 
+    </PRE>
+<h4><a name="Detailed_Output">Detailed_Output</a></h4>
+<PRE>
+ 
+ 
+   xptarr     is an array containing the intercepts of the input 
+              rays on the surface specified by the inputs 
+ 
+                 pri 
+                 target 
+                 nsurf 
+                 srflst 
+                 et 
+ 
+              The ith element of `xptarr' is the intercept 
+              corresponding to the ith ray, if such an intercept 
+              exists. If a ray intersects the surface at multiple 
+              points, the intercept closest to the ray's vertex is 
+              selected. 
+ 
+              The ith element of `xptarr' is defined if and only if the 
+              ith element of `fndarr' is SPICETRUE.
+ 
+              Units are km. 
+ 
+ 
+   fndarr     is an array of logical flags indicating whether the 
+              input rays intersect the surface. The ith element of 
+              `fndarr' is set to SPICETRUE if and only if an intercept 
+              was found for the ith ray. 
+ 
+ </PRE>
+<h4><a name="Parameters">Parameters</a></h4>
+<PRE>
+ 
+   See the include file 
+ 
+      SpiceDtl.h
+ 
+   for the values of tolerance parameters used by default by the 
+   ray-surface intercept algorithm. These are discussed in in the 
+   Particulars section below. 
+ </PRE>
+<h4><a name="Exceptions">Exceptions</a></h4>
+<PRE>
+ 
+   1)  If the input prioritization flag `pri' is set to SPICETRUE, 
+       the error SPICE(NOPRIORITIZATION) is signaled. 
+    
+   2)  If the input body name `target' cannot be mapped to an 
+       ID code, the error SPICE(IDCODENOTFOUND) is signaled. 
+ 
+   3)  If the input frame name `fixref' cannot be mapped to an 
+       ID code, the error SPICE(IDCODENOTFOUND) is signaled. 
+ 
+   4)  If the frame center associated with `fixref' cannot be 
+       retrieved, the error SPICE(NOFRAMEINFO) is signaled. 
+ 
+   5)  If the frame center associated with `fixref' is not 
+       the target body, the error SPICE(INVALIDFRAME) is signaled. 
+ 
+   6)  If `nrays' is less than 1, the error SPICE(INVALIDCOUNT)
+       is signaled.
+
+   7)  Any errors that occur during the intercept computation
+       will be signaled by routines in the call tree of this
+       routine.
+
+   8)  If any input string argument pointer is null, the error
+       SPICE(NULLPOINTER) will be signaled.
+
+   9)  If any input string argument is empty, the error
+       SPICE(EMPTYSTRING) will be signaled.
+   </PRE>
+<h4><a name="Files">Files</a></h4>
+<PRE>
+   
+   Appropriate kernels must be loaded by the calling program before 
+   this routine is called. 
+ 
+   The following data are required: 
+ 
+      - SPK data: ephemeris data for the positions of the centers 
+        of DSK reference frames relative to the target body are 
+        required if those frames are not centered at the target 
+        body center. 
+ 
+        Typically ephemeris data are made available by loading one 
+        or more SPK files via <a href="furnsh_c.html">furnsh_c</a>. 
+ 
+      - DSK data: DSK files containing topographic data for the 
+        target body must be loaded. If a surface list is specified, 
+        data for at least one of the listed surfaces must be loaded. 
+ 
+      - Frame data: if a frame definition is required to convert 
+        DSK segment data to the body-fixed frame designated by 
+        `fixref', the target, that definition must be available in the 
+        kernel pool. Typically the definitions of frames not already 
+        built-in to SPICE are supplied by loading a frame kernel. 
+ 
+      - CK data: if the frame to which `fixref' refers is a CK frame, 
+        and if any DSK segments used in the computation have a 
+        different frame, at least one CK file will be needed to 
+        permit transformation of vectors between that frame and both 
+        the J2000 and the target body-fixed frames. 
+ 
+      - SCLK data: if a CK file is needed, an associated SCLK 
+        kernel is required to enable conversion between encoded SCLK 
+        (used to time-tag CK data) and barycentric dynamical time 
+        (TDB). 
+ 
+   In all cases, kernel data are normally loaded once per program 
+   run, NOT every time this routine is called.  
+ 
+ </PRE>
+<h4><a name="Particulars">Particulars</a></h4>
+<PRE>
+ 
+   This routine is suitable for efficient ray-surface intercept 
+   computations in which the relative observer-target geometry is 
+   constant but the rays vary. 
+ 
+   For cases in which it is necessary to know the source of the 
+   data defining the surface on which an intercept was found, 
+   use the CSPICE routine <a href="dskxsi_c.html">dskxsi_c</a>.  
+ 
+   For cases in which a ray's vertex is not explicitly known but is 
+   defined by relative observer-target geometry, the CSPICE 
+   ray-surface intercept routine <a href="sincpt_c.html">sincpt_c</a> should be used. 
+ 
+   This routine works with multiple DSK files. It places no 
+   restrictions on the data types or coordinate systems of the DSK 
+   segments used in the computation. DSK segments using different 
+   reference frames may be used in a single computation. The only 
+   restriction is that any pair of reference frames used directly or 
+   indirectly are related by a constant rotation. 
+ 
+ 
+   Using DSK data 
+   ============== 
+ 
+      DSK loading and unloading 
+      ------------------------- 
+ 
+      DSK files providing data used by this routine are loaded by 
+      calling <a href="furnsh_c.html">furnsh_c</a> and can be unloaded by calling <a href="unload_c.html">unload_c</a> or 
+      <a href="kclear_c.html">kclear_c</a>. See the documentation of <a href="furnsh_c.html">furnsh_c</a> for limits on numbers 
+      of loaded DSK files. 
+ 
+      For run-time efficiency, it's desirable to avoid frequent 
+      loading and unloading of DSK files. When there is a reason to 
+      use multiple versions of data for a given target body---for 
+      example, if topographic data at varying resolutions are to be 
+      used---the surface list can be used to select DSK data to be 
+      used for a given computation. It is not necessary to unload 
+      the data that are not to be used. This recommendation presumes 
+      that DSKs containing different versions of surface data for a 
+      given body have different surface ID codes. 
+ 
+ 
+      DSK data priority 
+      ----------------- 
+ 
+      A DSK coverage overlap occurs when two segments in loaded DSK 
+      files cover part or all of the same domain---for example, a 
+      given longitude-latitude rectangle---and when the time 
+      intervals of the segments overlap as well. 
+ 
+      When DSK data selection is prioritized, in case of a coverage 
+      overlap, if the two competing segments are in different DSK 
+      files, the segment in the DSK file loaded last takes 
+      precedence. If the two segments are in the same file, the 
+      segment located closer to the end of the file takes 
+      precedence. 
+ 
+      When DSK data selection is unprioritized, data from competing 
+      segments are combined. For example, if two competing segments 
+      both represent a surface as sets of triangular plates, the 
+      union of those sets of plates is considered to represent the 
+      surface.  
+ 
+      Currently only unprioritized data selection is supported. 
+      Because prioritized data selection may be the default behavior 
+      in a later version of the routine, the presence of the `pri' 
+      argument is required. 
+ 
+ 
+      Round-off errors and mitigating algorithms 
+      ------------------------------------------ 
+ 
+      When topographic data are used to represent the surface of a 
+      target body, round-off errors can produce some results that 
+      may seem surprising. 
+ 
+      Note that, since the surface in question might have mountains, 
+      valleys, and cliffs, the points of intersection found for 
+      nearly identical sets of inputs may be quite far apart from 
+      each other: for example, a ray that hits a mountain side in a 
+      nearly tangent fashion may, on a different host computer, be 
+      found to miss the mountain and hit a valley floor much farther 
+      from the observer, or even miss the target altogether. 
+       
+      Round-off errors can affect segment selection: for example, a 
+      ray that is expected to intersect the target body's surface 
+      near the boundary between two segments might hit either 
+      segment, or neither of them; the result may be 
+      platform-dependent. 
+ 
+      A similar situation exists when a surface is modeled by a set 
+      of triangular plates, and the ray is expected to intersect the 
+      surface near a plate boundary. 
+       
+      To avoid having the routine fail to find an intersection when 
+      one clearly should exist, this routine uses two &quot;greedy&quot; 
+      algorithms: 
+      
+         1) If the ray passes sufficiently close to any of the  
+            boundary surfaces of a segment (for example, surfaces of 
+            maximum and minimum longitude or latitude), that segment 
+            is tested for an intersection of the ray with the 
+            surface represented by the segment's data. 
+ 
+            This choice prevents all of the segments from being 
+            missed when at least one should be hit, but it could, on 
+            rare occasions, cause an intersection to be found in a 
+            segment other than the one that would be found if higher 
+            precision arithmetic were used. 
+             
+         2) For type 2 segments, which represent surfaces as  
+            sets of triangular plates, each plate is expanded very 
+            slightly before a ray-plate intersection test is 
+            performed. The default plate expansion factor is  
+ 
+               1 + XFRACT 
+ 
+            where XFRACT is declared in  
+ 
+               SpiceDtl.h
+ 
+            For example, given a value for XFRACT of 1.e-10, the 
+            sides of the plate are lengthened by 1/10 of a micron 
+            per km. The expansion keeps the centroid of the plate 
+            fixed. 
+ 
+            Plate expansion prevents all plates from being missed 
+            in cases where clearly at least one should be hit. 
+ 
+            As with the greedy segment selection algorithm, plate 
+            expansion can occasionally cause an intercept to be 
+            found on a different plate than would be found if higher 
+            precision arithmetic were used. It also can occasionally 
+            cause an intersection to be found when the ray misses 
+            the target by a very small distance.  
+ </PRE>
+<h4><a name="Examples">Examples</a></h4>
+<PRE>
+ 
+   The numerical results shown for these examples may differ across 
+   platforms. The results depend on the SPICE kernels used as 
+   input, the compiler and supporting libraries, and the machine  
+   specific arithmetic implementation.  
+     
+   1) Compute surface intercepts of rays emanating from a set of 
+      vertices distributed on a longitude-latitude grid. All 
+      vertices are outside the target body, and all rays point 
+      toward the target's center. 
+ 
+      Check intercepts against expected values. Indicate the 
+      number of errors, the number of computations, and the 
+      number of intercepts found. 
+ 
+      Use the meta-kernel shown below to load example SPICE 
+      kernels. 
+
+          KPL/MK
+
+          File: dskxv_ex1.tm
+
+          This meta-kernel is intended to support operation of SPICE
+          example programs. The kernels shown here should not be
+          assumed to contain adequate or correct versions of data
+          required by SPICE-based user applications.
+
+          In order for an application to use this meta-kernel, the
+          kernels referenced here must be present in the user's
+          current working directory.
+
+          The names and contents of the kernels referenced
+          by this meta-kernel are as follows:
+
+             File name                        Contents
+             ---------                        --------
+             phobos512.bds                    DSK based on
+                                              Gaskell ICQ Q=512
+                                              plate model
+          \begindata
+
+             PATH_SYMBOLS    = 'GEN'
+             PATH_VALUES     = '/ftp/pub/naif/generic_kernels'
+
+             KERNELS_TO_LOAD = ( '$GEN/dsk/phobos/phobos512.bds' )
+
+          \begintext
+
+ 
+   Example code begins here. 
+ 
+      /.
+      Multi-segment, vectorized spear program.
+
+      This program expects all loaded DSKs
+      to represent the same body and surface.
+
+      Syntax: vspear &lt;meta-kernel&gt;
+      ./
+
+      #include &lt;stdio.h&gt;
+      #include &lt;stdlib.h&gt;
+      #include &quot;SpiceUsr.h&quot;
+
+      int main( int argc,  char **argv )
+      {
+         /.
+         Local constants 
+         ./ 
+         #define  DTOL           1.0e-14
+         #define  FILSIZ         256
+         #define  FRNMLN         33
+         #define  BDNMLN         37
+         #define  TYPLEN         5
+         #define  INTLEN         12
+         #define  MAXN           100000
+         #define  MAXSRF         100
+
+         /.
+         Local variables
+         ./
+         static SpiceBoolean     fndarr [MAXN];
+         SpiceBoolean            found;
+
+         SpiceChar               dsk1   [FILSIZ];
+         SpiceChar               fixref [FRNMLN];
+         SpiceChar               source [FILSIZ];
+         SpiceChar               filtyp [TYPLEN];
+         SpiceChar               target [BDNMLN];
+
+         SpiceDLADescr           dladsc;
+
+         SpiceDSKDescr           dskdsc;
+
+         SpiceDouble             d;
+         static SpiceDouble      dirarr[MAXN][3];
+         SpiceDouble             et;
+         SpiceDouble             lat;
+         SpiceDouble             latcrd[3];
+         SpiceDouble             latstp;
+         SpiceDouble             lon;
+         SpiceDouble             lonstp;
+         SpiceDouble             polmrg;
+         SpiceDouble             r;
+         SpiceDouble             radius;
+         SpiceDouble             vlat;
+         SpiceDouble             vlon;
+         SpiceDouble             vrad;
+         static SpiceDouble      vtxarr[MAXN][3];
+         static SpiceDouble      xptarr[MAXN][3];
+         SpiceDouble             xyzhit[3];
+
+         SpiceInt                bodyid;
+         SpiceInt                framid;
+         SpiceInt                handle;
+         SpiceInt                i;
+         SpiceInt                nderr;
+         SpiceInt                nhits;
+         SpiceInt                nlstep;
+         SpiceInt                nrays;
+         SpiceInt                nsurf;
+         static SpiceInt         srflst [MAXSRF];
+         SpiceInt                surfid;
+
+
+         <a href="chkin_c.html">chkin_c</a> ( &quot;vspear&quot; );
+
+         /.
+         Get meta-kernel name from the command line. 
+         ./
+         if ( argc != 2 )
+         {
+            printf ( &quot;Command syntax:  spearv &lt;meta-kernel&gt;\n&quot; );
+            exit(1);
+         }
+
+         /.
+         Load the meta-kernel. 
+         ./
+         <a href="furnsh_c.html">furnsh_c</a> ( argv[1] );
+
+         /.
+         Get a handle for one of the loaded DSKs,
+         then find the first segment and extract
+         the body and surface IDs. 
+         ./
+         <a href="kdata_c.html">kdata_c</a> ( 0,    &quot;DSK&quot;,  FILSIZ, TYPLEN,  FILSIZ,
+                   dsk1, filtyp, source, &amp;handle, &amp;found );
+         if ( !found )
+         {
+            <a href="sigerr_c.html">sigerr_c</a> ( &quot;SPICE(NOINFO)&quot; );
+         }
+
+         <a href="dlabfs_c.html">dlabfs_c</a> ( handle, &amp;dladsc, &amp;found );
+
+         if ( !found )
+         {
+            <a href="sigerr_c.html">sigerr_c</a> ( &quot;SPICE(NOSEGMENT)&quot; );
+         }
+
+         <a href="dskgd_c.html">dskgd_c</a> ( handle, &amp;dladsc, &amp;dskdsc );
+
+         bodyid = dskdsc.center;
+         surfid = dskdsc.surfce;
+         framid = dskdsc.frmcde;
+
+         <a href="bodc2n_c.html">bodc2n_c</a> ( bodyid, BDNMLN, target, &amp;found );
+
+         if ( !found )
+         {
+            <a href="setmsg_c.html">setmsg_c</a> ( &quot;Cannot map body ID # to a name.&quot; );
+            <a href="errint_c.html">errint_c</a> ( &quot;#&quot;, bodyid                       );
+            <a href="sigerr_c.html">sigerr_c</a> ( &quot;SPICE(BODYNAMENOTFOUND)&quot;         );
+         }
+
+         <a href="frmnam_c.html">frmnam_c</a> ( framid, FRNMLN, fixref );
+
+         if ( <a href="eqstr_c.html">eqstr_c</a>( fixref, &quot; &quot; ) )
+         {
+            <a href="setmsg_c.html">setmsg_c</a> ( &quot;Cannot map frame ID # to a name.&quot; );
+            <a href="errint_c.html">errint_c</a> ( &quot;#&quot;, framid                        );
+            <a href="sigerr_c.html">sigerr_c</a> ( &quot;SPICE(BODYNAMENOTFOUND)&quot;          );
+         }
+
+         /.
+         Set the magnitude of the ray vertices. Use a large
+         number to ensure the vertices are outside of
+         any realistic target.
+         ./
+         r = 1.0e10;
+
+         /.
+         Spear the target with rays pointing toward
+         the origin.  Use a grid of ray vertices
+         located on a sphere enclosing the target.
+
+         The variable `polmrg' (&quot;pole margin&quot;) can
+         be set to a small positive value to reduce
+         the number of intercepts done at the poles.
+         This may speed up the computation for
+         the multi-segment case, since rays parallel
+         to the Z axis will cause all segments converging
+         at the pole of interest to be tested for an
+         intersection.
+         ./     
+
+         polmrg =    0.5;
+         latstp =    1.0;
+         lonstp =    2.0;
+
+         nhits  =    0;
+         nderr  =    0;
+
+         lon    = -180.0;
+         lat    =   90.0;
+         nlstep =    0;
+         nrays  =    0;
+
+         /.
+         Generate rays. 
+         ./
+         while ( lon &lt; 180.0 )
+         {
+            while ( nlstep &lt;= 180 )
+            {
+               if ( lon == 180.0 )
+               {
+                  lat = 90.0 - nlstep*latstp;
+               }
+               else
+               {
+                  if ( nlstep == 0 )
+                  {
+                     lat =  90.0 - polmrg;
+                  }
+                  else if ( nlstep == 180 )
+                  {
+                     lat = -90.0 + polmrg;
+                  }
+                  else
+                  {
+                     lat =  90.0 - nlstep*latstp;
+                  }
+               }
+
+               <a href="latrec_c.html">latrec_c</a> ( r,             lon*<a href="rpd_c.html">rpd_c</a>(), 
+                          lat*<a href="rpd_c.html">rpd_c</a>(),   vtxarr[nrays] );
+
+               <a href="vminus_c.html">vminus_c</a> ( vtxarr[nrays], dirarr[nrays] );
+
+               ++ nrays;
+               ++ nlstep;      
+            }
+
+            lon   += lonstp;
+            lat    = 90.0;
+            nlstep = 0;
+         }
+
+         /.
+         Assign surface ID list. 
+
+         Note that, if we knew that all files had the desired
+         surface ID, we could set `nsurf' to 0 and omit the
+         initialization of the surface ID list.
+         ./
+         nsurf     = 1;
+         srflst[0] = surfid;
+
+         printf ( &quot;Computing intercepts...\n&quot; );
+
+         <b>dskxv_c</b> ( SPICEFALSE,  target,  nsurf,  srflst,
+                   et,          fixref,  nrays,  vtxarr,
+                   dirarr,      xptarr,  fndarr         );
+
+         printf ( &quot;Done.\n&quot; );
+
+         /.
+         Check results. 
+         ./
+         for ( i = 0;  i &lt; nrays;  i++ )
+         {
+            if ( fndarr[i] )
+            {
+               /.
+               Record that a new intercept was found. 
+               ./
+               ++ nhits;
+
+               /.
+               Compute the latitude and longitude of         
+               the intercept. Make sure these agree
+               well with those of the vertex.
+               ./
+               <a href="reclat_c.html">reclat_c</a> ( xptarr[i], latcrd, latcrd+1, latcrd+2 );
+               radius = latcrd[0];
+
+               /.
+               Recover the vertex longitude and latitude.
+               ./
+               <a href="reclat_c.html">reclat_c</a> ( vtxarr[i], &amp;vrad, &amp;vlon, &amp;vlat  );
+               <a href="latrec_c.html">latrec_c</a> ( radius,     vlon,  vlat, xyzhit );
+
+               d = <a href="vdist_c.html">vdist_c</a>( xptarr[i], xyzhit );
+
+               if ( d/r &gt; DTOL )
+               {
+                  printf ( &quot;===========================\n&quot; );
+                  printf ( &quot;Lon = %f;  Lat = %f\n&quot;,
+                           lon, lat                        );
+                  printf ( &quot;Bad intercept\n&quot;               );
+                  printf ( &quot;Distance error = %e\n&quot;, d      );
+                  printf ( &quot;xpt    = (%e %e %e)\n&quot;,
+                           xptarr[i][0], xptarr[i][1], xptarr[i][2] );
+                  printf ( &quot;xyzhit = (%e %e %e)\n&quot;,
+                           xyzhit[0], xyzhit[1], xyzhit[2] );
+
+                  ++ nderr;
+               }
+            }
+            else
+            {
+               /.
+               Missing the target entirely is a fatal error.
+
+               This is true only for this program, not in
+               general. For example, if the target shape is
+               a torus, many rays would miss the target.
+               ./
+               printf ( &quot;===========================\n&quot; );
+               printf ( &quot;Lon = %f;  Lat = %f\n&quot;,
+                        lon, lat                        );
+               printf ( &quot;No intercept\n&quot;                );
+               exit( 1 );
+            }
+         }
+         printf( &quot;nrays = %d\n&quot;, (int)nrays );
+         printf( &quot;nhits = %d\n&quot;, (int)nhits );
+         printf( &quot;nderr = %d\n&quot;, (int)nderr );
+
+         return ( 0 );
+      }  
+
+
+   When this program was executed on a PC/Linux/gcc 64-bit  
+   platform, the output was: 
+
+
+      Computing intercepts...
+      Done.
+      nrays = 32580
+      nhits = 32580
+      nderr = 0
+
+ </PRE>
+<h4><a name="Restrictions">Restrictions</a></h4>
+<PRE>
+ 
+   1)  The frame designated by `fixref' must have a fixed 
+       orientation relative to the frame of any DSK segment 
+       used in the computation. This routine has no  
+       practical way of ensuring that this condition is met; 
+       so this responsibility is delegated to the calling 
+       application. 
+     </PRE>
+<h4><a name="Literature_References">Literature_References</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Author_and_Institution">Author_and_Institution</a></h4>
+<PRE>
+ 
+   N.J. Bachman    (JPL) 
+ </PRE>
+<h4><a name="Version">Version</a></h4>
+<PRE>
+ 
+   -CSPICE Version 1.0.0, 26-FEB-2016 (NJB)
+</PRE>
+<h4><a name="Index_Entries">Index_Entries</a></h4>
+<PRE>
+ 
+   vectorized ray-surface intercept  
+   vectorized ray-dsk intercept  </PRE>
+<h4>Link to routine dskxv_c source file <a href='../../../src/cspice/dskxv_c.c'>dskxv_c.c</a> </h4>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+   <pre>Wed Apr  5 17:54:32 2017</pre>
+
+</body>
+</html>
+

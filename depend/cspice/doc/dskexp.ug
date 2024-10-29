@@ -1,0 +1,181 @@
+ 
+DSKEXP User's Guide
+===========================================================================
+ 
+   Last revised on 2015 APR 07 by N. J. Bachman.
+ 
+ 
+Abstract
+--------------------------------------------------------
+ 
+   DSKEXP is a command-line program that exports data from DSK files to
+   text files.
+ 
+ 
+Summary
+--------------------------------------------------------
+ 
+   DSKEXP enables SPICE Toolkit users to ``export'' data from a DSK file to
+   any of a variety of simple, easily parsed text formats. This capability
+   enables users to easily transform DSK files into formats required by
+   other applications; it also makes it easy to inspect the data in a DSK
+   file.
+ 
+   DSKEXP currently is limited to processing type 2 (plate model) DSK
+   segments.
+ 
+   If the input DSK file contains multiple segments, an output text file
+   will be created for each segment.
+ 
+ 
+DSKEXP output formats
+--------------------------------------------------------
+ 
+   Output files created by DSKEXP are usable as input data files by the
+   SPICE program MKDSK. The supported formats are:
+ 
+       1.   Plate-vertex table. The MKDSK code for this format is 1. The
+            output file format is
+ 
+               <vertex count NV>
+               1   <vertex 1  X value><Y value><Z value>
+                     ...
+               NV  <vertex NV X value><Y value><Z value>
+               <plate count NP>
+               1  <plate 1  vertex 1 ID><vertex 2 ID><vertex 3 ID>
+                     ...
+               NP <plate NP vertex 1 ID><vertex 2 ID><vertex 3 ID>
+ 
+       2.   Vertex-facet table. This format is also called ``obj'' format.
+            The MKDSK code for this format is 3. The output file format is
+ 
+                v <vertex 1  X value><Y value><Z value>
+                     ...
+                v <vertex NV X value><Y value><Z value>
+                f <plate 1  vertex 1 ID><vertex 2 ID><vertex 3 ID>
+                     ...
+                f <plate NP vertex 1 ID><vertex 2 ID><vertex 3 ID>
+ 
+            In the diagram above, NV and NP are the vertex and plate
+            counts, respectively.
+ 
+       3.   Rosetta/OSIRIS ``ver'' format. The MKDSK code for this format
+            is 4. The output file format is
+ 
+               <vertex count NV> <plate count NP>
+                 <vertex 1  X value><Y value><Z value>
+                     ...
+                 <vertex NV X value><Y value><Z value>
+               3
+                 <plate 1  vertex 1 ID><vertex 2 ID><vertex 3 ID>
+                     ...
+               3
+                 <plate NP vertex 1 ID><vertex 2 ID><vertex 3 ID>
+ 
+   The Gaskell ICQ format (MKDSK code 2) is not supported as an export
+   format.
+ 
+   See the MKDSK User's Guide for further information on these text file
+   formats.
+ 
+ 
+Running DSKEXP
+--------------------------------------------------------
+ 
+   The command syntax for DSKEXP is
+ 
+      dskexp   -dsk    <dsk>
+               -text   <output name>
+               -format <MKDSK format code/name>
+              [-prec   <# of vertex mantissa digits (1:17)>]
+ 
+   The parameters other than the output precision must be present in the
+   command.
+ 
+   The value associated with the keyword
+ 
+      -format
+ 
+   specifies the output file format. All of the supported output formats
+   are valid MKDSK input file formats. See the section ``DSKEXP output
+   formats'' above for further information.
+ 
+   Output formats may be specified by name or by integer code.
+ 
+   If the input file contains multiple segments, an output file will be
+   written for each segment. The file for the nth segment, where n is
+   greater than 1, will have the string
+ 
+      _<n-1>
+ 
+   appended to the output file name specified on the command line. For
+   example, if the input DSK contains multiple segments and if the
+   specified output file name is
+ 
+      phobos.plt
+ 
+   then the file for the first segment will have that name, the file for
+   the second segment will be named
+ 
+      phobos.plt_1
+ 
+   and so on.
+ 
+   The optional output precision specification allows users to limit the
+   precision of the double precision numbers representing components of
+   plate model vertices. Reducing the output precision can significantly
+   reduce the size of the output file. By default, full precision (17
+   mantissa digits) is used.
+ 
+   The command
+ 
+      dskexp
+ 
+   (without parameters) causes DSKEXP to dump a usage summary, as do the
+   commands
+ 
+      dskexp -usage
+      dskexp -u
+      dskexp -help
+      dskexp -h
+ 
+ 
+Examples
+--------------------------------------------------------
+ 
+       1.   Create a vertex-facet format output file. This example uses
+            default precision for the output vertices.
+ 
+               dskexp -dsk phobos.bds -text phobos.obj -format vertex-facet
+ 
+       2.   Create a vertex-facet format output file. Use 9-digit mantissas
+            for the vertices. The format name "obj" can be used to indicate
+            vertex-facet format.
+ 
+               dskexp -dsk phobos.bds -text phobos.obj -format obj -prec 9
+ 
+       3.   Create a vertex-facet format output file. Use 9-digit mantissas
+            for the vertices. The format code 3 can be used to indicate
+            vertex-facet format.
+ 
+               dskexp -dsk phobos.bds -text phobos.obj -format 3 -prec 9
+ 
+       4.   Create a plate-vertex format output file. This example uses
+            default precision for the output vertices.
+ 
+               dskexp -dsk phobos.bds -text phobos.obj -format plate-vertex
+ 
+       5.   Create a plate-vertex format output file. Use the integer code
+            for this format.
+ 
+               dskexp -dsk phobos.bds -text phobos.obj -format 1
+ 
+       6.   Create a Rosetta "ver" format output file.
+ 
+               dskexp -dsk phobos.bds -text phobos.obj -format ver
+ 
+       7.   Create a Rosetta "ver" format output file. Use the integer code
+            for this format.
+ 
+               dskexp -dsk phobos.bds -text phobos.obj -format 4
+ 

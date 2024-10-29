@@ -1,0 +1,667 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+
+<HEAD>
+   <TITLE>dskgd_c</TITLE>
+</HEAD>
+
+<BODY style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+<A name="TOP"></A>
+
+<table style="text-align: left; margin-left: auto; margin-right: auto; width: 800px;"
+ border="0" cellpadding="5" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153); vertical-align: middle; text-align: center;">
+      <div align="right"> 
+      <small><small><a href="index.html">Index Page</a></small></small>
+      </div>
+      <b>dskgd_c</b> </td>
+    </tr>
+
+    <tr>
+      <td style="vertical-align: top;">
+
+<small><div align="center">
+<A HREF="index.html#A">A</A>&nbsp;
+<A HREF="index.html#B">B</A>&nbsp;
+<A HREF="index.html#C">C</A>&nbsp;
+<A HREF="index.html#D">D</A>&nbsp;
+<A HREF="index.html#E">E</A>&nbsp;
+<A HREF="index.html#F">F</A>&nbsp;
+<A HREF="index.html#G">G</A>&nbsp;
+<A HREF="index.html#H">H</A>&nbsp;
+<A HREF="index.html#I">I</A>&nbsp;
+<A HREF="index.html#J">J</A>&nbsp;
+<A HREF="index.html#K">K</A>&nbsp;
+<A HREF="index.html#L">L</A>&nbsp;
+<A HREF="index.html#M">M</A>&nbsp;
+<A HREF="index.html#N">N</A>&nbsp;
+<A HREF="index.html#O">O</A>&nbsp;
+<A HREF="index.html#P">P</A>&nbsp;
+<A HREF="index.html#Q">Q</A>&nbsp;
+<A HREF="index.html#R">R</A>&nbsp;
+<A HREF="index.html#S">S</A>&nbsp;
+<A HREF="index.html#T">T</A>&nbsp;
+<A HREF="index.html#U">U</A>&nbsp;
+<A HREF="index.html#V">V</A>&nbsp;
+<A HREF="index.html#W">W</A>&nbsp;
+<A HREF="index.html#X">X</A>&nbsp;
+</div></small>
+       <br>
+       <table style="text-align: left; width: 60%; margin-left: auto; margin-right: auto;"
+       border="0" cellspacing="2" cellpadding="2">
+        <tbody>
+          <tr>
+            <td style="width: 33%; text-align: center;">
+            <small>
+              <a href="#Procedure">Procedure<br></a>
+              <a href="#Abstract">Abstract<br></a>
+              <a href="#Required_Reading">Required_Reading<br></a>
+              <a href="#Keywords">Keywords<br></a>
+              <a href="#Brief_I/O">Brief_I/O<br></a>
+              <a href="#Detailed_Input">Detailed_Input<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Detailed_Output">Detailed_Output<br></a>
+              <a href="#Parameters">Parameters<br></a>
+              <a href="#Exceptions">Exceptions<br></a>
+              <a href="#Files">Files<br></a>
+              <a href="#Particulars">Particulars<br></a>
+              <a href="#Examples">Examples<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Restrictions">Restrictions<br></a>
+              <a href="#Literature_References">Literature_References<br></a>
+              <a href="#Author_and_Institution">Author_and_Institution<br></a>
+              <a href="#Version">Version<br></a>
+              <a href="#Index_Entries">Index_Entries<br></a>
+             </small>
+            </td>
+          </tr>
+        </tbody>
+</table>
+
+<h4><a name="Procedure">Procedure</a></h4>
+<PRE>
+   void dskgd_c ( SpiceInt               handle,
+                  ConstSpiceDLADescr   * dladsc,
+                  SpiceDSKDescr        * dskdsc ) 
+</PRE>
+<h4><a name="Abstract">Abstract</a></h4>
+<PRE>
+ 
+   Return the DSK descriptor from a DSK segment identified 
+   by a DAS handle and DLA descriptor. 
+ </PRE>
+<h4><a name="Required_Reading">Required_Reading</a></h4>
+<PRE>
+ 
+   <a href="../req/das.html">DAS</a> 
+   <a href="../req/dsk.html">DSK</a> 
+   <a href="../req/naif_ids.html">NAIF_IDS</a>
+</PRE>
+<h4><a name="Keywords">Keywords</a></h4>
+<PRE>
+ 
+   DAS 
+   DSK 
+   FILES 
+   TOPOGRAPHY
+ 
+
+</PRE>
+<h4><a name="Brief_I/O">Brief_I/O</a></h4>
+<PRE>
+ 
+   Variable  I/O  Description 
+   --------  ---  -------------------------------------------------- 
+   handle     I   Handle of a DSK file.   
+   dladsc     I   DLA segment descriptor. 
+   dskdsc     O   DSK segment descriptor. 
+ </PRE>
+<h4><a name="Detailed_Input">Detailed_Input</a></h4>
+<PRE>
+ 
+   handle         is the handle of a DSK file that is open for 
+                  read access. 
+ 
+   dladsc         is the DLA segment descriptor corresponding to 
+                  a DSK segment. 
+ </PRE>
+<h4><a name="Detailed_Output">Detailed_Output</a></h4>
+<PRE>
+ 
+   dskdsc         is the DSK segment descriptor of the segment 
+                  designated by the input handle and DLA descriptor. 
+ </PRE>
+<h4><a name="Parameters">Parameters</a></h4>
+<PRE>
+ 
+   See the header files
+ 
+      SpiceDLA.h
+      SpiceDSK.h
+
+ </PRE>
+<h4><a name="Exceptions">Exceptions</a></h4>
+<PRE>
+ 
+   1) If the input handle is invalid, the error will be 
+      diagnosed by routines in the call tree of this
+      routine.
+
+   2) If the input DLA descriptor is invalid, the behavior
+      of this routine is undefined.
+ 
+   3) DAS read errors will be diagnosed by routines in the 
+      call tree of this routine. 
+ </PRE>
+<h4><a name="Files">Files</a></h4>
+<PRE>
+ 
+   See input argument `handle'. 
+ </PRE>
+<h4><a name="Particulars">Particulars</a></h4>
+<PRE>
+ 
+   This is a convenience routine intended for use by low-level routines
+   that read DSK segments. This routine may also be called by user
+   applications that must access DSK files at the segment level.
+    </PRE>
+<h4><a name="Examples">Examples</a></h4>
+<PRE>
+ 
+   The numerical results shown for this example may differ across 
+   platforms. The results depend on the SPICE kernels used as 
+   input, the compiler and supporting libraries, and the machine  
+   specific arithmetic implementation.  
+
+
+   1) Dump the DSK descriptors of a DSK file. 
+ 
+
+   Example code begins here. 
+
+      #include &lt;stdio.h&gt;
+      #include &quot;SpiceUsr.h&quot;
+
+      int main()
+      {
+         /.
+         Local constants 
+         ./
+         #define FILSIZ              256
+
+         /.
+         Local variables 
+         ./
+         SpiceChar               dsk    [FILSIZ];
+         SpiceBoolean            found;
+         SpiceDLADescr           dladsc;
+         SpiceDLADescr           nxtdsc;
+         SpiceDSKDescr           dskdsc;
+         SpiceInt                handle;
+         SpiceInt                i;
+
+         /.
+         Prompt for the name of a DSK file; open the file.
+         ./
+         <a href="prompt_c.html">prompt_c</a> ( &quot;Enter DSK name &gt; &quot;, FILSIZ, dsk );
+         <a href="dasopr_c.html">dasopr_c</a> ( dsk, &amp;handle );
+
+         /.
+         Search for the first segment in the file; obtain
+         the segment's DLA descriptor.
+         ./
+         <a href="dlabfs_c.html">dlabfs_c</a> ( handle, &amp;nxtdsc, &amp;found );
+
+         while ( found )
+         {
+            dladsc = nxtdsc;
+
+            <b>dskgd_c</b> ( handle, &amp;dladsc, &amp;dskdsc );
+
+            printf ( &quot;\nDSK descriptor contents:\n&quot; );
+
+            printf ( &quot;   %15d\n&quot;,  (int) dskdsc.surfce );
+            printf ( &quot;   %15d\n&quot;,  (int) dskdsc.center );
+            printf ( &quot;   %15d\n&quot;,  (int) dskdsc.dclass );
+            printf ( &quot;   %15d\n&quot;,  (int) dskdsc.dtype  );
+            printf ( &quot;   %15d\n&quot;,  (int) dskdsc.frmcde );
+            printf ( &quot;   %15d\n&quot;,  (int) dskdsc.corsys );
+        
+            for ( i = 0; i &lt; SPICE_DSK_NSYPAR;  i++ )
+            {
+               printf ( &quot;   %15.6f\n&quot;,        dskdsc.corpar[i] );
+            }
+
+            printf ( &quot;   %15.6f\n&quot;,    dskdsc.co1min );
+            printf ( &quot;   %15.6f\n&quot;,    dskdsc.co1max );
+            printf ( &quot;   %15.6f\n&quot;,    dskdsc.co2min );
+            printf ( &quot;   %15.6f\n&quot;,    dskdsc.co2max );
+            printf ( &quot;   %15.6f\n&quot;,    dskdsc.co3min );
+            printf ( &quot;   %15.6f\n&quot;,    dskdsc.co3max );
+            printf ( &quot;% 15.6f\n&quot;,   dskdsc.start  );
+            printf ( &quot;% 15.6f\n&quot;,   dskdsc.stop   );
+
+            /.
+            Fetch next DLA descriptor. 
+            ./
+            <a href="dlafns_c.html">dlafns_c</a> ( handle, &amp;dladsc, &amp;nxtdsc, &amp;found );
+         }
+         return ( 0 );
+      }
+
+
+   When this program was executed on a PC/Linux/gcc platform,
+   and when the input DSK name was 
+
+      phobos512.bds
+
+   (this file is available on the NAIF server), the output was:
+
+
+      Enter DSK name &gt; phobos512.bds
+
+      DSK descriptor contents:
+                     401
+                     401
+                       1
+                       2
+                   10021
+                       1
+                0.000000
+                0.000000
+                0.000000
+                0.000000
+                0.000000
+                0.000000
+                0.000000
+                0.000000
+                0.000000
+                0.000000
+               -3.141593
+                3.141593
+               -1.570796
+                1.570796
+                8.049632
+               13.940940
+      -1577879958.816059
+       1577880066.183913
+  
+
+   2) Again, dump the DSK descriptors of a DSK file, this time
+      interpreting the descriptor information and displaying
+      it in a user-friendly form. This display is a simplified
+      version of that created by the utility DSKBRIEF.
+
+      This program requests the name of an optional meta-kernel.
+      The meta-kernel can be used to define surface name-ID
+      associations. If no meta-kernel is needed, the user can
+      enter a carriage return at the prompt for this file.
+      
+
+   Example code begins here. 
+
+
+      /.
+      Program EX2 
+      ./
+      #include &lt;stdio.h&gt;
+      #include &quot;SpiceUsr.h&quot;
+
+      int main()
+      {     
+         /.
+         Local constants 
+         ./
+         #define BDNMLN          37
+         #define FILSIZ          256
+         #define FRNMLN          33
+         #define TIMLEN          41
+         #define NSYS             4
+         #define NAMLEN          21
+         #define NCLASS           2
+         #define SFNMLN          CSPICE_SRF_SFNMLN
+
+         /.
+         Local variables 
+         ./
+         SpiceBoolean            found;
+         SpiceBoolean            isname;
+
+         SpiceChar               bodnam [ SFNMLN ];
+         SpiceChar               btime  [ TIMLEN ];
+
+         SpiceChar             * clsnms [2] = 
+                                { &quot;Single-valued surface&quot;,
+                                  &quot;General surface&quot;       };
+
+         SpiceChar               dsk    [ FILSIZ ];
+         SpiceChar               etime  [ TIMLEN ];
+         SpiceChar               frame  [ FRNMLN ];
+         SpiceChar               meta   [ FILSIZ ];
+         SpiceChar               srfnam [ SFNMLN ];
+         SpiceChar             * sysnam;
+
+         SpiceChar             * sysnms [ NSYS ] =
+                                  { &quot;Latitudinal&quot;, &quot;Cylindrical&quot;, 
+                                    &quot;Rectangular&quot;, &quot;Planetodetic&quot; };
+
+         SpiceDLADescr           dladsc;
+         SpiceDLADescr           nxtdsc;
+
+         SpiceDouble             f;
+         SpiceDouble             re;
+         SpiceDouble             rp;
+
+         SpiceDSKDescr           dskdsc;
+
+         SpiceInt                bodyid;
+         SpiceInt                corsys;   
+         SpiceInt                dclass;
+         SpiceInt                dtype;  
+         SpiceInt                framid;
+         SpiceInt                handle;
+         SpiceInt                segno;   
+         SpiceInt                surfid;
+
+
+         <a href="prompt_c.html">prompt_c</a> ( &quot;Enter DSK name         &gt; &quot;, FILSIZ, dsk  );
+         <a href="prompt_c.html">prompt_c</a> ( &quot;Enter meta-kernel name &gt; &quot;, FILSIZ, meta );
+
+         if (    ( !<a href="eqstr_c.html">eqstr_c</a>( meta, &quot; &quot;) )
+              &amp;&amp; ( !<a href="eqstr_c.html">eqstr_c</a>( meta, &quot;&quot; ) )  )
+         {
+            <a href="furnsh_c.html">furnsh_c</a> ( meta );
+         }
+
+         /.
+         Open the DLA file and begin a forward search
+         for segments. 
+         ./
+         <a href="dasopr_c.html">dasopr_c</a> ( dsk, &amp;handle );
+
+         segno = 0;
+
+         <a href="dlabfs_c.html">dlabfs_c</a> ( handle, &amp;nxtdsc, &amp;found );
+
+         while ( found )
+         {
+            ++segno;
+
+            /.
+            Make the DLA descriptor we just fetched
+            the current one. 
+            ./
+            dladsc = nxtdsc;
+
+            <b>dskgd_c</b> ( handle, &amp;dladsc, &amp;dskdsc );
+
+            bodyid = dskdsc.center;
+            surfid = dskdsc.surfce;
+            framid = dskdsc.frmcde;
+            dtype  = dskdsc.dtype;
+            dclass = dskdsc.dclass;
+
+            <a href="bodc2s_c.html">bodc2s_c</a> ( bodyid, BDNMLN, bodnam );
+            <a href="srfc2s_c.html">srfc2s_c</a> ( surfid, bodyid, SFNMLN, srfnam, &amp;isname );
+            <a href="frmnam_c.html">frmnam_c</a> ( framid, FRNMLN, frame  );
+
+            if ( <a href="eqstr_c.html">eqstr_c</a>( frame, &quot; &quot; ) ) 
+            {
+               sprintf ( frame, &quot;%d&quot;, (int)framid );
+            }
+
+            <a href="etcal_c.html">etcal_c</a> ( dskdsc.start, TIMLEN, btime );
+            <a href="etcal_c.html">etcal_c</a> ( dskdsc.stop,  TIMLEN, etime );
+
+            corsys = dskdsc.corsys;
+            sysnam = sysnms[corsys-1];
+
+            printf ( &quot;%s\n&quot; 
+                     &quot; DSK descriptor for segment %d\n&quot;
+                     &quot;  Body:              %s\n&quot;
+                     &quot;  Surface:           %s\n&quot;
+                     &quot;  Frame:             %s\n&quot;
+                     &quot;  Start time (TDB):  %s\n&quot;
+                     &quot;  Stop time  (TDB):  %s\n&quot;
+                     &quot;  Data type:         %d\n&quot;
+                     &quot;  Data class:        %s\n&quot;
+                     &quot;  Coordinate System: %s\n&quot;,
+                     &quot;====================================&quot;,
+                     (int) segno,
+                     bodnam,
+                     srfnam,
+                     frame,
+                     btime,
+                     etime,
+                     (int) dtype,
+                     clsnms[ dclass-1 ],
+                     sysnam                                );
+
+            if ( corsys == SPICE_DSK_PDTSYS )
+            {
+               re = dskdsc.corpar[0];
+               f  = dskdsc.corpar[1];
+               rp = re * (1.0 - f);
+
+               printf ( &quot;    Equatorial radius (km): %21.14f\n&quot;
+                        &quot;    Polar radius      (km): %21.14f\n&quot;,
+                        re, rp                                  );
+            }
+
+            printf ( &quot;  Segment boundaries:\n&quot; );
+
+            if ( corsys == SPICE_DSK_LATSYS )
+            {
+               printf ( &quot;    Longitude (deg):   %21.14f  %21.14f\n&quot;
+                        &quot;    Latitude  (deg):   %21.14f  %21.14f\n&quot;
+                        &quot;    Radius     (km):   %21.14f  %21.14f\n&quot;,
+                        dskdsc.co1min * <a href="dpr_c.html">dpr_c</a>(),
+                        dskdsc.co1max * <a href="dpr_c.html">dpr_c</a>(),
+                        dskdsc.co2min * <a href="dpr_c.html">dpr_c</a>(),
+                        dskdsc.co2max * <a href="dpr_c.html">dpr_c</a>(),
+                        dskdsc.co3min,
+                        dskdsc.co3max                      );
+            }
+            else if ( corsys == SPICE_DSK_CYLSYS )
+            {
+               <a href="setmsg_c.html">setmsg_c</a> ( &quot;Coordinate system was Cylindrical.&quot; );
+               <a href="sigerr_c.html">sigerr_c</a> ( &quot;SPICE(NOTSUPPORTED)&quot; );
+            }
+            else if ( corsys == SPICE_DSK_RECSYS )
+            {
+               printf ( &quot;    X-coordinate (km): %21.14f  %21.14f\n&quot;
+                        &quot;    Y-coordinate (km): %21.14f  %21.14f\n&quot;
+                        &quot;    Z-coordinate (km): %21.14f  %21.14f\n&quot;,
+                        dskdsc.co1min,
+                        dskdsc.co1max,
+                        dskdsc.co2min,
+                        dskdsc.co2max,
+                        dskdsc.co3min,
+                        dskdsc.co3max                      );
+            }
+            else if ( corsys == SPICE_DSK_PDTSYS )
+            {
+               printf ( &quot;    Longitude (deg):   %21.14f  %21.14f\n&quot;
+                        &quot;    Latitude  (deg):   %21.14f  %21.14f\n&quot;
+                        &quot;    Altitude   (km):   %21.14f  %21.14f\n&quot;,
+                        dskdsc.co1min * <a href="dpr_c.html">dpr_c</a>(),
+                        dskdsc.co1max * <a href="dpr_c.html">dpr_c</a>(),
+                        dskdsc.co2min * <a href="dpr_c.html">dpr_c</a>(),
+                        dskdsc.co2max * <a href="dpr_c.html">dpr_c</a>(),
+                        dskdsc.co3min,
+                        dskdsc.co3max                      );
+            }
+            /.
+            Find the next segment, if it exists. 
+            ./
+            <a href="dlafns_c.html">dlafns_c</a> ( handle, &amp;dladsc, &amp;nxtdsc, &amp;found );
+         }
+         return ( 0 );
+      } 
+
+   When this program was executed on a PC/Linux/gcc/64-bit platform,
+   and when the input DSK name was 
+
+      phobos512.bds
+
+   (this file is available on the NAIF server), the output was:
+
+
+      Enter DSK name         &gt; phobos512.bds
+      Enter meta-kernel name &gt;
+      ====================================
+       DSK descriptor for segment 1
+        Body:              PHOBOS
+        Surface:           401
+        Frame:             IAU_PHOBOS
+        Start time (TDB):  1950 JAN 01 00:00:41.183
+        Stop time  (TDB):  2050 JAN 01 00:01:06.183
+        Data type:         2
+        Data class:        Single-valued surface
+        Coordinate System: Latitudinal
+        Segment boundaries:
+          Longitude (deg):     -180.00000000000000     180.00000000000000
+          Latitude  (deg):      -90.00000000000000      90.00000000000000
+          Radius     (km):        8.04963224872155      13.94093983212395
+ 
+
+
+   3) Again, dump the DSK descriptors of a DSK file, using the
+      program from example 2, but this time reading the DSK file
+
+         phobos_3_3_3seg.bds
+
+      which can be created by running an example program from
+      DSKW02. Use the meta-kernel below to demonstrate surface
+      name-ID mapping:
+
+
+         KPL/MK
+
+         File: dskgd_ex3.tm
+
+         This meta-kernel is intended to support operation of SPICE
+         example programs. The file contents shown here should not be
+         assumed to contain adequate or correct versions of data
+         required by SPICE-based user applications.
+
+
+         \begindata
+
+         NAIF_SURFACE_NAME += ( 'Phobos example surface 1',
+                                'Phobos example surface 2',
+                                'Phobos example surface 3' )
+         NAIF_SURFACE_CODE += (   1,   2,   3 )
+         NAIF_SURFACE_BODY += ( 401, 401, 401 )
+
+         \begintext
+
+
+   When this program was executed on a PC/Linux/gcc/64-bit
+   platform, using the example DSK named above, the output was:
+
+
+      Enter DSK name         &gt; phobos_3_3_3seg.bds
+      Enter meta-kernel name &gt; dskgd_ex3.tm
+      ====================================
+       DSK descriptor for segment 1
+        Body:              PHOBOS
+        Surface:           Phobos example surface 1
+        Frame:             IAU_PHOBOS
+        Start time (TDB):  1950 JAN 01 00:00:00.000
+        Stop time  (TDB):  2050 JAN 01 00:00:00.000
+        Data type:         2
+        Data class:        General surface
+        Coordinate System: Latitudinal
+        Segment boundaries:
+          Longitude (deg):     -180.00000000000000     180.00000000000000
+          Latitude  (deg):      -90.00000000000000      90.00000000000000
+          Radius     (km):        8.22529807597397      14.01176814562576
+      ====================================
+       DSK descriptor for segment 2
+        Body:              PHOBOS
+        Surface:           Phobos example surface 2
+        Frame:             IAU_PHOBOS
+        Start time (TDB):  1950 JAN 01 00:00:00.000
+        Stop time  (TDB):  2050 JAN 01 00:00:00.000
+        Data type:         2
+        Data class:        General surface
+        Coordinate System: Rectangular
+        Segment boundaries:
+          X-coordinate (km):     -1.30000000000000       1.31000000000000
+          Y-coordinate (km):     -1.21000000000000       1.20000000000000
+          Z-coordinate (km):     -9.45293235778800       9.63817977905300
+      ====================================
+       DSK descriptor for segment 3
+        Body:              PHOBOS
+        Surface:           Phobos example surface 3
+        Frame:             IAU_PHOBOS
+        Start time (TDB):  1950 JAN 01 00:00:00.000
+        Stop time  (TDB):  2050 JAN 01 00:00:00.000
+        Data type:         2
+        Data class:        General surface
+        Coordinate System: Planetodetic
+          Equatorial radius (km):     13.00000000000000
+          Polar radius      (km):      9.10000000000000
+        Segment boundaries:
+          Longitude (deg):     -180.00000000000000     180.00000000000000
+          Latitude  (deg):      -90.00000000000000      90.00000000000000
+          Altitude   (km):       -3.72866868360370       1.37201579108146
+</PRE>
+<h4><a name="Restrictions">Restrictions</a></h4>
+<PRE>
+ 
+   1) See Exception #2.
+ </PRE>
+<h4><a name="Literature_References">Literature_References</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Author_and_Institution">Author_and_Institution</a></h4>
+<PRE>
+ 
+   N.J. Bachman    (JPL) 
+ </PRE>
+<h4><a name="Version">Version</a></h4>
+<PRE>
+ 
+   -CSPICE Version 1.1.0, 05-APR-2017 (NJB)
+
+      Corrected a header comment typo.
+
+    22-JAN-2016 (NJB)
+
+      CSPICE header file references were updated.
+      Example program 1 was re-written; 
+      example program 2 was added.
+
+   -CSPICE Version 1.0.0, 13-NOV-2012 (NJB)
+</PRE>
+<h4><a name="Index_Entries">Index_Entries</a></h4>
+<PRE>
+ 
+   return dsk segment_descriptor 
+ </PRE>
+<h4>Link to routine dskgd_c source file <a href='../../../src/cspice/dskgd_c.c'>dskgd_c.c</a> </h4>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+   <pre>Wed Apr  5 17:54:32 2017</pre>
+
+</body>
+</html>
+

@@ -1,0 +1,612 @@
+ 
+DSKBRIEF User's Guide
+===========================================================================
+ 
+   Last revised on 2017 FEB 10 by N. J. Bachman.
+ 
+ 
+Abstract
+--------------------------------------------------------
+ 
+   DSKBRIEF is a command-line utility program that displays a summary of
+   the spatial coverage and additional attributes of one or more binary
+   Digital Shape Kernel (DSK) files.
+ 
+ 
+Summary
+--------------------------------------------------------
+ 
+   DSKBRIEF is a command-line utility program that displays summary
+   information for a set of one or more specified DSK files. A DSK summary
+   includes at a minimum:
+ 
+       --   The names or ID codes of the body or bodies for which the DSK
+            provides data
+ 
+       --   The surface names or surface ID codes associated with the
+            bodies (see the DSK Required Reading, dsk.req, for a discussion
+            of surfaces.)
+ 
+       --   The names or ID codes of the reference frames relative to which
+            DSK data are expressed
+ 
+       --   The coordinate systems used to describe spatial coverage
+ 
+       --   The bounds of the spatial regions for which the DSK provides
+            data
+ 
+   Coverage for multiple DSK segments and files can be aggregated and
+   displayed as though the DSK data were contained in a single file.
+ 
+   The user can command DSKBRIEF to produce detailed summaries, including
+   summaries of individual DSK segments. See the Usage section and the
+   command examples below.
+ 
+ 
+Usage
+--------------------------------------------------------
+ 
+   DSKBRIEF is executed on the command line using the syntax shown below:
+ 
+ 
+        > dskbrief [options] file [file ...]
+ 
+ 
+   where [file]s are binary DSK files, and possibly meta-kernels or text
+   kernels needed to support some of the display elements. The options are:
+ 
+      -a       Treat all DSK files as a single file.
+ 
+      -gaps    Display coverage gaps.
+ 
+      -ext     Display extended summaries: in addition to the default
+               set of attributes, these include data type, data
+               class, and time bounds. This option applies to summaries
+               of groups of DSK segments.
+ 
+      -seg     Display a segment-by-segment summary.
+ 
+      -full    Display a detailed summary for each segment, including
+               data-type-specific parameters. This option implies a
+               segment-by-segment summary.
+ 
+      -d <n>   Display n significant digits of floating point values.
+               The range of n is 3:17.
+ 
+      -v       Display the version of this program.
+ 
+      -h       Display help text.
+ 
+      -u       Display usage text.
+ 
+   The options can be provided in any order and can appear before, after,
+   or intermixed with file names. The case of option keys is significant:
+   they must be lowercase as shown above.
+ 
+   All option combinations are valid; however, some options override
+   others:
+ 
+       --   The options -full and -seg both override -a.
+ 
+       --   The option -ext has no effect when -full or -seg are present.
+ 
+       --   The option -gaps applies to sets of DSK files only when -a is
+            used. It applies to sets of matching segments within a given
+            DSK file unless -full or -seg are used.
+ 
+       --   The program terminates after displaying the requested
+            information when any of -h, -v, or -u are present. In this case
+            no DSK summary is displayed.
+ 
+ 
+Data aggregation
+--------------------------------------------------------
+ 
+   By default, for an individual DSK file, DSKBRIEF summarizes the
+   aggregated coverage of the file's segments. The coverage bounds that are
+   displayed are those of the union of the coverage regions of the
+   individual segments.
+ 
+   In order for coverage of multiple DSK segments to be aggregated, each
+   segment must have compatible attributes, so that combining the coverage
+   makes sense. The following attributes must match across the segments:
+ 
+      Body
+      Surface
+      Reference Frame
+      Data Type
+      Data Class
+      Coordinate System
+ 
+   In addition, if the coordinate system is planetodetic, the reference
+   ellipsoid shape parameters (equatorial radius and flattening
+   coefficient) must match exactly.
+ 
+   When some of the segments of a DSK file don't have compatible
+   attributes, the ones that are compatible are grouped together, and
+   summaries for each group are displayed.
+ 
+   Aggregation of data across multiple DSKs can be commanded as well.
+   Groups of DSKs in which all segments have compatible attributes can be
+   summarized as though the coverage were provided by a single DSK file
+   containing one segment. See the section ``Aggregated Summary of Multiple
+   DSK Files'' below.
+ 
+ 
+Running DSKBRIEF
+===========================================================================
+ 
+   When DSKBRIEF is executed, it displays summary information for the DSK
+   files specified on the command line.
+ 
+ 
+Ways to Provide File Names
+--------------------------------------------------------
+ 
+   DSKBRIEF supports two ways of providing names of files to be summarized:
+ 
+       --   by listing them on the command line
+ 
+       --   by getting them from a meta-kernel(s) provided on the command
+            line
+ 
+   In some cases DSKBRIEF requires text kernels to be provided in order to
+   produce complete summary output. Names of
+ 
+       --   Bodies
+ 
+       --   Surfaces
+ 
+       --   Reference Frames
+ 
+   that are not built into SPICE can appear in DSKBRIEF's output only if
+   one or more text kernels containing name-ID associations for these items
+   are specified on the command line.
+ 
+   When names of these attributes are not available, DSKBRIEF will display
+   the corresponding ID codes.
+ 
+ 
+Default Summary
+--------------------------------------------------------
+ 
+   The simplest DSKBRIEF run command is of the form:
+ 
+      dskbrief <DSK name>
+ 
+   For example, to summarize the DSK file
+ 
+      phobos512.bds
+ 
+   the run command is:
+ 
+      dskbrief phobos512.bds
+ 
+   The resulting summary is:
+ 
+ 
+      DSKBRIEF Program; Ver. 2.0.0, 30-JAN-2017; Toolkit Ver. N0065
+ 
+      Summary for: phobos512.bds
+ 
+      Body:                               401 (PHOBOS)
+        Surface:                          401 (Name not available)
+        Reference frame:                  IAU_PHOBOS
+        Coordinate system:                Planetocentric Latitudinal
+          Min, max longitude  (deg):       -180.000     180.000
+          Min, max latitude   (deg):        -90.0000     90.0000
+          Min, max radius      (km):          8.04963    13.9409
+ 
+ 
+   The top portion of the summary shows the basic attributes and the
+   spatial coverage of the DSK file:
+ 
+       --   Central body ID code and if available, center name.
+ 
+       --   Surface ID code and if available, surface name
+ 
+       --   Name of coordinate system associated with the segment or
+            segments.
+ 
+       --   Spatial region covered. This region is defined by the
+            coordinate bounds and reference frame.
+ 
+            When the spatial coverage of multiple segments is aggregated,
+            the bounds shown are the minimum and maximum coordinates of the
+            group of segments. If the region described by these extrema has
+            coverage gaps, a message to that effect will be displayed.
+ 
+   The names of the central body, the surface, and the reference frame will
+   be displayed if they are built into SPICE. Otherwise, the names of one
+   or more text kernels containing these name-ID associations may be
+   supplied on the command line; the recognized names will then appear in
+   the summary.
+ 
+ 
+Extended Summary
+--------------------------------------------------------
+ 
+   A more detailed view of a DSK's attributes can be displayed by supplying
+   the
+ 
+      -ext
+ 
+   option on the command line, for example
+ 
+      dskbrief -ext phobos512.bds
+ 
+   The resulting output is
+ 
+ 
+      Summary for: phobos512.bds
+ 
+      Body:                               401 (PHOBOS)
+        Surface:                          401 (Name not available)
+        Reference frame:                  IAU_PHOBOS
+        Data type:                        2 (Shape model using triangular
+                                             plates)
+        Data class:                       1 (Single-valued surface)
+        Coordinate system:                Planetocentric Latitudinal
+          Min, max longitude  (deg):       -180.000     180.000
+          Min, max latitude   (deg):        -90.0000     90.0000
+          Min, max radius      (km):          8.04963    13.9409
+        Start time:                       1950 JAN 01 00:00:41.183 TDB
+        Stop time:                        2050 JAN 01 00:01:06.183 TDB
+ 
+ 
+   In addition to the items shown in the default summary, the output
+   includes:
+ 
+       --   The segment's data type.
+ 
+       --   The segment's data class.
+ 
+       --   The time bounds that apply to the segment's data.
+ 
+   See the DSK Required Reading dsk.req for further information on the
+   concepts of DSK data type and data class.
+ 
+ 
+Full Summary
+--------------------------------------------------------
+ 
+   Details of the segment's data type-independent attributes and data
+   type-specific parameters can be displayed by supplying the
+ 
+      -full
+ 
+   option on the command line, for example
+ 
+      dskbrief -full phobos512.bds
+ 
+   The resulting output is
+ 
+ 
+      DSKBRIEF Program; Ver. 2.0.0, 30-JAN-2017; Toolkit Ver. N0065
+ 
+ 
+      Summary for: phobos512.bds
+ 
+      =====================================================================
+      Segment number 1 of file phobos512.bds
+ 
+      Body:                               401 (PHOBOS)
+        Surface:                          401 (Name not available)
+        Reference frame:                  IAU_PHOBOS
+        Data type:                        2 (Shape model using triangular
+                                             plates)
+        Data class:                       1 (Single-valued surface)
+        Coordinate system:                Planetocentric Latitudinal
+          Min, max longitude  (deg):       -180.000     180.000
+          Min, max latitude   (deg):        -90.0000     90.0000
+          Min, max radius      (km):          8.04963    13.9409
+        Start time:                       1950 JAN 01 00:00:41.183 TDB
+        Stop time:                        2050 JAN 01 00:01:06.183 TDB
+ 
+          Type 2 parameters
+          -----------------
+            Number of vertices:                 1579014
+            Number of plates:                   3145728
+            Voxel edge length (km):             1.04248E-01
+            Number of voxels:                   11914500
+            Number of coarse voxels:            95316
+            Voxel grid X, Y, Z extents:         260 235 195
+            Coarse voxel grid X, Y, Z extents:  52 47 39
+            Min, max vertex X value (km):       -13.4400    12.7628
+            Min, max vertex Y value (km):       -11.5206    12.0611
+            Min, max vertex Z value (km):        -9.57078   10.0550
+      =====================================================================
+ 
+   In addition to the items shown in the extended summary, the output
+   includes parameters specific to the segment's data type (2).
+ 
+   See the DSK Required Reading dsk.req for a detailed description of DSK
+   data type 2.
+ 
+ 
+Summary of Multiple DSK Files
+--------------------------------------------------------
+ 
+   Multiple DSKs can be specified individually on the command line, or in
+   one or more meta-kernels.
+ 
+   When multiple DSKs are summarized together, the default output is a
+   concatenation of the default summaries of each individual DSK file,
+   displayed in the order the files are processed.
+ 
+   A more manageable summary for multiple DSKs is obtained by displaying
+   aggregate coverage. The following section discusses this option.
+ 
+ 
+Aggregated Summary of Multiple DSK Files
+--------------------------------------------------------
+ 
+      Note: due to document formatting constraints, the
+      output shown below has in some cases been truncated
+      or wrapped across multiple lines. The actual program
+      output is not wrapped; in these examples, the maximum
+      actual output line length is 99 characters.
+ 
+   In the following example, the meta-kernel
+ 
+      mola_gap.tm
+ 
+   lists 288 DSK files. Each listed DSK has coverage of 15 degrees in
+   longitude and 10 to 11 degrees of latitude.
+ 
+   We can see the aggregate coverage of the DSKs using the command
+ 
+      dskbrief -a mola128.tm
+ 
+   The resulting output is
+ 
+ 
+      DSKBRIEF Program; Ver. 2.0.0, 30-JAN-2017; Toolkit Ver. N0065
+ 
+      Summary for: all DSK files
+ 
+      Body:                               499 (MARS)
+        Surface:                          499000 (MGS MOLA MEGDR 128
+                                                  PIXEL/DEG)
+        Reference frame:                  IAU_MARS
+        Coordinate system:                Planetocentric Latitudinal
+          Min, max longitude  (deg):           0.00000     360.000
+          Min, max latitude   (deg):         -87.0000       87.0000
+          Min, max radius      (km):        3371.72       3414.72
+          ***Coverage has gaps. Use the -gaps option to display them.***
+ 
+ 
+   We see that the aggregate coverage is 360 degrees in longitude and
+   ranges from -87 to 87 degrees in latitude, and that there are gaps in
+   the coverage.
+ 
+   The time coverage of the DSKs is aggregated as well, so if the
+ 
+      -ext
+ 
+   option is used, the displayed time bounds are the minimum and maximum
+   time bounds of any segments in the aggregated files.
+ 
+ 
+Summary of Multiple DSK Files with Gap Display
+--------------------------------------------------------
+ 
+   We can repeat the previous command using the
+ 
+      -gaps
+ 
+   option:
+ 
+      dskbrief -a -gaps mola128.tm
+ 
+   The resulting output is
+ 
+ 
+      DSKBRIEF Program; Ver. 2.0.0, 30-JAN-2017; Toolkit Ver. N0065
+ 
+      Summary for: all DSK files
+ 
+      Body:                               499 (MARS)
+        Surface:                          499000 (MGS MOLA MEGDR 128
+                                                  PIXEL/DEG)
+        Reference frame:                  IAU_MARS
+        Coordinate system:                Planetocentric Latitudinal
+          Min, max longitude  (deg):           0.00000     360.000
+          Min, max latitude   (deg):         -87.0000       87.0000
+          Min, max radius      (km):        3371.72       3414.72
+          Coverage gaps:
+            Longitude range (deg)       Latitude range (deg)
+               0.00000    360.000         0.00000    44.0000
+              90.0000      90.0000      -87.0000      0.00000
+              90.0000      90.0000       44.0000     87.0000
+             255.000      255.000       -87.0000      0.00000
+             255.000      255.000        44.0000     87.0000
+             300.000      300.000       -87.0000      0.00000
+             300.000      300.000        44.0000     87.0000
+             345.000      345.000       -87.0000      0.00000
+             345.000      345.000        44.0000     87.0000
+ 
+ 
+   The gap summary shows that aggregate latitude bounds were misleading:
+   there's a missing latitude band ranging from 0 to 360 degrees in
+   longitude and 0 to 44 degrees in latitude, plus eight small gaps.
+ 
+ 
+Summary with Higher Output Precision
+--------------------------------------------------------
+ 
+   In the gap summary above, there are small gaps that appear to have zero
+   extent in longitude. We can see the dimensions of these gaps by
+   specifying that the output values have 17 significant digits:
+ 
+      dskbrief -a -gaps -d 17 mola128.tm
+ 
+   The resulting output (truncated in this document) is:
+ 
+ 
+      Body:                               499 (MARS)
+        Surface:                          499000 (MGS MOLA MEGDR 128 PIXEL/
+                                                  DEG
+        Reference frame:                  IAU_MARS
+        Coordinate system:                Planetocentric Latitudinal
+          Min, max longitude  (deg):           0.0000000000000000     360.0
+          Min, max latitude   (deg):         -87.000000000000000       87.0
+          Min, max radius      (km):        3371.7199999966310       3414.7
+          Coverage gaps:
+            Longitude range (deg)                             Latitude rang
+               0.0000000000000000    360.00000000000000         0.000000000
+              89.999999999999986      90.000000000000000      -87.000000000
+              89.999999999999986      90.000000000000000       44.000000000
+             254.99999999999997      255.00000000000003       -87.000000000
+             254.99999999999997      255.00000000000003        44.000000000
+             299.99999999999994      300.00000000000000       -87.000000000
+             299.99999999999994      300.00000000000000        44.000000000
+             344.99999999999994      345.00000000000000       -87.000000000
+             344.99999999999994      345.00000000000000        44.000000000
+ 
+ 
+   All floating point outputs now have at least 17 digits.
+ 
+   It's now evident that all but one of the gaps have round-off-level
+   longitude extents. (This sort of gap is typically an artifact of the DSK
+   production process).
+ 
+ 
+Segment Summary
+--------------------------------------------------------
+ 
+   By default, DSKBRIEF aggregates the coverage of individual segments in
+   multi-segment DSK files. Segment-by-segment summaries of such DSK files
+   can be commanded using the
+ 
+      -seg
+ 
+   option. In this example, DSKBRIEF is used to summarize a DSK containing
+   36 segments:
+ 
+      dskbrief -seg /usr1/N0066/dsk/precursors/dsk_math_utils/multi_global
+                    _370k_36seg_row4_col8.bds
+ 
+   The first two segment summaries are shown below (the output has been
+   wrapped):
+ 
+ 
+      DSKBRIEF Program; Ver. 2.0.0, 30-JAN-2017; Toolkit Ver. N0065
+ 
+ 
+      Summary for: /usr1/N0066/dsk/precursors/dsk_math_utils/multi_global_
+                   370k_36seg_row4_col8.bds
+ 
+      =====================================================================
+      =========
+      Segment number 1 of file /usr1/N0066/dsk/precursors/dsk_math_utils/m
+                               ulti_global_370k_36seg_row4_col8.bds
+ 
+      Body:                               499 (MARS)
+        Surface:                          1 (Name not available)
+        Reference frame:                  IAU_MARS
+        Data type:                        2 (Shape model using triangular
+                                             plates)
+        Data class:                       1 (Single-valued surface)
+        Coordinate system:                Planetocentric Latitudinal
+          Min, max longitude  (deg):         135.000     142.500
+          Min, max latitude   (deg):         -52.5000    -45.0000
+          Min, max radius      (km):        2353.66     2531.45
+        Start time:                       1899 DEC 31 12:00:00.000 TDB
+        Stop time:                        2100 JAN 01 12:00:00.000 TDB
+      =====================================================================
+      =========
+      Segment number 2 of file /usr1/N0066/dsk/precursors/dsk_math_utils/m
+                               ulti_global_370k_36seg_row4_col8.bds
+ 
+      Body:                               499 (MARS)
+        Surface:                          1 (Name not available)
+        Reference frame:                  IAU_MARS
+        Data type:                        2 (Shape model using triangular
+                                             plates)
+        Data class:                       1 (Single-valued surface)
+        Coordinate system:                Planetocentric Latitudinal
+          Min, max longitude  (deg):         142.500     150.000
+          Min, max latitude   (deg):         -52.5000    -45.0000
+          Min, max radius      (km):        2353.66     2531.45
+        Start time:                       1899 DEC 31 12:00:00.000 TDB
+        Stop time:                        2100 JAN 01 12:00:00.000 TDB
+      =====================================================================
+      =========
+ 
+ 
+ 
+Summary of DSK Files Having Incompatible Attributes
+--------------------------------------------------------
+ 
+   Below is an example of an attempt to produce an aggregated summary for a
+   set of files having incompatible attributes. The file set contains 288
+   DSKs having compatible attributes and a second DSK containing three
+   segments that use different coordinate systems.
+ 
+   The command is
+ 
+      dskbrief -a mola_gap.tm phobos_3_3_3seg.bds
+ 
+   The output is (the output has been wrapped):
+ 
+ 
+      DSKBRIEF Program; Ver. 2.0.0, 30-JAN-2017; Toolkit Ver. N0065
+ 
+      Summary for: all DSK files
+ 
+      Body:                               499 (MARS)
+        Surface:                          499000 (MGS MOLA MEGDR 128 PIXEL/
+                                                  DEG)
+        Reference frame:                  IAU_MARS
+        Coordinate system:                Planetocentric Latitudinal
+          Min, max longitude  (deg):           0.00000     360.000
+          Min, max latitude   (deg):         -87.0000       87.0000
+          Min, max radius      (km):        3371.72       3414.72
+          ***Coverage has gaps. Use the -gaps option to display them.***
+ 
+      Body:                               401 (PHOBOS)
+        Surface:                          1 (Name not available)
+        Reference frame:                  IAU_PHOBOS
+        Coordinate system:                Planetocentric Latitudinal
+          Min, max longitude  (deg):       -180.000     180.000
+          Min, max latitude   (deg):        -90.0000     90.0000
+          Min, max radius      (km):          8.22530    14.0118
+ 
+      Body:                               401 (PHOBOS)
+        Surface:                          2 (Name not available)
+        Reference frame:                  IAU_PHOBOS
+        Coordinate system:                Rectangular
+         Min, max X coordinate (km):       -1.30000   1.31000
+         Min, max Y coordinate (km):       -1.21000   1.20000
+         Min, max Z coordinate (km):       -9.45293   9.63818
+ 
+      Body:                               401 (PHOBOS)
+        Surface:                          3 (Name not available)
+        Reference frame:                  IAU_PHOBOS
+        Coordinate system:                Planetodetic
+         Equatorial radius (km):           13.0000
+         Polar radius      (km):            7.00000E-01
+         Flattening coefficient:            3.00000E-01
+          Min, max longitude  (deg):       -180.000     180.000
+          Min, max latitude   (deg):        -90.0000     90.0000
+          Min, max altitude    (km):         -3.72867     1.37202
+ 
+ 
+   In the above output, the segments that are compatible are summarized
+   together; the others are summarized individually.
+ 
+ 
+Appendix A --- Revision History
+===========================================================================
+ 
+ 
+2017 FEB 10 by N. J. Bachman.
+ 
+   Updated to document the first SPICE Toolkit version of the program.
+ 
+ 
+2010 JUN 03 by N. J. Bachman.
+ 
+   Initial release.
+ 

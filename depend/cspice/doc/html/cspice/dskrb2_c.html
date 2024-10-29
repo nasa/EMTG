@@ -1,0 +1,584 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+
+<HEAD>
+   <TITLE>dskrb2_c</TITLE>
+</HEAD>
+
+<BODY style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+<A name="TOP"></A>
+
+<table style="text-align: left; margin-left: auto; margin-right: auto; width: 800px;"
+ border="0" cellpadding="5" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153); vertical-align: middle; text-align: center;">
+      <div align="right"> 
+      <small><small><a href="index.html">Index Page</a></small></small>
+      </div>
+      <b>dskrb2_c</b> </td>
+    </tr>
+
+    <tr>
+      <td style="vertical-align: top;">
+
+<small><div align="center">
+<A HREF="index.html#A">A</A>&nbsp;
+<A HREF="index.html#B">B</A>&nbsp;
+<A HREF="index.html#C">C</A>&nbsp;
+<A HREF="index.html#D">D</A>&nbsp;
+<A HREF="index.html#E">E</A>&nbsp;
+<A HREF="index.html#F">F</A>&nbsp;
+<A HREF="index.html#G">G</A>&nbsp;
+<A HREF="index.html#H">H</A>&nbsp;
+<A HREF="index.html#I">I</A>&nbsp;
+<A HREF="index.html#J">J</A>&nbsp;
+<A HREF="index.html#K">K</A>&nbsp;
+<A HREF="index.html#L">L</A>&nbsp;
+<A HREF="index.html#M">M</A>&nbsp;
+<A HREF="index.html#N">N</A>&nbsp;
+<A HREF="index.html#O">O</A>&nbsp;
+<A HREF="index.html#P">P</A>&nbsp;
+<A HREF="index.html#Q">Q</A>&nbsp;
+<A HREF="index.html#R">R</A>&nbsp;
+<A HREF="index.html#S">S</A>&nbsp;
+<A HREF="index.html#T">T</A>&nbsp;
+<A HREF="index.html#U">U</A>&nbsp;
+<A HREF="index.html#V">V</A>&nbsp;
+<A HREF="index.html#W">W</A>&nbsp;
+<A HREF="index.html#X">X</A>&nbsp;
+</div></small>
+       <br>
+       <table style="text-align: left; width: 60%; margin-left: auto; margin-right: auto;"
+       border="0" cellspacing="2" cellpadding="2">
+        <tbody>
+          <tr>
+            <td style="width: 33%; text-align: center;">
+            <small>
+              <a href="#Procedure">Procedure<br></a>
+              <a href="#Abstract">Abstract<br></a>
+              <a href="#Required_Reading">Required_Reading<br></a>
+              <a href="#Keywords">Keywords<br></a>
+              <a href="#Brief_I/O">Brief_I/O<br></a>
+              <a href="#Detailed_Input">Detailed_Input<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Detailed_Output">Detailed_Output<br></a>
+              <a href="#Parameters">Parameters<br></a>
+              <a href="#Exceptions">Exceptions<br></a>
+              <a href="#Files">Files<br></a>
+              <a href="#Particulars">Particulars<br></a>
+              <a href="#Examples">Examples<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Restrictions">Restrictions<br></a>
+              <a href="#Literature_References">Literature_References<br></a>
+              <a href="#Author_and_Institution">Author_and_Institution<br></a>
+              <a href="#Version">Version<br></a>
+              <a href="#Index_Entries">Index_Entries<br></a>
+             </small>
+            </td>
+          </tr>
+        </tbody>
+</table>
+
+<h4><a name="Procedure">Procedure</a></h4>
+<PRE>
+   void dskrb2_c ( SpiceInt           nv,
+                   ConstSpiceDouble   vrtces[][3],
+                   SpiceInt           np,
+                   ConstSpiceInt      plates[][3],
+                   SpiceInt           corsys,
+                   ConstSpiceDouble   corpar[],
+                   SpiceDouble      * mncor3,
+                   SpiceDouble      * mxcor3       )
+</PRE>
+<h4><a name="Abstract">Abstract</a></h4>
+<PRE>
+ 
+   Determine range bounds for a set of triangular plates to 
+   be stored in a type 2 DSK segment. 
+ </PRE>
+<h4><a name="Required_Reading">Required_Reading</a></h4>
+<PRE>
+ 
+   <a href="../req/dsk.html">DSK</a> 
+ </PRE>
+<h4><a name="Keywords">Keywords</a></h4>
+<PRE>
+ 
+   DAS 
+   DSK 
+   FILES 
+   PLATE 
+   TOPOGRAPHY 
+ 
+
+</PRE>
+<h4><a name="Brief_I/O">Brief_I/O</a></h4>
+<PRE>
+ 
+   Variable  I/O  Description 
+   --------  ---  -------------------------------------------------- 
+   nv         I   Number of vertices. 
+   vrtces     I   Vertices. 
+   np         I   Number of plates. 
+   plates     I   Plates. 
+   corsys     I   DSK coordinate system code. 
+   corpar     I   DSK coordinate system parameters. 
+   mncor3     O   Lower bound on range of third coordinate. 
+   mxcor3     O   Upper bound on range of third coordinate. 
+ </PRE>
+<h4><a name="Detailed_Input">Detailed_Input</a></h4>
+<PRE>
+ 
+   nv          is the number of vertices belonging to the input 
+               set of plates. 
+ 
+  
+   vrtces      is an array of coordinates of the vertices. The Ith 
+               vertex occupies elements [I-1][0:2] of this array. 
+ 
+ 
+   np          is the number of plates in the input plate set. 
+ 
+ 
+   plates      is an array representing the triangular plates of a 
+               shape model. The elements of `plates' are vertex 
+               indices; vertex indices are 1-based. The vertex 
+               indices of the Ith plate occupy elements [I-1][0:2] of 
+               this array. 
+ 
+   corsys      is an integer parameter identifying the coordinate 
+               system in which the bounds are to be computed. The 
+               bounds apply to the third coordinate in each system: 
+ 
+                  Latitudinal:           radius 
+                  Planetodetic:          altitude 
+                  Rectangular:           Z 
+ 
+ 
+   corpar     is an array of parameters associated with the coordinate 
+              system. Currently the only supported system that has 
+              associated parameters is the planetodetic system. For 
+              planetodetic coordinates, 
+ 
+                 corpar[0] is the equatorial radius 
+ 
+                 corpar[1] is the flattening coefficient. Let `re' and 
+                 `rp' represent, respectively, the equatorial and 
+                 polar radii of the reference ellipsoid of the 
+                 system. Then 
+ 
+                     corpar[1] = ( re - rp ) / re 
+ </PRE>
+<h4><a name="Detailed_Output">Detailed_Output</a></h4>
+<PRE>
+ 
+   mncor3    is a lower bound on the range of the third coordinate 
+             of the system identified by `corsys' and `corpar', taken 
+             over all plates. 
+ 
+             For latitudinal and rectangular coordinates, `mncor3' 
+             is the greatest lower bound of the third coordinate. 
+ 
+             For planetodetic coordinates, `mncor3' is an 
+             approximation: it is less than or equal to the greatest 
+             lower bound. 
+ 
+   mxcor3    is the least upper bound on the range of the third 
+             coordinate of the system identified by `corsys' and 
+             `corpar', taken over all plates. 
+ 
+ </PRE>
+<h4><a name="Parameters">Parameters</a></h4>
+<PRE>
+ 
+   See the include file dskdsc.inc for declarations of the public DSK 
+   type 2 parameters used by this routine. 
+ </PRE>
+<h4><a name="Exceptions">Exceptions</a></h4>
+<PRE>
+ 
+   1)  If the input coordinate system is not recognized, the error
+       SPICE(NOTSUPPORTED) is signaled.
+
+   2)  If a conversion from rectangular to planetodetic coordinates 
+       fails, the error will be signaled by a routine in the call 
+       tree of this routine. 
+ </PRE>
+<h4><a name="Files">Files</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Particulars">Particulars</a></h4>
+<PRE>
+ 
+   Users planning to create DSK files should consider whether the  
+   SPICE DSK creation utility MKDSK may be suitable for their needs. 
+ 
+   This routine supports use of the DSK type 2 segment writer <a href="dskw02_c.html">dskw02_c</a> 
+   by computing bounds on the range of the third coordinates of
+   the input plate set.
+ </PRE>
+<h4><a name="Examples">Examples</a></h4>
+<PRE>
+ 
+   The numerical results shown for this example may differ across 
+   platforms. The results depend on the SPICE kernels used as 
+   input, the compiler and supporting libraries, and the machine  
+   specific arithmetic implementation.  
+ 
+   1) Create a three-segment DSK file using plate model data for 
+      Phobos. Use latitudinal, rectangular, and planetodetic 
+      coordinates in the respective segments. This is not a  
+      realistic example, but it serves to demonstrate use of  
+      the supported coordinate systems. 
+ 
+      For simplicity, use an existing DSK file to provide the  
+      input plate and vertex data. The selected input file has one 
+      segment. 
+ 
+ 
+      Example code begins here.
+
+ 
+         /.
+
+         Example program for <a href="dskw02_c.html">dskw02_c</a>, <a href="dskmi2_c.html">dskmi2_c</a>, and <b>dskrb2_c</b>
+
+         Create a three-segment DSK file using plate model data for
+         Phobos. Use latitudinal, rectangular, and planetodetic
+         coordinates in the respective segments.
+
+         For simplicity, use an existing DSK file to provide the
+         input plate and vertex data. The selected input file has one
+         segment.
+
+            Version 1.0.0 22-JAN-2016 (NJB)
+
+         ./
+
+         #include &lt;stdio.h&gt;
+         #include &quot;SpiceUsr.h&quot;
+
+         int main()
+         {
+
+            /.
+            Local constants 
+            ./
+            #define FILSIZ          256
+            #define LNSIZE           81
+            #define NCOR              4
+            #define NSEG              3
+            #define NAMLEN           21
+
+            /.
+            Local variables 
+            ./
+
+            /.
+            Below, we declare large arrays static to avoid stack 
+            overflow problems. 
+            ./
+
+            SpiceBoolean            found;
+
+            SpiceChar               cornam [ NCOR ][ NAMLEN ] =
+                                    { &quot;radius&quot;,
+                                      &quot;Z-coordinate&quot;,
+                                      &quot;Z-coordinate&quot;,
+                                      &quot;altitude&quot; };
+
+            SpiceChar             * dsk;
+            SpiceChar             * frame;
+            SpiceChar             * indsk;   
+
+            SpiceDLADescr           dladsc;
+
+            SpiceDouble             corpar [ SPICE_DSK_NSYPAR ];
+            SpiceDouble             f;
+            SpiceDouble             finscl;
+            SpiceDouble             first;
+            SpiceDouble             last;
+            SpiceDouble             mncor1;
+            SpiceDouble             mncor2;
+            SpiceDouble             mncor3;
+            SpiceDouble             mxcor1;
+            SpiceDouble             mxcor2;
+            SpiceDouble             mxcor3;
+            SpiceDouble             re;
+            SpiceDouble             rp;
+
+            /.
+            Note: the values of SPICE_DSK02_MAXVRT and 
+            SPICE_DSK02_MAXPLT declared in SpiceDSK.h,  
+            integer spatial index dimension SPICE_DSK02_SPAISZ,
+            and the workspace dimension SPICE_DSK02_MAXCEL
+            are very large. Smaller buffers can be used for most 
+            applications.
+            ./
+            static SpiceDouble      spaixd [ SPICE_DSK02_SPADSZ ];
+            static SpiceDouble      vrtces [ SPICE_DSK02_MAXVRT ][3];
+
+            SpiceInt                center;
+            SpiceInt                corscl;
+            SpiceInt                corsys;
+            SpiceInt                dclass;
+            SpiceInt                handle;
+            SpiceInt                i;
+            SpiceInt                inhan;
+            SpiceInt                np;
+            SpiceInt                nv;
+            static SpiceInt         plates [ SPICE_DSK02_MAXPLT ][3];
+            SpiceInt                segno;
+            static SpiceInt         spaixi [ SPICE_DSK02_SPAISZ ];
+            SpiceInt                spaisz;
+            SpiceInt                surfid;
+            SpiceInt                voxpsz;
+            SpiceInt                voxlsz;
+            static SpiceInt         work   [ SPICE_DSK02_MAXCEL ][2];
+            SpiceInt                worksz;
+
+
+            /.
+            Assign names of input and output DSK files.
+            ./
+            indsk = &quot;phobos_3_3.bds&quot;;
+            dsk   = &quot;phobos_3_3_3seg.bds&quot;;
+
+            /.
+            Open input DSK for read access; find first segment.
+            ./
+            <a href="dasopr_c.html">dasopr_c</a> ( indsk, &amp;inhan );
+            <a href="dlabfs_c.html">dlabfs_c</a> ( inhan, &amp;dladsc, &amp;found );
+
+            /.
+            Fetch vertices and plates from input DSK file.
+
+            Note that vertex and plate indices are 1-based.
+            ./
+            printf ( &quot;Reading input data...\n&quot; );
+
+            <a href="dskv02_c.html">dskv02_c</a> ( inhan, &amp;dladsc, 1, SPICE_DSK02_MAXVRT, 
+                       &amp;nv,   vrtces                           );
+            <a href="dskp02_c.html">dskp02_c</a> ( inhan, &amp;dladsc, 1, SPICE_DSK02_MAXPLT, 
+                       &amp;np,   plates                           );
+
+            printf ( &quot;Done.\n&quot; );
+
+
+            /.
+            Set input array sizes required by <a href="dskmi2_c.html">dskmi2_c</a>.
+            ./
+            voxpsz = SPICE_DSK02_MAXVXP;
+            voxlsz = SPICE_DSK02_MXNVLS;
+            worksz = SPICE_DSK02_MAXCEL;
+            spaisz = SPICE_DSK02_SPAISZ;
+
+            /.
+            Set fine and coarse voxel scales. (These usually
+            need to determined by experimentation.)
+            ./
+            finscl = 5.0;
+            corscl = 4;
+
+            /.
+            Open a new DSK file.
+            ./
+            <a href="dskopn_c.html">dskopn_c</a> ( dsk, dsk, 0, &amp;handle );
+
+            /.
+            Create three segments and add them to the file.
+            ./
+            for ( segno = 1;  segno &lt;= NSEG;  segno++ )
+            {
+               /.
+               Create spatial index. We won't generate a 
+               vertex-plate mapping, so we set the flag
+               for creating this map to &quot;false.&quot;
+               ./
+               printf ( &quot;Creating segment %d\n&quot;, (int)segno );
+               printf ( &quot;Creating spatial index...\n&quot; );
+
+               <a href="dskmi2_c.html">dskmi2_c</a> ( nv,     vrtces,     np,     plates, 
+                          finscl, corscl,     worksz, voxpsz, 
+                          voxlsz, SPICEFALSE, spaisz, work,
+                          spaixd, spaixi                    );
+
+               printf ( &quot;Done.\n&quot; );
+
+               /.
+               Set up inputs describing segment attributes:
+
+               - Central body: Phobos
+               - Surface ID code: user's choice.
+                 We use the segment number here.
+               - Data class: general (arbitrary) shape
+               - Body-fixed reference frame
+               - Time coverage bounds (TBD)
+               ./
+               center = 401;
+               surfid = segno;
+               dclass = SPICE_DSK_GENCLS;
+               frame  = &quot;IAU_PHOBOS&quot;;
+
+               first = -50 * <a href="jyear_c.html">jyear_c</a>();
+               last  =  50 * <a href="jyear_c.html">jyear_c</a>();
+
+               /.
+               Set the coordinate system and coordinate system
+               bounds based on the segment index.
+
+               Zero out the coordinate parameters to start.
+               ./
+               for ( i = 0;  i &lt; SPICE_DSK_NSYPAR;  i++ )
+               {
+                  corpar[i] = 0.0;
+               }
+
+               if ( segno == 1 )
+               {
+                  /.      
+                  Use planetocentric latitudinal coordinates. Set
+                  the longitude and latitude bounds.
+                  ./
+                  corsys = SPICE_DSK_LATSYS;
+
+                  mncor1 = -<a href="pi_c.html">pi_c</a>();
+                  mxcor1 =  <a href="pi_c.html">pi_c</a>();
+                  mncor2 = -<a href="pi_c.html">pi_c</a>()/2;
+                  mxcor2 =  <a href="pi_c.html">pi_c</a>()/2;     
+               }
+               else if ( segno == 2 ) 
+               {
+
+                  /.
+                  Use rectangular coordinates. Set the
+                  X and Y bounds.
+
+                  The bounds shown here were derived from
+                  the plate data. They lie slightly outside
+                  of the range spanned by the plates.
+                  ./
+                  corsys = SPICE_DSK_RECSYS;
+
+                  mncor1 = -1.3;
+                  mxcor1 =  1.31;
+                  mncor2 = -1.21;
+                  mxcor2 =  1.2;
+               }
+               else
+               {
+                  /.
+                  Set the coordinate system to planetodetic.
+                  ./
+                  corsys    = SPICE_DSK_PDTSYS;
+
+                  mncor1    = -<a href="pi_c.html">pi_c</a>();
+                  mxcor1    =  <a href="pi_c.html">pi_c</a>();
+                  mncor2    = -<a href="pi_c.html">pi_c</a>()/2;
+                  mxcor2    =  <a href="pi_c.html">pi_c</a>()/2;
+
+                  /.
+                  We'll use equatorial and polar radii from
+                  pck00010.tpc. These normally would be fetched
+                  at run time, but for simplicity, we'll use
+                  hard-coded values.
+                  ./
+                  re        = 13.0;
+                  rp        =  9.1;
+                  f         = ( re - rp ) / re;
+
+                  corpar[0] = re;
+                  corpar[1] = f;
+               }
+               /.
+               Compute plate model radius bounds.
+               ./
+               printf ( &quot;Computing %s bounds of plate set...\n&quot;,
+                        cornam[corsys-1]                        );
+
+               <b>dskrb2_c</b> ( nv,     vrtces, np,      plates,
+                          corsys, corpar, &amp;mncor3, &amp;mxcor3 );
+
+               printf ( &quot;Done.\n&quot; );
+
+               /.
+               Write the segment to the file.
+               ./
+               printf ( &quot;Writing segment...\n&quot; );
+
+               <a href="dskw02_c.html">dskw02_c</a> ( handle,                                 
+                          center, surfid, dclass, frame,  corsys, 
+                          corpar, mncor1, mxcor1, mncor2, mxcor2, 
+                          mncor3, mxcor3, first,  last,   nv,     
+                          vrtces, np,     plates, spaixd, spaixi );
+
+               printf ( &quot;Done.\n&quot; );
+            }
+
+            /.    
+            Segregate the data records in the DSK file and
+            close the file.
+            ./
+            printf ( &quot;Segregating and closing DSK file...\n&quot; );     
+
+            <a href="dskcls_c.html">dskcls_c</a> ( handle, SPICETRUE );
+
+            printf ( &quot;Done.\n&quot; );
+
+            return ( 0 );
+         }
+
+ 
+    </PRE>
+<h4><a name="Restrictions">Restrictions</a></h4>
+<PRE>
+ 
+   1)  For planetodetic coordinates, the computation of the lower
+       altitude bound requires that the surface at altitude `mncor3' be
+       convex. This is the case for realistic geometries, but can be
+       false if a plate is very large compared to the overall shape
+       model.
+ </PRE>
+<h4><a name="Literature_References">Literature_References</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Author_and_Institution">Author_and_Institution</a></h4>
+<PRE>
+ 
+   N.J. Bachman    (JPL) 
+ </PRE>
+<h4><a name="Version">Version</a></h4>
+<PRE>
+ 
+   -CSPICE Version 1.0.0, 04-APR-2017 (NJB)
+</PRE>
+<h4><a name="Index_Entries">Index_Entries</a></h4>
+<PRE>
+ 
+   compute range bounds for type 2 dsk segment 
+ </PRE>
+<h4>Link to routine dskrb2_c source file <a href='../../../src/cspice/dskrb2_c.c'>dskrb2_c.c</a> </h4>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+   <pre>Wed Apr  5 17:54:32 2017</pre>
+
+</body>
+</html>
+

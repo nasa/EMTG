@@ -1,0 +1,334 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+
+<HEAD>
+   <TITLE>pckw02_c</TITLE>
+</HEAD>
+
+<BODY style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+<A name="TOP"></A>
+
+<table style="text-align: left; margin-left: auto; margin-right: auto; width: 800px;"
+ border="0" cellpadding="5" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153); vertical-align: middle; text-align: center;">
+      <div align="right"> 
+      <small><small><a href="index.html">Index Page</a></small></small>
+      </div>
+      <b>pckw02_c</b> </td>
+    </tr>
+
+    <tr>
+      <td style="vertical-align: top;">
+
+<small><div align="center">
+<A HREF="index.html#A">A</A>&nbsp;
+<A HREF="index.html#B">B</A>&nbsp;
+<A HREF="index.html#C">C</A>&nbsp;
+<A HREF="index.html#D">D</A>&nbsp;
+<A HREF="index.html#E">E</A>&nbsp;
+<A HREF="index.html#F">F</A>&nbsp;
+<A HREF="index.html#G">G</A>&nbsp;
+<A HREF="index.html#H">H</A>&nbsp;
+<A HREF="index.html#I">I</A>&nbsp;
+<A HREF="index.html#J">J</A>&nbsp;
+<A HREF="index.html#K">K</A>&nbsp;
+<A HREF="index.html#L">L</A>&nbsp;
+<A HREF="index.html#M">M</A>&nbsp;
+<A HREF="index.html#N">N</A>&nbsp;
+<A HREF="index.html#O">O</A>&nbsp;
+<A HREF="index.html#P">P</A>&nbsp;
+<A HREF="index.html#Q">Q</A>&nbsp;
+<A HREF="index.html#R">R</A>&nbsp;
+<A HREF="index.html#S">S</A>&nbsp;
+<A HREF="index.html#T">T</A>&nbsp;
+<A HREF="index.html#U">U</A>&nbsp;
+<A HREF="index.html#V">V</A>&nbsp;
+<A HREF="index.html#W">W</A>&nbsp;
+<A HREF="index.html#X">X</A>&nbsp;
+</div></small>
+       <br>
+       <table style="text-align: left; width: 60%; margin-left: auto; margin-right: auto;"
+       border="0" cellspacing="2" cellpadding="2">
+        <tbody>
+          <tr>
+            <td style="width: 33%; text-align: center;">
+            <small>
+              <a href="#Procedure">Procedure<br></a>
+              <a href="#Abstract">Abstract<br></a>
+              <a href="#Required_Reading">Required_Reading<br></a>
+              <a href="#Keywords">Keywords<br></a>
+              <a href="#Brief_I/O">Brief_I/O<br></a>
+              <a href="#Detailed_Input">Detailed_Input<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Detailed_Output">Detailed_Output<br></a>
+              <a href="#Parameters">Parameters<br></a>
+              <a href="#Exceptions">Exceptions<br></a>
+              <a href="#Files">Files<br></a>
+              <a href="#Particulars">Particulars<br></a>
+              <a href="#Examples">Examples<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Restrictions">Restrictions<br></a>
+              <a href="#Literature_References">Literature_References<br></a>
+              <a href="#Author_and_Institution">Author_and_Institution<br></a>
+              <a href="#Version">Version<br></a>
+              <a href="#Index_Entries">Index_Entries<br></a>
+             </small>
+            </td>
+          </tr>
+        </tbody>
+</table>
+
+<h4><a name="Procedure">Procedure</a></h4>
+<PRE>
+   void pckw02_c ( SpiceInt           handle,
+                   SpiceInt           clssid,
+                   ConstSpiceChar   * frame,
+                   SpiceDouble        first,
+                   SpiceDouble        last,
+                   ConstSpiceChar   * segid,
+                   SpiceDouble        intlen,
+                   SpiceInt           n,
+                   SpiceInt           polydg,
+                   SpiceDouble        cdata  [],
+                   SpiceDouble        btime      )
+</PRE>
+<h4><a name="Abstract">Abstract</a></h4>
+<PRE>
+ 
+  Write a type 2 segment to a PCK binary file given the file handle,
+  frame class ID, base frame, time range covered by the segment, and
+  the Chebyshev polynomial coefficients.
+ </PRE>
+<h4><a name="Required_Reading">Required_Reading</a></h4>
+<PRE>
+   <a href="../req/daf.html">DAF</a>
+   <a href="../req/frames.html">FRAMES</a> 
+   <a href="../req/naif_ids.html">NAIF_IDS</a> 
+   <a href="../req/pck.html">PCK</a> 
+   <a href="../req/spc.html">SPC</a> 
+ </PRE>
+<h4><a name="Keywords">Keywords</a></h4>
+<PRE>
+ 
+   PCK 
+ 
+
+</PRE>
+<h4><a name="Brief_I/O">Brief_I/O</a></h4>
+<PRE>
+ 
+ Variable  I/O  Description 
+   --------  ---  -------------------------------------------------- 
+   handle     I   Handle of binary PCK file open for writing. 
+   clssid     I   Frame class ID of body-fixed frame.
+   frame      I   Name of base reference frame.
+   first      I   Start time of interval covered by segment. 
+   last       I   End time of interval covered by segment. 
+   segid      I   Segment identifier. 
+   intlen     I   Length of time covered by logical record. 
+   n          I   Number of logical records in segment. 
+   polydg     I   Chebyshev polynomial degree. 
+   cdata      I   Array of Chebyshev coefficients. 
+   btime      I   Begin time of first logical record. 
+ </PRE>
+<h4><a name="Detailed_Input">Detailed_Input</a></h4>
+<PRE>
+ 
+   handle         is the DAF handle of an PCK file to which a type 2 
+                  segment is to be added. The PCK file must be open 
+                  for writing. 
+ 
+   clssid         is the frame class ID of a body-fixed reference frame
+                  whose orientation is described by the segment to be
+                  created.
+ 
+   frame          is the NAIF name for a reference frame relative to 
+                  which the orientation information for the frame
+                  designated by `clssid' is specified. The frame
+                  designated by `frame' is called the &quot;base frame.&quot;
+ 
+   first, 
+   last           are, respectively, the start and stop times of 
+                  the time interval over which the segment defines 
+                  the orientation of clssid. 
+ 
+   segid          is the segment identifier. A PCK segment 
+                  identifier may contain up to 40 characters. 
+ 
+   intlen         Length of time, in seconds, covered by each set of 
+                  Chebyshev polynomial coefficients (each logical 
+                  record). Each set of Chebyshev coefficients must 
+                  cover this fixed time interval, `intlen'. 
+ 
+   n              is the number of sets of Chebyshev polynomial 
+                  coefficients (number of logical records) 
+                  to be stored in the segment. There is one set 
+                  of Chebyshev coefficients for each time interval. 
+ 
+   polydg         Degree of each set of Chebyshev polynomials. 
+ 
+   cdata          Array containing all the sets of Chebyshev 
+                  polynomial coefficients to be contained in the 
+                  segment of the PCK file.  The coefficients are 
+                  stored in cdata in order as follows: 
+ 
+                     the (degree + 1) coefficients for the first 
+                     Euler angle of the first logical record 
+ 
+                     the coefficients for the second Euler angle 
+ 
+                     the coefficients for the third Euler angle 
+ 
+                     the coefficients for the first Euler angle for 
+                     the second logical record, ... 
+ 
+                     and so on. 
+ 
+   btime          Begin time (seconds past J2000 TDB) of first set 
+                  of Chebyshev polynomial coefficients (first 
+                  logical record). 
+ </PRE>
+<h4><a name="Detailed_Output">Detailed_Output</a></h4>
+<PRE>
+ 
+    None. 
+ </PRE>
+<h4><a name="Parameters">Parameters</a></h4>
+<PRE>
+ 
+    None. 
+ </PRE>
+<h4><a name="Exceptions">Exceptions</a></h4>
+<PRE>
+ 
+   1) If the number of sets of coefficients is not positive 
+      SPICE(NUMCOEFFSNOTPOS) is signaled. 
+ 
+   2) If the interval length is not positive, SPICE(INTLENNOTPOS) 
+      is signaled. 
+ 
+   3) If the integer code for the reference frame is not recognized, 
+      SPICE(INVALIDREFFRAME) is signaled. 
+ 
+   4) If segment stop time is not greater then the begin time, 
+       SPICE(BADDESCRTIMES) is signaled. 
+ 
+   5) If the time of the first record is not greater than 
+      or equal to the descriptor begin time, SPICE(BADDESCRTIMES) 
+      is signaled. 
+ 
+   6) If the end time of the last record is not greater than 
+      or equal to the descriptor end time, SPICE(BADDESCRTIMES) is 
+      signaled. 
+ 
+   7) If any input string pointers are null, the error 
+      SPICE(NULLPOINTER) will be signaled.
+      
+   8) If any input strings have length zero, the error 
+      SPICE(EMPTYSTRING) will be signaled.
+ 
+</PRE>
+<h4><a name="Files">Files</a></h4>
+<PRE>
+ 
+   A new type 2 PCK segment is written to the PCK file attached 
+   to HANDLE. 
+ </PRE>
+<h4><a name="Particulars">Particulars</a></h4>
+<PRE>
+ 
+   This routine writes an PCK type 2 data segment to the designated 
+   PCK file, according to the format described in the PCK Required 
+   Reading. 
+ 
+   Each segment can contain data for only one body-fixed frame and base
+   reference frame. The Chebyshev polynomial degree and length of time
+   covered by each logical record are also fixed.  However, an
+   arbitrary number of logical records of Chebyshev polynomial
+   coefficients can be written in each segment. Minimizing the number
+   of segments in a PCK file will help optimize how the SPICE system
+   accesses the file.
+
+ </PRE>
+<h4><a name="Examples">Examples</a></h4>
+<PRE>
+ 
+ 
+   Suppose that you have sets of Chebyshev polynomial coefficients 
+   in an array `cdata' pertaining to the position of the moon (NAIF ID 
+   = 301) in the J2000 reference frame, and want to put these into a 
+   type 2 segment in an existing PCK file. The following code could 
+   be used to add one new type 2 segment. To add multiple segments, 
+   put the call to <b>pckw02_c</b> in a loop. 
+ 
+      /.
+      First open the PCK file and get a handle for it. 
+      ./
+      <a href="dafopw_c.html">dafopw_c</a> ( pcknam, &amp;handle );
+ 
+      /.
+      Create a segment identifier. 
+      ./ 
+      segid = &quot;MY_SAMPLE_PCK_TYPE_2_SEGMENT&quot;;
+ 
+      /.
+      Write the segment. 
+      ./
+      <b>pckw02_c</b> ( handle, 301,    &quot;j2000&quot;, 
+                 first,  last,   segid,   intlen, 
+                 n,      polydg, cdata,   btime  );
+ 
+      /.
+      Close the file. 
+      ./ 
+      <a href="pckcls_c.html">pckcls_c</a> ( handle );
+
+ </PRE>
+<h4><a name="Restrictions">Restrictions</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Literature_References">Literature_References</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Author_and_Institution">Author_and_Institution</a></h4>
+<PRE>
+ 
+   N.J. Bachman      (JPL)
+   K.S. Zukor        (JPL) 
+ </PRE>
+<h4><a name="Version">Version</a></h4>
+<PRE>
+ 
+   -CSPICE Version 1.0.0, 16-DEC-2016 (NJB) (KSZ)
+</PRE>
+<h4><a name="Index_Entries">Index_Entries</a></h4>
+<PRE>
+ 
+   write pck type_2 data segment 
+ </PRE>
+<h4>Link to routine pckw02_c source file <a href='../../../src/cspice/pckw02_c.c'>pckw02_c.c</a> </h4>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+   <pre>Wed Apr  5 17:54:40 2017</pre>
+
+</body>
+</html>
+

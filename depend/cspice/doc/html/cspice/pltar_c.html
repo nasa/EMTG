@@ -1,0 +1,366 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+
+<HEAD>
+   <TITLE>pltar_c</TITLE>
+</HEAD>
+
+<BODY style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+<A name="TOP"></A>
+
+<table style="text-align: left; margin-left: auto; margin-right: auto; width: 800px;"
+ border="0" cellpadding="5" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153); vertical-align: middle; text-align: center;">
+      <div align="right"> 
+      <small><small><a href="index.html">Index Page</a></small></small>
+      </div>
+      <b>pltar_c</b> </td>
+    </tr>
+
+    <tr>
+      <td style="vertical-align: top;">
+
+<small><div align="center">
+<A HREF="index.html#A">A</A>&nbsp;
+<A HREF="index.html#B">B</A>&nbsp;
+<A HREF="index.html#C">C</A>&nbsp;
+<A HREF="index.html#D">D</A>&nbsp;
+<A HREF="index.html#E">E</A>&nbsp;
+<A HREF="index.html#F">F</A>&nbsp;
+<A HREF="index.html#G">G</A>&nbsp;
+<A HREF="index.html#H">H</A>&nbsp;
+<A HREF="index.html#I">I</A>&nbsp;
+<A HREF="index.html#J">J</A>&nbsp;
+<A HREF="index.html#K">K</A>&nbsp;
+<A HREF="index.html#L">L</A>&nbsp;
+<A HREF="index.html#M">M</A>&nbsp;
+<A HREF="index.html#N">N</A>&nbsp;
+<A HREF="index.html#O">O</A>&nbsp;
+<A HREF="index.html#P">P</A>&nbsp;
+<A HREF="index.html#Q">Q</A>&nbsp;
+<A HREF="index.html#R">R</A>&nbsp;
+<A HREF="index.html#S">S</A>&nbsp;
+<A HREF="index.html#T">T</A>&nbsp;
+<A HREF="index.html#U">U</A>&nbsp;
+<A HREF="index.html#V">V</A>&nbsp;
+<A HREF="index.html#W">W</A>&nbsp;
+<A HREF="index.html#X">X</A>&nbsp;
+</div></small>
+       <br>
+       <table style="text-align: left; width: 60%; margin-left: auto; margin-right: auto;"
+       border="0" cellspacing="2" cellpadding="2">
+        <tbody>
+          <tr>
+            <td style="width: 33%; text-align: center;">
+            <small>
+              <a href="#Procedure">Procedure<br></a>
+              <a href="#Abstract">Abstract<br></a>
+              <a href="#Required_Reading">Required_Reading<br></a>
+              <a href="#Keywords">Keywords<br></a>
+              <a href="#Brief_I/O">Brief_I/O<br></a>
+              <a href="#Detailed_Input">Detailed_Input<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Detailed_Output">Detailed_Output<br></a>
+              <a href="#Parameters">Parameters<br></a>
+              <a href="#Exceptions">Exceptions<br></a>
+              <a href="#Files">Files<br></a>
+              <a href="#Particulars">Particulars<br></a>
+              <a href="#Examples">Examples<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Restrictions">Restrictions<br></a>
+              <a href="#Literature_References">Literature_References<br></a>
+              <a href="#Author_and_Institution">Author_and_Institution<br></a>
+              <a href="#Version">Version<br></a>
+              <a href="#Index_Entries">Index_Entries<br></a>
+             </small>
+            </td>
+          </tr>
+        </tbody>
+</table>
+
+<h4><a name="Procedure">Procedure</a></h4>
+<PRE>
+   SpiceDouble pltar_c ( SpiceInt           nv,
+                         ConstSpiceDouble   vrtces [][3],
+                         SpiceInt           np,
+                         ConstSpiceInt      plates [][3]  )
+</PRE>
+<h4><a name="Abstract">Abstract</a></h4>
+<PRE>
+ 
+   Compute the total area of a collection of triangular plates. 
+ </PRE>
+<h4><a name="Required_Reading">Required_Reading</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Keywords">Keywords</a></h4>
+<PRE>
+ 
+   DSK 
+   GEOMETRY 
+   MATH 
+ 
+
+</PRE>
+<h4><a name="Brief_I/O">Brief_I/O</a></h4>
+<PRE>
+ 
+   Variable  I/O  Description 
+   --------  ---  -------------------------------------------------- 
+   nv         I   Number of vertices. 
+   vrtces     I   Array of vertices. 
+   np         I   Number of triangular plates. 
+   plates     I   Array of plates. 
+ 
+   The function returns the total area of the set of plates. 
+ </PRE>
+<h4><a name="Detailed_Input">Detailed_Input</a></h4>
+<PRE>
+ 
+   nv             is the number of vertices comprising the plate set. 
+ 
+   vrtces         is an array containing the plate model's vertices. 
+                  Elements 
+ 
+                     vrtces[i-1][0]
+                     vrtces[i-1][1]
+                     vrtces[i-1][2]
+ 
+                  are, respectively, the X, Y, and Z components of 
+                  the ith vertex, where i ranges from 1 to `nv'.
+ 
+                  This routine doesn't associate units with the 
+                  vertices. 
+ 
+ 
+   np             is the number of triangular plates comprising the 
+                  plate set. 
+ 
+   plates         is an array containing 3-tuples of integers
+                  representing the set of plates. The elements of
+                  `plates' are vertex indices. The vertex indices are
+                  1-based: vertices have indices ranging from 1 to
+                  `nv'. The elements
+ 
+                     plates[i-1][0]
+                     plates[i-1][1]
+                     plates[i-1][2]
+ 
+                  are, respectively, the indices of the vertices 
+                  comprising the ith plate. 
+ 
+                  Note that the order of the vertices of a plate is 
+                  significant: the vertices must be ordered in the 
+                  positive (counterclockwise) sense with respect to 
+                  the outward normal direction associated with the 
+                  plate. In other words, if V1, V2, V3 are the 
+                  vertices of a plate, then 
+ 
+                     ( V2 - V1 )  x  ( V3 - V2 ) 
+ 
+                  points in the outward normal direction. Here 
+                  &quot;x&quot; denotes the vector cross product operator. 
+ 
+                   </PRE>
+<h4><a name="Detailed_Output">Detailed_Output</a></h4>
+<PRE>
+ 
+   The function returns the total area of the input set of plates. 
+   Each plate contributes the area of the triangle defined by the 
+   plate's vertices. 
+ 
+   If the components of the vertex array have length unit L, then the 
+   output area has units 
+ 
+       2 
+      L 
+                             </PRE>
+<h4><a name="Parameters">Parameters</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Exceptions">Exceptions</a></h4>
+<PRE>
+ 
+   1) If the number of plates is less than 0, the error 
+      SPICE(BADPLATECOUNT) is signaled. 
+ 
+   2) If the number of plates is positive and the number of vertices 
+      is less than 3, the error SPICE(TOOFEWVERTICES) is signaled. 
+ 
+   3) If any plate contains a vertex index outside of the range
+ 
+         [1, nv]
+ 
+      the error SPICE(INDEXOUTOFRANGE) will be signaled.
+</PRE>
+<h4><a name="Files">Files</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Particulars">Particulars</a></h4>
+<PRE>
+ 
+   This routine computes the total area of a set of triangular 
+   plates. The plates need not define a closed surface. 
+    
+   Examples of valid plate sets: 
+ 
+      Tetrahedron 
+      Box 
+      Tiled ellipsoid 
+      Tiled ellipsoid with one plate removed 
+      Two disjoint boxes 
+      Two boxes with intersection having positive volume 
+      Single plate 
+      Empty plate set 
+ 
+ </PRE>
+<h4><a name="Examples">Examples</a></h4>
+<PRE>
+ 
+   The numerical results shown for these examples may differ across 
+   platforms. The results depend on the SPICE kernels used as input 
+   (if any), the compiler and supporting libraries, and the machine 
+   specific arithmetic implementation. 
+ 
+ 
+   1) Compute the area of the pyramid defined by the four 
+      triangular plates whose vertices are the 3-element 
+      subsets of the set of vectors 
+ 
+         ( 0, 0, 0 ) 
+         ( 1, 0, 0 ) 
+         ( 0, 1, 0 ) 
+         ( 0, 0, 1 ) 
+  
+ 
+   Example code begins here.
+
+
+      /.
+      PROGRAM EX1
+      ./
+
+      /.
+      Compute the area of a plate model representing the pyramid
+      with one vertex at the origin and the other vertices
+      coinciding with the standard basis vectors.
+      ./
+
+      #include &lt;stdio.h&gt;
+      #include &quot;SpiceUsr.h&quot;
+
+      int main()
+      {   
+         /.
+         Local constants 
+         ./ 
+         #define NVERT           4
+         #define NPLATE          4
+
+         /.
+         Local variables 
+         ./
+         SpiceDouble             area;
+
+         /.
+         Let the notation
+
+            &lt; A, B &gt;
+
+         denote the dot product of vectors A and B.
+
+         The plates defined below lie in the following planes,
+         respectively:
+
+            Plate 1:    { P :  &lt; P, (-1,  0,  0) &gt; = 0 }
+            Plate 2:    { P :  &lt; P, ( 0, -1,  0) &gt; = 0 }
+            Plate 3:    { P :  &lt; P, ( 0,  0, -1) &gt; = 0 }
+            Plate 4:    { P :  &lt; P, ( 1,  1,  1) &gt; = 1 }
+
+         ./
+         SpiceDouble             vrtces[NVERT ][3] =
+
+                                 { { 0.0, 0.0, 0.0 }, 
+                                   { 1.0, 0.0, 0.0 }, 
+                                   { 0.0, 1.0, 0.0 },
+                                   { 0.0, 0.0, 1.0 }  };
+
+         SpiceInt                plates[NPLATE][3] = 
+
+                                 { { 1, 4, 3 }, 
+                                   { 1, 2, 4 }, 
+                                   { 1, 3, 2 },
+                                   { 2, 3, 4 }  };
+
+         area = <b>pltar_c</b>( NVERT, vrtces, NPLATE, plates );
+
+         printf ( &quot;Expected area  =    (3 + sqrt(3)) / 2\n&quot; 
+                  &quot;               =    0.23660254037844384e+01\n&quot; );
+         printf ( &quot;Computed area  =   %24.17e\n&quot;, area            );
+
+         return ( 0 );
+      }
+
+
+   When this program was executed on a PC/Linux/gcc/64-bit platform, 
+   the output was: 
+ 
+ 
+      Expected area   =    (3 + SQRT(3)) / 2 
+                      =    0.23660254037844384E+01 
+      Computed area   =    2.3660254037844384 
+ 
+ </PRE>
+<h4><a name="Restrictions">Restrictions</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Literature_References">Literature_References</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Author_and_Institution">Author_and_Institution</a></h4>
+<PRE>
+ 
+   N.J. Bachman    (JPL) 
+ </PRE>
+<h4><a name="Version">Version</a></h4>
+<PRE>
+ 
+   -CSPICE Version 1.0.0, 24-OCT-2016 (NJB)
+</PRE>
+<h4><a name="Index_Entries">Index_Entries</a></h4>
+<PRE>
+ 
+   compute plate model area 
+ </PRE>
+<h4>Link to routine pltar_c source file <a href='../../../src/cspice/pltar_c.c'>pltar_c.c</a> </h4>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+   <pre>Wed Apr  5 17:54:40 2017</pre>
+
+</body>
+</html>
+

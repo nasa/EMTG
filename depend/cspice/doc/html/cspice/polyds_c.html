@@ -1,0 +1,291 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+
+<HEAD>
+   <TITLE>polyds_c</TITLE>
+</HEAD>
+
+<BODY style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+<A name="TOP"></A>
+
+<table style="text-align: left; margin-left: auto; margin-right: auto; width: 800px;"
+ border="0" cellpadding="5" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153); vertical-align: middle; text-align: center;">
+      <div align="right"> 
+      <small><small><a href="index.html">Index Page</a></small></small>
+      </div>
+      <b>polyds_c</b> </td>
+    </tr>
+
+    <tr>
+      <td style="vertical-align: top;">
+
+<small><div align="center">
+<A HREF="index.html#A">A</A>&nbsp;
+<A HREF="index.html#B">B</A>&nbsp;
+<A HREF="index.html#C">C</A>&nbsp;
+<A HREF="index.html#D">D</A>&nbsp;
+<A HREF="index.html#E">E</A>&nbsp;
+<A HREF="index.html#F">F</A>&nbsp;
+<A HREF="index.html#G">G</A>&nbsp;
+<A HREF="index.html#H">H</A>&nbsp;
+<A HREF="index.html#I">I</A>&nbsp;
+<A HREF="index.html#J">J</A>&nbsp;
+<A HREF="index.html#K">K</A>&nbsp;
+<A HREF="index.html#L">L</A>&nbsp;
+<A HREF="index.html#M">M</A>&nbsp;
+<A HREF="index.html#N">N</A>&nbsp;
+<A HREF="index.html#O">O</A>&nbsp;
+<A HREF="index.html#P">P</A>&nbsp;
+<A HREF="index.html#Q">Q</A>&nbsp;
+<A HREF="index.html#R">R</A>&nbsp;
+<A HREF="index.html#S">S</A>&nbsp;
+<A HREF="index.html#T">T</A>&nbsp;
+<A HREF="index.html#U">U</A>&nbsp;
+<A HREF="index.html#V">V</A>&nbsp;
+<A HREF="index.html#W">W</A>&nbsp;
+<A HREF="index.html#X">X</A>&nbsp;
+</div></small>
+       <br>
+       <table style="text-align: left; width: 60%; margin-left: auto; margin-right: auto;"
+       border="0" cellspacing="2" cellpadding="2">
+        <tbody>
+          <tr>
+            <td style="width: 33%; text-align: center;">
+            <small>
+              <a href="#Procedure">Procedure<br></a>
+              <a href="#Abstract">Abstract<br></a>
+              <a href="#Required_Reading">Required_Reading<br></a>
+              <a href="#Keywords">Keywords<br></a>
+              <a href="#Brief_I/O">Brief_I/O<br></a>
+              <a href="#Detailed_Input">Detailed_Input<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Detailed_Output">Detailed_Output<br></a>
+              <a href="#Parameters">Parameters<br></a>
+              <a href="#Exceptions">Exceptions<br></a>
+              <a href="#Files">Files<br></a>
+              <a href="#Particulars">Particulars<br></a>
+              <a href="#Examples">Examples<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Restrictions">Restrictions<br></a>
+              <a href="#Literature_References">Literature_References<br></a>
+              <a href="#Author_and_Institution">Author_and_Institution<br></a>
+              <a href="#Version">Version<br></a>
+              <a href="#Index_Entries">Index_Entries<br></a>
+             </small>
+            </td>
+          </tr>
+        </tbody>
+</table>
+
+<h4><a name="Procedure">Procedure</a></h4>
+<PRE>
+   void polyds_c ( ConstSpiceDouble    * coeffs,
+                   SpiceInt              deg,
+                   SpiceInt              nderiv,
+                   SpiceDouble           t,
+                   SpiceDouble         * p )
+
+</PRE>
+<h4><a name="Abstract">Abstract</a></h4>
+<PRE>
+   Compute the value of a polynomial and it's first
+   n derivatives at the value t.
+</PRE>
+<h4><a name="Required_Reading">Required_Reading</a></h4>
+<PRE>
+   None.
+</PRE>
+<h4><a name="Keywords">Keywords</a></h4>
+<PRE>
+    INTERPOLATION
+    MATH
+    POLYNOMIAL
+
+
+</PRE>
+<h4><a name="Brief_I/O">Brief_I/O</a></h4>
+<PRE>
+    VARIABLE  I/O  DESCRIPTION
+    --------  ---  --------------------------------------------------
+    coeffs     I   Coefficients of the polynomial to be evaluated.
+    deg        I   Degree of the polynomial to be evaluated.
+    nderiv     I   Number of derivatives to compute.
+    t          I   Point to evaluate the polynomial and derivatives
+    p          O   Value of polynomial and derivatives.
+</PRE>
+<h4><a name="Detailed_Input">Detailed_Input</a></h4>
+<PRE>
+    coeffs     contains the coefficients of the polynomial that is
+               to be evaluated. The first element of this array
+               should be the constant term, the second element the
+               linear coefficient, the third term the quadratic
+               coefficient, and so on. The number of coefficients
+               supplied should be one more than deg.
+
+               f(x) = coeffs[0] + coeffs[1]*x + coeffs[2]*x^2 +
+                      coeffs[3]*x^3 + ... + coeffs[deg]*x^deg
+
+    deg        is the degree of the polynomial to be evaluated. deg
+               should be one less than the number of coefficients
+               supplied.
+
+    nderiv     is the number of derivatives to compute. If nderiv
+               is zero, only the polynomial will be evaluated. If
+               nderiv = 1, then the polynomial and its first
+               derivative will be evaluated, and so on. If the value
+               of nderiv is negative, the routine returns
+               immediately.
+
+    t          is the point at which the polynomial and its
+               derivatives should be evaluated.
+</PRE>
+<h4><a name="Detailed_Output">Detailed_Output</a></h4>
+<PRE>
+    p          is an array containing the value of the polynomial and
+               its derivatives evaluated at t. The first element of
+               the array contains the value of p at t. The second
+               element of the array contains the value of the first
+               derivative of p at t and so on. The nderiv + 1'st
+               element of the array contains the nderiv'th derivative
+               of p evaluated at t.
+</PRE>
+<h4><a name="Parameters">Parameters</a></h4>
+<PRE>
+    None.
+</PRE>
+<h4><a name="Exceptions">Exceptions</a></h4>
+<PRE>
+   Error free
+
+   1) If nderiv is less than zero, the routine simply returns
+
+   2) If the degree of the polynomial is less than 0, the routine
+      simply returns.
+</PRE>
+<h4><a name="Files">Files</a></h4>
+<PRE>
+    None.
+</PRE>
+<h4><a name="Particulars">Particulars</a></h4>
+<PRE>
+    This routine uses the user supplied coefficients (coeffs)
+    to evaluate a polynomial (having these coefficients) and its
+    derivatives at the point t. The zero'th derivative of the
+    polynomial is regarded as the polynomial itself.
+</PRE>
+<h4><a name="Examples">Examples</a></h4>
+<PRE>
+   Example:
+   
+      For the polynomial
+   
+         f(x) = 1 + 3*x + 0.5*x^2 + x^3 + 0.5*x^4 - x^5 + x^6
+   
+      the coefficient set
+   
+      Degree  coeffs
+      ------  ------
+      0       1
+      1       3
+      2       0.5
+      3       1
+      4       0.5
+      5      -1
+      6       1
+   
+      Suppose t = 1.0
+   
+      We expect:
+   
+      Derivative Number     t = 1
+      ------------------    -----
+      f(x)         0        6
+      f'(x)        1        10
+      f''(x)       2        23
+      f'''(x)      3        78
+
+
+      #include &lt;stdio.h&gt;
+      #include &quot;SpiceUsr.h&quot;
+
+      int main()
+         {
+
+         /.
+         Local variables.
+         ./
+         SpiceDouble      coeffs [] = { 1., 3., 0.5, 1., 0.5, -1., 1. };
+         SpiceInt         deg    = 6;
+         SpiceInt         nderiv = 3;
+         SpiceDouble      t      = 1.;
+
+         /. Dimension p as nderiv + 1. ./
+         SpiceDouble      p [ 4 ];
+
+         int              i;
+
+         <b>polyds_c</b> ( coeffs, deg, nderiv, t, p );
+
+         for ( i=0; i&lt;=nderiv; i++ )
+            {
+            printf( &quot;p = %lf\n&quot;, p[i] );
+            }
+
+         return(0);
+         }
+
+   The program outputs:
+
+      p = 6.000000
+      p = 10.000000
+      p = 23.000000
+      p = 78.000000
+</PRE>
+<h4><a name="Restrictions">Restrictions</a></h4>
+<PRE>
+    Depending on the coefficients the user should be careful when
+    taking high order derivatives. As the example shows, these
+    can get big in a hurry. In general the coefficients of the
+    derivatives of a polynomial grow at a rate greater
+    than N! (N factorial).
+</PRE>
+<h4><a name="Literature_References">Literature_References</a></h4>
+<PRE>
+    None.
+</PRE>
+<h4><a name="Author_and_Institution">Author_and_Institution</a></h4>
+<PRE>
+    W.L. Taber      (JPL)
+    E.D. Wright     (JPL)
+</PRE>
+<h4><a name="Version">Version</a></h4>
+<PRE>
+   -CSPICE Version 1.0.0, 24-AUG-2015 (EDW)
+</PRE>
+<h4><a name="Index_Entries">Index_Entries</a></h4>
+<PRE>
+   compute a polynomial and its derivatives
+</PRE>
+<h4>Link to routine polyds_c source file <a href='../../../src/cspice/polyds_c.c'>polyds_c.c</a> </h4>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+   <pre>Wed Apr  5 17:54:40 2017</pre>
+
+</body>
+</html>
+

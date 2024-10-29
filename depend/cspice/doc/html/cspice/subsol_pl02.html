@@ -1,0 +1,931 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+
+<HEAD>
+   <TITLE>subsol_pl02</TITLE>
+</HEAD>
+
+<BODY style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+<A name="TOP"></A>
+
+<table style="text-align: left; margin-left: auto; margin-right: auto; width: 800px;"
+ border="0" cellpadding="5" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153); vertical-align: middle; text-align: center;">
+      <div align="right"> 
+      <small><small><a href="index.html">Index Page</a></small></small>
+      </div>
+      <b>subsol_pl02</b> </td>
+    </tr>
+
+    <tr>
+      <td style="vertical-align: top;">
+
+<small><div align="center">
+<A HREF="index.html#A">A</A>&nbsp;
+<A HREF="index.html#B">B</A>&nbsp;
+<A HREF="index.html#C">C</A>&nbsp;
+<A HREF="index.html#D">D</A>&nbsp;
+<A HREF="index.html#E">E</A>&nbsp;
+<A HREF="index.html#F">F</A>&nbsp;
+<A HREF="index.html#G">G</A>&nbsp;
+<A HREF="index.html#H">H</A>&nbsp;
+<A HREF="index.html#I">I</A>&nbsp;
+<A HREF="index.html#J">J</A>&nbsp;
+<A HREF="index.html#K">K</A>&nbsp;
+<A HREF="index.html#L">L</A>&nbsp;
+<A HREF="index.html#M">M</A>&nbsp;
+<A HREF="index.html#N">N</A>&nbsp;
+<A HREF="index.html#O">O</A>&nbsp;
+<A HREF="index.html#P">P</A>&nbsp;
+<A HREF="index.html#Q">Q</A>&nbsp;
+<A HREF="index.html#R">R</A>&nbsp;
+<A HREF="index.html#S">S</A>&nbsp;
+<A HREF="index.html#T">T</A>&nbsp;
+<A HREF="index.html#U">U</A>&nbsp;
+<A HREF="index.html#V">V</A>&nbsp;
+<A HREF="index.html#W">W</A>&nbsp;
+<A HREF="index.html#X">X</A>&nbsp;
+</div></small>
+       <br>
+       <table style="text-align: left; width: 60%; margin-left: auto; margin-right: auto;"
+       border="0" cellspacing="2" cellpadding="2">
+        <tbody>
+          <tr>
+            <td style="width: 33%; text-align: center;">
+            <small>
+              <a href="#Procedure">Procedure<br></a>
+              <a href="#Abstract">Abstract<br></a>
+              <a href="#Required_Reading">Required_Reading<br></a>
+              <a href="#Keywords">Keywords<br></a>
+              <a href="#Brief_I/O">Brief_I/O<br></a>
+              <a href="#Detailed_Input">Detailed_Input<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Detailed_Output">Detailed_Output<br></a>
+              <a href="#Parameters">Parameters<br></a>
+              <a href="#Exceptions">Exceptions<br></a>
+              <a href="#Files">Files<br></a>
+              <a href="#Particulars">Particulars<br></a>
+              <a href="#Examples">Examples<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Restrictions">Restrictions<br></a>
+              <a href="#Literature_References">Literature_References<br></a>
+              <a href="#Author_and_Institution">Author_and_Institution<br></a>
+              <a href="#Version">Version<br></a>
+              <a href="#Index_Entries">Index_Entries<br></a>
+             </small>
+            </td>
+          </tr>
+        </tbody>
+</table>
+
+<h4><a name="Procedure">Procedure</a></h4>
+<PRE>
+   void subsol_pl02 ( SpiceInt               handle,
+                      ConstSpiceDLADescr   * dladsc,
+                      ConstSpiceChar       * method,
+                      ConstSpiceChar       * target,
+                      SpiceDouble            et,
+                      ConstSpiceChar       * abcorr,
+                      ConstSpiceChar       * obsrvr,
+                      SpiceDouble            spoint [3],
+                      SpiceDouble          * dist,
+                      SpiceInt             * plateID     )
+</PRE>
+<h4><a name="Abstract">Abstract</a></h4>
+<PRE>
+ 
+   Deprecated: This routine has been superseded by the CSPICE routine
+   <a href="subslr_c.html">subslr_c</a>. This routine is supported for purposes of backward
+   compatibility only.
+
+   Compute the rectangular coordinates of the sub-solar point on a
+   target body at a particular epoch, optionally corrected for light
+   time and stellar aberration.  The target body's surface is
+   represented by a triangular plate model contained in a type 2 DSK
+   segment. Return the sub-solar point's coordinates expressed in the
+   body-fixed frame associated with the target body.  Also, return the
+   observer's distance from the sub-solar point.
+</PRE>
+<h4><a name="Required_Reading">Required_Reading</a></h4>
+<PRE>
+ 
+   <a href="../req/frames.html">FRAMES</a>
+   <a href="../req/pck.html">PCK</a>
+   <a href="../req/spk.html">SPK</a>
+   <a href="../req/time.html">TIME</a>
+ </PRE>
+<h4><a name="Keywords">Keywords</a></h4>
+<PRE>
+ 
+   GEOMETRY
+ 
+
+ </PRE>
+<h4><a name="Brief_I/O">Brief_I/O</a></h4>
+<PRE>
+ 
+   Variable  I/O  Description
+   --------  ---  --------------------------------------------------
+   handle     I   DSK handle.
+   dladsc     I   DLA descriptor of target body segment.
+   method     I   Computation method.
+   target     I   Name of target body.
+   et         I   Epoch in ephemeris seconds past J2000 TDB.
+   abcorr     I   Aberration correction.
+   obsrvr     I   Name of observing body.
+   spoint     O   Sub-solar point on the target body.
+   dist       O   Distance of observer from sub-solar point.
+   plateID    O   DSK plate ID of sub-solar point.
+ </PRE>
+<h4><a name="Detailed_Input">Detailed_Input</a></h4>
+<PRE>
+ 
+   handle      is the DAS file handle of a DSK file open for read
+               access.  This kernel must contain a type 2 segment that
+               provides a plate model representing the entire surface
+               of the target body.
+
+
+   dladsc      is the DLA descriptor of a DSK segment representing the
+               surface of the target body.
+
+
+   method      is a short string specifying the computation method
+               to be used.  The choices are:
+ 
+                  &quot;Intercept&quot;        The sub-solar point is defined as
+                                     the plate model surface intercept
+                                     of the ray starting at the Sun and
+                                     passing through the target's
+                                     center.
+
+                  &quot;Ellipsoid 
+                   near point&quot;       The sub-solar point is defined as
+                                     the plate model surface intercept
+                                     of the ray starting at the Sun and
+                                     passing through the nearest point
+                                     to the observer on a reference
+                                     ellipsoid associated with the
+                                     target body.
+
+                                     This option requires that the
+                                     reference ellipsoid's radii be
+                                     available in the kernel pool.
+
+               Neither case nor white space are significant in the
+               string &quot;method&quot;.  For example, the string 
+           
+                  &quot;  ellipsoidNEARPOINT&quot;
+
+               is valid.
+ 
+ 
+   target      is the name of the target body.  `target' is
+               case-insensitive, and leading and trailing blanks in
+               `target' are not significant. Optionally, you may supply
+               a string containing the integer ID code for the object.
+               For example both &quot;MOON&quot; and &quot;301&quot; are legitimate strings
+               that indicate the moon is the target body.
+ 
+               This routine assumes that the target body's surface is
+               represented by a plate model, and that a DSK file
+               containing the plate model has been loaded via <a href="dasopr_c.html">dasopr_c</a>.
+ 
+
+   et          is the epoch, represented  as seconds past J2000 TDB, at
+               which the sub-solar point on the target body is to be
+               computed.  When aberration corrections are used, `et'
+               refers to the epoch at which radiation is received at
+               the observer.
+ 
+ 
+   abcorr      indicates the aberration corrections to be applied to
+               the position and orientation of the target body and the
+               position of the Sun to account for one-way light time
+               and stellar aberration.  See the discussion in the
+               Particulars section for recommendations on how to choose
+               aberration corrections.
+                 
+               `abcorr' may be any of the following: 
+ 
+                  &quot;NONE&quot;     Apply no correction.  Use the geometric
+                             positions of the Sun and target body
+                             relative to the observer; evaluate the
+                             target body's orientation at `et'.
+ 
+               The following values of `abcorr' apply to the
+               &quot;reception&quot; case in which photons depart from the
+               target's location at the light-time corrected epoch
+               et-lt and *arrive* at the observer's location at
+               `et':
+ 
+                  &quot;LT&quot;       Correct for one-way light time (also
+                             called &quot;planetary aberration&quot;) using a
+                             Newtonian formulation. This correction
+                             uses the position and orientation of the
+                             target at the moment it emitted photons
+                             arriving at the observer at `et'.  The
+                             position of the Sun relative to the
+                             target is corrected for the one-way light
+                             time from the Sun to the target.
+ 
+                             The light time correction uses an
+                             iterative solution of the light time 
+                             equation (see Particulars for details). 
+                             The solution invoked by the &quot;LT&quot; option 
+                             uses one iteration. 
+ 
+                  &quot;LT+S&quot;     Correct for one-way light time and stellar
+                             aberration using a Newtonian formulation.
+                             This option modifies the positions
+                             obtained with the &quot;LT&quot; option to account
+                             for the observer's velocity relative to
+                             the solar system barycenter (note the
+                             target plays the role of &quot;observer&quot; in the
+                             computation of the aberration-corrected
+                             target-Sun vector). The result is the
+                             sub-solar point computed using apparent
+                             position and orientation of the target as
+                             seen by the observer and the apparent
+                             position of the Sun as seen by the target.
+ 
+                  &quot;CN&quot;       Converged Newtonian light time correction.
+                             In solving the light time equation, the
+                             &quot;CN&quot; correction iterates until the
+                             solution converges (three iterations on
+                             all supported platforms).
+ 
+                             The &quot;CN&quot; correction typically does not
+                             substantially improve accuracy because the
+                             errors made by ignoring relativistic
+                             effects may be larger than the improvement
+                             afforded by obtaining convergence of the
+                             light time solution. The &quot;CN&quot; correction
+                             computation also requires a significantly
+                             greater number of CPU cycles than does the
+                             one-iteration light time correction.
+ 
+                  &quot;CN+S&quot;     Converged Newtonian light time 
+                             and stellar aberration corrections. 
+ 
+
+   obsrvr      is the name of the observing body.  This is typically a
+               spacecraft, the earth, or a surface point on the earth.
+               `obsrvr' is case-insensitive, and leading and trailing
+               blanks in `obsrvr' are not significant. Optionally, you
+               may supply a string containing the integer ID code for
+               the object.  For example both &quot;EARTH&quot; and &quot;399&quot; are
+               legitimate strings that indicate the earth is the
+               observer.
+ </PRE>
+<h4><a name="Detailed_Output">Detailed_Output</a></h4>
+<PRE>
+   spoint      is the sub-solar point on the target body expressed
+               relative to the body-fixed reference frame of the target
+               body.
+               
+               The definition of sub-solar point depends on the
+               selected computation method.  See the description of the
+               input argument `method' for details.
+ 
+               The target body-fixed frame, which is time-dependent, is
+               evaluated at `et' if `abcorr' is &quot;NONE&quot;; otherwise the
+               frame is evaluated at et-lt, where `lt' is the one-way
+               light time from target to observer.
+ 
+               The position and orientation of the target body and the
+               position of the Sun are corrected for aberration as
+               specified by `abcorr'; the corrected positions and
+               orientation are used in the computation of `spoint'.
+ 
+
+   dist        is the distance between the observer and the sub-solar
+               point.  The observer is presumed to be outside the
+               target body, so `dist' is always non-negative.
+
+           
+   plateID     is the integer ID code of the plate on which the 
+               sub-solar point is located.  This ID code can be
+               use to look up data associated with the plate, such
+               as the plate's vertices or outward normal vector.
+ 
+</PRE>
+<h4><a name="Parameters">Parameters</a></h4>
+<PRE>
+ 
+   None.
+ </PRE>
+<h4><a name="Exceptions">Exceptions</a></h4>
+<PRE>
+ 
+   If any of the listed errors occur, the output arguments are
+   left unchanged.
+ 
+ 
+   1) If the input argument `method' is not recognized, the error
+      SPICE(DUBIOUSMETHOD) is signaled.
+ 
+   2) If either of the input body names `target' or `obsrvr' cannot be
+      mapped to NAIF integer codes, the error SPICE(IDCODENOTFOUND)
+      is signaled.
+ 
+   3) If `obsrvr' and `target' map to the same NAIF integer ID codes, the
+      error SPICE(BODIESNOTDISTINCT) is signaled.
+ 
+   4) If frame definition data enabling the evaluation of the state
+      of the target relative to the observer in target body-fixed
+      coordinates have not been loaded prior to calling <b>subsol_pl02</b>, the
+      error will be diagnosed and signaled by a routine in the call
+      tree of this routine.
+ 
+   5) If the specified aberration correction is not recognized, the
+      error will be diagnosed and signaled by a routine in the call
+      tree of this routine.
+ 
+   6) If insufficient ephemeris data have been loaded prior to
+      calling <b>subsol_pl02</b>, the error will be diagnosed and signaled by a
+      routine in the call tree of this routine. 
+ 
+   7) If a DSK providing a DSK type 2 plate model has not been
+      loaded prior to calling <b>subsol_pl02</b>, the error will be
+      diagnosed and signaled by a routine in the call tree of this
+      routine.
+
+   8) If the computation method is &quot;near point&quot; and radii of
+      the target body have not been loaded into the kernel pool, the
+      error will be diagnosed and signaled by routines in the call tree
+      of this routine.
+ 
+   9) If PCK data supplying a rotation model for the target body have
+      not been loaded prior to calling <b>subsol_pl02</b>, the error will be
+      diagnosed and signaled by a routine in the call tree of this
+      routine.
+ 
+   10) If the segment associated with the input DLA descriptor does not
+       contain data for the designated target, the error
+       SPICE(TARGETMISMATCH) is signaled.
+
+   11) If the segment associated with the input DLA descriptor is not
+       of data type 2, the error SPICE(WRONGDATATYPE) is signaled.
+
+   12) If the sub-solar point cannot be computed because the ray from
+       the observer to the aim point designated by `method' fails to
+       intersect the target surface as defined by the plate model, the
+       error SPICE(NOINTERCEPT) is signaled.
+
+   13) Use of transmission-style aberration corrections is not
+       permitted.  If abcorr specified such a correction, the 
+       error SPICE(NOTSUPPORTED) is signaled.
+
+   14) The observer is presumed to be outside the target body; no
+       checks are made to verify this.
+
+   15) If any input string pointer is null, the error SPICE(NULLPOINTER)
+       will be signaled.
+ 
+   16) If any input string has length zero, the error SPICE(EMPTYSTRING)
+       will be signaled.
+</PRE>
+<h4><a name="Files">Files</a></h4>
+<PRE>
+ 
+   Appropriate DSK, SPK, PCK, and frame data must be available to
+   the calling program before this routine is called.  Typically
+   the data are made available by loading kernels; however the
+   data may be supplied via subroutine interfaces if applicable.
+ 
+   The following data are required:
+ 
+      - DSK data:  a DSK file containing a plate model representing the
+        target body's surface must be loaded. This kernel must contain
+        a type 2 segment that contains data for the entire surface of
+        the target body.
+
+      - SPK data:  ephemeris data for target, observer, and Sun must be
+        loaded.  If aberration corrections are used, the states of
+        target and observer relative to the solar system barycenter
+        must be calculable from the available ephemeris data. Typically
+        ephemeris data are made available by loading one or more SPK
+        files via <a href="furnsh_c.html">furnsh_c</a>.
+ 
+      - PCK data:  triaxial radii for the target body must be loaded
+        into the kernel pool if the &quot;Near Point&quot; method is selected.
+        Typically these data are made available by loading a text PCK
+        file via <a href="furnsh_c.html">furnsh_c</a>.
+ 
+      - Further PCK data:  rotation data for the target body must
+        be loaded.  These may be provided in a text or binary PCK file.
+        Either type of file may be loaded via <a href="furnsh_c.html">furnsh_c</a>.
+
+      - Frame data:  if a frame definition is required to convert
+        the observer and target states to the body-fixed frame of
+        the target, that definition must be available in the kernel
+        pool.  Typically the definition is supplied by loading a
+        frame kernel via <a href="furnsh_c.html">furnsh_c</a>.
+ 
+   In all cases, kernel data are normally loaded once per program
+   run, NOT every time this routine is called.
+ </PRE>
+<h4><a name="Particulars">Particulars</a></h4>
+<PRE>
+ 
+   <b>subsol_pl02</b> computes the sub-solar point on a target body.
+   <b>subsol_pl02</b> also determines the distance of the observer from the
+   sub-solar point.
+ 
+   Sub-point Definitions
+   =====================
+ 
+   This routine offers two ways of defining the sub-solar point:
+
+      - The &quot;intercept&quot; method. In general, this definition
+        calls for defining a ray emanating from the Sun and
+        passing through the center of the target body.  The intercept
+        on the first plate (the one closest to the observer) hit by this
+        ray is the sub-point.
+           
+      - The &quot;ellipsoid near point&quot; method.  When a target's surface is
+        modeled by a set of triangular plates, the notion of &quot;dropping
+        a perpendicular segment to the surface,&quot; which makes sense for
+        convex surfaces, becomes problematic:  there need not be any
+        plate whose normal vector is parallel to a segment from the Sun
+        to some point on that plate, or there could be more than one
+        such plate.  If such a plate exists, it might be located
+        anywhere on the visible surface---not necessarily &quot;below&quot; the
+        Sun.
+
+        To work around these problems, the ellipsoid near point method
+        uses a reference ellipsoid to define a preliminary sub-solar
+        point: this is the unique point on the ellipsoid's surface at
+        which the outward surface normal points toward the Sun.  Then
+        the plate model sub-solar point is defined as the plate
+        intercept closest to the Sun of a ray emanating from the Sun
+        and passing through the preliminary sub-solar point on the
+        ellipsoid.
+
+   For a large target such as Mars, or for any target whose reference
+   ellipsoid deviates significantly from spherical, the results
+   obtained using the two sub-point definitions can be quite different.
+   The example program provided below demonstrates this fact; Phobos is
+   the target body in this case.  Some analysis on the user's part will
+   be needed to select the &quot;best&quot; definition for a given application.
+ 
+   When comparing sub-solar point computations with results from
+   sources other than SPICE, it's essential to make sure the same
+   geometric definitions are used.
+
+
+   Aberration Corrections
+   ======================
+
+   Below, we indicate the aberration corrections to use for some 
+   common applications: 
+ 
+      1) Compute the sub-solar point using the apparent direction
+         and orientation of a target. This is the most common case for
+         a remote-sensing observation.  When the observer's altitude
+         is more than one target radius above the surface:
+ 
+            Use &quot;LT+S&quot;:  apply both light time and stellar  
+            aberration corrections. 
+
+         Note that when the observer is close to the target surface,
+         this choice may yield inaccurate results, since light time is
+         measured between the observer and the target center.  When the
+         observer has altitude of less than one target radius above the
+         surface, aberration corrections should be omitted, so in this
+         case abcorr should be set to:
+
+            &quot;NONE&quot;          
+
+         Note that this selection calls for using the geometric position
+         of the Sun.
+
+
+      2) Use a geometric position vector and uncorrected target
+         orientation as low-accuracy estimates for an application where
+         execution speed is critical.
+ 
+            Use &quot;NONE&quot;. 
+ 
+   See the header of the CSPICE routine <a href="spkezr_c.html">spkezr_c</a> for a detailed
+   discussion of aberration corrections.
+ 
+ </PRE>
+<h4><a name="Examples">Examples</a></h4>
+<PRE>
+ 
+   The numerical results shown for this example may differ across
+   platforms. The results depend on the SPICE kernels used as input,
+   the compiler and supporting libraries, and the machine specific
+   arithmetic implementation.
+ 
+   In the following example program, the file
+
+      phobos.3.3.bds
+
+   is a DSK file containing a type 2 segment that provides a plate model 
+   representation of the surface of Phobos.  The file
+ 
+      mar085.bsp
+ 
+   is a binary SPK file containing data for Phobos, the Earth, and the
+   Sun for a time interval bracketing the date
+    
+      2006 NOV 3 00:00:00 UTC.
+ 
+   pck00009.tpc is a planetary constants kernel file containing radii
+   and rotation model constants.  naif0009.tls is a leapseconds kernel.
+ 
+   All of the kernels other than the DSK file should be loaded via
+   a meta-kernel.  An example of the contents of such a kernel is:
+
+       \begindata
+
+          KERNELS_TO_LOAD = ( 'naif0009.tls'
+                              'pck00009.tpc'
+                              'mar085.bsp' )
+       \begintext
+
+
+   Find the sub-solar point on Phobos as seen from Earth for a
+   specified sequence of times. Perform the computation twice, using
+   both the &quot;intercept&quot; and &quot;ellipsoid near point&quot; options. Compute the
+   corresponding sub-solar point values using an ellipsoidal surface
+   for comparison.
+
+
+      #include &lt;stdio.h&gt;
+      #include &lt;math.h&gt;
+      #include &quot;SpiceUsr.h&quot;
+
+      int main()
+      {
+         /.
+         Local parameters
+         ./
+         #define  FILSIZ         256 
+         #define  NCORR          2 
+         #define  NSAMP          3
+         #define  NMETHOD        2
+         #define  TOL            ( 1.e-12 )
+         #define  CORLEN         15
+         #define  METHLEN        81 
+         #define  TIMLEN         41
+
+         /.
+         Local variables
+         ./
+         SpiceBoolean            found;
+
+         SpiceChar             * abcorr;
+         SpiceChar             * abcorrs[ NCORR ]   = 
+                                 {
+                                    &quot;NONE&quot;,
+                                    &quot;LT+S&quot;
+                                 };
+
+         SpiceChar               dsk     [ FILSIZ  ];
+
+         SpiceChar             * emethod;
+         SpiceChar             * emethods[ NMETHOD ] = 
+                                 { 
+                                    &quot;Intercept&quot;, 
+                                    &quot;Near point&quot; 
+                                 };
+
+         SpiceChar               meta    [ FILSIZ  ];
+
+         SpiceChar             * method;
+         SpiceChar             * methods [ NMETHOD ] = 
+                                 { 
+                                    &quot;Intercept&quot;, 
+                                    &quot;Ellipsoid near point&quot; 
+                                 };
+
+         SpiceChar             * obsrvr = &quot;Earth&quot;;
+         SpiceChar             * target = &quot;Phobos&quot;;
+         SpiceChar               timstr [ TIMLEN ];
+
+         SpiceDLADescr           dladsc;
+
+         SpiceDouble             dist;
+         SpiceDouble             elat;
+         SpiceDouble             elon;
+         SpiceDouble             erad;
+         SpiceDouble             et0;
+         SpiceDouble             et;
+         SpiceDouble             f;
+         SpiceDouble             radii  [3];
+         SpiceDouble             re;
+         SpiceDouble             rp;
+         SpiceDouble             stepsize ;
+         SpiceDouble             xlat;
+         SpiceDouble             xlon;
+         SpiceDouble             xpt    [3];
+         SpiceDouble             xr;
+
+         SpiceInt                coridx;
+         SpiceInt                handle;
+         SpiceInt                i;
+         SpiceInt                midx;
+         SpiceInt                n;
+         SpiceInt                plid;
+
+         /.
+         Prompt for the name of a meta-kernel specifying
+         all of the other kernels we need.  Load the
+         metakernel.
+         ./
+         <a href="prompt_c.html">prompt_c</a> ( &quot;Enter meta-kernel name &gt; &quot;, FILSIZ, meta );
+         <a href="furnsh_c.html">furnsh_c</a> ( meta );
+
+         /.
+         Prompt for the name of the DSK to read.
+         ./
+         <a href="prompt_c.html">prompt_c</a> ( &quot;Enter DSK name         &gt; &quot;, FILSIZ, dsk );
+
+         /.
+         Look up radii of the target; compute flattening
+         coefficient. 
+         ./
+         <a href="bodvrd_c.html">bodvrd_c</a> ( target, &quot;RADII&quot;, 3, &amp;n, radii );
+
+         re = radii[0];
+         rp = radii[2];
+         f  = ( re - rp ) / re;
+
+         /.
+         Open the DSK file for read access.
+         We use the DAS-level interface for
+         this function.
+         ./
+         <a href="dasopr_c.html">dasopr_c</a> ( dsk, &amp;handle );
+
+         /.
+         Begin a forward search through the
+         kernel, treating the file as a DLA.
+         In this example, it's a very short
+         search.
+         ./
+         <a href="dlabfs_c.html">dlabfs_c</a> ( handle, &amp;dladsc, &amp;found );
+
+         if ( !found  )
+         {
+            /.
+            We arrive here only if the kernel
+            contains no segments.  This is
+            unexpected, but we're prepared for it.
+            ./
+            <a href="setmsg_c.html">setmsg_c</a> ( &quot;No segments found in DSK file #.&quot;);
+            <a href="errch_c.html">errch_c</a>  ( &quot;#&quot;,  dsk                         );
+            <a href="sigerr_c.html">sigerr_c</a> ( &quot;SPICE(NODATA)&quot;                   );
+         }
+
+         /.
+         If we made it this far, DLADSC is the
+         DLA descriptor of the first segment.
+
+         Now compute sub-solar points using both computation
+         methods.  We'll vary the aberration corrections
+         and the epochs.
+         ./
+         et0      = 0.0;
+         stepsize = 1.e6;
+
+         for ( i = 0;  i &lt; NSAMP;  i++  )
+         {
+            /.
+            Set the computation time for the ith 
+            sample. 
+            ./
+            et = et0 + i*stepsize;
+
+            <a href="timout_c.html">timout_c</a> ( et, 
+                       &quot;YYYY-MON-DD &quot;
+                       &quot;HR:MN:SC.### ::TDB(TDB)&quot;,
+                       TIMLEN,
+                       timstr                    );
+
+            printf ( &quot;\n\nObservation epoch:  %s\n&quot;, 
+                     timstr                      );
+
+            for ( coridx = 0;  coridx &lt; NCORR;  coridx++  )
+            {
+               /.
+               Select the aberration correction.
+               ./
+               abcorr = abcorrs[coridx];
+               printf ( &quot;\n&quot;
+                        &quot;   abcorr = %s\n&quot;, abcorr  );
+
+               for ( midx = 0;  midx &lt; NMETHOD;  midx++  )
+               {
+                  /.
+                  Select the computation method. 
+                  ./
+                  method  = methods [midx];
+                  emethod = emethods[midx];
+
+                  printf (  &quot;\n&quot;
+                            &quot;       Method = %s\n&quot;, method  );
+
+                  /.
+                  Compute the sub-solar point using a plate model
+                  representation of the target's surface. 
+                  ./
+                  <b>subsol_pl02</b> ( handle, &amp;dladsc, method, 
+                                target, et,      abcorr, 
+                                obsrvr, xpt,     &amp;dist,   &amp;plid );
+
+                  /.
+                  Represent the intercept in latitudinal
+                  coordinates. 
+                  ./ 
+                  <a href="reclat_c.html">reclat_c</a> ( xpt, &amp;xr, &amp;xlon, &amp;xlat );
+
+                  printf ( 
+                  &quot;         Sub-solar point on plate model surface:\n&quot;
+                  &quot;             Planetocentric Longitude (deg):  %f\n&quot;
+                  &quot;             Planetocentric Latitude  (deg):  %f\n&quot;
+                  &quot;             Radius                    (km):  %f\n&quot;
+                  &quot;             Observer distance         (km):  %f\n&quot;,
+                  xlon * <a href="dpr_c.html">dpr_c</a>(),
+                  xlat * <a href="dpr_c.html">dpr_c</a>(),
+                  xr,
+                  dist                                                 );
+
+                  /.
+                  Compute the sub-solar point using an ellipsoidal
+                  representation of the target's surface.  (The
+                  routine <a href="subsol_c.html">subsol_c</a> doesn't return distance.)
+                  ./
+                  <a href="subsol_c.html">subsol_c</a> ( emethod, target, et,  abcorr, 
+                             obsrvr,  xpt                 );
+
+                  /.
+                  Represent the intercept in latitudinal
+                  coordinates. 
+                  ./ 
+                  <a href="reclat_c.html">reclat_c</a> ( xpt, &amp;erad, &amp;elon, &amp;elat );
+
+                  printf ( 
+                  &quot;         Sub-solar point on ellipsoid surface:\n&quot;
+                  &quot;             Planetocentric Longitude (deg):  %f\n&quot;
+                  &quot;             Planetocentric Latitude  (deg):  %f\n&quot;
+                  &quot;             Radius                    (km):  %f\n&quot;,
+                  elon * <a href="dpr_c.html">dpr_c</a>(),
+                  elat * <a href="dpr_c.html">dpr_c</a>(),
+                  erad                                                 );
+               }
+            }
+         }
+
+         /.
+         Close the kernel.  This isn't necessary in a stand-
+         alone program, but it's good practice in subroutines
+         because it frees program and system resources.
+         ./
+         <a href="dascls_c.html">dascls_c</a> ( handle );
+
+         return ( 0 );
+      }
+
+
+   When this program was executed on a PC/Linux/gcc platform, 
+   the output for the first epoch (the rest of the output 
+   is not shown due to its large volume) was:
+ 
+
+      Enter meta-kernel name &gt; meta
+      Enter DSK name         &gt; phobos.3.3.bds
+
+
+      Observation epoch:  2000-JAN-01 12:00:00.000 (TDB)
+
+         abcorr = NONE
+
+             Method = Intercept
+               Sub-solar point on plate model surface:
+                   Planetocentric Longitude (deg):  102.413905
+                   Planetocentric Latitude  (deg):  -24.533127
+                   Radius                    (km):  11.612325
+                   Observer distance         (km):  276700026.660260
+               Sub-solar point on ellipsoid surface:
+                   Planetocentric Longitude (deg):  102.413905
+                   Planetocentric Latitude  (deg):  -24.533127
+                   Radius                    (km):  10.819463
+
+             Method = Ellipsoid near point
+               Sub-solar point on plate model surface:
+                   Planetocentric Longitude (deg):  107.297077
+                   Planetocentric Latitude  (deg):  -17.050888
+                   Radius                    (km):  11.571591
+                   Observer distance         (km):  276700027.335171
+               Sub-solar point on ellipsoid surface:
+                   Planetocentric Longitude (deg):  107.488961
+                   Planetocentric Latitude  (deg):  -16.739508
+                   Radius                    (km):  11.116793
+
+         abcorr = LT+S
+
+             Method = Intercept
+               Sub-solar point on plate model surface:
+                   Planetocentric Longitude (deg):  114.623420
+                   Planetocentric Latitude  (deg):  -24.533628
+                   Radius                    (km):  11.411417
+                   Observer distance         (km):  276710249.495398
+               Sub-solar point on ellipsoid surface:
+                   Planetocentric Longitude (deg):  114.623420
+                   Planetocentric Latitude  (deg):  -24.533628
+                   Radius                    (km):  10.983515
+
+             Method = Ellipsoid near point
+               Sub-solar point on plate model surface:
+                   Planetocentric Longitude (deg):  123.445345
+                   Planetocentric Latitude  (deg):  -15.622318
+                   Radius                    (km):  11.239869
+                   Observer distance         (km):  276710250.760758
+               Sub-solar point on ellipsoid surface:
+                   Planetocentric Longitude (deg):  123.267795
+                   Planetocentric Latitude  (deg):  -15.815465
+                   Radius                    (km):  11.479807
+</PRE>
+<h4><a name="Restrictions">Restrictions</a></h4>
+<PRE>
+ 
+   1) This routine assumes that the origin of the body-fixed reference 
+      frame associated with the target body is located in the interior
+      of that body.
+ </PRE>
+<h4><a name="Literature_References">Literature_References</a></h4>
+<PRE>
+ 
+   None.
+ </PRE>
+<h4><a name="Author_and_Institution">Author_and_Institution</a></h4>
+<PRE>
+   N.J. Bachman   (JPL)
+   J.E. McLean    (JPL)
+ </PRE>
+<h4><a name="Version">Version</a></h4>
+<PRE>
+ 
+   -CSPICE Version 2.0.0, 23-JUL-2016 (NJB) 
+ 
+       Bug fix: the DSK segment's surface ID code is no longer
+       required to match that of the target. The segment's
+       center ID must match.
+
+       Added <a href="failed_c.html">failed_c</a> calls.
+
+       Include file references have been updated. 
+
+   -Beta Version 1.3.0, 30-APR-2014 (NJB) (BVS)
+
+       Adding missing &quot;return&quot; statement after <a href="chkout_c.html">chkout_c</a> call
+       in branch for bad input method string.
+
+       Now includes dsk_proto.h.
+
+       Last update was 07-APR-2014 (BVS)
+
+       Changed FRAME to FRAMES in the Required_Reading section.
+
+   -Beta Version 1.2.0, 14-MAY-2010 (NJB)
+
+       Updated for compatibility with new DSK design.
+
+   -Beta Version 1.1.0, 09-FEB-2007 (NJB)
+
+       Bug fix:  type of local variable fDLADescr was changed to SpiceInt.
+
+   -Beta Version 1.0.0, 06-NOV-2006 (NJB)
+ </PRE>
+<h4><a name="Index_Entries">Index_Entries</a></h4>
+<PRE>
+ 
+   sub-solar point
+ </PRE>
+<h4>Link to routine subsol_pl02 source file <a href='../../../src/cspice/subsol_pl02.c'>subsol_pl02.c</a> </h4>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+   <pre>Wed Apr  5 17:54:45 2017</pre>
+
+</body>
+</html>
+

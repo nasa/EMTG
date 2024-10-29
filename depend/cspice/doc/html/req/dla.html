@@ -1,0 +1,620 @@
+<HTML>
+<HEAD>
+<TITLE> DLA Required Reading </TITLE>
+</HEAD>
+
+<BODY style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+
+<A NAME="top"></A>
+
+<TABLE STYLE="text-align: left; margin-left: auto; margin-right: auto; width: 800px;" BORDER="0" CELLPADDING="5" CELLSPACING="2">
+<TBODY>
+<TR>
+  <TD STYLE="background-color: rgb(153, 153, 153); vertical-align: middle; text-align: center;">
+  <DIV ALIGN="right">
+    <SMALL><SMALL><A HREF="index.html">Index Page</A></SMALL></SMALL>
+  </DIV>
+  <B>DLA Required Reading</B> </TD>
+</TR>
+<TR>
+  <TD STYLE="vertical-align: top;">
+
+<H2> Table of Contents
+</H2>
+
+<PRE>
+   <A HREF="#DLA Required Reading">DLA Required Reading</A>
+      <A HREF="#Abstract">Abstract</A>
+      <A HREF="#Intended audience">Intended audience</A>
+      <A HREF="#Related Documents">Related Documents</A>
+      <A HREF="#Introduction">Introduction</A>
+   <A HREF="#DLA Files">DLA Files</A>
+      <A HREF="#DLA File Structure">DLA File Structure</A>
+         <A HREF="#The DLA File Record">The DLA File Record</A>
+         <A HREF="#DLA Comment Area">DLA Comment Area</A>
+         <A HREF="#DLA Format Version">DLA Format Version</A>
+         <A HREF="#DLA Forward and Backward Pointers">DLA Forward and Backward Pointers</A>
+         <A HREF="#DLA Segment Descriptors">DLA Segment Descriptors</A>
+      <A HREF="#DLA Segment Layout">DLA Segment Layout</A>
+   <A HREF="#DLA Functions">DLA Functions</A>
+         <A HREF="#Summary of DLA Mnemonics">Summary of DLA Mnemonics</A>
+         <A HREF="#Summary of DAS Mnemonics">Summary of DAS Mnemonics</A>
+         <A HREF="#Summary of Calling Sequences">Summary of Calling Sequences</A>
+   <A HREF="#Appendix A: Revision History">Appendix A: Revision History</A>
+         <A HREF="#2017 APR 03 by N. J. Bachman">2017 APR 03 by N. J. Bachman</A>
+
+</PRE>
+
+<HR SIZE=3 NOSHADE>
+
+<BR><BR>
+<A NAME="DLA Required Reading"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H1> DLA Required Reading
+</H1><HR SIZE=3 NOSHADE><P><BR><BR><BR>
+   Last revised on 2017 APR 03 by N. J. Bachman.
+<P>
+ 
+<BR><BR>
+<A NAME="Abstract"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H2> Abstract
+</H2><HR ALIGN="LEFT" WIDTH=50% ><P><BR><BR>
+   The ``Doubly Linked Array'' (DLA) SPICE file format enables data in a
+   DAS file to be treated as a doubly linked list of virtual arrays, where
+   each virtual array may contain integer, double precision, and character
+   components.
+<P>
+ 
+<BR><BR>
+<A NAME="Intended audience"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H2> Intended audience
+</H2><HR ALIGN="LEFT" WIDTH=50% ><P><BR><BR>
+   This document is intended primarily for SPICE users who wish to gain a
+   detailed understanding of the DLA format, particularly users who wish to
+   create DSK files and sophisticated SPICE users who wish to create their
+   own DLA-based file formats.
+<P>
+ 
+   It may also be of interest to SPICE users who wish to access the
+   segment-oriented functions of the DSK subsystem; however, such users may
+   find adequate guidance in the code examples provided in API
+   documentation of those DSK functions and of the DLA functions referenced
+   by DSK documentation.
+<P>
+ 
+   Users of DSK files can find documentation of the DSK interface functions
+   in the DSK Required Reading file, <a href="../req/dsk.html">dsk.req</a>.
+<P>
+ 
+<BR><BR>
+<A NAME="Related Documents"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H2> Related Documents
+</H2><HR ALIGN="LEFT" WIDTH=50% ><P><BR><BR>
+   The following documents pertinent to DLA usage are included in the SPICE
+   Toolkit:
+<P>
+ 
+<UL>
+<TT>--</TT> DAS Required Reading
+<BR><BR></UL>
+<UL>
+<TT>--</TT> DSK Required Reading
+<BR><BR></UL>
+<UL>
+<TT>--</TT> Convert User's Guide
+<BR><BR></UL>
+<UL>
+<TT>--</TT> COMMNT User's Guide
+<BR><BR></UL>
+<BR><BR>
+<A NAME="Introduction"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H2> Introduction
+</H2><HR ALIGN="LEFT" WIDTH=50% ><P><BR><BR>
+   The SPICE Doubly Linked Array (DLA) subsystem consists of a Fortran 77
+   direct access file format and a set of functions that make it convenient
+   to create, read, annotate, and transport files having this format. The
+   same DLA file format is used by all language versions of SPICE.
+<P>
+ 
+   The DLA file format is an instance of the DAS architecture. DLA files
+   enable user application software to view the data in a DAS file as a
+   doubly linked list of virtual arrays, usually called ``segments,'' where
+   each segment may contain character, double precision, and integer
+   components.
+<P>
+ 
+   DLA segments provide a mechanism for grouping related data. For example,
+   in the SPICE DSK format, which is a specialization of the DLA format,
+   data are grouped into segments; each DSK segment is a DLA segment as
+   well. DSK segments contain data representing shapes of extended objects.
+   Such representations may use both integer and double precision data. For
+   example, in DSK data type 2, segments contain double precision numbers
+   that represent the vertex coordinates of triangular plates, and integers
+   that indicate which vertices belong to each plate.
+<P>
+ 
+   DLA files may be thought of as a functional generalization of DAF files:
+   DAF arrays contain only double precision data; DLA segments contain data
+   of multiple types. However, there are some differences that prevent
+   either format from being a special case of the other:
+<P>
+ 
+<UL>
+<TT>--</TT> DLA is based on the DAS low-level architecture
+<BR><BR></UL>
+<UL>
+<TT>--</TT> DAS access methods differ from DAF methods
+<BR><BR></UL>
+<UL>
+<TT>--</TT> DLA descriptors contain only segment location and size information; DAF
+descriptors contain both location information and information describing
+segment contents.
+<BR><BR></UL>
+   Applications can locate DLA segments by means of forward or backward
+   linear searches. DLA functions are provided to start a forward or
+   backward search, and to find the next or previous segment relative to a
+   given segment.
+<P>
+ 
+   In the CSPICE Toolkit, functionality that makes use of DLA segments'
+   data is provided by higher-level code, as is the case for the DSK
+   subsystem.
+<P>
+ 
+<BR><BR>
+<A NAME="DLA Files"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H1> DLA Files
+</H1><HR SIZE=3 NOSHADE><P><BR><BR><BR>
+   This chapter discusses details of the DLA file format.
+<P>
+ 
+<BR><BR>
+<A NAME="DLA File Structure"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H2> DLA File Structure
+</H2><HR ALIGN="LEFT" WIDTH=50% ><P><BR><BR>
+   DLA files are a special case of DAS files; they inherit all of the
+   characteristics of DAS files. DAS files, once they have been written,
+   are normally ``segregated,'' meaning that the character, double
+   precision, and integer records of a DAS file form three contiguous
+   components of the respective data types. See the DAS Required Reading,
+   <a href="../req/das.html">das.req</a>, for details.
+<P>
+ 
+   The underlying DAS architecture, in its segregated form, is:
+<P>
+ 
+<PRE>
+        File component          Record count
+        ==============          ============
+ 
+   +------------------------+
+   |      file record       |   ( 1 )
+   +------------------------+
+   |    reserved records    |   ( variable )
+   +------------------------+
+   |    comment records     |
+   |                        |   ( variable )
+   |                        |
+   +------------------------+
+   | first data directory   |   ( 1 )
+   +------------------------+
+   | character data records |
+   |                        |   ( variable )
+   |                        |
+   +------------------------+
+   |   d.p. data records    |
+   |                        |   ( variable )
+   |                        |
+   +------------------------+
+   |  integer data records  |
+   |                        |   ( variable )
+   |                        |
+   +------------------------+
+</PRE>
+   The DLA format presents a higher-level view of the DAS architecture. For
+   most purposes, DLA files can be thought of as having the following
+   logical components:
+<P>
+ 
+<PRE>
+   +----------------------------+
+   |       file record          |
+   +----------------------------+
+   |       comment area         |
+   |                            |
+   |                            |
+   +----------------------------+
+   | DLA format version         |
+   +----------------------------+
+   | DLA forward and backward   |
+   | pointers                   |
+   +----------------------------+
+   | DLA descriptors            |
+   +----------------------------+
+   | first virtual DLA segment  |
+   +----------------------------+
+   | second virtual DLA segment |
+   |                            |
+   |                            |
+   +----------------------------+
+              ...
+   +----------------------------+
+   | last virtual DLA segment   |
+   |                            |
+   +----------------------------+
+</PRE>
+   The diagram above does not show the physical order of the segments,
+   since segment data are distributed across the character, double
+   precision, and integer records of the file, and since DLA descriptors
+   are interleaved with DLA segments' integer components.
+<P>
+ 
+   Details of these components are discussed below.
+<P>
+ 
+<BR><BR>
+<A NAME="The DLA File Record"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H3> The DLA File Record
+</H3><P><BR><BR>
+   In a DLA file, the file record conforms to the DAS file record format.
+   See the DAS Required Reading, <a href="../req/das.html">das.req</a>, for a complete description of
+   this format. Within the file record, the ID word has the format
+<P>
+ 
+<PRE>
+   DAS/xxxx
+</PRE>
+   where the pattern
+<P>
+ 
+<PRE>
+   xxxx
+</PRE>
+   represents up to four printing characters identifying the file type. For
+   example, in DSK files, the ID word is
+<P>
+ 
+<PRE>
+   DAS/DSK
+</PRE>
+   In general the portion of the ID word indicating file type need not
+   indicate explicitly that the file is a DLA file. That fact can be
+   derived from the file type string if the type is known to the SPICE
+   system.
+<P>
+ 
+<BR><BR>
+<A NAME="DLA Comment Area"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H3> DLA Comment Area
+</H3><P><BR><BR>
+   All properties of the DLA comment area are inherited from the DAS
+   architecture. DAS functions are used to access the comment area
+   programmatically. The SPICE COMMNT utility can access the DLA comment
+   area interactively.
+<P>
+ 
+<BR><BR>
+<A NAME="DLA Format Version"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H3> DLA Format Version
+</H3><P><BR><BR>
+   The first member of a DLA file's integer address space is a parameter
+   indicating the format version of the file. The primary purpose of this
+   parameter is to indicate that the file is a DLA file. If the format is
+   updated, this version will allow SPICE software to identify the version
+   and access the file appropriately.
+<P>
+ 
+   SPICE identifies DLA files using a combination of three attributes:
+<P>
+ 
+<UL>
+<TT>1.</TT> The file architecture, which must be DAS
+<BR><BR></UL>
+<UL>
+<TT>2.</TT> The file type, which must be recognized as one derived from the DLA format,
+for example DSK
+<BR><BR></UL>
+<UL>
+<TT>3.</TT> The DLA format version
+<BR><BR></UL>
+<BR><BR>
+<A NAME="DLA Forward and Backward Pointers"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H3> DLA Forward and Backward Pointers
+</H3><P><BR><BR>
+   The segments of a DLA file are organized as a doubly linked list. The
+   DLA file contains pointers to data structures called ``segment
+   descriptors,'' which are associated with segments, at the head and tail
+   of the list. These pointers are used to initiate forward and backward
+   searches.
+<P>
+ 
+<BR><BR>
+<A NAME="DLA Segment Descriptors"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H3> DLA Segment Descriptors
+</H3><P><BR><BR>
+   A DLA ``segment descriptor,'' or simply ``descriptor,'' is a small array
+   of integers that indicate the sizes and addresses of the components of a
+   corresponding DLA segment. A DLA descriptor also contains integers that
+   act as forward and backward pointers to other DLA descriptors in the DLA
+   file's doubly linked segment list.
+<P>
+ 
+   DLA descriptors are also data structures used as input and output
+   arguments of DLA functions. They are also used extensively as arguments
+   to DSK functions; the DSK subsystem is currently the only other SPICE
+   subsystem where they're used. In the Fortran, IDL, and MATLAB SPICE
+   Toolkits, DLA descriptors are implemented as arrays. In the CSPICE
+   Toolkit, DLA descriptors are implemented by the structure SpiceDLADescr.
+<P>
+ 
+   The DLA segment descriptor members are:
+<P>
+ 
+<PRE>
+   +---------------+
+   | BACKWARD PTR  | Linked list backward pointer
+   +---------------+
+   | FORWARD PTR   | Linked list forward pointer
+   +---------------+
+   | BASE INT ADDR | Base DAS integer address
+   +---------------+
+   | INT COMP SIZE | Size of integer segment component
+   +---------------+
+   | BASE DP ADDR  | Base DAS d.p. address
+   +---------------+
+   | DP COMP SIZE  | Size of d.p. segment component
+   +---------------+
+   | BASE CHR ADDR | Base DAS character address
+   +---------------+
+   | CHR COMP SIZE | Size of character segment component
+   +---------------+
+ 
+</PRE>
+   The ``base address'' of a segment component of a given data type is the
+   address, in the DAS address space of that type, preceding the first
+   element of that component. All DAS addresses are 1-based.
+<P>
+ 
+   The general form of the doubly linked list layout in DAS integer address
+   space is:
+<P>
+ 
+<PRE>
+ 
+                 +------------------------------+
+                 |  Pointer to first descriptor | ----+
+                 +------------------------------+     |
+   +-------------|  Pointer to last descriptor  |     |
+   |             +------------------------------+     |
+   |                                                  |
+   |             +------------------------------+     |
+   |  NULL &lt;---- |  Backward pointer            | &lt;---+ First node
+   |       +---&gt; |                              |
+   |       |     +------------------------------+
+   |       |     |  Forward pointer             | ----+
+   |       |     +------------------------------+     |
+   |       |     |  Rest of DLA Descriptor 1    |     |
+   |       |     +------------------------------+     |
+   |       |     |  Segment 1 integer component |     |
+   |       |     +------------------------------+     |
+   |       +---- |  Backward pointer            | &lt;---+ Second node
+   |       +---&gt; |                              |
+   |       |     +------------------------------+
+   |       |     |  Forward pointer             | ----+
+   |       |     +------------------------------+     |
+   |       |     |  Rest of DLA Descriptor 2    |     |
+   |       |     +------------------------------+     |
+   |       |     |  Segment 2 integer component |     |
+   |       |     +------------------------------+     |
+   |  pointer from third node                     &lt;---+ Third node
+   |                            .
+   |                            .
+   |                            .
+   |  pointer to node N-1                  pointer from node N-1
+   |       |                                          |
+   |       |     +------------------------------+     |
+   +---&gt;   +---- |  Backward pointer            | &lt;---+ Final (Nth) node
+                 +------------------------------+
+                 |  Forward pointer             | ----&gt; NULL
+                 +------------------------------+
+                 |  Rest of DLA Descriptor N    |
+                 +------------------------------+
+                 |  Segment N integer component |
+                 +------------------------------+
+ 
+</PRE>
+   While this diagram shows the presence of multiple segments, a DLA file
+   need not contain more than one segment. It is valid, but usually not
+   useful, for a DLA file to have no segments.
+<P>
+ 
+<BR><BR>
+<A NAME="DLA Segment Layout"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H2> DLA Segment Layout
+</H2><HR ALIGN="LEFT" WIDTH=50% ><P><BR><BR>
+   The data populating a DLA file are stored in the file's segments.
+<P>
+ 
+   The segments of a DLA file consist of components in the respective DAS
+   character, double precision, and integer address spaces. The components
+   occupy contiguous address ranges in the respective address spaces.
+<P>
+ 
+   The general form of the DLA segment layout is:
+<P>
+ 
+<PRE>
+ 
+   Character space   Double precision space   Integer space
+ 
+   +-------------+   +--------------------+
+   |Segment 1    |   |Segment 1           |  +------------+
+   |character    |   |double precision    |  |Segment 1   |
+   |component    |   |component           |  |integer     |
+   +-------------+   |                    |  |component   |
+   |Segment 2    |   |                    |  |            |
+   |character    |   +--------------------+  |            |
+   |component    |   |Segment 2           |  +------------+
+   |             |   |double precision    |
+   +-------------+   |component           |  +------------+
+                     +--------------------+  |Segment 2   |
+                                             |integer     |
+                                             |component   |
+                                             +------------+
+        ...                   ...                 ...
+ 
+</PRE>
+   In the diagram above, the first integer segment component is displaced
+   downward slightly to indicate that the first component starts at an
+   integer address greater than 1: that component is preceded by other
+   information. DLA descriptors lie between consecutively numbered integer
+   components, so those components are not contiguous.
+<P>
+ 
+   Any of the segment components may be empty, but the DAS integer address
+   space is never empty.
+<P>
+ 
+   In a segregated DLA file, all segment components of a given type are
+   stored sequentially in the DAS address space of that type.
+<P>
+ 
+<BR><BR>
+<A NAME="DLA Functions"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H1> DLA Functions
+</H1><HR SIZE=3 NOSHADE><P><BR><BR><BR>
+   Access to DLA files is provided by DLA functions and functions of the
+   SPICE DAS subsystem.
+<P>
+ 
+   In all languages supported by SPICE, the DLA subsystem provides
+   functions for traversing DLA segment lists. Although the term is
+   somewhat inaccurate, this is usually referred to as ``searching'' the
+   lists.
+<P>
+ 
+   Functions of the DAS subsystem enable applications to open a DLA file
+   for read access, close a DLA file, and extract comments from a DLA
+   file's comment area.
+<P>
+ 
+   In the Fortran and C SPICE Toolkits, DAS functions can open an existing
+   DLA file for write access and delete or write to a DLA file's comment
+   area.
+<P>
+ 
+   In the Fortran SPICE Toolkit, DLA functions are provided to open a new
+   DLA file and to start and finish new DLA segments. DAS functions are
+   provided to write data to DLA segments, read data from DLA segments, and
+   update data in existing DLA segments.
+<P>
+ 
+<BR><BR>
+<A NAME="Summary of DLA Mnemonics"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H3> Summary of DLA Mnemonics
+</H3><P><BR><BR>
+   All of the API functions in the DLA family have names beginning with the
+   letters ``dla,'' followed by a two- or three-character mnemonic and the
+   suffix ``_c.'' For example, the function that starts a forward search
+   through the segment descriptor list in a DLA file is named <a href="../cspice/dlabfs_c.html">dlabfs_c</a>. The
+   following is a list of CSPICE DLA mnemonics and translations, in
+   alphabetical order.
+<P>
+ 
+<PRE>
+   bbs  Begin backward search
+   bfs  Begin forward search
+   fns  Find next segment
+   fps  Find previous segment
+</PRE>
+<BR><BR>
+<A NAME="Summary of DAS Mnemonics"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H3> Summary of DAS Mnemonics
+</H3><P><BR><BR>
+   The DAS functions whose mnemonics are listed below serve as part of the
+   CSPICE DLA system's interface.
+<P>
+ 
+<PRE>
+   ac   Add comments from buffer to file
+   cls  Close file
+   dc   Delete comments from file
+   ec   Extract comments from file
+   opr  Open file for read access
+   opw  Open file for write access
+</PRE>
+<BR><BR>
+<A NAME="Summary of Calling Sequences"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H3> Summary of Calling Sequences
+</H3><P><BR><BR>
+   Calling sequences of the DLA family of functions are given below.
+   Functions are grouped according to function.
+<P>
+ 
+   The following functions are intended for use by both CSPICE users'
+   application programs and by CSPICE functions.
+<P>
+ 
+   Opening and closing files:
+<P>
+ 
+<PRE>
+   <a href="../cspice/dascls_c.html">dascls_c</a> ( handle )
+   <a href="../cspice/dasopr_c.html">dasopr_c</a> ( fname, handle )
+   <a href="../cspice/dasopw_c.html">dasopw_c</a> ( fname, handle )
+</PRE>
+   Searching for segments:
+<P>
+ 
+<PRE>
+   <a href="../cspice/dlabbs_c.html">dlabbs_c</a> ( handle, descr, found )
+   <a href="../cspice/dlafns_c.html">dlafns_c</a> ( handle, descr, nxtdsc, found )
+   <a href="../cspice/dlafps_c.html">dlafps_c</a> ( handle, descr, prvdsc, found )
+   <a href="../cspice/dlabfs_c.html">dlabfs_c</a> ( handle, descr, found )
+</PRE>
+   Accessing the comment area:
+<P>
+ 
+<PRE>
+   <a href="../cspice/dasac_c.html">dasac_c</a> ( handle, n, buffer )
+   <a href="../cspice/dasdc_c.html">dasdc_c</a> ( handle )
+   <a href="../cspice/dasec_c.html">dasec_c</a> ( handle, bufsiz, n, buffer, done )
+</PRE>
+<BR><BR>
+<A NAME="Appendix A: Revision History"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H1> Appendix A: Revision History
+</H1><HR SIZE=3 NOSHADE><P><BR><BR><BR>
+<BR><BR>
+<A NAME="2017 APR 03 by N. J. Bachman"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H3> 2017 APR 03 by N. J. Bachman
+</H3><P><BR><BR>
+   Initial release.
+<P>
+ 
+
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+
+</BODY>
+
+</HTML>

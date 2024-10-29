@@ -1,0 +1,456 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+
+<HEAD>
+   <TITLE>srfscc_c</TITLE>
+</HEAD>
+
+<BODY style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+<A name="TOP"></A>
+
+<table style="text-align: left; margin-left: auto; margin-right: auto; width: 800px;"
+ border="0" cellpadding="5" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153); vertical-align: middle; text-align: center;">
+      <div align="right"> 
+      <small><small><a href="index.html">Index Page</a></small></small>
+      </div>
+      <b>srfscc_c</b> </td>
+    </tr>
+
+    <tr>
+      <td style="vertical-align: top;">
+
+<small><div align="center">
+<A HREF="index.html#A">A</A>&nbsp;
+<A HREF="index.html#B">B</A>&nbsp;
+<A HREF="index.html#C">C</A>&nbsp;
+<A HREF="index.html#D">D</A>&nbsp;
+<A HREF="index.html#E">E</A>&nbsp;
+<A HREF="index.html#F">F</A>&nbsp;
+<A HREF="index.html#G">G</A>&nbsp;
+<A HREF="index.html#H">H</A>&nbsp;
+<A HREF="index.html#I">I</A>&nbsp;
+<A HREF="index.html#J">J</A>&nbsp;
+<A HREF="index.html#K">K</A>&nbsp;
+<A HREF="index.html#L">L</A>&nbsp;
+<A HREF="index.html#M">M</A>&nbsp;
+<A HREF="index.html#N">N</A>&nbsp;
+<A HREF="index.html#O">O</A>&nbsp;
+<A HREF="index.html#P">P</A>&nbsp;
+<A HREF="index.html#Q">Q</A>&nbsp;
+<A HREF="index.html#R">R</A>&nbsp;
+<A HREF="index.html#S">S</A>&nbsp;
+<A HREF="index.html#T">T</A>&nbsp;
+<A HREF="index.html#U">U</A>&nbsp;
+<A HREF="index.html#V">V</A>&nbsp;
+<A HREF="index.html#W">W</A>&nbsp;
+<A HREF="index.html#X">X</A>&nbsp;
+</div></small>
+       <br>
+       <table style="text-align: left; width: 60%; margin-left: auto; margin-right: auto;"
+       border="0" cellspacing="2" cellpadding="2">
+        <tbody>
+          <tr>
+            <td style="width: 33%; text-align: center;">
+            <small>
+              <a href="#Procedure">Procedure<br></a>
+              <a href="#Abstract">Abstract<br></a>
+              <a href="#Required_Reading">Required_Reading<br></a>
+              <a href="#Keywords">Keywords<br></a>
+              <a href="#Brief_I/O">Brief_I/O<br></a>
+              <a href="#Detailed_Input">Detailed_Input<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Detailed_Output">Detailed_Output<br></a>
+              <a href="#Parameters">Parameters<br></a>
+              <a href="#Exceptions">Exceptions<br></a>
+              <a href="#Files">Files<br></a>
+              <a href="#Particulars">Particulars<br></a>
+              <a href="#Examples">Examples<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Restrictions">Restrictions<br></a>
+              <a href="#Literature_References">Literature_References<br></a>
+              <a href="#Author_and_Institution">Author_and_Institution<br></a>
+              <a href="#Version">Version<br></a>
+              <a href="#Index_Entries">Index_Entries<br></a>
+             </small>
+            </td>
+          </tr>
+        </tbody>
+</table>
+
+<h4><a name="Procedure">Procedure</a></h4>
+<PRE>
+   void srfscc_c ( ConstSpiceChar  * srfstr,
+                   SpiceInt          bodyid,
+                   SpiceInt        * code,
+                   SpiceBoolean    * found  ) 
+</PRE>
+<h4><a name="Abstract">Abstract</a></h4>
+<PRE>
+ 
+   Translate a surface string, together with a body ID code, to the 
+   corresponding surface ID code. The input surface string may 
+   contain a name or an integer ID code. 
+    </PRE>
+<h4><a name="Required_Reading">Required_Reading</a></h4>
+<PRE>
+ 
+   <a href="../req/dsk.html">DSK</a> 
+   <a href="../req/naif_ids.html">NAIF_IDS</a> 
+ </PRE>
+<h4><a name="Keywords">Keywords</a></h4>
+<PRE>
+ 
+   CONVERSION 
+   DSK 
+   ID 
+   NAME 
+   STRING 
+   SURFACE 
+ 
+
+</PRE>
+<h4><a name="Brief_I/O">Brief_I/O</a></h4>
+<PRE>
+ 
+   Variable  I/O  Description 
+   --------  ---  -------------------------------------------------- 
+   srfstr     I   Surface name or ID string. 
+   bodyid     I   Body ID code. 
+   code       O   Integer surface ID code. 
+   found      O   Flag indicating whether surface ID was found. 
+ </PRE>
+<h4><a name="Detailed_Input">Detailed_Input</a></h4>
+<PRE>
+ 
+   srfstr     is a string designating a surface. `srfstr' may contain 
+              a surface name or a string representation of the 
+              surface's integer ID code. 
+ 
+              Case and leading and trailing blanks in a surface name 
+              are not significant. Sequences of consecutive embedded
+              blanks are considered equivalent to a single blank. For
+              example, all of the strings below are considered to be
+              equivalent:
+
+                 &quot;MGS MOLA 128 PIXEL/DEG&quot; 
+                 &quot;MGS MOLA 128 pixel/deg&quot; 
+                 &quot;MGS MOLA 128 PIXEL/DEG   &quot; 
+                 &quot;MGS MOLA 128    PIXEL/DEG&quot; 
+                 &quot;   MGS MOLA 128 PIXEL/DEG&quot; 
+ 
+              However,  
+ 
+                 &quot;MGSMOLA 128PIXEL/DEG&quot;  
+ 
+              is not equivalent to the names above. 
+ 
+ 
+   bodyid     is the integer ID code of the body associated with the 
+              surface designated by `srfstr'. 
+ </PRE>
+<h4><a name="Detailed_Output">Detailed_Output</a></h4>
+<PRE>
+ 
+   code       is integer ID code of the surface designated by `srfstr',
+              for the body designated by `bodyid', if for this body an
+              association exists between the input surface string and a
+              surface ID code. `code' is defined if and only if the
+              output flag `found' is SPICETRUE.
+ 
+   found      is a logical flag that is SPICETRUE if a surface code 
+              corresponding to the input surface string and body ID 
+              code was found. `found' is SPICEFALSE otherwise. 
+ </PRE>
+<h4><a name="Parameters">Parameters</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Exceptions">Exceptions</a></h4>
+<PRE>
+ 
+   1)  If the input surface string does not map to an ID code 
+       and does not represent an integer, the output `code' is 
+       undefined and the output `found' is set to SPICEFALSE.
+ 
+       This case is not treated as an error. 
+ 
+   2)  The error SPICE(EMPTYSTRING) is signaled if the input string
+       does not contain at least one character, since such an input
+       string cannot be converted to a Fortran-style string in this
+       case.
+ 
+   3)  The error SPICE(NULLPOINTER) is signaled if the input string
+       pointer is null.
+</PRE>
+<h4><a name="Files">Files</a></h4>
+<PRE>
+   
+   Surface name-to-ID mappings may be defined at run time by loading
+   text kernels containing kernel variable assignments of the form
+ 
+      NAIF_SURFACE_NAME += ( &lt;surface name 1&gt;, ... ) 
+      NAIF_SURFACE_CODE += ( &lt;surface code 1&gt;, ... ) 
+      NAIF_SURFACE_BODY += ( &lt;body code 1&gt;,    ... ) 
+ 
+   Above, the Ith elements of the lists on the assignments' right
+   hand sides together define the Ith surface name/ID mapping.
+ 
+   The same effect can be achieved using assignments formatted as 
+   follows: 
+ 
+      NAIF_SURFACE_NAME += &lt;surface name 1&gt; 
+      NAIF_SURFACE_CODE += &lt;surface code 1&gt; 
+      NAIF_SURFACE_BODY += &lt;body code 1&gt; 
+ 
+      NAIF_SURFACE_NAME += &lt;surface name 2&gt; 
+      NAIF_SURFACE_CODE += &lt;surface code 2&gt; 
+      NAIF_SURFACE_BODY += &lt;body code 2&gt; 
+ 
+         ... 
+ 
+   Note the use of the 
+ 
+      += 
+ 
+   operator; this operator appends to rather than overwrites the 
+   kernel variable named on the left hand side of the assignment. 
+ </PRE>
+<h4><a name="Particulars">Particulars</a></h4>
+<PRE>
+ 
+   Surfaces are always associated with bodies (which usually are 
+   ephemeris objects). For any given body, a mapping between surface 
+   names and surface ID codes can be established.  
+ 
+   Bodies serve to disambiguate surface names and ID codes: the set 
+   of surface names and surface ID codes for a given body can be 
+   thought of as belonging to a name space. A given surface ID code 
+   or surface name may be used for surfaces of multiple bodies, 
+   without conflict. 
+ 
+   Associations between surface names and ID codes are always made 
+   via kernel pool assignments; there are no built-in associations. 
+ 
+   <b>srfscc_c</b> is one of four related subroutines: 
+ 
+      <a href="srfs2c_c.html">srfs2c_c</a>    Surface string and body string to surface ID code 
+      <b>srfscc_c</b>    Surface string and body ID code to surface ID code 
+      <a href="srfc2s_c.html">srfc2s_c</a>    Surface ID code and body ID code to surface string 
+      <a href="srfcss_c.html">srfcss_c</a>    Surface ID code and body string to surface string 
+ 
+   <a href="srfs2c_c.html">srfs2c_c</a>, <a href="srfc2s_c.html">srfc2s_c</a>, <b>srfscc_c</b>, and <a href="srfcss_c.html">srfcss_c</a> perform translations
+   between surface strings and their corresponding integer ID codes.
+ 
+   Refer to naif_ids.req for details concerning adding new surface 
+   name/code associations at run time by loading text kernels. 
+</PRE>
+<h4><a name="Examples">Examples</a></h4>
+<PRE>
+ 
+   The formatting of the results shown for this example may differ 
+   across platforms. 
+ 
+   1) Supposed a text kernel has been loaded that contains 
+      the following assignments: 
+ 
+         NAIF_SURFACE_NAME += ( 'MGS MOLA  64 pixel/deg', 
+                                'MGS MOLA 128 pixel/deg', 
+                                'PHOBOS GASKELL Q512'     ) 
+         NAIF_SURFACE_CODE += (   1,   2,    1 ) 
+         NAIF_SURFACE_BODY += ( 499, 499,  401 ) 
+ 
+      Translate each surface and body string pair to the  
+      associated surface ID code. Also perform a translation 
+      for a surface name having no matching ID and for  
+      a body string having no matching body ID code. 
+                   
+      Use the meta-kernel shown below to define the required SPICE 
+      kernel variables.
+ 
+ 
+         KPL/MK 
+ 
+         File: srfscc_ex1.tm 
+ 
+         This meta-kernel is intended to support operation of SPICE 
+         example programs. The file contents shown here should not be 
+         assumed to contain adequate or correct versions of data 
+         required by SPICE-based user applications. 
+ 
+ 
+         \begindata 
+ 
+         NAIF_SURFACE_NAME += ( 'MGS MOLA  64 pixel/deg', 
+                                'MGS MOLA 128 pixel/deg', 
+                                'PHOBOS GASKELL Q512'     ) 
+         NAIF_SURFACE_CODE += (   1,   2,    1 ) 
+         NAIF_SURFACE_BODY += ( 499, 499,  401 ) 
+ 
+         \begintext 
+ 
+ 
+     Example code begins here. 
+    
+
+        /.
+        <b>srfscc_c</b> example 1 
+        ./
+
+        #include &lt;stdio.h&gt;
+        #include &quot;SpiceUsr.h&quot;
+
+        int main()
+        {
+           /.
+           Local constants
+           ./
+           #define BDNMLN          37
+           #define SFNMLN          SPICE_SRF_SFNMLN
+           #define NCASE           7
+
+           /.
+           Local variables 
+           ./
+           SpiceBoolean            found;
+
+           static SpiceChar        srfstr [NCASE][BDNMLN] =
+
+                                      { &quot;MGS MOLA  64 pixel/deg&quot;,
+                                        &quot;PHOBOS GASKELL Q512&quot;,
+                                        &quot;MGS MOLA 128 pixel/deg&quot;,
+                                        &quot;1&quot;,
+                                        &quot;1&quot;,
+                                        &quot;2&quot;,
+                                        &quot;ZZZ&quot;                    };
+
+           static SpiceChar        tf     [2][6] =
+
+                                     { &quot;false&quot;, &quot;true&quot; };
+
+           SpiceChar             * meta;
+
+           static SpiceInt         bodyid [NCASE] = 
+
+                                      { 499, 401, 499, 499,
+                                        401, 499, 499      };
+
+           SpiceInt                i;
+           SpiceInt                surfid;
+
+           meta = &quot;srfscc_ex1.tm&quot;;
+
+           <a href="furnsh_c.html">furnsh_c</a> ( meta );
+
+           printf ( &quot;\n&quot; );
+
+           for ( i = 0;  i &lt; NCASE;  i++ )
+           {
+              <b>srfscc_c</b> ( srfstr[i], bodyid[i], &amp;surfid, &amp;found );
+
+              printf ( &quot;surface string   = %s\n&quot;
+                       &quot;body ID          = %d\n&quot;
+                       &quot;surface ID found = %s\n&quot;,
+                       srfstr[i],
+                       (int) bodyid[i],
+                       tf[found]                 );
+
+              if ( found ) 
+              {
+                 printf ( &quot;surface ID       = %d\n&quot;, surfid );
+              }
+              printf ( &quot;\n&quot; );
+           }
+           return ( 0 );
+        }    
+
+ 
+   When this program was executed on a PC/Linux/gcc/64-bit 
+   platform, the output was: 
+ 
+
+      surface string   = MGS MOLA  64 pixel/deg
+      body ID          = 499
+      surface ID found = true
+      surface ID       = 1
+
+      surface string   = PHOBOS GASKELL Q512
+      body ID          = 401
+      surface ID found = true
+      surface ID       = 1
+
+      surface string   = MGS MOLA 128 pixel/deg
+      body ID          = 499
+      surface ID found = true
+      surface ID       = 2
+
+      surface string   = 1
+      body ID          = 499
+      surface ID found = true
+      surface ID       = 1
+
+      surface string   = 1
+      body ID          = 401
+      surface ID found = true
+      surface ID       = 1
+
+      surface string   = 2
+      body ID          = 499
+      surface ID found = true
+      surface ID       = 2
+
+      surface string   = ZZZ
+      body ID          = 499
+      surface ID found = false
+
+ </PRE>
+<h4><a name="Restrictions">Restrictions</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Literature_References">Literature_References</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Author_and_Institution">Author_and_Institution</a></h4>
+<PRE>
+ 
+   N.J. Bachman    (JPL) 
+   B.V. Semenov    (JPL) 
+   E.D. Wright     (JPL) 
+ </PRE>
+<h4><a name="Version">Version</a></h4>
+<PRE>
+ 
+   -CSPICE Version 1.0.0, 05-APR-2017 (NJB) (BVS) (EDW)
+</PRE>
+<h4><a name="Index_Entries">Index_Entries</a></h4>
+<PRE>
+ 
+   surface string and body ID code to surface ID code  
+ </PRE>
+<h4>Link to routine srfscc_c source file <a href='../../../src/cspice/srfscc_c.c'>srfscc_c.c</a> </h4>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+   <pre>Wed Apr  5 17:54:44 2017</pre>
+
+</body>
+</html>
+

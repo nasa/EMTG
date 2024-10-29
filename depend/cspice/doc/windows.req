@@ -1,0 +1,519 @@
+ 
+Windows Required Reading
+===========================================================================
+ 
+   Last revised on 2010 MAY 18 by B. V. Semenov.
+ 
+ 
+Abstract
+--------------------------------------------------------
+ 
+   SPICE Toolkits define the SPICE data type "window" for use in the
+   manipulation of continuous intervals on the real line. Corresponding
+   window functions in CSPICE are designed to simplify the use of this data
+   type.
+ 
+ 
+Introduction
+--------------------------------------------------------
+ 
+   By definition, a window is a double precision SPICE cell that contains
+   zero or more intervals.
+ 
+   An interval is an ordered pair of numbers,
+ 
+      [ a(i), b(i) ]
+ 
+   such that
+ 
+      a(i)  <  b(i)
+            -
+ 
+   The intervals within a window are both ordered and disjoint. That is,
+   the beginning of each interval is greater than the end of the previous
+   interval:
+ 
+      b(i)  <  a(i+1)
+ 
+   This restriction is enforced primarily because it allows efficient
+   window operations.
+ 
+   The intervals stored in windows typically represent intervals of time
+   (seconds, days, or centuries past a reference epoch). However, windows
+   can represent any kinds of intervals.
+ 
+ 
+Basic Concepts
+ 
+   ``size'' - The maximum number of elements storable in a SPICE cell.
+   Cells are created with a constant size.
+ 
+   ``cardinality - The number of elements stored in a cell. ``cardinality''
+   describes how much of ``size'' is used. ``cardinality'' satisfies the
+   relationship:
+ 
+         cardinality < size
+                     -
+ 
+   ``measure'' - the measure of an interval is the length of the interval,
+   that is the difference of its endpoints:
+ 
+      m(i) = b(i) - a(i)
+ 
+   Note that the singleton interval
+ 
+      [ a(i), a(i) ]
+ 
+   has measure zero. The window
+ 
+      [1,2], [4,9], [16,16]
+ 
+   contains intervals of measure 1, 5, and 0 respectively.
+ 
+   The concept of measure extends readily to the gaps between adjacent
+   intervals. In the example above, the window contains gaps of measure 2
+   and 7. Intervals separated by gaps of measure zero or less are said to
+   overlap. Overlapping intervals created by the window functions are
+   merged as soon as they are created.
+ 
+   Finally, the measure of a window is the sum of the measures of its
+   intervals. In the example above, the measure of the window is 6. Note
+   that a floating point window containing only singletons has measure
+   zero.
+ 
+ 
+The window data type
+--------------------------------------------------------
+ 
+   SPICE windows are a form of the SPICE cell data type [1], so any
+   restriction that applies to the use of cells applies to the use of
+   windows as well. The implementation of a SPICE window differs according
+   to the Toolkit language.
+ 
+   The CSPICE implementation of SPICE windows consists of SpiceDouble cells
+   created and initialized to empty using the macro SPICEDOUBLE_CELL.
+ 
+   Example:
+ 
+      #include "SpiceUsr.h"
+ 
+         #define MAXSIZ       8
+ 
+         /*
+         Define a cell 'win' to use as a window.
+ 
+         This window can hold eight (MAXSIZ = 8) SpiceDouble values,
+         thus four intervals.
+         */
+ 
+         SPICEDOUBLE_CELL ( win, MAXSIZ );
+ 
+   The SPICEDOUBLE_CELL macro (defined in SpiceCell.h) creates a structure
+   of type SpiceCell having cell name `win', maximum cell cardinality
+   `MAXSIZ'.
+ 
+   The cell size, `MAXSIZ', must have an even value to use the cell as a
+   window. Two values defines a window interval, so a window of N intervals
+   requires a cell of size 2*N.
+ 
+   SPICE windows, when appearing as arguments to the CSPICE window
+   functions, always have type (SpiceCell *). The SpiceCell structure has
+   members (also defined in SpiceCell.h):
+ 
+         dtype      Data type of cell: character, integer, or double
+                    precision.
+ 
+                    'dtype' has type SpiceCellDataType.
+ 
+         length     For character cells, the declared length of the
+                    cell's string array. Unused as zero for non-string
+                    cells.
+ 
+         size       The maximum number of data items that can be stored in
+                    the cell's data array.
+ 
+         card       The cell's "cardinality": the number of data items
+                    currently present in the cell.
+ 
+         isSet      Boolean flag indicating whether the cell is a CSPICE
+                    set. Sets have no duplicate data items, and their data
+                    items are stored in increasing order.
+ 
+         adjust     Boolean flag indicating whether the cell's data area
+                    has adjustable size.  (Adjustable size cell data areas
+                    are not currently implemented.)
+ 
+         init       Boolean flag indicating whether the cell has been
+                    initialized.
+ 
+         base       is a void pointer to the associated data array.  base
+                    points to the start of the control area of this array.
+ 
+         data       is a void pointer to the first data slot in the
+                    associated data array. This slot is the element
+                    following the control area.
+ 
+   Any of the general cell functions in CSPICE may be used with windows.
+   For example, copyd_c may be used to copy the contents of one window into
+   another, and the function cardd_c may be used to determine the number of
+   endpoints (that is, twice the number of intervals) in a window.
+ 
+   All errors are reported via standard CSPICE error handling.
+ 
+   With the exception of the initialization functions, all window functions
+   assume that input cells do contain valid windows---that is, ordered and
+   distinct sets of endpoints. The windows subsystem may not signal errors
+   resulting from attempts to operate on invalid windows.
+ 
+ 
+References
+--------------------------------------------------------
+ 
+         [1]   CELLS Required Reading (cells.req).
+ 
+ 
+Window Functions
+===========================================================================
+ 
+   The window functions in CSPICE fall into the following categories.
+ 
+       --   Initialization
+ 
+       --   Unary
+ 
+       --   Binary
+ 
+       --   Complement
+ 
+       --   Comparison
+ 
+ 
+Initialization Functions
+--------------------------------------------------------
+ 
+   wnvald_c takes as input a double precision SPICE cell containing pairs
+   of endpoints and validates it to form a window. The calling sequence is
+   shown below.
+ 
+      wnvald_c ( size, n, &window )
+ 
+   On input, `window' is a cell of size `size' containing `n' endpoints.
+   During validation, the intervals are ordered, and overlapping intervals
+   are merged. On output, the cardinality of `window' is the number of
+   endpoints remaining, and the window is ready for use with any of the
+   window functions.
+ 
+   Because validation is done in place, there is no chance of overflow.
+   However, other errors may be detected. For example, if the left endpoint
+   of any interval is greater than the corresponding right endpoint,
+   wnvald_c signals an error.
+ 
+   Validation is primarily useful for ordering and merging intervals added
+   to a cell by appndd_c, or directly assigned to the cell.
+ 
+   Building a large window is done most efficiently by assigning the window
+   elements and then calling wnvald_c. Building up the window by repeated
+   insertion requires repeated ordering operations; wnvald_c does a single
+   ordering operation.
+ 
+ 
+Unary Functions
+--------------------------------------------------------
+ 
+   Each unary function operates on a single window. Six unary operations
+   are supported, each of which alters the contents of the input window.
+   The calling sequences are shown below.
+ 
+      wncond_c ( left, right, &window )      { Contract }
+ 
+      wnexpd_c ( left, right, &window )      { Expand }
+ 
+      wnextd_c ( side, &window )             { Extract }
+ 
+      wnfild_c ( small, &window )            { Fill }
+ 
+      wnfltd_c ( small, &window )            { Filter }
+ 
+      wninsd_c ( left, right, &window )      { Insert }
+ 
+   Each of the unary window functions works in place. That is, only one
+   window, `window', appears in each calling sequence, serving as both
+   input and output. Windows whose original contents need to be preserved
+   should be copied prior to calling any of the unary functions.
+ 
+   wninsd_c inserts the interval whose endpoints are `left' and `right'
+   into `window'. If the input interval overlaps any of the intervals in
+   the window, the intervals are merged. Thus, the cardinality of `window'
+   can actually decrease as the result of an insertion.
+ 
+   wnexpd_c and wncond_c expand (lengthen) and contract (shorten) each of
+   the intervals in `window'. The adjustments are not necessarily
+   symmetric. That is, wnexpd_c works by subtracting `left' units from the
+   left endpoint of each interval and adding `right' units to the right
+   endpoint of each interval. wncond_c is the same as `exp' with the signs
+   of the arguments reversed, and is primarily provided for clarity in
+   coding. (Expansion by negative increments is a messy concept.) Intervals
+   are merged when expansion causes them to overlap. Intervals are dropped
+   when they are contracted by amounts greater than their measures.
+ 
+   wnfltd_c and wnfild_c remove small intervals and small gaps between
+   adjacent intervals. Both functions take as input a minimum measure,
+   `small'. wnfltd_c filters out (drops) intervals with measures less than
+   or equal to `small', while wnfild_c merges adjacent intervals separated
+   by gaps with measures less than or equal to `small'.
+ 
+   Depending on the value of `side', wnextd_c extracts the left or right
+   endpoints of each interval in `window'. The resulting window contains
+   only the singleton intervals
+ 
+      [ a(1), a(1) ], ..., [ a(n), a(n) ]
+ 
+   or
+ 
+      [ b(1), b(1) ], ..., [ b(n), b(n) ]
+ 
+ 
+Binary Functions
+--------------------------------------------------------
+ 
+   Binary functions operate on two input windows to produce a third
+   (distinct) output window. Three major binary operations are supported.
+   The calling sequences are shown below.
+ 
+      wnunid_c ( &a, &b, &c )      { Union }
+ 
+      wnintd_c ( &a, &b, &c )      { Intersection }
+ 
+      wndifd_c ( &a, &b, &c )      { Difference }
+ 
+   In contrast with the unary functions, none of the binary functions work
+   in place. The output window, `c', must be distinct from both of the
+   input windows, `a' and `b'. We will have more to say about this later
+   on.
+ 
+   wnunid_c places the union of `a' and `b' into `c'. The union of two
+   windows contains every point that is contained in the first window, or
+   in the second window, or in both windows.
+ 
+   wnintd_c places the intersection of `a' and `b' into `c'. The
+   intersection of two windows contains every point that is contained in
+   the first window AND in the second.
+ 
+   wndifd_c places the difference of `a' and `b' into `c'. The difference
+   of two windows contains every point that is contained in the first
+   window, but NOT in the second.
+ 
+   In each case, if the output window, `c', is not large enough to hold the
+   result of the operation, as many intervals as will fit are inserted into
+   the window, and a SPICE error is signaled. (You can control the effect
+   of this error on your program; refer to Error Required Reading.)
+ 
+   In each of the binary functions, the output window must be distinct from
+   both of the input windows. All three of the binary operations can, in
+   principle, be performed in place, but not all can be performed
+   efficiently. Consequently, for the sake of consistency, none of the
+   functions work in place. For example, the following calls are invalid.
+ 
+      wnintd_c ( &a, &b, &a );
+ 
+      wnintd_c ( &a, &b, &b );
+ 
+ 
+   In each of the examples above, whether or not the function signals an
+   error, the results will almost certainly be wrong. Nearly the same
+   effect can be achieved, however, by placing the result into a temporary
+   window, which can be immediately copied back into one of the input
+   windows, as shown below.
+ 
+      wnintd_c ( &a, &b, &temp );
+ 
+      copy_c ( &temp, &a );
+ 
+ 
+Complement Functions
+--------------------------------------------------------
+ 
+   wncomd_c determines the complement of a window with respect to an
+   interval. The calling sequence is
+ 
+      wncomd_c ( left, right, &a, &c )     { Complement }
+ 
+   As with the binary functions, the output window, `c', must be distinct
+   from the input window, `a'.
+ 
+   Mathematically, the complement of a window contains those points that
+   are not contained in the window. That is, the complement of the set of
+   closed intervals
+ 
+      [ a(1), b(1) ], [ a(2), b(2) ], ..., [ a(n), b(n) ]
+ 
+   is the set of open intervals
+ 
+      ( -inf, a(1) ), ( b(1), a(2) ), ..., ( b(n), +inf )
+ 
+   Not all computer languages offer a satisfactory way to represent
+   infinity, so wncomd_c must take the complement with respect to a finite
+   interval.
+ 
+   Since the results of a window function must be another window, wncomd_c
+   returns the closure of the set theoretical complement. In short, the
+   double precision complement of the window
+ 
+      [ a(1), b(1) ], [ a(2), b(2) ], ..., [ a(n), b(n) ]
+ 
+   with respect to the interval from `left' to `right' is the intersection
+   of the windows
+ 
+      ( -inf, a(1) ], [ b(1), a(2) ], ..., [ b(n), +inf )
+ 
+   and [ `left', `right' ].
+ 
+   Intervals of measure zero (singleton intervals) in the original window
+   are replaced by gaps of measure zero, which are filled. Thus,
+   complementing a window twice does not necessarily yield the original
+   window.
+ 
+ 
+Comparison Functions
+--------------------------------------------------------
+ 
+   Comparison functions allow the contents of windows to be compared
+   against the contents of other windows. There are four comparison
+   functions: three logical functions and one function. The calling
+   sequences are shown below.
+ 
+      wnelmd_c ( point, &window )                      { Element }
+ 
+      wnincd_c ( left, right, &window )                { Inclusion }
+ 
+      wnreld_c ( &a, op, &b )                          { Relation }
+ 
+      wnsumd_c ( &win, &meas, &avg, &stddev,
+                       &shortest, &longest)            { Summary }
+ 
+   wnelmd_c returns true if the input point, `point', is an element of the
+   input window, `window'---that is, whenever the point lies within one of
+   the intervals of the window.
+ 
+   Similarly, wnincd_c is true whenever the input interval, from `left' to
+   `right', is included in the input window, `window'---that is, whenever
+   the interval lies entirely within one of the intervals of the window.
+ 
+   wnreld_c is true whenever a specified relationship between the input
+   windows, `a' and `b', is satisfied. Each relationship corresponds to a
+   comparison operator, `op'. The complete set of operators recognized by
+   wnreld_c is shown below.
+ 
+      "="          is equal to (contains the same intervals as)
+      "<>"         is not equal to
+      "<="         is a subset of
+      "<"          is a proper subset of
+      ">="         is a superset of
+      ">"          is a proper superset of
+ 
+   For example, the expression
+ 
+      wnreld_c ( &needed, "<=", &avail )
+ 
+ 
+   is true whenever the window `needed' is a subset of the window `avail'.
+   One window is a subset of another window if each of the intervals in the
+   first window is included in one of the intervals in the second window.
+   In addition, the first window is a proper subset of the second if the
+   second window contains at least one point not contained in the first
+   window. The following pairs of expressions are equivalent.
+ 
+      wnreld_c ( &a, ">", &b )
+      wnreld_c ( &b, "<", &a )
+ 
+      wnreld_c ( &a, ">=", &b )
+      wnreld_c ( &b, "<=", &a )
+ 
+   wnsumd_c provides a summary of the input window, `window'. It computes
+   the measure of the window, `meas', and the average, `avg', and standard
+   deviation, `stddev', of the measures of the individual intervals in the
+   window. It also returns the indices of the left endpoints of the
+   shortest and longest intervals in the window. All of these quantities
+   and indices are zero if the window contains no intervals.
+ 
+   The following describes the relation of `shortest' and `longest' to the
+   window data:
+ 
+   The left endpoint of the shortest interval has value:
+ 
+      SPICE_CELL_ELEM_D(window, shortest)
+ 
+   The right endpoint of the shortest interval has value:
+ 
+      SPICE_CELL_ELEM_D(window, shortest+1)
+ 
+   The left endpoint of the longest interval has value:
+ 
+      SPICE_CELL_ELEM_D(window, longest)
+ 
+   The right endpoint of the longest interval has value:
+ 
+      SPICE_CELL_ELEM_D(window, longest+1)
+ 
+   These use:
+ 
+      SPICE_CELL_ELEM_D(cell,i)
+ 
+   a macro that returns the ith data element of 'cell'.
+ 
+ 
+Summary
+===========================================================================
+ 
+   The following is a summary of the window functions in CSPICE. (DP =
+   double precision)
+ 
+            wncard_c - Cardinality of a DP window
+ 
+            wncomd_c - Complement a DP window
+ 
+            wncond_c - Contract the intervals of a DP window
+ 
+            wndifd_c - Difference two DP windows
+ 
+            wnelmd_c - Element of a DP window
+ 
+            wnexpd_c - Expand the intervals of a DP window
+ 
+            wnextd_c - Extract the endpoints from a DP window
+ 
+            wnfetd_c - Fetch an interval from a DP window
+ 
+            wnfild_c - Fill small gaps in a DP window
+ 
+            wnfltd_c - Filter small intervals from a DP window
+ 
+            wnincd_c - Included in a DP window
+ 
+            wninsd_c - Insert an interval into a DP window
+ 
+            wnintd_c - Intersect two DP windows
+ 
+            wnreld_c - Compare two DP windows
+ 
+            wnsumd_c - Summary of a DP window
+ 
+            wnunid_c - Union two DP windows
+ 
+            wnvald_c - Validate a DP window
+ 
+ 
+Appendix: Document Revision History
+===========================================================================
+ 
+ 
+Febuary 6, 2009 (EDW)
+ 
+   Document edited to conform to current NAIF format for Required Reading
+   Documents.
+ 
+ 
+September 3, 2002 (NAIF)
+ 
+   First release of CSPICE version of this document.
+ 

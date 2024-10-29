@@ -1,0 +1,493 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+
+<HEAD>
+   <TITLE>srfcss_c</TITLE>
+</HEAD>
+
+<BODY style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+<A name="TOP"></A>
+
+<table style="text-align: left; margin-left: auto; margin-right: auto; width: 800px;"
+ border="0" cellpadding="5" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153); vertical-align: middle; text-align: center;">
+      <div align="right"> 
+      <small><small><a href="index.html">Index Page</a></small></small>
+      </div>
+      <b>srfcss_c</b> </td>
+    </tr>
+
+    <tr>
+      <td style="vertical-align: top;">
+
+<small><div align="center">
+<A HREF="index.html#A">A</A>&nbsp;
+<A HREF="index.html#B">B</A>&nbsp;
+<A HREF="index.html#C">C</A>&nbsp;
+<A HREF="index.html#D">D</A>&nbsp;
+<A HREF="index.html#E">E</A>&nbsp;
+<A HREF="index.html#F">F</A>&nbsp;
+<A HREF="index.html#G">G</A>&nbsp;
+<A HREF="index.html#H">H</A>&nbsp;
+<A HREF="index.html#I">I</A>&nbsp;
+<A HREF="index.html#J">J</A>&nbsp;
+<A HREF="index.html#K">K</A>&nbsp;
+<A HREF="index.html#L">L</A>&nbsp;
+<A HREF="index.html#M">M</A>&nbsp;
+<A HREF="index.html#N">N</A>&nbsp;
+<A HREF="index.html#O">O</A>&nbsp;
+<A HREF="index.html#P">P</A>&nbsp;
+<A HREF="index.html#Q">Q</A>&nbsp;
+<A HREF="index.html#R">R</A>&nbsp;
+<A HREF="index.html#S">S</A>&nbsp;
+<A HREF="index.html#T">T</A>&nbsp;
+<A HREF="index.html#U">U</A>&nbsp;
+<A HREF="index.html#V">V</A>&nbsp;
+<A HREF="index.html#W">W</A>&nbsp;
+<A HREF="index.html#X">X</A>&nbsp;
+</div></small>
+       <br>
+       <table style="text-align: left; width: 60%; margin-left: auto; margin-right: auto;"
+       border="0" cellspacing="2" cellpadding="2">
+        <tbody>
+          <tr>
+            <td style="width: 33%; text-align: center;">
+            <small>
+              <a href="#Procedure">Procedure<br></a>
+              <a href="#Abstract">Abstract<br></a>
+              <a href="#Required_Reading">Required_Reading<br></a>
+              <a href="#Keywords">Keywords<br></a>
+              <a href="#Brief_I/O">Brief_I/O<br></a>
+              <a href="#Detailed_Input">Detailed_Input<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Detailed_Output">Detailed_Output<br></a>
+              <a href="#Parameters">Parameters<br></a>
+              <a href="#Exceptions">Exceptions<br></a>
+              <a href="#Files">Files<br></a>
+              <a href="#Particulars">Particulars<br></a>
+              <a href="#Examples">Examples<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Restrictions">Restrictions<br></a>
+              <a href="#Literature_References">Literature_References<br></a>
+              <a href="#Author_and_Institution">Author_and_Institution<br></a>
+              <a href="#Version">Version<br></a>
+              <a href="#Index_Entries">Index_Entries<br></a>
+             </small>
+            </td>
+          </tr>
+        </tbody>
+</table>
+
+<h4><a name="Procedure">Procedure</a></h4>
+<PRE>
+   void srfcss_c ( SpiceInt          code,
+                   ConstSpiceChar  * bodstr,
+                   SpiceInt          srflen,
+                   SpiceChar       * srfstr,
+                   SpiceBoolean    * isname ) 
+</PRE>
+<h4><a name="Abstract">Abstract</a></h4>
+<PRE>
+ 
+   Translate a surface ID code, together with a body string, to the 
+   corresponding surface name. If no such surface name exists, 
+   return a string representation of the surface ID code. 
+ </PRE>
+<h4><a name="Required_Reading">Required_Reading</a></h4>
+<PRE>
+ 
+   <a href="../req/dsk.html">DSK</a> 
+   <a href="../req/naif_ids.html">NAIF_IDS</a> 
+ </PRE>
+<h4><a name="Keywords">Keywords</a></h4>
+<PRE>
+ 
+   CONVERSION 
+   DSK 
+   ID 
+   NAME 
+   STRING 
+   SURFACE 
+ 
+
+</PRE>
+<h4><a name="Brief_I/O">Brief_I/O</a></h4>
+<PRE>
+ 
+   Variable  I/O  Description 
+   --------  ---  -------------------------------------------------- 
+   code       I   Integer surface ID code to translate to a string. 
+   bodstr     I   Name or ID of body associated with surface.
+   srflen     I   Length of output string `srfstr'. 
+   srfstr     O   String corresponding to surface ID code. 
+   isname     O   Flag indicating whether output is a surface name. 
+   SPICE_SRF_SFNMLN
+              P   Maximum length of surface name. 
+ </PRE>
+<h4><a name="Detailed_Input">Detailed_Input</a></h4>
+<PRE>
+ 
+   code       is an integer ID code for a surface associated with a 
+              specified body. 
+ 
+ 
+   bodstr     is a string designating the body associated with the 
+              input surface ID code. `bodstr' may contain a body name 
+              or a string representation of the body's integer ID 
+              code. For example, `bodstr' may contain 
+ 
+                 &quot;1000012&quot; 
+ 
+              instead of   
+ 
+                 '67P/CHURYUMOV-GERASIMENKO (1969 R1)' 
+ 
+              Case and leading and trailing blanks in a name are not 
+              significant. Sequences of consecutive embedded blanks 
+              are considered equivalent to a single blank. That is, 
+              all of the following strings are equivalent names: 
+ 
+                 '67P/CHURYUMOV-GERASIMENKO (1969 R1)' 
+                 '67P/Churyumov-Gerasimenko (1969 R1)' 
+                 '67P/CHURYUMOV-GERASIMENKO (1969 R1)   ' 
+                 '67P/CHURYUMOV-GERASIMENKO    (1969 R1)' 
+                 '   67P/CHURYUMOV-GERASIMENKO (1969 R1)' 
+ 
+              However, '67P/CHURYUMOV-GERASIMENKO(1969R1)'  
+              is not equivalent to the names above. 
+ 
+
+   srflen     is the maximum number of characters that can be
+              accommodated in the output string `srfstr'. This count
+              includes room for the terminating null character.
+              Normally `srflen' should be set to the value of the 
+              parameter SPICE_SRF_SFNMLN.
+
+ </PRE>
+<h4><a name="Detailed_Output">Detailed_Output</a></h4>
+<PRE>
+ 
+   srfstr     the name of the surface identified by `code', for the body
+              designated by `bodstr', if for this body an association
+              exists between the input surface ID and a surface name.
+ 
+              If `code' has more than one translation, then the most 
+              recently defined surface name corresponding to `code' is 
+              returned. `srfstr' will have the exact format (case and 
+              embedded blanks) used in the definition of the 
+              name/code association. 
+ 
+              If the input surface ID code and body name do not map 
+              to a surface name, `srfstr' is set to the string 
+              representation of `code'. 
+ 
+              `srfstr' should be declared with length 
+
+                 SPICE_SRF_SFNMLN 
+
+              (see the Parameters section below). 
+ 
+ 
+   isname     is a logical flag that is SPICETRUE if a surface name
+              corresponding to the input ID codes was found and
+              SPICEFALSE otherwise. When `isname' is SPICEFALSE, the
+              output string `srfstr' contains a string representing the
+              integer `code'.
+ </PRE>
+<h4><a name="Parameters">Parameters</a></h4>
+<PRE>
+ 
+   SPICE_SRF_SFNMLN  
+
+              is the maximum length of a surface name. This  
+              parameter is declared in the CSPICE header file  
+ 
+                 SpiceSrf.h
+ </PRE>
+<h4><a name="Exceptions">Exceptions</a></h4>
+<PRE>
+ 
+   1)  If the input body string cannot be mapped to a body name, the
+       output `srfstr' is set to a string representation of the surface
+       ID code. The output `isname' is set to SPICEFALSE.
+ 
+       This case is not treated as an error. 
+ 
+   2)  If the input surface code cannot be mapped to a surface name,
+       the output `srfstr' is set to a string representation of the
+       surface ID code. The input body string is ignored. The output
+       `isname' is set to SPICEFALSE.
+ 
+       This case is not treated as an error. 
+ 
+
+   3)  The error SPICE(NULLPOINTER) is signaled if the input body
+       string pointer is null.
+ 
+   4)  The error SPICE(EMPTYSTRING) is signaled if the input body
+       string has length zero.
+ 
+   5)  The error SPICE(NULLPOINTER) is signaled if the output surface
+       string pointer is null.
+ 
+   6)  The caller must pass a value indicating the length of the output
+       surface string. If this value is not at least 2, the error
+       SPICE(STRINGTOOSHORT) is signaled.
+</PRE>
+<h4><a name="Files">Files</a></h4>
+<PRE>
+   
+      
+   Surface name-to-ID mappings may be defined at run time by loading
+   text kernels containing kernel variable assignments of the form
+ 
+      NAIF_SURFACE_NAME += ( &lt;surface name 1&gt;, ... ) 
+      NAIF_SURFACE_CODE += ( &lt;surface code 1&gt;, ... ) 
+      NAIF_SURFACE_BODY += ( &lt;body code 1&gt;,    ... ) 
+ 
+   Above, the Ith elements of the lists on the assignments' right
+   hand sides together define the Ith surface name/ID mapping.
+ 
+   The same effect can be achieved using assignments formatted as 
+   follows: 
+ 
+      NAIF_SURFACE_NAME += &lt;surface name 1&gt; 
+      NAIF_SURFACE_CODE += &lt;surface code 1&gt; 
+      NAIF_SURFACE_BODY += &lt;body code 1&gt; 
+ 
+      NAIF_SURFACE_NAME += &lt;surface name 2&gt; 
+      NAIF_SURFACE_CODE += &lt;surface code 2&gt; 
+      NAIF_SURFACE_BODY += &lt;body code 2&gt; 
+ 
+         ... 
+ 
+   Note the use of the 
+ 
+      += 
+ 
+   operator; this operator appends to rather than overwrites the 
+   kernel variable named on the left hand side of the assignment.  
+
+  </PRE>
+<h4><a name="Particulars">Particulars</a></h4>
+<PRE>
+ 
+   Surfaces are always associated with bodies (which usually are 
+   ephemeris objects). For any given body, a mapping between surface 
+   names and surface ID codes can be established.  
+ 
+   Bodies serve to disambiguate surface names and ID codes: the set 
+   of surface names and surface ID codes for a given body can be 
+   thought of as belonging to a name space. A given surface ID code 
+   or surface name may be used for surfaces of multiple bodies, 
+   without conflict. 
+ 
+   Associations between surface names and ID codes are always made 
+   via kernel pool assignments; there are no built-in associations. 
+ 
+   <b>srfcss_c</b> is one of four related subroutines: 
+ 
+      <a href="srfs2c_c.html">srfs2c_c</a>    Surface string and body string to surface ID code 
+      <a href="srfscc_c.html">srfscc_c</a>    Surface string and body ID code to surface ID code 
+      <a href="srfc2s_c.html">srfc2s_c</a>    Surface ID code and body ID code to surface string 
+      <b>srfcss_c</b>    Surface ID code and body string to surface string 
+ 
+   <a href="srfs2c_c.html">srfs2c_c</a>, <a href="srfc2s_c.html">srfc2s_c</a>, <a href="srfscc_c.html">srfscc_c</a>, and <b>srfcss_c</b> perform translations
+   between surface strings and their corresponding integer ID codes.
+ 
+   Refer to naif_ids.req for details concerning adding new surface 
+   name/code associations at run time by loading text kernels.  
+</PRE>
+<h4><a name="Examples">Examples</a></h4>
+<PRE>
+ 
+   The formatting of the results shown for this example may differ 
+   across platforms. 
+ 
+   1) Supposed a text kernel has been loaded that contains 
+      the following assignments: 
+ 
+         NAIF_SURFACE_NAME += ( 'MGS MOLA  64 pixel/deg', 
+                                'MGS MOLA 128 pixel/deg', 
+                                'PHOBOS GASKELL Q512'     ) 
+         NAIF_SURFACE_CODE += (   1,   2,    1 ) 
+         NAIF_SURFACE_BODY += ( 499, 499,  401 ) 
+ 
+      Translate each surface and body ID code pair to the  
+      associated surface name. Also perform a translation 
+      for a surface ID having no matching name. 
+                   
+      Use the meta-kernel shown below to define the required SPICE 
+      kernel variables. 
+ 
+ 
+         KPL/MK 
+ 
+         File: srfcss_ex1.tm 
+ 
+         This meta-kernel is intended to support operation of SPICE 
+         example programs. The file contents shown here should not be 
+         assumed to contain adequate or correct versions of data 
+         required by SPICE-based user applications. 
+ 
+ 
+         \begindata 
+ 
+         NAIF_SURFACE_NAME += ( 'MGS MOLA  64 pixel/deg', 
+                                'MGS MOLA 128 pixel/deg', 
+                                'PHOBOS GASKELL Q512'     ) 
+         NAIF_SURFACE_CODE += (   1,   2,    1 ) 
+         NAIF_SURFACE_BODY += ( 499, 499,  401 ) 
+ 
+         \begintext 
+ 
+ 
+     Example code begins here. 
+ 
+
+        /.
+        <b>srfcss_c</b> example 1 
+        ./
+
+        #include &lt;stdio.h&gt;
+        #include &quot;SpiceUsr.h&quot;
+
+
+        int main()
+        {
+           /.
+           Local constants
+           ./
+           #define BDNMLN          37
+           #define NCASE           5
+
+           /.
+           Local variables 
+           ./
+           SpiceBoolean            isname;
+
+           SpiceChar               srfnam [ SPICE_SRF_SFNMLN ];
+
+           static SpiceChar        tf     [2][6] =
+
+                                      { &quot;false&quot;, &quot;true&quot; };
+
+           SpiceChar             * meta;
+
+           static SpiceChar        bodstr [NCASE][BDNMLN] =
+
+                                     { &quot;MARS&quot;, &quot;PHOBOS&quot;, &quot;499&quot;,
+                                       &quot;MARS&quot;, &quot;ZZZ&quot;            };
+
+
+           static SpiceInt         surfid [NCASE] = 
+
+                                      {   1,   1,   2,   3,  1 };
+
+           SpiceInt                i;
+
+
+           meta = &quot;srfcss_ex1.tm&quot;;
+
+           <a href="furnsh_c.html">furnsh_c</a> ( meta );
+
+           printf ( &quot;\n&quot; );
+
+           for ( i = 0;  i &lt; NCASE;  i++ )
+           {
+              <b>srfcss_c</b> ( surfid[i], bodstr[i], SPICE_SRF_SFNMLN,
+                         srfnam,    &amp;isname                      );
+
+              printf ( &quot;surface ID       = %d\n&quot;
+                       &quot;body string      = %s\n&quot;            
+                       &quot;name found       = %s\n&quot;
+                       &quot;surface string   = %s\n\n&quot;,
+                       (int) surfid[i],
+                       bodstr[i],
+                       tf[isname],
+                       srfnam                     );
+           }
+
+           return ( 0 );
+        }
+
+ 
+   When this program was executed on a PC/Linux/gcc/64-bit 
+   platform, the output was: 
+ 
+
+      surface ID       = 1
+      body string      = MARS
+      name found       = true
+      surface string   = MGS MOLA  64 pixel/deg
+
+      surface ID       = 1
+      body string      = PHOBOS
+      name found       = true
+      surface string   = PHOBOS GASKELL Q512
+
+      surface ID       = 2
+      body string      = 499
+      name found       = true
+      surface string   = MGS MOLA 128 pixel/deg
+
+      surface ID       = 3
+      body string      = MARS
+      name found       = false
+      surface string   = 3
+
+      surface ID       = 1
+      body string      = ZZZ
+      name found       = false
+      surface string   = 1
+
+ </PRE>
+<h4><a name="Restrictions">Restrictions</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Literature_References">Literature_References</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Author_and_Institution">Author_and_Institution</a></h4>
+<PRE>
+ 
+   N.J. Bachman    (JPL) 
+   B.V. Semenov    (JPL) 
+   E.D. Wright     (JPL) 
+ </PRE>
+<h4><a name="Version">Version</a></h4>
+<PRE>
+ 
+   -CSPICE Version 1.0.0, 05-APR-2017 (NJB) (BVS) (EDW)
+</PRE>
+<h4><a name="Index_Entries">Index_Entries</a></h4>
+<PRE>
+ 
+   surface ID code and body string to surface string 
+ </PRE>
+<h4>Link to routine srfcss_c source file <a href='../../../src/cspice/srfcss_c.c'>srfcss_c.c</a> </h4>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+   <pre>Wed Apr  5 17:54:44 2017</pre>
+
+</body>
+</html>
+

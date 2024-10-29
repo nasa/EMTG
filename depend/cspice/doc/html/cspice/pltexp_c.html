@@ -1,0 +1,320 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+
+<HEAD>
+   <TITLE>pltexp_c</TITLE>
+</HEAD>
+
+<BODY style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+<A name="TOP"></A>
+
+<table style="text-align: left; margin-left: auto; margin-right: auto; width: 800px;"
+ border="0" cellpadding="5" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153); vertical-align: middle; text-align: center;">
+      <div align="right"> 
+      <small><small><a href="index.html">Index Page</a></small></small>
+      </div>
+      <b>pltexp_c</b> </td>
+    </tr>
+
+    <tr>
+      <td style="vertical-align: top;">
+
+<small><div align="center">
+<A HREF="index.html#A">A</A>&nbsp;
+<A HREF="index.html#B">B</A>&nbsp;
+<A HREF="index.html#C">C</A>&nbsp;
+<A HREF="index.html#D">D</A>&nbsp;
+<A HREF="index.html#E">E</A>&nbsp;
+<A HREF="index.html#F">F</A>&nbsp;
+<A HREF="index.html#G">G</A>&nbsp;
+<A HREF="index.html#H">H</A>&nbsp;
+<A HREF="index.html#I">I</A>&nbsp;
+<A HREF="index.html#J">J</A>&nbsp;
+<A HREF="index.html#K">K</A>&nbsp;
+<A HREF="index.html#L">L</A>&nbsp;
+<A HREF="index.html#M">M</A>&nbsp;
+<A HREF="index.html#N">N</A>&nbsp;
+<A HREF="index.html#O">O</A>&nbsp;
+<A HREF="index.html#P">P</A>&nbsp;
+<A HREF="index.html#Q">Q</A>&nbsp;
+<A HREF="index.html#R">R</A>&nbsp;
+<A HREF="index.html#S">S</A>&nbsp;
+<A HREF="index.html#T">T</A>&nbsp;
+<A HREF="index.html#U">U</A>&nbsp;
+<A HREF="index.html#V">V</A>&nbsp;
+<A HREF="index.html#W">W</A>&nbsp;
+<A HREF="index.html#X">X</A>&nbsp;
+</div></small>
+       <br>
+       <table style="text-align: left; width: 60%; margin-left: auto; margin-right: auto;"
+       border="0" cellspacing="2" cellpadding="2">
+        <tbody>
+          <tr>
+            <td style="width: 33%; text-align: center;">
+            <small>
+              <a href="#Procedure">Procedure<br></a>
+              <a href="#Abstract">Abstract<br></a>
+              <a href="#Required_Reading">Required_Reading<br></a>
+              <a href="#Keywords">Keywords<br></a>
+              <a href="#Brief_I/O">Brief_I/O<br></a>
+              <a href="#Detailed_Input">Detailed_Input<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Detailed_Output">Detailed_Output<br></a>
+              <a href="#Parameters">Parameters<br></a>
+              <a href="#Exceptions">Exceptions<br></a>
+              <a href="#Files">Files<br></a>
+              <a href="#Particulars">Particulars<br></a>
+              <a href="#Examples">Examples<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Restrictions">Restrictions<br></a>
+              <a href="#Literature_References">Literature_References<br></a>
+              <a href="#Author_and_Institution">Author_and_Institution<br></a>
+              <a href="#Version">Version<br></a>
+              <a href="#Index_Entries">Index_Entries<br></a>
+             </small>
+            </td>
+          </tr>
+        </tbody>
+</table>
+
+<h4><a name="Procedure">Procedure</a></h4>
+<PRE>
+   void pltexp_c ( ConstSpiceDouble   iverts[3][3],
+                   SpiceDouble        delta,
+                   SpiceDouble        overts[3][3] ) 
+</PRE>
+<h4><a name="Abstract">Abstract</a></h4>
+<PRE>
+ 
+   Expand a triangular plate by a specified amount. The expanded 
+   plate is co-planar with, and has the same orientation as, the 
+   original. The centroids of the two plates coincide. 
+ </PRE>
+<h4><a name="Required_Reading">Required_Reading</a></h4>
+<PRE>
+ 
+   <a href="../req/dsk.html">DSK</a> 
+ </PRE>
+<h4><a name="Keywords">Keywords</a></h4>
+<PRE>
+ 
+   MATH  
+   GEOMETRY 
+   TOPOGRAPHY 
+ 
+
+</PRE>
+<h4><a name="Brief_I/O">Brief_I/O</a></h4>
+<PRE>
+ 
+   Variable  I/O  Description 
+   --------  ---  -------------------------------------------------- 
+   iverts     I   Vertices of the plate to be expanded. 
+   delta      I   Fraction by which the plate is to be expanded. 
+   overts     O   Vertices of the expanded plate. 
+ </PRE>
+<h4><a name="Detailed_Input">Detailed_Input</a></h4>
+<PRE>
+ 
+   iverts     is an array containing three vertices of a triangular 
+              plate. Each vertex is a three-dimensional vector. The 
+              elements 
+ 
+                 iverts[i][j], j = 0 ... 2
+ 
+              are, respectively, the X, Y, and Z components of the 
+              ith vertex. 
+ 
+ 
+   delta      is a fraction by which the plate is to be scaled. 
+              Scaling is done so that the scaled plate has the 
+              following properties: 
+ 
+                 -  it is co-planar with the input plate 
+ 
+                 -  its centroid coincides with that of the input 
+                    plate 
+ 
+                 -  its sides remain parallel to the corresponding 
+                    sides of the input plate 
+ 
+                 -  the distance of each vertex from the centroid is 
+                    (1+delta) times the corresponding distance for 
+                    the input plate 
+ </PRE>
+<h4><a name="Detailed_Output">Detailed_Output</a></h4>
+<PRE>
+ 
+   overts     is an array containing three vertices of the triangular 
+              plate resulting from scaling the input plate. 
+ 
+              If `ctroid' is the centroid (the average of the vertices) 
+              of the input plate, then the ith vertex of `overts' 
+ 
+                 overts[i][j], j = 0 ... 2
+ 
+              is equal to  
+ 
+                 ctroid[j] + (1+delta)*( iverts[i][j] - ctroid[j] ), 
+ 
+                 j = 0 ... 2
+ 
+ </PRE>
+<h4><a name="Parameters">Parameters</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Exceptions">Exceptions</a></h4>
+<PRE>
+ 
+   Error free. 
+ </PRE>
+<h4><a name="Files">Files</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Particulars">Particulars</a></h4>
+<PRE>
+ 
+   This routine supports &quot;greedy&quot; ray-plate intercept algorithms. 
+   Such algorithms attempt to ensure that false negatives---in which 
+   an intersection is not found due to round-off error---do not 
+   occur. In such an algorithm, the plate of interest is expanded 
+   slightly before the intersection test is performed. 
+    </PRE>
+<h4><a name="Examples">Examples</a></h4>
+<PRE>
+ 
+   The numerical results shown for these examples may differ across 
+   platforms. The results depend on the SPICE kernels used as input 
+   (if any), the compiler and supporting libraries, and the machine 
+   specific arithmetic implementation. 
+    
+   1) Expand an equilateral triangle that lies in the plane  
+       
+         { (x,y,z) : z = 7 } 
+ 
+      Use an expansion fraction of 1.0; this doubles the size of 
+      the plate. 
+ 
+      Example code begins here.  
+ 
+         /.
+         Example program pltexp_ex1
+         ./
+         #include &lt;stdio.h&gt;
+         #include &lt;math.h&gt;
+         #include &quot;SpiceUsr.h&quot;
+
+         int main()
+         {
+            /.
+            Local variables 
+            ./ 
+            SpiceDouble             delta;
+            SpiceDouble             iverts[3][3];
+            SpiceDouble             overts[3][3];
+            SpiceDouble             s;
+
+            s     = sqrt( 3.0 ) / 2.0;
+
+            <a href="vpack_c.html">vpack_c</a> (   s,  -0.5,  7.0, iverts[0] );
+            <a href="vpack_c.html">vpack_c</a> ( 0.0,   1.0,  7.0, iverts[1] );
+            <a href="vpack_c.html">vpack_c</a> (  -s,  -0.5,  7.0, iverts[2] );
+
+            delta = 1.0;
+
+            <b>pltexp_c</b> ( iverts, delta, overts );
+
+            printf ( &quot;\n&quot;
+                     &quot;Vertices of input plate: \n&quot;
+                     &quot; I1 = %20.12f %20.12f %20.12f\n&quot;
+                     &quot; I2 = %20.12f %20.12f %20.12f\n&quot;
+                     &quot; I3 = %20.12f %20.12f %20.12f\n&quot;,
+                     iverts[0][0], iverts[0][1], iverts[0][2], 
+                     iverts[1][0], iverts[1][1], iverts[1][2], 
+                     iverts[2][0], iverts[2][1], iverts[2][2]  );
+
+            printf ( &quot;\n&quot;
+                     &quot;Vertices of output plate: \n&quot;
+                     &quot; O1 = %20.12f %20.12f %20.12f\n&quot;
+                     &quot; O2 = %20.12f %20.12f %20.12f\n&quot;
+                     &quot; O3 = %20.12f %20.12f %20.12f\n\n&quot;,
+                     overts[0][0], overts[0][1], overts[0][2], 
+                     overts[1][0], overts[1][1], overts[1][2], 
+                     overts[2][0], overts[2][1], overts[2][2]  );
+
+            return ( 0 );
+         }
+ 
+ 
+ 
+   When this program was executed on a PC/Linux/gcc/64-bit 
+   platform, the output was: 
+ 
+
+      Vertices of input plate:
+       I1 =       0.866025403784      -0.500000000000       7.000000000000
+       I2 =       0.000000000000       1.000000000000       7.000000000000
+       I3 =      -0.866025403784      -0.500000000000       7.000000000000
+
+      Vertices of output plate:
+       O1 =       1.732050807569      -1.000000000000       7.000000000000
+       O2 =       0.000000000000       2.000000000000       7.000000000000
+       O3 =      -1.732050807569      -1.000000000000       7.000000000000
+
+ 
+   Note that the height of the plate is unchanged, but the vectors 
+   from the centroid to the vertices have doubled in length. 
+ 
+ </PRE>
+<h4><a name="Restrictions">Restrictions</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Literature_References">Literature_References</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Author_and_Institution">Author_and_Institution</a></h4>
+<PRE>
+ 
+   N.J. Bachman    (JPL) 
+ </PRE>
+<h4><a name="Version">Version</a></h4>
+<PRE>
+ 
+   -CSPICE Version 1.0.0, 29-FEB-2016 (NJB)
+</PRE>
+<h4><a name="Index_Entries">Index_Entries</a></h4>
+<PRE>
+ 
+   expand triangular plate 
+ </PRE>
+<h4>Link to routine pltexp_c source file <a href='../../../src/cspice/pltexp_c.c'>pltexp_c.c</a> </h4>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+   <pre>Wed Apr  5 17:54:40 2017</pre>
+
+</body>
+</html>
+

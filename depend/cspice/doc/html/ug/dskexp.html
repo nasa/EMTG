@@ -1,0 +1,279 @@
+<HTML>
+<HEAD>
+<TITLE> DSKEXP User's Guide </TITLE>
+</HEAD>
+
+<BODY style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+
+<A NAME="top"></A>
+
+<TABLE STYLE="text-align: left; margin-left: auto; margin-right: auto; width: 800px;" BORDER="0" CELLPADDING="5" CELLSPACING="2">
+<TBODY>
+<TR>
+  <TD STYLE="background-color: rgb(153, 153, 153); vertical-align: middle; text-align: center;">
+  <DIV ALIGN="right">
+    <SMALL><SMALL><A HREF="index.html">Index Page</A></SMALL></SMALL>
+  </DIV>
+  <B>DSKEXP User's Guide</B> </TD>
+</TR>
+<TR>
+  <TD STYLE="vertical-align: top;">
+
+<H2> Table of Contents
+</H2>
+
+<PRE>
+   <A HREF="#DSKEXP User's Guide">DSKEXP User's Guide</A>
+      <A HREF="#Abstract">Abstract</A>
+      <A HREF="#Summary">Summary</A>
+      <A HREF="#DSKEXP output formats">DSKEXP output formats</A>
+      <A HREF="#Running DSKEXP">Running DSKEXP</A>
+      <A HREF="#Examples">Examples</A>
+
+</PRE>
+
+<HR SIZE=3 NOSHADE>
+
+<BR><BR>
+<A NAME="DSKEXP User's Guide"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H1> DSKEXP User's Guide
+</H1><HR SIZE=3 NOSHADE><P><BR><BR><BR>
+   Last revised on 2015 APR 07 by N. J. Bachman.
+<P>
+ 
+<BR><BR>
+<A NAME="Abstract"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H2> Abstract
+</H2><HR ALIGN="LEFT" WIDTH=50% ><P><BR><BR>
+   DSKEXP is a command-line program that exports data from DSK files to
+   text files.
+<P>
+ 
+<BR><BR>
+<A NAME="Summary"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H2> Summary
+</H2><HR ALIGN="LEFT" WIDTH=50% ><P><BR><BR>
+   DSKEXP enables SPICE Toolkit users to ``export'' data from a DSK file to
+   any of a variety of simple, easily parsed text formats. This capability
+   enables users to easily transform DSK files into formats required by
+   other applications; it also makes it easy to inspect the data in a DSK
+   file.
+<P>
+ 
+   DSKEXP currently is limited to processing type 2 (plate model) DSK
+   segments.
+<P>
+ 
+   If the input DSK file contains multiple segments, an output text file
+   will be created for each segment.
+<P>
+ 
+<BR><BR>
+<A NAME="DSKEXP output formats"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H2> DSKEXP output formats
+</H2><HR ALIGN="LEFT" WIDTH=50% ><P><BR><BR>
+   Output files created by DSKEXP are usable as input data files by the
+   SPICE program MKDSK. The supported formats are:
+<P>
+ 
+<UL>
+<TT>1.</TT> Plate-vertex table. The MKDSK code for this format is 1. The output file
+format is
+<BR><BR></UL>
+<PRE>
+            &lt;vertex count NV&gt;
+            1   &lt;vertex 1  X value&gt;&lt;Y value&gt;&lt;Z value&gt;
+                  ...
+            NV  &lt;vertex NV X value&gt;&lt;Y value&gt;&lt;Z value&gt;
+            &lt;plate count NP&gt;
+            1  &lt;plate 1  vertex 1 ID&gt;&lt;vertex 2 ID&gt;&lt;vertex 3 ID&gt;
+                  ...
+            NP &lt;plate NP vertex 1 ID&gt;&lt;vertex 2 ID&gt;&lt;vertex 3 ID&gt;
+</PRE>
+<UL>
+<TT>2.</TT> Vertex-facet table. This format is also called ``obj'' format. The MKDSK
+code for this format is 3. The output file format is
+<BR><BR></UL>
+<PRE>
+             v &lt;vertex 1  X value&gt;&lt;Y value&gt;&lt;Z value&gt;
+                  ...
+             v &lt;vertex NV X value&gt;&lt;Y value&gt;&lt;Z value&gt;
+             f &lt;plate 1  vertex 1 ID&gt;&lt;vertex 2 ID&gt;&lt;vertex 3 ID&gt;
+                  ...
+             f &lt;plate NP vertex 1 ID&gt;&lt;vertex 2 ID&gt;&lt;vertex 3 ID&gt;
+</PRE>
+<UL>
+<TT>&#32;&#32;</TT> In the diagram above, NV and NP are the vertex and plate counts,
+respectively.
+<BR><BR></UL>
+<UL>
+<TT>3.</TT> Rosetta/OSIRIS ``ver'' format. The MKDSK code for this format is 4. The
+output file format is
+<BR><BR></UL>
+<PRE>
+            &lt;vertex count NV&gt; &lt;plate count NP&gt;
+              &lt;vertex 1  X value&gt;&lt;Y value&gt;&lt;Z value&gt;
+                  ...
+              &lt;vertex NV X value&gt;&lt;Y value&gt;&lt;Z value&gt;
+            3
+              &lt;plate 1  vertex 1 ID&gt;&lt;vertex 2 ID&gt;&lt;vertex 3 ID&gt;
+                  ...
+            3
+              &lt;plate NP vertex 1 ID&gt;&lt;vertex 2 ID&gt;&lt;vertex 3 ID&gt;
+</PRE>
+   The Gaskell ICQ format (MKDSK code 2) is not supported as an export
+   format.
+<P>
+ 
+   See the MKDSK User's Guide for further information on these text file
+   formats.
+<P>
+ 
+<BR><BR>
+<A NAME="Running DSKEXP"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H2> Running DSKEXP
+</H2><HR ALIGN="LEFT" WIDTH=50% ><P><BR><BR>
+   The command syntax for DSKEXP is
+<P>
+ 
+<PRE>
+   dskexp   -dsk    &lt;dsk&gt;
+            -text   &lt;output name&gt;
+            -format &lt;MKDSK format code/name&gt;
+           [-prec   &lt;# of vertex mantissa digits (1:17)&gt;]
+</PRE>
+   The parameters other than the output precision must be present in the
+   command.
+<P>
+ 
+   The value associated with the keyword
+<P>
+ 
+<PRE>
+   -format
+</PRE>
+   specifies the output file format. All of the supported output formats
+   are valid MKDSK input file formats. See the section ``DSKEXP output
+   formats'' above for further information.
+<P>
+ 
+   Output formats may be specified by name or by integer code.
+<P>
+ 
+   If the input file contains multiple segments, an output file will be
+   written for each segment. The file for the nth segment, where n is
+   greater than 1, will have the string
+<P>
+ 
+<PRE>
+   _&lt;n-1&gt;
+</PRE>
+   appended to the output file name specified on the command line. For
+   example, if the input DSK contains multiple segments and if the
+   specified output file name is
+<P>
+ 
+<PRE>
+   phobos.plt
+</PRE>
+   then the file for the first segment will have that name, the file for
+   the second segment will be named
+<P>
+ 
+<PRE>
+   phobos.plt_1
+</PRE>
+   and so on.
+<P>
+ 
+   The optional output precision specification allows users to limit the
+   precision of the double precision numbers representing components of
+   plate model vertices. Reducing the output precision can significantly
+   reduce the size of the output file. By default, full precision (17
+   mantissa digits) is used.
+<P>
+ 
+   The command
+<P>
+ 
+<PRE>
+   dskexp
+</PRE>
+   (without parameters) causes DSKEXP to dump a usage summary, as do the
+   commands
+<P>
+ 
+<PRE>
+   dskexp -usage
+   dskexp -u
+   dskexp -help
+   dskexp -h
+</PRE>
+<BR><BR>
+<A NAME="Examples"></A>
+<p align="right"><a href="#top"><small>Top</small></a></p>
+<H2> Examples
+</H2><HR ALIGN="LEFT" WIDTH=50% ><P><BR><BR>
+<UL>
+<TT>1.</TT> Create a vertex-facet format output file. This example uses default
+precision for the output vertices.
+<BR><BR></UL>
+<PRE>
+            dskexp -dsk phobos.bds -text phobos.obj -format vertex-facet
+</PRE>
+<UL>
+<TT>2.</TT> Create a vertex-facet format output file. Use 9-digit mantissas for the
+vertices. The format name "obj" can be used to indicate vertex-facet
+format.
+<BR><BR></UL>
+<PRE>
+            dskexp -dsk phobos.bds -text phobos.obj -format obj -prec 9
+</PRE>
+<UL>
+<TT>3.</TT> Create a vertex-facet format output file. Use 9-digit mantissas for the
+vertices. The format code 3 can be used to indicate vertex-facet format.
+<BR><BR></UL>
+<PRE>
+            dskexp -dsk phobos.bds -text phobos.obj -format 3 -prec 9
+</PRE>
+<UL>
+<TT>4.</TT> Create a plate-vertex format output file. This example uses default
+precision for the output vertices.
+<BR><BR></UL>
+<PRE>
+            dskexp -dsk phobos.bds -text phobos.obj -format plate-vertex
+</PRE>
+<UL>
+<TT>5.</TT> Create a plate-vertex format output file. Use the integer code for this
+format.
+<BR><BR></UL>
+<PRE>
+            dskexp -dsk phobos.bds -text phobos.obj -format 1
+</PRE>
+<UL>
+<TT>6.</TT> Create a Rosetta "ver" format output file.
+<BR><BR></UL>
+<PRE>
+            dskexp -dsk phobos.bds -text phobos.obj -format ver
+</PRE>
+<UL>
+<TT>7.</TT> Create a Rosetta "ver" format output file. Use the integer code for this
+format.
+<BR><BR></UL>
+<PRE>
+            dskexp -dsk phobos.bds -text phobos.obj -format 4
+</PRE>
+
+</TD>
+</TR>
+</TBODY>
+</TABLE>
+
+</BODY>
+
+</HTML>

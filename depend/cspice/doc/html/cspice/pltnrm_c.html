@@ -1,0 +1,249 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<HTML>
+
+<HEAD>
+   <TITLE>pltnrm_c</TITLE>
+</HEAD>
+
+<BODY style="color: rgb(0, 0, 0); background-color: rgb(255, 255, 255);">
+<A name="TOP"></A>
+
+<table style="text-align: left; margin-left: auto; margin-right: auto; width: 800px;"
+ border="0" cellpadding="5" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="background-color: rgb(153, 153, 153); vertical-align: middle; text-align: center;">
+      <div align="right"> 
+      <small><small><a href="index.html">Index Page</a></small></small>
+      </div>
+      <b>pltnrm_c</b> </td>
+    </tr>
+
+    <tr>
+      <td style="vertical-align: top;">
+
+<small><div align="center">
+<A HREF="index.html#A">A</A>&nbsp;
+<A HREF="index.html#B">B</A>&nbsp;
+<A HREF="index.html#C">C</A>&nbsp;
+<A HREF="index.html#D">D</A>&nbsp;
+<A HREF="index.html#E">E</A>&nbsp;
+<A HREF="index.html#F">F</A>&nbsp;
+<A HREF="index.html#G">G</A>&nbsp;
+<A HREF="index.html#H">H</A>&nbsp;
+<A HREF="index.html#I">I</A>&nbsp;
+<A HREF="index.html#J">J</A>&nbsp;
+<A HREF="index.html#K">K</A>&nbsp;
+<A HREF="index.html#L">L</A>&nbsp;
+<A HREF="index.html#M">M</A>&nbsp;
+<A HREF="index.html#N">N</A>&nbsp;
+<A HREF="index.html#O">O</A>&nbsp;
+<A HREF="index.html#P">P</A>&nbsp;
+<A HREF="index.html#Q">Q</A>&nbsp;
+<A HREF="index.html#R">R</A>&nbsp;
+<A HREF="index.html#S">S</A>&nbsp;
+<A HREF="index.html#T">T</A>&nbsp;
+<A HREF="index.html#U">U</A>&nbsp;
+<A HREF="index.html#V">V</A>&nbsp;
+<A HREF="index.html#W">W</A>&nbsp;
+<A HREF="index.html#X">X</A>&nbsp;
+</div></small>
+       <br>
+       <table style="text-align: left; width: 60%; margin-left: auto; margin-right: auto;"
+       border="0" cellspacing="2" cellpadding="2">
+        <tbody>
+          <tr>
+            <td style="width: 33%; text-align: center;">
+            <small>
+              <a href="#Procedure">Procedure<br></a>
+              <a href="#Abstract">Abstract<br></a>
+              <a href="#Required_Reading">Required_Reading<br></a>
+              <a href="#Keywords">Keywords<br></a>
+              <a href="#Brief_I/O">Brief_I/O<br></a>
+              <a href="#Detailed_Input">Detailed_Input<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Detailed_Output">Detailed_Output<br></a>
+              <a href="#Parameters">Parameters<br></a>
+              <a href="#Exceptions">Exceptions<br></a>
+              <a href="#Files">Files<br></a>
+              <a href="#Particulars">Particulars<br></a>
+              <a href="#Examples">Examples<br></a>
+
+              </small>
+              </td>
+              <td style="vertical-align: top; width: 33%; text-align: center;">
+              <small>               <a href="#Restrictions">Restrictions<br></a>
+              <a href="#Literature_References">Literature_References<br></a>
+              <a href="#Author_and_Institution">Author_and_Institution<br></a>
+              <a href="#Version">Version<br></a>
+              <a href="#Index_Entries">Index_Entries<br></a>
+             </small>
+            </td>
+          </tr>
+        </tbody>
+</table>
+
+<h4><a name="Procedure">Procedure</a></h4>
+<PRE>
+   void pltnrm_c ( ConstSpiceDouble    v1[3],
+                   ConstSpiceDouble    v2[3],
+                   ConstSpiceDouble    v3[3],
+                   SpiceDouble         normal[3] ) 
+</PRE>
+<h4><a name="Abstract">Abstract</a></h4>
+<PRE>
+ 
+   Compute an outward normal vector of a triangular plate. 
+   The vector does not necessarily have unit length. 
+ </PRE>
+<h4><a name="Required_Reading">Required_Reading</a></h4>
+<PRE>
+ 
+   <a href="../req/dsk.html">DSK</a> 
+ </PRE>
+<h4><a name="Keywords">Keywords</a></h4>
+<PRE>
+ 
+   DSK 
+   FILES 
+   TOPOGRAPHY 
+  
+
+</PRE>
+<h4><a name="Brief_I/O">Brief_I/O</a></h4>
+<PRE>
+ 
+   Variable  I/O  Description 
+   --------  ---  -------------------------------------------------- 
+   v1, 
+   v2, 
+   v3         I   Vertices of a plate. 
+   normal     O   Plate's outward normal vector. 
+ </PRE>
+<h4><a name="Detailed_Input">Detailed_Input</a></h4>
+<PRE>
+ 
+   v1, 
+   v2, 
+   v3             are vertices of a triangular plate. 
+                   </PRE>
+<h4><a name="Detailed_Output">Detailed_Output</a></h4>
+<PRE>
+ 
+   normal         is an outward normal vector of the plate defined by 
+                  the input vertices. The order of the vertices is 
+                  used to determine the choice of normal direction: 
+                  the normal vector is 
+ 
+                     ( V2 - V1 ) x ( V3 - V2 ) 
+                    </PRE>
+<h4><a name="Parameters">Parameters</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Exceptions">Exceptions</a></h4>
+<PRE>
+ 
+   1) The input plate may be degenerate: it may be a line segment 
+      or a point. These are not considered to be erroneous inputs. 
+ </PRE>
+<h4><a name="Files">Files</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Particulars">Particulars</a></h4>
+<PRE>
+ 
+   This routine saves computation time by not scaling the output 
+   vector to unit length. The caller can scale the vector using 
+   the routine <a href="vhat_c.html">vhat_c</a>. 
+ </PRE>
+<h4><a name="Examples">Examples</a></h4>
+<PRE>
+ 
+ 
+   1) Compute an upward normal of an equilateral triangle lying 
+      in the X-Y plane and centered at the origin. 
+ 
+      Example code begins here. 
+ 
+         #include &lt;stdio.h&gt;
+         #include &lt;math.h&gt;
+         #include &quot;SpiceUsr.h&quot;
+
+         int main()
+         {
+            ./
+            Local variables 
+            ./ 
+            SpiceDouble             normal[3];
+            SpiceDouble             s;
+            SpiceDouble             v1[3];
+            SpiceDouble             v2[3];
+            SpiceDouble             v3[3];
+
+            s = sqrt(3.0)/2;
+
+            <a href="vpack_c.html">vpack_c</a> (   s,  -0.5,  0.0, v1 );
+            <a href="vpack_c.html">vpack_c</a> ( 0.0,   1.0,  0.0, v2 );
+            <a href="vpack_c.html">vpack_c</a> (  -s,  -0.5,  0.0, v3 );
+
+            <b>pltnrm_c</b> ( v1, v2, v3, normal );
+
+            printf ( &quot;NORMAL = %18.11e %18.11e %18.11e\n&quot;, 
+                     normal[0], normal[1], normal[2]      );
+
+            return ( 0 );
+         }
+
+  
+      When run on a PC/Linux/gcc/64-bit platform, the output 
+      from this program was: 
+ 
+ 
+   NORMAL =  0.000000000000E+00  0.000000000000E+00  0.259807621135E+01 
+ 
+ </PRE>
+<h4><a name="Restrictions">Restrictions</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Literature_References">Literature_References</a></h4>
+<PRE>
+ 
+   None. 
+ </PRE>
+<h4><a name="Author_and_Institution">Author_and_Institution</a></h4>
+<PRE>
+ 
+   N.J. Bachman    (JPL) 
+ </PRE>
+<h4><a name="Version">Version</a></h4>
+<PRE>
+ 
+   -CSPICE Version 1.0.0, 26-JAN-2016 (NJB)
+</PRE>
+<h4><a name="Index_Entries">Index_Entries</a></h4>
+<PRE>
+   compute normal vector of triangular plate from vertices
+ </PRE>
+<h4>Link to routine pltnrm_c source file <a href='../../../src/cspice/pltnrm_c.c'>pltnrm_c.c</a> </h4>
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+   <pre>Wed Apr  5 17:54:40 2017</pre>
+
+</body>
+</html>
+

@@ -1,0 +1,1721 @@
+ 
+MKDSK User's Guide
+===========================================================================
+ 
+   Last revised on 2017 APR 05 by N. J. Bachman.
+ 
+ 
+Abstract
+--------------------------------------------------------
+ 
+   MKDSK is a utility program that creates a SPICE Digital Shape Kernel
+   (DSK) file from a text file containing shape data for an extended
+   object.
+ 
+ 
+Summary
+--------------------------------------------------------
+ 
+   MKDSK converts a text file containing surface shape and size data to a
+   binary Digital Shape Kernel (DSK).
+ 
+   The MKDSK program requires as input a setup file containing input
+   parameters and a second file containing the shape data to be processed.
+ 
+   Data files provided to this program either represent an object's surface
+   as a collection of triangular plates, or as a height grid.
+ 
+   Currently the only supported output DSK data type is type 2: this type
+   represents the surface of a specified body as a collection of triangular
+   plates.
+ 
+   The program allows the user to optionally specify some descriptive text
+   in a separate file, called the ``comment file,'' to be placed into the
+   ``comment area'' of the DSK file. (Doing this is highly recommended.)
+ 
+   For archival documentation purposes the content of the MKDSK setup file
+   is automatically placed at the end of the ``comment area'' of the DSK
+   file.
+ 
+ 
+References
+--------------------------------------------------------
+ 
+       1.   DSK Required Reading (dsk.req)
+ 
+       2.   NAIF Integer ID Codes (naif_ids.req)
+ 
+       3.   Frames Required Reading (frames.req)
+ 
+       4.   Kernel Required Reading (kernel.req)
+ 
+       5.   DSKBRIEF User's Guide (dskbrief.ug)
+ 
+       6.   DSKEXP User's Guide (dskexp.ug)
+ 
+       7.   COMMNT User's Guide (commnt.ug)
+ 
+       8.   Convert User's Guide (convert.ug)
+ 
+       9.   SPICE Tutorials. Thes are available on the NAIF web site at
+ 
+               https://naif.jpl.nasa.gov/naif/tutorials.html
+ 
+ 
+Usage
+--------------------------------------------------------
+ 
+   The diagram below shows MKDSK's command options. This diagram can be
+   displayed by executing the command
+ 
+      mkdsk -u
+ 
+      Program usage:
+ 
+               > mkdsk   [-setup <setup file name>]
+                         [-input <input shape data file name>]
+                         [-output <output DSK file name>]
+                         [-h|-help]
+                         [-t|-template]
+                         [-u|-usage]
+                         [-v|-version]
+ 
+   If a setup file name isn't provided on the command line, MKDSK will
+   prompt for it. It will not prompt for the input or output file names;
+   these file names must be provided on the command line or in the setup
+   file. If the input or output file names are provided on the command
+   line, any corresponding file names assigned using setup keywords are
+   ignored. The input file must already exist and the output file must be a
+   new file.
+ 
+ 
+Running MKDSK
+--------------------------------------------------------
+ 
+   You will need a setup file to run MKDSK. The format for the setup file
+   is described below.
+ 
+   As the program runs, it will print out messages describing its progress.
+   If an error is encountered, the program normally will display a
+   diagnostic message. The program attempts to delete the output file if it
+   encounters an error while creating it.
+ 
+   Only one DSK file containing one segment may be generated during a
+   single MKDSK run.
+ 
+ 
+MKDSK Setup File
+===========================================================================
+ 
+ 
+Setup File Format
+--------------------------------------------------------
+ 
+   Other than the input and output file names, which may be provided on the
+   command line, the program requires all inputs such as surface and
+   central body name or ID, frame name or ID, types of input and output
+   data, spatial coverage bounds, etc. to be provided in a setup file.
+ 
+   The format of this file must conform to the SPICE text kernel
+   specification. This format uses a ``keyword = value'' syntax for
+   assignment of parameter values.
+ 
+   The Kernel Required Reading document, which is included in the SPICE
+   Toolkit, provides details of this format specification. The ``Intro to
+   Kernels'' tutorial, which is available on the NAIF web site
+ 
+      http://naif.jpl.nasa.gov/naif/tutorials.html
+ 
+   may also be helpful.
+ 
+   Examples of setup files are included in this document. Often the easiest
+   way to create a setup file for your own use is to modify an existing
+   example.
+ 
+   For quick reference, a few details concerning the SPICE text kernel
+   format are listed below:
+ 
+   The names of the setup file keywords must be strictly uppercase while
+   parameterized keyword values (for example 'DEGREES'), reference frame
+   names, and body names may be upper, lower or mixed case. File names
+   should be assumed to be case sensitive to maximize portability. Any
+   white space preceding or following keyword names, values and the equal
+   sign is ignored.
+ 
+   All character string values and time strings must be enclosed in single
+   quotes. They must be provided on a single line or continued with the '+'
+   character as the final character of the value. The portion of the string
+   value on a single line can be no longer than 80 characters. When
+   multiple values are allowed and used, enclose the complete set in the
+   "()" characters: KEYWORD = ( 'value1' 'value2' ... ).
+ 
+ 
+Setup File Assignments
+--------------------------------------------------------
+ 
+   All assignments are either required, conditional or optional as
+   described below.
+ 
+   A setup file may contain blank lines. Non-printing characters including
+   TAB should not be used in setup file lines containing keyword
+   assignments or in blank lines separating assignment lines within the
+   data sections of a setup file. The program may not be able to parse
+   correctly any of the setup file lines that contain non-printing
+   characters and will signal a setup file parsing error on some computer
+   platforms.
+ 
+ 
+Required Assignments
+ 
+   The following assignments must be present in a setup file:
+ 
+      SURFACE_NAME        = 'Surface name' (name of the specific
+                            shape data set for the central body)
+                            An ID code may be specified as a
+                            single-quoted string.
+      CENTER_NAME         = 'Central body name'. An ID code may be
+                            specified as a single-quoted string.
+      REF_FRAME_NAME      = 'Reference frame name'
+      START_TIME          = 'Start time'
+      STOP_TIME           = 'Stop time'
+      DATA_CLASS          = 1 to indicate a surface that can be
+                            represented as a single-valued function
+                            of its domain coordinates.
+ 
+                            2 indicates a general surface. Surfaces
+                            that have multiple points for a given pair
+                            of domain coordinates---for example,
+                            multiple radii for a given latitude and
+                            longitude---belong to class 2.
+ 
+      INPUT_DATA_UNITS    = ( 'ANGLES    = angular unit'
+                              'DISTANCES = distance unit' )
+ 
+      COORDINATE_SYSTEM   = 'LATITUDINAL' or
+                            'RECTANGULAR' or
+                            'PLANETODETIC'
+ 
+      DATA_TYPE           = 2 (triangular plates)
+                            This is the data type of the single
+                            segment in the output file created
+                            by this program. Currently only type 2
+                            is supported.
+ 
+      PLATE_TYPE          = an integer in the range 1:5 specifying
+                            the input data file format. This assignment
+                            is applicable only to output data type 2.
+                            See the chapter ``Input Data File'' for
+                            further information.
+ 
+   The following assignments are required in the setup file if their values
+   are not provided on the command line:
+ 
+      INPUT_SHAPE_FILE    = 'Name of input shape data file'
+      OUTPUT_DSK_FILE     = 'Name of output DSK file '
+ 
+ 
+Conditional Assignments
+ 
+   One or more of the following assignments may be needed depending on the
+   kind of input data being used and other conditions.
+ 
+ 
+ 
+         KERNELS_TO_LOAD     =  ( 'kernel_1' 'kernel_2' ... )
+                                Leapseconds kernel (if not specified
+                                by the LEAPSECONDS_KERNEL assignment)
+                                and names of additional kernels, for
+                                example frame kernels to provide
+                                body-fixed frame specifications.
+ 
+ 
+         LEAPSECONDS_KERNEL  =  'file name' A leapseconds kernel
+                                must be specified using either
+                                this assignment or using a
+                                KERNELS_TO_LOAD assignment.
+ 
+         NAIF_BODY_NAME      += 'body name'
+         NAIF_BODY_CODE      += integer ID code
+                                These assignments are needed if
+                                the central body name is not
+                                built into SPICE and its body
+                                name-ID association is not defined
+                                in a kernel listed in a
+                                KERNELS_TO_LOAD assignment.
+ 
+         NAIF_SURFACE_NAME   += 'surface name'
+         NAIF_SURFACE_CODE   += integer surface ID code
+         NAIF_SURFACE_BODY   += integer body ID code
+                                These assignments are needed if
+                                the surface name-ID association
+                                is not defined in a kernel listed
+                                in a KERNELS_TO_LOAD assignment.
+ 
+      For latitudinal coordinates:
+ 
+         MINIMUM_LATITUDE    = lower latitude bound in selected
+                               angular units
+         MAXIMUM_LATITUDE    = upper latitude bound in selected
+                               angular units
+         MINIMUM_LONGITUDE   = lower longitude bound in selected
+                               angular units
+         MAXIMUM_LONGITUDE   = upper longitude bound in selected
+                               angular units
+ 
+      For rectangular coordinates:
+ 
+         MINIMUM_X           = lower X coordinate bound in selected units
+         MAXIMUM_X           = upper X coordinate bound in selected units
+         MINIMUM_Y           = lower Y coordinate bound in selected units
+         MAXIMUM_Y           = upper Y coordinate bound in selected units
+ 
+      For planetodetic coordinates:
+ 
+         MINIMUM_LATITUDE    = lower latitude bound in selected units
+         MAXIMUM_LATITUDE    = upper latitude bound in selected units
+         MINIMUM_LONGITUDE   = lower longitude bound in selected units
+         MAXIMUM_LONGITUDE   = upper longitude bound in selected units
+ 
+         EQUATORIAL_RADIUS   = equatorial spheroid radius in selected units
+         POLAR_RADIUS        = polar spheroid radius in selected units
+ 
+      For data type 2, plate type 5, the following additional assignments
+      are required:
+ 
+         WRAP_LONGITUDE              = connect leftmost column to
+                                       rightmost column: 'YES' or 'NO'
+         MAKE_NORTH_POLAR_CAP        = extend plate set to north pole:
+                                       'YES' or 'NO'
+         MAKE_SOUTH_POLAR_CAP        = extend plate set to south pole:
+                                       'YES' or 'NO'
+         INPUT_GRID_ORDER_ROW_MAJOR  = input data set is row-major:
+                                       'YES' or 'NO'
+         COLUMN_VALUE_ORDER_TOP_DOWN = input data set is top-down:
+                                       'YES' or 'NO'
+         ROW_VALUE_ORDER_LEFT_RIGHT  = input data set is left-right:
+                                       'YES' or 'NO'
+ 
+         NUMBER_OF_ROWS              = number of rows in grid
+         NUMBER_OF_COLUMNS           = number of columns in grid
+         COLUMN_STEP_SIZE            = column separation: longitude or X
+                                       step
+         ROW_STEP_SIZE               = row separation: latitude or Y step
+         HEIGHT_SCALE                = value by which to multiply the
+                                       height data to convert to km
+ 
+      For data type 2, plate type 5,  latitudinal or rectangular
+      coordinates, the following additional assignment
+      is required:
+ 
+         HEIGHT_REFERENCE            = value to add to input heights;
+                                       units are always km
+ 
+      For data type 2, plate type 5, rectangular coordinates, the
+      following additional assignments are required:
+ 
+         LEFT_COLUMN_X_COORDINATE    = X-coordinate of leftmost column of
+                                       grid
+         TOP_ROW_Y_COORDINATE        = Y-coordinate of top row of grid
+ 
+      For data type 2, plate type 5, latitudinal or planetodetic
+      coordinates, the following additional assignments
+      are required:
+ 
+         LEFT_COLUMN_LONGITUDE       = longitude of leftmost column of
+                                       grid
+         TOP_ROW_LATITUDE            = latitude of top row of grid
+ 
+ 
+ 
+Optional Assignments
+ 
+      COMMENT_FILE          = 'Name of optional comment file'
+ 
+      FINE_VOXEL_SCALE      = Double precision value > 0.0
+      COARSE_VOXEL_SCALE    = Integer >= 1
+ 
+      Optional assignment:
+      MAKE_VERTEX_PLATE_MAP =  'YES' or 'NO'
+                               If this assignment is not provided,
+                               MKDSK will not create a vertex-plate
+                               mapping.
+ 
+ 
+Detailed Description of Setup File Keywords
+--------------------------------------------------------
+ 
+   See the DSK Required Reading [1] for definitions of terms used in the
+   discussion below.
+ 
+         CENTER_NAME                   Name of central body with which the
+                                       surface is associated. An integer ID
+                                       code enclosed in single quotes may
+                                       be provided instead of a name, e.g.
+                                       '499' instead of 'MARS'. This
+                                       assignment is required.
+ 
+         COARSE_VOXEL_SCALE            This assignment is optional and need
+                                       not be used for most applications.
+                                       It is applicable only to type 2
+                                       segments. See the section ``Appendix
+                                       A: Spatial Index and Voxels'' below
+                                       for a more detailed discussion. The
+                                       coarse voxel scale is an integer
+                                       representing the ratio of the edge
+                                       length of coarse voxels to fine
+                                       voxels. This number must be greater
+                                       than or equal to 1.
+ 
+         COLUMN_STEP_SIZE              Applies only to height grid inputs
+                                       for data type 2 segments. This is
+                                       the grid's step size for longitude
+                                       or for X, depending on the specified
+                                       coordinate system. Units are given
+                                       by the INPUT_DATA_UNITS assignment.
+ 
+         COLUMN_VALUE_ORDER_TOP_DOWN   Applies only to height grid inputs
+                                       for data type 2 segments. Indicates
+                                       that columns of the vertex grid are
+                                       filled in in top-to-bottom order (in
+                                       order of decreasing latitude or Y
+                                       values) as data are read from the
+                                       input file. (This does not imply
+                                       that adjacent elements of a column
+                                       in the vertex grid are filled in
+                                       consecutively: see the description
+                                       of INPUT_GRID_ORDER_ROW_MAJOR.)
+                                       Values are 'YES' or 'NO'.
+ 
+         COMMENT_FILE                  Comment file name. This keyword is
+                                       used if you want to include comments
+                                       provided in this file in the comment
+                                       area of the DSK file. Include full
+                                       or relative path specification.
+ 
+         COORDINATE_SYSTEM             Name of the coordinate system used
+                                       to represent the bounds of spatial
+                                       coverage of the data set. The
+                                       supported values are 'LATITUDINAL',
+                                       'PLANETODETIC', and 'RECTANGULAR'.
+                                       'LATITUDINAL' refers to
+                                       planetocentric coordinates.
+ 
+         DATA_CLASS                    Code identifying the category of
+                                       topography represented by the
+                                       surface. Supported codes are: 1 for
+                                       a surface that can be represented as
+                                       a single-valued function of its
+                                       domain coordinates; an example is a
+                                       surface defined by a function that
+                                       maps each planetodetic longitude and
+                                       latitude pair to a unique altitude.
+                                       2 for arbitrary topography (e.g.
+                                       that of a dumbbell-shaped asteroid).
+                                       This assignment is required.
+ 
+         DATA_TYPE                     Code indicating the DSK data type of
+                                       the DSK segment to be created.
+                                       Currently the only supported code is
+                                       2 (triangular plates). This
+                                       assignment is required.
+ 
+         EQUATORIAL_RADIUS             Applies only to planetodetic
+                                       coordinates. This is the equatorial
+                                       radius of the reference ellipsoid.
+                                       Units are always km.
+ 
+         FINE_VOXEL_SCALE              This assignment is optional and need
+                                       not be used for most applications.
+                                       It is applicable only to type 2
+                                       segments. See the section ``Appendix
+                                       A: Spatial Index and Voxels'' below
+                                       for a more detailed discussion. The
+                                       fine voxel scale is a double
+                                       precision number. Normally the fine
+                                       voxel scale should be set to at
+                                       least 1.0.
+ 
+         HEIGHT_REFERENCE              Applies only to height grid inputs
+                                       for data type 2 segments using
+                                       'LATITUDINAL' or 'RECTANGULAR'
+                                       coordinates. Input height values are
+                                       scaled by the height scale and then
+                                       added to the height reference value
+                                       to produce vertex heights. Units are
+                                       always km.
+ 
+         HEIGHT_SCALE                  Applies only to height grid inputs
+                                       for data type 2 segments. Input
+                                       height values are multiplied by the
+                                       height scale to convert them to km.
+                                       This value is unitless.
+ 
+         INPUT_DATA_UNITS              Array of two strings specifying the
+                                       units of the input data. The right
+                                       hand side of the assignment has the
+                                       format ( 'ANGLES = angular unit'
+                                       'DISTANCES = distance unit' ). The
+                                       units accepted by the CSPICE routine
+                                       convrt_c are accepted in this
+                                       assignment. This assignment is
+                                       required.
+ 
+         INPUT_GRID_ORDER_ROW_MAJOR    Applies only to height grid inputs
+                                       for data type 2 segments. Indicates
+                                       that rows of the vertex grid are
+                                       filled sequentially as data are read
+                                       from the input file. The alternative
+                                       is that columns of the vertex grid
+                                       are filled in sequentially. Values
+                                       are 'YES' or 'NO'.
+ 
+         INPUT_SHAPE_FILE              Name of input shape data file. This
+                                       keyword must be used if the input
+                                       data file name is not provided on
+                                       the command line; if the input data
+                                       file name is supplied on the command
+                                       line, this assignment is ignored.
+                                       Include full or relative path
+                                       specification. The file must exist.
+ 
+         KERNELS_TO_LOAD               This is the SPICE meta-kernel
+                                       keyword that identifies kernels to
+                                       load. The right hand side is a list
+                                       of single-quoted kernel names; the
+                                       list is enclosed in parentheses. A
+                                       leapseconds kernel may be specified
+                                       using this assignment rather than a
+                                       LEAPSECONDS_FILE assignment. Other
+                                       kernels that might be needed are
+                                       frame kernels, a kernel defining
+                                       body name-ID associations, and a
+                                       kernel defining surface name-ID
+                                       associations.
+ 
+         LEAPSECONDS_FILE              leapseconds file name. This is the
+                                       SPICE LSK file name, including full
+                                       or relative path specification. A
+                                       leapseconds kernel can be specified
+                                       using a KERNELS_TO_LOAD assignment
+                                       instead of this one. Specification
+                                       of a leapseconds kernel by one of
+                                       these means is required. Only one
+                                       leapseconds kernel should be
+                                       specified, but if distinct
+                                       leapseconds kernels are specified
+                                       using both keywords, the one
+                                       specified by the LEAPSECONDS_FILE
+                                       keyword is loaded last and hence
+                                       overrides the other.
+ 
+         LEFT_COLUMN_LONGITUDE         Applies only to height grid inputs
+                                       for data type 2 segments, when the
+                                       coordinate system is 'LATITUDINAL'
+                                       or 'PLANETODETIC'. This is the
+                                       longitude of the grid's leftmost
+                                       column. Units are given by the
+                                       INPUT_DATA_UNITS assignment.
+ 
+         LEFT_COLUMN_X_COORDINATE      Applies only to height grid inputs
+                                       for data type 2 segments, when the
+                                       coordinate system is 'RECTANGULAR'.
+                                       This is the X value of the grid's
+                                       leftmost column. Units are given by
+                                       the INPUT_DATA_UNITS assignment.
+ 
+         MAKE_NORTH_POLAR_CAP          Applies only to height grid inputs
+                                       for data type 2 segments, when the
+                                       coordinate system is 'LATITUDINAL'
+                                       or 'PLANETODETIC'. Indicates that
+                                       the vertex grid should be augmented
+                                       by a vertex at the north pole, and
+                                       that plates should be formed using
+                                       this vertex and the vertices of the
+                                       grid's top row. Values are 'YES' or
+                                       'NO'.
+ 
+         MAKE_SOUTH_POLAR_CAP          Applies only to height grid inputs
+                                       for data type 2 segments, when the
+                                       coordinate system is 'LATITUDINAL'
+                                       or 'PLANETODETIC'. Indicates that
+                                       the vertex grid should be augmented
+                                       by a vertex at the south pole, and
+                                       that plates should be formed using
+                                       this vertex and the vertices of the
+                                       grid's bottom row. Values are 'YES'
+                                       or 'NO'.
+ 
+         MAKE_VERTEX_PLATE_MAP         Indicates that the optional
+                                       vertex-plate mapping data structure
+                                       should be created. Values are 'YES'
+                                       or 'NO'.
+ 
+         MAXIMUM_LATITUDE              Upper latitude bound of spatial
+                                       coverage in selected angular units.
+                                       Units are those specified by the
+                                       INPUT_DATA_UNITS assignment. This
+                                       assignment is required when the
+                                       coordinate system is LATITUDINAL or
+                                       PLANETODETIC.
+ 
+         MAXIMUM_LONGITUDE             Upper longitude bound of spatial
+                                       coverage in selected angular units.
+                                       Units are those specified by the
+                                       INPUT_DATA_UNITS assignment. When
+                                       the longitude coverage of the
+                                       segment is 360 degrees,
+                                       MAXIMUM_LONGITUDE should be set to a
+                                       value equivalent to 360 degrees
+                                       greater than the value assigned to
+                                       MINIMUM_LONGITUDE. For example, if
+                                       the angular units are degrees, the
+                                       longitude bounds could be set to
+                                       -180.0 and 180.0 respectively, or if
+                                       the angular units are radians, the
+                                       bounds could be set to the numeric
+                                       values of -pi and pi, respectively.
+                                       This assignment is required when the
+                                       coordinate system is LATITUDINAL or
+                                       PLANETODETIC.
+ 
+         MAXIMUM_X                     Applies only to height grid inputs
+                                       for data type 2 segments, when the
+                                       coordinate system is 'RECTANGULAR'.
+                                       This is the maximum value of the
+                                       X-coordinates of the vertices. Units
+                                       are given by the INPUT_DATA_UNITS
+                                       assignment.
+ 
+         MAXIMUM_Y                     Applies only to height grid inputs
+                                       for data type 2 segments, when the
+                                       coordinate system is 'RECTANGULAR'.
+                                       This is the maximum value of the
+                                       Y-coordinates of the vertices. Units
+                                       are given by the INPUT_DATA_UNITS
+                                       assignment.
+ 
+         MINIMUM_LATITUDE              Lower latitude bound of spatial
+                                       coverage in selected angular units.
+                                       Units are those specified by the
+                                       INPUT_DATA_UNITS assignment. This
+                                       assignment is required when the
+                                       coordinate system is LATITUDINAL or
+                                       PLANETODETIC.
+ 
+         MINIMUM_LONGITUDE             Lower longitude bound of spatial
+                                       coverage in selected angular units.
+                                       Units are those specified by the
+                                       INPUT_DATA_UNITS assignment. This
+                                       assignment is required when the
+                                       coordinate system is LATITUDINAL or
+                                       PLANETODETIC.
+ 
+         MINIMUM_X                     Applies only to height grid inputs
+                                       for data type 2 segments, when the
+                                       coordinate system is 'RECTANGULAR'.
+                                       This is the minimum value of the
+                                       X-coordinates of the vertices. Units
+                                       are given by the INPUT_DATA_UNITS
+                                       assignment.
+ 
+         MINIMUM_Y                     Applies only to height grid inputs
+                                       for data type 2 segments, when the
+                                       coordinate system is 'RECTANGULAR'.
+                                       This is the minimum value of the
+                                       Y-coordinates of the vertices. Units
+                                       are given by the INPUT_DATA_UNITS
+                                       assignment.
+ 
+         NUMBER_OF_COLUMNS             Applies only to height grid inputs
+                                       for data type 2 segments. This is
+                                       the number of columns of vertices in
+                                       the grid.
+ 
+         NUMBER_OF_ROWS                Applies only to height grid inputs
+                                       for data type 2 segments. This is
+                                       the number of rows of vertices in
+                                       the grid.
+ 
+         OUTPUT_DSK_FILE               Name of output DSK file. This
+                                       keyword must be used if the output
+                                       data file name is not provided on
+                                       the command line; if the output data
+                                       file name is supplied on the command
+                                       line, this assignment is ignored.
+                                       Include full or relative path
+                                       specification. The file must not
+                                       exist when MKDSK is run.
+ 
+         PLATE_TYPE                    Code indicating the format of the
+                                       input data file. This code is
+                                       applicable only when the data type
+                                       is 2; in this case, this assignment
+                                       is required. Supported values are: 1
+                                       for plate-vertex table; 2 for
+                                       Gaskell shape model; 3 for
+                                       vertex-facet table; 4 for
+                                       Rosetta/OSIRIS ``ver'' table; 5 for
+                                       an ASCII height grid. See the
+                                       chapter below titled ``Input Data
+                                       File'' for details.
+ 
+         POLAR_RADIUS                  Applies only to 'PLANETODETIC'
+                                       coordinates. This is the polar
+                                       radius of the reference ellipsoid.
+                                       Units are always km.
+ 
+         REF_FRAME_NAME                Name of the body-fixed reference
+                                       frame relative to which the surface
+                                       data are expressed. This frame need
+                                       not be centered on the body
+                                       specified by the keyword
+                                       CENTER_NAME, but this frame must be
+                                       fixed to that body. The center of
+                                       this frame is the origin of the
+                                       coordinate system in which the shape
+                                       data are expressed. For example, for
+                                       a DSK type 2 segment for Mars that
+                                       uses the reference frame IAU_MARS,
+                                       the vertices of the segment are
+                                       assumed to emanate from the center
+                                       of mass of Mars. This assignment is
+                                       required.
+ 
+         ROW_STEP_SIZE                 Applies only to height grid inputs
+                                       for data type 2 segments. This is
+                                       the grid's step size for latitude or
+                                       for Y, depending on the specified
+                                       coordinate system. Units are given
+                                       by the INPUT_DATA_UNITS assignment.
+ 
+         ROW_VALUE_ORDER_LEFT_RIGHT    Applies only to height grid inputs
+                                       for data type 2 segments. Indicates
+                                       that rows of the vertex grid are
+                                       filled in in left-to-right order as
+                                       data are read from the input file.
+                                       (This does not imply that adjacent
+                                       elements of a row in the vertex grid
+                                       are filled in consecutively: see the
+                                       description of
+                                       INPUT_GRID_ORDER_ROW_MAJOR.) Values
+                                       are 'YES' or 'NO'.
+ 
+         START_TIME                    Start time of coverage interval
+                                       during which this surface
+                                       representation is applicable. The
+                                       value is a quoted string; any string
+                                       acceptable to the SPICE routine
+                                       STR2ET is allowed. This assignment
+                                       is required.
+ 
+         STOP_TIME                     Stop time of coverage interval
+                                       during which this surface
+                                       representation is applicable. The
+                                       value is a quoted string; any string
+                                       acceptable to the SPICE routine
+                                       STR2ET is allowed. This assignment
+                                       is required.
+ 
+         SURFACE_NAME                  Name of the surface represented by
+                                       the DSK, for example 'MGS MOLA MEGDR
+                                       128 PIXELS/DEG'. An integer ID code
+                                       enclosed in single quotes may be
+                                       provided instead of a name, e. g.
+                                       '1' instead of 'MGS MOLA MEGDR 128
+                                       PIXELS/DEG'. Surface name-ID
+                                       associations must be defined in a
+                                       text kernel or in the MKDSK setup
+                                       file. Multiple surfaces can be
+                                       associated with a given central body
+                                       and used together during a single
+                                       application program run. For
+                                       example, versions of surfaces having
+                                       different resolutions could be
+                                       associated with a given central
+                                       body. This assignment is required.
+ 
+         TOP_ROW_LATITUDE              Applies only to height grid inputs
+                                       for data type 2 segments, when the
+                                       coordinate system is 'LATITUDINAL'
+                                       or 'PLANETODETIC'. This is the
+                                       latitude of the grid's top row.
+                                       Units are given by the
+                                       INPUT_DATA_UNITS assignment.
+ 
+         TOP_ROW_Y_COORDINATE          Applies only to height grid inputs
+                                       for data type 2 segments, when the
+                                       coordinate system is 'RECTANGULAR'.
+                                       This is the Y value of the grid's
+                                       top row. Units are given by the
+                                       INPUT_DATA_UNITS assignment.
+ 
+         WRAP_LONGITUDE                Applies only to height grid inputs
+                                       for data type 2 segments, when the
+                                       coordinate system is 'LATITUDINAL'
+                                       or 'PLANETODETIC'. Indicates that
+                                       plates are to be formed connecting
+                                       vertices in the rightmost column to
+                                       those in the leftmost column. Values
+                                       are 'YES' or 'NO'.
+ 
+ 
+Setup File Examples
+===========================================================================
+ 
+ 
+Input Using Latitudinal Coordinates and Plate Type 2
+ 
+   An example command file for a Phobos DSK:
+ 
+      \begindata
+ 
+      INPUT_SHAPE_FILE    = 'phobos_q512.txt'
+      OUTPUT_DSK_FILE     = 'phobos512.bds'
+      COMMENT_FILE        = ' '
+      KERNELS_TO_LOAD     = ( 'naif0012.tls' )
+      SURFACE_NAME        = 'Gaskell Phobos Q=512'
+      CENTER_NAME         = 'PHOBOS'
+      REF_FRAME_NAME      = 'IAU_PHOBOS'
+      START_TIME          = '1950-JAN-1/00:00:00'
+      STOP_TIME           = '2050-JAN-1/00:00:00'
+      DATA_CLASS          = 1
+      INPUT_DATA_UNITS    = ( 'ANGLES    = DEGREES'
+                              'DISTANCES = KILOMETERS' )
+      COORDINATE_SYSTEM   = 'LATITUDINAL'
+      MINIMUM_LATITUDE    =  -90.0
+      MAXIMUM_LATITUDE    =   90.0
+      MINIMUM_LONGITUDE   = -180.0
+      MAXIMUM_LONGITUDE   =  180.0
+      DATA_TYPE           = 2
+      PLATE_TYPE          = 2
+ 
+      NAIF_SURFACE_NAME   += 'Gaskell Phobos Q=512'
+      NAIF_SURFACE_CODE   += 1
+      NAIF_SURFACE_BODY   += 401
+ 
+      \begintext
+ 
+ 
+Input Using Planetodetic Coordinates and Plate Type 1
+ 
+   This is an example command file for a Mars DSK. The input plate data
+   were derived from the MGS MOLA data set named
+ 
+      megr90n000cb
+ 
+   This data set has a resolution of 4 pixels/degree. The surface coverage
+   is global.
+ 
+   This example presumes that vertices and plates have already been derived
+   from original input data, which constitute a digital elevation model
+   (DEM).
+ 
+      \begindata
+ 
+      INPUT_SHAPE_FILE    = 'megr90n000cb.inp'
+      OUTPUT_DSK_FILE     = 'megr90n000cb_1.bds'
+      COMMENT_FILE        = ' '
+      KERNELS_TO_LOAD     = ( 'naif0012.tls' )
+      SURFACE_NAME        = 'megr90n000cb --- plates'
+      CENTER_NAME         = 'MARS'
+      REF_FRAME_NAME      = 'IAU_MARS'
+      START_TIME          = '1950-JAN-1/00:00:00'
+      STOP_TIME           = '2050-JAN-1/00:00:00'
+      DATA_CLASS          = 1
+      INPUT_DATA_UNITS    = ( 'ANGLES    = DEGREES'
+                              'DISTANCES = KILOMETERS' )
+ 
+      COORDINATE_SYSTEM   = 'PLANETODETIC'
+      EQUATORIAL_RADIUS   = 3396.19
+      POLAR_RADIUS        = 3376.20
+ 
+      MINIMUM_LATITUDE    =  -90.0
+      MAXIMUM_LATITUDE    =   90.0
+      MINIMUM_LONGITUDE   = -180.0
+      MAXIMUM_LONGITUDE   =  180.0
+      DATA_TYPE           = 2
+      PLATE_TYPE          = 1
+ 
+      NAIF_SURFACE_NAME   += 'megr90n000cb --- plates'
+      NAIF_SURFACE_CODE   += 1
+      NAIF_SURFACE_BODY   += 499
+ 
+      \begintext
+ 
+ 
+Input Using Planetocentric Coordinates and Plate Type 5
+ 
+   This example uses the same data as the previous one, but in this case,
+   the height values have been transferred to an ASCII file, which serves
+   as the input data file.
+ 
+   We give this surface a distinct name from that of the previous example,
+   since the plate set created from the input data will differ.
+ 
+   The input data file is organized in row-major, top-down, left-to-right
+   order.
+ 
+   The top and bottom input pixel centers are 1/2 pixel away from the
+   poles, so we add polar caps. Similarly, the pixel centers of leftmost
+   and rightmost columns are one pixel apart, so we invoke longitude
+   wrapping. These choices create a plate set with complete coverage.
+ 
+   The distance units are meters.
+ 
+      \begindata
+ 
+      INPUT_SHAPE_FILE            = 'megr90n000cb.inp'
+      OUTPUT_DSK_FILE             = 'megr90n000cb_2.bds'
+      COMMENT_FILE                = ' '
+      KERNELS_TO_LOAD             = ( 'naif0012.tls' )
+      SURFACE_NAME                = 'megr90n000cb --- grid'
+      CENTER_NAME                 = 'MARS'
+      REF_FRAME_NAME              = 'IAU_MARS'
+      START_TIME                  = '1950-JAN-1/00:00:00'
+      STOP_TIME                   = '2050-JAN-1/00:00:00'
+      DATA_CLASS                  = 1
+      INPUT_DATA_UNITS            = ( 'ANGLES    = DEGREES'
+                                      'DISTANCES = METERS' )
+ 
+      COORDINATE_SYSTEM           = 'LATITUDINAL'
+ 
+      NUMBER_OF_ROWS              = 720
+      NUMBER_OF_COLUMNS           = 1440
+ 
+      ROW_STEP_SIZE               = 0.25
+      COLUMN_STEP_SIZE            = 0.25
+ 
+      LEFT_COLUMN_LONGITUDE       = -180.0
+      TOP_ROW_LATITUDE            =   89.875
+ 
+      INPUT_GRID_ORDER_ROW_MAJOR  = 'YES'
+      COLUMN_VALUE_ORDER_TOP_DOWN = 'YES'
+      ROW_VALUE_ORDER_LEFT_RIGHT  = 'YES'
+ 
+      WRAP_LONGITUDE              = 'YES'
+      MAKE_NORTH_POLAR_CAP        = 'YES'
+      MAKE_SOUTH_POLAR_CAP        = 'YES'
+ 
+      HEIGHT_SCALE                = 1.D-3
+      HEIGHT_REFERENCE            = 3396000
+ 
+      MINIMUM_LATITUDE            =  -90.0
+      MAXIMUM_LATITUDE            =   90.0
+      MINIMUM_LONGITUDE           = -180.0
+      MAXIMUM_LONGITUDE           =  180.0
+ 
+      DATA_TYPE                   = 2
+      PLATE_TYPE                  = 5
+ 
+      NAIF_SURFACE_NAME           += 'megr90n000cb --- grid'
+      NAIF_SURFACE_CODE           += 2
+      NAIF_SURFACE_BODY           += 499
+ 
+      \begintext
+ 
+ 
+Input Data File
+===========================================================================
+ 
+   All of the input files discussed below are particular to type 2
+   (triangular plate model) DSK segments.
+ 
+   The type 2 segment design has no restrictions on sizes or configuration
+   of the triangular plates defined by the vertices, even within a single
+   plate model file. Indeed it is quite normal that the plate sizes and
+   local plate density vary across the model in order to achieve desired
+   shape fidelity without using an excessive number of plates.
+ 
+   It is recommended that the input data not define any degenerate plates
+   (plates having zero-length edges). Such plates may cause run-time
+   failures of computations that require each plate to have a computable
+   outward normal vector.
+ 
+   MKDSK reads an ASCII text file containing body shape data. This text
+   file must conform to one of the following formats:
+ 
+         Plate-vertex table             Contains the body-fixed coordinates
+                                        of each vertex in a plate model
+                                        followed by a list that associates
+                                        particular vertices with each
+                                        plate. This file explicitly assigns
+                                        integer IDs to the plates and
+                                        vertices.
+ 
+         Gaskell shape model            Contains the body-fixed coordinates
+                                        of each vertex in a plate model.
+                                        The order of the vertex data
+                                        implicitly defines the plate-vertex
+                                        mapping.
+ 
+         Vertex-facet table             Is similar to the plate-vertex
+                                        table, but without the plate and
+                                        vertex ID assignment. A data line
+                                        has the prefix 'v' for vertex data
+                                        and 'f' for the plate-vertex
+                                        mapping (the facet map).
+ 
+         Rosetta/OSIRIS ``ver'' table   (The format of M. Kasalaainen.)
+                                        Contains the body-fixed coordinates
+                                        of each vertex in a plate model
+                                        followed by a list that associates
+                                        particular vertices with each
+                                        plate. Each line of plate vertex
+                                        indices is preceded by a line
+                                        containing a vertex count. Only
+                                        triangular plates are supported by
+                                        this program.
+ 
+         ASCII height grid              Contains height values of a regular
+                                        grid of vertices. For segments
+                                        using the planetocentric
+                                        latitudinal or planetodetic
+                                        coordinate systems, the vertices
+                                        are separated by equal longitude
+                                        increments and by equal latitude
+                                        increments. In the rectangular
+                                        system, the vertices are separated
+                                        by equal X increments and equal Y
+                                        increments.
+ 
+ 
+Units
+--------------------------------------------------------
+ 
+   The distance units of plate model vertex data may be any supported by
+   the SPICE unit conversion routine convrt_c. Distance units must be
+   specified in the MKDSK setup file.
+ 
+ 
+Reference Frame
+--------------------------------------------------------
+ 
+   The reference frame of all plate model vertex data must be specified in
+   the MKDSK setup file. The frame must be body-fixed with respect to the
+   body identified in the setup file as the ``center'' associated with the
+   surface. However, the frame need not have that body as its own center.
+ 
+ 
+Vertex order
+--------------------------------------------------------
+ 
+   The ordering of the plate vertices is expected to follow a
+   "right-handed" convention where the order of vertices implicitly defines
+   the orientation of the outward normal, i.e. given the assignment
+ 
+         plate =  vertex_1, vertex_2, vertex_3
+ 
+   derive the outward normal as:
+ 
+         -      --------   --------     --------   --------
+         n  = ( vertex_2 - vertex_1) X (vertex_3 - vertex_2)
+ 
+ 
+Vertex IDs
+ 
+   Vertex IDs always start at 1. Their upper bound is NV, the number of
+   vertices. Input data files that use plates must conform to this
+   convention.
+ 
+ 
+Plate Data File Type 1 (Plate-Vertex Table)
+--------------------------------------------------------
+ 
+   The data input file consists of two sections, the first for vertex data,
+   the second describing the plate-vertex mapping.
+ 
+ 
+      N
+      1 X(1) Y(1) Z(1)
+      2 X(2) Y(2) Z(2)
+ 
+            ...
+ 
+      N X(N) Y(N) Z(N)
+      M
+      1 V1(1) V2(1) V3(1)
+      2 V1(2) V2(2) V3(2)
+ 
+            ...
+ 
+      M V1(M) V2(M) V3(M)
+ 
+   where
+ 
+         N                              is the number of vertices listed in
+                                        the file.
+ 
+         1 through N                    are the indices of the plate model
+                                        vertices, provided as the first
+                                        space-separated item on the file
+                                        lines 2 through (N+1).
+ 
+         X(i) Y(i) Z(i)                 are the body-fixed Cartesian
+                                        coordinates of the plate model
+                                        vertices, provided for each vertex
+                                        as the 2nd, 3rd, and 4th
+                                        space-separated items on lines 2
+                                        through (N+1).
+ 
+         M                              is the number of plate-vertex
+                                        mappings in the file.
+ 
+         1 through M                    are the indices of the plate model
+                                        plates, provided as the first
+                                        space-separated item on the file
+                                        lines (N+3) through (N+M+2).
+ 
+         V1(i) V2(i) V3(i)              are the indices of the plate model
+                                        vertices for the corners of a given
+                                        plate, provided for each plate as
+                                        the 2nd, 3rd, and 4th
+                                        space-separated items on lines
+                                        (N+3) through (N+M+2).
+ 
+ 
+Sample Plate-Vertex Table Input File
+ 
+ 
+         12
+         1 0. 0. 1.17557
+         2 0.32492 1. 0.525731
+         3 1.05146 0. 0.525731
+         4 -0.850651 0.618034 0.525731
+         5 -0.850651 -0.618034 0.525731
+         6 0.32492 -1. 0.525731
+         7 0.850651 0.618034 -0.525731
+         8 -0.32492 1. -0.525731
+         9 -1.05146 0. -0.525731
+         10 -0.32492 -1. -0.525731
+         11 0.850651 -0.618034 -0.525731
+         12 0. 0. -1.17557
+         20
+         1 1 3 2
+         2 1 2 4
+         3 1 4 5
+         4 1 5 6
+         5 1 6 3
+         6 3 7 2
+         7 2 8 4
+         8 4 9 5
+         9 5 10 6
+         10 6 11 3
+         11 7 8 2
+         12 8 9 4
+         13 9 10 5
+         14 10 11 6
+         15 11 7 3
+         16 7 12 8
+         17 8 12 9
+         18 9 12 10
+         19 10 12 11
+         20 11 12 7
+ 
+ 
+Plate Data File Type 2 (Gaskell Shape Model)
+--------------------------------------------------------
+ 
+   A Gaskell shape model data file has no explicit plate-vertex mapping
+   data as that information is implicit in the ordering of the vertex data.
+ 
+   The data file has the form:
+ 
+ 
+         Q
+         X(1)          Y(1)          Z(1)
+         X(2)          Y(2)          Z(2)
+ 
+          ...          ...           ...
+         X(6*(Q+1)^2)  Y(6*(Q+1)^2)  Z(6*(Q+1)^2)
+ 
+   where
+ 
+         Q                              is the number of divisions per side
+                                        on a cube face. The number of
+                                        vertices in the file is
+ 
+                                           6 * (Q+1)^2
+ 
+         X(i) Y(i) Z(i)                 are the body-fixed Cartesian
+                                        coordinates of the plate model
+                                        vertices, provided for each vertex
+                                        as the 1st, 2nd, and 3rd
+                                        space-separated items on lines 2
+                                        through Nvert+1.
+ 
+ 
+Sample Gaskell Shape Model Input File
+ 
+ 
+          64
+          -9.36329     3.76796     3.80970
+          -9.12138     3.82357     3.86143
+          -8.87987     3.88047     3.91416
+          -8.63347     3.92422     3.95698
+          -8.39016     3.97415     4.00291
+          -8.14081     4.03950     4.05743
+          -7.88861     4.08816     4.09352
+          -7.63058     4.07331     4.08113
+          -7.37114     4.03909     4.05807
+          -7.11810     4.05018     4.08515
+          -6.89451     4.12730     4.15128
+          -6.69135     4.24326     4.25130
+          -6.46167     4.30681     4.31349
+ 
+            ...         ...         ...
+ 
+ 
+Plate Data File Type 3 (Vertex-Facet Table)
+--------------------------------------------------------
+ 
+   The data input file consists of two sections, the first for vertex data,
+   the second describing the plate-vertex mapping.
+ 
+ 
+      v X(1)  Y(1)  Z(1)
+      v X(2)  Y(2)  Z(2)
+ 
+             ...
+ 
+      v X(N)  Y(N)  Z(N)
+      f V1(1) V2(1) V3(1)
+      f V1(2) V2(2) V3(2)
+ 
+             ...
+ 
+      f V1(M) V2(M) V3(M)
+ 
+   where
+ 
+         X(i) Y(i) Z(i)                 are the body-fixed Cartesian
+                                        coordinates of the plate model
+                                        vertices, provided for each vertex
+                                        as the 2nd, 3rd, and 4th
+                                        space-separated items on the data
+                                        lines. Each vertex line has the
+                                        prefix character 'v'.
+ 
+         V1(i) V2(i) V3(i)              are the indices of the plate model
+                                        vertices for the corners of a given
+                                        plate, provided for each plate as
+                                        the 2nd, 3rd, and 4th
+                                        space-separated items on the data
+                                        lines. Each vertex line has the
+                                        prefix character 'f'.
+ 
+ 
+Sample Vertex-Facet Input File
+ 
+ 
+      v 0. 0. 1.17557
+      v 0.32492 1. 0.525731
+      v 1.05146 0. 0.525731
+      v -0.850651 0.618034 0.525731
+      v -0.850651 -0.618034 0.525731
+      v 0.32492 -1. 0.525731
+      v 0.850651 0.618034 -0.525731
+      v -0.32492 1. -0.525731
+      v -1.05146 0. -0.525731
+      v -0.32492 -1. -0.525731
+      v 0.850651 -0.618034 -0.525731
+      v 0. 0. -1.17557
+      f 1 3 2
+      f 1 2 4
+      f 1 4 5
+      f 1 5 6
+      f 1 6 3
+      f 3 7 2
+      f 2 8 4
+      f 4 9 5
+      f 5 10 6
+      f 6 11 3
+      f 7 8 2
+      f 8 9 4
+      f 9 10 5
+      f 10 11 6
+      f 11 7 3
+      f 7 12 8
+      f 8 12 9
+      f 9 12 10
+      f 10 12 11
+      f 11 12 7
+ 
+ 
+Rosetta/OSIRIS ``ver'' File
+--------------------------------------------------------
+ 
+   The file starts with a line containing vertex and plate counts. Vertex
+   data follow; the coordinates of each vertex are placed on a line. The
+   vertex indices are implied by the order of the vertex data lines. A
+   section of plate data follows the section of vertex data. Each line of
+   plate data is preceded by a line containing that plate's vertex count.
+   Each plate must be triangular in order to be processed by this program.
+ 
+ 
+Sample Rosetta/OSIRIS ``ver'' File
+ 
+      12  20
+       0. 0. 1.17557
+       0.32492 1. 0.525731
+       1.05146 0. 0.525731
+       -0.850651 0.618034 0.525731
+       -0.850651 -0.618034 0.525731
+       0.32492 -1. 0.525731
+       0.850651 0.618034 -0.525731
+       -0.32492 1. -0.525731
+       -1.05146 0. -0.525731
+       -0.32492 -1. -0.525731
+       0.850651 -0.618034 -0.525731
+       0. 0. -1.17557
+      3
+        1 3 2
+      3
+        1 2 4
+      3
+        1 4 5
+      3
+        1 5 6
+      3
+        1 6 3
+      3
+        3 7 2
+      3
+        2 8 4
+      3
+        4 9 5
+      3
+        5 10 6
+      3
+       6 11 3
+      3
+       7 8 2
+      3
+       8 9 4
+      3
+       9 10 5
+      3
+       10 11 6
+      3
+       11 7 3
+      3
+       7 12 8
+      3
+       8 12 9
+      3
+       9 12 10
+      3
+       10 12 11
+      3
+       11 12 7
+ 
+ 
+ASCII Height Grid File
+--------------------------------------------------------
+ 
+   An ASCII height grid file defines a surface by means of a set of height
+   values associated with a regular grid of coordinate pairs, which may be
+   any of
+ 
+       --   Planetocentric longitude and latitude
+ 
+       --   Planetodetic longitude and latitude
+ 
+       --   Rectangular X and Y
+ 
+   The coordinate pairs and heights define a vertex grid in 3-dimensional
+   space. The vertex grid has a rectangular shape in either longitude and
+   latitude or X and Y, depending on the specified coordinate system. It
+   has row and column counts specified by the setup file.
+ 
+   Each group of four adjacent vertices in the grid defines a pair of
+   plates as shown below:
+ 
+ 
+ 
+               vertex(I,J)      vertex(I,J+1)
+                   +----------------+
+                   |\               |
+                   | \              |
+                   |  \             |
+                   |   \            |
+                   |    \           |
+                   |     \          |
+                   |      \         |
+                   |       \        |
+                   |        \       |
+                   |         \      |
+                   |          \     |
+                   |           \    |
+                   |            \   |
+                   |             \  |
+                   |              \ |
+                   |               \|
+                   +----------------+
+               vertex(I+1,J)      vertex(I+1,J+1)
+ 
+ 
+ 
+Domain Coordinates
+ 
+   The pairs of coordinates (longitude, latitude) or (X, Y) are called
+   ``domain coordinates,'' since they constitute the domain of a function
+   whose range is the set of input height values.
+ 
+   The size of the grid is given by a row count NROWS and a column count
+   NCOLS; these are the values assigned by the setup file to the keywords
+   NUMBER_OF_ROWS and NUMBER_OF_COLUMNS.
+ 
+   The domain coordinates of the grid are defined by starting values and
+   constant step values. For planetocentric latitudinal and planetodetic
+   coordinates, longitudes are defined by a ``leftmost'' (minimum)
+   longitude LFTLON and a longitude step size LONSTP. These are the values
+   assigned to the keywords LEFT_COLUMN_LONGITUDE and COLUMN_STEP_SIZE. The
+   longitudes of the grid points increase from
+ 
+      LFTLON to LFTLON + ((NCOLS-1) * LONSTP)
+ 
+   Latitudes are defined by a top (maximum) latitude TOPLAT and a latitude
+   step size LATSTP. These are the values assigned to the keywords
+   TOP_ROW_LATITUDE and ROW_STEP_SIZE. The latitudes of the grid points
+   decrease from
+ 
+      TOPLAT to TOPLAT - ((NROWS-1) * LATSTP)
+ 
+   For rectangular coordinates, X vaues are defined by a ``leftmost''
+   (minimum) X value LEFTX and an X step size XSTEP. These are the values
+   assigned to the keywords LEFT_COLUMN_X and COLUMN_STEP_SIZE. The X
+   values of the grid points increase from
+ 
+      LEFTX to LEFTX + ((NCOLS-1) * XSTEP)
+ 
+   Y values are defined by a top (maximum) Y value TOPY and a Y step size
+   YSTEP. These are the values assigned to the keywords TOP_ROW_Y and
+   ROW_STEP_SIZE. The Y values of the grid points decrease from
+ 
+      TOPY to TOPY - ((NROWS-1) * YSTEP)
+ 
+ 
+Heights
+ 
+   Height values need not be given in standard units; rather, an input
+   parameter called the ``height scale'' must be present in the setup file.
+   The keyword for the height scale is
+ 
+      HEIGHT_SCALE
+ 
+   This scale is a factor by which the input heights are to be multiplied
+   to convert them to km.
+ 
+   For planetodetic coordinates, heights are expressed relative to the
+   reference spheroid of the coordinate system. The equatorial and polar
+   radii of this spheroid are provided as setup file inputs.
+ 
+   For planetocentric latitudinal and rectangular coordinates, input
+   heights are expressed relative to a reference height value which is
+   supplied in the setup file; the keyword for this value is
+   HEIGHT_REFERENCE. Units of the reference height are always km.
+ 
+ 
+Height Grid File Format
+ 
+   The input height grid file should contain only printable ASCII
+   characters. It should not contain tab characters. The line length should
+   not exceed 255 characters. Each data value must be parseable as a double
+   precision number. Data values cannot have embedded blanks. Values must
+   not be split across lines.
+ 
+   The data values must be separated by blanks or commas.
+ 
+   There are no restrictions on the precision of the data values.
+ 
+   The count of data values per line need not be constant. However, the
+   file may be easier to human readers to scan if data values are placed in
+   fixed-width columns.
+ 
+ 
+Height Grid Data Order
+ 
+   MKDSK reads the input file sequentially: it views the values in a height
+   grid file as a 1-dimensional stream of data. Values in lines are read
+   from the file from left to right; lines are read from the start of the
+   file to the end.
+ 
+   MKDSK can accept a variety of data orders. The order of data in the
+   input file are described by keywords in the setup file.
+ 
+   The input data can be in either ``row-major'' or ``column-major'' order.
+ 
+   Row-major order means that data for rows in the vertex grid are adjacent
+   in the input file: the first NCOLS elements of the file belong to a row,
+   the next NCOLS elements belong to a row, and so on.
+ 
+   Column-major order means that data for columns in the vertex grid are
+   adjacent in the input file: the first NROWS elements of the file belong
+   to a column, the next NROWS elements belong to a column, and so on.
+ 
+   The assignment of the string 'YES' to the keyword
+ 
+      INPUT_GRID_ORDER_ROW_MAJOR
+ 
+   indicates that the data are in row-major order. The assignment of 'NO'
+   indicates the data are in column-major order.
+ 
+   The columns of the vertex grid can be filled in in top-down or bottom-up
+   order. When top-down ordering is used, data within each vertex grid
+   column are filled in in order of decreasing latitude or Y-value. This
+   applies whether or not the input file has row-major order. If the order
+   is not top-down, it is bottom-up. The assignment of the string 'YES' to
+   the keyword
+ 
+      COLUMN_VALUE_ORDER_TOP_DOWN
+ 
+   indicates that the data are in top-down order. The assignment of 'NO'
+   indicates the data are in bottom-up order.
+ 
+   The rows of the vertex grid can be filled in in left-to-right or
+   right-to-left order. When left-to-right ordering is used, data within
+   each vertex grid row are filled in in order of increasing longitude or
+   X-value. This applies whether or not the input file has row-major order.
+   If the order is not left-to-right, it is right-to-left. The assignment
+   of the string 'YES' to the keyword
+ 
+      ROW_VALUE_ORDER_LEFT_RIGHT
+ 
+   indicates that the data are in left-to-right order. The assignment of
+   'NO' indicates the data are in right-to-left order.
+ 
+   The following examples show different possible orderings of the input
+   height data. All orderings shown can be described by assignments in the
+   setup file.
+ 
+   For this example, we use an extremely small vertex grid having two rows
+   and three columns. Let the vertices of the vertex grid be numbered as
+   follows:
+ 
+ 
+         1     2     3
+ 
+         4     5     6
+ 
+ 
+   The orderings of the data for these vertices, as a function of the data
+   file's attributes, are shown below.
+ 
+   Row-major, top-down, left-right:
+ 
+       1  2  3
+       4  5  6
+ 
+   Row-major, top-down, right-left:
+ 
+       3  2  1
+       6  5  4
+ 
+   Row-major, bottom-up, left-right:
+ 
+       4  5  6
+       1  2  3
+ 
+   Row-major, bottom-up, right-left:
+ 
+       6  5  4
+       3  2  1
+ 
+   Column-major, top-down, left-right:
+ 
+       1  4
+       2  5
+       3  6
+ 
+   Column-major, top-down, right-left:
+ 
+       3  6
+       2  5
+       1  4
+ 
+   Column-major, bottom-up, left-right:
+ 
+       4  1
+       5  2
+       6  3
+ 
+   Column-major, bottom-up, right-left:
+ 
+       6  3
+       5  2
+       4  1
+ 
+ 
+Polar Caps
+ 
+   If the segment's coordinate system is 'LATITUDINAL' or 'PLANETODETIC',
+   then if polar latitude coverage by the plate set is desired, it may be
+   necessary to fill in a gap above the northernmost or below the
+   southernmost rows of the vertex grid.
+ 
+   A polar cap is created by placing an artificial vertex on the positive
+   or negative Z axis, as specified. The height of the vertex is derived by
+   taking the average of the heights from the adjacent row of the vertex
+   grid. Plates are formed using the polar vertex and vertices of the
+   adjacent row of vertices.
+ 
+   If longitude wrapping is enabled, a plate is created that covers the
+   region between the specified pole and that filled in by longitude
+   wrapping.
+ 
+   North and south polar caps can be created independently. The assignment
+   of the string 'YES' to either of the keywords
+ 
+      MAKE_NORTH_POLAR_CAP
+      MAKE_SOUTH_POLAR_CAP
+ 
+   enables creation of the specified polar caps.
+ 
+   Plates created for the north polar cap have the following form:
+ 
+ 
+               north polar vertex
+                   +
+                   |\
+                   | \
+                   |  \
+                   |   \
+                   |    \
+                   |     \
+                   |      \
+                   |       \
+                   |        \
+                   |         \
+                   |          \
+                   |           \
+                   |            \
+                   |             \
+                   |              \
+                   |               \
+                   +----------------+
+               vertex(1,J)      vertex(1,J+1)
+ 
+ 
+   Plates created for the south polar cap are like the above, but include
+   vertices of the southernmost row of the grid, and are inverted in the
+   direction of latitude.
+ 
+   A polar cap should not be generated if the input data set already has a
+   row of vertices with latitude on that pole: the cap would contain
+   degenerate plates.
+ 
+ 
+Longitude Wrapping
+ 
+   If the segment's coordinate system is 'LATITUDINAL' or 'PLANETODETIC',
+   then if 360-degree longitude coverage by the plate set is desired, it
+   may be necessary to fill in a gap between the rightmost and leftmost
+   vertex columns. When the ``longitude wrapping'' feature is enabled,
+   plates are formed that join the vertices of these columns. The
+   assignment of the string 'YES' to the keyword
+ 
+      WRAP_LONGITUDE
+ 
+   enables longitude wrapping.
+ 
+   Plates created by longitude wrapping have the following form:
+ 
+ 
+ 
+               vertex(I,NCOLS)     vertex(I,1)
+                   +----------------+
+                   |\               |
+                   | \              |
+                   |  \             |
+                   |   \            |
+                   |    \           |
+                   |     \          |
+                   |      \         |
+                   |       \        |
+                   |        \       |
+                   |         \      |
+                   |          \     |
+                   |           \    |
+                   |            \   |
+                   |             \  |
+                   |              \ |
+                   |               \|
+                   +----------------+
+               vertex(I+1,NCOLS)    vertex(I+1,1)
+ 
+ 
+   The plate created by longitude wrapping for the north polar cap has the
+   form:
+ 
+ 
+ 
+               north polar vertex
+                   +
+                   |\
+                   | \
+                   |  \
+                   |   \
+                   |    \
+                   |     \
+                   |      \
+                   |       \
+                   |        \
+                   |         \
+                   |          \
+                   |           \
+                   |            \
+                   |             \
+                   |              \
+                   |               \
+                   +----------------+
+               vertex(1,NCOLS)    vertex(1,1)
+ 
+ 
+   The plate created by longitude wrapping for the south polar cap is like
+   the above, but includes vertices of the southernmost row of the grid,
+   and is inverted in the direction of latitude.
+ 
+   Longitude wrapping should not be used if the input data set already has
+   the rightmost column overlapping the leftmost column. The new plates
+   would either be degenerate or inward-facing.
+ 
+ 
+Output DSK File
+===========================================================================
+ 
+   The output DSK file has a single segment, the contents of which are
+   derived from the input data and from parameters specified in the setup
+   file.
+ 
+   The output file is not human-readable: it is a binary file designed to
+   support rapid read access by SPICE software and SPICE-based
+   applications.
+ 
+   The contents of the output file can be summarized by running the SPICE
+   utility program DSKBRIEF. It is recommended that DSK creators use
+   DSKBRIEF to verify that the output file has the intended attributes.
+ 
+   Data may be extracted from the output DSK file using the interface
+   software provided in the SPICE library. Data also may be exported from
+   the DSK file to a human-readable text file by means of the SPICE utility
+   program DSKEXP.
+ 
+ 
+Appendix A: Spatial Index and Voxels
+===========================================================================
+ 
+   This discussion applies to type 2 segments.
+ 
+   ``Voxel scales'' are attributes of a data structure in type 2 DSK
+   segments called a ``spatial index.'' The spatial index enables type 2
+   DSK software to rapidly locate plates in a given region of space.
+ 
+   Starting with the release of the N0066 SPICE Toolkit, MKDSK
+   automatically computes voxel scales appropriate for the input data.
+ 
+   In some cases, speed of ray-surface intercept computations can be
+   improved by manually adjusting the voxel scales.
+ 
+   See the DSK Required Reading [1] for a detailed description of DSK type
+   2 spatial indexes.
+ 
