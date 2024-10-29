@@ -1,0 +1,3 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+  siman_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\siman_test.exe

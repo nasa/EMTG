@@ -1,0 +1,4 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+C:\SwInstalls\gsl-2.4.0\sort\test_heapsort.c(92,17): warning C4244: '=': conversion from 'size_t' to 'double', possible loss of data
+  sort_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\sort_test.exe

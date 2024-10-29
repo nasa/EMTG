@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\test_airy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\test_bessel.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\test_coulomb.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\test_dilog.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\test_gamma.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\test_hermite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\test_hyperg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\test_legendre.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\test_mathieu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\SwInstalls\gsl-2.4.0\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{B7A420A4-5AC1-3EE6-8BCA-6719148CD54D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{BE3ECF17-CD9F-32F3-9848-1BCCA4E334F3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

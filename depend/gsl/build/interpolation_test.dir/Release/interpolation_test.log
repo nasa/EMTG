@@ -1,0 +1,4 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+C:\SwInstalls\gsl-2.4.0\interpolation\test2d.c(113,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+  interpolation_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\interpolation_test.exe

@@ -1,0 +1,5 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+  tests.c
+C:\SwInstalls\gsl-2.4.0\integration\test.c(97,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  integration_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\integration_test.exe

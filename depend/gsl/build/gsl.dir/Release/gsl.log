@@ -1,0 +1,912 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  version.c
+  placeholder.c
+  prec.c
+  hypot.c
+  log1p.c
+  expm1.c
+  coerce.c
+  invhyp.c
+  infnan.c
+  fdiv.c
+  fcmp.c
+  ldfrexp.c
+  results.c
+  error.c
+  stream.c
+  message.c
+  strerror.c
+  math.c
+  integ.c
+C:\SwInstalls\gsl-2.4.0\test\results.c(47,20): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  block.c
+  vector.c
+  reim.c
+  subvector.c
+  matrix.c
+  rowcol.c
+  getset.c
+  submatrix.c
+  permutation.c
+  permute.c
+  canonical.c
+  combination.c
+  multiset.c
+  sortind.c
+  sortvec.c
+  sortvecind.c
+  subset.c
+  subsetind.c
+  print.c
+  make_rep.c
+  env.c
+  fp.c
+  read.c
+  blas.c
+  cod.c
+C:\SwInstalls\gsl-2.4.0\ieee-utils\env.c(28,20): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  condest.c
+C:\SwInstalls\gsl-2.4.0\ieee-utils\read.c(51,3): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  invtri.c
+  multiply.c
+  tridiag.c
+  lu.c
+  luc.c
+  hh.c
+  qrpt.c
+  lq.c
+  ptlq.c
+  householder.c
+  hessenberg.c
+  householdercomplex.c
+  hesstri.c
+  choleskyc.c
+  mcholesky.c
+  pcholesky.c
+  symmtd.c
+  hermtd.c
+  bidiag.c
+  balance.c
+  balancemat.c
+  symm.c
+  symmv.c
+  nonsymm.c
+  nonsymmv.c
+  herm.c
+  hermv.c
+  gensymm.c
+  gensymmv.c
+  genherm.c
+  genhermv.c
+  gen.c
+  genv.c
+  francis.c
+  schur.c
+  airy.c
+  airy_der.c
+  airy_zero.c
+  atanint.c
+  bessel.c
+  bessel_I0.c
+  bessel_I1.c
+  bessel_In.c
+  bessel_Inu.c
+  bessel_J0.c
+  bessel_J1.c
+  bessel_Jn.c
+  bessel_Jnu.c
+  bessel_K0.c
+  bessel_K1.c
+  bessel_Kn.c
+  bessel_Knu.c
+  bessel_Y0.c
+  bessel_Y1.c
+C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Knu.c(87,16): warning C4244: '+=': conversion from 'double' to 'int', possible loss of data
+  bessel_Yn.c
+  bessel_Ynu.c
+  bessel_amp_phase.c
+  bessel_i.c
+  bessel_j.c
+  bessel_k.c
+  bessel_olver.c
+  bessel_temme.c
+  bessel_y.c
+  bessel_zero.c
+  bessel_sequence.c
+  beta_inc.c
+  clausen.c
+  coulomb.c
+  coupling.c
+C:\SwInstalls\gsl-2.4.0\specfunc\bessel_zero.c(1125,39): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\bessel_zero.c(1133,39): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\bessel_zero.c(1145,39): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\bessel_zero.c(1153,39): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\bessel_zero.c(1171,37): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+  coulomb_bound.c
+C:\SwInstalls\gsl-2.4.0\specfunc\coulomb.c(1125,19): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+  dawson.c
+  debye.c
+  dilog.c
+C:\SwInstalls\gsl-2.4.0\specfunc\coulomb.c(994): warning C4700: uninitialized local variable 'G_lam_G' used
+C:\SwInstalls\gsl-2.4.0\specfunc\coulomb.c(996): warning C4700: uninitialized local variable 'Gp_lam_G' used
+C:\SwInstalls\gsl-2.4.0\specfunc\debye.c(218,22): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\debye.c(271,22): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\debye.c(327,22): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\debye.c(384,22): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+  elementary.c
+C:\SwInstalls\gsl-2.4.0\specfunc\debye.c(441,22): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\debye.c(499,22): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+  ellint.c
+  elljac.c
+  erfc.c
+  exp.c
+  expint.c
+  expint3.c
+  fermi_dirac.c
+  gamma_inc.c
+  hyperg_0F1.c
+C:\SwInstalls\gsl-2.4.0\specfunc\gamma_inc.c(120,24): warning C4244: 'initializing': conversion from 'const double' to 'int', possible loss of data
+  hyperg_2F0.c
+  hyperg_1F1.c
+  hyperg_2F1.c
+  hyperg_U.c
+  lambert.c
+C:\SwInstalls\gsl-2.4.0\specfunc\hyperg_2F1.c(371,21): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\hyperg_U.c(1026,19): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\hyperg_U.c(1716,26): warning C4244: 'function': conversion from 'const double' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\hyperg_U.c(1724,39): warning C4244: 'function': conversion from 'const double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\hyperg_U.c(1724,46): warning C4244: 'function': conversion from 'const double' to 'const int', possible loss of data
+  legendre_H3d.c
+  legendre_P.c
+  legendre_Qn.c
+  legendre_con.c
+  legendre_poly.c
+  log.c
+  mathieu_angfunc.c
+  mathieu_charv.c
+  mathieu_coeff.c
+  mathieu_radfunc.c
+  mathieu_workspace.c
+C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_charv.c(799,28): warning C4018: '<=': signed/unsigned mismatch
+C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_charv.c(712,33): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_charv.c(712,63): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_charv.c(869,28): warning C4018: '<=': signed/unsigned mismatch
+C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_charv.c(810,45): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_charv.c(810,65): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+  poch.c
+C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_workspace.c(33,34): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_workspace.c(33,59): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\poch.c(98,25): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+  psi.c
+  result.c
+  shint.c
+  sinint.c
+  synchrotron.c
+C:\SwInstalls\gsl-2.4.0\specfunc\psi.c(524,31): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\psi.c(736,13): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  transport.c
+  trig.c
+  zeta.c
+  dht.c
+  qrng.c
+  niederreiter-2.c
+C:\SwInstalls\gsl-2.4.0\specfunc\zeta.c(824,21): warning C4244: 'initializing': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\trig.c(184,22): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\trig.c(256,22): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  sobol.c
+  halton.c
+  reversehalton.c
+  borosh13.c
+  cmrg.c
+  coveyou.c
+  default.c
+  fishman18.c
+  fishman20.c
+  fishman2x.c
+  gfsr4.c
+  knuthran2.c
+C:\SwInstalls\gsl-2.4.0\rng\default.c(34,19): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\rng\default.c(82,7): warning C4996: 'getenv': This function or variable may be unsafe. Consider using _dupenv_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  knuthran.c
+  knuthran2002.c
+  lecuyer21.c
+  minstd.c
+  mrg.c
+  mt.c
+  r250.c
+  ran0.c
+  ran1.c
+  ran2.c
+  ran3.c
+  rand48.c
+  rand.c
+  random.c
+  randu.c
+  ranf.c
+  ranlux.c
+  ranlxd.c
+  ranlxs.c
+C:\SwInstalls\gsl-2.4.0\rng\ranlxs.c(202,37): warning C4244: 'return': conversion from 'double' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\rng\ranlxd.c(152,37): warning C4244: 'return': conversion from 'double' to 'unsigned long', possible loss of data
+  ranmar.c
+  rng.c
+  slatec.c
+  taus.c
+  taus113.c
+  transputer.c
+  tt.c
+  types.c
+  uni32.c
+  uni.c
+  vax.c
+  waterman14.c
+  zuf.c
+  bernoulli.c
+  bigauss.c
+  dirichlet.c
+  discrete.c
+  erlang.c
+  gausszig.c
+  gausstail.c
+C:\SwInstalls\gsl-2.4.0\randist\discrete.c(361,9): warning C4244: '=': conversion from 'double' to 'size_t', possible loss of data
+  gumbel.c
+  levy.c
+  logarithmic.c
+  multinomial.c
+  mvgauss.c
+  shuffle.c
+  sphere.c
+C:\SwInstalls\gsl-2.4.0\randist\logarithmic.c(51,18): warning C4244: 'return': conversion from 'double' to 'unsigned int', possible loss of data
+  landau.c
+  binomial_tpe.c
+  dft.c
+C:\SwInstalls\gsl-2.4.0\randist\shuffle.c(75,42): warning C4267: 'function': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\randist\shuffle.c(120,35): warning C4267: 'function': conversion from 'size_t' to 'unsigned long', possible loss of data
+  fft.c
+  dd.c
+  solve_quadratic.c
+C:\SwInstalls\gsl-2.4.0\randist\landau.c(526,7): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  solve_cubic.c
+  zsolve_quadratic.c
+  zsolve_cubic.c
+C:\SwInstalls\gsl-2.4.0\fft\factorize.c(164,30): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?) (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\factorize.c(171,10): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_init.c(184,11): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_init.c(185,12): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+  zsolve.c
+  zsolve_init.c
+  gcv.c
+C:\SwInstalls\gsl-2.4.0\fft\c_init.c(93,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_init.c(94,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_init.c(184,11): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_init.c(185,12): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_3.c(40,33): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_3.c(89,42): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_3.c(90,42): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_5.c(42,31): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_5.c(43,32): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_5.c(130,53): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_5.c(131,53): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_5.c(134,42): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_5.c(135,42): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_6.c(44,33): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(44,21): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(45,21): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(46,21): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(48,21): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(49,21): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(50,21): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(164,34): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(165,34): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(168,34): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(169,34): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(172,34): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(173,34): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(176,34): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(177,34): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(180,70): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(181,70): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(184,76): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(185,76): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(188,76): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(189,76): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(192,76): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_pass_7.c(193,76): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_radix2.c(53,29): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_radix2.c(112,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_radix2.c(113,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_radix2.c(114,33): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_radix2.c(212,29): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_radix2.c(265,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_radix2.c(266,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\c_radix2.c(267,33): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+  multilinear.c
+C:\SwInstalls\gsl-2.4.0\fft\hc_main.c(113,19): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_main.c(117,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_init.c(95,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_init.c(96,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_main.c(60,27): warning C4244: '*=': conversion from 'const double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_main.c(113,19): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_main.c(117,27): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_3.c(33,27): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_3.c(99,42): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_3.c(100,42): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_4.c(170,41): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_4.c(171,41): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+  multiwlinear.c
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_5.c(36,23): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_5.c(37,23): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_5.c(61,53): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_5.c(62,38): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_5.c(147,53): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_5.c(148,53): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_5.c(151,42): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_5.c(152,42): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_5.c(238,46): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_5.c(239,49): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_n.c(40,30): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_n.c(41,30): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_n.c(186,25): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_pass_n.c(187,25): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_radix2.c(44,29): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_radix2.c(111,41): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_radix2.c(113,26): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_radix2.c(114,26): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\hc_radix2.c(115,35): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_n.c(126,51): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_init.c(103,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_init.c(104,46): warning C4244: '=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_3.c(37,33): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_3.c(52,38): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_3.c(153,38): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_4.c(190,44): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_4.c(191,44): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_5.c(39,23): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_5.c(40,23): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_5.c(72,49): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_5.c(75,38): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_5.c(178,53): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_5.c(179,53): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_5.c(182,42): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_5.c(183,42): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_5.c(266,33): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_5.c(267,44): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_n.c(39,30): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_n.c(40,30): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_n.c(126,51): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_n.c(186,25): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_pass_n.c(187,25): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_radix2.c(82,26): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_radix2.c(83,26): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+C:\SwInstalls\gsl-2.4.0\fft\real_radix2.c(84,35): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\fft.c)
+  work.c
+  lmniel.c
+  lmder.c
+  fdfridge.c
+  gradient.c
+  multirobust.c
+  robust_wfun.c
+  multireg.c
+  fdfvv.c
+  multilarge.c
+  normal.c
+  tsqr.c
+  cgst.c
+  dummy.c
+  rstat.c
+  rquantile.c
+C:\SwInstalls\gsl-2.4.0\rstat\rquantile.c(71,20): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  mean.c
+  variance.c
+  absdev.c
+  skew.c
+  kurtosis.c
+  lag1.c
+  p_variance.c
+  ttest.c
+  median.c
+  covariance.c
+  quantiles.c
+  wmean.c
+  wvariance.c
+  wabsdev.c
+  wskew.c
+  wkurtosis.c
+  siman.c
+  levin_u.c
+  levin_utrunc.c
+  work_u.c
+C:\SwInstalls\gsl-2.4.0\sum\levin_utrunc.c(191,18): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  work_utrunc.c
+C:\SwInstalls\gsl-2.4.0\sum\levin_u.c(230,18): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  qk15.c
+  qk21.c
+  qk31.c
+  qk41.c
+  qk51.c
+  qk61.c
+  qk.c
+  qng.c
+  qag.c
+  qags.c
+  qagp.c
+  workspace.c
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(68,13): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qag.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(72,26): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qag.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(78,15): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qag.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(68,13): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qags.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(72,26): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qags.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(78,15): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qags.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt2.c(42,26): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qags.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt2.c(46,16): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qags.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt2.c(31,21): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qags.c)
+  qcheb.c
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(68,13): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qagp.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(72,26): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qagp.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(78,15): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qagp.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt2.c(42,26): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qagp.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt2.c(46,16): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qagp.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt2.c(31,21): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qagp.c)
+  qawc.c
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(68,13): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qawc.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(72,26): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qawc.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(78,15): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qawc.c)
+  qmomo.c
+  qaws.c
+  qmomof.c
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(68,13): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qaws.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(72,26): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qaws.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(78,15): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qaws.c)
+  qawo.c
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(68,13): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qawo.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(72,26): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qawo.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt.c(78,15): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qawo.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt2.c(42,26): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qawo.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt2.c(46,16): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qawo.c)
+C:\SwInstalls\gsl-2.4.0\integration\qpsrt2.c(31,21): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\integration\qawo.c)
+  qawf.c
+  glfixed.c
+C:\SwInstalls\gsl-2.4.0\integration\glfixed.c(236,26): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\integration\glfixed.c(209,29): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\integration\glfixed.c(287,18): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+  cquad.c
+C:\SwInstalls\gsl-2.4.0\integration\cquad.c(389,16): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\integration\cquad.c(414,17): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\integration\cquad.c(568,16): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\integration\cquad.c(586,17): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\integration\cquad.c(600,17): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\integration\cquad.c(627,17): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  fixed.c
+  chebyshev.c
+  chebyshev2.c
+  legendre.c
+  rational.c
+C:\SwInstalls\gsl-2.4.0\integration\fixed.c(195,15): warning C4267: 'function': conversion from 'size_t' to 'const int', possible loss of data
+  accel.c
+  akima.c
+  cspline.c
+  interp.c
+  spline.c
+  poly.c
+  steffen.c
+  interp2d.c
+  bilinear.c
+C:\SwInstalls\gsl-2.4.0\interpolation\poly.c(143,43): warning C4244: 'function': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\interpolation\poly.c(143,60): warning C4244: 'function': conversion from 'size_t' to 'double', possible loss of data
+  bicubic.c
+  spline2d.c
+  add.c
+  get.c
+  params.c
+C:\SwInstalls\gsl-2.4.0\histogram\params.c(27,18): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+  reset.c
+  pdf.c
+  add2d.c
+  get2d.c
+  init2d.c
+C:\SwInstalls\gsl-2.4.0\histogram\init2d.c(196,24): warning C4244: '=': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\histogram\init2d.c(201,24): warning C4244: '=': conversion from 'size_t' to 'double', possible loss of data
+  params2d.c
+  reset2d.c
+  file2d.c
+  pdf2d.c
+  calloc_range.c
+C:\SwInstalls\gsl-2.4.0\histogram\params2d.c(27,19): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\histogram\params2d.c(40,19): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+  calloc_range2d.c
+C:\SwInstalls\gsl-2.4.0\histogram\file2d.c(167,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  copy2d.c
+  maxval.c
+  maxval2d.c
+  oper2d.c
+  stat.c
+  stat2d.c
+  rk2simp.c
+  gear1.c
+  gear2.c
+  rk1imp.c
+  msadams.c
+  msbdf.c
+  driver.c
+  bisection.c
+  falsepos.c
+C:\SwInstalls\gsl-2.4.0\ode-initval2\msbdf.c(870,50): warning C4244: 'function': conversion from 'const size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\msbdf.c(983,69): warning C4244: 'function': conversion from 'const size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\msbdf.c(995,70): warning C4244: 'function': conversion from 'const size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\msbdf.c(1008,33): warning C4244: 'function': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\msbdf.c(1016,68): warning C4244: 'function': conversion from 'const size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\msbdf.c(1357,30): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\msbdf.c(1765,15): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  secant.c
+  steffenson.c
+  gnewton.c
+  dnewton.c
+  broyden.c
+C:\SwInstalls\gsl-2.4.0\ode-initval2\msadams.c(575,50): warning C4244: 'function': conversion from 'const size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\msadams.c(686,63): warning C4244: 'function': conversion from 'const size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\msadams.c(698,70): warning C4244: 'function': conversion from 'const size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\msadams.c(711,33): warning C4244: 'function': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\msadams.c(719,68): warning C4244: 'function': conversion from 'const size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\msadams.c(968,18): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\msadams.c(1278,15): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  hybrid.c
+  hybridj.c
+  golden.c
+  bracketing.c
+  quad_golden.c
+  fdfminimizer.c
+  steepest_descent.c
+  conjugate_fr.c
+  conjugate_pr.c
+  vector_bfgs.c
+  vector_bfgs2.c
+  fminimizer.c
+  simplex.c
+  simplex2.c
+  miser.c
+  plain.c
+C:\SwInstalls\gsl-2.4.0\monte\miser.c(146,20): warning C4244: '=': conversion from 'double' to 'size_t', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\miser.c(223,42): warning C4267: 'function': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\miser.c(240,25): warning C4244: '=': conversion from 'double' to 'size_t', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\miser.c(241,25): warning C4244: '=': conversion from 'double' to 'size_t', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\miser.c(626,30): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+  vegas.c
+  ntuple.c
+C:\SwInstalls\gsl-2.4.0\ntuple\ntuple.c(46,18): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\ntuple\ntuple.c(76,18): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  betainv.c
+  cauchyinv.c
+  chisqinv.c
+  exponentialinv.c
+  fdistinv.c
+  flatinv.c
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(144,37): warning C4267: 'function': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(167,19): warning C4244: '=': conversion from 'double' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(175,22): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(183,57): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(184,32): warning C4244: '=': conversion from 'double' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(185,38): warning C4244: '=': conversion from 'double' to 'size_t', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(203,34): warning C4267: 'function': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(210,23): warning C4267: 'function': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(210,28): warning C4267: 'function': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(229,39): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(350,34): warning C4267: 'function': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(356,30): warning C4267: 'function': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(363,30): warning C4267: 'function': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(160,32): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(173,33): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(503,22): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(552,20): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+  gammainv.c
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(578,18): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\monte\vegas.c(676,15): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  gaussinv.c
+  gumbel1.c
+  gumbel1inv.c
+  gumbel2.c
+  gumbel2inv.c
+  laplaceinv.c
+  logisticinv.c
+  lognormalinv.c
+  paretoinv.c
+  rayleighinv.c
+  tdistinv.c
+  weibullinv.c
+  hypergeometric.c
+  dwt.c
+  wavelet.c
+C:\SwInstalls\gsl-2.4.0\wavelet\dwt.c(54,10): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+  daubechies.c
+  haar.c
+  greville.c
+  spdgemm.c
+  spdgemv.c
+  spcompress.c
+  spcopy.c
+  spgetset.c
+  spio.c
+  spmatrix.c
+C:\SwInstalls\gsl-2.4.0\spmatrix\spio.c(169,11): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\spmatrix\spio.c(195,17): warning C4996: 'sscanf': This function or variable may be unsafe. Consider using sscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  spoper.c
+  spprop.c
+  spswap.c
+  itersolve.c
+  gmres.c
+  minmax.c
+  pow_int.c
+  inline.c
+  deriv.c
+  eval.c
+  init.c
+  init.c
+  file.c
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(83,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(159,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(83,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(159,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(83,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(159,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(83,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(159,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(83,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(159,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(83,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(159,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(83,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(159,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(83,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(159,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(83,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(159,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(83,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(159,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(83,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(159,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(83,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(159,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(83,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(159,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(83,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\block\fprintf_source.c(159,24): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  init.c
+  file.c
+  copy.c
+  swap.c
+  prop.c
+  minmax.c
+  oper.c
+C:\SwInstalls\gsl-2.4.0\vector\oper_complex_source.c(128,26): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(130,30): warning C4244: '*=': conversion from 'const double' to 'float', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(146,30): warning C4244: '+=': conversion from 'const double' to 'float', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(130,30): warning C4244: '*=': conversion from 'const double' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(146,30): warning C4244: '+=': conversion from 'const double' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(130,30): warning C4244: '*=': conversion from 'const double' to 'long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(146,30): warning C4244: '+=': conversion from 'const double' to 'long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(130,30): warning C4244: '*=': conversion from 'const double' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(146,30): warning C4244: '+=': conversion from 'const double' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(130,30): warning C4244: '*=': conversion from 'const double' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(146,30): warning C4244: '+=': conversion from 'const double' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(130,30): warning C4244: '*=': conversion from 'const double' to 'unsigned short', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(146,30): warning C4244: '+=': conversion from 'const double' to 'unsigned short', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(130,30): warning C4244: '*=': conversion from 'const double' to 'short', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(146,30): warning C4244: '+=': conversion from 'const double' to 'short', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(130,30): warning C4244: '*=': conversion from 'const double' to 'unsigned char', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(146,30): warning C4244: '+=': conversion from 'const double' to 'unsigned char', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(130,30): warning C4244: '*=': conversion from 'const double' to 'char', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\oper_source.c(146,30): warning C4244: '+=': conversion from 'const double' to 'char', possible loss of data
+  view.c
+  init.c
+  file.c
+  swap.c
+  copy.c
+  minmax.c
+  prop.c
+  oper.c
+C:\SwInstalls\gsl-2.4.0\matrix\oper_complex_source.c(159,30): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(149,35): warning C4244: '*=': conversion from 'const double' to 'float', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(169,35): warning C4244: '+=': conversion from 'const double' to 'float', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(187,29): warning C4244: '+=': conversion from 'const double' to 'float', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(149,35): warning C4244: '*=': conversion from 'const double' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(169,35): warning C4244: '+=': conversion from 'const double' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(187,29): warning C4244: '+=': conversion from 'const double' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(149,35): warning C4244: '*=': conversion from 'const double' to 'long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(169,35): warning C4244: '+=': conversion from 'const double' to 'long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(187,29): warning C4244: '+=': conversion from 'const double' to 'long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(149,35): warning C4244: '*=': conversion from 'const double' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(169,35): warning C4244: '+=': conversion from 'const double' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(187,29): warning C4244: '+=': conversion from 'const double' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(149,35): warning C4244: '*=': conversion from 'const double' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(169,35): warning C4244: '+=': conversion from 'const double' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(187,29): warning C4244: '+=': conversion from 'const double' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(149,35): warning C4244: '*=': conversion from 'const double' to 'unsigned short', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(169,35): warning C4244: '+=': conversion from 'const double' to 'unsigned short', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(187,29): warning C4244: '+=': conversion from 'const double' to 'unsigned short', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(149,35): warning C4244: '*=': conversion from 'const double' to 'short', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(169,35): warning C4244: '+=': conversion from 'const double' to 'short', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(187,29): warning C4244: '+=': conversion from 'const double' to 'short', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(149,35): warning C4244: '*=': conversion from 'const double' to 'unsigned char', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(169,35): warning C4244: '+=': conversion from 'const double' to 'unsigned char', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(187,29): warning C4244: '+=': conversion from 'const double' to 'unsigned char', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(149,35): warning C4244: '*=': conversion from 'const double' to 'char', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(169,35): warning C4244: '+=': conversion from 'const double' to 'char', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\oper_source.c(187,29): warning C4244: '+=': conversion from 'const double' to 'char', possible loss of data
+  view.c
+  init.c
+  file.c
+C:\SwInstalls\gsl-2.4.0\permutation\file.c(101,20): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  inline.c
+  init.c
+  file.c
+C:\SwInstalls\gsl-2.4.0\combination\file.c(102,20): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  inline.c
+  init.c
+  file.c
+C:\SwInstalls\gsl-2.4.0\multiset\file.c(104,20): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  inline.c
+  sort.c
+  exponential.c
+  qr.c
+  svd.c
+C:\SwInstalls\gsl-2.4.0\linalg\svd.c(592,31): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\svd.c(567,23): warning C4267: 'initializing': conversion from 'size_t' to 'int', possible loss of data
+  cholesky.c
+  inline.c
+  jacobi.c
+C:\SwInstalls\gsl-2.4.0\eigen\jacobi.c(190,11): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+  sort.c
+  beta.c
+  gegenbauer.c
+  gamma.c
+  hermite.c
+  hyperg.c
+  laguerre.c
+  pow_int.c
+  inline.c
+  file.c
+  inline.c
+  beta.c
+  binomial.c
+  cauchy.c
+  chisq.c
+  exponential.c
+  exppow.c
+  fdist.c
+  flat.c
+  gamma.c
+C:\SwInstalls\gsl-2.4.0\randist\gamma.c(44,21): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+  gauss.c
+  geometric.c
+C:\SwInstalls\gsl-2.4.0\randist\geometric.c(45,33): warning C4244: '=': conversion from 'double' to 'unsigned int', possible loss of data
+  hyperg.c
+  laplace.c
+  logistic.c
+  lognormal.c
+  nbinomial.c
+  pareto.c
+  pascal.c
+  poisson.c
+C:\SwInstalls\gsl-2.4.0\randist\poisson.c(41,27): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+  rayleigh.c
+  tdist.c
+  weibull.c
+  eval.c
+  deriv.c
+  linear.c
+  fsolver.c
+  fdfsolver.c
+  fdjac.c
+  convergence.c
+  covar.c
+  cholesky.c
+  convergence.c
+  covar.c
+  dogleg.c
+  fdf.c
+  fdjac.c
+  lm.c
+  qr.c
+  scaling.c
+  subspace2D.c
+  svd.c
+  trust.c
+  cholesky.c
+  convergence.c
+  dogleg.c
+  fdf.c
+  lm.c
+  scaling.c
+  subspace2D.c
+  trust.c
+  minmax.c
+  hermite.c
+  laguerre.c
+  gegenbauer.c
+  jacobi.c
+  exponential.c
+  linear.c
+  inline.c
+  init.c
+C:\SwInstalls\gsl-2.4.0\histogram\init.c(121,23): warning C4244: '=': conversion from 'size_t' to 'double', possible loss of data
+  file.c
+C:\SwInstalls\gsl-2.4.0\histogram\file.c(114,20): warning C4996: 'fscanf': This function or variable may be unsafe. Consider using fscanf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  copy.c
+  oper.c
+  control.c
+  cstd.c
+  cscal.c
+  evolve.c
+  step.c
+  rk2.c
+  rk2imp.c
+  rk4.c
+  rk4imp.c
+  rkf45.c
+  rk8pd.c
+  rkck.c
+  bsimp.c
+C:\SwInstalls\gsl-2.4.0\ode-initval\bsimp.c(489,26): warning C4267: 'function': conversion from 'size_t' to 'const unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval\bsimp.c(513,15): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  control.c
+  cstd.c
+  cscal.c
+  evolve.c
+  step.c
+  rk2.c
+  rk2imp.c
+  rk4.c
+  rk4imp.c
+  rkf45.c
+  rk8pd.c
+  rkck.c
+  bsimp.c
+C:\SwInstalls\gsl-2.4.0\ode-initval2\bsimp.c(491,26): warning C4267: 'function': conversion from 'size_t' to 'const unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\bsimp.c(516,15): warning C4267: 'return': conversion from 'size_t' to 'unsigned int', possible loss of data
+  brent.c
+  newton.c
+  convergence.c
+  fsolver.c
+  fdfsolver.c
+  fdjac.c
+  fsolver.c
+  fdfsolver.c
+  convergence.c
+  newton.c
+  fsolver.c
+  brent.c
+  convergence.c
+  convergence.c
+  diff.c
+  diff.c
+  deriv.c
+  beta.c
+  cauchy.c
+  chisq.c
+  exponential.c
+  exppow.c
+  fdist.c
+  flat.c
+  gamma.c
+  gauss.c
+  laplace.c
+  logistic.c
+  lognormal.c
+  pareto.c
+  rayleigh.c
+  tdist.c
+  weibull.c
+  binomial.c
+  poisson.c
+  geometric.c
+  nbinomial.c
+  pascal.c
+  bspline.c
+  bspline.c
+C:\SwInstalls\gsl-2.4.0\bspline\bspline.c(551,34): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\bspline\bspline.c(551,47): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\bspline\bspline.c(849,24): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\bspline\bspline.c(849,34): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\bspline\bspline.c(891,12): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\bspline\bspline.c(893,9): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\bspline\bspline.c(894,10): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  gsl.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\Release\gsl.lib

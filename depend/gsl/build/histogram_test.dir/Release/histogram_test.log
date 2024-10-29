@@ -1,0 +1,21 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+  test1d.c
+  test2d.c
+  test1d_resample.c
+  test2d_resample.c
+  test1d_trap.c
+  test2d_trap.c
+C:\SwInstalls\gsl-2.4.0\histogram\test2d.c(425,21): warning C4244: '=': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\histogram\test2d.c(426,28): warning C4244: '=': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\histogram\test1d.c(274,21): warning C4244: '=': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\histogram\test1d.c(275,28): warning C4244: '=': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\histogram\test1d.c(422,15): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\histogram\test1d.c(428,15): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\histogram\test1d.c(451,15): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\histogram\test1d.c(457,15): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\histogram\test2d.c(652,15): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\histogram\test2d.c(658,15): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\histogram\test2d.c(701,15): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\histogram\test2d.c(707,15): warning C4996: 'fopen': This function or variable may be unsafe. Consider using fopen_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  histogram_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\histogram_test.exe

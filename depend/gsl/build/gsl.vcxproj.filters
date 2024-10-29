@@ -1,0 +1,1779 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\version.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\utils\placeholder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\minmax.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\prec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\hypot.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\log1p.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\expm1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\coerce.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\invhyp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\pow_int.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\infnan.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\fdiv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\fcmp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\ldfrexp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\test\results.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\err\error.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\err\stream.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\err\message.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\err\strerror.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\complex\math.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\complex\inline.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cheb\deriv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cheb\eval.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cheb\init.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cheb\integ.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\block\init.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\block\file.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\block\block.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\init.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\file.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\vector.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\copy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\swap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\prop.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\minmax.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\oper.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\reim.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\subvector.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\view.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\init.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\matrix.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\file.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\rowcol.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\swap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\copy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\minmax.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\prop.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\oper.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\getset.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\view.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\submatrix.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\permutation\init.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\permutation\file.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\permutation\permutation.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\permutation\permute.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\permutation\canonical.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\permutation\inline.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\combination\init.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\combination\file.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\combination\combination.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\combination\inline.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiset\init.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiset\file.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiset\multiset.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiset\inline.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sort\sort.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sort\sortind.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sort\sortvec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sort\sortvecind.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sort\subset.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sort\subsetind.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ieee-utils\print.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ieee-utils\make_rep.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ieee-utils\env.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ieee-utils\fp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ieee-utils\read.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\blas\blas.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\cod.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\condest.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\invtri.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\multiply.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\exponential.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\tridiag.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\lu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\luc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\hh.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\qr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\qrpt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\lq.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\ptlq.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\svd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\householder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\householdercomplex.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\hessenberg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\hesstri.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\cholesky.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\choleskyc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\mcholesky.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\pcholesky.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\symmtd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\hermtd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\bidiag.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\balance.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\balancemat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\inline.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\jacobi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\symm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\symmv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\nonsymm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\nonsymmv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\herm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\hermv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\gensymm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\gensymmv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\genherm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\genhermv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\gen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\genv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\sort.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\francis.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\schur.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\airy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\airy_der.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\airy_zero.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\atanint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_I0.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_I1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_In.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Inu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_J0.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_J1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Jn.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Jnu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_K0.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_K1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Kn.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Knu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Y0.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Y1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Yn.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Ynu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_amp_phase.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_i.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_j.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_k.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_olver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_temme.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_y.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_zero.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_sequence.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\beta.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\beta_inc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\clausen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\coulomb.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\coupling.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\coulomb_bound.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\dawson.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\debye.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\dilog.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\elementary.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\ellint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\elljac.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\erfc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\exp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\expint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\expint3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\fermi_dirac.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\gegenbauer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\gamma.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\gamma_inc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\hermite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\hyperg_0F1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\hyperg_2F0.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\hyperg_1F1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\hyperg_2F1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\hyperg_U.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\hyperg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\laguerre.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\lambert.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\legendre_H3d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\legendre_P.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\legendre_Qn.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\legendre_con.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\legendre_poly.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\log.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_angfunc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_charv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_coeff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_radfunc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_workspace.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\poch.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\pow_int.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\psi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\result.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\shint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\sinint.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\synchrotron.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\transport.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\trig.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\zeta.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\dht\dht.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\qrng\qrng.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\qrng\niederreiter-2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\qrng\sobol.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\qrng\halton.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\qrng\reversehalton.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\qrng\inline.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\borosh13.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\cmrg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\coveyou.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\default.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\file.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\fishman18.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\fishman20.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\fishman2x.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\gfsr4.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\knuthran2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\knuthran.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\knuthran2002.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\lecuyer21.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\minstd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\mrg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\mt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\r250.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ran0.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ran1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ran2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ran3.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\rand48.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\rand.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\random.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\randu.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ranf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ranlux.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ranlxd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ranlxs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ranmar.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\rng.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\slatec.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\taus.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\taus113.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\transputer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\tt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\types.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\uni32.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\uni.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\vax.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\waterman14.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\zuf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\inline.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\bernoulli.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\beta.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\bigauss.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\binomial.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\cauchy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\chisq.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\dirichlet.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\discrete.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\erlang.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\exponential.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\exppow.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\fdist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\flat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\gamma.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\gauss.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\gausszig.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\gausstail.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\geometric.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\gumbel.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\hyperg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\laplace.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\levy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\logarithmic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\logistic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\lognormal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\multinomial.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\mvgauss.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\nbinomial.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\pareto.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\pascal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\poisson.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\rayleigh.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\shuffle.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\sphere.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\tdist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\weibull.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\landau.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\binomial_tpe.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\fft\dft.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\fft\fft.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\dd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\eval.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\solve_quadratic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\solve_cubic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\zsolve_quadratic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\zsolve_cubic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\zsolve.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\zsolve_init.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\deriv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\fit\linear.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\gcv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\multilinear.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\multiwlinear.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\work.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\lmniel.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\lmder.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\fsolver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\fdfsolver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\fdfridge.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\fdjac.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\convergence.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\gradient.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\covar.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\multirobust.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\robust_wfun.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\multireg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\cholesky.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\convergence.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\covar.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\dogleg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\fdf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\fdfvv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\fdjac.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\lm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\qr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\scaling.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\subspace2D.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\svd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\trust.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge\multilarge.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge\normal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge\tsqr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\cgst.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\cholesky.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\convergence.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\dogleg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\dummy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\fdf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\lm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\scaling.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\subspace2D.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\trust.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rstat\rstat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rstat\rquantile.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\mean.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\variance.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\absdev.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\skew.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\kurtosis.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\lag1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\p_variance.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\minmax.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\ttest.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\median.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\covariance.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\quantiles.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\wmean.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\wvariance.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\wabsdev.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\wskew.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\wkurtosis.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\siman\siman.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sum\levin_u.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sum\levin_utrunc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sum\work_u.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sum\work_utrunc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qk15.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qk21.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qk31.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qk41.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qk51.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qk61.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qk.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qng.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qag.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qags.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qagp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\workspace.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qcheb.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qawc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qmomo.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qaws.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qmomof.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qawo.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qawf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\glfixed.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\cquad.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\fixed.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\chebyshev.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\chebyshev2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\legendre.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\hermite.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\laguerre.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\gegenbauer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\jacobi.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\exponential.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\rational.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\accel.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\akima.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\cspline.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\interp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\linear.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\spline.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\poly.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\steffen.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\inline.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\interp2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\bilinear.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\bicubic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\spline2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\add.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\get.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\init.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\params.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\reset.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\file.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\pdf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\add2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\get2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\init2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\params2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\reset2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\file2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\pdf2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\calloc_range.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\calloc_range2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\copy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\copy2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\maxval.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\maxval2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\oper.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\oper2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\stat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\stat2d.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\control.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\cstd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\cscal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\evolve.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\step.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rk2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rk2imp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rk2simp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rk4.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rk4imp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rkf45.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rk8pd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rkck.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\bsimp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\gear1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\gear2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\control.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\cstd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\cscal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\evolve.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\step.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rk2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rk2imp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rk4.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rk4imp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rkf45.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rk8pd.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rkck.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\bsimp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rk1imp.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\msadams.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\msbdf.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\driver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\bisection.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\brent.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\falsepos.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\newton.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\secant.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\steffenson.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\convergence.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\fsolver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\fdfsolver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\fdjac.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\fsolver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\fdfsolver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\convergence.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\newton.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\gnewton.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\dnewton.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\broyden.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\hybrid.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\hybridj.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\min\fsolver.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\min\golden.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\min\brent.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\min\convergence.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\min\bracketing.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\min\quad_golden.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\fdfminimizer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\steepest_descent.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\conjugate_fr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\conjugate_pr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\convergence.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\diff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\vector_bfgs.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\vector_bfgs2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\fminimizer.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\simplex.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\simplex2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\monte\miser.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\monte\plain.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\monte\vegas.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ntuple\ntuple.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\diff\diff.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\deriv\deriv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\beta.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\betainv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\cauchy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\cauchyinv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\chisq.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\chisqinv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\exponential.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\exponentialinv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\exppow.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\fdist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\fdistinv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\flat.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\flatinv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gamma.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gammainv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gauss.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gaussinv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gumbel1.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gumbel1inv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gumbel2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gumbel2inv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\laplace.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\laplaceinv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\logistic.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\logisticinv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\lognormal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\lognormalinv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\pareto.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\paretoinv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\rayleigh.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\rayleighinv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\tdist.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\tdistinv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\weibull.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\weibullinv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\binomial.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\poisson.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\geometric.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\nbinomial.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\pascal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\hypergeometric.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\wavelet\dwt.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\wavelet\wavelet.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\wavelet\bspline.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\wavelet\daubechies.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\wavelet\haar.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\bspline\bspline.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\bspline\greville.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spblas\spdgemm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spblas\spdgemv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spcompress.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spcopy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spgetset.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spio.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spmatrix.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spoper.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spprop.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spswap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\splinalg\itersolve.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\splinalg\gmres.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\utils\system.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\vector\view.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\matrix\view.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\ieee-utils\gsl_ieee_utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\linalg\tridiag.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_amp_phase.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\specfunc\recurse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\qrng\gsl_qrng.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\integration\qng.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\interpolation\integ_eval.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\histogram\gsl_histogram.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\histogram\gsl_histogram2d.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\monte\gsl_monte_vegas.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\monte\gsl_monte_miser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\monte\gsl_monte_plain.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\monte\gsl_monte.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\SwInstalls\gsl-2.4.0\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{B7A420A4-5AC1-3EE6-8BCA-6719148CD54D}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{BE3ECF17-CD9F-32F3-9848-1BCCA4E334F3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

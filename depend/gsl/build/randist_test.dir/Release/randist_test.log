@@ -1,0 +1,11 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+C:\SwInstalls\gsl-2.4.0\randist\test.c(667,18): warning C4244: '=': conversion from 'double' to 'long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\randist\test.c(1169,10): warning C4244: 'return': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\randist\test.c(1186,10): warning C4244: 'return': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\randist\test.c(1203,10): warning C4244: 'return': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\randist\test.c(1832,71): warning C4244: 'function': conversion from 'size_t' to 'const double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\randist\test.c(1832,75): warning C4244: 'function': conversion from 'size_t' to 'const double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\randist\test.c(1837,32): warning C4244: 'function': conversion from 'size_t' to 'const double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\randist\test.c(1837,36): warning C4244: 'function': conversion from 'size_t' to 'const double', possible loss of data
+  randist_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\randist_test.exe

@@ -1,0 +1,14 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+  signals.c
+C:\SwInstalls\gsl-2.4.0\fft\test_complex_source.c(250,35): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?) (compiling source file C:\SwInstalls\gsl-2.4.0\fft\test.c)
+C:\SwInstalls\gsl-2.4.0\fft\test_real_source.c(133,37): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?) (compiling source file C:\SwInstalls\gsl-2.4.0\fft\test.c)
+C:\SwInstalls\gsl-2.4.0\fft\test_complex_source.c(250,35): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?) (compiling source file C:\SwInstalls\gsl-2.4.0\fft\test.c)
+C:\SwInstalls\gsl-2.4.0\fft\test_real_source.c(133,37): warning C4334: '<<': result of 32-bit shift implicitly converted to 64 bits (was 64-bit shift intended?) (compiling source file C:\SwInstalls\gsl-2.4.0\fft\test.c)
+C:\SwInstalls\gsl-2.4.0\fft\signals_source.c(144,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\signals.c)
+C:\SwInstalls\gsl-2.4.0\fft\signals_source.c(209,26): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\signals.c)
+C:\SwInstalls\gsl-2.4.0\fft\signals_source.c(218,26): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\signals.c)
+C:\SwInstalls\gsl-2.4.0\fft\signals_source.c(144,22): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\signals.c)
+C:\SwInstalls\gsl-2.4.0\fft\signals_source.c(209,26): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\signals.c)
+C:\SwInstalls\gsl-2.4.0\fft\signals_source.c(218,26): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\fft\signals.c)
+  fft_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\fft_test.exe

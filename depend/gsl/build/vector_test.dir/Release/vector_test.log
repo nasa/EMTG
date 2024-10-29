@@ -1,0 +1,42 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+C:\SwInstalls\gsl-2.4.0\vector\test_complex_source.c(641,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_complex_source.c(686,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_complex_source.c(641,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_complex_source.c(686,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_complex_source.c(641,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_complex_source.c(686,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(97,25): warning C4244: '=': conversion from 'size_t' to 'long double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(721,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(763,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(97,25): warning C4244: '=': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(721,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(763,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(97,25): warning C4244: '=': conversion from 'size_t' to 'float', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(721,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(763,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(97,25): warning C4267: '=': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(721,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(763,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(97,25): warning C4267: '=': conversion from 'size_t' to 'long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(721,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(763,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(97,25): warning C4267: '=': conversion from 'size_t' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(721,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(763,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(97,25): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(721,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(763,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(97,25): warning C4267: '=': conversion from 'size_t' to 'unsigned short', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(721,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(763,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(97,25): warning C4267: '=': conversion from 'size_t' to 'short', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(721,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(763,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(97,25): warning C4267: '=': conversion from 'size_t' to 'unsigned char', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(721,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(763,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(97,25): warning C4267: '=': conversion from 'size_t' to 'char', possible loss of data
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(721,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\vector\test_source.c(763,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  vector_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\vector_test.exe

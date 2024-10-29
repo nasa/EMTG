@@ -1,0 +1,12 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+C:\SwInstalls\gsl-2.4.0\multifit\test_filip.c(117,51): warning C4244: 'function': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\multifit\test_pontius.c(86,53): warning C4244: 'function': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\multifit\test_shaw.c(26,24): warning C4101: 'G': unreferenced local variable
+C:\SwInstalls\gsl-2.4.0\multifit\test_shaw.c(244,10): warning C4101: 'reg_idx': unreferenced local variable
+C:\SwInstalls\gsl-2.4.0\multifit\test_wnlin.c(69,19): warning C4244: 'initializing': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\multifit\test_wnlin.c(95,19): warning C4244: 'initializing': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\multifit\test_nonlinear.c(348,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\multifit\test_nonlinear.c(377,7): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\multifit\test_nonlinear.c(438,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  multifit_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\multifit_test.exe

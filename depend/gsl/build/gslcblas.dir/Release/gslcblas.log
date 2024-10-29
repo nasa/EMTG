@@ -1,0 +1,200 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  sasum.c
+  saxpy.c
+  scasum.c
+  scnrm2.c
+  scopy.c
+  sdot.c
+  sdsdot.c
+  sgbmv.c
+C:\SwInstalls\gsl-2.4.0\cblas\source_asum_r.h(30,10): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\sasum.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_dot_r.h(32,10): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\sdsdot.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_asum_c.h(30,34): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\scasum.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_nrm2_c.h(38,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\scnrm2.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_nrm2_c.h(49,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\scnrm2.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_nrm2_c.h(59,16): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\scnrm2.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_nrm2_c.h(35,23): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\scnrm2.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_nrm2_c.h(46,23): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\scnrm2.c)
+  sgemm.c
+  sgemv.c
+  sger.c
+  snrm2.c
+  srot.c
+C:\SwInstalls\gsl-2.4.0\cblas\source_nrm2_r.h(29,12): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\snrm2.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_nrm2_r.h(39,19): warning C4244: '=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\snrm2.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_nrm2_r.h(49,16): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\snrm2.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_nrm2_r.h(36,23): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\snrm2.c)
+  srotg.c
+  srotm.c
+  srotmg.c
+C:\SwInstalls\gsl-2.4.0\cblas\source_rotg.h(28,15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\srotg.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_rotg.h(36,15): warning C4244: '=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\srotg.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_rotg.h(22,31): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\srotg.c)
+  ssbmv.c
+  sscal.c
+  sspmv.c
+  sspr.c
+  sspr2.c
+C:\SwInstalls\gsl-2.4.0\cblas\source_rotmg.h(46,7): warning C4244: '=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\srotmg.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_rotmg.h(47,7): warning C4244: '=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\srotmg.c)
+  sswap.c
+C:\SwInstalls\gsl-2.4.0\cblas\source_spr2.h(41,43): warning C4244: '+=': conversion from 'const double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\sspr2.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_spr2.h(58,43): warning C4244: '+=': conversion from 'const double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\sspr2.c)
+  ssymm.c
+  ssymv.c
+  ssyr.c
+  ssyr2.c
+  ssyr2k.c
+  ssyrk.c
+  stbmv.c
+  stbsv.c
+C:\SwInstalls\gsl-2.4.0\cblas\source_tbmv_r.h(37,52): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\stbmv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_tbmv_r.h(55,52): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\stbmv.c)
+  stpmv.c
+  stpsv.c
+  strmm.c
+  strmv.c
+  strsm.c
+  strsv.c
+  dasum.c
+  daxpy.c
+  dcopy.c
+  ddot.c
+  dgbmv.c
+  dgemm.c
+  dgemv.c
+  dger.c
+  dnrm2.c
+  drot.c
+  drotg.c
+  drotm.c
+  drotmg.c
+  dsbmv.c
+  dscal.c
+  dsdot.c
+  dspmv.c
+  dspr.c
+  dspr2.c
+  dswap.c
+  dsymm.c
+  dsymv.c
+  dsyr.c
+  dsyr2.c
+  dsyr2k.c
+  dsyrk.c
+  dtbmv.c
+  dtbsv.c
+  dtpmv.c
+  dtpsv.c
+  dtrmm.c
+  dtrmv.c
+  dtrsm.c
+  dtrsv.c
+  dzasum.c
+  dznrm2.c
+  caxpy.c
+  ccopy.c
+  cdotc_sub.c
+  cdotu_sub.c
+C:\SwInstalls\gsl-2.4.0\cblas\source_dot_c.h(31,31): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\cdotc_sub.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_dot_c.h(32,31): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\cdotc_sub.c)
+  cgbmv.c
+C:\SwInstalls\gsl-2.4.0\cblas\source_dot_c.h(31,31): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\cdotu_sub.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_dot_c.h(32,31): warning C4244: '+=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\cdotu_sub.c)
+  cgemm.c
+  cgemv.c
+  cgerc.c
+  cgeru.c
+  chbmv.c
+  chemm.c
+  chemv.c
+  cher.c
+  cher2.c
+  cher2k.c
+  cherk.c
+  chpmv.c
+  chpr.c
+  chpr2.c
+  cscal.c
+  csscal.c
+  cswap.c
+  csymm.c
+  csyr2k.c
+  csyrk.c
+  ctbmv.c
+  ctbsv.c
+C:\SwInstalls\gsl-2.4.0\cblas\source_tbsv_c.h(57,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctbsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_tbsv_c.h(93,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctbsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_tbsv_c.h(130,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctbsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_tbsv_c.h(167,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctbsv.c)
+  ctpmv.c
+  ctpsv.c
+C:\SwInstalls\gsl-2.4.0\cblas\source_tpsv_c.h(43,22): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctpsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_tpsv_c.h(69,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctpsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_tpsv_c.h(92,22): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctpsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_tpsv_c.h(117,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctpsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_tpsv_c.h(141,22): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctpsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_tpsv_c.h(166,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctpsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_tpsv_c.h(189,22): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctpsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_tpsv_c.h(215,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctpsv.c)
+  ctrmm.c
+  ctrmv.c
+  ctrsm.c
+  ctrsv.c
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsm_c.h(68,26): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsm.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsm_c.h(112,26): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsm.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsm_c.h(156,26): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsm.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsm_c.h(200,26): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsm.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsm_c.h(244,28): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsm.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsm_c.h(287,28): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsm.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsm_c.h(331,28): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsm.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsm_c.h(374,28): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsm.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsv_c.h(44,22): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsv_c.h(70,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsv_c.h(93,22): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsv_c.h(118,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsv_c.h(142,22): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsv_c.h(167,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsv_c.h(190,22): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsv.c)
+C:\SwInstalls\gsl-2.4.0\cblas\source_trsv_c.h(216,24): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\ctrsv.c)
+  zaxpy.c
+  zcopy.c
+  zdotc_sub.c
+  zdotu_sub.c
+  zdscal.c
+  zgbmv.c
+  zgemm.c
+  zgemv.c
+  zgerc.c
+  zgeru.c
+  zhbmv.c
+  zhemm.c
+  zhemv.c
+  zher.c
+  zher2.c
+  zher2k.c
+  zherk.c
+  zhpmv.c
+  zhpr.c
+  zhpr2.c
+  zscal.c
+  zswap.c
+  zsymm.c
+  zsyr2k.c
+  zsyrk.c
+  ztbmv.c
+  ztbsv.c
+  ztpmv.c
+  ztpsv.c
+  ztrmm.c
+  ztrmv.c
+  ztrsm.c
+  ztrsv.c
+  icamax.c
+C:\SwInstalls\gsl-2.4.0\cblas\source_iamax_c.h(31,44): warning C4244: 'initializing': conversion from 'double' to 'const float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\icamax.c)
+  idamax.c
+  isamax.c
+  izamax.c
+C:\SwInstalls\gsl-2.4.0\cblas\source_iamax_r.h(32,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data (compiling source file C:\SwInstalls\gsl-2.4.0\cblas\isamax.c)
+  xerbla.c
+  gslcblas.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\Release\gslcblas.lib

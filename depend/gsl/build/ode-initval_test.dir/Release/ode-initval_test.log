@@ -1,0 +1,4 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+C:\SwInstalls\gsl-2.4.0\ode-initval\test.c(143,11): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  ode-initval_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\ode-initval_test.exe

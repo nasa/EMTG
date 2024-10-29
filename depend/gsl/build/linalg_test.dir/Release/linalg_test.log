@@ -1,0 +1,73 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(416,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(502,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(569,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(641,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(717,25): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(717,39): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(814,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(814,41): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(928,18): warning C4477: 'printf' : format string '%3lu' requires an argument of type 'unsigned long', but variadic argument 1 has type 'size_t'
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(928,18): message : consider using '%zu' in the format string
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(928,18): warning C4477: 'printf' : format string '%3lu' requires an argument of type 'unsigned long', but variadic argument 2 has type 'size_t'
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(928,18): message : consider using '%zu' in the format string
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(928,18): warning C4477: 'printf' : format string '%lu' requires an argument of type 'unsigned long', but variadic argument 3 has type 'size_t'
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(928,18): message : consider using '%zu' in the format string
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(949,18): warning C4477: 'printf' : format string '%3lu' requires an argument of type 'unsigned long', but variadic argument 1 has type 'size_t'
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(949,18): message : consider using '%zu' in the format string
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(949,18): warning C4477: 'printf' : format string '%3lu' requires an argument of type 'unsigned long', but variadic argument 2 has type 'size_t'
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(949,18): message : consider using '%zu' in the format string
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(949,18): warning C4477: 'printf' : format string '%lu' requires an argument of type 'unsigned long', but variadic argument 3 has type 'size_t'
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(949,18): message : consider using '%zu' in the format string
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1046,22): warning C4477: 'printf' : format string '%3lu' requires an argument of type 'unsigned long', but variadic argument 1 has type 'size_t'
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1046,22): message : consider using '%zu' in the format string
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1046,22): warning C4477: 'printf' : format string '%3lu' requires an argument of type 'unsigned long', but variadic argument 2 has type 'size_t'
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1046,22): message : consider using '%zu' in the format string
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1046,22): warning C4477: 'printf' : format string '%lu' requires an argument of type 'unsigned long', but variadic argument 3 has type 'size_t'
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1046,22): message : consider using '%zu' in the format string
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1068,18): warning C4477: 'printf' : format string '%3lu' requires an argument of type 'unsigned long', but variadic argument 1 has type 'size_t'
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1068,18): message : consider using '%zu' in the format string
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1068,18): warning C4477: 'printf' : format string '%3lu' requires an argument of type 'unsigned long', but variadic argument 2 has type 'size_t'
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1068,18): message : consider using '%zu' in the format string
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1068,18): warning C4477: 'printf' : format string '%lu' requires an argument of type 'unsigned long', but variadic argument 3 has type 'size_t'
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1068,18): message : consider using '%zu' in the format string
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1135,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1211,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1290,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1290,41): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1418,29): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1418,43): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1564,29): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1564,43): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1720,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1794,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1871,25): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1871,39): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1975,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(1975,41): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(2068,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(2145,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(2223,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(2223,41): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(2334,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(2334,41): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(2456,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(2528,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(2528,41): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(2806,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(2806,41): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(3053,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(3053,41): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(3331,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(3358,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(3430,28): warning C4267: 'initializing': conversion from 'size_t' to 'const unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(3431,28): warning C4267: 'initializing': conversion from 'size_t' to 'const unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(3536,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(3601,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(3601,41): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(3680,28): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(3786,27): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(4168,31): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\linalg\test.c(4168,45): warning C4267: 'initializing': conversion from 'size_t' to 'unsigned long', possible loss of data
+  linalg_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\linalg_test.exe

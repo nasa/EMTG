@@ -1,0 +1,11 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+C:\SwInstalls\gsl-2.4.0\bspline\test.c(279,18): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\bspline\test.c(279,30): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\bspline\test.c(307,18): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\bspline\test.c(307,30): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\bspline\test.c(336,18): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\bspline\test.c(336,30): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\bspline\test.c(365,18): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\bspline\test.c(365,30): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+  bspline_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\bspline_test.exe

@@ -1,0 +1,8 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+C:\SwInstalls\gsl-2.4.0\ode-initval2\test.c(177,13): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\test.c(2112,34): warning C4267: 'function': conversion from 'size_t' to 'const unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\test.c(2050,27): warning C4244: 'initializing': conversion from 'double' to 'const size_t', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\test.c(2267,31): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\ode-initval2\test.c(2268,31): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+  ode-initval2_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\ode-initval2_test.exe

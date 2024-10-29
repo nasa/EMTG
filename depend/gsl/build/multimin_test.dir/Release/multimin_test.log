@@ -1,0 +1,4 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+  test_funcs.c
+  multimin_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\multimin_test.exe

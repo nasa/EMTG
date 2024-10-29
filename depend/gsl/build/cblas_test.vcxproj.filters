@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_amax.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_asum.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_axpy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_copy.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_dot.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_gbmv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_gemm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_gemv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_ger.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_hbmv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_hemm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_hemv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_her.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_her2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_her2k.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_herk.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_hpmv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_hpr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_hpr2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_nrm2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_rot.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_rotg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_rotm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_rotmg.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_sbmv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_scal.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_spmv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_spr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_spr2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_swap.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_symm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_symv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_syr.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_syr2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_syr2k.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_syrk.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_tbmv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_tbsv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_tpmv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_tpsv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_trmm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_trmv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_trsm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cblas\test_trsv.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\SwInstalls\gsl-2.4.0\CMakeLists.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{BE3ECF17-CD9F-32F3-9848-1BCCA4E334F3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,1239 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="17.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <PreferredToolArchitecture>x64</PreferredToolArchitecture>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="MinSizeRel|x64">
+      <Configuration>MinSizeRel</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="RelWithDebInfo|x64">
+      <Configuration>RelWithDebInfo</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3780B454-89D1-3505-BC75-763E023ADBF3}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <Platform>x64</Platform>
+    <ProjectName>gsl</ProjectName>
+    <VCProjectUpgraderObjectName>NoUpgrade</VCProjectUpgraderObjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.20506.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\SwInstalls\gsl-2.4.0\build\Debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">gsl.dir\Debug\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">gsl</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\SwInstalls\gsl-2.4.0\build\Release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">gsl.dir\Release\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">gsl</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='Release|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\SwInstalls\gsl-2.4.0\build\MinSizeRel\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">gsl.dir\MinSizeRel\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">gsl</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">.lib</TargetExt>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\SwInstalls\gsl-2.4.0\build\RelWithDebInfo\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">gsl.dir\RelWithDebInfo\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">gsl</TargetName>
+    <TargetExt Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">.lib</TargetExt>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\SwInstalls\gsl-2.4.0\build;C:\SwInstalls\gsl-2.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>Disabled</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;_DEBUG;DLL_EXPORT;HAVE_CONFIG_H;CMAKE_INTDIR="Debug"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_DEBUG;_WINDOWS;DLL_EXPORT;HAVE_CONFIG_H;CMAKE_INTDIR=\"Debug\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\SwInstalls\gsl-2.4.0\build;C:\SwInstalls\gsl-2.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\SwInstalls\gsl-2.4.0\build;C:\SwInstalls\gsl-2.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\SwInstalls\gsl-2.4.0\build;C:\SwInstalls\gsl-2.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;DLL_EXPORT;HAVE_CONFIG_H;CMAKE_INTDIR="Release"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;DLL_EXPORT;HAVE_CONFIG_H;CMAKE_INTDIR=\"Release\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\SwInstalls\gsl-2.4.0\build;C:\SwInstalls\gsl-2.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\SwInstalls\gsl-2.4.0\build;C:\SwInstalls\gsl-2.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\SwInstalls\gsl-2.4.0\build;C:\SwInstalls\gsl-2.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MinSpace</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;DLL_EXPORT;HAVE_CONFIG_H;CMAKE_INTDIR="MinSizeRel"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;DLL_EXPORT;HAVE_CONFIG_H;CMAKE_INTDIR=\"MinSizeRel\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\SwInstalls\gsl-2.4.0\build;C:\SwInstalls\gsl-2.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\SwInstalls\gsl-2.4.0\build;C:\SwInstalls\gsl-2.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>C:\SwInstalls\gsl-2.4.0\build;C:\SwInstalls\gsl-2.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AssemblerListingLocation>$(IntDir)</AssemblerListingLocation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <Optimization>MaxSpeed</Optimization>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <UseFullPaths>false</UseFullPaths>
+      <WarningLevel>Level3</WarningLevel>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;DLL_EXPORT;HAVE_CONFIG_H;CMAKE_INTDIR="RelWithDebInfo"</PreprocessorDefinitions>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>%(PreprocessorDefinitions);WIN32;_WINDOWS;NDEBUG;DLL_EXPORT;HAVE_CONFIG_H;CMAKE_INTDIR=\"RelWithDebInfo\"</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\SwInstalls\gsl-2.4.0\build;C:\SwInstalls\gsl-2.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Midl>
+      <AdditionalIncludeDirectories>C:\SwInstalls\gsl-2.4.0\build;C:\SwInstalls\gsl-2.4.0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <OutputDirectory>$(ProjectDir)/$(IntDir)</OutputDirectory>
+      <HeaderFileName>%(Filename).h</HeaderFileName>
+      <TypeLibraryName>%(Filename).tlb</TypeLibraryName>
+      <InterfaceIdentifierFileName>%(Filename)_i.c</InterfaceIdentifierFileName>
+      <ProxyFileName>%(Filename)_p.c</ProxyFileName>
+    </Midl>
+    <Lib>
+      <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <CustomBuild Include="C:\SwInstalls\gsl-2.4.0\CMakeLists.txt">
+      <UseUtf8Encoding>Always</UseUtf8Encoding>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/SwInstalls/gsl-2.4.0 -BC:/SwInstalls/gsl-2.4.0/build --check-stamp-file C:/SwInstalls/gsl-2.4.0/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCCompilerABI.c;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeConfigurableFile.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseArguments.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseLibraryArchitecture.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckCSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckFunctionExists.c;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckIncludeFiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckSymbolExists.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMClang-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\LCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\NVHPC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XLClang-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.23\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\WindowsPaths.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeCCompiler.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeCXXCompiler.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeRCCompiler.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeSystem.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_DLFCN_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_IEEEFP_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_INTTYPES_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_MEMORY_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STDINT_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STDLIB_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STRINGS_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STRING_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_SYS_STAT_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_SYS_TYPES_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_UNISTD_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\STDC_HEADERS.c;C:\SwInstalls\gsl-2.4.0\cmake\c_flag_overrides.cmake;C:\SwInstalls\gsl-2.4.0\cmake\cxx_flag_overrides.cmake;C:\SwInstalls\gsl-2.4.0\cmake\init.cmake;C:\SwInstalls\gsl-2.4.0\gsl.pc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/SwInstalls/gsl-2.4.0 -BC:/SwInstalls/gsl-2.4.0/build --check-stamp-file C:/SwInstalls/gsl-2.4.0/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCCompilerABI.c;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeConfigurableFile.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseArguments.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseLibraryArchitecture.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckCSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckFunctionExists.c;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckIncludeFiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckSymbolExists.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMClang-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\LCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\NVHPC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XLClang-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.23\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\WindowsPaths.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeCCompiler.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeCXXCompiler.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeRCCompiler.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeSystem.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_DLFCN_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_IEEEFP_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_INTTYPES_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_MEMORY_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STDINT_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STDLIB_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STRINGS_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STRING_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_SYS_STAT_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_SYS_TYPES_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_UNISTD_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\STDC_HEADERS.c;C:\SwInstalls\gsl-2.4.0\cmake\c_flag_overrides.cmake;C:\SwInstalls\gsl-2.4.0\cmake\cxx_flag_overrides.cmake;C:\SwInstalls\gsl-2.4.0\cmake\init.cmake;C:\SwInstalls\gsl-2.4.0\gsl.pc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/SwInstalls/gsl-2.4.0 -BC:/SwInstalls/gsl-2.4.0/build --check-stamp-file C:/SwInstalls/gsl-2.4.0/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCCompilerABI.c;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeConfigurableFile.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseArguments.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseLibraryArchitecture.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckCSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckFunctionExists.c;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckIncludeFiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckSymbolExists.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMClang-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\LCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\NVHPC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XLClang-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.23\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\WindowsPaths.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeCCompiler.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeCXXCompiler.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeRCCompiler.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeSystem.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_DLFCN_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_IEEEFP_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_INTTYPES_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_MEMORY_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STDINT_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STDLIB_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STRINGS_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STRING_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_SYS_STAT_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_SYS_TYPES_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_UNISTD_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\STDC_HEADERS.c;C:\SwInstalls\gsl-2.4.0\cmake\c_flag_overrides.cmake;C:\SwInstalls\gsl-2.4.0\cmake\cxx_flag_overrides.cmake;C:\SwInstalls\gsl-2.4.0\cmake\init.cmake;C:\SwInstalls\gsl-2.4.0\gsl.pc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='MinSizeRel|x64'">false</LinkObjects>
+      <Message Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt</Message>
+      <Command Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">setlocal
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/SwInstalls/gsl-2.4.0 -BC:/SwInstalls/gsl-2.4.0/build --check-stamp-file C:/SwInstalls/gsl-2.4.0/build/CMakeFiles/generate.stamp
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal &amp; call :cmErrorLevel %errorlevel% &amp; goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd</Command>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCCompilerABI.c;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCXXCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCXXCompilerABI.cpp;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCXXInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCommonLanguageInclude.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeCompilerIdDetection.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeConfigurableFile.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompileFeatures.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompilerABI.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineCompilerId.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeDetermineSystem.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeFindBinUtils.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeGenericSystem.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeInitializeConfigs.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeLanguageInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseArguments.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseImplicitIncludeInfo.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseImplicitLinkInfo.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeParseLibraryArchitecture.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeRCCompiler.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeRCInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeSystem.cmake.in;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeSystemSpecificInformation.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeSystemSpecificInitialize.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestCXXCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestCompilerCommon.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CMakeTestRCCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckCSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckFunctionExists.c;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckIncludeFiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckLibraryExists.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CheckSymbolExists.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\ADSP-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\ARMCC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\ARMClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\AppleClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Borland-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Bruce-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\CMakeCommonCompilerMacros.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Clang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Clang-DetermineCompilerInternal.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Comeau-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Compaq-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Compaq-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Cray-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Embarcadero-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Fujitsu-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\FujitsuClang-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\GHS-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\GNU-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\GNU-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\HP-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\HP-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IAR-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMCPP-C-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMCPP-CXX-DetermineVersionInternal.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMClang-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IBMClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Intel-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\IntelLLVM-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\LCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\LCC-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\MSVC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\NVHPC-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\NVIDIA-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\OpenWatcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\PGI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\PathScale-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SCO-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SDCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SunPro-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\SunPro-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\TI-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\TinyCC-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\VisualAge-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\VisualAge-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\Watcom-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XL-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XL-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XLClang-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\XLClang-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\zOS-C-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Compiler\zOS-CXX-DetermineCompiler.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\CompilerId\VS-10.vcxproj.in;C:\Program Files\CMake\share\cmake-3.23\Modules\Internal\CheckSourceCompiles.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Internal\FeatureTesting.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-Determine-CXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-MSVC-C.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-MSVC-CXX.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows-MSVC.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\Windows.cmake;C:\Program Files\CMake\share\cmake-3.23\Modules\Platform\WindowsPaths.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeCCompiler.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeCXXCompiler.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeRCCompiler.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\3.23.1\CMakeSystem.cmake;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_DLFCN_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_IEEEFP_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_INTTYPES_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_MEMORY_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STDINT_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STDLIB_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STRINGS_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_STRING_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_SYS_STAT_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_SYS_TYPES_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\HAVE_UNISTD_H.c;C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\CheckIncludeFiles\STDC_HEADERS.c;C:\SwInstalls\gsl-2.4.0\cmake\c_flag_overrides.cmake;C:\SwInstalls\gsl-2.4.0\cmake\cxx_flag_overrides.cmake;C:\SwInstalls\gsl-2.4.0\cmake\init.cmake;C:\SwInstalls\gsl-2.4.0\gsl.pc.cmake;%(AdditionalInputs)</AdditionalInputs>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">C:\SwInstalls\gsl-2.4.0\build\CMakeFiles\generate.stamp</Outputs>
+      <LinkObjects Condition="'$(Configuration)|$(Platform)'=='RelWithDebInfo|x64'">false</LinkObjects>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\version.c" />
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\utils\system.h" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\utils\placeholder.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\minmax.c">
+      <ObjectFileName>$(IntDir)/sys/minmax.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\prec.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\hypot.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\log1p.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\expm1.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\coerce.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\invhyp.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\pow_int.c">
+      <ObjectFileName>$(IntDir)/sys/pow_int.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\infnan.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\fdiv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\fcmp.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sys\ldfrexp.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\test\results.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\err\error.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\err\stream.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\err\message.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\err\strerror.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\complex\math.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\complex\inline.c">
+      <ObjectFileName>$(IntDir)/complex/inline.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cheb\deriv.c">
+      <ObjectFileName>$(IntDir)/cheb/deriv.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cheb\eval.c">
+      <ObjectFileName>$(IntDir)/cheb/eval.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cheb\init.c">
+      <ObjectFileName>$(IntDir)/cheb/init.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cheb\integ.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\block\init.c">
+      <ObjectFileName>$(IntDir)/block/init.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\block\file.c">
+      <ObjectFileName>$(IntDir)/block/file.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\block\block.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\init.c">
+      <ObjectFileName>$(IntDir)/vector/init.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\file.c">
+      <ObjectFileName>$(IntDir)/vector/file.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\vector.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\copy.c">
+      <ObjectFileName>$(IntDir)/vector/copy.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\swap.c">
+      <ObjectFileName>$(IntDir)/vector/swap.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\prop.c">
+      <ObjectFileName>$(IntDir)/vector/prop.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\minmax.c">
+      <ObjectFileName>$(IntDir)/vector/minmax.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\oper.c">
+      <ObjectFileName>$(IntDir)/vector/oper.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\reim.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\subvector.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\vector\view.c">
+      <ObjectFileName>$(IntDir)/vector/view.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\vector\view.h" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\init.c">
+      <ObjectFileName>$(IntDir)/matrix/init.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\matrix.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\file.c">
+      <ObjectFileName>$(IntDir)/matrix/file.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\rowcol.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\swap.c">
+      <ObjectFileName>$(IntDir)/matrix/swap.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\copy.c">
+      <ObjectFileName>$(IntDir)/matrix/copy.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\minmax.c">
+      <ObjectFileName>$(IntDir)/matrix/minmax.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\prop.c">
+      <ObjectFileName>$(IntDir)/matrix/prop.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\oper.c">
+      <ObjectFileName>$(IntDir)/matrix/oper.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\getset.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\view.c">
+      <ObjectFileName>$(IntDir)/matrix/view.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\matrix\submatrix.c" />
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\matrix\view.h" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\permutation\init.c">
+      <ObjectFileName>$(IntDir)/permutation/init.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\permutation\file.c">
+      <ObjectFileName>$(IntDir)/permutation/file.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\permutation\permutation.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\permutation\permute.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\permutation\canonical.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\permutation\inline.c">
+      <ObjectFileName>$(IntDir)/permutation/inline.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\combination\init.c">
+      <ObjectFileName>$(IntDir)/combination/init.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\combination\file.c">
+      <ObjectFileName>$(IntDir)/combination/file.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\combination\combination.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\combination\inline.c">
+      <ObjectFileName>$(IntDir)/combination/inline.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiset\init.c">
+      <ObjectFileName>$(IntDir)/multiset/init.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiset\file.c">
+      <ObjectFileName>$(IntDir)/multiset/file.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiset\multiset.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiset\inline.c">
+      <ObjectFileName>$(IntDir)/multiset/inline.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sort\sort.c">
+      <ObjectFileName>$(IntDir)/sort/sort.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sort\sortind.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sort\sortvec.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sort\sortvecind.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sort\subset.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sort\subsetind.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ieee-utils\print.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ieee-utils\make_rep.c" />
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\ieee-utils\gsl_ieee_utils.h" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ieee-utils\env.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ieee-utils\fp.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ieee-utils\read.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\blas\blas.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\cod.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\condest.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\invtri.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\multiply.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\exponential.c">
+      <ObjectFileName>$(IntDir)/linalg/exponential.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\tridiag.c" />
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\linalg\tridiag.h" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\lu.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\luc.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\hh.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\qr.c">
+      <ObjectFileName>$(IntDir)/linalg/qr.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\qrpt.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\lq.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\ptlq.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\svd.c">
+      <ObjectFileName>$(IntDir)/linalg/svd.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\householder.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\householdercomplex.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\hessenberg.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\hesstri.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\cholesky.c">
+      <ObjectFileName>$(IntDir)/linalg/cholesky.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\choleskyc.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\mcholesky.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\pcholesky.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\symmtd.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\hermtd.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\bidiag.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\balance.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\balancemat.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\linalg\inline.c">
+      <ObjectFileName>$(IntDir)/linalg/inline.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\jacobi.c">
+      <ObjectFileName>$(IntDir)/eigen/jacobi.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\symm.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\symmv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\nonsymm.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\nonsymmv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\herm.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\hermv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\gensymm.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\gensymmv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\genherm.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\genhermv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\gen.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\genv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\sort.c">
+      <ObjectFileName>$(IntDir)/eigen/sort.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\francis.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\eigen\schur.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\airy.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\airy_der.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\airy_zero.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\atanint.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel.c" />
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel.h" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_I0.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_I1.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_In.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Inu.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_J0.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_J1.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Jn.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Jnu.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_K0.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_K1.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Kn.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Knu.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Y0.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Y1.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Yn.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_Ynu.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_amp_phase.c" />
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_amp_phase.h" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_i.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_j.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_k.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_olver.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_temme.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_y.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_zero.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\bessel_sequence.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\beta.c">
+      <ObjectFileName>$(IntDir)/specfunc/beta.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\beta_inc.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\clausen.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\coulomb.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\coupling.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\coulomb_bound.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\dawson.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\debye.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\dilog.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\elementary.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\ellint.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\elljac.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\erfc.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\exp.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\expint.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\expint3.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\fermi_dirac.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\gegenbauer.c">
+      <ObjectFileName>$(IntDir)/specfunc/gegenbauer.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\gamma.c">
+      <ObjectFileName>$(IntDir)/specfunc/gamma.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\gamma_inc.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\hermite.c">
+      <ObjectFileName>$(IntDir)/specfunc/hermite.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\hyperg_0F1.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\hyperg_2F0.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\hyperg_1F1.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\hyperg_2F1.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\hyperg_U.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\hyperg.c">
+      <ObjectFileName>$(IntDir)/specfunc/hyperg.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\laguerre.c">
+      <ObjectFileName>$(IntDir)/specfunc/laguerre.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\lambert.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\legendre_H3d.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\legendre_P.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\legendre_Qn.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\legendre_con.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\legendre_poly.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\log.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_angfunc.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_charv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_coeff.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_radfunc.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\mathieu_workspace.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\poch.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\pow_int.c">
+      <ObjectFileName>$(IntDir)/specfunc/pow_int.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\psi.c" />
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\specfunc\recurse.h" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\result.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\shint.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\sinint.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\synchrotron.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\transport.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\trig.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\specfunc\zeta.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\dht\dht.c" />
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\qrng\gsl_qrng.h" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\qrng\qrng.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\qrng\niederreiter-2.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\qrng\sobol.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\qrng\halton.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\qrng\reversehalton.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\qrng\inline.c">
+      <ObjectFileName>$(IntDir)/qrng/inline.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\borosh13.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\cmrg.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\coveyou.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\default.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\file.c">
+      <ObjectFileName>$(IntDir)/rng/file.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\fishman18.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\fishman20.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\fishman2x.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\gfsr4.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\knuthran2.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\knuthran.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\knuthran2002.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\lecuyer21.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\minstd.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\mrg.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\mt.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\r250.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ran0.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ran1.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ran2.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ran3.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\rand48.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\rand.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\random.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\randu.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ranf.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ranlux.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ranlxd.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ranlxs.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\ranmar.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\rng.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\slatec.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\taus.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\taus113.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\transputer.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\tt.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\types.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\uni32.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\uni.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\vax.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\waterman14.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\zuf.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rng\inline.c">
+      <ObjectFileName>$(IntDir)/rng/inline.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\bernoulli.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\beta.c">
+      <ObjectFileName>$(IntDir)/randist/beta.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\bigauss.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\binomial.c">
+      <ObjectFileName>$(IntDir)/randist/binomial.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\cauchy.c">
+      <ObjectFileName>$(IntDir)/randist/cauchy.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\chisq.c">
+      <ObjectFileName>$(IntDir)/randist/chisq.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\dirichlet.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\discrete.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\erlang.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\exponential.c">
+      <ObjectFileName>$(IntDir)/randist/exponential.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\exppow.c">
+      <ObjectFileName>$(IntDir)/randist/exppow.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\fdist.c">
+      <ObjectFileName>$(IntDir)/randist/fdist.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\flat.c">
+      <ObjectFileName>$(IntDir)/randist/flat.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\gamma.c">
+      <ObjectFileName>$(IntDir)/randist/gamma.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\gauss.c">
+      <ObjectFileName>$(IntDir)/randist/gauss.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\gausszig.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\gausstail.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\geometric.c">
+      <ObjectFileName>$(IntDir)/randist/geometric.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\gumbel.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\hyperg.c">
+      <ObjectFileName>$(IntDir)/randist/hyperg.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\laplace.c">
+      <ObjectFileName>$(IntDir)/randist/laplace.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\levy.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\logarithmic.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\logistic.c">
+      <ObjectFileName>$(IntDir)/randist/logistic.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\lognormal.c">
+      <ObjectFileName>$(IntDir)/randist/lognormal.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\multinomial.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\mvgauss.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\nbinomial.c">
+      <ObjectFileName>$(IntDir)/randist/nbinomial.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\pareto.c">
+      <ObjectFileName>$(IntDir)/randist/pareto.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\pascal.c">
+      <ObjectFileName>$(IntDir)/randist/pascal.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\poisson.c">
+      <ObjectFileName>$(IntDir)/randist/poisson.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\rayleigh.c">
+      <ObjectFileName>$(IntDir)/randist/rayleigh.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\shuffle.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\sphere.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\tdist.c">
+      <ObjectFileName>$(IntDir)/randist/tdist.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\weibull.c">
+      <ObjectFileName>$(IntDir)/randist/weibull.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\landau.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\randist\binomial_tpe.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\fft\dft.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\fft\fft.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\dd.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\eval.c">
+      <ObjectFileName>$(IntDir)/poly/eval.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\solve_quadratic.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\solve_cubic.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\zsolve_quadratic.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\zsolve_cubic.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\zsolve.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\zsolve_init.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\poly\deriv.c">
+      <ObjectFileName>$(IntDir)/poly/deriv.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\fit\linear.c">
+      <ObjectFileName>$(IntDir)/fit/linear.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\gcv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\multilinear.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\multiwlinear.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\work.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\lmniel.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\lmder.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\fsolver.c">
+      <ObjectFileName>$(IntDir)/multifit/fsolver.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\fdfsolver.c">
+      <ObjectFileName>$(IntDir)/multifit/fdfsolver.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\fdfridge.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\fdjac.c">
+      <ObjectFileName>$(IntDir)/multifit/fdjac.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\convergence.c">
+      <ObjectFileName>$(IntDir)/multifit/convergence.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\gradient.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\covar.c">
+      <ObjectFileName>$(IntDir)/multifit/covar.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\multirobust.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\robust_wfun.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit\multireg.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\cholesky.c">
+      <ObjectFileName>$(IntDir)/multifit_nlinear/cholesky.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\convergence.c">
+      <ObjectFileName>$(IntDir)/multifit_nlinear/convergence.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\covar.c">
+      <ObjectFileName>$(IntDir)/multifit_nlinear/covar.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\dogleg.c">
+      <ObjectFileName>$(IntDir)/multifit_nlinear/dogleg.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\fdf.c">
+      <ObjectFileName>$(IntDir)/multifit_nlinear/fdf.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\fdfvv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\fdjac.c">
+      <ObjectFileName>$(IntDir)/multifit_nlinear/fdjac.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\lm.c">
+      <ObjectFileName>$(IntDir)/multifit_nlinear/lm.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\qr.c">
+      <ObjectFileName>$(IntDir)/multifit_nlinear/qr.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\scaling.c">
+      <ObjectFileName>$(IntDir)/multifit_nlinear/scaling.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\subspace2D.c">
+      <ObjectFileName>$(IntDir)/multifit_nlinear/subspace2D.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\svd.c">
+      <ObjectFileName>$(IntDir)/multifit_nlinear/svd.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multifit_nlinear\trust.c">
+      <ObjectFileName>$(IntDir)/multifit_nlinear/trust.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge\multilarge.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge\normal.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge\tsqr.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\cgst.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\cholesky.c">
+      <ObjectFileName>$(IntDir)/multilarge_nlinear/cholesky.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\convergence.c">
+      <ObjectFileName>$(IntDir)/multilarge_nlinear/convergence.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\dogleg.c">
+      <ObjectFileName>$(IntDir)/multilarge_nlinear/dogleg.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\dummy.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\fdf.c">
+      <ObjectFileName>$(IntDir)/multilarge_nlinear/fdf.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\lm.c">
+      <ObjectFileName>$(IntDir)/multilarge_nlinear/lm.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\scaling.c">
+      <ObjectFileName>$(IntDir)/multilarge_nlinear/scaling.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\subspace2D.c">
+      <ObjectFileName>$(IntDir)/multilarge_nlinear/subspace2D.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multilarge_nlinear\trust.c">
+      <ObjectFileName>$(IntDir)/multilarge_nlinear/trust.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rstat\rstat.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\rstat\rquantile.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\mean.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\variance.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\absdev.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\skew.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\kurtosis.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\lag1.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\p_variance.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\minmax.c">
+      <ObjectFileName>$(IntDir)/statistics/minmax.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\ttest.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\median.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\covariance.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\quantiles.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\wmean.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\wvariance.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\wabsdev.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\wskew.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\statistics\wkurtosis.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\siman\siman.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sum\levin_u.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sum\levin_utrunc.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sum\work_u.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\sum\work_utrunc.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qk15.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qk21.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qk31.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qk41.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qk51.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qk61.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qk.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qng.c" />
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\integration\qng.h" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qag.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qags.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qagp.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\workspace.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qcheb.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qawc.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qmomo.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qaws.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qmomof.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qawo.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\qawf.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\glfixed.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\cquad.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\fixed.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\chebyshev.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\chebyshev2.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\legendre.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\hermite.c">
+      <ObjectFileName>$(IntDir)/integration/hermite.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\laguerre.c">
+      <ObjectFileName>$(IntDir)/integration/laguerre.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\gegenbauer.c">
+      <ObjectFileName>$(IntDir)/integration/gegenbauer.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\jacobi.c">
+      <ObjectFileName>$(IntDir)/integration/jacobi.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\exponential.c">
+      <ObjectFileName>$(IntDir)/integration/exponential.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\integration\rational.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\accel.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\akima.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\cspline.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\interp.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\linear.c">
+      <ObjectFileName>$(IntDir)/interpolation/linear.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\interpolation\integ_eval.h" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\spline.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\poly.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\steffen.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\inline.c">
+      <ObjectFileName>$(IntDir)/interpolation/inline.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\interp2d.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\bilinear.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\bicubic.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\interpolation\spline2d.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\add.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\get.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\init.c">
+      <ObjectFileName>$(IntDir)/histogram/init.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\params.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\reset.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\file.c">
+      <ObjectFileName>$(IntDir)/histogram/file.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\pdf.c" />
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\histogram\gsl_histogram.h" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\add2d.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\get2d.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\init2d.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\params2d.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\reset2d.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\file2d.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\pdf2d.c" />
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\histogram\gsl_histogram2d.h" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\calloc_range.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\calloc_range2d.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\copy.c">
+      <ObjectFileName>$(IntDir)/histogram/copy.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\copy2d.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\maxval.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\maxval2d.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\oper.c">
+      <ObjectFileName>$(IntDir)/histogram/oper.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\oper2d.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\stat.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\histogram\stat2d.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\control.c">
+      <ObjectFileName>$(IntDir)/ode-initval/control.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\cstd.c">
+      <ObjectFileName>$(IntDir)/ode-initval/cstd.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\cscal.c">
+      <ObjectFileName>$(IntDir)/ode-initval/cscal.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\evolve.c">
+      <ObjectFileName>$(IntDir)/ode-initval/evolve.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\step.c">
+      <ObjectFileName>$(IntDir)/ode-initval/step.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rk2.c">
+      <ObjectFileName>$(IntDir)/ode-initval/rk2.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rk2imp.c">
+      <ObjectFileName>$(IntDir)/ode-initval/rk2imp.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rk2simp.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rk4.c">
+      <ObjectFileName>$(IntDir)/ode-initval/rk4.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rk4imp.c">
+      <ObjectFileName>$(IntDir)/ode-initval/rk4imp.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rkf45.c">
+      <ObjectFileName>$(IntDir)/ode-initval/rkf45.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rk8pd.c">
+      <ObjectFileName>$(IntDir)/ode-initval/rk8pd.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\rkck.c">
+      <ObjectFileName>$(IntDir)/ode-initval/rkck.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\bsimp.c">
+      <ObjectFileName>$(IntDir)/ode-initval/bsimp.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\gear1.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval\gear2.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\control.c">
+      <ObjectFileName>$(IntDir)/ode-initval2/control.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\cstd.c">
+      <ObjectFileName>$(IntDir)/ode-initval2/cstd.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\cscal.c">
+      <ObjectFileName>$(IntDir)/ode-initval2/cscal.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\evolve.c">
+      <ObjectFileName>$(IntDir)/ode-initval2/evolve.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\step.c">
+      <ObjectFileName>$(IntDir)/ode-initval2/step.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rk2.c">
+      <ObjectFileName>$(IntDir)/ode-initval2/rk2.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rk2imp.c">
+      <ObjectFileName>$(IntDir)/ode-initval2/rk2imp.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rk4.c">
+      <ObjectFileName>$(IntDir)/ode-initval2/rk4.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rk4imp.c">
+      <ObjectFileName>$(IntDir)/ode-initval2/rk4imp.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rkf45.c">
+      <ObjectFileName>$(IntDir)/ode-initval2/rkf45.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rk8pd.c">
+      <ObjectFileName>$(IntDir)/ode-initval2/rk8pd.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rkck.c">
+      <ObjectFileName>$(IntDir)/ode-initval2/rkck.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\bsimp.c">
+      <ObjectFileName>$(IntDir)/ode-initval2/bsimp.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\rk1imp.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\msadams.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\msbdf.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ode-initval2\driver.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\bisection.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\brent.c">
+      <ObjectFileName>$(IntDir)/roots/brent.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\falsepos.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\newton.c">
+      <ObjectFileName>$(IntDir)/roots/newton.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\secant.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\steffenson.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\convergence.c">
+      <ObjectFileName>$(IntDir)/roots/convergence.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\fsolver.c">
+      <ObjectFileName>$(IntDir)/roots/fsolver.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\roots\fdfsolver.c">
+      <ObjectFileName>$(IntDir)/roots/fdfsolver.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\fdjac.c">
+      <ObjectFileName>$(IntDir)/multiroots/fdjac.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\fsolver.c">
+      <ObjectFileName>$(IntDir)/multiroots/fsolver.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\fdfsolver.c">
+      <ObjectFileName>$(IntDir)/multiroots/fdfsolver.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\convergence.c">
+      <ObjectFileName>$(IntDir)/multiroots/convergence.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\newton.c">
+      <ObjectFileName>$(IntDir)/multiroots/newton.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\gnewton.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\dnewton.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\broyden.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\hybrid.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multiroots\hybridj.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\min\fsolver.c">
+      <ObjectFileName>$(IntDir)/min/fsolver.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\min\golden.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\min\brent.c">
+      <ObjectFileName>$(IntDir)/min/brent.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\min\convergence.c">
+      <ObjectFileName>$(IntDir)/min/convergence.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\min\bracketing.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\min\quad_golden.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\fdfminimizer.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\steepest_descent.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\conjugate_fr.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\conjugate_pr.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\convergence.c">
+      <ObjectFileName>$(IntDir)/multimin/convergence.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\diff.c">
+      <ObjectFileName>$(IntDir)/multimin/diff.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\vector_bfgs.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\vector_bfgs2.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\fminimizer.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\simplex.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\multimin\simplex2.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\monte\miser.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\monte\plain.c" />
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\monte\gsl_monte_vegas.h" />
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\monte\gsl_monte_miser.h" />
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\monte\gsl_monte_plain.h" />
+    <ClInclude Include="C:\SwInstalls\gsl-2.4.0\monte\gsl_monte.h" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\monte\vegas.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\ntuple\ntuple.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\diff\diff.c">
+      <ObjectFileName>$(IntDir)/diff/diff.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\deriv\deriv.c">
+      <ObjectFileName>$(IntDir)/deriv/deriv.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\beta.c">
+      <ObjectFileName>$(IntDir)/cdf/beta.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\betainv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\cauchy.c">
+      <ObjectFileName>$(IntDir)/cdf/cauchy.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\cauchyinv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\chisq.c">
+      <ObjectFileName>$(IntDir)/cdf/chisq.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\chisqinv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\exponential.c">
+      <ObjectFileName>$(IntDir)/cdf/exponential.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\exponentialinv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\exppow.c">
+      <ObjectFileName>$(IntDir)/cdf/exppow.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\fdist.c">
+      <ObjectFileName>$(IntDir)/cdf/fdist.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\fdistinv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\flat.c">
+      <ObjectFileName>$(IntDir)/cdf/flat.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\flatinv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gamma.c">
+      <ObjectFileName>$(IntDir)/cdf/gamma.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gammainv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gauss.c">
+      <ObjectFileName>$(IntDir)/cdf/gauss.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gaussinv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gumbel1.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gumbel1inv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gumbel2.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\gumbel2inv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\laplace.c">
+      <ObjectFileName>$(IntDir)/cdf/laplace.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\laplaceinv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\logistic.c">
+      <ObjectFileName>$(IntDir)/cdf/logistic.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\logisticinv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\lognormal.c">
+      <ObjectFileName>$(IntDir)/cdf/lognormal.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\lognormalinv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\pareto.c">
+      <ObjectFileName>$(IntDir)/cdf/pareto.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\paretoinv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\rayleigh.c">
+      <ObjectFileName>$(IntDir)/cdf/rayleigh.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\rayleighinv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\tdist.c">
+      <ObjectFileName>$(IntDir)/cdf/tdist.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\tdistinv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\weibull.c">
+      <ObjectFileName>$(IntDir)/cdf/weibull.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\weibullinv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\binomial.c">
+      <ObjectFileName>$(IntDir)/cdf/binomial.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\poisson.c">
+      <ObjectFileName>$(IntDir)/cdf/poisson.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\geometric.c">
+      <ObjectFileName>$(IntDir)/cdf/geometric.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\nbinomial.c">
+      <ObjectFileName>$(IntDir)/cdf/nbinomial.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\pascal.c">
+      <ObjectFileName>$(IntDir)/cdf/pascal.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\cdf\hypergeometric.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\wavelet\dwt.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\wavelet\wavelet.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\wavelet\bspline.c">
+      <ObjectFileName>$(IntDir)/wavelet/bspline.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\wavelet\daubechies.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\wavelet\haar.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\bspline\bspline.c">
+      <ObjectFileName>$(IntDir)/bspline/bspline.c.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\bspline\greville.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spblas\spdgemm.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spblas\spdgemv.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spcompress.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spcopy.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spgetset.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spio.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spmatrix.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spoper.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spprop.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\spmatrix\spswap.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\splinalg\itersolve.c" />
+    <ClCompile Include="C:\SwInstalls\gsl-2.4.0\splinalg\gmres.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="C:\SwInstalls\gsl-2.4.0\build\ZERO_CHECK.vcxproj">
+      <Project>{E85B9238-F7E0-3476-88A3-779DAFA54ABD}</Project>
+      <Name>ZERO_CHECK</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\SwInstalls\gsl-2.4.0\build\copy-headers.vcxproj">
+      <Project>{8C3B7100-57C4-331C-8BF6-B3B76F522A9A}</Project>
+      <Name>copy-headers</Name>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </ProjectReference>
+    <ProjectReference Include="C:\SwInstalls\gsl-2.4.0\build\gslcblas.vcxproj">
+      <Project>{9C5372EC-50FA-33AA-B926-6CD4C91D2B18}</Project>
+      <Name>gslcblas</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

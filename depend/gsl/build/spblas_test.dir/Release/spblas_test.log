@@ -1,0 +1,5 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+C:\SwInstalls\gsl-2.4.0\spblas\test.c(65,37): warning C4244: 'initializing': conversion from 'double' to 'size_t', possible loss of data
+C:\SwInstalls\gsl-2.4.0\spblas\test.c(66,37): warning C4244: 'initializing': conversion from 'double' to 'size_t', possible loss of data
+  spblas_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\spblas_test.exe

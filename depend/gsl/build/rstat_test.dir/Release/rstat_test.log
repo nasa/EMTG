@@ -1,0 +1,6 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+C:\SwInstalls\gsl-2.4.0\rstat\test.c(79,16): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\rstat\test.c(79,21): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\rstat\test.c(92,16): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+  rstat_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\rstat_test.exe

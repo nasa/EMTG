@@ -1,0 +1,12 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+C:\SwInstalls\gsl-2.4.0\multifit_nlinear\test_wnlin.c(69,19): warning C4244: 'initializing': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\multifit_nlinear\test_wnlin.c(95,19): warning C4244: 'initializing': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\multifit_nlinear\test_wnlin.c(124,19): warning C4244: 'initializing': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\multifit_nlinear\test_fdf.c(273,9): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\multifit_nlinear\test_fdf.c(275,9): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\multifit_nlinear\test_fdf.c(280,7): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\multifit_nlinear\test_fdf.c(283,3): warning C4996: 'strcpy': This function or variable may be unsafe. Consider using strcpy_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\multifit_nlinear\test_fdf.c(264,3): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\multifit_nlinear\test_fdf.c(308,7): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  multifit_nlinear_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\multifit_nlinear_test.exe

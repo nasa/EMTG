@@ -1,0 +1,81 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(252,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(309,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(367,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(565,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(587,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(621,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(657,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(684,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(711,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(738,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(761,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(637,48): warning C4244: 'initializing': conversion from 'size_t' to 'long double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(252,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(309,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(367,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(565,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(587,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(621,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(657,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(684,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(711,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(738,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(761,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(637,48): warning C4244: 'initializing': conversion from 'size_t' to 'double', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(252,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(309,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(367,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(565,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(587,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(621,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(657,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(684,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(711,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(738,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(761,15): warning C4267: 'function': conversion from 'size_t' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_complex_source.c(637,48): warning C4244: 'initializing': conversion from 'size_t' to 'float', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(625,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(679,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(733,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(625,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(679,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(733,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(563,24): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(625,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(679,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(733,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(563,24): warning C4244: 'initializing': conversion from 'double' to 'unsigned long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(625,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(679,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(733,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(563,24): warning C4244: 'initializing': conversion from 'double' to 'long', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(625,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(679,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(733,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(563,24): warning C4244: 'initializing': conversion from 'double' to 'unsigned int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(625,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(679,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(733,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(563,24): warning C4244: 'initializing': conversion from 'double' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(625,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(679,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(733,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(563,24): warning C4244: 'initializing': conversion from 'double' to 'unsigned short', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(625,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(679,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(733,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(563,24): warning C4244: 'initializing': conversion from 'double' to 'short', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(625,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(679,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(733,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(563,24): warning C4244: 'initializing': conversion from 'double' to 'unsigned char', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(625,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(679,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(733,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(563,24): warning C4244: 'initializing': conversion from 'double' to 'char', possible loss of data
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(625,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(679,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\matrix\test_source.c(733,13): warning C4996: 'tmpfile': This function or variable may be unsafe. Consider using tmpfile_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+  matrix_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\matrix_test.exe

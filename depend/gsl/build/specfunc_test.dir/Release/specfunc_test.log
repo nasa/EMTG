@@ -1,0 +1,72 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test_sf.c
+  test_airy.c
+  test_bessel.c
+  test_coulomb.c
+  test_dilog.c
+  test_gamma.c
+  test_hermite.c
+  test_hyperg.c
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(85,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(87,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(89,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(91,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(95,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(98,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(101,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(104,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(107,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(84,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(86,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(88,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(90,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(128,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(130,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(134,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(127,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(129,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(151,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(153,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(155,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(159,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(150,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(152,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(154,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(183,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(185,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(187,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(191,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(194,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(197,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(200,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(182,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(184,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(186,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(215,5): warning C4996: 'strcat': This function or variable may be unsafe. Consider using strcat_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(214,5): warning C4996: 'sprintf': This function or variable may be unsafe. Consider using sprintf_s instead. To disable deprecation, use _CRT_SECURE_NO_WARNINGS. See online help for details.
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(415,3): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(416,3): warning C4244: 'function': conversion from 'double' to 'int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(1104,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(1908,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(1909,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(1910,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(1911,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(1912,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(1913,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(1914,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(1915,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(2588,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(2592,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(2599,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(2600,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(2602,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(2603,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(2612,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_sf.c(2613,3): warning C4244: 'function': conversion from 'double' to 'const int', possible loss of data
+  test_legendre.c
+  test_mathieu.c
+C:\SwInstalls\gsl-2.4.0\specfunc\test_legendre.c(280,48): warning C4267: 'function': conversion from 'size_t' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_legendre.c(304,48): warning C4267: 'function': conversion from 'size_t' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_legendre.c(305,50): warning C4267: 'function': conversion from 'size_t' to 'const int', possible loss of data
+C:\SwInstalls\gsl-2.4.0\specfunc\test_legendre.c(430,20): warning C4267: 'initializing': conversion from 'size_t' to 'const int', possible loss of data
+  specfunc_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\specfunc_test.exe

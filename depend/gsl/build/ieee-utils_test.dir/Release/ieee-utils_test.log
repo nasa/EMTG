@@ -1,0 +1,9 @@
+﻿  Building Custom Rule C:/SwInstalls/gsl-2.4.0/CMakeLists.txt
+  test.c
+C:\SwInstalls\gsl-2.4.0\ieee-utils\test.c(220): warning C4756: overflow in constant arithmetic
+C:\SwInstalls\gsl-2.4.0\ieee-utils\test.c(238): warning C4756: overflow in constant arithmetic
+C:\SwInstalls\gsl-2.4.0\ieee-utils\test.c(470): warning C4723: potential divide by 0
+C:\SwInstalls\gsl-2.4.0\ieee-utils\test.c(466): warning C4723: potential divide by 0
+C:\SwInstalls\gsl-2.4.0\ieee-utils\test.c(255): warning C4723: potential divide by 0
+C:\SwInstalls\gsl-2.4.0\ieee-utils\test.c(251): warning C4723: potential divide by 0
+  ieee-utils_test.vcxproj -> C:\SwInstalls\gsl-2.4.0\build\bin\Release\ieee-utils_test.exe
