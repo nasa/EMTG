@@ -1,5 +1,5 @@
 Mission: default_zeroControl_intercept_MGALT
-Written by EMTG_v9 core program compiled Dec 15 2020 10:41:15
+Written by EMTG_v9 core program compiled Oct 13 2022 08:44:20
 
 Journey: 0
 Journey name: default
@@ -47,6 +47,9 @@ Boundary: 1 140860907.75456864 49436535.03683715 -822.94884400 -10.35830880 28.0
 Boundary: 2 -247131527.54324961 5464445.84957966 6183911.94984951 0.36791930 -22.15440081 -0.47319999
 
 
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
 Journey flight time (seconds): 22842066.97860718
 Journey flight time (days): 264.37577522
 
@@ -88,6 +91,17 @@ Worst constraint is F[8]: j0p0MGALT: step 6 control magnitude
 with violation 0.00000093707586591777
 Worst decision variable is X[0]: j0p0MGALTEphemerisPeggedLaunchDirectInsertion: event left state epoch
 with unhappiness 0.00000000000000000000
+
+
+
+Number of solution attempts: 1
+Solution attempt that produced a feasible solution with the best objective value (0 if no feasible solutions): 1
+Time to completion of solution attempt that produced a feasible solution with the best objective value (seconds) (-1 if no feasible solutions): 0.00600000000000000012
+
+
+
+Was first NLP solve feasible: 1
+Objective function value from first NLP solve: -1.00000000000000000000
 
 
 

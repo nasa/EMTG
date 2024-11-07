@@ -49,6 +49,9 @@ The CMake program is used to set additional options for the \ac{EMTG} build.
 	\item Configure the Python settings to point to the appropriate PyEMTGEnv paths:
 		\begin{enumerate}
 			\item Expand the ``PYTHON'' section
+				\begin{enumerate}
+					\item Sometimes the ``PYTHON'' section is not populated when Python is not found. You may need to update the ''Ungrouped Entries'' and populate the PYTHON\_EXECUTABLE as indicated in the next step then click ``Configure'' to see the other parameters mentioned in the next step.
+				\end{enumerate}
 			\item Replace the Python paths in the PYTHON\_EXECUTABLE, PYTHON\_INCLUDE\_DIR, and PYTHON\_LIBRARY values to point to where your PyEMTGEnv is located (e.g. \verb|C:/Users/YourName/AppData/Local/mambaforge/envs/PyEmtgEnv/*|)
 		\end{enumerate}
 	\item Click ``Configure''

@@ -43,41 +43,46 @@ objective_type 0
 #8: SundmanCoastPhase
 #9: variable phase type
 #10: ProbeEntryPhase
-#11 ControlLawThrustPhase
+#11: ControlLawThrustPhase
 mission_type 6
 #Enable ACE feasible point finder?
 ACE_feasible_point_finder 1
 #optimality tolerance
-snopt_optimality_tolerance 0.1
+snopt_optimality_tolerance 0.10000000000000000555
 #Universe folder
-universe_folder C:\emtg\testatron\universe\
+universe_folder C:/emtg/testatron/universe/
 #HardwarePath
-HardwarePath C:\emtg\testatron\HardwareModels\
-#LaunchVehicleLibraryFile
-LaunchVehicleLibraryFile default.emtg_launchvehicleopt
-#LaunchVehicleKey
-LaunchVehicleKey ExampleRocket
+HardwarePath C:/emtg/testatron/HardwareModels/
+#ThrottleTableFile
+ThrottleTableFile NEXT_TT11_NewFrontiers_EOL_1_3_2017.ThrottleTable
 #Override the working directory?
 override_working_directory 1
 #User-defined working directory
-forced_working_directory C:\emtg\testatron\tests\journey_options
+forced_working_directory C:/emtg/testatron/tests/journey_options
+#Create a mission subfolder?
+override_mission_subfolder 1
+#Mission subfolder
+forced_mission_subfolder .
+#Close program after completion?
+background_mode 1
 #which inner loop solver to run?
 #0: none, evaluate trialX
 #1: run MBH
 #2: run constrained DE
 #3: run NLP using trialX as initial guess
 #4: filament walker
-run_inner_loop 3
-#Enter any user data that should be appended to the .emtg file.
-#This is typically used in python wrappers
+run_inner_loop 0
+#Field for taking notes
 user_data 
 
 
-
 BEGIN_JOURNEY
-
 #Journey name
 journey_name EarthToMarsSOI
+#Journey central body name
+journey_central_body SUN
+#flyby sequence, as indices from the Universe file
+sequence
 #phase type
 #0: MGALTS
 #1: FBLTS
@@ -93,9 +98,9 @@ journey_name EarthToMarsSOI
 #11 ControlLawThrustPhase
 phase_type 6
 #Journey flight time bounds (days)
-flight_time_bounds 0.0 250.0
+flight_time_bounds 0 250
 #Journey arrival date bounds (MJD, two entries)
-arrival_date_bounds 54526.0 54556.0
+arrival_date_bounds 54526 54556
 #journey arrival type
 #0: insertion into parking orbit (use chemical Isp)
 #1: rendezvous (use chemical Isp)
@@ -113,9 +118,14 @@ arrival_type 2
 #3: Periapse
 arrival_class 2
 #journey arrival ellipsoid axes (3)
-arrival_ellipsoid_axes 982897.38322896 982897.38322896 982897.38322896
+arrival_ellipsoid_axes 982897.38322895998135 982897.38322895998135 982897.38322895998135
+#Which bodies are used for third-body perturbation?
+#Expressed as indices in the Universe file
+perturbation_bodies
 #ECC for ephemeris pegged orbit insertion
-ephemeris_pegged_orbit_insertion_ECC 1e-10
+ephemeris_pegged_orbit_insertion_ECC 1.0000000000000000364e-10
+#STK .grv style gravity model file
+central_body_gravity_file C:/emtg/testatron/universe/gravity_files/DoesNotExist.grv
 
 #Maneuver constraint code
 #Works for absolute and relative epochs and also magnitudes
@@ -134,36 +144,37 @@ END_PHASE_DISTANCE_CONSTRAINT_BLOCK
 
 #trial decision vector
 BEGIN_TRIALX
-p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: event left state epoch,54395.46238598755007842556
-p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote,5.81892696110654661368
-p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote,26.09550147474143955151
-p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote,0.60475933253844527115
-p0MGAnDSMs: phase flight time,231.38719673347267757890
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vMAG,2.47687196756379135465
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vRA,4.91732229547969623695
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vDEC,-9.70283815487448464410
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state RA,-20.19000189685494817127
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state DEC,-0.29356960132047604795
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event left state mass,525.20000000000004547474
-p0MGAnDSMs: virtual chemical fuel,-0.00009057998807162299
-p0MGAnDSMs: virtual chemical oxidizer,-0.00008378648499626057
-p0MGAnDSMsForwardSubPhase0: burn index,0.77574401336115028638
-p0MGAnDSMsForwardSubPhase0: DSM x component,-0.00000060076440178136
-p0MGAnDSMsForwardSubPhase0: DSM y component,0.00000015659284713365
-p0MGAnDSMsForwardSubPhase0: DSM z component,0.00000034030732720680
-p0MGAnDSMsBackwardSubPhase0: burn index,0.22425613657619039576
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: event left state epoch ,54395.462385987550078
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote ,5.8189269611065466137
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote ,26.095501474741439552
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote ,0.60475933253844527115
+p0MGAnDSMs: phase flight time ,231.38719673347267758
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vMAG ,2.4768719675637913546
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vRA ,4.917322295479696237
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vDEC ,-9.7028381548744846441
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state RA ,-20.190001896854948171
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state DEC ,-0.29356960132047604795
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event left state mass ,525.20000000000004547
+p0MGAnDSMs: virtual chemical fuel ,-9.0579988071622989068e-05
+p0MGAnDSMs: virtual chemical oxidizer ,-8.3786484996260573652e-05
+p0MGAnDSMsForwardSubPhase0: burn index ,0.77574401336115028638
+p0MGAnDSMsForwardSubPhase0: DSM x component ,-6.0076440178136001208e-07
+p0MGAnDSMsForwardSubPhase0: DSM y component ,1.5659284713364999908e-07
+p0MGAnDSMsForwardSubPhase0: DSM z component ,3.4030732720680002313e-07
+p0MGAnDSMsBackwardSubPhase0: burn index ,0.22425613657619039576
 END_TRIALX
 
 END_JOURNEY
 
 BEGIN_JOURNEY
-
 #Journey name
 journey_name MarsSOItoPeriapse
 #Journey central body name
-journey_central_body Mars
+journey_central_body MarsCentered
 #destination list, as indices from the Universe file
 destination_list -1 0
+#flyby sequence, as indices from the Universe file
+sequence
 #phase type
 #0: MGALTS
 #1: FBLTS
@@ -178,6 +189,8 @@ destination_list -1 0
 #10 ProbeEntryPhase
 #11 ControlLawThrustPhase
 phase_type 6
+#Override journey periapse arrival altitude?
+PeriapseArrival_override_altitude 1
 #does the journey have time bounds?
 #0: unbounded
 #1: bounded flight time
@@ -185,9 +198,9 @@ phase_type 6
 #3: bounded aggregate flight time
 timebounded 3
 #Journey wait time bounds (days)
-wait_time_bounds 0.0 0.0
+wait_time_bounds 0 0
 #Journey flight time bounds (days)
-flight_time_bounds 180.0 250.0
+flight_time_bounds 180 250
 #journey departure type
 #0: launch or direct insertion
 #1: depart from parking orbit (you can use this one in place of a launch vehicle model, and the departure burn will be done with the EDS motor)
@@ -219,6 +232,11 @@ arrival_type 2
 #2: Ephemeris-referenced
 #3: Periapse
 arrival_class 3
+#Which bodies are used for third-body perturbation?
+#Expressed as indices in the Universe file
+perturbation_bodies
+#STK .grv style gravity model file
+central_body_gravity_file C:/emtg/testatron/universe/gravity_files/DoesNotExist.grv
 
 #Maneuver constraint code
 #Works for absolute and relative epochs and also magnitudes
@@ -237,22 +255,23 @@ END_PHASE_DISTANCE_CONSTRAINT_BLOCK
 
 #trial decision vector
 BEGIN_TRIALX
-p0MGAnDSMsFreePointFreeDirectDeparture: event left state mass,525.20015252638916081196
-p0MGAnDSMs: phase flight time,4.51695623174345151085
-p0MGAnDSMsPeriapseFlybyIn: event left state r,22397.72417513912296271883
-p0MGAnDSMsPeriapseFlybyIn: event left state RA,0.63416435885088517921
-p0MGAnDSMsPeriapseFlybyIn: event left state DEC,-0.45196782510420363543
-p0MGAnDSMsPeriapseFlybyIn: event left state v,3.14199062252536620576
-p0MGAnDSMsPeriapseFlybyIn: event left state vRA,-16.85220254100319436930
-p0MGAnDSMsPeriapseFlybyIn: event left state vDEC,0.40150126843726408055
-p0MGAnDSMsPeriapseFlybyIn: event left state mass,525.20006088029208513035
-p0MGAnDSMs: virtual chemical fuel,0.00000000000000000000
-p0MGAnDSMs: virtual chemical oxidizer,-0.00008529783920799587
-p0MGAnDSMsForwardSubPhase0: burn index,0.86718877594227194994
-p0MGAnDSMsForwardSubPhase0: DSM x component,-0.00000067978188589279
-p0MGAnDSMsForwardSubPhase0: DSM y component,0.00000086026091139502
-p0MGAnDSMsForwardSubPhase0: DSM z component,0.00000073532858735348
-p0MGAnDSMsBackwardSubPhase0: burn index,0.13281124844731484469
+p0MGAnDSMsFreePointFreeDirectDeparture: event left state mass ,525.20015252638916081
+p0MGAnDSMs: phase flight time ,4.5169562317434515109
+p0MGAnDSMsPeriapseFlybyIn: event left state r ,22397.724175139122963
+p0MGAnDSMsPeriapseFlybyIn: event left state RA ,0.63416435885088517921
+p0MGAnDSMsPeriapseFlybyIn: event left state DEC ,-0.45196782510420363543
+p0MGAnDSMsPeriapseFlybyIn: event left state v ,3.1419906225253662058
+p0MGAnDSMsPeriapseFlybyIn: event left state vRA ,-16.852202541003194369
+p0MGAnDSMsPeriapseFlybyIn: event left state vDEC ,0.40150126843726408055
+p0MGAnDSMsPeriapseFlybyIn: event left state mass ,525.20006088029208513
+p0MGAnDSMs: virtual chemical fuel ,0
+p0MGAnDSMs: virtual chemical oxidizer ,-8.5297839207995867356e-05
+p0MGAnDSMsForwardSubPhase0: burn index ,0.86718877594227194994
+p0MGAnDSMsForwardSubPhase0: DSM x component ,-6.7978188589278995661e-07
+p0MGAnDSMsForwardSubPhase0: DSM y component ,8.6026091139501998013e-07
+p0MGAnDSMsForwardSubPhase0: DSM z component ,7.353285873534799948e-07
+p0MGAnDSMsBackwardSubPhase0: burn index ,0.13281124844731484469
 END_TRIALX
 
 END_JOURNEY
+

@@ -15,7 +15,7 @@ snopt_optimality_tolerance 0.0020000000000000000416
 #NLP max run time (seconds)
 snopt_max_run_time 59
 #Universe folder
-universe_folder C:\emtg\testatron\universe
+universe_folder C:/emtg/testatron/universe/
 #Beginning of the SplineEphem data set
 earliestPossibleEpoch 51513
 #End of the SplineEphem data set
@@ -57,8 +57,6 @@ maximum_mass 5000
 #31: 1D Throttle table high-Isp
 #32: 2D polynomial fit
 engine_type 3
-#thruster input power bounds (kW)
-engine_input_power_bounds 0.0 5.0
 #Solar power model type
 #0: classic Sauer model
 #1: polynomial (0th order on the left)
@@ -69,13 +67,24 @@ power_decay_rate 0.050000000000000002776
 #represent the power requirements of the spacecraft at a distance r from the sun
 #i.e. heaters, communications, etc
 spacecraft_power_coefficients 1.3999999999999999112 -0.10000000000000000555 0.050000000000000002776
+#thruster input power bounds (kW)
+engine_input_power_bounds 0 5
+#HardwarePath
+HardwarePath C:/emtg/testatron/HardwareModels/
 #LaunchVehicleLibraryFile
-LaunchVehicleLibraryFile default.emtg_launchvehicleopt
-LaunchVehicleKey ExampleRocket
+LaunchVehicleLibraryFile NLSII_April2017.emtg_launchvehicleopt
+#LaunchVehicleKey
+LaunchVehicleKey Atlas_V_411
 #Override the working directory?
 override_working_directory 1
 #User-defined working directory
-forced_working_directory C:\emtg\testatron\tests\spacecraft_options
+forced_working_directory C:/emtg/testatron/tests/spacecraft_options
+#Create a mission subfolder?
+override_mission_subfolder 1
+#Mission subfolder
+forced_mission_subfolder .
+#Close program after completion?
+background_mode 1
 #Stop after a particular journey? (if this value is greater than the number of journeys, do the whole mission)
 stop_after_journey 0
 #which inner loop solver to run?
@@ -120,6 +129,8 @@ arrival_ellipsoid_axes 10000000 10000000 10000000
 perturbation_bodies
 #ECC for ephemeris pegged orbit insertion
 ephemeris_pegged_orbit_insertion_ECC 1.0000000000000000364e-10
+#STK .grv style gravity model file
+central_body_gravity_file C:/emtg/testatron/universe/gravity_files/DoesNotExist.grv
 
 #Maneuver constraint code
 #Works for absolute and relative epochs and also magnitudes

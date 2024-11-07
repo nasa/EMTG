@@ -1,0 +1,53 @@
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+README Version 1.0
+
+File History
+    
+    File created 9/3/2024 by Alec Mudek.
+    
+    
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+All thruster data provided here is publicly available from the following sources:
+
+
+AEPS
+
+    Hofer, Richard, et al. "Completing the development of the 12.5 kW Hall effect rocket with magnetic shielding (HERMeS)." 
+    36th International Electric Propulsion Conference. Vol. 193. University of Vienna Austria, 2019.
+    
+BIT-3
+
+    Tsay, Michael, et al. "Twin Ion Engine Demonstration for Small Spacecraft Applications." 2022.
+    
+Halo12
+
+    VanWoerkom, M., et al. "Test Results of ExoTerra’s Halo Micro Electric Propulsion System." 
+    36th International Electric Propulsion Conference. University of Vienna, Austria. 2019.
+
+NEXT-C
+    
+    Fisher, Jack. "NEXT-C flight ion system status." AIAA Propulsion and Energy 2020 Forum. 2020.
+    
+PPS5000
+    
+    Duchemin, Olivier, et al. "Qualification Status of the PPS-5000 Hall Thruster Unit." 
+    36th International Electric Propulsion Conference. University of Vienna, Austria. Vol. 13. 2019.
+
+
+
+
+If using a .ThrottleTable file, you can copy and paste the data from publications such as these and EMTG will use it directly. 
+If using a .ThrottleTable file, many of the entries (e.g. polynomial coefficients) in the .emtg_propulsionsystemopt file are 
+unnecessary. All points in a given .ThrottleTable file are valid for an EMTG run and only those performance points explicity 
+provided will be used. A consequence of this is the need to have the performance for multiple thrusters (if desired) provided
+in the .ThrottleTable file (e.g. the AEPSx2.ThrottleTable file).
+
+The performance capabilities of these thrusters are not limited to the discrete values tested. Sometimes, polynomial fits are 
+preferred as they provide a wider range of performance charcteristics. For polynomial fits, you only need to provide the 
+performance of a single thruster (notice there are no 2xNEXTC or 2xHalo12 lines in default_thrusters.emtg_propulsionsystemopt). 
+The "Number of thrusters" is a field in the EMTG GUI that you can use here for multiple thrusters.
+
+NOTE: The "Number of thrusters" field will not work if using a .ThrottleTable file. This is why the 2xThruster lines appear for 
+      some entries in the default_thrusters.emtg_propulsionsystemopt file.

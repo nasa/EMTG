@@ -138,7 +138,7 @@ namespace EMTG
         double Thrust;//thrust of the spacecraft, in Newtons
         double LV_margin;//LV margin (as a fraction)
         double LV_adapter_mass;//LV adapter mass (kg)
-        int engine_type;//low-thrust engine type, from original EMTGv8 list
+        int engine_type;//low-thrust engine type, from default EMTGv9.02 list
         int number_of_electric_propulsion_systems;//number of thruster systems (used to be called number of engines)
         double engine_duty_cycle;//percentage of time that engine can operate
         DutyCycleType duty_cycle_type;//duty cycle type. Choices are 0 - averaged, 1 - realistic

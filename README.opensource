@@ -34,7 +34,7 @@ The following dependencies have been bundled with this release and files associa
 ~~~~~~~~~~~~~
 Installation:
 ~~~~~~~~~~~~~
-The GSFC EMTG team is primarily using Windows and Linux. Bothe Windows and Linux build guides are included.
+The GSFC EMTG team is primarily using Windows and Linux. Both Windows and Linux build guides are included.
 
 Navigate to the /docs/build_system/ directory for EMTG_*_build_system*.pdf documents detailing step-by-step instructions on 
 how to install the software dependencies and build EMTG. These documents are catered to specific software dependency 

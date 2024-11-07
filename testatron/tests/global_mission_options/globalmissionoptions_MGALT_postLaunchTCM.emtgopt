@@ -5,14 +5,23 @@ mission_name globalmissionoptions_MGALT_postLaunchTCM
 #maximum number of trials for MBH
 MBH_max_trials 100000
 #Universe folder
-universe_folder C:\emtg\testatron\universe
+universe_folder C:/emtg/testatron/universe/
 #TCM magnitude post-launch (km/s)
 TCM_post_launch 5
+#HardwarePath
+HardwarePath C:/emtg/testatron/HardwareModels/
 #LaunchVehicleLibraryFile
-LaunchVehicleLibraryFile default.emtg_launchvehicleopt
-LaunchVehicleKey ExampleRocket
+LaunchVehicleLibraryFile NLSII_April2017.emtg_launchvehicleopt
+#Override the working directory?
+override_working_directory 1
 #User-defined working directory
-forced_working_directory C:\emtg\testatron\tests\global_mission_options
+forced_working_directory C:/emtg/testatron/tests/global_mission_options
+#Create a mission subfolder?
+override_mission_subfolder 1
+#Mission subfolder
+forced_mission_subfolder .
+#Close program after completion?
+background_mode 1
 #Stop after a particular journey? (if this value is greater than the number of journeys, do the whole mission)
 stop_after_journey 0
 #which inner loop solver to run?
@@ -40,6 +49,8 @@ arrival_ellipsoid_axes 10000000 10000000 10000000
 perturbation_bodies
 #ECC for ephemeris pegged orbit insertion
 ephemeris_pegged_orbit_insertion_ECC 1.0000000000000000364e-10
+#STK .grv style gravity model file
+central_body_gravity_file C:/emtg/testatron/universe/gravity_files/DoesNotExist.grv
 
 #Maneuver constraint code
 #Works for absolute and relative epochs and also magnitudes

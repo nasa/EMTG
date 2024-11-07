@@ -1,5 +1,5 @@
 Mission: globalmissionoptions_MGALT_numtimesteps
-Written by EMTG_v9 core program compiled Dec 15 2020 10:41:15
+Written by EMTG_v9 core program compiled Oct 13 2022 08:44:20
 
 Journey: 0
 Journey name: default
@@ -67,6 +67,9 @@ Boundary: 1 122048599.66091365 84819387.66327912 -2212.32384753 -17.47442525 24.
 Boundary: 2 -222497795.48934296 -93618991.51634887 3502965.85626625 10.30238258 -20.26303732 -0.67756921
 
 
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
 Journey flight time (seconds): 26092800.00000000
 Journey flight time (days): 302.00000000
 
@@ -108,6 +111,17 @@ Worst constraint is F[9]: j0p0MGALT: step 8 control magnitude
 with violation 0.00000482662052525562
 Worst decision variable is X[0]: j0p0MGALTEphemerisPeggedLaunchDirectInsertion: event left state epoch
 with unhappiness 0.00000000000000000000
+
+
+
+Number of solution attempts: 1
+Solution attempt that produced a feasible solution with the best objective value (0 if no feasible solutions): 1
+Time to completion of solution attempt that produced a feasible solution with the best objective value (seconds) (-1 if no feasible solutions): 0.00200000000000000004
+
+
+
+Was first NLP solve feasible: 1
+Objective function value from first NLP solve: -0.86660825702163790663
 
 
 

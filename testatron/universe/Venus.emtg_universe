@@ -26,10 +26,10 @@ r_SOI 616000
 minimum_safe_distance 6351.8
 
 #menu of bodies
-#name shortname number SPICE_ID minimum_flyby_altitude GM radius ephemeris_epoch alpha0 alphadot delta0 deltadot W Wdot SMA ECC INC RAAN AOP MA
+#name shortname number SPICE_ID minimum_flyby_altitude GM radius central_body_flattening_coefficient ephemeris_epoch alpha0 alphadot delta0 deltadot W Wdot SMA ECC INC RAAN AOP MA
 #SMA, radius, and minimum_flyby_altitude in km, angles in degrees, GM in km^3/s^2
 #if minimum_flyby_altitude <= 0, then this object is not placed on the flyby menu
 #orbit elements are for MJD 51544 / January 1, 2000 00:00 CT, ("Coordinate Time" as per JPL HORIZONS documentation) in ICRF frame
 begin_body_list
-Sun S 1 10 20000000.0 132712440041.939400 4379000.0 0.0010826265 6378.0 10.0 0.367 51544.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+Sun S 1 10 20000000.0 132712440041.939400 4379000.0 0.00005 0.0010826265 6378.0 10.0 0.367 51544.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
 end_body_list

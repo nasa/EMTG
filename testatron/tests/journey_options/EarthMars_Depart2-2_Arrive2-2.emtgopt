@@ -32,7 +32,7 @@ mission_name EarthMars_Depart2-2_Arrive2-2
 #26: maximize distance from central body
 objective_type 0
 #flight time bounds (days)
-total_flight_time_bounds 0.0 1500.0
+total_flight_time_bounds 0 1500
 #phase type
 #0: MGALTS
 #1: FBLTS
@@ -45,43 +45,85 @@ total_flight_time_bounds 0.0 1500.0
 #8: SundmanCoastPhase
 #9: variable phase type
 #10: ProbeEntryPhase
-#11 ControlLawThrustPhase
+#11: ControlLawThrustPhase
 mission_type 6
 #Enable ACE feasible point finder?
 ACE_feasible_point_finder 1
 #optimality tolerance
-snopt_optimality_tolerance 0.1
+snopt_optimality_tolerance 0.10000000000000000555
 #Universe folder
-universe_folder C:\emtg\testatron\universe\
+universe_folder C:/emtg/testatron/universe/
 #maximum possible mass of the spacecraft (kg)
-maximum_mass 5000.0
+maximum_mass 5000
+#low-thrust engine type
+#0: fixed thrust/Isp
+#1: constant Isp, efficiency, EMTG computes input power
+#2: choice of power model, constant efficiency, EMTG chooses Isp
+#3: choice of power model, constant efficiency and Isp
+#4: continuously-varying specific impulse
+#5: custom thrust and mass flow rate polynomial
+#6: NSTAR
+#7: XIPS-25
+#8: BPT-4000 High-Isp
+#9: BPT-4000 High-Thrust
+#10: BPT-4000 Ex-High-Isp
+#11: NEXT high-Isp v9
+#12: VASIMR (argon, using analytical model)
+#13: Hall Thruster (Xenon, using analytical model)
+#14: NEXT high-ISP v10
+#15: NEXT high-thrust v10
+#16: BPT-4000 MALTO
+#17: NEXIS Cardiff 8-15-201
+#18: H6MS Cardiff 8-15-2013
+#19: BHT20K Cardiff 8-16-2013
+#20: Aerojet HiVHAC EM
+#21: 13 kW STMD Hall high-Isp (not available in open-source)
+#22: 13 kW STMD Hall high-thrust (not available in open-source)
+#23: NEXT TT11 High-Thrust
+#24: NEXT TT11 High-Isp
+#25: NEXT TT11 Expanded Throttle Table
+#26: 13 kW STMD Hall high-Isp 10-1-2014 (not available in open-source)
+#27: 13 kW STMD Hall medium-thrust 10-1-2014 (not available in open-source)
+#28: 13 kW STMD Hall high-thrust 10-1-2014 (not available in open-source)
+#29: 2D Throttle table
+#30: 1D Throttle table high-thrust
+#31: 1D Throttle table high-Isp
+#32: 2D polynomial fit
+engine_type 23
+#Power at 1 AU (kW)
+power_at_1_AU 40
 #HardwarePath
-HardwarePath C:\emtg\testatron\HardwareModels\
-#LaunchVehicleLibraryFile
-LaunchVehicleLibraryFile default.emtg_launchvehicleopt
-#LaunchVehicleKey
-LaunchVehicleKey ExampleRocket
+HardwarePath C:/emtg/testatron/HardwareModels/
+#ThrottleTableFile
+ThrottleTableFile NEXT_TT11_NewFrontiers_EOL_1_3_2017.ThrottleTable
 #Override the working directory?
 override_working_directory 1
 #User-defined working directory
-forced_working_directory C:\emtg\testatron\tests\journey_options
+forced_working_directory C:/emtg/testatron/tests/journey_options
+#Create a mission subfolder?
+override_mission_subfolder 1
+#Mission subfolder
+forced_mission_subfolder .
+#Close program after completion?
+background_mode 1
 #which inner loop solver to run?
 #0: none, evaluate trialX
 #1: run MBH
 #2: run constrained DE
 #3: run NLP using trialX as initial guess
 #4: filament walker
-run_inner_loop 3
-#Enter any user data that should be appended to the .emtg file.
-#This is typically used in python wrappers
+run_inner_loop 0
+#Field for taking notes
 user_data 
 
 
-
 BEGIN_JOURNEY
-
 #Journey name
 journey_name journey1
+#Journey central body name
+journey_central_body SUN
+#flyby sequence, as indices from the Universe file
+sequence
 #phase type
 #0: MGALTS
 #1: FBLTS
@@ -107,12 +149,12 @@ phase_type 6
 departure_type 2
 #what are the bounds on the initial impulse for each journey in km/s\
 #you can set a very high upper bound if you are using a launchy vehicle model - the optimizer will find the correct value
-initial_impulse_bounds 0.0 30.0
+initial_impulse_bounds 0 30
 #one entry for each element
 departure_elements_vary_flag 1 1 0 0 0 0
 #bounds on elements or state components, two entries for each element
-departure_elements_bounds 1500000.0 1500100.0 0.0 0.1 0.0 360.0 0.0 360.0 0.0 360.0 0.0 360.0
-#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+departure_elements_bounds 1500000 1500100 0 0.10000000000000000555 0 360 0 360 0 360 0 360
+#departure free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane, IncomingBplaneRpTA, OutgoingBplaneRpTA)
 departure_elements_state_representation 3
 #journey departure boundary class
 #0: Ephemeris-pegged (default EMTG)
@@ -120,8 +162,6 @@ departure_elements_state_representation 3
 #2: Ephemeris-referenced
 #3: Periapse
 departure_class 2
-#journey departure ellipsoid axes (3)
-departure_ellipsoid_axes 1471600.5684938184 1471600.5684938184 1471600.5684938184
 #journey arrival type
 #0: insertion into parking orbit (use chemical Isp)
 #1: rendezvous (use chemical Isp)
@@ -135,8 +175,8 @@ arrival_type 2
 #one entry for each element
 arrival_elements_vary_flag 1 1 0 0 0 0
 #bounds on elements or state components, two entries for each element
-arrival_elements_bounds 1600000.0 1600000.0 0.5 0.5 0.0 360.0 0.0 360.0 0.0 360.0 0.0 360.0
-#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+arrival_elements_bounds 1600000 1600000 0.5 0.5 0 360 0 360 0 360 0 360
+#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane, IncomingBplaneRpTA, OutgoingBplaneRpTA)
 arrival_elements_state_representation 3
 #journey arrival boundary class
 #0: Ephemeris-pegged (default EMTG)
@@ -145,17 +185,22 @@ arrival_elements_state_representation 3
 #3: Periapse
 arrival_class 2
 #journey arrival ellipsoid axes (3)
-arrival_ellipsoid_axes 982897.38322896 982897.38322896 982897.38322896
+arrival_ellipsoid_axes 982897.38322895998135 982897.38322895998135 982897.38322895998135
 #Starting orbital radius for an Edelbaum escape spiral (km)
-escape_spiral_starting_radius 42000.0
+escape_spiral_starting_radius 42000
 #Final orbit radius for an Edelbaum capture spiral (km)
-escape_spiral_final_radius 1500000.0
+escape_spiral_final_radius 1500000
 #Final orbit radius for an Edelbaum capture spiral (km)
-capture_spiral_final_radius 42000.0
+capture_spiral_final_radius 42000
 #Starting orbital radius for an Edelbaum capture spiral (km)
-capture_spiral_starting_radius 100000.0
+capture_spiral_starting_radius 100000
+#Which bodies are used for third-body perturbation?
+#Expressed as indices in the Universe file
+perturbation_bodies
 #ECC for ephemeris pegged orbit insertion
-ephemeris_pegged_orbit_insertion_ECC 1e-10
+ephemeris_pegged_orbit_insertion_ECC 1.0000000000000000364e-10
+#STK .grv style gravity model file
+central_body_gravity_file C:/emtg/testatron/universe/gravity_files/DoesNotExist.grv
 
 #Maneuver constraint code
 #Works for absolute and relative epochs and also magnitudes
@@ -174,24 +219,25 @@ END_PHASE_DISTANCE_CONSTRAINT_BLOCK
 
 #trial decision vector
 BEGIN_TRIALX
-p0MGAnDSMsEphemerisReferencedFreeDirectDepartureExterior: event interface state RA,-17.78778057903399201223
-p0MGAnDSMsEphemerisReferencedFreeDirectDepartureExterior: event interface state DEC,-1.05558783531411148893
-p0MGAnDSMsEphemerisReferencedFreeDirectDepartureExterior: event left state mass,5000.00000000000000000000
-p0MGAnDSMsEphemerisReferencedFreeDirectDepartureExterior: event left state epoch,54562.28343937528552487493
-p0MGAnDSMs: phase flight time,1146.57951632123558738385
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vMAG,5.18875087954291647208
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vRA,7.24790319995369003436
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vDEC,167.07753287176399226155
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state RA,-39.76277305285550767167
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state DEC,1.01757304167287365715
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event left state mass,2105.51707129276201158063
-p0MGAnDSMs: virtual chemical fuel,1503.62749543209088187723
-p0MGAnDSMs: virtual chemical oxidizer,1390.85543327464665708249
-p0MGAnDSMsForwardSubPhase0: burn index,0.30540409261521633821
-p0MGAnDSMsForwardSubPhase0: DSM x component,0.22104036181773167868
-p0MGAnDSMsForwardSubPhase0: DSM y component,-2.67456303576895315643
-p0MGAnDSMsForwardSubPhase0: DSM z component,-0.40540084163864342770
-p0MGAnDSMsBackwardSubPhase0: burn index,0.69459590738468368620
+p0MGAnDSMsEphemerisReferencedFreeDirectDepartureExterior: event interface state RA ,-17.787780579033992012
+p0MGAnDSMsEphemerisReferencedFreeDirectDepartureExterior: event interface state DEC ,-1.0555878353141114889
+p0MGAnDSMsEphemerisReferencedFreeDirectDepartureExterior: event left state mass ,5000
+p0MGAnDSMsEphemerisReferencedFreeDirectDepartureExterior: event left state epoch ,54562.283439375285525
+p0MGAnDSMs: phase flight time ,1146.5795163212355874
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vMAG ,5.1887508795429164721
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vRA ,7.2479031999536900344
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vDEC ,167.07753287176399226
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state RA ,-39.762773052855507672
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state DEC ,1.0175730416728736571
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event left state mass ,2105.5170712927620116
+p0MGAnDSMs: virtual chemical fuel ,1503.6274954320908819
+p0MGAnDSMs: virtual chemical oxidizer ,1390.8554332746466571
+p0MGAnDSMsForwardSubPhase0: burn index ,0.30540409261521633821
+p0MGAnDSMsForwardSubPhase0: DSM x component ,0.22104036181773167868
+p0MGAnDSMsForwardSubPhase0: DSM y component ,-2.6745630357689531564
+p0MGAnDSMsForwardSubPhase0: DSM z component ,-0.4054008416386434277
+p0MGAnDSMsBackwardSubPhase0: burn index ,0.6945959073846836862
 END_TRIALX
 
 END_JOURNEY
+

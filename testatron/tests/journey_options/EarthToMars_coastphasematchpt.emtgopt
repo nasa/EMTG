@@ -13,7 +13,7 @@ mission_name EarthToMars_coastphasematchpt
 #7: minimize launch mass
 #8: arrive as early as possible
 #9: arrive as late as possible
-#10: minimum propellant (not the same as #2)
+#10: <PLACEHOLDER FOR FUTURE OBJECTIVE FUNCTIONS>
 #11: maximum dry/wet ratio
 #12: maximum arrival kinetic energy
 #13: minimum BOL power
@@ -42,19 +42,29 @@ objective_type 0
 #7: CoastPhase
 #8: SundmanCoastPhase
 #9: variable phase type
+#10: ProbeEntryPhase
+#11: ControlLawThrustPhase
 mission_type 7
 #Enable ACE feasible point finder?
 ACE_feasible_point_finder 1
 #optimality tolerance
-snopt_optimality_tolerance 0.1
+snopt_optimality_tolerance 0.10000000000000000555
 #Universe folder
-universe_folder C:\emtg\testatron\universe\
+universe_folder C:/emtg/testatron/universe/
 #HardwarePath
-HardwarePath C:\emtg\testatron\HardwareModels\
+HardwarePath C:/emtg/testatron/HardwareModels/
+#ThrottleTableFile
+ThrottleTableFile NEXT_TT11_NewFrontiers_EOL_1_3_2017.ThrottleTable
 #Override the working directory?
 override_working_directory 1
 #User-defined working directory
-forced_working_directory C:\emtg\testatron\tests\journey_options
+forced_working_directory C:/emtg/testatron/tests/journey_options
+#Create a mission subfolder?
+override_mission_subfolder 1
+#Mission subfolder
+forced_mission_subfolder .
+#Close program after completion?
+background_mode 1
 #which inner loop solver to run?
 #0: none, evaluate trialX
 #1: run MBH
@@ -62,18 +72,17 @@ forced_working_directory C:\emtg\testatron\tests\journey_options
 #3: run NLP using trialX as initial guess
 #4: filament walker
 run_inner_loop 0
-#Enter any user data that should be appended to the .emtg file.
-#This is typically used in python wrappers
+#Field for taking notes
 user_data 
 
 
-
 BEGIN_JOURNEY
-
 #Journey name
 journey_name EarthToMarsSOI
 #Journey central body name
 journey_central_body SUN
+#flyby sequence, as indices from the Universe file
+sequence
 #phase type
 #0: MGALTS
 #1: FBLTS
@@ -84,11 +93,14 @@ journey_central_body SUN
 #6: MGAnDSMs
 #7: CoastPhase
 #8: SundmanCoastPhase
+#9: variable (do not use)
+#10 ProbeEntryPhase
+#11 ControlLawThrustPhase
 phase_type 7
 #coast phase match point fraction
-CoastPhaseMatchPointFraction 0.7
+CoastPhaseMatchPointFraction 0.69999999999999995559
 #coast phase backward integration step length (seconds)
-CoastPhaseBackwardIntegrationStepLength 40000.0
+CoastPhaseBackwardIntegrationStepLength 40000
 #journey arrival type
 #0: insertion into parking orbit (use chemical Isp)
 #1: rendezvous (use chemical Isp)
@@ -106,9 +118,14 @@ arrival_type 2
 #3: Periapse
 arrival_class 2
 #journey arrival ellipsoid axes (3)
-arrival_ellipsoid_axes 982897.38322896 982897.38322896 982897.38322896
+arrival_ellipsoid_axes 982897.38322895998135 982897.38322895998135 982897.38322895998135
+#Which bodies are used for third-body perturbation?
+#Expressed as indices in the Universe file
+perturbation_bodies
 #ECC for ephemeris pegged orbit insertion
-ephemeris_pegged_orbit_insertion_ECC 1e-10
+ephemeris_pegged_orbit_insertion_ECC 1.0000000000000000364e-10
+#STK .grv style gravity model file
+central_body_gravity_file C:/emtg/testatron/universe/gravity_files/DoesNotExist.grv
 
 #Maneuver constraint code
 #Works for absolute and relative epochs and also magnitudes
@@ -127,18 +144,19 @@ END_PHASE_DISTANCE_CONSTRAINT_BLOCK
 
 #trial decision vector
 BEGIN_TRIALX
-p0CoastPhaseEphemerisPeggedLaunchDirectInsertion: event left state epoch,54379.40807968911394709721
-p0CoastPhaseEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote,5.23023510172430938781
-p0CoastPhaseEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote,25.98614920841946229757
-p0CoastPhaseEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote,1.01868202401421292791
-p0CoastPhase: phase flight time,274.20451323809328414427
-p0CoastPhaseEphemerisReferencedInterceptExterior: event interface state vMAG,2.60835679541569032125
-p0CoastPhaseEphemerisReferencedInterceptExterior: event interface state vRA,23.68123032997576160597
-p0CoastPhaseEphemerisReferencedInterceptExterior: event interface state vDEC,122.71034959153882937244
-p0CoastPhaseEphemerisReferencedInterceptExterior: event interface state RA,-12.26518862032646950411
-p0CoastPhaseEphemerisReferencedInterceptExterior: event interface state DEC,-0.86815985818279861608
-p0CoastPhaseEphemerisReferencedInterceptExterior: event left state mass,525.19999999994752215571
-p0CoastPhase: virtual chemical fuel,0.00000000005250717638
+p0CoastPhaseEphemerisPeggedLaunchDirectInsertion: event left state epoch ,54379.408079689113947
+p0CoastPhaseEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote ,5.2302351017243093878
+p0CoastPhaseEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote ,25.986149208419462298
+p0CoastPhaseEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote ,1.0186820240142129279
+p0CoastPhase: phase flight time ,274.20451323809328414
+p0CoastPhaseEphemerisReferencedInterceptExterior: event interface state vMAG ,2.6083567954156903212
+p0CoastPhaseEphemerisReferencedInterceptExterior: event interface state vRA ,23.681230329975761606
+p0CoastPhaseEphemerisReferencedInterceptExterior: event interface state vDEC ,122.71034959153882937
+p0CoastPhaseEphemerisReferencedInterceptExterior: event interface state RA ,-12.265188620326469504
+p0CoastPhaseEphemerisReferencedInterceptExterior: event interface state DEC ,-0.86815985818279861608
+p0CoastPhaseEphemerisReferencedInterceptExterior: event left state mass ,525.19999999994752216
+p0CoastPhase: virtual chemical fuel ,5.2507176380000000606e-11
 END_TRIALX
 
 END_JOURNEY
+

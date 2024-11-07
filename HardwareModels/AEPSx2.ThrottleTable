@@ -1,0 +1,22 @@
+#2xAEPS throttle table
+#Performance characteristics from:
+#
+#   Hofer, Richard, et al. "Completing the development of the 12.5 kW Hall effect rocket with magnetic shielding (HERMeS)." 
+#   36th International Electric Propulsion Conference. Vol. 193. University of Vienna Austria, 2019.
+#
+PPU efficiency,1
+PPU min power (kW),2.7
+PPU max power (kW),26.2
+#Throttle level,Mass flow rate (mg/s),Beam Current (A),Beam Voltage (V),Thrust (mN),Isp (s),Efficiency,PPU input power (kW)
+TL1,9.70468555,9,300,167.5,1760,51.1,2.7
+TL2,20.57641644,21,300,395.5,1960,59.6,6.3
+TL3,21.04894604,20.75,400,479.1,2321,64.4,8.3
+TL4,21.44351204,20.8,500,545.7,2595,65.8,10.4
+TL5,22.11550131,20.83333333,600,612.9,2826,67.2,12.5
+TL6,22.18595544,20.79365079,630,630.3,2897,67.5,13.1
+2xTL1,19.4093711,18,300,335,1760,51.1,5.4
+2xTL2,41.15283288,42,300,791,1960,59.6,12.6
+2xTL3,42.09789208,41.5,400,958.2,2321,64.4,16.6
+2xTL4,42.88702408,41.6,500,1091.4,2595,65.8,20.8
+2xTL5,44.23100261,41.66666667,600,1225.8,2826,67.2,25
+2xTL6,44.37191088,41.58730159,630,1260.6,2897,67.5,26.2

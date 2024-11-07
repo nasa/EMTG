@@ -99,7 +99,7 @@ class MissionOptions(object):
         """SPICE leap seconds kernel - required for SPICE to work"""
         self.SPICE_reference_frame_kernel = "pck00010.tpc"
         """SPICE_reference_frame_kernel"""
-        self.universe_folder = "C:/Utilities/Universe"
+        self.universe_folder = "C:/emtg/Universe"
         """Universe folder"""
         self.ephemeris_source = 2
         """Choices are 0 - static, 1 - SPICE (default to static if no SPICE file supplied for a body), 2 - SplineEphem"""
@@ -142,7 +142,7 @@ class MissionOptions(object):
         self.LV_adapter_mass = 0
         """LV adapter mass (kg)"""
         self.engine_type = 5
-        """low-thrust engine type, from original EMTGv8 list"""
+        """low-thrust engine type, from default EMTGv9.02 list"""
         self.number_of_electric_propulsion_systems = 1
         """number of thruster systems (used to be called number of engines)"""
         self.engine_duty_cycle = 1
@@ -217,7 +217,7 @@ class MissionOptions(object):
         """Chemical propellant margin (fraction)"""
         self.SpacecraftModelInput = 2
         """Spacecraft object input type. Choices are 0 - Assemble from libraries, 1 - Read .emtg_spacecraftoptions file, 2 - Assemble from missionoptions object"""
-        self.HardwarePath = "c:/Utilities/HardwareModels/"
+        self.HardwarePath = "C:/emtg/HardwareModels/"
         """HardwarePath"""
         self.ThrottleTableFile = "empty.ThrottleTable"
         """ThrottleTableFile"""
@@ -229,11 +229,11 @@ class MissionOptions(object):
         """PropulsionSystemsLibraryFile"""
         self.SpacecraftOptionsFile = "default.emtg_spacecraftopt"
         """SpacecraftOptionsFile"""
-        self.LaunchVehicleKey = "ExampleRocket"
+        self.LaunchVehicleKey = "Falcon_9_FT_(RTLS)"
         """LaunchVehicleKey"""
         self.PowerSystemKey = "5kW_basic"
         """PowerSystemKey"""
-        self.ElectricPropulsionSystemKey = "defaultThruster"
+        self.ElectricPropulsionSystemKey = "AEPS_PolyFit_HTandHI"
         """ElectricPropulsionSystemKey"""
         self.ChemicalPropulsionSystemKey = "DefaultChemicalPropulsionSystem"
         """ChemicalPropulsionSystemKey"""
@@ -317,11 +317,11 @@ class MissionOptions(object):
         """Append throttle level to ephemeris output?"""
         self.call_system_to_generate_bsp = 0
         """Should EMTG make a system call to clean the .ephemeris file and call python to call spice to generate the bsp?"""
-        self.spice_utilities_path = "c:/utilities/cspice/exe"
+        self.spice_utilities_path = "C:/utilities/cspice/exe"
         """Where are the spice utilities brief and mkspk located?"""
         self.spice_utility_extension = ".exe"
         """What is the file extension on the spice utlities? Likely either ".exe" for Windows or "" for *nix"""
-        self.pyemtg_path = "c:/emtg/PyEMTG/"
+        self.pyemtg_path = "C:/emtg/PyEMTG/"
         """Where is PyEMTG located?"""
         self.spacecraft_SPICE_ID = -52284
         """SPICE ID of spacecraft for bsp"""
@@ -382,7 +382,6 @@ class MissionOptions(object):
             print("Python is unable to open", self.filename)
             return
         
-        
         while True:
             line = inputFile.readline()
             if not line:
@@ -431,7 +430,7 @@ class MissionOptions(object):
                         # Check for mission types that are not supported in PyEMTG
                         self.mission_type = int(linecell[1])
                         if (self.mission_type < 2): print("WARNING: The selected options file contains an unsupported mission type. The supported mission types are MGALT, FBLT, PSBI, PSFB, MGAnDSMs, CoastPhase, SundmanCoastPhase, variable phase type, ProbeEntryPhase, and ControlLawThrustPhase. Please select one of these types from the Global Mission Options tab.")
-        
+                  
                     elif linecell[0] == "NLP_solver_type":
                         self.NLP_solver_type = int(linecell[1])
                   
@@ -1113,7 +1112,7 @@ class MissionOptions(object):
                 optionsFile.write("#SPICE_reference_frame_kernel\n")
                 optionsFile.write("SPICE_reference_frame_kernel " + str(self.SPICE_reference_frame_kernel) + "\n")
     
-            if (self.universe_folder != "C:/Utilities/Universe" or writeAll):
+            if (self.universe_folder != "C:/emtg/Universe" or writeAll):
                 optionsFile.write("#Universe folder\n")
                 optionsFile.write("universe_folder " + str(self.universe_folder) + "\n")
     
@@ -1198,7 +1197,7 @@ class MissionOptions(object):
                 optionsFile.write("LV_adapter_mass " + str(self.LV_adapter_mass) + "\n")
     
             if (self.engine_type != 5 or writeAll):
-                optionsFile.write("#low-thrust engine type\n#0: fixed thrust/Isp\n#1: constant Isp, efficiency, EMTG computes input power\n#2: choice of power model, constant efficiency, EMTG chooses Isp\n#3: choice of power model, constant efficiency and Isp\n#4: continuously-varying specific impulse\n#5: custom thrust and mass flow rate polynomial\n#6: NSTAR\n#7: XIPS-25\n#8: BPT-4000 High-Isp\n#9: BPT-4000 High-Thrust\n#10: BPT-4000 Ex-High-Isp\n#11: NEXT high-Isp v9\n#12: VASIMR (argon, using analytical model)\n#13: Hall Thruster (Xenon, using analytical model)\n#14: NEXT high-ISP v10\n#15: NEXT high-thrust v10\n#16: BPT-4000 MALTO\n#17: NEXIS Cardiff 8-15-201\n#18: H6MS Cardiff 8-15-2013\n#19: BHT20K Cardiff 8-16-2013\n#20: Aerojet HiVHAC EM\n#21: 13 kW STMD Hall high-Isp (not available in open-source)\n#22: 13 kW STMD Hall high-thrust (not available in open-source)\n#23: NEXT TT11 High-Thrust\n#24: NEXT TT11 High-Isp\n#25: NEXT TT11 Expanded Throttle Table\n#26: 13 kW STMD Hall high-Isp 10-1-2014 (not available in open-source)\n#27: 13 kW STMD Hall medium-thrust 10-1-2014 (not available in open-source)\n#28: 13 kW STMD Hall high-thrust 10-1-2014 (not available in open-source)\n#29: 2D Throttle table\n#30: 1D Throttle table high-thrust\n#31: 1D Throttle table high-Isp\n#32: 2D polynomial fit\n")
+                optionsFile.write("#low-thrust engine type\n#0: fixed thrust/Isp\n#1: constant Isp, efficiency, EMTG computes input power\n#2: choice of power model, constant efficiency, EMTG chooses Isp\n#3: choice of power model, constant efficiency and Isp\n#4: continuously-varying specific impulse\n#5: custom thrust and mass flow rate polynomial\n#6: AEPS_High_Thrust_and_Isp\n#7: BIT3_High_Thrust_and_Isp\n#8: Halo12_High_Thrust\n#9: Halo12_High_Isp\n#10: NEXTC_High_Thrust\n#11: NEXTC_High_Isp\n#12: PPS5000_High_Thrust\n#13: PPS5000_High_Isp\n#14: 2D Throttle table\n#15: 1D Throttle table high-thrust\n#16: 1D Throttle table high-Isp\n#17: 2D polynomial fit\n")
                 optionsFile.write("engine_type " + str(self.engine_type) + "\n")
     
             if (self.number_of_electric_propulsion_systems != 1 or writeAll):
@@ -1367,7 +1366,7 @@ class MissionOptions(object):
                 optionsFile.write("#Spacecraft object input type\n#0: Assemble from libraries\n#1: Read .emtg_spacecraftoptions file\n#2: Assemble from missionoptions object\n")
                 optionsFile.write("SpacecraftModelInput " + str(self.SpacecraftModelInput) + "\n")
     
-            if (self.HardwarePath != "c:/Utilities/HardwareModels/" or writeAll):
+            if (self.HardwarePath != "C:/emtg/HardwareModels/" or writeAll):
                 optionsFile.write("#HardwarePath\n")
                 optionsFile.write("HardwarePath " + str(self.HardwarePath) + "\n")
     
@@ -1391,7 +1390,7 @@ class MissionOptions(object):
                 optionsFile.write("#SpacecraftOptionsFile\n")
                 optionsFile.write("SpacecraftOptionsFile " + str(self.SpacecraftOptionsFile) + "\n")
     
-            if (self.LaunchVehicleKey != "ExampleRocket" or writeAll):
+            if (self.LaunchVehicleKey != "Falcon_9_FT_(RTLS)" or writeAll):
                 optionsFile.write("#LaunchVehicleKey\n")
                 optionsFile.write("LaunchVehicleKey " + str(self.LaunchVehicleKey) + "\n")
     
@@ -1399,7 +1398,7 @@ class MissionOptions(object):
                 optionsFile.write("#PowerSystemKey\n")
                 optionsFile.write("PowerSystemKey " + str(self.PowerSystemKey) + "\n")
     
-            if (self.ElectricPropulsionSystemKey != "defaultThruster" or writeAll):
+            if (self.ElectricPropulsionSystemKey != "AEPS_PolyFit_HTandHI" or writeAll):
                 optionsFile.write("#ElectricPropulsionSystemKey\n")
                 optionsFile.write("ElectricPropulsionSystemKey " + str(self.ElectricPropulsionSystemKey) + "\n")
     
@@ -1567,7 +1566,7 @@ class MissionOptions(object):
                 optionsFile.write("#Generate bsp?\n")
                 optionsFile.write("call_system_to_generate_bsp " + str(int(self.call_system_to_generate_bsp)) + "\n")
     
-            if (self.spice_utilities_path != "c:/utilities/cspice/exe" or writeAll):
+            if (self.spice_utilities_path != "C:/utilities/cspice/exe" or writeAll):
                 optionsFile.write("#Where are spice utilities?\n")
                 optionsFile.write("spice_utilities_path " + str(self.spice_utilities_path) + "\n")
     
@@ -1575,7 +1574,7 @@ class MissionOptions(object):
                 optionsFile.write("#Spice utility extension\n")
                 optionsFile.write("spice_utility_extension " + str(self.spice_utility_extension) + "\n")
     
-            if (self.pyemtg_path != "c:/emtg/PyEMTG/" or writeAll):
+            if (self.pyemtg_path != "C:/emtg/PyEMTG/" or writeAll):
                 optionsFile.write("#PyEMTG path\n")
                 optionsFile.write("pyemtg_path " + str(self.pyemtg_path) + "\n")
     

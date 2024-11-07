@@ -5,6 +5,13 @@
 \subsubsection{Purpose}
 \noindent \ac{EMTG} depends on three components of Boost: filesystem, serialization, and system (and their dependencies). In addition, if a user wishes to build the \ac{EMTG} PyHardware and Propulator components, then the python component of Boost is required. \\ \ac{EMTG} is known to work with \hl{Boost 1.79.0}.
 
+\subsubsection{Bundled Installation Instructions}
+\begin{enumerate}
+	\item Open the \textless EMTG-root\textgreater \textbackslash depend\textbackslash boost directory.
+	\item Confirm that the sub-directories contain files.
+	\item If the files exist, proceed to Step~\ref{bundle:boost} of Section~\ref{sec:boost_installation_instructions}. \\ If for some reason the files do not exist, go to the next sub-section to download it.
+\end{enumerate}
+
 \subsubsection{Download Location}
 \noindent The main page for the software distributions is in the following website: \\
 \url{https://www.boost.org/users/download/}
@@ -16,12 +23,13 @@
 \noindent \hl{Executing the Boost installer requires elevated privileges.}
 
 \subsubsection{Dependency Installation Instructions}
+\label{sec:boost_installation_instructions}
 \begin{enumerate}
 	\item Execute the downloaded file and proceed through the install instructions utilizing the defaults unless otherwise indicated in the following steps 
 	\begin{enumerate}
 		\item When prompted for the install location, save to a destination with no spaces in the file path (e.g. C:\textbackslash SW\_Installs\textbackslash boost\_1\_79\_0) and record its location for future use
 	\end{enumerate}
-	\item Creation of a “user-config.jam” file in your home directory
+	\item \label{bundle:boost} Creation of a “user-config.jam” file in your home directory
 	\begin{enumerate}
 		\item Navigate to your user directory (e.g. “C:\textbackslash Users\textbackslash MyName\textbackslash”)
 		\item Create a “user-config.jam” file
@@ -48,7 +56,7 @@
 		\item Click on the `Visual Studio *' folder 
 		\item Select the `Developer Command Prompt *' option
 	\end{enumerate}
-	\item Navigate to the root Boost directory (e.g. C: \textbackslash SW\_Installs \textbackslash boost\_1\_79\_0) in the command window
+	\item Navigate to the root Boost directory (e.g. \textless EMTG-root\textgreater \textbackslash depend \textbackslash boost or C:\textbackslash SW\_Installs\textbackslash boost\_1\_79\_0) in the command window
 	\item Type the following and hit Enter:
 	\begin{verbatim}
 		bootstrap

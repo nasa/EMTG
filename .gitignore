@@ -3,7 +3,6 @@
 #################
 build/*
 bin/*
-/HardwareModels
 EMTG_v9_Results/*
 scripts/*
 #EMTG-config.cmake

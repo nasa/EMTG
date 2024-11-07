@@ -1,5 +1,5 @@
 Mission: EarthToMars_JourneyEndDeltaV
-Written by EMTG_v9 core program compiled Dec 15 2020 10:41:15
+Written by EMTG_v9 core program compiled Oct 13 2022 08:44:20
 
 Journey: 0
 Journey name: EarthToMarsSOI
@@ -38,18 +38,21 @@ Thruster duty cycle: 1
    21 | 2454557.17039520 |   3/31/2008 |     SFthrust |                deep-space |     11.74418619 |                   - |                   - |                   - |    0.000 |    0.000 |              - | -178334512.93952793 |  157925499.97330511 |   15003356.57008876 |        -17.11642043 |        -12.57034489 |         -2.79400177 |     -0.010015379815 |     -0.072424259639 |      0.138730129340 |     -0.004657963863 |     -0.033683154355 |      0.064520761186 |           0.15682 |        0.07612 |           3092 |        2.07875 |      2.51014080e-06 |       471.9167 |              1 |        2.07875 |              - | 
    22 | 2454568.91458139 |   4/12/2008 |     SFthrust |                deep-space |     11.74418619 |                   - |                   - |                   - |    0.000 |    0.000 |              - | -194804497.03217882 |  144338696.75846738 |   12239432.69834446 |        -15.32516505 |        -14.10300433 |         -2.78694424 |      0.079960130979 |     -0.100877658182 |      0.086156950930 |      0.036995647620 |     -0.046673689114 |      0.039862768578 |           0.15490 |        0.07383 |           3086 |        2.01070 |      2.43919868e-06 |       469.4764 |              1 |        2.01070 |              - | 
    23 | 2454582.28667449 |   4/25/2008 |  force-coast |                deep-space |     15.00000000 |                   - |                   - |                   - |    0.000 |    0.000 |              - | -211197520.80653268 |  127083217.02814537 |    9050903.34173300 |        -13.12071765 |        -15.62532588 |         -2.81236172 |      0.000000000000 |      0.000000000000 |      0.000000000000 |                   - |                   - |                   - |           0.00000 |              - |              - |              - |                   - |       467.0738 |              - |        0.00000 |              - | 
-   24 | 2454589.78667449 |    5/3/2008 |    intercept |                   Mars_BE |      0.00000000 |                   - |                   - |                   - |  109.959 |  -17.772 |       18.18263 | -219305561.09000078 |  116730136.46687394 |    7212937.61908311 |        -11.90109962 |        -16.31621239 |         -2.85846048 |      1.386060868671 |     -2.984063118477 |      2.712347311776 |                   - |                   - |                   - |           4.26411 |              - |              - |        1.91962 |                   - |     -1221.9639 |              - |        0.00000 |              - | 
+   24 | 2454589.78667449 |    5/3/2008 |    intercept |                   Mars_BE |      0.00000000 |                   - |                   - |                   - |  109.959 |  -17.772 |       18.18263 | -219305561.09000078 |  116730136.46687394 |    7212937.61908311 |        -11.90109962 |        -16.31621239 |         -2.85846048 |      1.386060868671 |     -2.984063118477 |      2.712347311776 |                   - |                   - |                   - |           4.26411 |              - |              - |        1.91962 |                   - |       101.1812 |              - |        0.00000 |              - | 
 
 
 Journey initial mass increment: 0.00000000000000000000 kg
 Journey final mass increment: 0.00000000000000000000 kg
 Journey post-arrival delta-v (Monoprop): 3.00000000000000000000 km/s
-Journey post-arrival propellant consumed: 1689.03773858969111643091 kg
+Journey post-arrival propellant consumed: 365.89263407308487785485 kg
 
 Boundary states:
 Boundary: 1 135454460.54396337 -67082474.50721811 1006.82699455 12.72708260 26.57197167 -0.00163017
 Boundary: 2 -219611262.09637320 117410152.84305567 7853415.47879874 -10.51503875 -19.30027551 -0.14611317
 
+
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
 
 Journey flight time (seconds): 21589953.73812389
 Journey flight time (days): 249.88372382
@@ -82,8 +85,8 @@ Spacecraft: Chemical oxidizer margin (kg): 0.00000000000000000000
 Spacecraft: Total electric propellant (kg): 58.12615820313156689281
 Spacecraft: Total chemical fuel (kg): 0.00000000005251999997
 Spacecraft: Total chemical oxidizer (kg): 0.00000000000000000000
-Spacecraft: Final mass including propellant margin (kg): -1221.96389679271806016914
-Spacecraft: Dry mass (kg): -1221.96389679271806016914
+Spacecraft: Final mass including propellant margin (kg): 101.18120772388817840692
+Spacecraft: Dry mass (kg): 101.18120772388817840692
 
 Objective function is "minimize delta-v"
 J = 3.47606844835652495362
@@ -92,6 +95,17 @@ Worst constraint is F[21]: j0p0MGALT: match point x
 with violation -0.00000954800747605840
 Worst decision variable is X[0]: j0p0MGALTEphemerisPeggedLaunchDirectInsertion: event left state epoch
 with unhappiness 0.00000000000000000000
+
+
+
+Number of solution attempts: 1
+Solution attempt that produced a feasible solution with the best objective value (0 if no feasible solutions): 1
+Time to completion of solution attempt that produced a feasible solution with the best objective value (seconds) (-1 if no feasible solutions): 0.00100000000000000002
+
+
+
+Was first NLP solve feasible: 1
+Objective function value from first NLP solve: 3.47606844835652495362
 
 
 

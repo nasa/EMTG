@@ -57,6 +57,7 @@ RLA_bounds -2880 2880
 #8: SundmanCoastPhase
 #9: variable phase type
 #10: ProbeEntryPhase
+#11: ControlLawThrustPhase
 mission_type 9
 #NLP solver type
 #0: SNOPT
@@ -119,6 +120,8 @@ skip_first_nlp_run 0
 NLP_stop_on_goal_attain 0
 #Objective value at which NLP stops
 NLP_objective_goal 0
+#Within an NLP run, how frequently do we check to see if we have found a feasible solution with a better objective function value than we have written out before, and, if true, write it to file? (seconds) ONLY WORKS IF NLP CHAPERONE IS ACTIVE.
+NLP_write_output_check_time 1000000
 #MBH RNG seed (negative number means system clock)
 MBH_RNG_seed -1
 #Print NLP movie frames?
@@ -130,7 +133,7 @@ SPICE_leap_seconds_kernel naif0012.tls
 #SPICE_reference_frame_kernel
 SPICE_reference_frame_kernel pck00010.tpc
 #Universe folder
-universe_folder C:\emtg\testatron\universe
+universe_folder C:/emtg/testatron/universe/
 #0: static, 1: SPICE (default to static if no SPICE file supplied for a body), 2: SplineEphem
 ephemeris_source 2
 #How many sample points should SplineEphem use per orbital period of each body?
@@ -211,7 +214,7 @@ LV_adapter_mass 0
 #30: 1D Throttle table high-thrust
 #31: 1D Throttle table high-Isp
 #32: 2D polynomial fit
-engine_type 5
+engine_type 6
 #number of thruster systems (used to be called number of engines)
 number_of_electric_propulsion_systems 1
 #percentage of time that engine can operate
@@ -224,7 +227,7 @@ duty_cycle_type 0
 thrust_scale_factor 1
 #Power at 1 AU (kW)
 power_at_1_AU 5
-#power source type, 0: fixed, 1: solar
+#power source type. Choices are 0 - fixed, 1 - solar
 power_source_type 1
 #Solar power model type
 #0: classic Sauer model
@@ -300,7 +303,23 @@ chemical_propellant_margin 0
 #2: Assemble from missionoptions object
 SpacecraftModelInput 2
 #HardwarePath
-HardwarePath c:/emtg/testatron/HardwareModels/
+HardwarePath C:/emtg/testatron/HardwareModels/
+#ThrottleTableFile
+ThrottleTableFile NEXT_TT11_NewFrontiers_EOL_1_3_2017.ThrottleTable
+#LaunchVehicleLibraryFile
+LaunchVehicleLibraryFile NLSII_April2017.emtg_launchvehicleopt
+#PowerSystemsLibraryFile
+PowerSystemsLibraryFile default.emtg_powersystemsopt
+#PropulsionSystemsLibraryFile
+PropulsionSystemsLibraryFile 4_18_2017.emtg_propulsionsystemopt
+#SpacecraftOptionsFile
+SpacecraftOptionsFile default.emtg_spacecraftopt
+#LaunchVehicleKey
+LaunchVehicleKey Atlas_V_551
+#PowerSystemKey
+PowerSystemKey 5kW_basic
+#ElectricPropulsionSystemKey
+ElectricPropulsionSystemKey NSTAR
 #ChemicalPropulsionSystemKey
 ChemicalPropulsionSystemKey DefaultChemicalPropulsionSystem
 #solar radiation pressure?
@@ -331,7 +350,7 @@ waypoint_file_path ./banana.ephemeris
 covariance_file_path ./shampoo_bottle.ephemeris
 #state representation for parallel shooting (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE)
 ParallelShootingStateRepresentation 1
-#state representation for periapse boundary conditions (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+#state representation for periapse boundary conditions (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane, IncomingBplaneRpTA, OutgoingBplaneRpTA)
 PeriapseBoundaryStateRepresentation 5
 #state representation for parallel shooting constraints (Cartesian or same as encoded states)
 ParallelShootingConstraintStateRepresentation 0
@@ -348,17 +367,19 @@ output_dormant_journeys 0
 #How long to output an ephemeris after the mission end (days)
 post_mission_wait_time 0
 #Override the working directory?
-override_working_directory 0
+override_working_directory 1
 #User-defined working directory
-forced_working_directory C:\emtg\testatron\tests\physics_options
+forced_working_directory C:/emtg/testatron/tests/physics_options
 #Create a mission subfolder?
-override_mission_subfolder 0
+override_mission_subfolder 1
 #Mission subfolder
-forced_mission_subfolder mission_subfolder
+forced_mission_subfolder .
 #Shorten output file names?
 short_output_file_names 1
 #Generate forward-integrated ephemeris?
 generate_forward_integrated_ephemeris 0
+#Consecutive lines in ephemeris file separated by less than this amount of time will be removed when the clean ephemeris file is created. (Seconds)
+forward_integrated_ephemeris_minimum_timestep_kept 120
 #SPICE ID of central body for forward integrated ephemeris
 forward_integrated_ephemeris_central_body_SPICE_ID 10
 #Add control switch line to ephemeris?
@@ -382,7 +403,7 @@ append_throttle_level_to_ephemeris_output 0
 #Generate bsp?
 call_system_to_generate_bsp 0
 #Where are spice utilities?
-spice_utilities_path c:/emtg/testatron/cspice/exe
+spice_utilities_path c:/utilities/cspice/exe
 #Spice utility extension
 spice_utility_extension .exe
 #PyEMTG path
@@ -390,7 +411,7 @@ pyemtg_path c:/emtg/PyEMTG/
 #SPICE ID of spacecraft
 spacecraft_SPICE_ID -52284
 #Close program after completion?
-background_mode 0
+background_mode 1
 #Output STMs?
 output_STMs 0
 #Output maneuver and target spec files?
@@ -405,7 +426,13 @@ stop_after_journey 1
 #2: run constrained DE
 #3: run NLP using trialX as initial guess
 #4: filament walker
-run_inner_loop 3
+run_inner_loop 0
+#Should EMTG check the feasibility tolerance of the initial guess when running in MBH mode and skip the NLP solve for that iteration if the feasibility tolerance is greater than feasibilityTolInMBHToSkipNLP?
+checkFeasibilityTolInMBHToSkipNLP 0
+#If checkFeasibilityTolInMBHToSkipNLP is true, then we skip the NLP solve for any MBH iteration whose initial feasibility is greater than the value of this option.
+feasibilityTolInMBHToSkipNLP 1000000
+#Maximum number of hops without improving objective function before trying a random point when the guess is worse than the skip-NLP-solve-tolerance and checkFeasibilityTolInMBHToSkipNLP is true.
+MBH_max_not_improve_with_NLP_skip 10000
 #Check derivatives using NLP finite differencing?
 check_derivatives 0
 #Field for taking notes
@@ -433,9 +460,15 @@ sequence
 #8: SundmanCoastPhase
 #9: variable (do not use)
 #10 ProbeEntryPhase
+#11 ControlLawThrustPhase
 phase_type 6
 #impulses per phase
 impulses_per_phase 1
+#Thrust control law
+#0: Cartesian (not implemented)
+#1: velocity direction
+#2: anti-velocity direction
+thrust_control_law 1
 #Force unit magnitude control?
 #0: free control magnitude
 #1: force unit magnitude
@@ -461,11 +494,11 @@ override_integration_step_size 0
 integration_step_size 86400
 #Override journey flyby altitude?
 override_flyby_altitude_bounds 0
-#Lower and upper bound on journey flyby altitude (only applies to the departure flyby, if there is one)
+#Lower and upper bound on journey flyby altitude, if override is active (only applies to the departure flyby, if there is one)
 flyby_altitude_bounds 300 1000000
-#Override journey flyby altitude?
+#Override journey periapse arrival altitude?
 PeriapseArrival_override_altitude 0
-#Lower and upper bound on journey flyby altitude (km)
+#Lower and upper bound on journey periapse arrival altitude, if override is active (km)
 PeriapseArrival_altitude_bounds 300 1000000
 #PeriapseDeparture altitude bounds (in km)
 PeriapseDeparture_altitude_bounds 300 300
@@ -519,9 +552,9 @@ departure_elements 6678 0.2999999999999999889 0 0 0 5
 departure_elements_bounds 0 0 0 0 0 0 0 0 0 0 0 0
 #Reference epoch (MJD) for journey departure elements
 departure_elements_reference_epoch 51544.5
-#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+#departure free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane, IncomingBplaneRpTA, OutgoingBplaneRpTA)
 departure_elements_state_representation 3
-#reference frame for journey departure elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)
+#reference frame for journey departure elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)
 departure_elements_frame 1
 #Allow journey departure free point boundary to propagate (otherwise it is a fixed waypoint)
 AllowJourneyFreePointDepartureToPropagate 0
@@ -565,9 +598,9 @@ arrival_elements 42000 0.010000000000000000208 5 0 0 5
 arrival_elements_bounds 0 0 0 0 0 0 0 0 0 0 0 0
 #Reference epoch (MJD) for journey arrival elements
 arrival_elements_reference_epoch 51594.5
-#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane, IncomingBplaneRpTA, OutgoingBplaneRpTA)
 arrival_elements_state_representation 3
-#reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)
+#reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)
 arrival_elements_frame 1
 #Allow journey arrival free point boundary to propagate (otherwise it is a fixed waypoint)
 AllowJourneyFreePointArrivalToPropagate 0
@@ -621,6 +654,8 @@ freeze_decision_variables 0
 ephemeris_pegged_orbit_insertion_SMA 42000
 #ECC for ephemeris pegged orbit insertion
 ephemeris_pegged_orbit_insertion_ECC 0.010000000000000000208
+#Lower and upper bounds for ephemeris pegged orbit insertion Delta v (km/s)
+ephemeris_pegged_orbit_insertion_dv_bounds 0 100
 #Impact momentum enhancement factor for planetary defense (also called beta)
 impact_momentum_enhancement_factor 1
 #Aerodynamic drag?
@@ -632,7 +667,15 @@ coefficient_of_drag 2.2000000000000001776
 #Atmospheric density model
 AtmosphericDensityModelKey Exponential
 #File defining atmospheric density model
-AtmosphericDensityModelDataFile c:/emtg/testatron/DoesNotExist.emtg_densityopt
+AtmosphericDensityModelDataFile c:/Utilities/DoesNotExist.emtg_densityopt
+#Include central body gravitational harmonics perturbations?
+perturb_central_body_gravity_harmonics 0
+#Maximum degree to include for central body gravitational harmonics
+central_body_gravity_degree 2
+#Maximum order to include for central body gravitational harmonics
+central_body_gravity_order 0
+#STK .grv style gravity model file
+central_body_gravity_file C:/emtg/testatron/universe/gravity_files/DoesNotExist.grv
 #Probe separation impulse (Ns)
 probe_separation_impulse 1
 #Probe mass (kg)
@@ -697,8 +740,16 @@ ProbeAEI_to_end_MatchPointFraction 0.5
 ProbeAEI_to_end_ForwardIntegrationStepLength 86400
 #probe AEI to end backward integration step length (seconds)
 ProbeAEI_to_end_BackwardIntegrationStepLength 86400
+#Print a target spec for the probe state at the end of the first sub-phase?
+Probe_AEI_print_target_spec 1
+#Print a target spec for the probe state at the end of the second sub-phase?
+Probe_end_print_target_spec 1
 #Always print this journey's options to the .emtgopt file?
 print_this_journey_options_no_matter_what 0
+#Override default ephemeris output resolution?
+override_ephemeris_output_resolution 0
+#If overriding default ephemeris output resolution, this is the overriding value (seconds)
+EphemerisOutputResolution 1
 
 #Maneuver constraint code
 #Works for absolute and relative epochs and also magnitudes
@@ -717,24 +768,24 @@ END_PHASE_DISTANCE_CONSTRAINT_BLOCK
 
 #trial decision vector
 BEGIN_TRIALX
-p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: event left state epoch ,53591.435369558894308
-p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote ,4.2130732950335278986
-p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote ,32.164098104693948699
-p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote ,0.48187590733374419116
-p0MGAnDSMs: phase flight time ,139.39991867051637087
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vMAG ,4.6242398176793972908
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vRA ,7.3893111877721295855
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vDEC ,75.584113409026258523
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state RA ,4.2479066020941189663
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state DEC ,-0.18535099830718793079
-p0MGAnDSMsEphemerisReferencedInterceptExterior: event left state mass ,4338.3763837928700013
-p0MGAnDSMs: virtual chemical fuel ,0
-p0MGAnDSMs: virtual chemical oxidizer ,-9.6229528661000000709e-10
-p0MGAnDSMsForwardSubPhase0: burn index ,0.073905600590200418165
-p0MGAnDSMsForwardSubPhase0: DSM x component ,-3.6970978101181001447e-07
-p0MGAnDSMsForwardSubPhase0: DSM y component ,-2.2804924704188999002e-07
-p0MGAnDSMsForwardSubPhase0: DSM z component ,-8.8688972610380000461e-08
-p0MGAnDSMsBackwardSubPhase0: burn index ,0.92609439940989979334
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: event left state epoch ,53591.529392904056294
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote ,4.2117248327658636242
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote ,32.162727756235298671
+p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote ,0.48129784892206117775
+p0MGAnDSMs: phase flight time ,139.36951943722274905
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vMAG ,4.6213499898798309218
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vRA ,7.3896341578089064228
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state vDEC ,75.584233805647954796
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state RA ,4.2485937254488632675
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event interface state DEC ,-0.18627310778549532877
+p0MGAnDSMsEphemerisReferencedInterceptExterior: event left state mass ,4339.3814271265428033
+p0MGAnDSMs: virtual chemical fuel ,-2.0310351476333579493e-05
+p0MGAnDSMs: virtual chemical oxidizer ,-1.5269922090706140443e-05
+p0MGAnDSMsForwardSubPhase0: burn index ,0.27555452148299425241
+p0MGAnDSMsForwardSubPhase0: DSM x component ,4.7961635000000004378e-13
+p0MGAnDSMsForwardSubPhase0: DSM y component ,-1.6413537199999999549e-12
+p0MGAnDSMsForwardSubPhase0: DSM z component ,-3.0802027600000002016e-12
+p0MGAnDSMsBackwardSubPhase0: burn index ,0.7244454785171053901
 END_TRIALX
 
 END_JOURNEY
@@ -760,9 +811,15 @@ sequence
 #8: SundmanCoastPhase
 #9: variable (do not use)
 #10 ProbeEntryPhase
+#11 ControlLawThrustPhase
 phase_type 7
 #impulses per phase
 impulses_per_phase 1
+#Thrust control law
+#0: Cartesian (not implemented)
+#1: velocity direction
+#2: anti-velocity direction
+thrust_control_law 1
 #Force unit magnitude control?
 #0: free control magnitude
 #1: force unit magnitude
@@ -788,11 +845,11 @@ override_integration_step_size 0
 integration_step_size 86400
 #Override journey flyby altitude?
 override_flyby_altitude_bounds 0
-#Lower and upper bound on journey flyby altitude (only applies to the departure flyby, if there is one)
+#Lower and upper bound on journey flyby altitude, if override is active (only applies to the departure flyby, if there is one)
 flyby_altitude_bounds 300 1000
-#Override journey flyby altitude?
+#Override journey periapse arrival altitude?
 PeriapseArrival_override_altitude 1
-#Lower and upper bound on journey flyby altitude (km)
+#Lower and upper bound on journey periapse arrival altitude, if override is active (km)
 PeriapseArrival_altitude_bounds 300 1000
 #PeriapseDeparture altitude bounds (in km)
 PeriapseDeparture_altitude_bounds 185 185
@@ -846,9 +903,9 @@ departure_elements 0 0 0 0 0 0
 departure_elements_bounds 0 0 0 0 0 0 0 0 0 0 0 0
 #Reference epoch (MJD) for journey departure elements
 departure_elements_reference_epoch 51544.5
-#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+#departure free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane, IncomingBplaneRpTA, OutgoingBplaneRpTA)
 departure_elements_state_representation 0
-#reference frame for journey departure elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)
+#reference frame for journey departure elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)
 departure_elements_frame 0
 #Allow journey departure free point boundary to propagate (otherwise it is a fixed waypoint)
 AllowJourneyFreePointDepartureToPropagate 0
@@ -892,9 +949,9 @@ arrival_elements 0 0 0 0 0 0
 arrival_elements_bounds 0 0 0 0 0 0 0 0 0 0 0 0
 #Reference epoch (MJD) for journey arrival elements
 arrival_elements_reference_epoch 51544.5
-#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane, IncomingBplaneRpTA, OutgoingBplaneRpTA)
 arrival_elements_state_representation 0
-#reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)
+#reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)
 arrival_elements_frame 0
 #Allow journey arrival free point boundary to propagate (otherwise it is a fixed waypoint)
 AllowJourneyFreePointArrivalToPropagate 0
@@ -948,6 +1005,8 @@ freeze_decision_variables 0
 ephemeris_pegged_orbit_insertion_SMA 6678
 #ECC for ephemeris pegged orbit insertion
 ephemeris_pegged_orbit_insertion_ECC 0
+#Lower and upper bounds for ephemeris pegged orbit insertion Delta v (km/s)
+ephemeris_pegged_orbit_insertion_dv_bounds 0 100
 #Impact momentum enhancement factor for planetary defense (also called beta)
 impact_momentum_enhancement_factor 1
 #Aerodynamic drag?
@@ -959,7 +1018,15 @@ coefficient_of_drag 2.2000000000000001776
 #Atmospheric density model
 AtmosphericDensityModelKey Exponential
 #File defining atmospheric density model
-AtmosphericDensityModelDataFile c:/emtg/testatron/DoesNotExist.emtg_densityopt
+AtmosphericDensityModelDataFile c:/Utilities/DoesNotExist.emtg_densityopt
+#Include central body gravitational harmonics perturbations?
+perturb_central_body_gravity_harmonics 0
+#Maximum degree to include for central body gravitational harmonics
+central_body_gravity_degree 2
+#Maximum order to include for central body gravitational harmonics
+central_body_gravity_order 0
+#STK .grv style gravity model file
+central_body_gravity_file C:/emtg/testatron/universe/gravity_files/DoesNotExist.grv
 #Probe separation impulse (Ns)
 probe_separation_impulse 1
 #Probe mass (kg)
@@ -1024,8 +1091,16 @@ ProbeAEI_to_end_MatchPointFraction 0.5
 ProbeAEI_to_end_ForwardIntegrationStepLength 86400
 #probe AEI to end backward integration step length (seconds)
 ProbeAEI_to_end_BackwardIntegrationStepLength 86400
+#Print a target spec for the probe state at the end of the first sub-phase?
+Probe_AEI_print_target_spec 1
+#Print a target spec for the probe state at the end of the second sub-phase?
+Probe_end_print_target_spec 1
 #Always print this journey's options to the .emtgopt file?
 print_this_journey_options_no_matter_what 0
+#Override default ephemeris output resolution?
+override_ephemeris_output_resolution 0
+#If overriding default ephemeris output resolution, this is the overriding value (seconds)
+EphemerisOutputResolution 1
 
 #Maneuver constraint code
 #Works for absolute and relative epochs and also magnitudes
@@ -1044,15 +1119,15 @@ END_PHASE_DISTANCE_CONSTRAINT_BLOCK
 
 #trial decision vector
 BEGIN_TRIALX
-p0CoastPhaseFreePointFreeDirectDeparture: event left state mass ,4338.3763837933702234
-p0CoastPhase: phase flight time ,49.9970153605453973
-p0CoastPhasePeriapseFlybyIn: event left state VINFin ,6.5270584065025420983
-p0CoastPhasePeriapseFlybyIn: event left state RHAin ,1.2150053974279431124
-p0CoastPhasePeriapseFlybyIn: event left state DHAin ,-0.13448213003932352194
-p0CoastPhasePeriapseFlybyIn: event left state BRADIUSin ,4035.1145406881528288
-p0CoastPhasePeriapseFlybyIn: event left state BTHETAin ,-1.2431002662316565921
-p0CoastPhasePeriapseFlybyIn: event left state TAin ,6.283185307179586232
-p0CoastPhasePeriapseFlybyIn: event left state mass ,4338.376383793871355
+p0CoastPhaseFreePointFreeDirectDeparture: event left state mass ,4339.3814271270421159
+p0CoastPhase: phase flight time ,50.02871734810412363
+p0CoastPhasePeriapseFlybyIn: event left state VINFin ,4.6204229371775573654
+p0CoastPhasePeriapseFlybyIn: event left state RHAin ,1.1064487674441529919
+p0CoastPhasePeriapseFlybyIn: event left state DHAin ,0.18601008905664206949
+p0CoastPhasePeriapseFlybyIn: event left state BRADIUSin ,6031.686521849294877
+p0CoastPhasePeriapseFlybyIn: event left state BTHETAin ,0.45130988434277341526
+p0CoastPhasePeriapseFlybyIn: event left state TAin ,-2.1635544632390000315e-08
+p0CoastPhasePeriapseFlybyIn: event left state mass ,4339.381427127542338
 p0CoastPhase: virtual chemical fuel ,4.9999999970000002774e-10
 END_TRIALX
 

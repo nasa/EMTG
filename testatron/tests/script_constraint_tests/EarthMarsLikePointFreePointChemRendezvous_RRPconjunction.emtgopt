@@ -3,13 +3,11 @@
 #mission name
 mission_name EarthMarsLikePointFreePointChemRendezvous_RRPconjunction
 #flight time bounds (days)
-total_flight_time_bounds 0.0 500
+total_flight_time_bounds 0 400
 #Enable ACE feasible point finder?
 ACE_feasible_point_finder 1
-#NLP major iterations
-snopt_major_iterations 500
 #Universe folder
-universe_folder c:/emtg/testatron/Universe
+universe_folder C:/emtg/testatron/universe/
 #low-thrust engine type
 #0: fixed thrust/Isp
 #1: constant Isp, efficiency, EMTG computes input power
@@ -44,42 +42,43 @@ universe_folder c:/emtg/testatron/Universe
 #30: 1D Throttle table high-thrust
 #31: 1D Throttle table high-Isp
 #32: 2D polynomial fit
-engine_type 3
-#solar power coefficients gamma_1 through gamma_5, if all gamma = [1 0 0 0 0], then solar power is a simple 1/r^2
-solar_power_gamma 1 0 0 0 0 0.0 0.0
+engine_type 6
 #thrust polynomial coefficients
-engine_input_thrust_coefficients 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+engine_input_thrust_coefficients 0 0 0 0 0 0 0
 #mass flow rate polynomial coefficients
-engine_input_mass_flow_rate_coefficients 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+engine_input_mass_flow_rate_coefficients 0 0 0 0 0 0 0
 #thruster input power bounds (kW)
-engine_input_power_bounds 0.0 5.0
+engine_input_power_bounds 0 5
 #HardwarePath
-HardwarePath c:/emtg/testatron/HardwareModels/
-#LaunchVehicleLibraryFile
-LaunchVehicleLibraryFile default.emtg_launchvehicleopt
-#LaunchVehicleKey
-LaunchVehicleKey ExampleRocket
-#state representation for periapse boundary conditions (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+HardwarePath C:/emtg/testatron/HardwareModels/
+#state representation for periapse boundary conditions (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane, IncomingBplaneRpTA, OutgoingBplaneRpTA)
 PeriapseBoundaryStateRepresentation 2
-#Shorten output file names?
-short_output_file_names 0
+#Override the working directory?
+override_working_directory 1
+#User-defined working directory
+forced_working_directory C:/emtg/testatron/tests/script_constraint_tests
+#Create a mission subfolder?
+override_mission_subfolder 1
+#Mission subfolder
+forced_mission_subfolder .
+#Close program after completion?
+background_mode 1
 #which inner loop solver to run?
 #0: none, evaluate trialX
 #1: run MBH
 #2: run constrained DE
 #3: run NLP using trialX as initial guess
 #4: filament walker
-run_inner_loop 3
-#Enter any user data that should be appended to the .emtg file.
-#This is typically used in python wrappers
+run_inner_loop 0
+#Field for taking notes
 user_data 
 
 
-
 BEGIN_JOURNEY
-
+#flyby sequence, as indices from the Universe file
+sequence
 #PeriapseDeparture altitude bounds (in km)
-PeriapseDeparture_altitude_bounds 300.0 300.0
+PeriapseDeparture_altitude_bounds 300 300
 #journey arrival type
 #0: insertion into parking orbit (use chemical Isp)
 #1: rendezvous (use chemical Isp)
@@ -91,23 +90,28 @@ PeriapseDeparture_altitude_bounds 300.0 300.0
 #7: momentum transfer (kinetic impactor)
 arrival_type 1
 #cartesian state or SMA, ECC, INC, RAAN, AOP, TA
-arrival_elements -222468535.69630718 -93676520.64435294 3501041.48546516 10.30834121 -20.26052907 -0.677663
+arrival_elements -222468535.69630718231 -93676520.644352942705 3501041.4854651601054 10.308341210000000032 -20.260529070000000473 -0.67766300000000001535
 #Reference epoch (MJD) for journey arrival elements
-arrival_elements_reference_epoch 54703.755620089825
+arrival_elements_reference_epoch 54703.755620089825243
 #reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)
 arrival_elements_frame 1
 #Allow journey arrival free point boundary to propagate (otherwise it is a fixed waypoint)
 AllowJourneyFreePointArrivalToPropagate 1
 #Bounds on this journey's final velocity (in km/s)
-final_velocity 0.5 1.0 0.0
+final_velocity 0.5 1 0
 #journey arrival boundary class
 #0: Ephemeris-pegged (default EMTG)
 #1: Free point
 #2: Ephemeris-referenced
 #3: Periapse
 arrival_class 1
+#Which bodies are used for third-body perturbation?
+#Expressed as indices in the Universe file
+perturbation_bodies
 #ECC for ephemeris pegged orbit insertion
-ephemeris_pegged_orbit_insertion_ECC 1e-10
+ephemeris_pegged_orbit_insertion_ECC 1.0000000000000000364e-10
+#STK .grv style gravity model file
+central_body_gravity_file C:/emtg/testatron/universe/gravity_files/DoesNotExist.grv
 
 #Maneuver constraint code
 #Works for absolute and relative epochs and also magnitudes
@@ -127,49 +131,49 @@ END_PHASE_DISTANCE_CONSTRAINT_BLOCK
 
 #trial decision vector
 BEGIN_TRIALX
-p0MGALTEphemerisPeggedLaunchDirectInsertion: event left state epoch ,54395.53296872003556927666
-p0MGALTEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote ,5.59416487303416598564
-p0MGALTEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote ,-11.58171642821251623445
+p0MGALTEphemerisPeggedLaunchDirectInsertion: event left state epoch ,54395.532968720035569
+p0MGALTEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote ,5.5941648730341659856
+p0MGALTEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote ,-11.581716428212516234
 p0MGALTEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote ,0.55928135292680636326
-p0MGALT: phase flight time ,400.00000000000000000000
-p0MGALTFreePointChemRendezvous: event left state x ,-222468535.69630718231201171875
-p0MGALTFreePointChemRendezvous: event left state y ,-93676520.64435294270515441895
-p0MGALTFreePointChemRendezvous: event left state z ,3501041.48546516010537743568
-p0MGALTFreePointChemRendezvous: event left state vx ,10.30834120999990055623
-p0MGALTFreePointChemRendezvous: event left state vy ,-20.26052906999990099735
+p0MGALT: phase flight time ,400
+p0MGALTFreePointChemRendezvous: event left state x ,-222468535.69630718231
+p0MGALTFreePointChemRendezvous: event left state y ,-93676520.644352942705
+p0MGALTFreePointChemRendezvous: event left state z ,3501041.4854651601054
+p0MGALTFreePointChemRendezvous: event left state vx ,10.308341209999900556
+p0MGALTFreePointChemRendezvous: event left state vy ,-20.260529069999900997
 p0MGALTFreePointChemRendezvous: event left state vz ,-0.67766299999989998426
-p0MGALTFreePointChemRendezvous: event left state mass ,489.28012130416254876764
+p0MGALTFreePointChemRendezvous: event left state mass ,489.28012130416254877
 p0MGALTFreePointChemRendezvous: V_infinity_x ,-0.15668370091035310754
-p0MGALTFreePointChemRendezvous: V_infinity_y ,0.37216155304837150730
+p0MGALTFreePointChemRendezvous: V_infinity_y ,0.3721615530483715073
 p0MGALTFreePointChemRendezvous: V_infinity_z ,0.29486606999408415675
-p0MGALTFreePointChemRendezvous: virtual chemical fuel ,37.43581200566212174863
-p0MGALTFreePointChemRendezvous: virtual chemical oxidizer ,34.62812610523354095449
-p0MGALT: virtual chemical fuel ,0.00000000000000000000
-p0MGALT: virtual electric propellant ,35.91987869594566973319
-p0MGALT: step 0 u_x ,-0.00000060156620118601
-p0MGALT: step 0 u_y ,-0.00000495754519136415
-p0MGALT: step 0 u_z ,0.00000552580180324114
-p0MGALT: step 1 u_x ,-0.00002125094968352670
-p0MGALT: step 1 u_y ,-0.00001958798501111580
-p0MGALT: step 1 u_z ,0.00001401065891459830
-p0MGALT: step 2 u_x ,-0.00002453858402384768
-p0MGALT: step 2 u_y ,0.00001400242786031569
-p0MGALT: step 2 u_z ,0.00000777355874426178
-p0MGALT: step 3 u_x ,-0.00001873502290339335
-p0MGALT: step 3 u_y ,-0.00006326606917450572
-p0MGALT: step 3 u_z ,0.00001615636882656979
-p0MGALT: step 4 u_x ,0.00000667412901700359
-p0MGALT: step 4 u_y ,-0.00002394746716327667
-p0MGALT: step 4 u_z ,0.00002211275974417504
-p0MGALT: step 5 u_x ,0.00000439185791889507
-p0MGALT: step 5 u_y ,-0.00000812665099370058
-p0MGALT: step 5 u_z ,0.00001466446422759837
-p0MGALT: step 6 u_x ,0.00000342228436167602
-p0MGALT: step 6 u_y ,-0.00000934987829059875
-p0MGALT: step 6 u_z ,0.00002115656528367538
-p0MGALT: step 7 u_x ,-0.00000825188851372172
-p0MGALT: step 7 u_y ,0.00000323209200536745
-p0MGALT: step 7 u_z ,0.00000904153345038239
+p0MGALTFreePointChemRendezvous: virtual chemical fuel ,37.435812005662121749
+p0MGALTFreePointChemRendezvous: virtual chemical oxidizer ,34.628126105233540954
+p0MGALT: virtual chemical fuel ,0
+p0MGALT: virtual electric propellant ,35.919878695945669733
+p0MGALT: step 0 u_x ,-6.0156620118601001294e-07
+p0MGALT: step 0 u_y ,-4.9575451913641501559e-06
+p0MGALT: step 0 u_z ,5.5258018032411396634e-06
+p0MGALT: step 1 u_x ,-2.1250949683526698664e-05
+p0MGALT: step 1 u_y ,-1.9587985011115801535e-05
+p0MGALT: step 1 u_z ,1.4010658914598300237e-05
+p0MGALT: step 2 u_x ,-2.4538584023847679396e-05
+p0MGALT: step 2 u_y ,1.4002427860315689838e-05
+p0MGALT: step 2 u_z ,7.773558744261780453e-06
+p0MGALT: step 3 u_x ,-1.8735022903393350191e-05
+p0MGALT: step 3 u_y ,-6.3266069174505723538e-05
+p0MGALT: step 3 u_z ,1.6156368826569789121e-05
+p0MGALT: step 4 u_x ,6.6741290170035896093e-06
+p0MGALT: step 4 u_y ,-2.3947467163276670021e-05
+p0MGALT: step 4 u_z ,2.2112759744175040146e-05
+p0MGALT: step 5 u_x ,4.3918579188950701564e-06
+p0MGALT: step 5 u_y ,-8.1266509937005793063e-06
+p0MGALT: step 5 u_z ,1.466446422759836937e-05
+p0MGALT: step 6 u_x ,3.4222843616760201257e-06
+p0MGALT: step 6 u_y ,-9.349878290598750505e-06
+p0MGALT: step 6 u_z ,2.115656528367538042e-05
+p0MGALT: step 7 u_x ,-8.2518885137217202216e-06
+p0MGALT: step 7 u_y ,3.2320920053674501447e-06
+p0MGALT: step 7 u_z ,9.0415334503823902311e-06
 p0MGALT: step 8 u_x ,-0.43924833970614873824
 p0MGALT: step 8 u_y ,-0.88700539199499972565
 p0MGALT: step 8 u_z ,-0.14215783314340857402
@@ -182,10 +186,10 @@ p0MGALT: step 10 u_z ,-0.23223447078541736843
 p0MGALT: step 11 u_x ,-0.16187474346797303681
 p0MGALT: step 11 u_y ,-0.94900180451785531854
 p0MGALT: step 11 u_z ,-0.27053832544327249821
-p0MGALT: step 12 u_x ,-0.06727882384415329042
+p0MGALT: step 12 u_x ,-0.067278823844153290423
 p0MGALT: step 12 u_y ,-0.94992377287241935857
 p0MGALT: step 12 u_z ,-0.30515305274609505481
-p0MGALT: step 13 u_x ,0.02565272885635039302
+p0MGALT: step 13 u_x ,0.025652728856350393016
 p0MGALT: step 13 u_y ,-0.94122007822591680082
 p0MGALT: step 13 u_z ,-0.33681466723715314249
 p0MGALT: step 14 u_x ,0.11468980139358131431
@@ -197,15 +201,16 @@ p0MGALT: step 15 u_z ,-0.39562763370251619044
 p0MGALT: step 16 u_x ,0.13424112189620163171
 p0MGALT: step 16 u_y ,-0.43279495817382784839
 p0MGALT: step 16 u_z ,-0.21350993878493962352
-p0MGALT: step 17 u_x ,0.00005249861285849811
-p0MGALT: step 17 u_y ,-0.00005328553100625300
-p0MGALT: step 17 u_z ,0.00001669474131582582
-p0MGALT: step 18 u_x ,0.00000795872191505786
-p0MGALT: step 18 u_y ,-0.00000640765148018918
-p0MGALT: step 18 u_z ,0.00001069949332155318
-p0MGALT: step 19 u_x ,-0.00002862641292278312
-p0MGALT: step 19 u_y ,-0.00003084298455247048
-p0MGALT: step 19 u_z ,-0.00003876110908107577
+p0MGALT: step 17 u_x ,5.2498612858498112769e-05
+p0MGALT: step 17 u_y ,-5.3285531006253001988e-05
+p0MGALT: step 17 u_z ,1.6694741315825819492e-05
+p0MGALT: step 18 u_x ,7.9587219150578596664e-06
+p0MGALT: step 18 u_y ,-6.4076514801891804041e-06
+p0MGALT: step 18 u_z ,1.0699493321553180727e-05
+p0MGALT: step 19 u_x ,-2.8626412922783121053e-05
+p0MGALT: step 19 u_y ,-3.0842984552470482766e-05
+p0MGALT: step 19 u_z ,-3.876110908107577302e-05
 END_TRIALX
 
 END_JOURNEY
+

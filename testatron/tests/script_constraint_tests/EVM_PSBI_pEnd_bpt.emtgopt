@@ -16,7 +16,10 @@ total_flight_time_bounds 0 1000
 #8: SundmanCoastPhase
 #9: variable phase type
 #10: ProbeEntryPhase
+#11: ControlLawThrustPhase
 mission_type 4
+#Quiet NLP solver?
+quiet_NLP 0
 #Enable ACE feasible point finder?
 ACE_feasible_point_finder 1
 #NLP major iterations
@@ -24,9 +27,19 @@ snopt_major_iterations 500
 #Seed MBH?
 seed_MBH 1
 #Universe folder
-universe_folder C:/emtg/testatron/Universe
+universe_folder C:/emtg/testatron/universe/
 #HardwarePath
-HardwarePath c:/emtg/testatron/HardwareModels/
+HardwarePath C:/emtg/testatron/HardwareModels/
+#Override the working directory?
+override_working_directory 1
+#User-defined working directory
+forced_working_directory C:/emtg/testatron/tests/script_constraint_tests
+#Create a mission subfolder?
+override_mission_subfolder 1
+#Mission subfolder
+forced_mission_subfolder .
+#Close program after completion?
+background_mode 1
 #which inner loop solver to run?
 #0: none, evaluate trialX
 #1: run MBH
@@ -53,6 +66,7 @@ sequence 2
 #8: SundmanCoastPhase
 #9: variable (do not use)
 #10 ProbeEntryPhase
+#11 ControlLawThrustPhase
 phase_type 4
 #journey arrival type
 #0: insertion into parking orbit (use chemical Isp)
@@ -67,6 +81,8 @@ arrival_type 2
 #Which bodies are used for third-body perturbation?
 #Expressed as indices in the Universe file
 perturbation_bodies
+#STK .grv style gravity model file
+central_body_gravity_file C:/emtg/testatron/universe/gravity_files/DoesNotExist.grv
 
 #Maneuver constraint code
 #Works for absolute and relative epochs and also magnitudes
@@ -87,507 +103,507 @@ END_PHASE_DISTANCE_CONSTRAINT_BLOCK
 
 #trial decision vector
 BEGIN_TRIALX
-p0PSBIEphemerisPeggedLaunchDirectInsertion: event left state epoch ,54576.505862956619239
+p0PSBIEphemerisPeggedLaunchDirectInsertion: event left state epoch ,54596.837308901493088
 p0PSBIEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote ,0
 p0PSBIEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote ,-44.771511323282183525
 p0PSBIEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote ,-1.570796326794896558
-p0PSBI: phase flight time ,493.19069233826320442
-p0PSBIEphemerisPeggedFlybyIn: event left state mass ,459.14539802793711942
-p0PSBIEphemerisPeggedFlybyIn: V_infinity_x ,-3.2727989289549768159
-p0PSBIEphemerisPeggedFlybyIn: V_infinity_y ,-4.1564429110878293727
-p0PSBIEphemerisPeggedFlybyIn: V_infinity_z ,-4.3086051075773710295
-p0PSBI: virtual chemical fuel ,9.9787999949000000591e-10
-p0PSBI: virtual electric propellant ,66.05460197155512958
-p0PSBI_Step0: left state r ,150318578.39247429371
-p0PSBI_Step0: left state RA ,3.6399227921318519918
-p0PSBI_Step0: left state DEC ,-0.20431412747389154916
-p0PSBI_Step0: left state v ,29.628466576394838938
-p0PSBI_Step0: left state vRA ,5.2695678554130829241
-p0PSBI_Step0: left state vDEC ,-0.35256962339915531857
-p0PSBI_Step0: left state mass ,525.20000000000004547
+p0PSBI: phase flight time ,487.20368657605695262
+p0PSBIEphemerisPeggedFlybyIn: event left state mass ,462.85514994593097526
+p0PSBIEphemerisPeggedFlybyIn: V_infinity_x ,-1.3394926315197288602
+p0PSBIEphemerisPeggedFlybyIn: V_infinity_y ,-3.3348669047807533161
+p0PSBIEphemerisPeggedFlybyIn: V_infinity_z ,-4.3206270403878583863
+p0PSBI: virtual chemical fuel ,5.2520000000000003201e-11
+p0PSBI: virtual electric propellant ,62.344850054217978652
+p0PSBI_Step0: left state r ,151096118.64052343369
+p0PSBI_Step0: left state RA ,3.9788488597754358977
+p0PSBI_Step0: left state DEC ,-0.31154451137147853856
+p0PSBI_Step0: left state v ,29.492234399041826975
+p0PSBI_Step0: left state vRA ,5.6213371226912585144
+p0PSBI_Step0: left state vDEC ,-0.26035464656242979231
+p0PSBI_Step0: left state mass ,525.20000000002266916
 p0PSBI_Step0: virtual chemical fuel ,5.2520000000000003201e-11
-p0PSBI_Step0: virtual electric propellant ,0
-p0PSBI_Step0: substep0 u_x ,-0.016466613498862359144
-p0PSBI_Step0: substep0 u_y ,0.0062351360983812220695
-p0PSBI_Step0: substep0 u_z ,0.0094897862831984092225
-p0PSBI_Step1: left state r ,151223162.28616729379
-p0PSBI_Step1: left state RA ,4.052922171673749574
-p0PSBI_Step1: left state DEC ,-0.33006518109754479084
-p0PSBI_Step1: left state v ,29.442822339564692413
-p0PSBI_Step1: left state vRA ,5.693053277628791875
-p0PSBI_Step1: left state vDEC ,-0.23662920237676488
-p0PSBI_Step1: left state mass ,525.06524326935186764
-p0PSBI_Step1: virtual chemical fuel ,1.050400000000000064e-10
-p0PSBI_Step1: virtual electric propellant ,0.13475673064828516678
-p0PSBI_Step1: substep0 u_x ,-0.96985418819081370412
-p0PSBI_Step1: substep0 u_y ,0.027306628544606414977
-p0PSBI_Step1: substep0 u_z ,0.24215119708173893365
-p0PSBI_Step2: left state r ,151844566.39703887701
-p0PSBI_Step2: left state RA ,4.486535322266171022
-p0PSBI_Step2: left state DEC ,-0.39914902239795080341
-p0PSBI_Step2: left state v ,28.9660701993313765
-p0PSBI_Step2: left state vRA ,-0.19670461290285246037
-p0PSBI_Step2: left state vDEC ,-0.081510907110299513079
-p0PSBI_Step2: left state mass ,518.32809409504648102
-p0PSBI_Step2: virtual chemical fuel ,1.5755999999999999668e-10
-p0PSBI_Step2: virtual electric propellant ,6.8719059049536781458
-p0PSBI_Step2: substep0 u_x ,-0.96857893574556797045
-p0PSBI_Step2: substep0 u_y ,-0.24774453177734412357
-p0PSBI_Step2: substep0 u_z ,0.021851618168782893648
-p0PSBI_Step3: left state r ,151632742.37508973479
-p0PSBI_Step3: left state RA ,4.9254040603056949976
-p0PSBI_Step3: left state DEC ,-0.39880803356545890814
-p0PSBI_Step3: left state v ,28.637432359438385276
-p0PSBI_Step3: left state vRA ,0.19206529079181322572
-p0PSBI_Step3: left state vDEC ,0.086769315249028977632
-p0PSBI_Step3: left state mass ,511.59094492090582662
-p0PSBI_Step3: virtual chemical fuel ,2.100800000000000128e-10
-p0PSBI_Step3: virtual electric propellant ,13.609055079094211749
-p0PSBI_Step3: substep0 u_x ,-0.85082714724555186248
-p0PSBI_Step3: substep0 u_y ,-0.49659110213293156111
-p0PSBI_Step3: substep0 u_z ,-0.17172781796656921838
-p0PSBI_Step4: left state r ,149936215.87955355644
-p0PSBI_Step4: left state RA ,5.3516961230144453054
-p0PSBI_Step4: left state DEC ,-0.33124199664564168977
-p0PSBI_Step4: left state v ,28.598734934729847623
-p0PSBI_Step4: left state vRA ,0.60095489829799930703
-p0PSBI_Step4: left state vDEC ,0.24381048541537708729
-p0PSBI_Step4: left state mass ,504.85379574676522907
-p0PSBI_Step4: virtual chemical fuel ,2.6259999576999997576e-10
-p0PSBI_Step4: virtual electric propellant ,20.346204253234745352
-p0PSBI_Step4: substep0 u_x ,-0.6358766574874890054
-p0PSBI_Step4: substep0 u_y ,-0.69721928975615432567
-p0PSBI_Step4: substep0 u_z ,-0.33097755082922764025
-p0PSBI_Step5: left state r ,146274828.69762817025
-p0PSBI_Step5: left state RA ,5.7605775443355291543
-p0PSBI_Step5: left state DEC ,-0.20834940491664610818
-p0PSBI_Step5: left state v ,28.975332230403196832
-p0PSBI_Step5: left state vRA ,1.0527322907335019408
-p0PSBI_Step5: left state vDEC ,0.36126511061854671425
-p0PSBI_Step5: left state mass ,498.11664657262480205
-p0PSBI_Step5: virtual chemical fuel ,3.2952602151000001172e-10
-p0PSBI_Step5: virtual electric propellant ,27.083353427375293165
-p0PSBI_Step5: substep0 u_x ,-0.3429315899932624534
-p0PSBI_Step5: substep0 u_y ,-0.82549857794992531623
-p0PSBI_Step5: substep0 u_z ,-0.44827449519682627255
-p0PSBI_Step6: left state r ,140417253.41135251522
-p0PSBI_Step6: left state RA ,-0.11632993329465435295
-p0PSBI_Step6: left state DEC ,-0.045501772041817378778
-p0PSBI_Step6: left state v ,29.866713740347460515
-p0PSBI_Step6: left state vRA ,1.5544895123786197644
-p0PSBI_Step6: left state vDEC ,0.40682364199013676398
-p0PSBI_Step6: left state mass ,491.37949739848431818
-p0PSBI_Step6: virtual chemical fuel ,3.6763999555000000206e-10
-p0PSBI_Step6: virtual electric propellant ,33.820502601515840979
-p0PSBI_Step6: substep0 u_x ,0.0017697425407310340972
-p0PSBI_Step6: substep0 u_y ,-0.85712461617758339827
-p0PSBI_Step6: substep0 u_z ,-0.51510606713683448898
-p0PSBI_Step7: left state r ,132498229.70511984825
-p0PSBI_Step7: left state RA ,0.32052488683771684919
-p0PSBI_Step7: left state DEC ,0.13864896399409554206
-p0PSBI_Step7: left state v ,31.32311031487687103
-p0PSBI_Step7: left state vRA ,2.0863044394446461638
-p0PSBI_Step7: left state vDEC ,0.35498188388247342573
-p0PSBI_Step7: left state mass ,484.64234822417881787
-p0PSBI_Step7: virtual chemical fuel ,4.2016000267000002489e-10
-p0PSBI_Step7: virtual electric propellant ,40.557651775656403004
-p0PSBI_Step7: substep0 u_x ,0.35551280498744319836
-p0PSBI_Step7: substep0 u_y ,-0.77416872494333022203
-p0PSBI_Step7: substep0 u_z ,-0.52371120966954354259
-p0PSBI_Step8: left state r ,123223965.3107291013
-p0PSBI_Step8: left state RA ,0.83882969909908311479
-p0PSBI_Step8: left state DEC ,0.31092224038058957625
-p0PSBI_Step8: left state v ,33.281497959084603622
-p0PSBI_Step8: left state vRA ,2.621899821038386591
-p0PSBI_Step8: left state vDEC ,0.20361745868238756429
-p0PSBI_Step8: left state mass ,477.90519904995585421
-p0PSBI_Step8: virtual chemical fuel ,4.7268000979000004771e-10
-p0PSBI_Step8: virtual electric propellant ,47.294800949796943712
-p0PSBI_Step8: substep0 u_x ,0.017975628074578642313
-p0PSBI_Step8: substep0 u_y ,-0.016051687946638359961
-p0PSBI_Step8: substep0 u_z ,-0.01291201119188412072
-p0PSBI_Step9: left state r ,114442619.01417572796
-p0PSBI_Step9: left state RA ,1.4903785132725069218
-p0PSBI_Step9: left state DEC ,0.40235863748148736896
-p0PSBI_Step9: left state v ,35.669149467164849909
-p0PSBI_Step9: left state vRA ,3.1612271683585433379
-p0PSBI_Step9: left state vDEC ,-0.014569735678996664774
-p0PSBI_Step9: left state mass ,477.72100239457984117
-p0PSBI_Step9: virtual chemical fuel ,5.3960603456999995903e-10
-p0PSBI_Step9: virtual electric propellant ,47.478997605170768281
-p0PSBI_Step9: substep0 u_x ,5.5003839418699095856e-06
-p0PSBI_Step9: substep0 u_y ,-8.5145533154085095132e-06
-p0PSBI_Step9: substep0 u_z ,-5.1711530767439797099e-06
-p0PSBI_Step10: left state r ,109585154.24184823036
-p0PSBI_Step10: left state RA ,2.2320337117127593274
-p0PSBI_Step10: left state DEC ,0.32124039554076788683
-p0PSBI_Step10: left state v ,37.082240772576071208
-p0PSBI_Step10: left state vRA ,3.7455686719462910617
-p0PSBI_Step10: left state vDEC ,-0.24243161249202316299
-p0PSBI_Step10: left state mass ,477.72100239474116279
-p0PSBI_Step10: virtual chemical fuel ,5.7772000527999998397e-10
-p0PSBI_Step10: virtual electric propellant ,47.478997605009347183
-p0PSBI_Step10: substep0 u_x ,1.8723359807015799448e-06
-p0PSBI_Step10: substep0 u_y ,-1.1648008508835499809e-06
-p0PSBI_Step10: substep0 u_z ,1.9206339554322899485e-06
-p0PSBI_Step11: left state r ,111156415.89241357148
-p0PSBI_Step11: left state RA ,2.9264537682643130267
-p0PSBI_Step11: left state DEC ,0.084781210216303692917
-p0PSBI_Step11: left state v ,36.617685763856783865
-p0PSBI_Step11: left state vRA ,4.3958033260681794729
-p0PSBI_Step11: left state vDEC ,-0.38669199585786273587
-p0PSBI_Step11: left state mass ,477.7210023949099309
-p0PSBI_Step11: virtual chemical fuel ,6.4464603457000004298e-10
-p0PSBI_Step11: virtual electric propellant ,47.478997604840621705
-p0PSBI_Step11: substep0 u_x ,-1.0437673259033999917e-07
-p0PSBI_Step11: substep0 u_y ,-1.0766241665960409353e-05
-p0PSBI_Step11: substep0 u_z ,9.7257783204795992015e-07
-p0PSBI_Step12: left state r ,118294941.55295348167
-p0PSBI_Step12: left state RA ,3.5401097937468435362
-p0PSBI_Step12: left state DEC ,-0.16955695107175161596
-p0PSBI_Step12: left state v ,34.594219411733234892
-p0PSBI_Step12: left state vRA ,5.0479273659415468956
-p0PSBI_Step12: left state vDEC ,-0.38105193704525675003
-p0PSBI_Step12: left state mass ,477.7210023950446498
-p0PSBI_Step12: virtual chemical fuel ,6.8276001039000001562e-10
-p0PSBI_Step12: virtual electric propellant ,47.478997604705938329
-p0PSBI_Step12: substep0 u_x ,-2.5235131784206998873e-06
-p0PSBI_Step12: substep0 u_y ,-2.6601607578946601394e-06
-p0PSBI_Step12: substep0 u_z ,6.6701321519424496668e-06
-p0PSBI_Step13: left state r ,127689043.649304986
-p0PSBI_Step13: left state RA ,4.1071165236035405144
-p0PSBI_Step13: left state DEC ,-0.34043148135311862568
-p0PSBI_Step13: left state v ,32.11987817340627771
-p0PSBI_Step13: left state vRA ,5.6189676015874354675
-p0PSBI_Step13: left state vDEC ,-0.25249830329095246384
-p0PSBI_Step13: left state mass ,477.72100239519954812
-p0PSBI_Step13: virtual chemical fuel ,7.3528000504999995564e-10
-p0PSBI_Step13: virtual electric propellant ,47.478997604551040013
-p0PSBI_Step13: substep0 u_x ,-8.4859129783065901395e-06
-p0PSBI_Step13: substep0 u_y ,4.4517802777479999887e-08
-p0PSBI_Step13: substep0 u_z ,3.3922890676496598192e-06
-p0PSBI_Step14: left state r ,136234006.12207823992
-p0PSBI_Step14: left state RA ,4.6365412189593691039
-p0PSBI_Step14: left state DEC ,-0.40246336467683407889
-p0PSBI_Step14: left state v ,30.021756535990260062
-p0PSBI_Step14: left state vRA ,-0.17320200688205389383
-p0PSBI_Step14: left state vDEC ,-0.067286009793249945687
-p0PSBI_Step14: left state mass ,477.72097252775085963
-p0PSBI_Step14: virtual chemical fuel ,7.8780000439000003148e-10
-p0PSBI_Step14: virtual electric propellant ,47.479027471999650345
-p0PSBI_Step14: substep0 u_x ,-1.8443013594771070438e-05
-p0PSBI_Step14: substep0 u_y ,-1.1719830315559679525e-05
-p0PSBI_Step14: substep0 u_z ,-4.2725925992748201739e-06
-p0PSBI_Step15: left state r ,142031894.6222923696
-p0PSBI_Step15: left state RA ,5.1171949411024790777
-p0PSBI_Step15: left state DEC ,-0.37146371561390245652
-p0PSBI_Step15: left state v ,28.66659609893357441
-p0PSBI_Step15: left state vRA ,0.28382845536946277321
-p0PSBI_Step15: left state vDEC ,0.12472238892990361592
-p0PSBI_Step15: left state mass ,477.7208226644091269
-p0PSBI_Step15: virtual chemical fuel ,8.8353808159000001727e-10
-p0PSBI_Step15: virtual electric propellant ,47.479177335205129395
-p0PSBI_Step15: substep0 u_x ,-0.55993193926612316869
-p0PSBI_Step15: substep0 u_y ,-0.47278621913358076512
-p0PSBI_Step15: substep0 u_z ,-0.19013273131957431072
-p0PSBI_Step16: left state r ,144146857.6841853261
-p0PSBI_Step16: left state RA ,5.5470938463738690416
-p0PSBI_Step16: left state DEC ,-0.27456538643516581466
-p0PSBI_Step16: left state v ,27.873181123983290064
-p0PSBI_Step16: left state vRA ,0.7514147166045823667
-p0PSBI_Step16: left state vDEC ,0.28767964403742851687
-p0PSBI_Step16: left state mass ,472.62012424443724967
-p0PSBI_Step16: virtual chemical fuel ,8.9284000439000001203e-10
-p0PSBI_Step16: virtual electric propellant ,52.579875755114585445
-p0PSBI_Step16: substep0 u_x ,-0.53813875897454932495
-p0PSBI_Step16: substep0 u_y ,-0.73111941148282921787
-p0PSBI_Step16: substep0 u_z ,-0.41936986862471059556
-p0PSBI_Step17: left state r ,141802158.60254999995
-p0PSBI_Step17: left state RA ,-0.33826406063105096678
-p0PSBI_Step17: left state DEC ,-0.13504315123351684491
-p0PSBI_Step17: left state v ,28.00163189619063786
-p0PSBI_Step17: left state vRA ,1.2653577455921016792
-p0PSBI_Step17: left state vDEC ,0.38663009231177980496
-p0PSBI_Step17: left state mass ,465.88297507021439969
-p0PSBI_Step17: virtual chemical fuel ,9.4536000261000002002e-10
-p0PSBI_Step17: virtual electric propellant ,59.317024929255076415
-p0PSBI_Step17: substep0 u_x ,-0.30962582773197544483
-p0PSBI_Step17: substep0 u_y ,-0.77756185915489761662
-p0PSBI_Step17: substep0 u_z ,-0.54729279621916182563
-p0PSBI_Step18: left state r ,134406540.17141199112
-p0PSBI_Step18: left state RA ,0.065599557583784218195
-p0PSBI_Step18: left state DEC ,0.032649144243719341318
-p0PSBI_Step18: left state v ,29.398020413090598879
-p0PSBI_Step18: left state vRA ,1.8234393366866754604
-p0PSBI_Step18: left state vDEC ,0.38651690986243281145
-p0PSBI_Step18: left state mass ,459.14582589599160656
-p0PSBI_Step18: virtual chemical fuel ,9.978800026099999586e-10
-p0PSBI_Step18: virtual electric propellant ,66.05417410339563844
-p0PSBI_Step18: substep0 u_x ,-6.2968216094638796451e-06
-p0PSBI_Step18: substep0 u_y ,-3.4019397254780869844e-05
-p0PSBI_Step18: substep0 u_z ,-2.4079850440505978781e-05
-p0PSBI_Step19: left state r ,122247688.89772710204
-p0PSBI_Step19: left state RA ,0.53826514141072578923
-p0PSBI_Step19: left state DEC ,0.21699782627935837453
-p0PSBI_Step19: left state v ,32.567730005524190062
-p0PSBI_Step19: left state vRA ,2.388902412987839341
-p0PSBI_Step19: left state vDEC ,0.27722870780078068265
-p0PSBI_Step19: left state mass ,459.14554250961037951
-p0PSBI_Step19: virtual chemical fuel ,9.4535999949000006734e-10
-p0PSBI_Step19: virtual electric propellant ,66.05445748977676601
-p0PSBI_Step19: substep0 u_x ,-1.1147607442918429672e-05
-p0PSBI_Step19: substep0 u_y ,-8.1260306459274306577e-06
-p0PSBI_Step19: substep0 u_z ,-1.8586887845506439021e-05
-p1PSBIEphemerisPeggedUnpoweredFlyby: V_infinity_x ,-4.4206751838904274621
-p1PSBIEphemerisPeggedUnpoweredFlyby: V_infinity_y ,-4.6413513208044072655
-p1PSBIEphemerisPeggedUnpoweredFlyby: V_infinity_z ,-2.3381183259781863626
-p1PSBI: phase flight time ,506.80930766173673874
-p1PSBIEphemerisPeggedIntercept: event left state mass ,422.05768497123756333
-p1PSBIEphemerisPeggedIntercept: V_infinity_x ,-3.0102801345777869813
-p1PSBIEphemerisPeggedIntercept: V_infinity_y ,-5.0850732143501744531
-p1PSBIEphemerisPeggedIntercept: V_infinity_z ,-2.7878476030662611151
-p1PSBI: virtual chemical fuel ,-1.1434192133000000258e-10
-p1PSBI: virtual electric propellant ,37.087713059241757207
-p1PSBI_Step0: left state r ,107862903.56159004569
-p1PSBI_Step0: left state RA ,1.1782105145360191045
-p1PSBI_Step0: left state DEC ,0.37314033093195941859
-p1PSBI_Step0: left state v ,37.976432514835330778
-p1PSBI_Step0: left state vRA ,2.9862805465558786011
-p1PSBI_Step0: left state vDEC ,0.11752698405815920069
-p1PSBI_Step0: left state mass ,459.14539802798964274
+p0PSBI_Step0: virtual electric propellant ,3.0117848700000000613e-12
+p0PSBI_Step0: substep0 u_x ,-0.50805151705554196795
+p0PSBI_Step0: substep0 u_y ,0.094397208484900740899
+p0PSBI_Step0: substep0 u_z ,0.10875076945950046259
+p0PSBI_Step1: left state r ,151764241.0042180717
+p0PSBI_Step1: left state RA ,4.4049823254142808082
+p0PSBI_Step1: left state DEC ,-0.39166625352848205566
+p0PSBI_Step1: left state v ,29.170225811135395588
+p0PSBI_Step1: left state vRA ,6.0152366679415472106
+p0PSBI_Step1: left state vDEC ,-0.11340006577502848018
+p0PSBI_Step1: left state mass ,521.68573662280402914
+p0PSBI_Step1: virtual chemical fuel ,0
+p0PSBI_Step1: virtual electric propellant ,3.51426337723613047
+p0PSBI_Step1: substep0 u_x ,-0.96833794801783934503
+p0PSBI_Step1: substep0 u_y ,-0.21038924349763188371
+p0PSBI_Step1: substep0 u_z ,0.13432006324971279554
+p0PSBI_Step2: left state r ,151851395.88876190782
+p0PSBI_Step2: left state RA ,4.8408592219303550053
+p0PSBI_Step2: left state DEC ,-0.40504769265866769068
+p0PSBI_Step2: left state v ,28.794226675340240718
+p0PSBI_Step2: left state vRA ,0.1132403412699574119
+p0PSBI_Step2: left state vDEC ,0.052578698276551705248
+p0PSBI_Step2: left state mass ,515.03045812041273166
+p0PSBI_Step2: virtual chemical fuel ,0
+p0PSBI_Step2: virtual electric propellant ,10.169541879640142668
+p0PSBI_Step2: substep0 u_x ,-0.85389443248037322221
+p0PSBI_Step2: substep0 u_y ,-0.51927139566756319589
+p0PSBI_Step2: substep0 u_z ,0.035059150828512297693
+p0PSBI_Step3: left state r ,150798570.3438359201
+p0PSBI_Step3: left state RA ,5.2662900611418059782
+p0PSBI_Step3: left state DEC ,-0.3503093702785207153
+p0PSBI_Step3: left state v ,28.641884195743013919
+p0PSBI_Step3: left state vRA ,0.50755729934630977596
+p0PSBI_Step3: left state vDEC ,0.21382368424118780581
+p0PSBI_Step3: left state mass ,508.37509706385276331
+p0PSBI_Step3: virtual chemical fuel ,0
+p0PSBI_Step3: virtual electric propellant ,16.824902936206964199
+p0PSBI_Step3: substep0 u_x ,-0.65145167125111447248
+p0PSBI_Step3: substep0 u_y ,-0.75541493837376527676
+p0PSBI_Step3: substep0 u_z ,-0.070511742960333245733
+p0PSBI_Step4: left state r ,148103623.59575438499
+p0PSBI_Step4: left state RA ,5.6716410604393026063
+p0PSBI_Step4: left state DEC ,-0.23803277416178802994
+p0PSBI_Step4: left state v ,28.825833151644090435
+p0PSBI_Step4: left state vRA ,0.93834670925479102266
+p0PSBI_Step4: left state vDEC ,0.34369475880382793775
+p0PSBI_Step4: left state mass ,501.71973262559441764
+p0PSBI_Step4: virtual chemical fuel ,0
+p0PSBI_Step4: virtual electric propellant ,23.480267374474212971
+p0PSBI_Step4: substep0 u_x ,-0.37516432513476682953
+p0PSBI_Step4: substep0 u_y ,-0.91149142530421933817
+p0PSBI_Step4: substep0 u_z ,-0.16866869597007505543
+p0PSBI_Step5: left state r ,143460560.58194285631
+p0PSBI_Step5: left state RA ,6.0660518434471129012
+p0PSBI_Step5: left state DEC ,-0.083635057661434641929
+p0PSBI_Step5: left state v ,29.43969000159145466
+p0PSBI_Step5: left state vRA ,1.4175113820509359641
+p0PSBI_Step5: left state vDEC ,0.41134307395829949883
+p0PSBI_Step5: left state mass ,495.06436823150181681
+p0PSBI_Step5: virtual chemical fuel ,0
+p0PSBI_Step5: virtual electric propellant ,30.135631768572839206
+p0PSBI_Step5: substep0 u_x ,-0.038976091143611446554
+p0PSBI_Step5: substep0 u_y ,-0.96773103483895339672
+p0PSBI_Step5: substep0 u_z ,-0.24897156345471216365
+p0PSBI_Step6: left state r ,136834316.91992622614
+p0PSBI_Step6: left state RA ,0.19285798644483520548
+p0PSBI_Step6: left state DEC ,0.095463615831890002994
+p0PSBI_Step6: left state v ,30.54583368387239517
+p0PSBI_Step6: left state vRA ,1.9314306220868111552
+p0PSBI_Step6: left state vDEC ,0.38899367132114903711
+p0PSBI_Step6: left state mass ,488.40900374616938961
+p0PSBI_Step6: virtual chemical fuel ,0
+p0PSBI_Step6: virtual electric propellant ,36.790996253910648761
+p0PSBI_Step6: substep0 u_x ,0.32730638401757539135
+p0PSBI_Step6: substep0 u_y ,-0.89430058795814115769
+p0PSBI_Step6: substep0 u_z ,-0.305147934098046969
+p0PSBI_Step7: left state r ,128589817.93823517859
+p0PSBI_Step7: left state RA ,0.66071144685986027412
+p0PSBI_Step7: left state DEC ,0.27351686320768830996
+p0PSBI_Step7: left state v ,32.141400886224779754
+p0PSBI_Step7: left state vRA ,2.4506478082599265633
+p0PSBI_Step7: left state vDEC ,0.26772629133278513791
+p0PSBI_Step7: left state mass ,481.75363994627849706
+p0PSBI_Step7: virtual chemical fuel ,0
+p0PSBI_Step7: virtual electric propellant ,43.446360053808874113
+p0PSBI_Step7: substep0 u_x ,0.66714688692558787864
+p0PSBI_Step7: substep0 u_y ,-0.66110072883637194252
+p0PSBI_Step7: substep0 u_z ,-0.34311017289201428682
+p0PSBI_Step8: left state r ,119693485.45906624198
+p0PSBI_Step8: left state RA ,1.2367880107474320539
+p0PSBI_Step8: left state DEC ,0.39947649870239754222
+p0PSBI_Step8: left state v ,34.079425990472749675
+p0PSBI_Step8: left state vRA ,2.9683002599384913367
+p0PSBI_Step8: left state vDEC ,0.065162973582189920307
+p0PSBI_Step8: left state mass ,475.09877476854467204
+p0PSBI_Step8: virtual chemical fuel ,0
+p0PSBI_Step8: virtual electric propellant ,50.101225231548326633
+p0PSBI_Step8: substep0 u_x ,9.9452359987761695947e-05
+p0PSBI_Step8: substep0 u_y ,-3.350052597517195319e-05
+p0PSBI_Step8: substep0 u_z ,-4.7618010357686202383e-05
+p0PSBI_Step9: left state r ,112183640.47932684422
+p0PSBI_Step9: left state RA ,1.9293196216172070478
+p0PSBI_Step9: left state DEC ,0.38980581447324880173
+p0PSBI_Step9: left state v ,36.19187595810745961
+p0PSBI_Step9: left state vRA ,3.5120996754130366924
+p0PSBI_Step9: left state vDEC ,-0.1692777222782133606
+p0PSBI_Step9: left state mass ,475.09821634651615341
+p0PSBI_Step9: virtual chemical fuel ,0
+p0PSBI_Step9: virtual electric propellant ,50.101783653584902822
+p0PSBI_Step9: substep0 u_x ,4.9724243195159452239e-05
+p0PSBI_Step9: substep0 u_y ,1.064814922679956968e-05
+p0PSBI_Step9: substep0 u_z ,-3.2607053552125009332e-05
+p0PSBI_Step10: left state r ,109251309.92470544577
+p0PSBI_Step10: left state RA ,2.6382200848803165627
+p0PSBI_Step10: left state DEC ,0.20103046742308117167
+p0PSBI_Step10: left state v ,37.058797275708840857
+p0PSBI_Step10: left state vRA ,4.1303548478716258785
+p0PSBI_Step10: left state vDEC ,-0.35984651252660881937
+p0PSBI_Step10: left state mass ,475.09821899058181316
+p0PSBI_Step10: virtual chemical fuel ,0
+p0PSBI_Step10: virtual electric propellant ,50.101781009527009303
+p0PSBI_Step10: substep0 u_x ,2.5667905200865700431e-05
+p0PSBI_Step10: substep0 u_y ,2.1916828491397311041e-05
+p0PSBI_Step10: substep0 u_z ,-4.3175139001205842249e-05
+p0PSBI_Step11: left state r ,112430513.25772246718
+p0PSBI_Step11: left state RA ,3.2850587199127261329
+p0PSBI_Step11: left state DEC ,-0.07436929976710970891
+p0PSBI_Step11: left state v ,36.120016549007672779
+p0PSBI_Step11: left state vRA ,4.8034974843404008027
+p0PSBI_Step11: left state vDEC ,-0.41458290953776710808
+p0PSBI_Step11: left state mass ,475.09822083687561189
+p0PSBI_Step11: virtual chemical fuel ,0
+p0PSBI_Step11: virtual electric propellant ,50.10177916324055758
+p0PSBI_Step11: substep0 u_x ,-3.1976481862150407665e-05
+p0PSBI_Step11: substep0 u_y ,1.6382899394207228738e-05
+p0PSBI_Step11: substep0 u_z ,-3.4869556261640788364e-05
+p0PSBI_Step12: left state r ,120065895.19832739234
+p0PSBI_Step12: left state RA ,3.8896559661142049436
+p0PSBI_Step12: left state DEC ,-0.3002261060969919626
+p0PSBI_Step12: left state v ,33.978301006504700865
+p0PSBI_Step12: left state vRA ,5.4264339972381385735
+p0PSBI_Step12: left state vDEC ,-0.31636072445362373173
+p0PSBI_Step12: left state mass ,475.09822289214787361
+p0PSBI_Step12: virtual chemical fuel ,0
+p0PSBI_Step12: virtual electric propellant ,50.101777107973077818
+p0PSBI_Step12: substep0 u_x ,-4.3427378112248497973e-05
+p0PSBI_Step12: substep0 u_y ,-1.2276868591620799156e-05
+p0PSBI_Step12: substep0 u_z ,8.670145806632950178e-06
+p0PSBI_Step13: left state r ,128945774.03755965829
+p0PSBI_Step13: left state RA ,4.4662743287450261676
+p0PSBI_Step13: left state DEC ,-0.40808672219413377746
+p0PSBI_Step13: left state v ,31.658907698934910968
+p0PSBI_Step13: left state vRA ,5.9536758676489220932
+p0PSBI_Step13: left state vDEC ,-0.13187712075026425396
+p0PSBI_Step13: left state mass ,475.09816829583616027
+p0PSBI_Step13: virtual chemical fuel ,0
+p0PSBI_Step13: virtual electric propellant ,50.101831704289992331
+p0PSBI_Step13: substep0 u_x ,-3.8862013026608188682e-05
+p0PSBI_Step13: substep0 u_y ,-2.4187953456156211564e-05
+p0PSBI_Step13: substep0 u_z ,1.0210479856054279242e-05
+p0PSBI_Step14: left state r ,136435748.27179315686
+p0PSBI_Step14: left state RA ,4.9923827983020210297
+p0PSBI_Step14: left state DEC ,-0.39982304210119257171
+p0PSBI_Step14: left state v ,29.820853750960701234
+p0PSBI_Step14: left state vRA ,0.14094355229613242386
+p0PSBI_Step14: left state vDEC ,0.073273564687376335769
+p0PSBI_Step14: left state mass ,475.09815063380222
+p0PSBI_Step14: virtual chemical fuel ,0
+p0PSBI_Step14: virtual electric propellant ,50.101849366328039537
+p0PSBI_Step14: substep0 u_x ,-0.00024330883293788296839
+p0PSBI_Step14: substep0 u_y ,-0.00025213249577349383657
+p0PSBI_Step14: substep0 u_z ,5.2521792887727507422e-05
+p0PSBI_Step15: left state r ,141003162.94050878286
+p0PSBI_Step15: left state RA ,5.4534032161198524591
+p0PSBI_Step15: left state DEC ,-0.30896105413799102024
+p0PSBI_Step15: left state v ,28.744727328982602188
+p0PSBI_Step15: left state vRA ,0.60648881080663841203
+p0PSBI_Step15: left state vDEC ,0.25601463351167907945
+p0PSBI_Step15: left state mass ,475.09599716668157043
+p0PSBI_Step15: virtual chemical fuel ,0
+p0PSBI_Step15: virtual electric propellant ,50.104002833453208154
+p0PSBI_Step15: substep0 u_x ,-0.41974854902603930817
+p0PSBI_Step15: substep0 u_y ,-0.72459661566267130617
+p0PSBI_Step15: substep0 u_z ,0.033729584376915644484
+p0PSBI_Step16: left state r ,141908241.45849171281
+p0PSBI_Step16: left state RA ,5.8627187344318514306
+p0PSBI_Step16: left state DEC ,-0.16779709975748002826
+p0PSBI_Step16: left state v ,28.218447189873785419
+p0PSBI_Step16: left state vRA ,1.103088762931673017
+p0PSBI_Step16: left state vDEC ,0.38568313407880694399
+p0PSBI_Step16: left state mass ,469.51837229493827408
+p0PSBI_Step16: virtual chemical fuel ,0
+p0PSBI_Step16: virtual electric propellant ,55.681627705200241962
+p0PSBI_Step16: substep0 u_x ,-0.26958378115563474964
+p0PSBI_Step16: substep0 u_y ,-0.95923556278045518653
+p0PSBI_Step16: substep0 u_z ,-0.066528435977889044395
+p0PSBI_Step17: left state r ,138502894.37746375799
+p0PSBI_Step17: left state RA ,-0.030737177790477687722
+p0PSBI_Step17: left state DEC ,0.001944266509686265465
+p0PSBI_Step17: left state v ,28.637830941694339515
+p0PSBI_Step17: left state vRA ,1.6458100036256126941
+p0PSBI_Step17: left state vDEC ,0.42359448302357094462
+p0PSBI_Step17: left state mass ,462.87231925768048768
+p0PSBI_Step17: virtual chemical fuel ,0
+p0PSBI_Step17: virtual electric propellant ,62.327680742461410546
+p0PSBI_Step17: substep0 u_x ,-5.745158568815079259e-05
+p0PSBI_Step17: substep0 u_y ,-0.002518073093258688111
+p0PSBI_Step17: substep0 u_z ,-0.00061923249691053783295
+p0PSBI_Step18: left state r ,130576324.50748440623
+p0PSBI_Step18: left state RA ,0.39055079063765418823
+p0PSBI_Step18: left state DEC ,0.1851371694243728605
+p0PSBI_Step18: left state v ,30.600632409674631162
+p0PSBI_Step18: left state vRA ,2.1967805864529843518
+p0PSBI_Step18: left state vDEC ,0.34386795416631343869
+p0PSBI_Step18: left state mass ,462.85520896789290646
+p0PSBI_Step18: virtual chemical fuel ,5.2520000000000003201e-11
+p0PSBI_Step18: virtual electric propellant ,62.344791032251279717
+p0PSBI_Step18: substep0 u_x ,8.1719824960302406568e-06
+p0PSBI_Step18: substep0 u_y ,-4.2768848780738721871e-05
+p0PSBI_Step18: substep0 u_z ,-1.6276868270548309261e-05
+p0PSBI_Step19: left state r ,119319519.94072073698
+p0PSBI_Step19: left state RA ,0.91500659248350046937
+p0PSBI_Step19: left state DEC ,0.35350624353287241064
+p0PSBI_Step19: left state v ,33.588207983629033038
+p0PSBI_Step19: left state vRA ,2.7347268587094504255
+p0PSBI_Step19: left state vDEC ,0.16335621884326556597
+p0PSBI_Step19: left state mass ,462.85514962597636668
+p0PSBI_Step19: virtual chemical fuel ,0
+p0PSBI_Step19: virtual electric propellant ,62.344850374170327711
+p0PSBI_Step19: substep0 u_x ,4.7853832230160000073e-08
+p0PSBI_Step19: substep0 u_y ,-2.6732218991631920892e-05
+p0PSBI_Step19: substep0 u_z ,-2.4817733882298579408e-05
+p1PSBIEphemerisPeggedUnpoweredFlyby: V_infinity_x ,-2.5801010805019650718
+p1PSBIEphemerisPeggedUnpoweredFlyby: V_infinity_y ,-4.2350298937196022564
+p1PSBIEphemerisPeggedUnpoweredFlyby: V_infinity_z ,-2.6440411373045549226
+p1PSBI: phase flight time ,512.79468154582036732
+p1PSBIEphemerisPeggedIntercept: event left state mass ,428.35915602165351856
+p1PSBIEphemerisPeggedIntercept: V_infinity_x ,-2.2261812620124175055
+p1PSBIEphemerisPeggedIntercept: V_infinity_y ,-4.9549552677724122418
+p1PSBIEphemerisPeggedIntercept: V_infinity_z ,-2.4893359107796513285
+p1PSBI: virtual chemical fuel ,0
+p1PSBI: virtual electric propellant ,34.495992172626294803
+p1PSBI_Step0: left state r ,107635470.89297489822
+p1PSBI_Step0: left state RA ,1.614279307355527493
+p1PSBI_Step0: left state DEC ,0.42472039504493563911
+p1PSBI_Step0: left state v ,38.273627257302244686
+p1PSBI_Step0: left state vRA ,3.311773906110275334
+p1PSBI_Step0: left state vDEC ,-0.037397133741890797864
+p1PSBI_Step0: left state mass ,462.85514994598344174
 p1PSBI_Step0: virtual chemical fuel ,5.2520000860000001758e-11
-p1PSBI_Step0: virtual electric propellant ,5.2520000000000003201e-11
-p1PSBI_Step0: substep0 u_x ,-9.2836262445272799712e-06
-p1PSBI_Step0: substep0 u_y ,-7.5820382706703898522e-06
-p1PSBI_Step0: substep0 u_z ,-3.7795263991835500574e-06
-p1PSBI_Step1: left state r ,98747308.070405334234
-p1PSBI_Step1: left state RA ,2.0941977667769862137
-p1PSBI_Step1: left state DEC ,0.3889720098178262031
-p1PSBI_Step1: left state v ,40.857905701103199192
-p1PSBI_Step1: left state vRA ,3.6260383330980694438
-p1PSBI_Step1: left state vDEC ,-0.16136064988867815373
-p1PSBI_Step1: left state mass ,459.14531830992973482
+p1PSBI_Step0: virtual electric propellant ,-1.8315475379910001312e-08
+p1PSBI_Step0: substep0 u_x ,-8.9800003341466982931e-05
+p1PSBI_Step0: substep0 u_y ,-0.00012221584546834307616
+p1PSBI_Step0: substep0 u_z ,-6.3264125031436968527e-05
+p1PSBI_Step1: left state r ,102486502.8609918952
+p1PSBI_Step1: left state RA ,2.5018829681143515131
+p1PSBI_Step1: left state DEC ,0.29229757466851036263
+p1PSBI_Step1: left state v ,39.859333246526546191
+p1PSBI_Step1: left state vRA ,3.9619330100515597337
+p1PSBI_Step1: left state vDEC ,-0.29407754983503764379
+p1PSBI_Step1: left state mass ,462.85429965929318996
 p1PSBI_Step1: virtual chemical fuel ,1.0504000082999999945e-10
-p1PSBI_Step1: virtual electric propellant ,7.9718217402725214792e-05
-p1PSBI_Step1: substep0 u_x ,-0.080419414179694115319
-p1PSBI_Step1: substep0 u_y ,-0.10915744538629268412
-p1PSBI_Step1: substep0 u_z ,-0.043675170870437818316
-p1PSBI_Step2: left state r ,104083869.58944113553
-p1PSBI_Step2: left state RA ,2.9682737887795944687
-p1PSBI_Step2: left state DEC ,0.12516420432003028118
-p1PSBI_Step2: left state v ,39.200506630172277767
-p1PSBI_Step2: left state vRA ,-1.9475290159992297845
-p1PSBI_Step2: left state vDEC ,-0.37605741152862393051
-p1PSBI_Step2: left state mass ,458.15915611262533957
+p1PSBI_Step1: virtual electric propellant ,0.00084935108574151667662
+p1PSBI_Step1: substep0 u_x ,-4.9403477967890907507e-05
+p1PSBI_Step1: substep0 u_y ,-0.0001902411717373819755
+p1PSBI_Step1: substep0 u_z ,-6.7877465688037652569e-05
+p1PSBI_Step2: left state r ,110313051.16715268791
+p1PSBI_Step2: left state RA ,3.2667364395017344236
+p1PSBI_Step2: left state DEC ,-0.01706404408545436624
+p1PSBI_Step2: left state v ,37.483694021178614264
+p1PSBI_Step2: left state vRA ,-1.6096018104425127149
+p1PSBI_Step2: left state vDEC ,-0.42208830214983095175
+p1PSBI_Step2: left state mass ,462.85316965178049031
 p1PSBI_Step2: virtual chemical fuel ,3.8113974930000000878e-11
-p1PSBI_Step2: virtual electric propellant ,0.98624191563855245768
-p1PSBI_Step2: substep0 u_x ,-9.2698798186407992941e-06
-p1PSBI_Step2: substep0 u_y ,-3.1019258964981588633e-05
-p1PSBI_Step2: substep0 u_z ,-1.1991828499091640754e-05
-p1PSBI_Step3: left state r ,119748123.49706675112
-p1PSBI_Step3: left state RA ,3.626322832250835404
-p1PSBI_Step3: left state DEC ,-0.16146800545798511983
-p1PSBI_Step3: left state v ,34.68575277265021839
-p1PSBI_Step3: left state vRA ,-1.2729976737938173414
-p1PSBI_Step3: left state vDEC ,-0.41406671882700507581
-p1PSBI_Step3: left state mass ,458.15891712091473664
+p1PSBI_Step2: virtual electric propellant ,0.0019792807967773480213
+p1PSBI_Step2: substep0 u_x ,-2.5995121658573000788e-06
+p1PSBI_Step2: substep0 u_y ,-4.4336710748327228134e-05
+p1PSBI_Step2: substep0 u_z ,-1.3291464190379189165e-05
+p1PSBI_Step3: left state r ,125598420.12155452371
+p1PSBI_Step3: left state RA ,3.8811877290719358768
+p1PSBI_Step3: left state DEC ,-0.26811915276295428257
+p1PSBI_Step3: left state v ,33.3497366671816593
+p1PSBI_Step3: left state vRA ,-0.97047192147701011322
+p1PSBI_Step3: left state vDEC ,-0.37570001289847709813
+p1PSBI_Step3: left state mass ,462.85309756643636092
 p1PSBI_Step3: virtual chemical fuel ,1.050400000000000064e-10
-p1PSBI_Step3: virtual electric propellant ,0.98648090745419747538
-p1PSBI_Step3: substep0 u_x ,1.2779591940236999068e-07
-p1PSBI_Step3: substep0 u_y ,-8.1812327370478499233e-06
-p1PSBI_Step3: substep0 u_z ,1.570681784857090027e-06
-p1PSBI_Step4: left state r ,137045305.2391628027
-p1PSBI_Step4: left state RA ,4.1522350146722182274
-p1PSBI_Step4: left state DEC ,-0.33661922743537275871
-p1PSBI_Step4: left state v ,30.386552821184825035
-p1PSBI_Step4: left state vRA ,-0.71643588017634485254
-p1PSBI_Step4: left state vDEC ,-0.31828312138213021854
-p1PSBI_Step4: left state mass ,458.15891309420851485
+p1PSBI_Step3: virtual electric propellant ,0.0020513295127615881371
+p1PSBI_Step3: substep0 u_x ,1.6953875964897949848e-05
+p1PSBI_Step3: substep0 u_y ,-6.1385216355014371459e-05
+p1PSBI_Step3: substep0 u_z ,-1.0965693174158630541e-05
+p1PSBI_Step4: left state r ,141256526.96024811268
+p1PSBI_Step4: left state RA ,4.4031851974634648172
+p1PSBI_Step4: left state DEC ,-0.39553247727497464759
+p1PSBI_Step4: left state v ,29.630252349318844551
+p1PSBI_Step4: left state vRA ,-0.45518796845701459119
+p1PSBI_Step4: left state vDEC ,-0.22963396732198404493
+p1PSBI_Step4: left state mass ,462.85288027051592508
 p1PSBI_Step4: virtual chemical fuel ,1.5755999999999999668e-10
-p1PSBI_Step4: virtual electric propellant ,0.98648493426539674012
-p1PSBI_Step4: substep0 u_x ,-2.2096043277297600835e-06
-p1PSBI_Step4: substep0 u_y ,-6.1841927363470699787e-06
-p1PSBI_Step4: substep0 u_z ,-3.1113217721090402049e-06
-p1PSBI_Step5: left state r ,151102786.01545643806
-p1PSBI_Step5: left state RA ,4.6022280059179863088
-p1PSBI_Step5: left state DEC ,-0.41131796296870271057
-p1PSBI_Step5: left state v ,27.260964418430187806
-p1PSBI_Step5: left state vRA ,-0.25659269533871764679
-p1PSBI_Step5: left state vDEC ,-0.15970665222992863619
-p1PSBI_Step5: left state mass ,458.15891309414564603
+p1PSBI_Step4: virtual electric propellant ,0.0022686255391650080211
+p1PSBI_Step4: substep0 u_x ,6.3104740151143099013e-06
+p1PSBI_Step4: substep0 u_y ,-4.4001191989440080476e-05
+p1PSBI_Step4: substep0 u_z ,1.583628693735410069e-06
+p1PSBI_Step5: left state r ,153501432.91821980476
+p1PSBI_Step5: left state RA ,4.8554602071746124636
+p1PSBI_Step5: left state DEC ,-0.42449960015312226957
+p1PSBI_Step5: left state v ,26.982606957812254933
+p1PSBI_Step5: left state vRA ,-0.018379509857442855036
+p1PSBI_Step5: left state vDEC ,-0.047774128201950816219
+p1PSBI_Step5: left state mass ,462.85281863270375879
 p1PSBI_Step5: virtual chemical fuel ,2.100800000000000128e-10
-p1PSBI_Step5: virtual electric propellant ,0.98648493443326479291
-p1PSBI_Step5: substep0 u_x ,-1.3196388974678899877e-05
-p1PSBI_Step5: substep0 u_y ,-6.6496586961228800586e-06
-p1PSBI_Step5: substep0 u_z ,-1.9294984975326599116e-06
-p1PSBI_Step6: left state r ,160061668.99558478594
-p1PSBI_Step6: left state RA ,-1.2836389674250057169
-p1PSBI_Step6: left state DEC ,-0.41478272001029847793
-p1PSBI_Step6: left state v ,25.393725317799574981
-p1PSBI_Step6: left state vRA ,0.157027875667832717
-p1PSBI_Step6: left state vDEC ,0.020170500033124483252
-p1PSBI_Step6: left state mass ,458.15884563846674382
+p1PSBI_Step5: virtual electric propellant ,0.0023302634554917909387
+p1PSBI_Step5: substep0 u_x ,-3.3442571471642417054e-05
+p1PSBI_Step5: substep0 u_y ,-4.426445725957960808e-05
+p1PSBI_Step5: substep0 u_z ,-5.1486176295689702723e-06
+p1PSBI_Step6: left state r ,160814258.76289537549
+p1PSBI_Step6: left state RA ,-1.0327046004909590238
+p1PSBI_Step6: left state DEC ,-0.3869427082855423361
+p1PSBI_Step6: left state v ,25.483913372957577081
+p1PSBI_Step6: left state vRA ,0.39286523639570347655
+p1PSBI_Step6: left state vDEC ,0.1352918339980924145
+p1PSBI_Step6: left state mass ,462.8526997553249771
 p1PSBI_Step6: virtual chemical fuel ,1.5756000266999999596e-10
-p1PSBI_Step6: virtual electric propellant ,0.98655239021727303417
-p1PSBI_Step6: substep0 u_x ,-2.160678825458007052e-05
-p1PSBI_Step6: substep0 u_y ,-1.5691695439690178659e-05
-p1PSBI_Step6: substep0 u_z ,-8.0789000386216597006e-06
-p1PSBI_Step7: left state r ,163298883.88798972964
-p1PSBI_Step7: left state RA ,-0.92318185457501300561
-p1PSBI_Step7: left state DEC ,-0.36710068183744937187
-p1PSBI_Step7: left state v ,24.737975864855027197
-p1PSBI_Step7: left state vRA ,0.56599772235982825919
-p1PSBI_Step7: left state vDEC ,0.1936964429785739128
-p1PSBI_Step7: left state mass ,458.15866868185975136
+p1PSBI_Step6: virtual electric propellant ,0.0024491185605583732851
+p1PSBI_Step6: substep0 u_x ,-5.2213796279509949727e-05
+p1PSBI_Step6: substep0 u_y ,-0.00010587469612344246883
+p1PSBI_Step6: substep0 u_z ,-3.9688869983844909939e-05
+p1PSBI_Step7: left state r ,162660406.2449375689
+p1PSBI_Step7: left state RA ,-0.67767290629002374658
+p1PSBI_Step7: left state DEC ,-0.3038257285820689102
+p1PSBI_Step7: left state v ,25.113634496009332508
+p1PSBI_Step7: left state vRA ,0.81706240898582294108
+p1PSBI_Step7: left state vDEC ,0.29306529900884825679
+p1PSBI_Step7: left state mass ,462.85207048840197785
 p1PSBI_Step7: virtual chemical fuel ,2.1008000267000001208e-10
-p1PSBI_Step7: virtual electric propellant ,0.98672934692920966082
-p1PSBI_Step7: substep0 u_x ,-7.9876292101932477863e-05
-p1PSBI_Step7: substep0 u_y ,-6.3243883746899598464e-05
-p1PSBI_Step7: substep0 u_z ,-2.1648665087470320145e-05
-p1PSBI_Step8: left state r ,160662622.58947923779
-p1PSBI_Step8: left state RA ,-0.58207693409930172379
-p1PSBI_Step8: left state DEC ,-0.27857831651812747786
-p1PSBI_Step8: left state v ,25.271242736755304747
-p1PSBI_Step8: left state vRA ,1.0000555451391406336
-p1PSBI_Step8: left state vDEC ,0.33397344591520194967
-p1PSBI_Step8: left state mass ,458.15794957425919165
+p1PSBI_Step7: virtual electric propellant ,0.0030781424559421450074
+p1PSBI_Step7: substep0 u_x ,-0.0001686190711103208173
+p1PSBI_Step7: substep0 u_y ,-0.00018878588419335429194
+p1PSBI_Step7: substep0 u_z ,-9.3131779356991906127e-05
+p1PSBI_Step8: left state r ,158937299.7940338552
+p1PSBI_Step8: left state RA ,-0.34003933492614279999
+p1PSBI_Step8: left state DEC ,-0.18551127179749204998
+p1PSBI_Step8: left state v ,25.86335083896149456
+p1PSBI_Step8: left state vRA ,1.2764949771686282531
+p1PSBI_Step8: left state vDEC ,0.3977102492499753339
+p1PSBI_Step8: left state mass ,462.85042624565022606
 p1PSBI_Step8: virtual chemical fuel ,1.5756000311000000784e-10
-p1PSBI_Step8: virtual electric propellant ,0.987448454634788364
-p1PSBI_Step8: substep0 u_x ,-3.5514316643170402825e-05
-p1PSBI_Step8: substep0 u_y ,-3.5274608177648942968e-05
-p1PSBI_Step8: substep0 u_z ,-1.3772787268329089727e-05
-p1PSBI_Step9: left state r ,152273859.60087668896
-p1PSBI_Step9: left state RA ,-0.2374831835736053165
-p1PSBI_Step9: left state DEC ,-0.15189867959078018345
-p1PSBI_Step9: left state v ,27.01197447086739345
-p1PSBI_Step9: left state vRA ,1.4747760313129703036
-p1PSBI_Step9: left state vDEC ,0.41245079027071795963
-p1PSBI_Step9: left state mass ,458.15760349710194532
+p1PSBI_Step8: virtual electric propellant ,0.0047223853136461983737
+p1PSBI_Step8: substep0 u_x ,3.3449415370868001816e-07
+p1PSBI_Step8: substep0 u_y ,-4.4301614758657237303e-05
+p1PSBI_Step8: substep0 u_z ,-2.7213143507953670928e-05
+p1PSBI_Step9: left state r ,149863801.92812970281
+p1PSBI_Step9: left state RA ,0.0091267009400830545474
+p1PSBI_Step9: left state DEC ,-0.035397143879010828371
+p1PSBI_Step9: left state v ,27.749263284374006133
+p1PSBI_Step9: left state vRA ,1.7715436246700839718
+p1PSBI_Step9: left state vDEC ,0.42266904478098865638
+p1PSBI_Step9: left state mass ,462.8502998438706868
 p1PSBI_Step9: virtual chemical fuel ,2.1008000288999999218e-10
-p1PSBI_Step9: virtual electric propellant ,0.98779453189713795069
-p1PSBI_Step9: substep0 u_x ,-2.65041733320536787e-05
-p1PSBI_Step9: substep0 u_y ,-1.3618938517145909919e-05
-p1PSBI_Step9: substep0 u_z ,-7.8911167610273801867e-06
-p1PSBI_Step10: left state r ,138685127.32385742664
-p1PSBI_Step10: left state RA ,0.14553879151647919343
-p1PSBI_Step10: left state DEC ,0.015038422378302884752
-p1PSBI_Step10: left state v ,30.00729251023577504
-p1PSBI_Step10: left state vRA ,1.987355153541692232
-p1PSBI_Step10: left state vDEC ,0.40321358151719266516
-p1PSBI_Step10: left state mass ,458.15739179832985428
+p1PSBI_Step9: virtual electric propellant ,0.0048487871963362174851
+p1PSBI_Step9: substep0 u_x ,-9.1643063668267465971e-05
+p1PSBI_Step9: substep0 u_y ,-6.7417012162396261488e-05
+p1PSBI_Step9: substep0 u_z ,-5.7238205087850602126e-05
+p1PSBI_Step10: left state r ,136215040.79507994652
+p1PSBI_Step10: left state RA ,0.4134191034562348932
+p1PSBI_Step10: left state DEC ,0.14396454740487363289
+p1PSBI_Step10: left state v ,30.781254724682117541
+p1PSBI_Step10: left state vRA ,2.2851212975551753459
+p1PSBI_Step10: left state vDEC ,0.35139084276928400641
+p1PSBI_Step10: left state mass ,462.84960576914403418
 p1PSBI_Step10: virtual chemical fuel ,1.1434193014000000088e-10
-p1PSBI_Step10: virtual electric propellant ,0.98800623077427240926
-p1PSBI_Step10: substep0 u_x ,-3.9665401115662752955e-05
-p1PSBI_Step10: substep0 u_y ,-2.3258412940485580998e-05
-p1PSBI_Step10: substep0 u_z ,2.2679198006248000471e-06
-p1PSBI_Step11: left state r ,121565873.91375048459
-p1PSBI_Step11: left state RA ,0.63182241365117874921
-p1PSBI_Step11: left state DEC ,0.21861371796893958042
-p1PSBI_Step11: left state v ,34.204590622883891626
-p1PSBI_Step11: left state vRA ,2.5275455702959455095
-p1PSBI_Step11: left state vDEC ,0.28857132471063096091
-p1PSBI_Step11: left state mass ,458.15707558529135213
+p1PSBI_Step10: virtual electric propellant ,0.0055428594754511444076
+p1PSBI_Step10: substep0 u_x ,-5.0759395752941749436e-05
+p1PSBI_Step10: substep0 u_y ,-3.5235690916124397912e-06
+p1PSBI_Step10: substep0 u_z ,-3.5165551917959447792e-05
+p1PSBI_Step11: left state r ,120093261.34355348349
+p1PSBI_Step11: left state RA ,0.94972531622002875906
+p1PSBI_Step11: left state DEC ,0.3310839196071577728
+p1PSBI_Step11: left state v ,34.771685968595043903
+p1PSBI_Step11: left state vRA ,2.8114953545491552234
+p1PSBI_Step11: left state vDEC ,0.18154257571347898192
+p1PSBI_Step11: left state mass ,462.84936005035831386
 p1PSBI_Step11: virtual chemical fuel ,7.6227954919999996276e-11
-p1PSBI_Step11: virtual electric propellant ,0.98832244391786794324
-p1PSBI_Step11: substep0 u_x ,-0.98708635357946883371
-p1PSBI_Step11: substep0 u_y ,-0.14954913631427957377
-p1PSBI_Step11: substep0 u_z ,-0.057407375530686644005
-p1PSBI_Step12: left state r ,105186029.02700008452
-p1PSBI_Step12: left state RA ,1.3438753363514912564
-p1PSBI_Step12: left state DEC ,0.39895104070928155693
-p1PSBI_Step12: left state v ,39.219338522773185218
-p1PSBI_Step12: left state vRA ,3.1094942693032834313
-p1PSBI_Step12: left state vDEC ,0.063655220678068502593
-p1PSBI_Step12: left state mass ,451.2338915884191124
+p1PSBI_Step11: virtual electric propellant ,0.0057881431663566124471
+p1PSBI_Step11: substep0 u_x ,-0.85673943004683394964
+p1PSBI_Step11: substep0 u_y ,-0.29145157654039988149
+p1PSBI_Step11: substep0 u_z ,-0.18623121728874469927
+p1PSBI_Step12: left state r ,106294598.59056676924
+p1PSBI_Step12: left state RA ,1.7193460739303887408
+p1PSBI_Step12: left state DEC ,0.42401060551147451427
+p1PSBI_Step12: left state v ,39.030384859432494693
+p1PSBI_Step12: left state vRA ,3.3835088684950918037
+p1PSBI_Step12: left state vDEC ,-0.070489456932506300291
+p1PSBI_Step12: left state mass ,456.37741160890766423
 p1PSBI_Step12: virtual chemical fuel ,3.8113979709999997821e-11
-p1PSBI_Step12: virtual electric propellant ,7.911506440977630561
-p1PSBI_Step12: substep0 u_x ,-0.86875748765488491898
-p1PSBI_Step12: substep0 u_y ,-0.46414252448469850432
-p1PSBI_Step12: substep0 u_z ,-0.1727198486546782652
-p1PSBI_Step13: left state r ,99157282.181582212448
-p1PSBI_Step13: left state RA ,2.2968348012933894609
-p1PSBI_Step13: left state DEC ,0.3498978042543048339
-p1PSBI_Step13: left state v ,41.566526984948261259
-p1PSBI_Step13: left state vRA ,3.7571519145383511784
-p1PSBI_Step13: left state vDEC ,-0.21281930726370745788
-p1PSBI_Step13: left state mass ,444.31070759154710004
+p1PSBI_Step12: virtual electric propellant ,6.477736584627902694
+p1PSBI_Step12: substep0 u_x ,-0.70709825223962319285
+p1PSBI_Step12: substep0 u_y ,-0.64856506044260564536
+p1PSBI_Step12: substep0 u_z ,-0.28175910047698038419
+p1PSBI_Step13: left state r ,103468889.1178702563
+p1PSBI_Step13: left state RA ,2.6134142002845379693
+p1PSBI_Step13: left state DEC ,0.2546170911771790113
+p1PSBI_Step13: left state v ,40.340547412732746579
+p1PSBI_Step13: left state vRA ,4.0365434294934843251
+p1PSBI_Step13: left state vDEC ,-0.31668014842084701854
+p1PSBI_Step13: left state mass ,449.37246504952315718
 p1PSBI_Step13: virtual chemical fuel ,4.48999999999999999e-18
-p1PSBI_Step13: virtual electric propellant ,14.834690438037098303
-p1PSBI_Step13: substep0 u_x ,-0.47847896591730287863
-p1PSBI_Step13: substep0 u_y ,-0.81610202320661007214
-p1PSBI_Step13: substep0 u_z ,-0.32409171984670626099
-p1PSBI_Step14: left state r ,110109033.79212136567
-p1PSBI_Step14: left state RA ,3.1188291575307722781
-p1PSBI_Step14: left state DEC ,0.059503136409439827403
-p1PSBI_Step14: left state v ,38.714925648181598206
-p1PSBI_Step14: left state vRA ,-1.8494253127121638158
-p1PSBI_Step14: left state vDEC ,-0.39184375730472353894
-p1PSBI_Step14: left state mass ,437.38752359467378028
+p1PSBI_Step13: virtual electric propellant ,13.482683144024980137
+p1PSBI_Step13: substep0 u_x ,-0.24376676312618206222
+p1PSBI_Step13: substep0 u_y ,-0.90008366494579639117
+p1PSBI_Step13: substep0 u_z ,-0.36116093858146969264
+p1PSBI_Step14: left state r ,115469537.3409524262
+p1PSBI_Step14: left state RA ,3.3494890037225388824
+p1PSBI_Step14: left state DEC ,-0.055337060750895616934
+p1PSBI_Step14: left state v ,37.373878555794540546
+p1PSBI_Step14: left state vRA ,-1.5732502050360253065
+p1PSBI_Step14: left state vDEC ,-0.42303947247892992323
+p1PSBI_Step14: left state mass ,442.36752379937593105
 p1PSBI_Step14: virtual chemical fuel ,5.2520003150000000172e-11
-p1PSBI_Step14: virtual electric propellant ,21.75787443509790009
-p1PSBI_Step14: substep0 u_x ,-0.013742005286879743764
-p1PSBI_Step14: substep0 u_y ,-0.92260003491452236002
-p1PSBI_Step14: substep0 u_z ,-0.38551308209575529951
-p1PSBI_Step15: left state r ,131253072.52118384838
-p1PSBI_Step15: left state RA ,3.7089572766830976036
-p1PSBI_Step15: left state DEC ,-0.19427762923796865202
-p1PSBI_Step15: left state v ,33.828965230920239549
-p1PSBI_Step15: left state vRA ,-1.265961376415859263
-p1PSBI_Step15: left state vDEC ,-0.41281917803359746699
-p1PSBI_Step15: left state mass ,430.46433959780171108
+p1PSBI_Step14: virtual electric propellant ,20.48762439427750337
+p1PSBI_Step14: substep0 u_x ,0.21018375954876722389
+p1PSBI_Step14: substep0 u_y ,-0.91564217305461625962
+p1PSBI_Step14: substep0 u_z ,-0.34268054153438887166
+p1PSBI_Step15: left state r ,135686787.31922528148
+p1PSBI_Step15: left state RA ,3.918575841289442252
+p1PSBI_Step15: left state DEC ,-0.28046863412047051689
+p1PSBI_Step15: left state v ,32.970547104259040339
+p1PSBI_Step15: left state vRA ,-1.0129109255879384932
+p1PSBI_Step15: left state vDEC ,-0.38155055701704299054
+p1PSBI_Step15: left state mass ,435.36257740615798184
 p1PSBI_Step15: virtual chemical fuel ,2.9299999999999998167e-18
-p1PSBI_Step15: virtual electric propellant ,28.68105843215741757
-p1PSBI_Step15: substep0 u_x ,0.31591989799076647394
-p1PSBI_Step15: substep0 u_y ,-0.87461238448500988607
-p1PSBI_Step15: substep0 u_z ,-0.36776051839073820027
-p1PSBI_Step16: left state r ,154128538.26470455527
-p1PSBI_Step16: left state RA ,4.1617940680044753776
-p1PSBI_Step16: left state DEC ,-0.33853804846555535235
-p1PSBI_Step16: left state v ,29.558913841101325914
-p1PSBI_Step16: left state vRA ,-0.81452911132493710511
-p1PSBI_Step16: left state vDEC ,-0.34199149527614380872
-p1PSBI_Step16: left state mass ,423.54115560092958503
-p1PSBI_Step16: virtual chemical fuel ,-3.8113970889999999838e-11
-p1PSBI_Step16: virtual electric propellant ,35.604242429216931498
-p1PSBI_Step16: substep0 u_x ,0.10852087461631398924
-p1PSBI_Step16: substep0 u_y ,-0.17046612744614952906
-p1PSBI_Step16: substep0 u_z ,-0.071229857310528998937
-p1PSBI_Step17: left state r ,174684273.74974507093
-p1PSBI_Step17: left state RA ,-1.7549871355528523509
-p1PSBI_Step17: left state DEC ,-0.40331803395004750534
-p1PSBI_Step17: left state v ,26.008253152546988218
-p1PSBI_Step17: left state vRA ,-0.45241069049025384174
-p1PSBI_Step17: left state vDEC ,-0.23326160613961377521
-p1PSBI_Step17: left state mass ,422.05776484080541877
-p1PSBI_Step17: virtual chemical fuel ,-7.6227946109999997976e-11
-p1PSBI_Step17: virtual electric propellant ,37.087633189463865335
-p1PSBI_Step17: substep0 u_x ,6.4070522973747003729e-06
-p1PSBI_Step17: substep0 u_y ,-1.3009385129936209489e-05
-p1PSBI_Step17: substep0 u_z ,-4.8669482020091700691e-06
-p1PSBI_Step18: left state r ,191106217.24023514986
-p1PSBI_Step18: left state RA ,-1.4494589073490082853
-p1PSBI_Step18: left state DEC ,-0.41934455162378259097
-p1PSBI_Step18: left state v ,23.363673528393245959
-p1PSBI_Step18: left state vRA ,-0.13653954146933955371
-p1PSBI_Step18: left state vDEC ,-0.10822182917810962977
-p1PSBI_Step18: left state mass ,422.05768497159158414
-p1PSBI_Step18: virtual chemical fuel ,-1.1434192133000000258e-10
-p1PSBI_Step18: virtual electric propellant ,37.08771305878282476
-p1PSBI_Step18: substep0 u_x ,-2.1033977752882302014e-06
-p1PSBI_Step18: substep0 u_y ,-1.8596188234854000031e-06
-p1PSBI_Step18: substep0 u_z ,-1.6031230053448199854e-06
-p1PSBI_Step19: left state r ,202790805.17318573594
-p1PSBI_Step19: left state RA ,-1.186198180201103014
-p1PSBI_Step19: left state DEC ,-0.40531360977498964715
-p1PSBI_Step19: left state v ,21.583212003485925834
-p1PSBI_Step19: left state vRA ,0.15990692349263468941
-p1PSBI_Step19: left state vDEC ,0.022396164700499099354
-p1PSBI_Step19: left state mass ,422.05768497140905993
-p1PSBI_Step19: virtual chemical fuel ,-1.0503999741000000458e-10
-p1PSBI_Step19: virtual electric propellant ,37.087713059070246402
-p1PSBI_Step19: substep0 u_x ,4.0661806832708998189e-07
-p1PSBI_Step19: substep0 u_y ,-6.9183023394536695942e-06
-p1PSBI_Step19: substep0 u_z ,4.04851062230090005e-07
+p1PSBI_Step15: virtual electric propellant ,27.492570787601010807
+p1PSBI_Step15: substep0 u_x ,0.50709269656964384154
+p1PSBI_Step15: substep0 u_y ,-0.8179784074943020622
+p1PSBI_Step15: substep0 u_z ,-0.27068371229820997748
+p1PSBI_Step16: left state r ,157180553.64896598458
+p1PSBI_Step16: left state RA ,4.3774267568775293569
+p1PSBI_Step16: left state DEC ,-0.39037581945127786121
+p1PSBI_Step16: left state v ,29.123742566022258416
+p1PSBI_Step16: left state vRA ,-0.5859905193915757593
+p1PSBI_Step16: left state vDEC ,-0.27122191291926611711
+p1PSBI_Step16: left state mass ,428.35940255692906931
+p1PSBI_Step16: virtual chemical fuel ,0
+p1PSBI_Step16: virtual electric propellant ,34.495745636937080292
+p1PSBI_Step16: substep0 u_x ,3.8771790815017581622e-05
+p1PSBI_Step16: substep0 u_y ,-1.5132293279873639756e-05
+p1PSBI_Step16: substep0 u_z ,-1.199993417633219909e-06
+p1PSBI_Step17: left state r ,176393875.20329800248
+p1PSBI_Step17: left state RA ,-1.5315355084363382332
+p1PSBI_Step17: left state DEC ,-0.42233875775656204432
+p1PSBI_Step17: left state v ,25.773233887890835803
+p1PSBI_Step17: left state vRA ,-0.23704590022460436671
+p1PSBI_Step17: left state vDEC ,-0.13953883169120118168
+p1PSBI_Step17: left state mass ,428.35926737424671273
+p1PSBI_Step17: virtual chemical fuel ,0
+p1PSBI_Step17: virtual electric propellant ,34.495880819722849253
+p1PSBI_Step17: substep0 u_x ,2.2203908065065999176e-05
+p1PSBI_Step17: substep0 u_y ,-1.7992730195981469001e-05
+p1PSBI_Step17: substep0 u_z ,-3.7259965476321701828e-06
+p1PSBI_Step18: left state r ,191534832.7844620049
+p1PSBI_Step18: left state RA ,-1.2224182115138511051
+p1PSBI_Step18: left state DEC ,-0.40924024218221699556
+p1PSBI_Step18: left state v ,23.351881393023361966
+p1PSBI_Step18: left state vRA ,0.074771019419348050405
+p1PSBI_Step18: left state vDEC ,-0.0025966017873173541375
+p1PSBI_Step18: left state mass ,428.35921078352237146
+p1PSBI_Step18: virtual chemical fuel ,0
+p1PSBI_Step18: virtual electric propellant ,34.495937410550837399
+p1PSBI_Step18: substep0 u_x ,2.0397097150848250089e-05
+p1PSBI_Step18: substep0 u_y ,-1.4786591351123590243e-05
+p1PSBI_Step18: substep0 u_z ,-8.365612139682500068e-07
+p1PSBI_Step19: left state r ,202056684.0744381845
+p1PSBI_Step19: left state RA ,-0.95872279007016913965
+p1PSBI_Step19: left state DEC ,-0.36986803526567779699
+p1PSBI_Step19: left state v ,21.751965935102759886
+p1PSBI_Step19: left state vRA ,0.37626670785342142267
+p1PSBI_Step19: left state vDEC ,0.13033231750608464949
+p1PSBI_Step19: left state mass ,428.35915656304143795
+p1PSBI_Step19: virtual chemical fuel ,0
+p1PSBI_Step19: virtual electric propellant ,34.495991631134955924
+p1PSBI_Step19: substep0 u_x ,1.0879763574500600498e-05
+p1PSBI_Step19: substep0 u_y ,1.0827092106646670709e-05
+p1PSBI_Step19: substep0 u_z ,1.4374485215240540015e-05
 END_TRIALX
 
 END_JOURNEY

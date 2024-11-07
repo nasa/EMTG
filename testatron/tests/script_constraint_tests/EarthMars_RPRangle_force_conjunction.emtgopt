@@ -3,72 +3,89 @@
 #mission name
 mission_name EarthMars_RPRangle_force_conjunction
 #flight time bounds (days)
-total_flight_time_bounds 0.0 2000.0
-#phase type
-#0: MGALTS
-#1: FBLTS
-#2: MGALT
-#3: FBLT
-#4: PSBI
-#5: PSFB
-#6: MGAnDSMs
-#7: CoastPhase
-#8: SundmanCoastPhase
-#9: variable phase type
-#10: ProbeEntryPhase
-#11 ControlLawThrustPhase
-mission_type 6
+total_flight_time_bounds 0 2000
 #Enable ACE feasible point finder?
 ACE_feasible_point_finder 1
 #NLP major iterations
 snopt_major_iterations 500
+#Seed MBH?
+seed_MBH 1
 #Universe folder
-universe_folder c:/emtg/testatron/Universe
+universe_folder C:/emtg/testatron/universe/
+#low-thrust engine type
+#0: fixed thrust/Isp
+#1: constant Isp, efficiency, EMTG computes input power
+#2: choice of power model, constant efficiency, EMTG chooses Isp
+#3: choice of power model, constant efficiency and Isp
+#4: continuously-varying specific impulse
+#5: custom thrust and mass flow rate polynomial
+#6: NSTAR
+#7: XIPS-25
+#8: BPT-4000 High-Isp
+#9: BPT-4000 High-Thrust
+#10: BPT-4000 Ex-High-Isp
+#11: NEXT high-Isp v9
+#12: VASIMR (argon, using analytical model)
+#13: Hall Thruster (Xenon, using analytical model)
+#14: NEXT high-ISP v10
+#15: NEXT high-thrust v10
+#16: BPT-4000 MALTO
+#17: NEXIS Cardiff 8-15-201
+#18: H6MS Cardiff 8-15-2013
+#19: BHT20K Cardiff 8-16-2013
+#20: Aerojet HiVHAC EM
+#21: 13 kW STMD Hall high-Isp (not available in open-source)
+#22: 13 kW STMD Hall high-thrust (not available in open-source)
+#23: NEXT TT11 High-Thrust
+#24: NEXT TT11 High-Isp
+#25: NEXT TT11 Expanded Throttle Table
+#26: 13 kW STMD Hall high-Isp 10-1-2014 (not available in open-source)
+#27: 13 kW STMD Hall medium-thrust 10-1-2014 (not available in open-source)
+#28: 13 kW STMD Hall high-thrust 10-1-2014 (not available in open-source)
+#29: 2D Throttle table
+#30: 1D Throttle table high-thrust
+#31: 1D Throttle table high-Isp
+#32: 2D polynomial fit
+engine_type 6
 #thrust polynomial coefficients
-engine_input_thrust_coefficients 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+engine_input_thrust_coefficients 0 0 0 0 0 0 0
 #mass flow rate polynomial coefficients
-engine_input_mass_flow_rate_coefficients 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+engine_input_mass_flow_rate_coefficients 0 0 0 0 0 0 0
 #thruster input power bounds (kW)
-engine_input_power_bounds 0.0 5.0
+engine_input_power_bounds 0 5
 #HardwarePath
-HardwarePath c:/emtg/testatron/HardwareModels/
-#LaunchVehicleLibraryFile
-LaunchVehicleLibraryFile default.emtg_launchvehicleopt
-#LaunchVehicleKey
-LaunchVehicleKey ExampleRocket
-#state representation for periapse boundary conditions (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+HardwarePath C:/emtg/testatron/HardwareModels/
+#state representation for periapse boundary conditions (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane, IncomingBplaneRpTA, OutgoingBplaneRpTA)
 PeriapseBoundaryStateRepresentation 2
-#Shorten output file names?
-short_output_file_names 0
+#Override the working directory?
+override_working_directory 1
+#User-defined working directory
+forced_working_directory C:/emtg/testatron/tests/script_constraint_tests
+#Create a mission subfolder?
+override_mission_subfolder 1
+#Mission subfolder
+forced_mission_subfolder .
+#Close program after completion?
+background_mode 1
 #which inner loop solver to run?
 #0: none, evaluate trialX
 #1: run MBH
 #2: run constrained DE
 #3: run NLP using trialX as initial guess
 #4: filament walker
-run_inner_loop 3
-#Enter any user data that should be appended to the .emtg file.
-#This is typically used in python wrappers
+run_inner_loop 0
+#Field for taking notes
 user_data 
 
 
-
 BEGIN_JOURNEY
-
-#phase type
-#0: MGALTS
-#1: FBLTS
-#2: MGALT
-#3: FBLT
-#4: PSBI
-#5: PSFB
-#6: MGAnDSMs
-#7: CoastPhase
-#8: SundmanCoastPhase
-#9: variable (do not use)
-#10 ProbeEntryPhase
-#11 ControlLawThrustPhase
-phase_type 6
+#flyby sequence, as indices from the Universe file
+sequence
+#Which bodies are used for third-body perturbation?
+#Expressed as indices in the Universe file
+perturbation_bodies
+#STK .grv style gravity model file
+central_body_gravity_file C:/emtg/testatron/universe/gravity_files/DoesNotExist.grv
 
 #Maneuver constraint code
 #Works for absolute and relative epochs and also magnitudes
@@ -88,19 +105,75 @@ END_PHASE_DISTANCE_CONSTRAINT_BLOCK
 
 #trial decision vector
 BEGIN_TRIALX
-p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: event left state epoch,54063.09037249979883199558
-p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote,3.13261490645312790093
-p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote,47.35810013402871732069
-p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote,0.36778952135864506623
-p0MGAnDSMs: phase flight time,1925.00913551026724235271
-p0MGAnDSMsEphemerisPeggedLTRendezvous: event left state mass,196.75887555520591831737
-p0MGAnDSMs: virtual chemical fuel,170.61876594542744101091
-p0MGAnDSMs: virtual chemical oxidizer,157.82235849952454032064
-p0MGAnDSMsForwardSubPhase0: burn index,0.40996031490483858528
-p0MGAnDSMsForwardSubPhase0: DSM x component,2.99951083273035123966
-p0MGAnDSMsForwardSubPhase0: DSM y component,0.55147534500537176427
-p0MGAnDSMsForwardSubPhase0: DSM z component,0.43772891607310526751
-p0MGAnDSMsBackwardSubPhase0: burn index,0.59003968509526150132
+p0MGALTEphemerisPeggedLaunchDirectInsertion: event left state epoch ,54400.656835910500376
+p0MGALTEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote ,5.3398424145904703764
+p0MGALTEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote ,-48.769882735895144776
+p0MGALTEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote ,1.1066004815689844953
+p0MGALT: phase flight time ,1207.6477724245105492
+p0MGALTEphemerisPeggedLTRendezvous: event left state mass ,263.45190977027010604
+p0MGALT: virtual chemical fuel ,0
+p0MGALT: virtual electric propellant ,261.74809022962494964
+p0MGALT: step 0 u_x ,0.58426909088542267057
+p0MGALT: step 0 u_y ,0.15839881389458643213
+p0MGALT: step 0 u_z ,-0.45828763652629445069
+p0MGALT: step 1 u_x ,0.6101741138371847839
+p0MGALT: step 1 u_y ,0.54764472872410152604
+p0MGALT: step 1 u_z ,0.32499679595543140564
+p0MGALT: step 2 u_x ,-0.27451339997791535108
+p0MGALT: step 2 u_y ,0.28624666115240349207
+p0MGALT: step 2 u_z ,0.88688821433939879491
+p0MGALT: step 3 u_x ,0.25689728649337695288
+p0MGALT: step 3 u_y ,0.10179724478385110409
+p0MGALT: step 3 u_z ,0.48516544346678625033
+p0MGALT: step 4 u_x ,-0.80609365577288349947
+p0MGALT: step 4 u_y ,-0.19073153726461611335
+p0MGALT: step 4 u_z ,0.19214878067553864405
+p0MGALT: step 5 u_x ,-0.19971246723439894932
+p0MGALT: step 5 u_y ,-0.55410109207033153567
+p0MGALT: step 5 u_z ,0.068949479165757665555
+p0MGALT: step 6 u_x ,0.16492593700780022736
+p0MGALT: step 6 u_y ,-0.10841733136930586934
+p0MGALT: step 6 u_z ,0.28888843298260158399
+p0MGALT: step 7 u_x ,-0.25616114149474500383
+p0MGALT: step 7 u_y ,-0.32885579033616818556
+p0MGALT: step 7 u_z ,-0.54752664786771632066
+p0MGALT: step 8 u_x ,0.36251170303873592182
+p0MGALT: step 8 u_y ,-0.56322433178316133606
+p0MGALT: step 8 u_z ,-0.28484711001144136233
+p0MGALT: step 9 u_x ,0.55005679035914867292
+p0MGALT: step 9 u_y ,0.2672954162190168681
+p0MGALT: step 9 u_z ,-0.0067269267405694055384
+p0MGALT: step 10 u_x ,0.69562109601046739904
+p0MGALT: step 10 u_y ,0.013179229144387960559
+p0MGALT: step 10 u_z ,-0.49410460181430260196
+p0MGALT: step 11 u_x ,-0.68836462748680471435
+p0MGALT: step 11 u_y ,-0.073906136574004244189
+p0MGALT: step 11 u_z ,-0.26116598126097723132
+p0MGALT: step 12 u_x ,-0.77456738951903625345
+p0MGALT: step 12 u_y ,0.58773200487515242507
+p0MGALT: step 12 u_z ,-0.13651830743905946086
+p0MGALT: step 13 u_x ,-0.91030514506627469018
+p0MGALT: step 13 u_y ,0.10361322857914045947
+p0MGALT: step 13 u_z ,-0.39186690653379507854
+p0MGALT: step 14 u_x ,-0.9192134961059927889
+p0MGALT: step 14 u_y ,-0.20111854576633780844
+p0MGALT: step 14 u_z ,-0.33852308507222128586
+p0MGALT: step 15 u_x ,-0.47579422893647582704
+p0MGALT: step 15 u_y ,-0.74416494565006741091
+p0MGALT: step 15 u_z ,-0.12675414295887732496
+p0MGALT: step 16 u_x ,-0.01671927511677928635
+p0MGALT: step 16 u_y ,-0.7873500458406432756
+p0MGALT: step 16 u_z ,-0.42285439755978770915
+p0MGALT: step 17 u_x ,0.35122272401924159446
+p0MGALT: step 17 u_y ,-0.83676078479039872615
+p0MGALT: step 17 u_z ,0.074559115215692362
+p0MGALT: step 18 u_x ,0.88762076542008516711
+p0MGALT: step 18 u_y ,-0.020505944707138845651
+p0MGALT: step 18 u_z ,-0.19663671881781119577
+p0MGALT: step 19 u_x ,0.17193231087793914291
+p0MGALT: step 19 u_y ,0.72719907032743580366
+p0MGALT: step 19 u_z ,0.56293641916173386974
 END_TRIALX
 
 END_JOURNEY
+

@@ -1,0 +1,33 @@
+#universe file
+#Earth
+
+#Central body name
+central_body_name Earth
+#Central body SPICE ID
+central_body_SPICE_ID 399
+#central body radius
+central_body_radius 6378.136
+#gravitational constant of central body, in km^3/s^2
+mu 3.9860043543609598E+05
+#characteristic length unit, in km
+LU 42164
+#angles defining the local reference frame relative to ICRF, given in degrees
+#alpha0, alphadot, delta0, deltadot, W, Wdot
+reference_angles -90.0 -0.641 90.0 -0.557 190.147 360.9856235
+#radius of the central body's sphere of influence
+r_SOI 1.0e+7
+#minimum safe distance from the central body
+minimum_safe_distance 6378
+# central body flattening
+central_body_flattening_coefficient 0.00335
+
+#menu of bodies
+#name shortname number SPICE_ID minimum_flyby_altitude GM radius central_body_flattening_coefficient ephemeris_epoch alpha0 alphadot delta0 deltadot W Wdot SMA ECC INC RAAN AOP MA
+#SMA, radius, and minimum_flyby_altitude in km, angles in degrees, GM in km^3/s^2
+#if minimum_flyby_altitude <= 0, then this object is not placed on the flyby menu
+#orbit elements are for MJD 51544 / January 1, 2000 00:00 CT, ("Coordinate Time" as per JPL HORIZONS documentation) in ICRF frame
+begin_body_list
+Moon L 1 301 200 4.9028000661637961E+03 1737.53 0.0012 51544 269.9949 0.0031 66.5392 0.0130 38.3213 13.17635815 3.812186875611919E+05 6.476694126942699E-02 2.094024252661913E+01 1.223324045627363E+01 6.078357549567350E+01 1.407402558848975E+02
+Sun S 2 10 20000000.0 1.32712440018e+11 4379000.0 5e-05 51544.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+GatewayNRHO G 3 -60000 -1 0.0 0.1 0.0 58900.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+end_body_list

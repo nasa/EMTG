@@ -34,7 +34,7 @@ objective_type 0
 #Include the initial impulse in calculating the delta-v objective function?
 include_initial_impulse_in_cost 1
 #launch window open date (MJD)
-launch_window_open_date 59514.0
+launch_window_open_date 59514
 #phase type
 #0: MGALTS
 #1: FBLTS
@@ -47,6 +47,7 @@ launch_window_open_date 59514.0
 #8: SundmanCoastPhase
 #9: variable phase type
 #10: ProbeEntryPhase
+#11: ControlLawThrustPhase
 mission_type 7
 #Quiet NLP solver?
 quiet_NLP 0
@@ -59,9 +60,21 @@ snopt_major_iterations 500
 #Seed MBH?
 seed_MBH 1
 #Universe folder
-universe_folder C:/emtg/testatron/universe
+universe_folder C:/emtg/testatron/universe/
 #HardwarePath
-HardwarePath c:/emtg/testatron/HardwareModels/
+HardwarePath C:/emtg/testatron/HardwareModels/
+#ThrottleTableFile
+ThrottleTableFile NEXT_TT11_NewFrontiers_EOL_1_3_2017.ThrottleTable
+#Override the working directory?
+override_working_directory 1
+#User-defined working directory
+forced_working_directory C:/emtg/testatron/tests/journey_options
+#Create a mission subfolder?
+override_mission_subfolder 1
+#Mission subfolder
+forced_mission_subfolder .
+#Close program after completion?
+background_mode 1
 #which inner loop solver to run?
 #0: none, evaluate trialX
 #1: run MBH
@@ -69,20 +82,19 @@ HardwarePath c:/emtg/testatron/HardwareModels/
 #3: run NLP using trialX as initial guess
 #4: filament walker
 run_inner_loop 3
-#Enter any user data that should be appended to the .emtg file.
-#This is typically used in python wrappers
+#Field for taking notes
 user_data 
 
 
-
 BEGIN_JOURNEY
-
 #Journey name
 journey_name KSC_to_injection
 #Journey central body name
 journey_central_body Earth
 #destination list, as indices from the Universe file
 destination_list 0 0
+#flyby sequence, as indices from the Universe file
+sequence
 #phase type
 #0: MGALTS
 #1: FBLTS
@@ -95,6 +107,7 @@ destination_list 0 0
 #8: SundmanCoastPhase
 #9: variable (do not use)
 #10 ProbeEntryPhase
+#11 ControlLawThrustPhase
 phase_type 7
 #Journey wait time bounds (days)
 wait_time_bounds -0.5 0.5
@@ -110,12 +123,12 @@ departure_type 2
 #one entry for each element
 departure_elements_vary_flag 0 0 0 1 1 1
 #cartesian state or SMA, ECC, INC, RAAN, AOP, TA
-departure_elements 6563.14 0.0 28.5 0.0 0.0 0.0
+departure_elements 6563.1400000000003274 0 28.5 0 0 0
 #bounds on elements or state components, two entries for each element
-departure_elements_bounds 0.0 0.0 0.0 0.0 0.0 0.0 -180.0 180.0 -180.0 180.0 -360.0 360.0
+departure_elements_bounds 0 0 0 0 0 0 -180 180 -180 180 -360 360
 #Reference epoch (MJD) for journey departure elements
-departure_elements_reference_epoch 59514.58333333861
-#arrival free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane)
+departure_elements_reference_epoch 59514.583333338610828
+#departure free point state representation (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE, IncomingBplane, OutgoingBplane, IncomingBplaneRpTA, OutgoingBplaneRpTA)
 departure_elements_state_representation 3
 #journey departure boundary class
 #0: Ephemeris-pegged (default EMTG)
@@ -136,9 +149,9 @@ arrival_type 2
 #one entry for each element
 arrival_elements_vary_flag 1 1 1 1 1 1
 #bounds on elements or state components, two entries for each element
-arrival_elements_bounds -7000.0 7000.0 -7000.0 7000.0 -7000.0 7000.0 -8.0 8.0 -8.0 8.0 -8.0 8.0
+arrival_elements_bounds -7000 7000 -7000 7000 -7000 7000 -8 8 -8 8 -8 8
 #Reference epoch (MJD) for journey arrival elements
-arrival_elements_reference_epoch 59514.58333333861
+arrival_elements_reference_epoch 59514.583333338610828
 #journey arrival boundary class
 #0: Ephemeris-pegged (default EMTG)
 #1: Free point
@@ -147,6 +160,11 @@ arrival_elements_reference_epoch 59514.58333333861
 arrival_class 1
 #Print a target spec for free point arrival at the end of this journey?
 FreePointArrival_print_target_spec 0
+#Which bodies are used for third-body perturbation?
+#Expressed as indices in the Universe file
+perturbation_bodies
+#STK .grv style gravity model file
+central_body_gravity_file C:/emtg/testatron/universe/gravity_files/DoesNotExist.grv
 
 #Maneuver constraint code
 #Works for absolute and relative epochs and also magnitudes
@@ -192,13 +210,14 @@ END_TRIALX
 END_JOURNEY
 
 BEGIN_JOURNEY
-
 #Journey name
 journey_name injection_to_escape
 #Journey central body name
 journey_central_body Earth
 #destination list, as indices from the Universe file
 destination_list 3 -1
+#flyby sequence, as indices from the Universe file
+sequence
 #phase type
 #0: MGALTS
 #1: FBLTS
@@ -211,18 +230,19 @@ destination_list 3 -1
 #8: SundmanCoastPhase
 #9: variable (do not use)
 #10 ProbeEntryPhase
+#11 ControlLawThrustPhase
 phase_type 7
 #Journey wait time bounds (days)
-wait_time_bounds 0.0 0.0
+wait_time_bounds 0 0
 #what are the bounds on the initial impulse for each journey in km/s\
 #you can set a very high upper bound if you are using a launchy vehicle model - the optimizer will find the correct value
-initial_impulse_bounds 0.0 4.48106649388
+initial_impulse_bounds 0 4.4810664938800002233
 #Force free point direct insertion burn to be along the inertial velocity vector?
 force_free_point_direct_insertion_along_velocity_vector 1
 #cartesian state or SMA, ECC, INC, RAAN, AOP, TA
-departure_elements -874.83467727 -6504.5547018 -13.8025763 6.78869723 -0.90515995 -3.71853488
+departure_elements -874.83467727000004288 -6504.5547017999997479 -13.802576300000000131 6.78869723000000036 -0.90515995000000004644 -3.7185348799999999869
 #Reference epoch (MJD) for journey departure elements
-departure_elements_reference_epoch 59514.58333333861
+departure_elements_reference_epoch 59514.583333338610828
 #journey departure boundary class
 #0: Ephemeris-pegged (default EMTG)
 #1: Free point
@@ -246,9 +266,14 @@ arrival_type 2
 #3: Periapse
 arrival_class 2
 #journey arrival ellipsoid axes (3)
-arrival_ellipsoid_axes 1471720.0 1471720.0 1471720.0
+arrival_ellipsoid_axes 1471720 1471720 1471720
+#Which bodies are used for third-body perturbation?
+#Expressed as indices in the Universe file
+perturbation_bodies
 #ECC for ephemeris pegged orbit insertion
-ephemeris_pegged_orbit_insertion_ECC 1e-10
+ephemeris_pegged_orbit_insertion_ECC 1.0000000000000000364e-10
+#STK .grv style gravity model file
+central_body_gravity_file C:/emtg/testatron/universe/gravity_files/DoesNotExist.grv
 
 #Maneuver constraint code
 #Works for absolute and relative epochs and also magnitudes
@@ -284,3 +309,4 @@ p0CoastPhase: virtual chemical fuel ,0
 END_TRIALX
 
 END_JOURNEY
+

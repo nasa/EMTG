@@ -5,6 +5,13 @@
 \subsubsection{Purpose}
 \noindent \ac{EMTG} depends on the \ac{SNOPT} \ac{NLP} solver package, which is written in Fortran, and MinGW provides a free Fortran compiler and runtime library for Windows. These instructions assume that MinGW is used to compile the \ac{SNOPT} library used by \ac{EMTG}. \\ \ac{EMTG} is known to work with \hl{MinGW 7.2.0}.
 
+\subsubsection{Bundled Installation Instructions}
+\begin{enumerate}
+	\item Open the \textless EMTG-root\textgreater \textbackslash depend\textbackslash mingw64\textbackslash README.txt file.
+	\item Confirm that the files indicated in the README exist.
+	\item If the files exist, proceed to Step~\ref{bundle:mingw} of Section~\ref{sec:mingw_installation_instructions}. \\ If for some reason the files do not exist, go to the next sub-section to download it.
+\end{enumerate}
+
 \subsubsection{Download Location}
 \noindent The main page for the software distributions is in the following website: \\
 \url{https://sourceforge.net/projects/mingw-w64/files/}
@@ -19,7 +26,7 @@
 	\begin{enumerate}
 		\item Install 7zip if that is not already installed on your machine to extract the *.7z file. 
 	\end{enumerate}	
-	\item Edit the user’s Path environment variable to include the bin directory of MinGW so that the EMTG executable can find the Fortran runtime library during execution.
+	\item \label{bundle:mingw} Edit the user’s Path environment variable to include the bin directory of MinGW so that the EMTG executable can find the Fortran runtime library during execution.
 	\begin{enumerate}
 		\item Press the Windows button.
 		\item Type “Edit environment variables for your account”. %\\ \emph{(Autocomplete may take over at some point.)} 

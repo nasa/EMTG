@@ -73,8 +73,24 @@ class ConventionalHardwarePanel(wx.Panel):
         self.txtTCM_Isp = wx.TextCtrl(self, -1, "TCM_Isp")
 
         self.lblengine_type = wx.StaticText(self, -1, "Engine type")
-        enginetypes = ['0: fixed thrust/Isp','1: constant Isp, efficiency, EMTG computes input power','2: choice of power model, constant efficiency, EMTG chooses Isp',
-                       '3: choice of power model, constant efficiency and Isp','4: continuously-varying specific impulse','5: custom thrust and mass flow rate polynomial']
+        enginetypes = ['0: fixed thrust/Isp',
+                       '1: constant Isp, efficiency, EMTG computes input power',
+                       '2: choice of power model, constant efficiency, EMTG chooses Isp',
+                       '3: choice of power model, constant efficiency and Isp',
+                       '4: continuously-varying specific impulse',
+                       '5: custom thrust and mass flow rate polynomial',
+                       '6: AEPS_High_Thrust_and_Isp',
+                       '7: BIT3_High_Thrust_and_Isp',
+                       '8: Halo12_High_Thrust',
+                       '9: Halo12_High_Isp',
+                       '10: NEXTC_High_Thrust',
+                       '11: NEXTC_High_Isp',
+                       '12: PPS5000_High_Thrust',
+                       '13: PPS5000_High_Isp',
+                       '14: 2D Throttle-Table optimization',
+                       '15: 1D Throttle-Table optimization (high-Thrust set)',
+                       '16: 1D Throttle-Table optimization (high-Isp set)',
+                       '17: 2D polynomial fit (from throttle table)']
 
         self.cmbengine_type = wx.ComboBox(self, -1, choices = enginetypes, style=wx.CB_READONLY)
 

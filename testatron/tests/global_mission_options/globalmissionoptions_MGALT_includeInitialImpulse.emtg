@@ -1,5 +1,5 @@
 Mission: globalmissionoptions_MGALT_includeInitialImpulse
-Written by EMTG_v9 core program compiled Dec 15 2020 10:41:15
+Written by EMTG_v9 core program compiled Oct 13 2022 08:44:20
 
 Journey: 0
 Journey name: default
@@ -47,6 +47,9 @@ Boundary: 1 121948856.23758994 84958178.56621942 -2214.21547877 -17.50248307 24.
 Boundary: 2 -222439002.88267401 -93734545.08427888 3499100.87974915 10.31435141 -20.25799722 -0.67775757
 
 
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
 Journey flight time (seconds): 26092800.00000000
 Journey flight time (days): 302.00000000
 
@@ -88,6 +91,17 @@ Worst constraint is F[21]: j0p0MGALT: match point x
 with violation -0.00000624783005634294
 Worst decision variable is X[0]: j0p0MGALTEphemerisPeggedLaunchDirectInsertion: event left state epoch
 with unhappiness 0.00000000000000000000
+
+
+
+Number of solution attempts: 1
+Solution attempt that produced a feasible solution with the best objective value (0 if no feasible solutions): 1
+Time to completion of solution attempt that produced a feasible solution with the best objective value (seconds) (-1 if no feasible solutions): 0.00100000000000000002
+
+
+
+Was first NLP solve feasible: 1
+Objective function value from first NLP solve: -0.86478387183585248010
 
 
 

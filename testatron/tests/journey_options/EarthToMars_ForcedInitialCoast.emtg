@@ -1,5 +1,5 @@
 Mission: EarthToMars_ForcedInitialCoast
-Written by EMTG_v9 core program compiled Dec 15 2020 10:41:15
+Written by EMTG_v9 core program compiled Oct 13 2022 08:44:20
 
 Journey: 0
 Journey name: EarthToMarsSOI
@@ -48,6 +48,9 @@ Boundary: 1 138273054.85790974 55957325.06606445 -900.25101084 -11.67164200 27.5
 Boundary: 2 -80713897.34737584 227456526.18773347 6747661.80225454 -21.91754936 -6.04553995 0.41164574
 
 
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
 Journey flight time (seconds): 9134543.84379387
 Journey flight time (days): 105.72388708
 
@@ -89,6 +92,17 @@ Worst constraint is F[22]: j0p0MGALT: match point y
 with violation 0.00000592993544317063
 Worst decision variable is X[0]: j0p0MGALTEphemerisPeggedLaunchDirectInsertion: event left state epoch
 with unhappiness 0.00000000000000000000
+
+
+
+Number of solution attempts: 1
+Solution attempt that produced a feasible solution with the best objective value (0 if no feasible solutions): 1
+Time to completion of solution attempt that produced a feasible solution with the best objective value (seconds) (-1 if no feasible solutions): 0.00100000000000000002
+
+
+
+Was first NLP solve feasible: 1
+Objective function value from first NLP solve: 1.23095219056748095277
 
 
 

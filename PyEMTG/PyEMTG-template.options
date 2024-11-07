@@ -4,7 +4,7 @@ de_file de430.bsp
 leapseconds_file naif0012.tls
 default_small_bodies_file C:/emtg/Universe/ephemeris_files/AllAsteroids.SmallBody
 default_HardwarePath C:/emtg/HardwareModels
-default_ThrottleTableFile empty.ThrottleTable
+default_ThrottleTableFile AEPS.ThrottleTable
 default_LaunchVehicleLibraryFile default.emtg_launchvehicleopt
 default_PowerSystemsLibraryFile default.emtg_powersystemsopt
 default_PropulsionSystemsLibraryFile default.emtg_propulsionsystemopt

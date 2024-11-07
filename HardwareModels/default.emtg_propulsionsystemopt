@@ -2,8 +2,24 @@
 #SpacecraftThrusterMode choices are (0: ConstantThrustIsp, 1: FixedEfficiencyCSI, 2: FixedEfficiencyVSI, 3: Poly1D, 4: SteppedHThrust1D, 5: SteppedLMdot1D, 6: SteppedHIsp1D, 7: SteppedHefficiency1D, 8: SteppedFullSet1D, 8: Stepped2D, 9: Poly2D)
 #name ThrusterMode ThrottleTableFile MassPerString(kg) NumberOfStrings Pmin(kW) Pmax(kW) ConstantThrust(N) ConstantIsp(s) MinimumOrMonopropIsp/MonopropIsp(s) FixedEfficiency MixtureRatio ThrustScaleFactor ThrustCoefficients(mN)[0:6] MassFlowCoefficients(mg/s)[0:6]
 #
-defaultThruster                        3 none 0 1 0.525 2.6 0 1 0 0 0 1 26.337459 -51.694393 90.486509 -36.720293 5.145602 0 0 2.506 -5.3568 6.2539 -2.5372 0.36985 0 0
+AEPS_High_Thrust       4 c:/emtg/HardwareModels/AEPS.ThrottleTable   51.8 1 2.7 26.2 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+AEPS_High_Isp          6 c:/emtg/HardwareModels/AEPS.ThrottleTable   51.8 1 2.7 26.2 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+2xAEPS_High_Thrust     4 c:/emtg/HardwareModels/AEPSx2.ThrottleTable 51.8 1 2.7 26.2 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+2xAEPS_High_Isp        6 c:/emtg/HardwareModels/AEPSx2.ThrottleTable 51.8 1 2.7 26.2 0 1 0 0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+AEPS_PolyFit_HTandHI   3 none 0 1 2.7 13.1 0 1 0 0 0 1 1.50425793E+02 -8.49145941E+01 5.08811269E+01 -7.55386372 4.84519450E-01 -1.14744279E-02 0 -2.67251013E+01 2.16210801E+01 -3.75871135 3.06458349E-01 -1.12502819E-02 1.37590778E-04 0
+BIT3_High_Thrust       4 c:/emtg/HardwareModels/BIT3.ThrottleTable   0 1 0.055 0.075 0 1 1 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+BIT3_High_Isp          6 c:/emtg/HardwareModels/BIT3.ThrottleTable   0 1 0.055 0.075 0 1 1 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+2xBIT3_High_Thrust     4 c:/emtg/HardwareModels/BIT3x2.ThrottleTable 0 1 0.055 0.075 0 1 1 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+2xBIT3_High_Isp        6 c:/emtg/HardwareModels/BIT3x2.ThrottleTable 0 1 0.055 0.075 0 1 1 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+BIT3_PolyFit_HTandHI   3 none 0 1 0.055 0.075 0 1 1 1 0 1 -1.02114E+00 3.68571E-02 -1.14286E-04 0 0 0 0 1.63126E+00 -9.78341E-02 2.26971E-03 -2.33106E-05 8.94303E-08 0 0
+PPS5000_High_Thrust    4 c:/emtg/HardwareModels/PPS5000.ThrottleTable   0 1 2.5 5.0 0 1 1 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+PPS5000_High_Isp       6 c:/emtg/HardwareModels/PPS5000.ThrottleTable   0 1 2.5 5.0 0 1 1 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+2xPPS5000_High_Thrust  4 c:/emtg/HardwareModels/PPS5000x2.ThrottleTable 0 1 2.5 5.0 0 1 1 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+2xPPS5000_High_Isp     6 c:/emtg/HardwareModels/PPS5000x2.ThrottleTable 0 1 2.5 5.0 0 1 1 1 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0
+PPS5000_PolyFit_HT     3 none 0 1 2.5 5.0 0 1 1 1 0 1 -6.54545E+01 1.02711E-01 -6.52597E-06 0 0 0 0 -2.94251E+00 6.13367E-03 -4.48049E-07 0 0 0 0
+PPS5000_PolyFit_HI     3 none 0 1 2.5 4.5 0 1 1 1 0 1 -5.75E+01 8.75E-02 -5.00E-06 0 0 0 0 2.19829E-01 3.12214E-03 -5.80126E-08 0 0 0 0
+NEXTC_PolyFit_HT       3 none 0 1 0.64 7.33  0 1 1 1 0 1 -13.39446  58.29300 -5.86349 0.34576 0 0 0 0.48699  1.87664 -0.28947  0.01796 0 0 0
+NEXTC_PolyFit_HI       3 none 0 1 0.64 7.33  0 1 1 1 0 1   9.19015  26.16480  0.60239 0.00494 0 0 0 2.08805 -0.47568  0.23550 -0.01390 0 0 0
+Halo12_PolyFit_HT      3 none 0 1 0.0963 0.5440 0 1 1 1 0 1  1.45852 -0.23748  0.29653 -0.00433 0 0 0 -0.64363 10.65476  7.53030 -25.31211 0 0 0
+Halo12_PolyFit_HI      3 none 0 1 0.0963 0.5440 0 1 1 1 0 1 -6.57611  9.13661 -2.64481  0.28415 0 0 0  1.09551 -8.52754 34.77985 -34.72538 0 0 0
 DefaultChemicalPropulsionSystem        0 none 0 1 0.5 1.0 22.0 320.0 220.0 0.5 0.925 1.0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-WarpDrive                              0 none 0 1 0.5 1.0 22.0 1.0e+6 1.0e+6 0.5 0.925 1.0 0 0 0 0 0 0 0 0 0 0 0 0 0 0
-#EndHardwareBlock
-

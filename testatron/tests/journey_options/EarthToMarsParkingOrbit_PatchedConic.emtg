@@ -1,5 +1,5 @@
 Mission: EarthToMarsParkingOrbit_PatchedConic
-Written by EMTG_v9 core program compiled Dec 15 2020 10:41:15
+Written by EMTG_v9 core program compiled Oct 13 2022 08:44:20
 
 Journey: 0
 Journey name: EarthToMarsSOI
@@ -46,6 +46,9 @@ Boundary: 1 134906473.42535236 63327985.82371476 -1164.12349958 -13.15459669 26.
 Boundary: 2 -247052629.25500152 2163446.72064309 6112813.91809645 0.69132526 -22.15938236 -0.48124731
 
 
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
 Journey flight time (seconds): 22485009.05269241
 Journey flight time (days): 260.24316033
 
@@ -83,10 +86,21 @@ Spacecraft: Dry mass (kg): 337.19419118286259617889
 Objective function is "minimize delta-v"
 J = 1.39059122447945493484
 
-Worst constraint is F[9]: j0p0MGAnDSMs: match point mass
+Worst constraint is F[10]: j0p0MGAnDSMs: match point mass
 with violation 0.00000748728325020860
 Worst decision variable is X[0]: j0p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: event left state epoch
 with unhappiness 0.00000000000000000000
+
+
+
+Number of solution attempts: 1
+Solution attempt that produced a feasible solution with the best objective value (0 if no feasible solutions): 1
+Time to completion of solution attempt that produced a feasible solution with the best objective value (seconds) (-1 if no feasible solutions): 0.00100000000000000002
+
+
+
+Was first NLP solve feasible: 1
+Objective function value from first NLP solve: 1.39059122447945493484
 
 
 
@@ -96,10 +110,10 @@ Xlowerbounds,53782.00000000000000000000,0.00000000000000000000,-50.2654824574366
 Xdescriptions,j0p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: event left state epoch,j0p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: magnitude of outgoing velocity asymptote,j0p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: RA of departure asymptote,j0p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: DEC of departure asymptote,j0p0MGAnDSMs: phase flight time,j0p0MGAnDSMsEphemerisPeggedOrbitInsertion: event left state mass,j0p0MGAnDSMsEphemerisPeggedOrbitInsertion: V_infinity_x,j0p0MGAnDSMsEphemerisPeggedOrbitInsertion: V_infinity_y,j0p0MGAnDSMsEphemerisPeggedOrbitInsertion: V_infinity_z,j0p0MGAnDSMsEphemerisPeggedOrbitInsertion: virtual chemical fuel,j0p0MGAnDSMsEphemerisPeggedOrbitInsertion: virtual chemical oxidizer,j0p0MGAnDSMs: virtual chemical fuel,j0p0MGAnDSMs: virtual chemical oxidizer,j0p0MGAnDSMsForwardSubPhase0: burn index,j0p0MGAnDSMsForwardSubPhase0: DSM x component,j0p0MGAnDSMsForwardSubPhase0: DSM y component,j0p0MGAnDSMsForwardSubPhase0: DSM z component,j0p0MGAnDSMsBackwardSubPhase0: burn index
 
 
-Fupperbounds.,1000000000000000019884624838656.00000000000000000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,1.00000000000000000000
-Constraint_Vector,1.39059122447945493484,-0.00000140757792967372,-0.00000130200959230999,-0.00000534408848326704,0.00000629585638638299,0.00000283510174236753,0.00000236703416839700,-0.00000369553456712873,-0.00000146850321456075,0.00000748728335020860,-0.00000388949783741656,-0.00000359778546366745,0.00000000000009992007,0.86173231898042512711
-Flowerbounds,-1000000000000000019884624838656.00000000000000000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,0.00000000000000000000
-Fdescriptions,objective function,j0p0MGAnDSMsEphemerisPeggedOrbitInsertion: virtual chemical fuel constraint,j0p0MGAnDSMsEphemerisPeggedOrbitInsertion: virtual chemical oxidizer constraint,j0p0MGAnDSMs: match point x,j0p0MGAnDSMs: match point y,j0p0MGAnDSMs: match point z,j0p0MGAnDSMs: match point xdot,j0p0MGAnDSMs: match point ydot,j0p0MGAnDSMs: match point zdot,j0p0MGAnDSMs: match point mass,j0p0MGAnDSMs: match point virtual chemical fuel,j0p0MGAnDSMs: match point virtual chemical oxidizer,j0p0MGAnDSMs: burn index sum constraint,Mission flight time bounds
+Fupperbounds.,1000000000000000019884624838656.00000000000000000000,0.00000000000010000000,0.00000000000010000000,0.00000000000000000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,0.00000000000010000000,1.00000000000000000000
+Constraint_Vector,1.39059122447945493484,-0.00000140757792967372,-0.00000130200959230999,-98.60943227166202973422,-0.00000534408848326704,0.00000629585638638299,0.00000283510174236753,0.00000236703416839700,-0.00000369553456712873,-0.00000146850321456075,0.00000748728335020860,-0.00000388949783741656,-0.00000359778546366745,0.00000000000009992007,0.86173231898042512711
+Flowerbounds,-1000000000000000019884624838656.00000000000000000000,-0.00000000000010000000,-0.00000000000010000000,-100.00000000000000000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,-0.00000000000010000000,0.00000000000000000000
+Fdescriptions,objective function,j0p0MGAnDSMsEphemerisPeggedOrbitInsertion: virtual chemical fuel constraint,j0p0MGAnDSMsEphemerisPeggedOrbitInsertion: virtual chemical oxidizer constraint,j0p0MGAnDSMsEphemerisPeggedOrbitInsertion: ephemeris pegged orbit insertion Delta v,j0p0MGAnDSMs: match point x,j0p0MGAnDSMs: match point y,j0p0MGAnDSMs: match point z,j0p0MGAnDSMs: match point xdot,j0p0MGAnDSMs: match point ydot,j0p0MGAnDSMs: match point zdot,j0p0MGAnDSMs: match point mass,j0p0MGAnDSMs: match point virtual chemical fuel,j0p0MGAnDSMs: match point virtual chemical oxidizer,j0p0MGAnDSMs: burn index sum constraint,Mission flight time bounds
 
 user_data: 
 

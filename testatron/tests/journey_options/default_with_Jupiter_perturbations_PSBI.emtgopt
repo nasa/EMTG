@@ -15,6 +15,8 @@ total_flight_time_bounds 0 500
 #7: CoastPhase
 #8: SundmanCoastPhase
 #9: variable phase type
+#10: ProbeEntryPhase
+#11: ControlLawThrustPhase
 mission_type 4
 #Enable ACE feasible point finder?
 ACE_feasible_point_finder 1
@@ -33,7 +35,7 @@ enable_NLP_chaperone 0
 #MBH RNG seed (negative number means system clock)
 MBH_RNG_seed 0
 #Universe folder
-universe_folder c:/emtg/testatron/Universe
+universe_folder C:/emtg/testatron/universe/
 #integration step size (maximum for adaptive, fixed for fixed)
 integration_time_step_size 864000
 #number of spiral segments
@@ -51,21 +53,25 @@ throttle_logic_mode 0
 #ACS propellant consumption (kg/day)
 ACS_kg_per_day 1
 #HardwarePath
-HardwarePath c:/emtg/testatron/HardwareModels/
-#ThrottleTableFile
-ThrottleTableFile empty.ThrottleTable
+HardwarePath C:/emtg/testatron/HardwareModels/
 #third body perturbations?
 perturb_thirdbody 1
 #spacecraft area (for SRP, in m^2)
 spacecraft_area 1
 #Path to covariance file
 covariance_file_path ./banana.ephemeris
-#state representation for parallel shooting (Cartesian, SphericalRADEC, SphericalAZFPA)
+#state representation for parallel shooting (Cartesian, SphericalRADEC, SphericalAZFPA, COE, MEE)
 ParallelShootingStateRepresentation 2
-#state representation for periapse boundary conditions (Cartesian, SphericalRADEC, SphericalAZFPA)
-PeriapseBoundaryStateRepresentation 1
-#Shorten output file names?
-short_output_file_names 1
+#Override the working directory?
+override_working_directory 1
+#User-defined working directory
+forced_working_directory C:/emtg/testatron/tests/journey_options
+#Create a mission subfolder?
+override_mission_subfolder 1
+#Mission subfolder
+forced_mission_subfolder .
+#Close program after completion?
+background_mode 1
 #which inner loop solver to run?
 #0: none, evaluate trialX
 #1: run MBH
@@ -92,6 +98,9 @@ sequence
 #6: MGAnDSMs
 #7: CoastPhase
 #8: SundmanCoastPhase
+#9: variable (do not use)
+#10 ProbeEntryPhase
+#11 ControlLawThrustPhase
 phase_type 4
 #Journey duty cycle
 duty_cycle 0
@@ -99,9 +108,9 @@ duty_cycle 0
 propagatorType 0
 #integration step size (s)
 integration_step_size 1
-#Lower and upper bound on journey flyby altitude (only applies to the departure flyby, if there is one)
+#Lower and upper bound on journey flyby altitude, if override is active (only applies to the departure flyby, if there is one)
 flyby_altitude_bounds 1000 10000
-#Lower and upper bound on journey flyby altitude (km)
+#Lower and upper bound on journey periapse arrival altitude, if override is active (km)
 PeriapseArrival_altitude_bounds 300 100000
 #PeriapseDeparture altitude bounds (in km)
 PeriapseDeparture_altitude_bounds 300 300
@@ -110,19 +119,21 @@ arrival_date_bounds 53982 60000
 #what are the bounds on the initial impulse for each journey in km/s\
 #you can set a very high upper bound if you are using a launchy vehicle model - the optimizer will find the correct value
 initial_impulse_bounds 1.0000000000000000209e-08 6.9699999999999997513
-#reference frame for journey departure elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)
+#reference frame for journey departure elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)
 departure_elements_frame 1
 #Allow journey departure free point boundary to propagate (otherwise it is a fixed waypoint)
 AllowJourneyFreePointDepartureToPropagate 1
 #journey departure ellipsoid axes (3)
 departure_ellipsoid_axes 1000000 1000000 1000000
-#reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM)
+#reference frame for journey arrival elements (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar, 8: SAM, 9: ObjectReferenced)
 arrival_elements_frame 1
 #journey arrival ellipsoid axes (3)
 arrival_ellipsoid_axes 1000000 1000000 1000000
 #Which bodies are used for third-body perturbation?
 #Expressed as indices in the Universe file
 perturbation_bodies 5
+#STK .grv style gravity model file
+central_body_gravity_file C:/emtg/testatron/universe/gravity_files/DoesNotExist.grv
 
 #Maneuver constraint code
 #Works for absolute and relative epochs and also magnitudes

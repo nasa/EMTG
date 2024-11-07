@@ -86,7 +86,7 @@ namespace EMTG
         this->quiet_basinhopping = (bool) 0;
         this->SPICE_leap_seconds_kernel = "naif0012.tls";
         this->SPICE_reference_frame_kernel = "pck00010.tpc";
-        this->universe_folder = "C:/Utilities/Universe";
+        this->universe_folder = "C:/emtg/Universe";
         this->ephemeris_source = 2;
         this->SplineEphem_points_per_period = 360;
         this->SplineEphem_non_central_body_sun_points_per_period = 10000;
@@ -145,15 +145,15 @@ namespace EMTG
         this->bipropellant_mixture_ratio = 0.925;
         this->chemical_propellant_margin = 0;
         this->SpacecraftModelInput = (SpacecraftModelInputType) 2;
-        this->HardwarePath = "c:/Utilities/HardwareModels/";
+        this->HardwarePath = "C:/emtg/HardwareModels/";
         this->ThrottleTableFile = "empty.ThrottleTable";
         this->LaunchVehicleLibraryFile = "default.emtg_launchvehicleopt";
         this->PowerSystemsLibraryFile = "default.emtg_powersystemsopt";
         this->PropulsionSystemsLibraryFile = "default.emtg_propulsionsystemopt";
         this->SpacecraftOptionsFile = "default.emtg_spacecraftopt";
-        this->LaunchVehicleKey = "ExampleRocket";
+        this->LaunchVehicleKey = "Falcon_9_FT_(RTLS)";
         this->PowerSystemKey = "5kW_basic";
-        this->ElectricPropulsionSystemKey = "defaultThruster";
+        this->ElectricPropulsionSystemKey = "AEPS_PolyFit_HTandHI";
         this->ChemicalPropulsionSystemKey = "DefaultChemicalPropulsionSystem";
         this->perturb_SRP = (bool) 0;
         this->perturb_thirdbody = (bool) 0;
@@ -195,9 +195,9 @@ namespace EMTG
         this->append_number_of_active_engines_to_ephemeris_output = (bool) 0;
         this->append_throttle_level_to_ephemeris_output = (bool) 0;
         this->call_system_to_generate_bsp = (bool) 0;
-        this->spice_utilities_path = "c:/utilities/cspice/exe";
+        this->spice_utilities_path = "C:/utilities/cspice/exe";
         this->spice_utility_extension = ".exe";
-        this->pyemtg_path = "c:/emtg/PyEMTG/";
+        this->pyemtg_path = "C:/emtg/PyEMTG/";
         this->spacecraft_SPICE_ID = -52284;
         this->background_mode = (bool) 0;
         this->output_STMs = (bool) 0;
@@ -298,7 +298,7 @@ namespace EMTG
         this->LV_adapter_mass_lowerBound = 0;
         this->LV_adapter_mass_upperBound = math::LARGE;
         this->engine_type_lowerBound = 0;
-        this->engine_type_upperBound = 32;
+        this->engine_type_upperBound = 17;
         this->number_of_electric_propulsion_systems_lowerBound = 1;
         this->number_of_electric_propulsion_systems_upperBound = INT_MAX;
         this->engine_duty_cycle_lowerBound = 1.00E-10;
@@ -2258,7 +2258,7 @@ namespace EMTG
             optionsFileStream << "SPICE_reference_frame_kernel " << this->SPICE_reference_frame_kernel << std::endl;
         }
     
-        if (this->universe_folder != "C:/Utilities/Universe" || writeAll)
+        if (this->universe_folder != "C:/emtg/Universe" || writeAll)
         {
             optionsFileStream << "#Universe folder" << std::endl;
             optionsFileStream << "universe_folder " << this->universe_folder << std::endl;
@@ -2386,7 +2386,7 @@ namespace EMTG
     
         if (this->engine_type != 5 || writeAll)
         {
-            optionsFileStream << "#low-thrust engine type\n#0: fixed thrust/Isp\n#1: constant Isp, efficiency, EMTG computes input power\n#2: choice of power model, constant efficiency, EMTG chooses Isp\n#3: choice of power model, constant efficiency and Isp\n#4: continuously-varying specific impulse\n#5: custom thrust and mass flow rate polynomial\n#6: NSTAR\n#7: XIPS-25\n#8: BPT-4000 High-Isp\n#9: BPT-4000 High-Thrust\n#10: BPT-4000 Ex-High-Isp\n#11: NEXT high-Isp v9\n#12: VASIMR (argon, using analytical model)\n#13: Hall Thruster (Xenon, using analytical model)\n#14: NEXT high-ISP v10\n#15: NEXT high-thrust v10\n#16: BPT-4000 MALTO\n#17: NEXIS Cardiff 8-15-201\n#18: H6MS Cardiff 8-15-2013\n#19: BHT20K Cardiff 8-16-2013\n#20: Aerojet HiVHAC EM\n#21: 13 kW STMD Hall high-Isp (not available in open-source)\n#22: 13 kW STMD Hall high-thrust (not available in open-source)\n#23: NEXT TT11 High-Thrust\n#24: NEXT TT11 High-Isp\n#25: NEXT TT11 Expanded Throttle Table\n#26: 13 kW STMD Hall high-Isp 10-1-2014 (not available in open-source)\n#27: 13 kW STMD Hall medium-thrust 10-1-2014 (not available in open-source)\n#28: 13 kW STMD Hall high-thrust 10-1-2014 (not available in open-source)\n#29: 2D Throttle table\n#30: 1D Throttle table high-thrust\n#31: 1D Throttle table high-Isp\n#32: 2D polynomial fit" << std::endl;
+            optionsFileStream << "#low-thrust engine type\n#0: fixed thrust/Isp\n#1: constant Isp, efficiency, EMTG computes input power\n#2: choice of power model, constant efficiency, EMTG chooses Isp\n#3: choice of power model, constant efficiency and Isp\n#4: continuously-varying specific impulse\n#5: custom thrust and mass flow rate polynomial\n#6: AEPS_High_Thrust_and_Isp\n#7: BIT3_High_Thrust_and_Isp\n#8: Halo12_High_Thrust\n#9: Halo12_High_Isp\n#10: NEXTC_High_Thrust\n#11: NEXTC_High_Isp\n#12: PPS5000_High_Thrust\n#13: PPS5000_High_Isp\n#14: 2D Throttle table\n#15: 1D Throttle table high-thrust\n#16: 1D Throttle table high-Isp\n#17: 2D polynomial fit" << std::endl;
             optionsFileStream << "engine_type " << this->engine_type << std::endl;
         }
     
@@ -2630,7 +2630,7 @@ namespace EMTG
             optionsFileStream << "SpacecraftModelInput " << this->SpacecraftModelInput << std::endl;
         }
     
-        if (this->HardwarePath != "c:/Utilities/HardwareModels/" || writeAll)
+        if (this->HardwarePath != "C:/emtg/HardwareModels/" || writeAll)
         {
             optionsFileStream << "#HardwarePath" << std::endl;
             optionsFileStream << "HardwarePath " << this->HardwarePath << std::endl;
@@ -2666,7 +2666,7 @@ namespace EMTG
             optionsFileStream << "SpacecraftOptionsFile " << this->SpacecraftOptionsFile << std::endl;
         }
     
-        if (this->LaunchVehicleKey != "ExampleRocket" || writeAll)
+        if (this->LaunchVehicleKey != "Falcon_9_FT_(RTLS)" || writeAll)
         {
             optionsFileStream << "#LaunchVehicleKey" << std::endl;
             optionsFileStream << "LaunchVehicleKey " << this->LaunchVehicleKey << std::endl;
@@ -2678,7 +2678,7 @@ namespace EMTG
             optionsFileStream << "PowerSystemKey " << this->PowerSystemKey << std::endl;
         }
     
-        if (this->ElectricPropulsionSystemKey != "defaultThruster" || writeAll)
+        if (this->ElectricPropulsionSystemKey != "AEPS_PolyFit_HTandHI" || writeAll)
         {
             optionsFileStream << "#ElectricPropulsionSystemKey" << std::endl;
             optionsFileStream << "ElectricPropulsionSystemKey " << this->ElectricPropulsionSystemKey << std::endl;
@@ -2786,12 +2786,10 @@ namespace EMTG
             optionsFileStream << "ParallelShootingConstraintStateRepresentation " << this->ParallelShootingConstraintStateRepresentation << std::endl;
         }
     
-    
-		// Always output the non-default printing option
-		optionsFileStream << "#Write only options that are *not* default into the .emtgopt file?" << std::endl;
-		optionsFileStream << "print_only_non_default_options " << this->print_only_non_default_options << std::endl;
+        // Always output the non-default printing option
+        optionsFileStream << "#Write only options that are *not* default into the .emtgopt file?" << std::endl;
+        optionsFileStream << "print_only_non_default_options " << this->print_only_non_default_options << std::endl;
 
-    
         if (this->output_file_frame != 1 || writeAll)
         {
             optionsFileStream << "#reference frame for output file (0: J2000_ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF, 5: Principle Axes, 6: Topocentric, 7: Polar)" << std::endl;
@@ -2930,7 +2928,7 @@ namespace EMTG
             optionsFileStream << "call_system_to_generate_bsp " << this->call_system_to_generate_bsp << std::endl;
         }
     
-        if (this->spice_utilities_path != "c:/utilities/cspice/exe" || writeAll)
+        if (this->spice_utilities_path != "C:/utilities/cspice/exe" || writeAll)
         {
             optionsFileStream << "#Where are spice utilities?" << std::endl;
             optionsFileStream << "spice_utilities_path " << this->spice_utilities_path << std::endl;
@@ -2942,7 +2940,7 @@ namespace EMTG
             optionsFileStream << "spice_utility_extension " << this->spice_utility_extension << std::endl;
         }
     
-        if (this->pyemtg_path != "c:/emtg/PyEMTG/" || writeAll)
+        if (this->pyemtg_path != "C:/emtg/PyEMTG/" || writeAll)
         {
             optionsFileStream << "#PyEMTG path" << std::endl;
             optionsFileStream << "pyemtg_path " << this->pyemtg_path << std::endl;

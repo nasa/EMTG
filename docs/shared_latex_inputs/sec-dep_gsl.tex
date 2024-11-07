@@ -5,6 +5,13 @@
 \subsubsection{Purpose}
 \noindent \ac{EMTG} depends on \ac{GSL} for cubic-splining utilities. \\ \ac{EMTG} is known to work with \hl{GSL 2.4.0}. 
 
+\subsubsection{Bundled Installation Instructions}
+\begin{enumerate}
+	\item Open the \textless EMTG-root\textgreater \textbackslash depend\textbackslash gsl directory.
+	\item Confirm that the sub-directories contain files.
+	\item If the files exist, no further action is needed and you can go to the next dependency section. If for some reason the files do not exist, go to the next sub-section to download it.
+\end{enumerate}
+
 \subsubsection{Download Location}
 \noindent The main page for the software distributions is in the following website: \\
 \begin{itemize}
@@ -17,6 +24,7 @@
 \url{https://github.com/ampl/gsl/tree/v2.4.0}
 
 \subsubsection{Dependency Installation Instructions}
+\label{sec:gsl_installation_instructions}
 \begin{enumerate}
 	\item Download the zip file from the GitHub page by clicking the ‘Code’ button, select the ‘Download Zip’ option, and save to your desired location.
 	\begin{figure}[H]
@@ -27,7 +35,7 @@
 	\begin{enumerate}
 		\item Extract the contents of the zip file into a destination with no spaces in the file path (e.g. C:\textbackslash SW\_Installs\textbackslash gsl-2.4.0) and record its location for future use.
 	\end{enumerate}
-	\item Open the CMake \ac{GUI}
+	\item \label{bundle:gsl} Open the CMake \ac{GUI}
 	\item Set the CMake settings
 	\begin{enumerate}
 		\item Make sure that the “Advanced” and “Grouped” check boxes are checked. \\ \emph{This makes it easier to see all options}

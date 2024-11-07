@@ -41,7 +41,7 @@ bool,print_NLP_movie_frames,,,0,0,1,Print NLP movie frames?,Print NLP movie fram
 bool,quiet_basinhopping,,,0,0,1,Quiet MBH?,Quiet MBH?
 std::string,SPICE_leap_seconds_kernel,,,naif0012.tls,,,SPICE leap seconds kernel - required for SPICE to work,SPICE leap seconds kernel - required for SPICE to work
 std::string,SPICE_reference_frame_kernel,,,pck00010.tpc,,,SPICE_reference_frame_kernel,SPICE_reference_frame_kernel
-std::string,universe_folder,,,C:/Utilities/Universe,,,Universe folder,Universe folder
+std::string,universe_folder,,,C:/emtg/Universe,,,Universe folder,Universe folder
 int,ephemeris_source,,,2,0,2,"Choices are 0 - static, 1 - SPICE (default to static if no SPICE file supplied for a body), 2 - SplineEphem","0: static, 1: SPICE (default to static if no SPICE file supplied for a body), 2: SplineEphem"
 size_t,SplineEphem_points_per_period,,,360,1,inf,How many sample points should SplineEphem use per orbital period of each body?,How many sample points should SplineEphem use per orbital period of each body?
 size_t,SplineEphem_non_central_body_sun_points_per_period,,,10000,1,inf,How many sample points should SplineEphem use per orbital period of the sun with respect to the central body?,How many sample points should SplineEphem use per orbital period of the sun with respect to the central body?
@@ -62,7 +62,7 @@ double,IspChem,,,320,1,inf,specific impulse of the engine used for impulsive man
 double,Thrust,,,0.1,1.00E-10,inf,"thrust of the spacecraft, in Newtons","thrust of the spacecraft, in Newtons"
 double,LV_margin,,,0,0,1,LV margin (as a fraction),LV margin (as a fraction)
 double,LV_adapter_mass,,,0,0,inf,LV adapter mass (kg),LV adapter mass (kg)
-int,engine_type,,,5,0,32,"low-thrust engine type, from original EMTGv8 list","low-thrust engine type\n#0: fixed thrust/Isp\n#1: constant Isp, efficiency, EMTG computes input power\n#2: choice of power model, constant efficiency, EMTG chooses Isp\n#3: choice of power model, constant efficiency and Isp\n#4: continuously-varying specific impulse\n#5: custom thrust and mass flow rate polynomial\n#6: NSTAR\n#7: XIPS-25\n#8: BPT-4000 High-Isp\n#9: BPT-4000 High-Thrust\n#10: BPT-4000 Ex-High-Isp\n#11: NEXT high-Isp v9\n#12: VASIMR (argon, using analytical model)\n#13: Hall Thruster (Xenon, using analytical model)\n#14: NEXT high-ISP v10\n#15: NEXT high-thrust v10\n#16: BPT-4000 MALTO\n#17: NEXIS Cardiff 8-15-201\n#18: H6MS Cardiff 8-15-2013\n#19: BHT20K Cardiff 8-16-2013\n#20: Aerojet HiVHAC EM\n#21: 13 kW STMD Hall high-Isp (not available in open-source)\n#22: 13 kW STMD Hall high-thrust (not available in open-source)\n#23: NEXT TT11 High-Thrust\n#24: NEXT TT11 High-Isp\n#25: NEXT TT11 Expanded Throttle Table\n#26: 13 kW STMD Hall high-Isp 10-1-2014 (not available in open-source)\n#27: 13 kW STMD Hall medium-thrust 10-1-2014 (not available in open-source)\n#28: 13 kW STMD Hall high-thrust 10-1-2014 (not available in open-source)\n#29: 2D Throttle table\n#30: 1D Throttle table high-thrust\n#31: 1D Throttle table high-Isp\n#32: 2D polynomial fit"
+int,engine_type,,,5,0,17,"low-thrust engine type, from default EMTGv9.02 list","low-thrust engine type\n#0: fixed thrust/Isp\n#1: constant Isp, efficiency, EMTG computes input power\n#2: choice of power model, constant efficiency, EMTG chooses Isp\n#3: choice of power model, constant efficiency and Isp\n#4: continuously-varying specific impulse\n#5: custom thrust and mass flow rate polynomial\n#6: AEPS_High_Thrust_and_Isp\n#7: BIT3_High_Thrust_and_Isp\n#8: Halo12_High_Thrust\n#9: Halo12_High_Isp\n#10: NEXTC_High_Thrust\n#11: NEXTC_High_Isp\n#12: PPS5000_High_Thrust\n#13: PPS5000_High_Isp\n#14: 2D Throttle table\n#15: 1D Throttle table high-thrust\n#16: 1D Throttle table high-Isp\n#17: 2D polynomial fit"
 int,number_of_electric_propulsion_systems,,,1,1,inf,number of thruster systems (used to be called number of engines),number of thruster systems (used to be called number of engines)
 double,engine_duty_cycle,,,1,1.00E-10,1,percentage of time that engine can operate,percentage of time that engine can operate
 DutyCycleType,duty_cycle_type,,,0,0,1,"duty cycle type. Choices are 0 - averaged, 1 - realistic",duty cycle type\n#0: averaged\n#1: realistic
@@ -100,15 +100,15 @@ double,maximum_chemical_oxidizer,,,1000,0,inf,Chemical oxidizer tank capacity (k
 double,bipropellant_mixture_ratio,,,0.925,1.00E-10,1,Bipropellant mixture ratio,Bipropellant mixture ratio
 double,chemical_propellant_margin,,,0,0,1,Chemical propellant margin (fraction),Chemical propellant margin (fraction)
 SpacecraftModelInputType,SpacecraftModelInput,,,2,0,2,"Spacecraft object input type. Choices are 0 - Assemble from libraries, 1 - Read .emtg_spacecraftoptions file, 2 - Assemble from missionoptions object",Spacecraft object input type\n#0: Assemble from libraries\n#1: Read .emtg_spacecraftoptions file\n#2: Assemble from missionoptions object
-std::string,HardwarePath,,,c:/Utilities/HardwareModels/,,,HardwarePath,HardwarePath
+std::string,HardwarePath,,,C:/emtg/HardwareModels/,,,HardwarePath,HardwarePath
 std::string,ThrottleTableFile,,,empty.ThrottleTable,,,ThrottleTableFile,ThrottleTableFile
 std::string,LaunchVehicleLibraryFile,,,default.emtg_launchvehicleopt,,,LaunchVehicleLibraryFile,LaunchVehicleLibraryFile
 std::string,PowerSystemsLibraryFile,,,default.emtg_powersystemsopt,,,PowerSystemsLibraryFile,PowerSystemsLibraryFile
 std::string,PropulsionSystemsLibraryFile,,,default.emtg_propulsionsystemopt,,,PropulsionSystemsLibraryFile,PropulsionSystemsLibraryFile
 std::string,SpacecraftOptionsFile,,,default.emtg_spacecraftopt,,,SpacecraftOptionsFile,SpacecraftOptionsFile
-std::string,LaunchVehicleKey,,,ExampleRocket,,,LaunchVehicleKey,LaunchVehicleKey
+std::string,LaunchVehicleKey,,,Falcon_9_FT_(RTLS),,,LaunchVehicleKey,LaunchVehicleKey
 std::string,PowerSystemKey,,,5kW_basic,,,PowerSystemKey,PowerSystemKey
-std::string,ElectricPropulsionSystemKey,,,defaultThruster,,,ElectricPropulsionSystemKey,ElectricPropulsionSystemKey
+std::string,ElectricPropulsionSystemKey,,,AEPS_PolyFit_HTandHI,,,ElectricPropulsionSystemKey,ElectricPropulsionSystemKey
 std::string,ChemicalPropulsionSystemKey,,,DefaultChemicalPropulsionSystem,,,ChemicalPropulsionSystemKey,ChemicalPropulsionSystemKey
 bool,perturb_SRP,,,0,0,1,solar radiation pressure?,solar radiation pressure?
 bool,perturb_thirdbody,,,0,0,1,third body perturbations?,third body perturbations?
@@ -150,9 +150,9 @@ bool,append_active_power_to_ephemeris_output,,,0,0,1,Append active power to ephe
 bool,append_number_of_active_engines_to_ephemeris_output,,,0,0,1,Append number of active propulsion systems to ephemeris output?,Append number of active propulsion systems to ephemeris output?
 bool,append_throttle_level_to_ephemeris_output,,,0,0,1,Append throttle level to ephemeris output?,Append throttle level to ephemeris output?
 bool,call_system_to_generate_bsp,,,0,0,1,Should EMTG make a system call to clean the .ephemeris file and call python to call spice to generate the bsp?,Generate bsp?
-std::string,spice_utilities_path,,,c:/utilities/cspice/exe,,,Where are the spice utilities brief and mkspk located?,Where are spice utilities?
+std::string,spice_utilities_path,,,C:/utilities/cspice/exe,,,Where are the spice utilities brief and mkspk located?,Where are spice utilities?
 std::string,spice_utility_extension,,,.exe,,,"What is the file extension on the spice utlities? Likely either "".exe"" for Windows or """" for *nix",Spice utility extension
-std::string,pyemtg_path,,,c:/emtg/PyEMTG/,,,Where is PyEMTG located?,PyEMTG path
+std::string,pyemtg_path,,,C:/emtg/PyEMTG/,,,Where is PyEMTG located?,PyEMTG path
 int,spacecraft_SPICE_ID,,,-52284,minf,inf,SPICE ID of spacecraft for bsp,SPICE ID of spacecraft
 bool,background_mode,,,0,0,1,Close program after completion?,Close program after completion?
 bool,output_STMs,,,0,0,1,Output STMs?,Output STMs?

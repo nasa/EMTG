@@ -1,5 +1,5 @@
 Mission: EarthToMarsBallisticRendezvous
-Written by EMTG_v9 core program compiled Dec 15 2020 10:41:15
+Written by EMTG_v9 core program compiled Oct 13 2022 08:44:20
 
 Journey: 0
 Journey name: EarthToMarsBallisticRendezvous
@@ -46,6 +46,9 @@ Boundary: 1 134774403.58590201 63596862.83528065 -1177.05692369 -13.20864786 26.
 Boundary: 2 -231408107.83974698 -73804443.80806434 4136948.97706648 8.26680698 -21.01423370 -0.64331355
 
 
+BEGIN_BOUNDARY_CONSTRAINT_BLOCK
+END_BOUNDARY_CONSTRAINT_BLOCK
+
 Journey flight time (seconds): 25961205.44121170
 Journey flight time (days): 300.47691483
 
@@ -87,6 +90,17 @@ Worst constraint is F[1]: j0p0MGAnDSMs: match point x
 with violation -0.00000826274668284390
 Worst decision variable is X[0]: j0p0MGAnDSMsEphemerisPeggedLaunchDirectInsertion: event left state epoch
 with unhappiness 0.00000000000000000000
+
+
+
+Number of solution attempts: 1
+Solution attempt that produced a feasible solution with the best objective value (0 if no feasible solutions): 1
+Time to completion of solution attempt that produced a feasible solution with the best objective value (seconds) (-1 if no feasible solutions): 0.00000000000000000000
+
+
+
+Was first NLP solve feasible: 1
+Objective function value from first NLP solve: 2.34380902194809692674
 
 
 

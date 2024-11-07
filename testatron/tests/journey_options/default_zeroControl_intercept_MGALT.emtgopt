@@ -5,11 +5,19 @@ mission_name default_zeroControl_intercept_MGALT
 #Enable ACE feasible point finder?
 ACE_feasible_point_finder 1
 #Universe folder
-universe_folder C:/emtg/testatron/Universe
+universe_folder C:/emtg/testatron/universe/
 #HardwarePath
 HardwarePath C:/emtg/testatron/HardwareModels/
-#ThrottleTableFile
-ThrottleTableFile empty.ThrottleTable
+#Override the working directory?
+override_working_directory 1
+#User-defined working directory
+forced_working_directory C:/emtg/testatron/tests/journey_options
+#Create a mission subfolder?
+override_mission_subfolder 1
+#Mission subfolder
+forced_mission_subfolder .
+#Close program after completion?
+background_mode 1
 #which inner loop solver to run?
 #0: none, evaluate trialX
 #1: run MBH
@@ -44,6 +52,8 @@ arrival_type 2
 perturbation_bodies
 #ECC for ephemeris pegged orbit insertion
 ephemeris_pegged_orbit_insertion_ECC 1.0000000000000000364e-10
+#STK .grv style gravity model file
+central_body_gravity_file C:/emtg/testatron/universe/gravity_files/DoesNotExist.grv
 
 #Maneuver constraint code
 #Works for absolute and relative epochs and also magnitudes

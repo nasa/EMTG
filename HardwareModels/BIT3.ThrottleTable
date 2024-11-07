@@ -1,0 +1,14 @@
+﻿#BIT-3 throttle table
+#Performance characteristics from:
+#
+#   Tsay, Michael, et al. "Twin Ion Engine Demonstration for Small Spacecraft Applications." (2022).
+#
+PPU efficiency,1
+PPU min power (kW),0.055
+PPU max power (kW),0.075
+#Throttle level,Mass flow rate (mg/s),Beam Current (A),Beam Voltage (V),Thrust (mN),Isp (s),Efficiency,PPU input power (kW)
+TL1,0.056305449,0.0099,0,0.66,1290,1,0.055
+TL2,0.056104716,0.0114,0,0.78,1530,1,0.06
+TL3,0.05629074,0.0129,0,0.89,1740,1,0.065
+TL4,0.056148755,0.0143,0,1,1960,1,0.07
+TL5,0.056305449,0.0156,0,1.1,2150,1,0.075
