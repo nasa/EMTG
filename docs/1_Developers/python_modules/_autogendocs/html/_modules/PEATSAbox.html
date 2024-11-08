@@ -1,0 +1,616 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PEATSAbox &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for PEATSAbox</h1><div class="highlight"><pre>
+<span></span><span class="c1">#EMTG: Evolutionary Mission Trajectory Generator</span>
+<span class="c1">#An open-source global optimization tool for preliminary mission design</span>
+<span class="c1">#Provided by NASA Goddard Space Flight Center</span>
+<span class="c1">#</span>
+<span class="c1">#Copyright (c) 2014 - 2024 United States Government as represented by the</span>
+<span class="c1">#Administrator of the National Aeronautics and Space Administration.</span>
+<span class="c1">#All Other Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#Licensed under the NASA Open Source License (the &quot;License&quot;); </span>
+<span class="c1">#You may not use this file except in compliance with the License. </span>
+<span class="c1">#You may obtain a copy of the License at:</span>
+<span class="c1">#https://opensource.org/license/nasa1-3-php</span>
+<span class="c1">#Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1">#distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1">#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either </span>
+<span class="c1">#express or implied.   See the License for the specific language</span>
+<span class="c1">#governing permissions and limitations under the License.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">PEATSAbox.py</span>
+<span class="sd">==================</span>
+
+<span class="sd">Class that is a sortable container for a mission and its options script</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PEATSAbox"><a class="viewcode-back" href="../PEATSA/PEATSAbox.html#PEATSAbox.PEATSAbox">[docs]</a><span class="k">class</span> <span class="nc">PEATSAbox</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A sortable container for a mission and its options script</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    PEATSAorder : PEATSAmenu object</span>
+<span class="sd">        Holds options for the PEATSA run.</span>
+<span class="sd">    PEATSAfolder : String</span>
+<span class="sd">        Path to the output directory for this PEATSA run. Does NOT need to end with &#39;/&#39;.</span>
+<span class="sd">    PEATSAdough_path : String, optional</span>
+<span class="sd">        Path to .emtgopt file for this case relative to PEATSApath. The default is None.</span>
+<span class="sd">    PEATSAcrust_path : String, optional</span>
+<span class="sd">        Path to .emtg file for this case relative to PEATSApath. The default is None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PEATSAorder</span><span class="p">,</span> <span class="n">PEATSAfolder</span><span class="p">,</span> <span class="n">PEATSAdough_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">PEATSAcrust_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initializationType</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor for PEATSAbox</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        PEATSAorder : PEATSAmenu object</span>
+<span class="sd">            Holds options for the PEATSA run.</span>
+<span class="sd">        PEATSAfolder : String</span>
+<span class="sd">            Path to the output directory for this PEATSA run. Does NOT need to end with &#39;/&#39;.</span>
+<span class="sd">        PEATSAdough_path : String, optional</span>
+<span class="sd">            Path to .emtgopt file for this case relative to PEATSApath. The default is None.</span>
+<span class="sd">        PEATSAcrust_path : String, optional</span>
+<span class="sd">            Path to .emtg file for this case relative to PEATSApath. The default is None.</span>
+<span class="sd">        initializationType : Integer, optional</span>
+<span class="sd">            0: Old way: all initialization at once</span>
+<span class="sd">            1: New way (for parallelization). Only reading of files happens on construction. Rest of initialization requires calling initializeAfterReading()</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PEATSApath</span>       <span class="o">=</span> <span class="n">PEATSAfolder</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Path to the output directory for this PEATSA run&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span> <span class="o">=</span> <span class="n">PEATSAcrust_path</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Path to .emtg file for this case relative to PEATSApath&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAdough_path</span> <span class="o">=</span> <span class="n">PEATSAdough_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAdough_fullpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSApath</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAdough_path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAdough_fullpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAdough_fullpath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;results&quot;</span><span class="p">,</span> <span class="s2">&quot;cases&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Path to .emtgopt file for this case relative to PEATSApath&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed_boxes</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Description.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fingerprint</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Fingerprint dictionary. Gets updated in initialize() based on PEATSAorder.seed_criteria.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">converged</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;If this cases produced a non-failed solution, gets set to 1 in initialize(). Otherwise, 0.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed_criteria</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mission_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">final_mass</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1e10</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Final mass of spacecraft for this case (kg). Set in initialize() iff the case did not fail.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_of_flight</span> <span class="o">=</span> <span class="mf">1e10</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Time of flight for mission for this case (years). Set in initialize() iff the case did not fail.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extra_csv_column_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_fingerprint</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">in_study</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feasibility</span> <span class="o">=</span> <span class="mf">1e10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iteration</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">used_seed</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">re_run_using_this_seed</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">objective_value</span> <span class="o">=</span> <span class="mf">1e100</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">successfullyReadMissionAndMissionOptions</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">first_nlp_solve_feasible</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">objective_value_first_nlp_solve</span> <span class="o">=</span> <span class="mf">1e100</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_solution_attempts</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">solution_attempt_index_that_produced_best_feasible_solution</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># Check if this is a minimzation or maximization problem and set the </span>
+        <span class="c1"># default obective value accordingly</span>
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">max_or_min</span> <span class="o">==</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">objective_value</span> <span class="o">=</span> <span class="mf">1e100</span>
+        <span class="k">elif</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">max_or_min</span> <span class="o">==</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">objective_value</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1e100</span>
+        
+        <span class="k">if</span> <span class="n">initializationType</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">initializationType</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">initializeReadOnly</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">)</span>
+        <span class="k">return</span>
+    
+<div class="viewcode-block" id="PEATSAbox.initializeReadOnly"><a class="viewcode-back" href="../PEATSA/PEATSAbox.html#PEATSAbox.PEATSAbox.initializeReadOnly">[docs]</a>    <span class="k">def</span> <span class="nf">initializeReadOnly</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PEATSAorder</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        A version of initialize() that only does the stuff that requires reading from file</span>
+<span class="sd">        because that stuff is not a good candidate for parallelization, while the other</span>
+<span class="sd">        stuff is.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="kn">import</span> <span class="nn">sys</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">emtg_root_directory</span> <span class="o">+</span> <span class="s2">&quot;/PyEMTG&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">PyHardware</span>
+            <span class="n">use_pyhardware</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">use_pyhardware</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="kn">import</span> <span class="nn">MissionOptions</span>
+        <span class="kn">import</span> <span class="nn">Mission</span>
+        <span class="kn">import</span> <span class="nn">ThrottleTable</span>
+        <span class="kn">import</span> <span class="nn">math</span>
+        <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+        <span class="kn">import</span> <span class="nn">logging</span>
+        
+        <span class="c1"># Check if we have a mission file</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1">#MO = MissionOptions.MissionOptions(self.PEATSApath + self.PEATSAdough_path)</span>
+            <span class="n">MO</span> <span class="o">=</span> <span class="n">MissionOptions</span><span class="o">.</span><span class="n">MissionOptions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PEATSAdough_fullpath</span><span class="p">)</span>
+            <span class="c1"># Write the mission options object to a class variable</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAdough</span> <span class="o">=</span> <span class="n">MO</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="c1">#logging.info(&#39;WARNING: Unable to load mission options file: &#39; + self.PEATSApath + self.PEATSAdough_path)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;WARNING: Unable to load mission options file: &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAdough_fullpath</span><span class="p">)</span>
+            <span class="k">return</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="s1">&#39;fake&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span><span class="p">:</span>
+            <span class="c1"># Sometimes things go wrong loading the data, so put this in a try block</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Load the mission object</span>
+                <span class="n">M</span> <span class="o">=</span> <span class="n">Mission</span><span class="o">.</span><span class="n">Mission</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PEATSApath</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span><span class="p">)</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">successfullyReadMissionAndMissionOptions</span> <span class="o">=</span> <span class="kc">True</span>
+
+                <span class="c1"># # Even if it didnt converge, we should be able to get feasiblity</span>
+                <span class="c1"># self.feasibility = M.worst_violation</span>
+                
+                <span class="c1"># Write the Mission object to the box</span>
+                <span class="c1">#if not PEATSAorder.thin_crust:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust</span> <span class="o">=</span> <span class="n">M</span>
+                
+                <span class="c1"># # If the emtg case converged, then it will not have &quot;FAILURE&quot; in the name</span>
+                <span class="c1"># # and it will be safe to load the file into an EMTG mission object</span>
+                <span class="c1"># # (Jacob) every once in a while Jacob writes MBH code wrong and &quot;FAILURE&quot; does not appear, so let&#39;s also check feasibility ourselves!</span>
+                <span class="c1"># if &quot;FAILURE&quot; not in self.PEATSAcrust_path and self.feasibility &lt; MO.snopt_feasibility_tolerance:</span>
+                <span class="c1">#     # Get the final mass</span>
+                <span class="c1">#     self.final_mass = M.spacecraft_dry_mass</span>
+        
+                <span class="c1">#     # Get the time of flight</span>
+                <span class="c1">#     self.time_of_flight = M.total_flight_time_years</span>
+        
+                <span class="c1">#     # Update the flag to note that it converged</span>
+                <span class="c1">#     self.converged = 1</span>
+
+            <span class="k">except</span><span class="p">:</span>
+                <span class="c1"># Something is wrong with this file. Consider it a failure</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">successfullyReadMissionAndMissionOptions</span> <span class="o">=</span> <span class="kc">False</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">converged</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;WARNING: .emtg file exists but threw an error while being loaded: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSApath</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span><span class="p">)</span>
+        
+        <span class="c1"># Load the mission options object</span>
+        <span class="c1">#MO = MissionOptions.MissionOptions(self.PEATSApath + self.PEATSAdough_path)</span>
+            
+        
+        
+        <span class="c1"># Load the spacecraft options if a spacecraft options file exists</span>
+        <span class="k">if</span> <span class="n">MO</span><span class="o">.</span><span class="n">SpacecraftModelInput</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">use_pyhardware</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAstone</span> <span class="o">=</span> <span class="n">PyHardware</span><span class="o">.</span><span class="n">SpacecraftOptions</span><span class="p">(</span><span class="n">MO</span><span class="o">.</span><span class="n">HardwarePath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">MO</span><span class="o">.</span><span class="n">SpacecraftOptionsFile</span><span class="p">)</span>
+        
+            <span class="c1"># # Initialize an array to hold the throttle table files</span>
+            <span class="c1"># self.PEATSAcooking_temperatures = []</span>
+            
+            <span class="c1"># # Loop through all of the stages to get all of the throttle table files</span>
+            <span class="c1"># for stage_idx in range(self.PEATSAstone.getNumberOfStages()):</span>
+                
+            <span class="c1">#     # Grab the stage options</span>
+            <span class="c1">#     stage = self.PEATSAstone.getStageOptions(stage_idx)</span>
+                
+            <span class="c1">#     # Grab the EP options</span>
+            <span class="c1">#     EPopts = stage.getElectricPropulsionSystemOptions()</span>
+                
+            <span class="c1">#     # Append the throttle table files</span>
+            <span class="c1">#     self.PEATSAcooking_temperatures.append(ThrottleTable.ThrottleTable(EPopts.getThrottleTableFile()))</span>
+        
+        <span class="c1"># Load the launch vehicle options, if a lv library exists</span>
+        <span class="k">if</span> <span class="n">MO</span><span class="o">.</span><span class="n">SpacecraftModelInput</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">use_pyhardware</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAovenmitt</span> <span class="o">=</span> <span class="n">PyHardware</span><span class="o">.</span><span class="n">LaunchVehicleOptionsLibrary</span><span class="p">(</span><span class="n">MO</span><span class="o">.</span><span class="n">HardwarePath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">MO</span><span class="o">.</span><span class="n">LaunchVehicleLibraryFile</span><span class="p">)</span>
+                
+        <span class="c1"># # Get the mission name</span>
+        <span class="c1"># self.mission_name = self.PEATSAdough.mission_name</span>
+        
+        <span class="c1"># # Note what iteration it was introducted</span>
+        <span class="c1"># self.iteration = PEATSAorder.iteration</span>
+        
+        <span class="c1"># # Evaluate the objective.</span>
+        <span class="c1"># if self.PEATSAcrust_path != None and self.PEATSAcrust_path != &quot;&quot; and &quot;FAILURE&quot; not in self.PEATSAcrust_path and self.feasibility &lt; MO.snopt_feasibility_tolerance:</span>
+        <span class="c1">#     try:</span>
+        <span class="c1">#         M = Mission.Mission(self.PEATSApath + self.PEATSAcrust_path)</span>
+        <span class="c1">#         # self.PEATSAcrust = M</span>
+        <span class="c1">#         self.objective_value = eval(PEATSAorder.objective_formula)</span>
+        <span class="c1">#     except:</span>
+        <span class="c1">#         if &#39;M&#39; in locals():</span>
+        <span class="c1">#             raise Exception(&quot;The mission object exists, but the objective formula wasnt able to be evaluated&quot;)</span>
+        
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="PEATSAbox.initializeAfterReading"><a class="viewcode-back" href="../PEATSA/PEATSAbox.html#PEATSAbox.PEATSAbox.initializeAfterReading">[docs]</a>    <span class="k">def</span> <span class="nf">initializeAfterReading</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PEATSAorder</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Do the parallelizable initialization stuff. Called only AFTER initializeReadOnly()</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">sys</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">emtg_root_directory</span> <span class="o">+</span> <span class="s2">&quot;/PyEMTG&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">PyHardware</span>
+            <span class="n">use_pyhardware</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">use_pyhardware</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="kn">import</span> <span class="nn">MissionOptions</span>
+        <span class="kn">import</span> <span class="nn">Mission</span>
+        <span class="kn">import</span> <span class="nn">ThrottleTable</span>
+        <span class="kn">import</span> <span class="nn">math</span>
+        <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+        <span class="kn">import</span> <span class="nn">logging</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">successfullyReadMissionAndMissionOptions</span><span class="p">:</span>
+            <span class="c1"># Even if it didnt converge, we should be able to get feasiblity</span>
+            <span class="n">MO</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAdough</span>
+            <span class="n">M</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feasibility</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">worst_violation</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">first_nlp_solve_feasible</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">first_nlp_solve_feasible</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">objective_value_first_nlp_solve</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">objective_value_first_nlp_solve</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">number_of_solution_attempts</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">number_of_solution_attempts</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">solution_attempt_index_that_produced_best_feasible_solution</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">solution_attempt_index_that_produced_best_feasible_solution</span>
+            
+            <span class="c1"># If the emtg case converged, then it will not have &quot;FAILURE&quot; in the name</span>
+            <span class="c1"># and it will be safe to load the file into an EMTG mission object</span>
+            <span class="c1"># (Jacob) every once in a while Jacob writes MBH code wrong and &quot;FAILURE&quot; does not appear, so let&#39;s also check feasibility ourselves!</span>
+            <span class="k">if</span> <span class="s2">&quot;FAILURE&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">feasibility</span> <span class="o">&lt;</span> <span class="n">MO</span><span class="o">.</span><span class="n">snopt_feasibility_tolerance</span><span class="p">:</span>
+                <span class="c1"># Get the final mass</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">final_mass</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">spacecraft_dry_mass</span>
+    
+                <span class="c1"># Get the time of flight</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">time_of_flight</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">total_flight_time_years</span>
+    
+                <span class="c1"># Update the flag to note that it converged</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">converged</span> <span class="o">=</span> <span class="mi">1</span>
+                
+        <span class="c1"># Load the spacecraft options if a spacecraft options file exists</span>
+        <span class="c1"># Initialize an array to hold the throttle table files</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcooking_temperatures</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1"># Loop through all of the stages to get all of the throttle table files</span>
+        <span class="k">for</span> <span class="n">stage_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PEATSAstone</span><span class="o">.</span><span class="n">getNumberOfStages</span><span class="p">()):</span>
+            <span class="c1"># Grab the stage options</span>
+            <span class="n">stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAstone</span><span class="o">.</span><span class="n">getStageOptions</span><span class="p">(</span><span class="n">stage_idx</span><span class="p">)</span>
+            
+            <span class="c1"># Grab the EP options</span>
+            <span class="n">EPopts</span> <span class="o">=</span> <span class="n">stage</span><span class="o">.</span><span class="n">getElectricPropulsionSystemOptions</span><span class="p">()</span>
+            
+            <span class="c1"># Append the throttle table files</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcooking_temperatures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ThrottleTable</span><span class="o">.</span><span class="n">ThrottleTable</span><span class="p">(</span><span class="n">EPopts</span><span class="o">.</span><span class="n">getThrottleTableFile</span><span class="p">()))</span>
+            
+        <span class="c1"># Get the mission name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mission_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAdough</span><span class="o">.</span><span class="n">mission_name</span>
+        
+        <span class="c1"># Note what iteration it was introducted</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iteration</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span>
+        
+        <span class="c1"># Evaluate the objective.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="s2">&quot;FAILURE&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">feasibility</span> <span class="o">&lt;</span> <span class="n">MO</span><span class="o">.</span><span class="n">snopt_feasibility_tolerance</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1">#M = Mission.Mission(self.PEATSApath + self.PEATSAcrust_path)</span>
+                <span class="c1"># self.PEATSAcrust = M</span>
+                <span class="c1">#M = self.PEATSAcrust</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">objective_value</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">objective_formula</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="c1"># don&#39;t do anything ... if we made it </span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;The mission object exists, but the objective formula wasnt able to be evaluated&quot;</span><span class="p">)</span>
+                
+        <span class="c1"># Loop through the different seed crieteria</span>
+        <span class="k">for</span> <span class="n">seed_criteria</span> <span class="ow">in</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">seed_criteria</span><span class="p">:</span>
+            
+            <span class="c1"># Add a new dictionary entry in the box&#39;s seed criteria by</span>
+            <span class="c1"># evaluating the seed criteria. This is not in a try block</span>
+            <span class="c1"># because it needs to work</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">seed_criteria</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="nb">eval</span><span class="p">(</span><span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">])})</span>
+            
+            <span class="c1"># Initialize a boolean for each seed</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">re_run_using_this_seed</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+            
+            <span class="c1"># Initialize the fingerprint for this seed criteria in the dictionary   </span>
+            <span class="c1"># to an empty list</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fingerprint</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="p">()</span> <span class="p">})</span>    
+                
+            <span class="c1"># Get the fingerprint</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">formula</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">):</span>
+                <span class="c1"># Add this formula. This is not in a try block, because</span>
+                <span class="c1"># if PEATSA can&#39;t get the fingerprint for all of its cases</span>
+                <span class="c1"># PEATSA cant function!</span>
+                <span class="k">if</span> <span class="n">formula</span> <span class="o">!=</span> <span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">[</span><span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+=</span> <span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">formula</span><span class="p">),)</span>
+        
+            <span class="c1"># Add the seed criteria to the fingerprint</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">[</span><span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seed_criteria</span><span class="p">[</span><span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">]],)</span>
+                
+        <span class="c1"># Get the extra user requested csv data</span>
+        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">extra_csv_column_definitions</span><span class="p">:</span>
+            <span class="c1"># This does not need to succeed, for PEATSA to work, so it will go in </span>
+            <span class="c1"># a try block</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Try evaluating the formula</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">extra_csv_column_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">column</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="c1"># It didnt work. Oh well, just throw an empty string in the list</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">extra_csv_column_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+                
+                <span class="c1"># from IPython import embed</span>
+                <span class="c1"># embed()</span>
+                <span class="c1"># stop</span>
+        
+                <span class="c1"># If we are debugging however, we want to know that the formula failed.</span>
+                <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">if_run_cases</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;M.&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="s2">&quot;M&quot;</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">())</span> <span class="ow">or</span> <span class="s2">&quot;M.&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">column</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error in user csv column formula: &quot;</span> <span class="o">+</span> <span class="n">column</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        
+        <span class="k">return</span></div>
+    
+<div class="viewcode-block" id="PEATSAbox.initialize"><a class="viewcode-back" href="../PEATSA/PEATSAbox.html#PEATSAbox.PEATSAbox.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">PEATSAorder</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        PEATSAorder : TYPE</span>
+<span class="sd">            DESCRIPTION.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Exception</span>
+<span class="sd">            DESCRIPTION.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">sys</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">emtg_root_directory</span> <span class="o">+</span> <span class="s2">&quot;/PyEMTG&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">PyHardware</span>
+            <span class="n">use_pyhardware</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">use_pyhardware</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="kn">import</span> <span class="nn">MissionOptions</span>
+        <span class="kn">import</span> <span class="nn">Mission</span>
+        <span class="kn">import</span> <span class="nn">ThrottleTable</span>
+        <span class="kn">import</span> <span class="nn">math</span>
+        <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+        <span class="kn">import</span> <span class="nn">logging</span>
+        
+        <span class="c1"># Check if we have a mission file</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="s1">&#39;fake&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span><span class="p">:</span>
+            <span class="c1"># Sometimes things go wrong loading the data, so put this in a try block</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Load the mission object</span>
+                <span class="n">M</span> <span class="o">=</span> <span class="n">Mission</span><span class="o">.</span><span class="n">Mission</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PEATSApath</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span><span class="p">)</span>
+                <span class="c1">#MO = MissionOptions.MissionOptions(self.PEATSApath + self.PEATSAdough_path)</span>
+                <span class="n">MO</span> <span class="o">=</span> <span class="n">MissionOptions</span><span class="o">.</span><span class="n">MissionOptions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PEATSAdough_fullpath</span><span class="p">)</span>
+
+                <span class="c1"># Even if it didnt converge, we should be able to get hef easiblity</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">feasibility</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">worst_violation</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">first_nlp_solve_feasible</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">first_nlp_solve_feasible</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">objective_value_first_nlp_solve</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">objective_value_first_nlp_solve</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">number_of_solution_attempts</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">number_of_solution_attempts</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">solution_attempt_index_that_produced_best_feasible_solution</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">solution_attempt_index_that_produced_best_feasible_solution</span>
+                
+                <span class="c1"># Write the Mission object to the box</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">thin_crust</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust</span> <span class="o">=</span> <span class="n">M</span>
+                
+                <span class="c1"># If the emtg case converged, then it will not have &quot;FAILURE&quot; in the name</span>
+                <span class="c1"># and it will be safe to load the file into an EMTG mission object</span>
+                <span class="c1"># (Jacob) every once in a while Jacob writes MBH code wrong and &quot;FAILURE&quot; does not appear, so let&#39;s also check feasibility ourselves!</span>
+                <span class="k">if</span> <span class="s2">&quot;FAILURE&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">feasibility</span> <span class="o">&lt;</span> <span class="n">MO</span><span class="o">.</span><span class="n">snopt_feasibility_tolerance</span><span class="p">:</span>
+                    <span class="c1"># Get the final mass</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">final_mass</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">spacecraft_dry_mass</span>
+        
+                    <span class="c1"># Get the time of flight</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">time_of_flight</span> <span class="o">=</span> <span class="n">M</span><span class="o">.</span><span class="n">total_flight_time_years</span>
+        
+                    <span class="c1"># Update the flag to note that it converged</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">converged</span> <span class="o">=</span> <span class="mi">1</span>
+
+            <span class="k">except</span><span class="p">:</span>
+                <span class="c1"># Something is wrong with this file. Consider it a failure</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">converged</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;WARNING: .emtg file exists but threw an error while being loaded: &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSApath</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span><span class="p">)</span>
+        
+        <span class="c1"># Load the mission options object</span>
+        <span class="c1">#MO = MissionOptions.MissionOptions(self.PEATSApath + self.PEATSAdough_path)</span>
+        <span class="n">MO</span> <span class="o">=</span> <span class="n">MissionOptions</span><span class="o">.</span><span class="n">MissionOptions</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PEATSAdough_fullpath</span><span class="p">)</span>
+            
+        <span class="c1"># Write the mission and mission object to a class variable</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAdough</span> <span class="o">=</span> <span class="n">MO</span>
+        
+        <span class="c1"># Load the spacecraft options if a spacecraft options file exists</span>
+        <span class="k">if</span> <span class="n">MO</span><span class="o">.</span><span class="n">SpacecraftModelInput</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">use_pyhardware</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAstone</span> <span class="o">=</span> <span class="n">PyHardware</span><span class="o">.</span><span class="n">SpacecraftOptions</span><span class="p">(</span><span class="n">MO</span><span class="o">.</span><span class="n">HardwarePath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">MO</span><span class="o">.</span><span class="n">SpacecraftOptionsFile</span><span class="p">)</span>
+        
+            <span class="c1"># Initialize an array to hold the throttle table files</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcooking_temperatures</span> <span class="o">=</span> <span class="p">[]</span>
+            
+            <span class="c1"># Loop through all of the stages to get all of the throttle table files</span>
+            <span class="k">for</span> <span class="n">stage_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PEATSAstone</span><span class="o">.</span><span class="n">getNumberOfStages</span><span class="p">()):</span>
+                
+                <span class="c1"># Grab the stage options</span>
+                <span class="n">stage</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAstone</span><span class="o">.</span><span class="n">getStageOptions</span><span class="p">(</span><span class="n">stage_idx</span><span class="p">)</span>
+                
+                <span class="c1"># Grab the EP options</span>
+                <span class="n">EPopts</span> <span class="o">=</span> <span class="n">stage</span><span class="o">.</span><span class="n">getElectricPropulsionSystemOptions</span><span class="p">()</span>
+                
+                <span class="c1"># Append the throttle table files</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcooking_temperatures</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ThrottleTable</span><span class="o">.</span><span class="n">ThrottleTable</span><span class="p">(</span><span class="n">EPopts</span><span class="o">.</span><span class="n">getThrottleTableFile</span><span class="p">()))</span>
+        
+        <span class="c1"># Load the launch vehicle options, if a lv library exists</span>
+        <span class="k">if</span> <span class="n">MO</span><span class="o">.</span><span class="n">SpacecraftModelInput</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">use_pyhardware</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAovenmitt</span> <span class="o">=</span> <span class="n">PyHardware</span><span class="o">.</span><span class="n">LaunchVehicleOptionsLibrary</span><span class="p">(</span><span class="n">MO</span><span class="o">.</span><span class="n">HardwarePath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">MO</span><span class="o">.</span><span class="n">LaunchVehicleLibraryFile</span><span class="p">)</span>
+                
+        <span class="c1"># Get the mission name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mission_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAdough</span><span class="o">.</span><span class="n">mission_name</span>
+        
+        <span class="c1"># Note what iteration it was introducted</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iteration</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span>
+        
+        <span class="c1"># Evaluate the objective.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span> <span class="o">!=</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="s2">&quot;FAILURE&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">feasibility</span> <span class="o">&lt;</span> <span class="n">MO</span><span class="o">.</span><span class="n">snopt_feasibility_tolerance</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">M</span> <span class="o">=</span> <span class="n">Mission</span><span class="o">.</span><span class="n">Mission</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PEATSApath</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">PEATSAcrust_path</span><span class="p">)</span>
+                <span class="c1"># self.PEATSAcrust = M</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">objective_value</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">objective_formula</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s1">&#39;M&#39;</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">():</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;The mission object exists, but the objective formula wasnt able to be evaluated&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Loop through the different seed crieteria</span>
+        <span class="k">for</span> <span class="n">seed_criteria</span> <span class="ow">in</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">seed_criteria</span><span class="p">:</span>
+            
+            <span class="c1"># Add a new dictionary entry in the box&#39;s seed criteria by</span>
+            <span class="c1"># evaluating the seed criteria. This is not in a try block</span>
+            <span class="c1"># because it needs to work</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">seed_criteria</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="nb">eval</span><span class="p">(</span><span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">])})</span>
+            
+            <span class="c1"># Initialize a boolean for each seed</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">re_run_using_this_seed</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">:</span> <span class="kc">False</span><span class="p">})</span>
+            
+            <span class="c1"># Initialize the fingerprint for this seed criteria in the dictionary   </span>
+            <span class="c1"># to an empty list</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fingerprint</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span> <span class="p">()</span> <span class="p">})</span>    
+                
+            <span class="c1"># Get the fingerprint</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">formula</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">):</span>
+                <span class="c1"># Add this formula. This is not in a try block, because</span>
+                <span class="c1"># if PEATSA can&#39;t get the fingerprint for all of its cases</span>
+                <span class="c1"># PEATSA cant function!</span>
+                <span class="k">if</span> <span class="n">formula</span> <span class="o">!=</span> <span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">[</span><span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+=</span> <span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">formula</span><span class="p">),)</span>
+        
+            <span class="c1"># Add the seed criteria to the fingerprint</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">[</span><span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seed_criteria</span><span class="p">[</span><span class="n">seed_criteria</span><span class="p">[</span><span class="mi">0</span><span class="p">]],)</span>
+                
+        <span class="c1"># Get the extra user requested csv data</span>
+        <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">extra_csv_column_definitions</span><span class="p">:</span>
+            <span class="c1"># This does not need to succeed, for PEATSA to work, so it will go in </span>
+            <span class="c1"># a try block</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Try evaluating the formula</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">extra_csv_column_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">column</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="c1"># It didnt work. Oh well, just throw an empty string in the list</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">extra_csv_column_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+                
+                <span class="c1"># from IPython import embed</span>
+                <span class="c1"># embed()</span>
+                <span class="c1"># stop</span>
+        
+                <span class="c1"># If we are debugging however, we want to know that the formula failed.</span>
+                <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">if_run_cases</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;M.&#39;</span> <span class="ow">in</span> <span class="n">column</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">and</span> <span class="s2">&quot;M&quot;</span> <span class="ow">in</span> <span class="nb">locals</span><span class="p">())</span> <span class="ow">or</span> <span class="s2">&quot;M.&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">column</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error in user csv column formula: &quot;</span> <span class="o">+</span> <span class="n">column</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div></div>
+        
+        
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

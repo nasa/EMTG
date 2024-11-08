@@ -1,0 +1,459 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>analyze_convergence &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for analyze_convergence</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">analyze_convergence.py</span>
+<span class="sd">========================</span>
+
+<span class="sd">Standlone executable for producing the equivalent of a PEATSA csv summary file.</span>
+
+<span class="sd">Calling sequence is</span>
+
+<span class="sd">python analyze_convergence.py &lt;path/to/peatsa/output/folder&gt; &lt;&#39;max&#39; or &#39;min&#39;&gt;</span>
+
+<span class="sd">Max or min sets whether the PEATSA run is attempting to maximize or minimize the objective function.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../PEATSA/analyze_convergence.html#analyze_convergence.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">!=</span><span class="mi">3</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Syntax:&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;python analyze_convergence.py /path/to/peatsa/folder max_or_min&quot;</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        
+        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;/Utilities/emtg/PyEMTG&quot;</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">MissionOptions</span>
+        <span class="kn">import</span> <span class="nn">Mission</span>
+        
+        <span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;max&quot;</span><span class="p">:</span>
+            <span class="n">ifMax</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">elif</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span>
+            <span class="n">ifMax</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Enter &#39;max&#39; or &#39;min&#39; as second command line option&quot;</span><span class="p">)</span>
+        
+        <span class="n">root</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">case_root</span> <span class="o">=</span> <span class="n">root</span> <span class="o">+</span> <span class="s2">&quot;/cases/&quot;</span>
+        <span class="n">result_root</span> <span class="o">=</span> <span class="n">root</span> <span class="o">+</span> <span class="s2">&quot;/results/&quot;</span>
+                
+        <span class="n">docs</span> <span class="o">=</span> <span class="p">[</span><span class="n">root</span> <span class="o">+</span> <span class="s2">&quot;/docs/&quot;</span> <span class="o">+</span> <span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">root</span> <span class="o">+</span> <span class="s2">&quot;/docs&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">)]</span>
+            
+        <span class="n">docs</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">docs</span><span class="p">,</span><span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">doc</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;Iteration&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">)))</span>
+        
+        <span class="n">final_data</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="n">has_iter0_cases</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="c1"># assume python3</span>
+            <span class="c1">#if (sys.version_info &gt; (3,0)):</span>
+            <span class="c1">#    print(doc)</span>
+            <span class="c1">#else:</span>
+            <span class="c1">#    print doc</span>
+            
+            <span class="n">iter_no</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;Iteration&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">))</span>
+            
+            <span class="n">data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">iter_no</span><span class="p">:{}})</span>
+            
+            <span class="n">cases</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">case_root</span> <span class="o">+</span> <span class="s2">&quot;Iteration&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">iter_no</span><span class="p">))</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.emtgopt&quot;</span><span class="p">)]</span>
+            <span class="n">result_cases</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">result_root</span> <span class="o">+</span> <span class="s2">&quot;Iteration&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">iter_no</span><span class="p">))</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.emtgopt&quot;</span><span class="p">)]</span>
+            
+            <span class="k">if</span> <span class="n">iter_no</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">cases</span><span class="p">):</span>
+                <span class="n">has_iter0_cases</span> <span class="o">=</span> <span class="kc">True</span>
+                
+            <span class="n">docH</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+                    
+            <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">docH</span><span class="o">.</span><span class="n">readlines</span><span class="p">():</span>
+            
+                <span class="n">linesplit</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Folder&quot;</span><span class="p">):</span>
+                    
+                    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">linesplit</span><span class="p">):</span>
+                        
+                        <span class="k">if</span> <span class="n">entry</span> <span class="o">==</span> <span class="s2">&quot;PEATSA objective&quot;</span><span class="p">:</span>
+                            <span class="n">objcolumn</span> <span class="o">=</span> <span class="n">idx</span>
+                        <span class="k">if</span> <span class="n">entry</span> <span class="o">==</span> <span class="s2">&quot;Mission Name&quot;</span><span class="p">:</span>
+                            <span class="n">namecolumn</span> <span class="o">=</span> <span class="n">idx</span>
+                        <span class="k">if</span> <span class="n">entry</span> <span class="o">==</span> <span class="s2">&quot;Filename&quot;</span><span class="p">:</span>
+                            <span class="n">filecolumn</span> <span class="o">=</span> <span class="n">idx</span>
+                                        
+                    <span class="k">continue</span>
+                    
+                <span class="n">name</span> <span class="o">=</span> <span class="n">linesplit</span><span class="p">[</span><span class="n">namecolumn</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_seeded_by&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">objval</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">linesplit</span><span class="p">[</span><span class="n">objcolumn</span><span class="p">])</span>
+                <span class="n">filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">cases</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span><span class="p">)]</span>
+                <span class="n">result_filenames</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">result_cases</span> <span class="k">if</span> <span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span><span class="p">))</span> <span class="ow">and</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.emtgopt&quot;</span><span class="p">)]</span>
+                <span class="n">emtg_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">result_cases</span> <span class="k">if</span> <span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="ow">or</span> <span class="n">file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;FAILURE_&quot;</span> <span class="o">+</span> <span class="n">name</span><span class="p">))</span> <span class="ow">and</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.emtg&quot;</span><span class="p">)]</span>
+                <span class="n">converged_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">emtg_files</span> <span class="k">if</span> <span class="s2">&quot;FAILURE&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">file</span><span class="p">]</span>
+                <span class="n">seeds</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_seeded_by_&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;emtgopt&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">filenames</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_seeded_by&quot;</span><span class="p">))</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">numCases</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">filenames</span><span class="p">)</span>
+                <span class="n">numRans</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">result_filenames</span><span class="p">)</span>
+                <span class="n">numFinished</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">emtg_files</span><span class="p">)</span>
+                <span class="n">numConverged</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">converged_files</span><span class="p">)</span>
+                <span class="k">if</span> <span class="s2">&quot;FAIL&quot;</span> <span class="ow">in</span> <span class="n">linesplit</span><span class="p">[</span><span class="n">filecolumn</span><span class="p">]:</span>
+                    <span class="n">ifConverge</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ifConverge</span> <span class="o">=</span> <span class="mi">1</span>
+                
+                <span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">name</span><span class="p">:[</span><span class="n">objval</span><span class="p">,</span><span class="n">ifConverge</span><span class="p">,</span><span class="n">seeds</span><span class="p">,</span><span class="n">numCases</span><span class="p">,</span><span class="n">numRans</span><span class="p">,</span><span class="n">numFinished</span><span class="p">,</span><span class="n">numConverged</span><span class="p">]})</span>
+                        
+                
+            <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+    
+                <span class="k">if</span> <span class="n">iter_no</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">final_data</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">name</span><span class="p">:[]})</span>
+                        
+                <span class="n">numCases</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="mi">3</span><span class="p">]</span>
+                <span class="n">numRans</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span>
+                <span class="n">numFin</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="mi">5</span><span class="p">]</span>
+                <span class="n">numConv</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="mi">6</span><span class="p">]</span>
+                
+                <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">ifConverged</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">ifImprove</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">ifFirstFeasible</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">ifConverged</span> <span class="o">=</span> <span class="mi">1</span>
+                    
+                
+                <span class="k">if</span> <span class="n">iter_no</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>                
+                                    
+                    <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">prev_iteration_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Case &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot; is in iteration &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">iter_no</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; but not in previous.&quot;</span><span class="p">)</span>
+                        
+                    <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">prev_iteration_data</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Iteration &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">iter_no</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; has no solution for case &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot;, but the previous iteration does&quot;</span><span class="p">)</span>
+                        
+                    
+                    <span class="n">seed_code</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="mi">2</span><span class="p">])</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                        
+                        <span class="k">for</span> <span class="n">seed</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="mi">2</span><span class="p">]:</span>
+                            
+                            <span class="k">if</span> <span class="s2">&quot;External&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seed</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="n">prev_iteration_data</span><span class="p">[</span><span class="n">seed</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> 
+                                    <span class="n">seed_code</span> <span class="o">+=</span> <span class="s2">&quot;F&quot;</span>
+                                
+                                <span class="k">if</span> <span class="n">seed</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">prev_iteration_data</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">2</span><span class="p">]:</span>
+                                    <span class="n">seed_code</span> <span class="o">+=</span> <span class="s2">&quot;1&quot;</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">iter_no_2</span> <span class="o">=</span> <span class="n">iter_no</span>
+                                                            
+                                    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+                                        <span class="k">if</span> <span class="n">seed</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no_2</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="mi">2</span><span class="p">]</span> <span class="ow">and</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no_2</span><span class="p">][</span><span class="n">seed</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no_2</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">seed</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+                                            <span class="n">iter_no_2</span> <span class="o">-=</span> <span class="mi">1</span>
+                                            <span class="k">if</span> <span class="n">iter_no_2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                                                <span class="k">break</span>
+                                        <span class="k">else</span><span class="p">:</span>
+                                            <span class="k">break</span>
+                                    <span class="n">seed_code</span> <span class="o">+=</span> <span class="nb">str</span><span class="p">(</span><span class="n">iter_no</span><span class="o">-</span><span class="n">iter_no_2</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">seed_code</span> <span class="o">+=</span> <span class="s2">&quot;E&quot;</span>
+                    
+                    <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                        
+                        <span class="k">if</span> <span class="n">prev_iteration_data</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                            <span class="n">ifFirstFeasible</span> <span class="o">=</span> <span class="mi">1</span>
+                            <span class="n">ifImprove</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="k">else</span><span class="p">:</span> 
+                            <span class="n">ifFirstFeasible</span> <span class="o">=</span> <span class="mi">0</span>
+                               
+                            <span class="n">prev_obj</span> <span class="o">=</span> <span class="n">prev_iteration_data</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+                            <span class="k">if</span> <span class="n">ifMax</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">prev_obj</span><span class="p">:</span>
+                                    <span class="n">ifImprove</span> <span class="o">=</span> <span class="mi">1</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">ifImprove</span> <span class="o">=</span> <span class="mi">0</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="k">if</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">][</span><span class="n">name</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">prev_obj</span><span class="p">:</span>
+                                    <span class="n">ifImprove</span> <span class="o">=</span> <span class="mi">1</span>
+                                <span class="k">else</span><span class="p">:</span>
+                                    <span class="n">ifImprove</span> <span class="o">=</span> <span class="mi">0</span>
+                                            
+                    <span class="c1"># final_data[name].append(str(ifConverged) + &quot;/&quot; + str(ifFirstFeasible) + &quot;/&quot; + str(ifImprove) + &quot;/&quot; + str(ifImprovedWithoutSeed) + &quot;/&quot; + str(ifRepeatedSeed))</span>
+                    <span class="n">final_data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">numCases</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">numRans</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">numFin</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">numConv</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ifConverged</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ifFirstFeasible</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ifImprove</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">seed_code</span><span class="p">))</span>
+               
+                    
+               
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">final_data</span><span class="p">[</span><span class="n">name</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">numCases</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">numRans</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">numFin</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">numConv</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ifConverged</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ifFirstFeasible</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;//&quot;</span><span class="p">)</span>                
+            
+            <span class="k">if</span> <span class="n">iter_no</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">prev_iteration_data</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">prev_iteration_data</span><span class="p">,</span><span class="n">keys</span><span class="p">():</span>
+                       <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                           <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Case &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s2">&quot; is in iteration &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">iter_no</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; but not in the next.&quot;</span><span class="p">)</span>    
+            <span class="n">prev_iteration_data</span> <span class="o">=</span> <span class="n">data</span><span class="p">[</span><span class="n">iter_no</span><span class="p">]</span>
+            
+        
+        <span class="n">outfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;ConvergenceSummary.csv&quot;</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        
+        <span class="n">outfile_strings</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;&quot;</span><span class="p">]</span>
+        
+        <span class="n">new_feasible</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">improvements</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">converged</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">improved_unseeded</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">ran_unseeded</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">used_infeasible_ig</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cases_created</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cases_run</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">waiting_for_seeds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">iterations_before_improvement</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">converged_this_iteration</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">cases_finished</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="n">ifFirst</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">final_data</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">outfile_strings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+            
+            <span class="n">ctr</span> <span class="o">=</span> <span class="mi">0</span>
+            
+            <span class="k">for</span> <span class="n">iter_result</span> <span class="ow">in</span> <span class="n">final_data</span><span class="p">[</span><span class="n">name</span><span class="p">]:</span>
+                
+                <span class="k">if</span> <span class="n">ifFirst</span><span class="p">:</span>
+                    <span class="n">outfile_strings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot;,Iteration&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">ctr</span><span class="p">)</span>
+                    <span class="n">new_feasible</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">improvements</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">converged</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">improved_unseeded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">ran_unseeded</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">used_infeasible_ig</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">cases_run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">cases_created</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">waiting_for_seeds</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">iterations_before_improvement</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">converged_this_iteration</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                    <span class="n">cases_finished</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+                
+                <span class="n">outfile_strings</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="n">iter_result</span>
+                
+                <span class="n">result_split</span> <span class="o">=</span> <span class="n">iter_result</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">ctr</span><span class="o">!=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">has_iter0_cases</span><span class="p">:</span>                
+                    <span class="k">if</span> <span class="n">result_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
+                        <span class="n">waiting_for_seeds</span><span class="p">[</span><span class="n">ctr</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span> 
+              
+                <span class="n">cases_created</span><span class="p">[</span><span class="n">ctr</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result_split</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>                
+                            
+                <span class="n">cases_run</span><span class="p">[</span><span class="n">ctr</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result_split</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                
+                <span class="n">cases_finished</span><span class="p">[</span><span class="n">ctr</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result_split</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+                
+                <span class="n">converged_this_iteration</span><span class="p">[</span><span class="n">ctr</span><span class="p">]</span> <span class="o">+=</span> <span class="nb">int</span><span class="p">(</span><span class="n">result_split</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+                   
+                <span class="k">if</span> <span class="n">result_split</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+                    <span class="n">converged</span><span class="p">[</span><span class="n">ctr</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    
+                <span class="k">if</span> <span class="n">result_split</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+                    <span class="n">new_feasible</span><span class="p">[</span><span class="n">ctr</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>  
+                    <span class="c1"># TODO: This wont work if the case has multiple seeds. in that case we need to figure out which seed fixed it by parsing the seedcode string</span>
+                    <span class="n">iterations_before_improvement</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">result_split</span><span class="p">[</span><span class="mi">7</span><span class="p">])]</span> <span class="o">+=</span> <span class="mi">1</span>          
+                
+                <span class="k">if</span> <span class="n">result_split</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+                    <span class="n">improvements</span><span class="p">[</span><span class="n">ctr</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="c1"># TODO: This wont work if the case has multiple seeds. in that case we need to figure out which seed fixed it by parsing the seedcode string</span>
+                    <span class="n">iterations_before_improvement</span><span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">result_split</span><span class="p">[</span><span class="mi">7</span><span class="p">])]</span> <span class="o">+=</span> <span class="mi">1</span>
+                
+                <span class="k">if</span> <span class="n">result_split</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">result_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">ctr</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="n">ran_unseeded</span><span class="p">[</span><span class="n">ctr</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                    <span class="k">if</span> <span class="n">result_split</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span> <span class="ow">or</span> <span class="n">result_split</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span><span class="p">:</span>
+                        <span class="n">improved_unseeded</span><span class="p">[</span><span class="n">ctr</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">elif</span> <span class="n">result_split</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                    <span class="c1"># TODO: This wont work if the case has multiple seeds. in that case we need to figure out which seed fixed it by parsing the seedcode string</span>
+                    <span class="k">if</span> <span class="n">result_split</span><span class="p">[</span><span class="mi">7</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;F&quot;</span><span class="p">:</span>
+                        <span class="n">used_infeasible_ig</span><span class="p">[</span><span class="n">ctr</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span> 
+                
+                <span class="n">ctr</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+            <span class="n">ifFirst</span> <span class="o">=</span> <span class="mi">0</span>
+        
+            <span class="n">outfile_strings</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        
+        <span class="n">outfile_strings</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+        
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">outfile_strings</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;CasesCreated&quot;</span><span class="p">)</span>    
+        <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">cases_created</span><span class="p">:</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">im</span><span class="p">))</span>
+    
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;CasesRun&quot;</span><span class="p">)</span>    
+        <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">cases_run</span><span class="p">:</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">im</span><span class="p">))</span>
+    
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;CasesFinished&quot;</span><span class="p">)</span>    
+        <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">cases_finished</span><span class="p">:</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">im</span><span class="p">))</span>
+    
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;ConvergedThisIteration&quot;</span><span class="p">)</span>    
+        <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">converged_this_iteration</span><span class="p">:</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">im</span><span class="p">))</span>
+    
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;ConvergedTotal&quot;</span><span class="p">)</span>    
+        <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">converged</span><span class="p">:</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">im</span><span class="p">))</span>
+    
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;FirstConverged&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">new_feasible</span><span class="p">:</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">im</span><span class="p">))</span>
+    
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Improvements&quot;</span><span class="p">)</span>    
+        <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">improvements</span><span class="p">:</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">im</span><span class="p">))</span>
+            
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;RanUnseeded&quot;</span><span class="p">)</span>    
+        <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">ran_unseeded</span><span class="p">:</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">im</span><span class="p">))</span>
+                
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;UnseededImprovements&quot;</span><span class="p">)</span>    
+        <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">improved_unseeded</span><span class="p">:</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">im</span><span class="p">))</span>
+                
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;InfeasibleIG&quot;</span><span class="p">)</span>    
+        <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">used_infeasible_ig</span><span class="p">:</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">im</span><span class="p">))</span>
+                
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;TimesUsingSeedBeforeImprovement&quot;</span><span class="p">)</span>    
+        <span class="k">for</span> <span class="n">im</span> <span class="ow">in</span> <span class="n">iterations_before_improvement</span><span class="p">:</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;,&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">im</span><span class="p">))</span>
+                
+        <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">string</span> <span class="ow">in</span> <span class="n">outfile_strings</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">outfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>    
+            
+        <span class="n">outfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="k">return</span></div>
+    
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

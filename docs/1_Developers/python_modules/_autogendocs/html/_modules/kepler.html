@@ -1,0 +1,284 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>kepler &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for kepler</h1><div class="highlight"><pre>
+<span></span><span class="c1">#Kepler solver for PyEMTG</span>
+<span class="c1">#Ryne Beeson 7-9-2014</span>
+
+<span class="c1">#  Orbital Elements -&gt; r, v Arrays</span>
+<div class="viewcode-block" id="coe2rv"><a class="viewcode-back" href="../PyEMTG/kepler.html#kepler.coe2rv">[docs]</a><span class="k">def</span> <span class="nf">coe2rv</span><span class="p">(</span><span class="n">oe</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+    <span class="c1">#  import statements</span>
+    <span class="kn">from</span> <span class="nn">math</span>  <span class="kn">import</span> <span class="n">cos</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">sqrt</span>
+    <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">matrix</span><span class="p">,</span> <span class="n">array</span><span class="p">,</span> <span class="n">zeros</span>
+    
+    <span class="c1">#  if &#39;a&#39; is set to zero, then body is at rest in the</span>
+    <span class="c1">#+ current frame of reference.</span>
+    <span class="c1">#+ return a zero vector for r and v</span>
+    <span class="k">if</span> <span class="n">oe</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mf">0.0</span><span class="p">:</span> <span class="k">return</span> <span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">),</span> <span class="n">zeros</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+    
+    <span class="n">a</span>  <span class="o">=</span> <span class="n">oe</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">e</span>  <span class="o">=</span> <span class="n">oe</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">i</span>  <span class="o">=</span> <span class="n">oe</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="n">Om</span> <span class="o">=</span> <span class="n">oe</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">om</span> <span class="o">=</span> <span class="n">oe</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+    <span class="n">f</span>  <span class="o">=</span> <span class="n">oe</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+    
+    <span class="n">p</span>  <span class="o">=</span> <span class="n">a</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">e</span><span class="o">*</span><span class="n">e</span><span class="p">)</span>
+    <span class="n">r</span>  <span class="o">=</span> <span class="n">p</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">e</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">f</span><span class="p">))</span>
+    <span class="n">rv</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">([</span><span class="n">r</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="n">r</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">f</span><span class="p">),</span>   <span class="mi">0</span><span class="p">])</span>
+    <span class="n">vv</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">([</span><span class="o">-</span><span class="n">sin</span><span class="p">(</span><span class="n">f</span><span class="p">),</span>  <span class="n">e</span> <span class="o">+</span> <span class="n">cos</span><span class="p">(</span><span class="n">f</span><span class="p">),</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">vv</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">mu</span><span class="o">/</span><span class="n">p</span><span class="p">)</span><span class="o">*</span><span class="n">vv</span>
+    
+    <span class="n">c0</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">Om</span><span class="p">);</span> <span class="n">s0</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="n">Om</span><span class="p">)</span>
+    <span class="n">co</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">om</span><span class="p">);</span> <span class="n">so</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="n">om</span><span class="p">)</span>
+    <span class="n">ci</span> <span class="o">=</span> <span class="n">cos</span><span class="p">(</span><span class="n">i</span><span class="p">);</span>  <span class="n">si</span> <span class="o">=</span> <span class="n">sin</span><span class="p">(</span><span class="n">i</span><span class="p">)</span>
+    
+    <span class="n">R</span>  <span class="o">=</span> <span class="n">matrix</span><span class="p">([[</span><span class="n">c0</span><span class="o">*</span><span class="n">co</span> <span class="o">-</span> <span class="n">s0</span><span class="o">*</span><span class="n">so</span><span class="o">*</span><span class="n">ci</span><span class="p">,</span> <span class="o">-</span><span class="n">c0</span><span class="o">*</span><span class="n">so</span> <span class="o">-</span> <span class="n">s0</span><span class="o">*</span><span class="n">co</span><span class="o">*</span><span class="n">ci</span><span class="p">,</span>  <span class="n">s0</span><span class="o">*</span><span class="n">si</span><span class="p">],</span>
+                 <span class="p">[</span><span class="n">s0</span><span class="o">*</span><span class="n">co</span> <span class="o">+</span> <span class="n">c0</span><span class="o">*</span><span class="n">so</span><span class="o">*</span><span class="n">ci</span><span class="p">,</span> <span class="o">-</span><span class="n">s0</span><span class="o">*</span><span class="n">so</span> <span class="o">+</span> <span class="n">c0</span><span class="o">*</span><span class="n">co</span><span class="o">*</span><span class="n">ci</span><span class="p">,</span> <span class="o">-</span><span class="n">c0</span><span class="o">*</span><span class="n">si</span><span class="p">],</span>
+                 <span class="p">[</span><span class="n">so</span><span class="o">*</span><span class="n">si</span><span class="p">,</span>             <span class="n">co</span><span class="o">*</span><span class="n">si</span><span class="p">,</span>             <span class="n">ci</span><span class="p">]])</span>
+                 
+    <span class="n">ri</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">R</span><span class="o">*</span><span class="n">rv</span><span class="o">.</span><span class="n">T</span><span class="p">);</span> <span class="n">ri</span> <span class="o">=</span> <span class="n">ri</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">vi</span> <span class="o">=</span> <span class="n">array</span><span class="p">(</span><span class="n">R</span><span class="o">*</span><span class="n">vv</span><span class="o">.</span><span class="n">T</span><span class="p">);</span> <span class="n">vi</span> <span class="o">=</span> <span class="n">vi</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+    
+    <span class="k">return</span> <span class="n">ri</span><span class="p">,</span> <span class="n">vi</span></div>
+
+
+<span class="c1">#  laguerre_conway solver</span>
+<div class="viewcode-block" id="laguerre_conway"><a class="viewcode-back" href="../PyEMTG/kepler.html#kepler.laguerre_conway">[docs]</a><span class="k">def</span> <span class="nf">laguerre_conway</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">M</span><span class="p">):</span>
+    <span class="c1">#  import statements</span>
+    <span class="kn">from</span> <span class="nn">math</span>  <span class="kn">import</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">sin</span><span class="p">,</span> <span class="n">cos</span>
+    <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="nb">abs</span>
+    <span class="c1">#  generate an initial guess for eccentric anomaly (E)</span>
+    <span class="n">En</span> <span class="o">=</span> <span class="p">(</span><span class="n">M</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">sin</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="n">e</span><span class="p">))</span> <span class="o">+</span> <span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="n">e</span><span class="p">)</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">M</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">sin</span><span class="p">(</span><span class="n">M</span><span class="p">)</span> <span class="o">-</span> <span class="n">sin</span><span class="p">(</span><span class="n">M</span> <span class="o">+</span> <span class="n">e</span><span class="p">))</span>
+    <span class="n">n</span>  <span class="o">=</span> <span class="mi">4</span>
+    <span class="c1">#  for-loop</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">20</span><span class="p">):</span>
+        <span class="n">f</span>      <span class="o">=</span>  <span class="n">M</span> <span class="o">-</span> <span class="n">En</span> <span class="o">+</span> <span class="n">e</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">En</span><span class="p">)</span>
+        <span class="n">fdash</span>  <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="o">+</span> <span class="n">e</span><span class="o">*</span><span class="n">cos</span><span class="p">(</span><span class="n">En</span><span class="p">)</span>
+        <span class="n">fddash</span> <span class="o">=</span> <span class="o">-</span><span class="n">e</span><span class="o">*</span><span class="n">sin</span><span class="p">(</span><span class="n">En</span><span class="p">)</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(((</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">fdash</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">n</span><span class="o">*</span><span class="p">(</span><span class="n">n</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="n">f</span><span class="o">*</span><span class="n">fddash</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">fdash</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">En1</span> <span class="o">=</span> <span class="n">En</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">f</span><span class="o">/</span><span class="p">(</span><span class="n">fdash</span> <span class="o">+</span> <span class="n">g</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">En1</span> <span class="o">=</span> <span class="n">En</span> <span class="o">-</span> <span class="p">(</span><span class="n">n</span><span class="o">*</span><span class="n">f</span><span class="o">/</span><span class="p">(</span><span class="n">fdash</span> <span class="o">-</span> <span class="n">g</span><span class="p">))</span>
+        <span class="c1">#  calculate error</span>
+        <span class="n">error</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">En1</span> <span class="o">-</span> <span class="n">En</span><span class="p">)</span>
+        <span class="n">En</span> <span class="o">=</span> <span class="n">En1</span>
+        <span class="k">if</span> <span class="n">error</span> <span class="o">&lt;=</span> <span class="mf">1E-4</span><span class="p">:</span>
+            <span class="k">break</span>
+    
+    <span class="c1">#  return the eccentric anomaly</span>
+    <span class="k">return</span> <span class="n">En</span></div>
+
+<div class="viewcode-block" id="safe_acos"><a class="viewcode-back" href="../PyEMTG/kepler.html#kepler.safe_acos">[docs]</a><span class="k">def</span> <span class="nf">safe_acos</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">acos</span><span class="p">,</span> <span class="n">pi</span>
+    <span class="k">if</span> <span class="n">num</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">0.0</span>
+    <span class="k">elif</span> <span class="n">num</span> <span class="o">&lt;</span> <span class="o">-</span><span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">pi</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">acos</span><span class="p">(</span><span class="n">num</span><span class="p">)</span></div>
+
+
+<span class="c1">#  solve kepler&#39;s equation using laguerre_conway</span>
+<div class="viewcode-block" id="kepler"><a class="viewcode-back" href="../PyEMTG/kepler.html#kepler.kepler">[docs]</a><span class="k">def</span> <span class="nf">kepler</span><span class="p">(</span><span class="n">sma</span><span class="p">,</span> <span class="n">ecc</span><span class="p">,</span> <span class="n">inc</span><span class="p">,</span> <span class="n">RAAN</span><span class="p">,</span> <span class="n">AOP</span><span class="p">,</span> <span class="n">MA</span><span class="p">,</span> <span class="n">reference_time</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+    <span class="c1">#  input delta_time in (secs)</span>
+    <span class="c1">#  import statements</span>
+    <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">sqrt</span><span class="p">,</span> <span class="n">tan</span><span class="p">,</span> <span class="n">atan</span>
+    <span class="c1">#  delta_time</span>
+    <span class="n">delta_time</span> <span class="o">=</span> <span class="p">(</span><span class="n">epoch</span> <span class="o">-</span> <span class="n">reference_time</span><span class="p">)</span><span class="o">*</span><span class="mf">86400.0</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">sqrt</span><span class="p">((</span><span class="n">sma</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="n">mu</span><span class="p">)</span>
+    <span class="n">MA</span> <span class="o">=</span> <span class="p">(</span><span class="n">MA</span> <span class="o">+</span> <span class="n">n</span><span class="o">*</span><span class="n">delta_time</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">pi</span><span class="p">)</span>
+    <span class="c1">#  update E</span>
+    <span class="n">E</span>   <span class="o">=</span> <span class="n">laguerre_conway</span><span class="p">(</span><span class="n">ecc</span><span class="p">,</span> <span class="n">MA</span><span class="p">)</span> <span class="o">%</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">pi</span><span class="p">)</span>
+    <span class="c1">#  calculate f</span>
+    <span class="n">f</span> <span class="o">=</span> <span class="mf">2.0</span><span class="o">*</span><span class="n">atan</span><span class="p">(</span><span class="n">tan</span><span class="p">(</span><span class="n">E</span><span class="o">/</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">sqrt</span><span class="p">((</span><span class="mi">1</span> <span class="o">+</span> <span class="n">ecc</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">ecc</span><span class="p">)))</span> <span class="o">%</span> <span class="p">(</span><span class="mf">2.0</span><span class="o">*</span><span class="n">pi</span><span class="p">)</span>
+    <span class="c1">#  coe2rv</span>
+    <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">coe2rv</span><span class="p">([</span><span class="n">sma</span><span class="p">,</span> <span class="n">ecc</span><span class="p">,</span> <span class="n">inc</span><span class="p">,</span> <span class="n">RAAN</span><span class="p">,</span> <span class="n">AOP</span><span class="p">,</span> <span class="n">f</span><span class="p">],</span> <span class="n">mu</span><span class="p">)</span>
+    <span class="c1">#  return r and v</span>
+
+    <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span></div>
+
+<div class="viewcode-block" id="cart2kep"><a class="viewcode-back" href="../PyEMTG/kepler.html#kepler.cart2kep">[docs]</a><span class="k">def</span> <span class="nf">cart2kep</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="n">mu</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">math</span>  <span class="kn">import</span> <span class="n">pi</span><span class="p">,</span> <span class="n">acos</span>
+    <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">linalg</span><span class="p">,</span> <span class="n">cross</span><span class="p">,</span> <span class="n">dot</span>
+    
+    <span class="n">r_mag</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+    <span class="n">v_mag</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+    <span class="n">h</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>    
+    <span class="n">h_mag</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>    
+    <span class="n">h_hat</span> <span class="o">=</span> <span class="p">[</span><span class="n">x</span><span class="o">/</span><span class="n">h_mag</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">h</span><span class="p">]</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">cross</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span><span class="n">h_hat</span><span class="p">)</span>    
+    <span class="n">n_mag</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="n">crossVH</span> <span class="o">=</span> <span class="n">cross</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">h</span><span class="p">)</span>
+    <span class="n">e_vec</span> <span class="o">=</span> <span class="p">[</span><span class="n">crossVH</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">mu</span><span class="o">-</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">r_mag</span><span class="p">,</span><span class="n">crossVH</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">mu</span><span class="o">-</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">r_mag</span><span class="p">,</span><span class="n">crossVH</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">mu</span><span class="o">-</span><span class="n">r</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">r_mag</span><span class="p">]</span>    
+    <span class="n">E</span> <span class="o">=</span> <span class="n">v_mag</span><span class="o">*</span><span class="n">v_mag</span><span class="o">/</span><span class="mi">2</span> <span class="o">-</span> <span class="n">mu</span><span class="o">/</span><span class="n">r_mag</span>
+    
+    <span class="n">a</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu</span><span class="o">/</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">E</span><span class="p">)</span>  
+    <span class="n">e</span> <span class="o">=</span> <span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e_vec</span><span class="p">)</span> 
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">OM</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">omega</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="n">nu</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+
+    <span class="n">delta</span> <span class="o">=</span> <span class="mf">1e-7</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">e</span> <span class="o">&gt;</span> <span class="n">delta</span> <span class="ow">and</span> <span class="n">n_mag</span><span class="o">&gt;</span><span class="n">delta</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">safe_acos</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">h_mag</span><span class="p">)</span>
+        <span class="n">OM</span> <span class="o">=</span> <span class="n">safe_acos</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">n_mag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">OM</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span> <span class="o">-</span> <span class="n">OM</span>
+            
+        <span class="n">omega</span> <span class="o">=</span> <span class="n">safe_acos</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">e_vec</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">n_mag</span><span class="o">*</span><span class="n">e</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">e_vec</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">omega</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span> <span class="o">-</span> <span class="n">omega</span>
+            
+        <span class="n">nu</span> <span class="o">=</span> <span class="n">safe_acos</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">e_vec</span><span class="p">,</span><span class="n">r</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">e</span><span class="o">*</span><span class="n">r_mag</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">v</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">nu</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span> <span class="o">-</span> <span class="n">nu</span>
+            
+    <span class="k">elif</span> <span class="p">(</span><span class="n">e</span> <span class="o">&lt;</span> <span class="n">delta</span> <span class="ow">and</span> <span class="n">n_mag</span> <span class="o">&gt;</span> <span class="n">delta</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">safe_acos</span><span class="p">(</span><span class="n">h</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">h_mag</span><span class="p">)</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="mi">0</span>
+    
+        <span class="n">OM</span> <span class="o">=</span> <span class="n">safe_acos</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">n_mag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">OM</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span> <span class="o">-</span> <span class="n">OM</span>   
+    
+        <span class="n">nu</span> <span class="o">=</span> <span class="n">safe_acos</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">n</span><span class="p">,</span><span class="n">r</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">n_mag</span><span class="o">*</span><span class="n">r_mag</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">nu</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span> <span class="o">-</span> <span class="n">nu</span>
+
+    <span class="k">elif</span> <span class="p">(</span><span class="n">e</span> <span class="o">&lt;</span> <span class="n">delta</span> <span class="ow">and</span> <span class="n">n_mag</span> <span class="o">&lt;</span> <span class="n">delta</span><span class="p">):</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">OM</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">nu</span> <span class="o">=</span> <span class="n">safe_acos</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">/</span><span class="n">r_mag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">nu</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span> <span class="o">-</span> <span class="n">nu</span>
+            
+    <span class="k">elif</span> <span class="p">(</span><span class="mi">1</span> <span class="o">&gt;</span> <span class="n">e</span> <span class="ow">and</span> <span class="n">e</span> <span class="o">&gt;</span> <span class="n">delta</span> <span class="ow">and</span> <span class="n">n_mag</span> <span class="o">&lt;</span> <span class="n">delta</span><span class="p">):</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="n">safe_acos</span><span class="p">(</span><span class="n">e_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">e_vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">omega</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span> <span class="o">-</span> <span class="n">omega</span>
+            
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">OM</span> <span class="o">=</span> <span class="mi">0</span>
+    
+        <span class="n">nu</span> <span class="o">=</span> <span class="n">safe_acos</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">e_vec</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">e</span><span class="o">*</span><span class="n">r_mag</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">nu</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span> <span class="o">-</span> <span class="n">nu</span>
+
+    <span class="k">elif</span> <span class="p">(</span><span class="n">e</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">n_mag</span> <span class="o">&lt;</span> <span class="n">delta</span><span class="p">):</span>
+        <span class="n">omega</span> <span class="o">=</span> <span class="n">safe_acos</span><span class="p">(</span><span class="n">e_vec</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">/</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">e_vec</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>    
+            <span class="n">omega</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span> <span class="o">-</span> <span class="n">omega</span>
+        
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">OM</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">nu</span> <span class="o">=</span> <span class="n">safe_acos</span><span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">e_vec</span><span class="p">,</span><span class="n">r</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">e</span><span class="o">*</span><span class="n">r_mag</span><span class="p">))</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">dot</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">v</span><span class="p">,</span><span class="mi">3</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">):</span>
+            <span class="n">nu</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">pi</span> <span class="o">-</span> <span class="n">nu</span>
+    
+    <span class="n">oe</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span><span class="p">,</span><span class="n">e</span><span class="p">,</span><span class="n">i</span><span class="p">,</span><span class="n">OM</span><span class="p">,</span><span class="n">omega</span><span class="p">,</span><span class="n">nu</span><span class="p">]</span>
+    
+    <span class="k">return</span> <span class="n">oe</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,219 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EMTGInterfaceReaders &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for EMTGInterfaceReaders</h1><div class="highlight"><pre>
+<span></span><span class="c1">#EMTG: Evolutionary Mission Trajectory Generator</span>
+<span class="c1">#An open-source global optimization tool for preliminary mission design</span>
+<span class="c1">#Provided by NASA Goddard Space Flight Center</span>
+<span class="c1">#</span>
+<span class="c1">#Copyright (c) 2014 - 2024 United States Government as represented by the</span>
+<span class="c1">#Administrator of the National Aeronautics and Space Administration.</span>
+<span class="c1">#All Other Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#Licensed under the NASA Open Source License (the &quot;License&quot;); </span>
+<span class="c1">#You may not use this file except in compliance with the License. </span>
+<span class="c1">#You may obtain a copy of the License at:</span>
+<span class="c1">#https://opensource.org/license/nasa1-3-php</span>
+<span class="c1">#Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1">#distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1">#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either </span>
+<span class="c1">#express or implied.   See the License for the specific language</span>
+<span class="c1">#governing permissions and limitations under the License.</span>
+
+<span class="c1">#Code to read EMTG interface files</span>
+<span class="c1">#Jeremy Knittel 2-27-2018</span>
+
+<span class="c1"># Input is [year,month,date,time of day in fractional hours]</span>
+<div class="viewcode-block" id="date_list_to_JD"><a class="viewcode-back" href="../PEATSA/EMTGInterfaceReaders.html#EMTGInterfaceReaders.date_list_to_JD">[docs]</a><span class="k">def</span> <span class="nf">date_list_to_JD</span><span class="p">(</span><span class="n">date_list</span><span class="p">):</span>
+    <span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">sign</span><span class="p">,</span> <span class="n">floor</span>
+    
+    <span class="c1"># Extract the year</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">date_list</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="c1"># Extract the month</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">date_list</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1"># Extract the day</span>
+    <span class="n">I</span> <span class="o">=</span> <span class="n">date_list</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+    <span class="c1"># Extract the time of day, in hours</span>
+    <span class="n">UT</span> <span class="o">=</span> <span class="n">date_list</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+    
+    <span class="c1"># Calculate the Julian Date. </span>
+    <span class="c1"># From: http://aa.usno.navy.mil/faq/docs/JD_Formula.php</span>
+    <span class="k">return</span> <span class="mi">367</span><span class="o">*</span><span class="n">K</span> <span class="o">-</span> <span class="n">floor</span><span class="p">(</span> <span class="p">(</span> <span class="mi">7</span> <span class="o">*</span> <span class="p">(</span> <span class="n">K</span> <span class="o">+</span> <span class="n">floor</span><span class="p">((</span><span class="n">M</span><span class="o">+</span><span class="mf">9.0</span><span class="p">)</span><span class="o">/</span><span class="mf">12.0</span><span class="p">)</span> <span class="p">)</span> <span class="p">)</span> <span class="o">/</span> <span class="mf">4.0</span> <span class="p">)</span> <span class="o">+</span> <span class="n">floor</span><span class="p">(</span> <span class="p">(</span><span class="mi">275</span><span class="o">*</span><span class="n">M</span><span class="p">)</span> <span class="o">/</span> <span class="mf">9.0</span> <span class="p">)</span> <span class="o">+</span> <span class="n">I</span> <span class="o">+</span> <span class="mf">1721013.5</span> <span class="o">+</span> <span class="n">UT</span><span class="o">/</span><span class="mi">24</span> <span class="o">-</span> <span class="mf">0.5</span><span class="o">*</span><span class="n">sign</span><span class="p">(</span><span class="mi">100</span> <span class="o">*</span> <span class="n">K</span> <span class="o">+</span> <span class="n">M</span> <span class="o">-</span> <span class="mf">190002.5</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span></div>
+
+<div class="viewcode-block" id="convert_month_string_to_int"><a class="viewcode-back" href="../PEATSA/EMTGInterfaceReaders.html#EMTGInterfaceReaders.convert_month_string_to_int">[docs]</a><span class="k">def</span> <span class="nf">convert_month_string_to_int</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+    
+    <span class="c1"># I dont think its necessary to comment this function. I think a fifth grader can understand this</span>
+    <span class="k">if</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;jan&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;Jan&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;JAN&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;JANUARY&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;january&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;January&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;1&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;01&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;feb&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;Feb&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;FEB&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;FEBRUARY&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;february&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;February&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;2&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;02&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">2</span>
+    <span class="k">if</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;mar&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;Mar&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;MAR&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;MARCH&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;march&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;March&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;3&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;03&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">3</span>
+    <span class="k">if</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;apr&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;Apr&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;APR&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;APRIL&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;april&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;April&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;4&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;04&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">4</span>
+    <span class="k">if</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;may&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;May&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;MAY&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;5&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;05&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">5</span>
+    <span class="k">if</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;jun&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;Jun&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;JUN&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;JUNE&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;june&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;June&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;6&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;06&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">6</span>
+    <span class="k">if</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;jul&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;Jul&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;JUL&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;JULY&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;july&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;July&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;7&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;07&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">7</span>
+    <span class="k">if</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;aug&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;Aug&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;AUG&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;AUGUST&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;august&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;August&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;8&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;08&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">8</span>
+    <span class="k">if</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;sep&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;Sep&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;SEP&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;SEPTEMBER&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;september&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;September&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;9&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;09&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">9</span>
+    <span class="k">if</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;oct&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;Oct&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;OCT&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;OCTOBER&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;october&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;October&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;10&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;10&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">10</span>
+    <span class="k">if</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;nov&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;Nov&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;NOV&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;NOVEMBER&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;november&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;November&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;11&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;11&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">11</span>
+    <span class="k">if</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;dec&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;Dec&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;DEC&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;DECEMBER&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;december&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;December&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;12&quot;</span> <span class="ow">or</span> <span class="nb">input</span> <span class="o">==</span> <span class="s2">&quot;12&quot;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">12</span></div>
+
+<div class="viewcode-block" id="convert_time_string_to_hours_float"><a class="viewcode-back" href="../PEATSA/EMTGInterfaceReaders.html#EMTGInterfaceReaders.convert_time_string_to_hours_float">[docs]</a><span class="k">def</span> <span class="nf">convert_time_string_to_hours_float</span><span class="p">(</span><span class="nb">input</span><span class="p">):</span>
+    <span class="c1"># Split the line by colon, assuming it is hours:minutes:seconds.seconds_fraction</span>
+    <span class="n">input_split</span> <span class="o">=</span> <span class="nb">input</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Calculate the fractional hours past midnight</span>
+    <span class="k">return</span> <span class="nb">float</span><span class="p">(</span><span class="n">input_split</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">input_split</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">/</span> <span class="mf">60.0</span> <span class="o">+</span> <span class="nb">float</span><span class="p">(</span><span class="n">input_split</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">/</span> <span class="mf">3600.0</span></div>
+
+<div class="viewcode-block" id="read_spk_data_to_list_of_lists"><a class="viewcode-back" href="../PEATSA/EMTGInterfaceReaders.html#EMTGInterfaceReaders.read_spk_data_to_list_of_lists">[docs]</a><span class="k">def</span> <span class="nf">read_spk_data_to_list_of_lists</span><span class="p">(</span><span class="n">spkin_file</span><span class="p">):</span>
+    
+    <span class="c1"># Get a handle to the file</span>
+    <span class="n">file_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">spkin_file</span><span class="p">)</span>
+    
+    <span class="c1"># Initialize the output data array</span>
+    <span class="n">data_out</span> <span class="o">=</span> <span class="p">[[]</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">8</span><span class="p">)]</span>
+    
+    <span class="c1"># Loop through all lines</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">file_handle</span><span class="p">:</span>
+        
+        <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;#&quot;</span><span class="p">:</span>
+            <span class="k">continue</span>
+        
+        <span class="c1"># Split the line based on spaces, removing the newlines</span>
+        <span class="n">linesplit</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot; </span><span class="se">\r\n</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Remove any blank entries in the list</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">linesplit</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+            
+        <span class="n">date_split</span> <span class="o">=</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;  &quot;</span><span class="p">,</span><span class="s2">&quot; &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                        
+        <span class="c1"># Get the epoch</span>
+        <span class="n">JD</span> <span class="o">=</span> <span class="n">date_list_to_JD</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">date_split</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="c1"># year</span>
+                              <span class="n">convert_month_string_to_int</span><span class="p">(</span><span class="n">date_split</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="c1"># month</span>
+                              <span class="nb">int</span><span class="p">(</span><span class="n">date_split</span><span class="p">[</span><span class="mi">2</span><span class="p">]),</span> <span class="c1"># days</span>
+                              <span class="n">convert_time_string_to_hours_float</span><span class="p">(</span><span class="n">date_split</span><span class="p">[</span><span class="mi">3</span><span class="p">])])</span> <span class="c1"># hours</span>
+        
+        <span class="c1"># Add the julian date</span>
+        <span class="n">data_out</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">JD</span><span class="p">)</span>
+        
+        <span class="c1"># Loop through the rest of the data</span>
+        <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">linesplit</span><span class="p">)):</span>
+            <span class="n">data_out</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">linesplit</span><span class="p">[</span><span class="n">idx</span><span class="p">]))</span>
+                    
+    <span class="c1"># Return the ephemeris data</span>
+    <span class="k">return</span> <span class="n">data_out</span></div>
+        
+         
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

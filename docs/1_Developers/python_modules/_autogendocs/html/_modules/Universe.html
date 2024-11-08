@@ -1,0 +1,326 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Universe &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Universe</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">Body</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<div class="viewcode-block" id="Universe"><a class="viewcode-back" href="../PyEMTG/Universe.html#Universe.Universe">[docs]</a><span class="k">class</span> <span class="nc">Universe</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file_name</span><span class="p">):</span>
+        <span class="c1">#fields</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">central_body_name</span> <span class="o">=</span> <span class="s1">&#39;Sun&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">central_body_SPICE_ID</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">central_body_radius</span> <span class="o">=</span> <span class="mf">4.379e+6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">central_body_J2</span> <span class="o">=</span> <span class="mf">2.2e-7</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">central_body_J2_reference_radius</span> <span class="o">=</span> <span class="mf">4.379e+6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">=</span> <span class="mf">132712440017.99</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">central_body_flattening_coefficient</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LU</span> <span class="o">=</span> <span class="mf">1.49597870691e+8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">TU</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">LU</span><span class="o">**</span><span class="mi">3</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_angles</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">90.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">66.560709000000003</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">84.176</span><span class="p">,</span> <span class="mf">14.1844000</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r_SOI</span> <span class="o">=</span> <span class="mi">747989353500</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">minimum_safe_distance</span> <span class="o">=</span> <span class="mf">2.0e+7</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">convert_elements_from_central_body_frame</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#0: body orbit elements are in ICRF, 1: body orbit elements are in central body frame as defined in the Universe file</span>
+
+        <span class="c1">#list of bodies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bodies</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flyby_menu</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flyby_indices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">perturbation_menu</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">perturbation_indices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination_menu</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination_indices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_constraint_menu</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_indices</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_bodies</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1">#success flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">success</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1">#methods</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parse_universe_file</span><span class="p">(</span><span class="n">input_file_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generate_flyby_menu</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generate_perturbation_menu</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generate_destination_menu</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">generate_distance_constraint_menu</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Universe.parse_universe_file"><a class="viewcode-back" href="../PyEMTG/Universe.html#Universe.Universe.parse_universe_file">[docs]</a>    <span class="k">def</span> <span class="nf">parse_universe_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file_name</span><span class="p">):</span>
+        <span class="c1">#Step 1: open the file</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">input_file_name</span><span class="p">):</span>
+            <span class="n">inputfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_file_name</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">success</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">success</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">return</span>
+
+        <span class="n">body_list_line</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1">#Step 2: parse the file</span>
+        <span class="n">linenumber</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">J2flag</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">inputfile</span><span class="p">:</span>
+            <span class="c1">#strip off the newline character</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">linenumber</span> <span class="o">=</span> <span class="n">linenumber</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="n">line</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;#&quot;</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">split</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;name&quot;</span> <span class="ow">and</span> <span class="s2">&quot;J2&quot;</span> <span class="ow">in</span> <span class="n">line</span><span class="p">:</span>
+                        <span class="n">J2flag</span> <span class="o">=</span> <span class="kc">True</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1">#this is an active line, so it is space delimited</span>
+                    <span class="c1">#first we need to check if this line is part of the body list</span>
+                    <span class="k">if</span> <span class="n">body_list_line</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="n">line</span> <span class="o">==</span> <span class="s2">&quot;end_body_list&quot;</span><span class="p">:</span>
+                           <span class="n">body_list_line</span> <span class="o">=</span> <span class="mi">0</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">bodies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Body</span><span class="o">.</span><span class="n">Body</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">J2flag</span><span class="p">))</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">number_of_bodies</span> <span class="o">+=</span> <span class="mi">1</span>
+
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">linecell</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+                    
+                        <span class="n">choice</span> <span class="o">=</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+                        <span class="k">if</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;central_body_name&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">central_body_name</span> <span class="o">=</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+                        <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;central_body_SPICE_ID&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">central_body_SPICE_ID</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                        <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;central_body_radius&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">central_body_radius</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                        <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;central_body_J2&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">central_body_J2</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                        <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;central_body_J2_reference_radius&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">central_body_J2_reference_radius</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                        <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;mu&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                        <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;central_body_flattening_coefficient&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">central_body_flattening_coefficient</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                        <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;LU&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">LU</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                        <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;TU&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">TU</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                        <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;reference_angles&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">reference_angles</span> <span class="o">=</span> <span class="p">[</span><span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">5</span><span class="p">],</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">6</span><span class="p">]]</span>
+
+                        <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;r_SOI&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">r_SOI</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                        <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;minimum_safe_distance&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">minimum_safe_distance</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+                        <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;convert_elements_from_central_body_frame&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">convert_elements_from_central_body_frame</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+
+                        <span class="k">elif</span> <span class="n">choice</span> <span class="o">==</span> <span class="s2">&quot;begin_body_list&quot;</span><span class="p">:</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">bodies</span> <span class="o">=</span> <span class="p">[]</span>
+                            <span class="n">body_list_line</span> <span class="o">=</span> <span class="mi">1</span>
+
+                        <span class="c1">#if option is not recognized</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Universe&quot;</span><span class="p">)</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Option not recognized: &quot;</span><span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="s2">&quot; on line &quot;</span> <span class="p">,</span><span class="nb">str</span><span class="p">(</span><span class="n">linenumber</span><span class="p">))</span>
+                            <span class="bp">self</span><span class="o">.</span><span class="n">success</span> <span class="o">=</span> <span class="mi">0</span>
+                            <span class="n">inputfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                            <span class="k">return</span>
+        <span class="n">inputfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="Universe.generate_flyby_menu"><a class="viewcode-back" href="../PyEMTG/Universe.html#Universe.Universe.generate_flyby_menu">[docs]</a>    <span class="k">def</span> <span class="nf">generate_flyby_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flyby_menu</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">flyby_indices</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_bodies</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bodies</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">minimum_flyby_altitude</span> <span class="o">&gt;</span> <span class="mf">0.0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flyby_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">flyby_menu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bodies</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Universe.generate_perturbation_menu"><a class="viewcode-back" href="../PyEMTG/Universe.html#Universe.Universe.generate_perturbation_menu">[docs]</a>    <span class="k">def</span> <span class="nf">generate_perturbation_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">perturbation_menu</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">perturbation_indices</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_bodies</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">perturbation_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">perturbation_menu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bodies</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Universe.generate_destination_menu"><a class="viewcode-back" href="../PyEMTG/Universe.html#Universe.Universe.generate_destination_menu">[docs]</a>    <span class="k">def</span> <span class="nf">generate_destination_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination_menu</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination_indices</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1">#add the free point destination option to the beginning of the list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination_menu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;SOI boundary&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination_menu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;Central body&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_bodies</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">destination_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">destination_menu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bodies</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Universe.generate_distance_constraint_menu"><a class="viewcode-back" href="../PyEMTG/Universe.html#Universe.Universe.generate_distance_constraint_menu">[docs]</a>    <span class="k">def</span> <span class="nf">generate_distance_constraint_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_menu</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_indices</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1">#add the central body to the beginning of the list</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_menu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">central_body_name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">number_of_bodies</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distance_indices</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">distance_menu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bodies</span><span class="p">[</span><span class="n">b</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Universe.write_universe_file"><a class="viewcode-back" href="../PyEMTG/Universe.html#Universe.Universe.write_universe_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_universe_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file_name</span><span class="p">):</span>
+        <span class="c1">#write out the universe file</span>
+        <span class="n">outputfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#universe file</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#Central body name</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;central_body_name &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">central_body_name</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#Central body SPICE ID</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;central_body_SPICE_ID &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">central_body_SPICE_ID</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#central body radius in km</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;central_body_radius &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">central_body_radius</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#central body J2</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;central_body_J2 &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">central_body_J2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#central body J2</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;central_body_J2_reference_radius &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">central_body_J2_reference_radius</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#gravitational constant of central body, in km^3/s^2</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;mu &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#central body flattening coefficient</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;central_body_flattening_coefficient &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">central_body_flattening_coefficient</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#characteristic length unit, in km</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;LU &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">LU</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#angles defining the local reference frame relative to ICRF, given in degrees</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#alpha0, alphadot, delta0, deltadot, W, Wdot</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;reference_angles &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_angles</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_angles</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_angles</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_angles</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_angles</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reference_angles</span><span class="p">[</span><span class="mi">5</span><span class="p">])</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#radius of the central body&#39;s sphere of influence</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;r_SOI &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r_SOI</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#minimum safe distance from the central body</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;minimum_safe_distance &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">minimum_safe_distance</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#Orbit elements are in ICRF? (0: yes, 1: no, they are in central body frame)</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;convert_elements_from_central_body_frame &quot;</span>  <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">convert_elements_from_central_body_frame</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#menu of bodies</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#name shortname number SPICE_ID minimum_flyby_altitude GM radius J2 AbsoluteMagnitude albedo ephemeris_epoch alpha0 alphadot delta0 deltadot W Wdot SMA ECC INC RAAN AOP MA</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#SMA, radius, and minimum_flyby_altitude in km, angles in degrees, mass in kg, </span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#if minimum_flyby_altitude &lt;= 0, then this object is not placed on the flyby menu</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;#orbit elements are for MJD 51544 / January 1, 2000 00:00 CT, (&quot;&quot;Coordinate Time&quot;&quot; as per JPL HORIZONS documentation) in ICRF frame</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;begin_body_list</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">body</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bodies</span><span class="p">:</span>
+            <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">body</span><span class="o">.</span><span class="n">body_line</span><span class="p">()</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;end_body_list&quot;</span><span class="p">)</span>
+
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

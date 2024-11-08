@@ -1,0 +1,226 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>mathUtilities module &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="posVel2BPlane module" href="posVel2BPlane.html" />
+    <link rel="prev" title="kepler module" href="kepler.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-mathUtilities">
+<span id="mathutilities-module"></span><h1>mathUtilities module<a class="headerlink" href="#module-mathUtilities" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">mathUtilities.</span></span><span class="sig-name descname"><span class="pre">mathUtilities</span></span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Basic support math</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.angle_between_2_vectors">
+<span class="sig-name descname"><span class="pre">angle_between_2_vectors</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.angle_between_2_vectors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.angle_between_2_vectors" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate angle between 2 3D vectors in rad</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.column_vector_norm2">
+<span class="sig-name descname"><span class="pre">column_vector_norm2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.column_vector_norm2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.column_vector_norm2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate 2 norm of column vector explicitly rather than using numpy’s built-in utilities</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.column_vector_norm2_deriv">
+<span class="sig-name descname"><span class="pre">column_vector_norm2_deriv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.column_vector_norm2_deriv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.column_vector_norm2_deriv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate derivative of norm2 of column vector w.r.t. the vector itself (x)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.crossmat">
+<span class="sig-name descname"><span class="pre">crossmat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.crossmat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.crossmat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate skew-symmetric cross matrix of 3 array x</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.d_atan2">
+<span class="sig-name descname"><span class="pre">d_atan2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.d_atan2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.d_atan2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate first derivatives of atan2 w.r.t. its arguments. First element is d/dy, second element is d/dx</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.d_crossproduct">
+<span class="sig-name descname"><span class="pre">d_crossproduct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.d_crossproduct"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.d_crossproduct" title="Permalink to this definition">¶</a></dt>
+<dd><p>derivative of cross product w.r.t. its arguments (x     imes y)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.d_transform1">
+<span class="sig-name descname"><span class="pre">d_transform1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.d_transform1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.d_transform1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns derivative of transformation matrix about 1-axis by angle th (rad) wrt th</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.d_transform2">
+<span class="sig-name descname"><span class="pre">d_transform2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.d_transform2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.d_transform2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns derivative of transformation matrix about 2-axis by angle th (rad) wrt th</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.d_transform3">
+<span class="sig-name descname"><span class="pre">d_transform3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.d_transform3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.d_transform3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns derivative of transformation matrix about 3-axis by angle th (rad) wrt th</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.i_unit">
+<span class="sig-name descname"><span class="pre">i_unit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.i_unit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.i_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns i unit vector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.j_unit">
+<span class="sig-name descname"><span class="pre">j_unit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.j_unit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.j_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns j unit vector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.k_unit">
+<span class="sig-name descname"><span class="pre">k_unit</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.k_unit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.k_unit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns k unit vector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.tensor_bullet2_vector">
+<span class="sig-name descname"><span class="pre">tensor_bullet2_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">t</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.tensor_bullet2_vector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.tensor_bullet2_vector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate product of m x n x p tensor and n vector to produce m x p matrix</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.transform1">
+<span class="sig-name descname"><span class="pre">transform1</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.transform1"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.transform1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns transformation matrix about 1-axis by angle th (rad)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.transform2">
+<span class="sig-name descname"><span class="pre">transform2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.transform2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.transform2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns transformation matrix about 2-axis by angle th (rad)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.transform3">
+<span class="sig-name descname"><span class="pre">transform3</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">th</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.transform3"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.transform3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns transformation matrix about 3-axis by angle th (rad)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="mathUtilities.mathUtilities.unit_vector_deriv">
+<span class="sig-name descname"><span class="pre">unit_vector_deriv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/mathUtilities.html#mathUtilities.unit_vector_deriv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#mathUtilities.mathUtilities.unit_vector_deriv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate derivative of unit vector x_unit w.r.t. its non-unit vector x</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">PyEMTG documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">PyEMTG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">PyEMTG documentation</a><ul>
+  <li><a href="modules.html">PyEMTG</a><ul>
+      <li>Previous: <a href="kepler.html" title="previous chapter">kepler module</a></li>
+      <li>Next: <a href="posVel2BPlane.html" title="next chapter">posVel2BPlane module</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

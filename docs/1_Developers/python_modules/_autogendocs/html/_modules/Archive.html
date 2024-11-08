@@ -1,0 +1,347 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Archive &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for Archive</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="c1">#from matplotlib import ticker</span>
+<span class="c1">#import matplotlib.pyplot as plt</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+
+<span class="kn">import</span> <span class="nn">astropy.time</span>
+
+<span class="c1">#EMTG path item class</span>
+<div class="viewcode-block" id="PathItem"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.PathItem">[docs]</a><span class="k">class</span> <span class="nc">PathItem</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step_index</span><span class="p">,</span> <span class="n">time_index</span><span class="p">,</span> <span class="n">number_of_steps_since_last_restart</span><span class="p">,</span> <span class="n">seconds_since_last_restart</span><span class="p">,</span> <span class="n">NLP_success</span><span class="p">,</span> <span class="n">NLP_distance_from_filament</span><span class="p">,</span> <span class="n">NLP_inform_code</span><span class="p">,</span>  <span class="n">fitness</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">step_index</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setvalues</span><span class="p">(</span><span class="n">step_index</span><span class="p">,</span> <span class="n">time_index</span><span class="p">,</span> <span class="n">number_of_steps_since_last_restart</span><span class="p">,</span> <span class="n">seconds_since_last_restart</span><span class="p">,</span> <span class="n">NLP_success</span><span class="p">,</span> <span class="n">NLP_distance_from_filament</span><span class="p">,</span> <span class="n">NLP_inform_code</span><span class="p">,</span>  <span class="n">fitness</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PathItem.clear"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.PathItem.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_index</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_index</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_steps_since_last_restart</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seconds_since_last_restart</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">NLP_success</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">NLP_distance_from_filament</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">NLP_inform_code</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="PathItem.setvalues"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.PathItem.setvalues">[docs]</a>    <span class="k">def</span> <span class="nf">setvalues</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step_index</span><span class="p">,</span> <span class="n">time_index</span><span class="p">,</span> <span class="n">number_of_steps_since_last_restart</span><span class="p">,</span> <span class="n">seconds_since_last_restart</span><span class="p">,</span> <span class="n">NLP_success</span><span class="p">,</span> <span class="n">NLP_distance_from_filament</span><span class="p">,</span> <span class="n">NLP_inform_code</span><span class="p">,</span> <span class="n">fitness</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">step_index</span> <span class="o">=</span> <span class="n">step_index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time_index</span> <span class="o">=</span> <span class="n">time_index</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_steps_since_last_restart</span> <span class="o">=</span> <span class="n">number_of_steps_since_last_restart</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seconds_since_last_restart</span> <span class="o">=</span> <span class="n">seconds_since_last_restart</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">NLP_success</span> <span class="o">=</span> <span class="n">NLP_success</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">NLP_distance_from_filament</span> <span class="o">=</span> <span class="n">NLP_distance_from_filament</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">NLP_inform_code</span> <span class="o">=</span> <span class="n">NLP_inform_code</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fitness</span> <span class="o">=</span> <span class="n">fitness</span></div>
+
+<div class="viewcode-block" id="PathItem.write"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.PathItem.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputfile</span><span class="p">):</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">step_index</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span>
+                         <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">time_index</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span>
+                         <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">number_of_steps_since_last_restart</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span>
+                         <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">seconds_since_last_restart</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span>
+                         <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NLP_success</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span>
+                         <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NLP_distance_from_filament</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span>
+                         <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NLP_inform_code</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;,&#39;</span>
+                         <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fitness</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span></div></div>
+
+<span class="c1">#EMTG path class</span>
+<div class="viewcode-block" id="Path"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.Path">[docs]</a><span class="k">class</span> <span class="nc">Path</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step_index</span><span class="p">,</span> <span class="n">time_index</span><span class="p">,</span> <span class="n">number_of_steps_since_last_restart</span><span class="p">,</span> <span class="n">seconds_since_last_restart</span><span class="p">,</span> <span class="n">NLP_success</span><span class="p">,</span> <span class="n">NLP_distance_from_filament</span><span class="p">,</span> <span class="n">NLP_inform_code</span><span class="p">,</span> <span class="n">fitness</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">step_index</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">step_index</span><span class="p">,</span> <span class="n">time_index</span><span class="p">,</span> <span class="n">number_of_steps_since_last_restart</span><span class="p">,</span> <span class="n">seconds_since_last_restart</span><span class="p">,</span> <span class="n">NLP_success</span><span class="p">,</span> <span class="n">NLP_distance_from_filament</span><span class="p">,</span> <span class="n">NLP_inform_code</span><span class="p">,</span> <span class="n">fitness</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Path.clear"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.Path.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PathItems</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="Path.append"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.Path.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">step_index</span><span class="p">,</span> <span class="n">time_index</span><span class="p">,</span> <span class="n">number_of_steps_since_last_restart</span><span class="p">,</span> <span class="n">seconds_since_last_restart</span><span class="p">,</span> <span class="n">NLP_success</span><span class="p">,</span> <span class="n">NLP_distance_from_filament</span><span class="p">,</span> <span class="n">NLP_inform_code</span><span class="p">,</span> <span class="n">fitness</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PathItems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PathItem</span><span class="p">(</span><span class="n">step_index</span><span class="p">,</span> <span class="n">time_index</span><span class="p">,</span> <span class="n">number_of_steps_since_last_restart</span><span class="p">,</span> <span class="n">seconds_since_last_restart</span><span class="p">,</span> <span class="n">NLP_success</span><span class="p">,</span> <span class="n">NLP_distance_from_filament</span><span class="p">,</span> <span class="n">NLP_inform_code</span><span class="p">,</span> <span class="n">fitness</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Path.write"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.Path.write">[docs]</a>    <span class="k">def</span> <span class="nf">write</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">outputfile</span><span class="p">):</span>
+        <span class="k">for</span> <span class="n">Item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">PathItems</span><span class="p">:</span>
+            <span class="n">Item</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">outputfile</span><span class="p">)</span></div></div>
+
+<span class="c1">#EMTG archive item class</span>
+<div class="viewcode-block" id="ArchiveItem"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.ArchiveItem">[docs]</a><span class="k">class</span> <span class="nc">ArchiveItem</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namestring</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">namestring</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setname</span><span class="p">(</span><span class="n">namestring</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ArchiveItem.clear"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.ArchiveItem.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="ArchiveItem.setname"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.ArchiveItem.setname">[docs]</a>    <span class="k">def</span> <span class="nf">setname</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">namestring</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">namestring</span></div>
+
+<div class="viewcode-block" id="ArchiveItem.append"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.ArchiveItem.append">[docs]</a>    <span class="k">def</span> <span class="nf">append</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ArchiveItem.pop"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.ArchiveItem.pop">[docs]</a>    <span class="k">def</span> <span class="nf">pop</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">popvalue</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">popvalue</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ArchiveItem.remove"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.ArchiveItem.remove">[docs]</a>    <span class="k">def</span> <span class="nf">remove</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">removevalue</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">removevalue</span><span class="p">)</span></div></div>
+
+<span class="c1">#EMTG archive class</span>
+<div class="viewcode-block" id="Archive"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.Archive">[docs]</a><span class="k">class</span> <span class="nc">Archive</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file_name</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">input_file_name</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">parse_archive</span><span class="p">(</span><span class="n">input_file_name</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Archive.clear"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.Archive.clear">[docs]</a>    <span class="k">def</span> <span class="nf">clear</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ArchiveItems</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Paths</span> <span class="o">=</span> <span class="p">[]</span></div>
+
+<div class="viewcode-block" id="Archive.parse_archive"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.Archive.parse_archive">[docs]</a>    <span class="k">def</span> <span class="nf">parse_archive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_file_name</span><span class="p">):</span>
+        <span class="c1">#Step 1: open the file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">input_file_name</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">):</span>
+            <span class="n">inputfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_file_name</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">success</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unable to open&quot;</span><span class="p">,</span> <span class="n">input_file_name</span><span class="p">,</span> <span class="s2">&quot;EMTG Error&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">success</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">return</span>
+
+        <span class="c1">#Step 2: scan through the file</span>
+        <span class="n">linenumber</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">inputfile</span><span class="p">:</span>
+            <span class="c1">#strip off the newline character</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+            <span class="n">linenumber</span> <span class="o">=</span> <span class="n">linenumber</span> <span class="o">+</span> <span class="mi">1</span>
+
+            <span class="c1">#the first line of the archive defines everything else</span>
+            <span class="k">if</span> <span class="n">linenumber</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+               <span class="n">linecell</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+               <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">linecell</span><span class="p">:</span>
+                   <span class="bp">self</span><span class="o">.</span><span class="n">ArchiveItems</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">ArchiveItem</span><span class="p">(</span><span class="n">entry</span><span class="p">))</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">linecell</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+                <span class="n">entryindex</span> <span class="o">=</span> <span class="mi">0</span>
+                <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="n">linecell</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">ArchiveItems</span><span class="p">[</span><span class="n">entryindex</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">entry</span><span class="p">))</span>
+                    <span class="n">entryindex</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1">#Close the file</span>
+        <span class="n">inputfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Archive.write_archive"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.Archive.write_archive">[docs]</a>    <span class="k">def</span> <span class="nf">write_archive</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file_name</span><span class="p">):</span>
+        <span class="n">outputfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ArchiveItems</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">entry</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ArchiveItems</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+            <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="n">entry</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">linenumber</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ArchiveItems</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)):</span>
+            <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ArchiveItems</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">linenumber</span><span class="p">]))</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ArchiveItems</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;,&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">linenumber</span><span class="p">]))</span>
+            <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Archive.plot_objective_vs_arrival_date"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.Archive.plot_objective_vs_arrival_date">[docs]</a>    <span class="k">def</span> <span class="nf">plot_objective_vs_arrival_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#first we need to create an array of arrival dates</span>
+
+        <span class="n">ArrivalDates</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">linenumber</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ArchiveItems</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)):</span>
+            <span class="n">currentArrivalDate</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ArchiveItems</span><span class="p">:</span>
+                
+                <span class="k">if</span> <span class="s2">&quot;flight time&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">&quot;launch epoch&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">&quot;stay time&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span> <span class="ow">or</span> <span class="s2">&quot;wait time&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">currentArrivalDate</span> <span class="o">+=</span> <span class="n">item</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">linenumber</span><span class="p">]</span>
+            <span class="n">ArrivalDates</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">currentArrivalDate</span><span class="p">)</span>
+
+        <span class="n">date_vector</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">date</span> <span class="ow">in</span> <span class="n">ArrivalDates</span><span class="p">:</span>
+            <span class="n">datestring</span> <span class="o">=</span> <span class="n">astropy</span><span class="o">.</span><span class="n">time</span><span class="o">.</span><span class="n">Time</span><span class="p">(</span><span class="n">date</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;mjd&#39;</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="s1">&#39;tdb&#39;</span><span class="p">,</span> <span class="n">out_subfmt</span><span class="o">=</span><span class="s1">&#39;date&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">iso</span>
+            <span class="n">date_vector</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">datestring</span><span class="p">,</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">date</span><span class="p">())</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">DataFigure</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DataAxes</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DataFigure</span><span class="o">.</span><span class="n">add_axes</span><span class="p">([</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DataAxes</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">date_vector</span><span class="p">,</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ArchiveItems</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DataAxes</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;Arrival Epoch&#39;</span><span class="p">)</span>
+
+        <span class="k">def</span> <span class="nf">format_date</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%m-</span><span class="si">%d</span><span class="s1">-%Y&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">DataAxes</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">ticker</span><span class="o">.</span><span class="n">FuncFormatter</span><span class="p">(</span><span class="n">format_date</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DataFigure</span><span class="o">.</span><span class="n">autofmt_xdate</span><span class="p">()</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Archive.assemble_paths"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.Archive.assemble_paths">[docs]</a>    <span class="k">def</span> <span class="nf">assemble_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#step 1: set the current number of restarts to a negative number</span>
+        <span class="n">reset_number</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="n">reference_step_count</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">reference_timestamp</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1">#step 2: iterate through the archive and detect path data</span>
+        <span class="k">for</span> <span class="n">linenumber</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ArchiveItems</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)):</span>
+            <span class="n">current_reset_count</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">current_step_count</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">current_fitness</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">current_timestamp</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">current_NLP_success</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">current_NLP_distance_from_filament</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">current_NLP_inform_code</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">ArchiveItems</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;reset count&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">current_reset_count</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">linenumber</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s2">&quot;step count&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">current_step_count</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">linenumber</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s2">&quot;solution timestamp&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">current_timestamp</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">linenumber</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s2">&quot;NLP success&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">current_NLP_success</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">linenumber</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s2">&quot;NLP distance from equality filament&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">current_NLP_distance_from_filament</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">linenumber</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s2">&quot;NLP inform code&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">current_NLP_inform_code</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">linenumber</span><span class="p">]</span>
+                <span class="k">if</span> <span class="s2">&quot;Objective function&quot;</span> <span class="ow">in</span> <span class="n">item</span><span class="o">.</span><span class="n">name</span><span class="p">:</span>
+                    <span class="n">current_fitness</span> <span class="o">=</span> <span class="n">item</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="n">linenumber</span><span class="p">]</span>
+            
+            <span class="c1">#detect if we are on a new path</span>
+            <span class="k">if</span> <span class="n">current_reset_count</span> <span class="o">&gt;</span> <span class="n">reset_number</span><span class="p">:</span>
+                <span class="c1">#create a new path</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;New path at step &quot;</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">current_step_count</span><span class="p">))</span>
+                <span class="n">reset_number</span> <span class="o">=</span> <span class="n">current_reset_count</span>
+                <span class="n">reference_step_count</span> <span class="o">=</span> <span class="n">current_step_count</span>
+                <span class="n">reference_timestamp</span> <span class="o">=</span> <span class="n">current_timestamp</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">Paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">current_step_count</span><span class="p">,</span> <span class="n">current_timestamp</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">current_fitness</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1">#if we are not on a new path, append this step&#39;s results to the current path</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">Paths</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_step_count</span><span class="p">,</span>
+                                      <span class="n">current_timestamp</span><span class="p">,</span>
+                                      <span class="n">current_step_count</span> <span class="o">-</span> <span class="n">reference_step_count</span><span class="p">,</span>
+                                      <span class="n">current_timestamp</span> <span class="o">-</span> <span class="n">reference_timestamp</span><span class="p">,</span> 
+                                      <span class="n">current_NLP_success</span><span class="p">,</span>
+                                      <span class="n">current_NLP_distance_from_filament</span><span class="p">,</span>
+                                      <span class="n">current_NLP_inform_code</span><span class="p">,</span>
+                                      <span class="n">current_fitness</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Archive.write_paths"><a class="viewcode-back" href="../PyEMTG/Archive.html#Archive.Archive.write_paths">[docs]</a>    <span class="k">def</span> <span class="nf">write_paths</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_file_name</span><span class="p">):</span>
+        <span class="n">outputfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">output_file_name</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span>
+
+        <span class="n">current_path</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="k">for</span> <span class="n">Path</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">Paths</span><span class="p">:</span>
+            <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Path #&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">current_path</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">outputfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;Step #, Timestamp (s), steps since path start, seconds since path start, NLP success?, NLP exit distance from equality filament, NLP inform code, fitness</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="n">current_path</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">Path</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">outputfile</span><span class="p">)</span>
+
+        <span class="n">outputfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

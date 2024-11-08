@@ -1,0 +1,383 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>posVel2BPlane module &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="posVel2BPlaneOut module" href="posVel2BPlaneOut.html" />
+    <link rel="prev" title="mathUtilities module" href="mathUtilities.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-posVel2BPlane">
+<span id="posvel2bplane-module"></span><h1>posVel2BPlane module<a class="headerlink" href="#module-posVel2BPlane" title="Permalink to this heading">¶</a></h1>
+<p>Revision history
+2018-12-18; Noble Hatten; created</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">posVel2BPlane.</span></span><span class="sig-name descname"><span class="pre">posVel2BPlane</span></span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.bDotR">
+<span class="sig-name descname"><span class="pre">bDotR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.bDotR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.bDotR" title="Permalink to this definition">¶</a></dt>
+<dd><p>B dot R</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.bDotR_derivs">
+<span class="sig-name descname"><span class="pre">bDotR_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.bDotR_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.bDotR_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>checked
+typed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.bDotT">
+<span class="sig-name descname"><span class="pre">bDotT</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.bDotT"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.bDotT" title="Permalink to this definition">¶</a></dt>
+<dd><p>B dot T</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.bDotT_derivs">
+<span class="sig-name descname"><span class="pre">bDotT_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.bDotT_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.bDotT_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>checked
+typed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.bScalar">
+<span class="sig-name descname"><span class="pre">bScalar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.bScalar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.bScalar" title="Permalink to this definition">¶</a></dt>
+<dd><p>magnitude of b vector
+also called Delta or miss distance</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.bScalar_derivs">
+<span class="sig-name descname"><span class="pre">bScalar_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.bScalar_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.bScalar_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>checked
+typed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.bTheta">
+<span class="sig-name descname"><span class="pre">bTheta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.bTheta"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.bTheta" title="Permalink to this definition">¶</a></dt>
+<dd><p>b plane theta (clock angle)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.bTheta_derivs">
+<span class="sig-name descname"><span class="pre">bTheta_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.bTheta_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.bTheta_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>checked
+typed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.bVector">
+<span class="sig-name descname"><span class="pre">bVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.bVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.bVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>b vector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.bVector_derivs">
+<span class="sig-name descname"><span class="pre">bVector_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.bVector_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.bVector_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>checked
+typed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.drdx">
+<span class="sig-name descname"><span class="pre">drdx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.drdx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.drdx" title="Permalink to this definition">¶</a></dt>
+<dd><p>typed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.dvdx">
+<span class="sig-name descname"><span class="pre">dvdx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.dvdx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.dvdx" title="Permalink to this definition">¶</a></dt>
+<dd><p>typed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.eCrossR">
+<span class="sig-name descname"><span class="pre">eCrossR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.eCrossR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.eCrossR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.eCrossR_derivs">
+<span class="sig-name descname"><span class="pre">eCrossR_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.eCrossR_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.eCrossR_derivs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.eVector">
+<span class="sig-name descname"><span class="pre">eVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.eVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.eVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>eccentricity vector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.eVector_derivs">
+<span class="sig-name descname"><span class="pre">eVector_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.eVector_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.eVector_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>checked</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.hCross">
+<span class="sig-name descname"><span class="pre">hCross</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.hCross"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.hCross" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.hVector">
+<span class="sig-name descname"><span class="pre">hVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.hVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.hVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>angular momentum vector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.hVector_derivs">
+<span class="sig-name descname"><span class="pre">hVector_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.hVector_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.hVector_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>checked
+typed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.hVector_derivs_v2">
+<span class="sig-name descname"><span class="pre">hVector_derivs_v2</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.hVector_derivs_v2"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.hVector_derivs_v2" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.nVector">
+<span class="sig-name descname"><span class="pre">nVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.nVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.nVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>not the node vector: h cross e; i think battin calls it p</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.nVector_derivs">
+<span class="sig-name descname"><span class="pre">nVector_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.nVector_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.nVector_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>checked</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.periapsisPositionVector">
+<span class="sig-name descname"><span class="pre">periapsisPositionVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.periapsisPositionVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.periapsisPositionVector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.periapsisVelocityVector">
+<span class="sig-name descname"><span class="pre">periapsisVelocityVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.periapsisVelocityVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.periapsisVelocityVector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.rPeri">
+<span class="sig-name descname"><span class="pre">rPeri</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.rPeri"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.rPeri" title="Permalink to this definition">¶</a></dt>
+<dd><p>periapsis radius</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.rPeri_derivs">
+<span class="sig-name descname"><span class="pre">rPeri_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.rPeri_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.rPeri_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>checked, but some are off by ~1e-13
+typed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.rVector">
+<span class="sig-name descname"><span class="pre">rVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.rVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.rVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>bplane R vector as a unit vector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.rVectorNotUnit">
+<span class="sig-name descname"><span class="pre">rVectorNotUnit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.rVectorNotUnit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.rVectorNotUnit" title="Permalink to this definition">¶</a></dt>
+<dd><p>bplane R vector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.rVector_derivs">
+<span class="sig-name descname"><span class="pre">rVector_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.rVector_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.rVector_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>checked
+typed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.sVector">
+<span class="sig-name descname"><span class="pre">sVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.sVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.sVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>s vector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.sVector_derivs">
+<span class="sig-name descname"><span class="pre">sVector_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.sVector_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.sVector_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>checked
+typed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.tVector">
+<span class="sig-name descname"><span class="pre">tVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.tVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.tVector" title="Permalink to this definition">¶</a></dt>
+<dd><p>t vector as a unit vector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.tVectorNotUnit">
+<span class="sig-name descname"><span class="pre">tVectorNotUnit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.tVectorNotUnit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.tVectorNotUnit" title="Permalink to this definition">¶</a></dt>
+<dd><p>t vector</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.tVector_derivs">
+<span class="sig-name descname"><span class="pre">tVector_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.tVector_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.tVector_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>checked
+typed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.trueAnomaly">
+<span class="sig-name descname"><span class="pre">trueAnomaly</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.trueAnomaly"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.trueAnomaly" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.trueAnomaly_derivs">
+<span class="sig-name descname"><span class="pre">trueAnomaly_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.trueAnomaly_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.trueAnomaly_derivs" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.vInfDec">
+<span class="sig-name descname"><span class="pre">vInfDec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.vInfDec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.vInfDec" title="Permalink to this definition">¶</a></dt>
+<dd><p>declination of v infinity</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.vInfDec_derivs">
+<span class="sig-name descname"><span class="pre">vInfDec_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.vInfDec_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.vInfDec_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>checked
+typed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.vInfMag">
+<span class="sig-name descname"><span class="pre">vInfMag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.vInfMag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.vInfMag" title="Permalink to this definition">¶</a></dt>
+<dd><p>magnitude of v infinity</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.vInfMag_derivs">
+<span class="sig-name descname"><span class="pre">vInfMag_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.vInfMag_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.vInfMag_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>checked
+typed</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.vInfRA">
+<span class="sig-name descname"><span class="pre">vInfRA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.vInfRA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.vInfRA" title="Permalink to this definition">¶</a></dt>
+<dd><p>right ascension of v infinity</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="posVel2BPlane.posVel2BPlane.vInfRA_derivs">
+<span class="sig-name descname"><span class="pre">vInfRA_derivs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/posVel2BPlane.html#posVel2BPlane.vInfRA_derivs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#posVel2BPlane.posVel2BPlane.vInfRA_derivs" title="Permalink to this definition">¶</a></dt>
+<dd><p>checked
+typed</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">PyEMTG documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">PyEMTG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">PyEMTG documentation</a><ul>
+  <li><a href="modules.html">PyEMTG</a><ul>
+      <li>Previous: <a href="mathUtilities.html" title="previous chapter">mathUtilities module</a></li>
+      <li>Next: <a href="posVel2BPlaneOut.html" title="next chapter">posVel2BPlaneOut module</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

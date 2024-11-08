@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>FrameHandler module &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="GlobalOptionsPanel module" href="GlobalOptionsPanel.html" />
+    <link rel="prev" title="EOM module" href="EOM.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-FrameHandler">
+<span id="framehandler-module"></span><h1>FrameHandler module<a class="headerlink" href="#module-FrameHandler" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="FrameHandler.FrameHandler">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">FrameHandler.</span></span><span class="sig-name descname"><span class="pre">FrameHandler</span></span><a class="reference internal" href="../_modules/FrameHandler.html#FrameHandler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FrameHandler.FrameHandler" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="FrameHandler.FrameHandler.Rx">
+<span class="sig-name descname"><span class="pre">Rx</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/FrameHandler.html#FrameHandler.Rx"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FrameHandler.FrameHandler.Rx" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="FrameHandler.FrameHandler.Ry">
+<span class="sig-name descname"><span class="pre">Ry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/FrameHandler.html#FrameHandler.Ry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FrameHandler.FrameHandler.Ry" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="FrameHandler.FrameHandler.Rz">
+<span class="sig-name descname"><span class="pre">Rz</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/FrameHandler.html#FrameHandler.Rz"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FrameHandler.FrameHandler.Rz" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="FrameHandler.FrameHandler.construct_rotation_matrices">
+<span class="sig-name descname"><span class="pre">construct_rotation_matrices</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ET_sec_past_J2000</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/FrameHandler.html#FrameHandler.construct_rotation_matrices"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FrameHandler.FrameHandler.construct_rotation_matrices" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="FrameHandler.FrameHandler.getR">
+<span class="sig-name descname"><span class="pre">getR</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">from_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/FrameHandler.html#FrameHandler.getR"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FrameHandler.FrameHandler.getR" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="FrameHandler.FrameHandler.initJ2000frames">
+<span class="sig-name descname"><span class="pre">initJ2000frames</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">alpha0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alphadot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deltadot</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">W0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Wdot</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/FrameHandler.html#FrameHandler.initJ2000frames"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FrameHandler.FrameHandler.initJ2000frames" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="FrameHandler.FrameHandler.rotateVector">
+<span class="sig-name descname"><span class="pre">rotateVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vec</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">from_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">to_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/FrameHandler.html#FrameHandler.rotateVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#FrameHandler.FrameHandler.rotateVector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">PyEMTG documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">PyEMTG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">PyEMTG documentation</a><ul>
+  <li><a href="modules.html">PyEMTG</a><ul>
+      <li>Previous: <a href="EOM.html" title="previous chapter">EOM module</a></li>
+      <li>Next: <a href="GlobalOptionsPanel.html" title="next chapter">GlobalOptionsPanel module</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

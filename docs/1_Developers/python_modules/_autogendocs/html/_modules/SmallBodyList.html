@@ -1,0 +1,236 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmallBodyList &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for SmallBodyList</h1><div class="highlight"><pre>
+<span></span><span class="c1">#classes for small body list</span>
+<span class="c1">#for use in finding science flybys</span>
+<span class="c1">#Jacob Englander 7-9-2014</span>
+<span class="c1">#expected interface with Ryne Beeson&#39;s bubble search code</span>
+
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">kepler</span> <span class="kn">import</span> <span class="n">kepler</span>
+<span class="kn">from</span> <span class="nn">numpy</span> <span class="kn">import</span> <span class="n">array</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<div class="viewcode-block" id="SmallBody"><a class="viewcode-back" href="../PyEMTG/SmallBodyList.html#SmallBodyList.SmallBody">[docs]</a><span class="k">class</span> <span class="nc">SmallBody</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">SPICEID</span><span class="p">,</span> <span class="n">ReferenceEpoch</span><span class="p">,</span> <span class="n">SMA</span><span class="p">,</span> <span class="n">ECC</span><span class="p">,</span> <span class="n">INC</span><span class="p">,</span> <span class="n">RAAN</span><span class="p">,</span> <span class="n">AOP</span><span class="p">,</span> <span class="n">MA</span><span class="p">,</span> <span class="n">Tholen</span><span class="p">,</span> <span class="n">SMASSII</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">Diameter</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_values</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">SPICEID</span><span class="p">,</span> <span class="n">ReferenceEpoch</span><span class="p">,</span> <span class="n">SMA</span><span class="p">,</span> <span class="n">ECC</span><span class="p">,</span> <span class="n">INC</span><span class="p">,</span> <span class="n">RAAN</span><span class="p">,</span> <span class="n">AOP</span><span class="p">,</span> <span class="n">MA</span><span class="p">,</span> <span class="n">Tholen</span><span class="p">,</span> <span class="n">SMASSII</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">Diameter</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SmallBody.set_values"><a class="viewcode-back" href="../PyEMTG/SmallBodyList.html#SmallBodyList.SmallBody.set_values">[docs]</a>    <span class="k">def</span> <span class="nf">set_values</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">SPICEID</span><span class="p">,</span> <span class="n">ReferenceEpoch</span><span class="p">,</span> <span class="n">SMA</span><span class="p">,</span> <span class="n">ECC</span><span class="p">,</span> <span class="n">INC</span><span class="p">,</span> <span class="n">RAAN</span><span class="p">,</span> <span class="n">AOP</span><span class="p">,</span> <span class="n">MA</span><span class="p">,</span> <span class="n">Tholen</span><span class="p">,</span> <span class="n">SMASSII</span><span class="p">,</span> <span class="n">H</span><span class="p">,</span> <span class="n">Diameter</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SPICEID</span> <span class="o">=</span> <span class="n">SPICEID</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ReferenceEpoch</span> <span class="o">=</span> <span class="n">ReferenceEpoch</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SMA</span> <span class="o">=</span> <span class="n">SMA</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ECC</span> <span class="o">=</span> <span class="n">ECC</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">INC</span> <span class="o">=</span> <span class="n">INC</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">RAAN</span> <span class="o">=</span> <span class="n">RAAN</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AOP</span> <span class="o">=</span> <span class="n">AOP</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">MA</span> <span class="o">=</span> <span class="n">MA</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Tholen</span> <span class="o">=</span> <span class="n">Tholen</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SMASSII</span> <span class="o">=</span> <span class="n">SMASSII</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="n">H</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Diameter</span> <span class="o">=</span> <span class="n">Diameter</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Aphelion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SMA</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ECC</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Perihelion</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SMA</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">ECC</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SmallBody.locate_body_spice"><a class="viewcode-back" href="../PyEMTG/SmallBodyList.html#SmallBodyList.SmallBody.locate_body_spice">[docs]</a>    <span class="k">def</span> <span class="nf">locate_body_spice</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">JD</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">AU</span><span class="p">):</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">spiceypy</span> <span class="k">as</span> <span class="nn">spice</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;PySpice not available&quot;</span><span class="p">)</span>
+            
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">state</span><span class="p">,</span><span class="n">time</span> <span class="o">=</span> <span class="n">spice</span><span class="o">.</span><span class="n">spkez</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SPICEID</span><span class="p">,(</span><span class="n">JD</span><span class="o">-</span><span class="mf">2400000.5</span><span class="o">-</span><span class="mf">51544.5</span><span class="p">)</span><span class="o">*</span><span class="mf">86400.0</span><span class="p">,</span><span class="s2">&quot;eclipJ2000&quot;</span><span class="p">,</span><span class="s2">&quot;NONE&quot;</span><span class="p">,</span><span class="mi">10</span><span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">]</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="c1">#call Ryne&#39;s Kepler solver</span>
+            <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">kepler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SMA</span> <span class="o">*</span> <span class="n">AU</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ECC</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">INC</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">RAAN</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">AOP</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MA</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ReferenceEpoch</span><span class="p">,</span> <span class="n">JD</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span></div>
+
+<div class="viewcode-block" id="SmallBody.locate_body"><a class="viewcode-back" href="../PyEMTG/SmallBodyList.html#SmallBodyList.SmallBody.locate_body">[docs]</a>    <span class="k">def</span> <span class="nf">locate_body</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">JD</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">AU</span><span class="p">):</span>
+        <span class="c1">#call Ryne&#39;s Kepler solver</span>
+        <span class="n">r</span><span class="p">,</span> <span class="n">v</span> <span class="o">=</span> <span class="n">kepler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SMA</span> <span class="o">*</span> <span class="n">AU</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ECC</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">INC</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">RAAN</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">AOP</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">MA</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ReferenceEpoch</span><span class="p">,</span> <span class="n">JD</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span><span class="p">,</span> <span class="n">v</span></div></div>
+
+<div class="viewcode-block" id="SmallBodyList"><a class="viewcode-back" href="../PyEMTG/SmallBodyList.html#SmallBodyList.SmallBodyList">[docs]</a><span class="k">class</span> <span class="nc">SmallBodyList</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">mu</span><span class="p">,</span> <span class="n">LU</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">body_list</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LU</span> <span class="o">=</span> <span class="n">LU</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">=</span> <span class="n">mu</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_small_body_list</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SmallBodyList.read_small_body_list"><a class="viewcode-back" href="../PyEMTG/SmallBodyList.html#SmallBodyList.SmallBodyList.read_small_body_list">[docs]</a>    <span class="k">def</span> <span class="nf">read_small_body_list</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+        
+        <span class="c1">#read the small body list file</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">filename</span><span class="p">):</span>
+            <span class="n">inputfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;File &quot;</span><span class="p">,</span> <span class="n">inputfile</span><span class="p">,</span> <span class="s2">&quot; does not exist!&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">inputfile</span><span class="p">:</span>
+            <span class="n">linecell</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+            <span class="c1">#change empty values to 0 so that float() and int() don&#39;t blow up</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">linecell</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">linecell</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+                    <span class="n">linecell</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;-1&#39;</span>
+            <span class="k">if</span> <span class="n">linecell</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">:</span>
+                <span class="n">linecell</span><span class="o">.</span><span class="n">pop</span><span class="p">()</span>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">linecell</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">13</span><span class="p">:</span>
+                <span class="n">linecell</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s1">&#39;-1&#39;</span><span class="p">)</span>
+            <span class="n">linecell</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">linecell</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+
+            <span class="c1">#skip the first line</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;full_name&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">body_list</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">SmallBody</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(),</span> <span class="c1">#name</span>
+                                                <span class="nb">int</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)),</span> <span class="c1">#SPICE ID</span>
+                                                <span class="nb">float</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)),</span> <span class="c1">#reference epoch</span>
+                                                <span class="nb">float</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)),</span> <span class="c1">#SMA (AU)</span>
+                                                <span class="nb">float</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)),</span> <span class="c1">#ECC</span>
+                                                <span class="nb">float</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">))</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.0</span><span class="p">,</span> <span class="c1">#INC</span>
+                                                <span class="nb">float</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">6</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">))</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.0</span><span class="p">,</span> <span class="c1">#RAAN</span>
+                                                <span class="nb">float</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">))</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.0</span><span class="p">,</span> <span class="c1">#AOP</span>
+                                                <span class="nb">float</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">8</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">))</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span><span class="o">/</span><span class="mf">180.0</span><span class="p">,</span> <span class="c1">#MA</span>
+                                                <span class="n">linecell</span><span class="p">[</span><span class="mi">9</span><span class="p">],</span>  <span class="c1">#Tholen spectral type</span>
+                                                <span class="s1">&#39;&#39;</span><span class="p">,</span><span class="c1">#linecell[10], #SMASSII spectral type</span>
+                                                <span class="nb">float</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">10</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">)),</span> <span class="c1">#absolute magnitude</span>
+                                                <span class="nb">float</span><span class="p">(</span><span class="n">linecell</span><span class="p">[</span><span class="mi">11</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">))))</span> <span class="c1">#diameter (km)</span></div>
+
+
+    <span class="c1">#function to find bodies that are near a reference state at a reference epoch</span>
+<div class="viewcode-block" id="SmallBodyList.find_bubble_targets"><a class="viewcode-back" href="../PyEMTG/SmallBodyList.html#SmallBodyList.SmallBodyList.find_bubble_targets">[docs]</a>    <span class="k">def</span> <span class="nf">find_bubble_targets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ReferenceState</span><span class="p">,</span> <span class="n">ReferenceJD</span><span class="p">,</span> <span class="n">RelativePositionFilterMagnitude</span><span class="p">,</span> <span class="n">RelativeVelocityFilterMagnitude</span><span class="p">,</span> <span class="n">MaximumMagnitude</span><span class="p">,</span> <span class="n">ifSpice</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">spiceFiles</span> <span class="o">=</span> <span class="p">[],</span> <span class="n">IDs</span> <span class="o">=</span> <span class="p">[]):</span>
+        <span class="c1">#initialize the list of bodies</span>
+        <span class="n">list_of_acceptable_bodies</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="c1"># print spiceFile</span>
+        <span class="c1">#find the reference sun distance</span>
+        <span class="n">ReferenceSunDistance</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">ReferenceState</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ReferenceState</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">ReferenceState</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">LU</span>
+
+        <span class="k">for</span> <span class="n">body</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">body_list</span><span class="p">:</span>
+           <span class="c1">#first filter is to discard all objects whose aphelion is smaller than the reference sun distance or whose perihelion is larger than the reference sun distance</span>
+           <span class="k">if</span> <span class="n">body</span><span class="o">.</span><span class="n">Aphelion</span> <span class="o">&gt;=</span> <span class="p">(</span><span class="n">ReferenceSunDistance</span> <span class="o">-</span> <span class="n">RelativePositionFilterMagnitude</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">LU</span><span class="p">)</span> \
+               <span class="ow">and</span> <span class="n">body</span><span class="o">.</span><span class="n">Perihelion</span> <span class="o">&lt;=</span> <span class="p">(</span><span class="n">ReferenceSunDistance</span> <span class="o">+</span> <span class="n">RelativePositionFilterMagnitude</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">LU</span><span class="p">)</span> \
+               <span class="ow">and</span> <span class="n">body</span><span class="o">.</span><span class="n">H</span> <span class="o">&lt;=</span> <span class="n">MaximumMagnitude</span><span class="p">:</span>
+               
+               <span class="k">if</span> <span class="n">ifSpice</span> <span class="ow">and</span> <span class="n">body</span><span class="o">.</span><span class="n">SPICEID</span> <span class="ow">in</span> <span class="n">IDs</span><span class="p">:</span>
+                   <span class="n">BodyR</span><span class="p">,</span> <span class="n">BodyV</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">locate_body_spice</span><span class="p">(</span><span class="n">ReferenceJD</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LU</span><span class="p">)</span>
+               <span class="k">else</span><span class="p">:</span>
+                   <span class="c1">#second and third filters are on relative position and velocity, so we have to get the current state vector</span>
+                   <span class="n">BodyR</span><span class="p">,</span> <span class="n">BodyV</span> <span class="o">=</span> <span class="n">body</span><span class="o">.</span><span class="n">locate_body</span><span class="p">(</span><span class="n">ReferenceJD</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">LU</span><span class="p">)</span>
+
+               <span class="c1">#compute relative position</span>
+               <span class="n">RelativePosition</span> <span class="o">=</span> <span class="p">[</span><span class="n">BodyR</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ReferenceState</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">BodyR</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ReferenceState</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">BodyR</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">ReferenceState</span><span class="p">[</span><span class="mi">2</span><span class="p">]]</span>
+               <span class="n">body</span><span class="o">.</span><span class="n">RelativePositionMagnitude</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">RelativePosition</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">RelativePosition</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">RelativePosition</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+               <span class="c1">#compute relative velocity</span>
+               <span class="n">RelativeVelocity</span> <span class="o">=</span> <span class="p">[</span><span class="n">BodyV</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">ReferenceState</span><span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="n">BodyV</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">ReferenceState</span><span class="p">[</span><span class="mi">4</span><span class="p">],</span> <span class="n">BodyV</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">-</span> <span class="n">ReferenceState</span><span class="p">[</span><span class="mi">5</span><span class="p">]]</span>
+               <span class="n">body</span><span class="o">.</span><span class="n">RelativeVelocityMagnitude</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">RelativeVelocity</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">RelativeVelocity</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">RelativeVelocity</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+               <span class="k">if</span> <span class="n">body</span><span class="o">.</span><span class="n">RelativePositionMagnitude</span> <span class="o">&lt;</span> <span class="n">RelativePositionFilterMagnitude</span> <span class="ow">and</span> <span class="n">body</span><span class="o">.</span><span class="n">RelativeVelocityMagnitude</span> <span class="o">&lt;</span> <span class="n">RelativeVelocityFilterMagnitude</span><span class="p">:</span>
+                   <span class="n">list_of_acceptable_bodies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">body</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">list_of_acceptable_bodies</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

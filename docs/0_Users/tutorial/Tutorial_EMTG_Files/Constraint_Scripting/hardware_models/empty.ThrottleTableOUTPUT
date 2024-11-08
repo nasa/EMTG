@@ -1,0 +1,33 @@
+PPU efficiency, 1
+PPU min power(kW), 0
+PPU max power(kW), 100
+
+
+#high-Isp set
+#Throttle level,Mass flow rate (mg/s),Beam Current (A),Beam Voltage (V),Thrust (mN),Isp (s),Efficiency,Thruster input power (kW)
+TL1,1,1,1000,100,3000,1,1
+TL2,1.5,1,1000,120,3100,1,1.4
+
+
+#high-Thrust set
+#Throttle level,Mass flow rate (mg/s),Beam Current (A),Beam Voltage (V),Thrust (mN),Isp (s),Efficiency,Thruster input power (kW)
+TL1,1,1,1000,100,3000,1,1
+TL2,1.5,1,1000,120,3100,1,1.4
+
+
+#high-Efficiency set
+#Throttle level,Mass flow rate (mg/s),Beam Current (A),Beam Voltage (V),Thrust (mN),Isp (s),Efficiency,Thruster input power (kW)
+TL1,1,1,1000,100,3000,1,1
+TL2,1.5,1,1000,120,3100,1,1.4
+
+
+#low-Mdot set
+#Throttle level,Mass flow rate (mg/s),Beam Current (A),Beam Voltage (V),Thrust (mN),Isp (s),Efficiency,Thruster input power (kW)
+TL1,1,1,1000,100,3000,1,1
+TL2,1.5,1,1000,120,3100,1,1.4
+
+
+#Full set
+#Throttle level,Mass flow rate (mg/s),Beam Current (A),Beam Voltage (V),Thrust (mN),Isp (s),Efficiency,Thruster input power (kW), Mdot_on (mg/s), Mdot_off (mg/s), V_on (V), V_off (V)
+TL1,1,1,1000,100,3000,1,1
+TL2,1.5,1,1000,120,3100,1,1.4

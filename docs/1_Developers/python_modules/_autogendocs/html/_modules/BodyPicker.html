@@ -1,0 +1,541 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BodyPicker &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for BodyPicker</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">Universe</span>
+<span class="kn">import</span> <span class="nn">wx</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<span class="c1">########################################################################################</span>
+<span class="c1">#&quot;Picker&quot; classes</span>
+<span class="c1">########################################################################################</span>
+
+<div class="viewcode-block" id="DestinationPicker"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.DestinationPicker">[docs]</a><span class="k">class</span> <span class="nc">DestinationPicker</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">Dialog</span><span class="p">):</span>
+    <span class="c1">#fields</span>
+    <span class="n">universe</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">destination1</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">destination2</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">universe</span><span class="p">,</span> <span class="n">destination1</span><span class="p">,</span> <span class="n">destination2</span><span class="p">):</span>
+
+        <span class="n">wx</span><span class="o">.</span><span class="n">Dialog</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetTitle</span><span class="p">(</span><span class="s2">&quot;Destination Picker&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">universe</span> <span class="o">=</span> <span class="n">universe</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblDestination1</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Starting location&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblDestination2</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Final location&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Destination1Picker</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">ListBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">destination_menu</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">LB_SINGLE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Destination2Picker</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">ListBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">destination_menu</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">LB_SINGLE</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnOK</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;OK&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnCancel</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Cancel&quot;</span><span class="p">)</span>
+
+        <span class="n">maingrid</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">FlexGridSizer</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        
+        <span class="n">maingrid</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">lblDestination1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lblDestination2</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">Destination1Picker</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">Destination2Picker</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">btnOK</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btnCancel</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetSizerAndFit</span><span class="p">(</span><span class="n">maingrid</span><span class="p">)</span>
+
+        <span class="n">destination1</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">destination2</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination1</span> <span class="o">=</span> <span class="n">destination1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination2</span> <span class="o">=</span> <span class="n">destination2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Destination1Picker</span><span class="o">.</span><span class="n">SetSelection</span><span class="p">(</span><span class="n">destination1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Destination2Picker</span><span class="o">.</span><span class="n">SetSelection</span><span class="p">(</span><span class="n">destination2</span><span class="p">)</span>
+
+        <span class="n">font</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetFont</span><span class="p">()</span>
+        <span class="n">font</span><span class="o">.</span><span class="n">SetWeight</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">FONTWEIGHT_BOLD</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblDestination1</span><span class="o">.</span><span class="n">SetFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblDestination2</span><span class="o">.</span><span class="n">SetFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnOK</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ClickOK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnCancel</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ClickCancel</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DestinationPicker.ClickOK"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.DestinationPicker.ClickOK">[docs]</a>    <span class="k">def</span> <span class="nf">ClickOK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination1</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Destination1Picker</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination2</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">Destination2Picker</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination1</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination2</span> <span class="o">-=</span> <span class="mi">1</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DestinationPicker.ClickCancel"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.DestinationPicker.ClickCancel">[docs]</a>    <span class="k">def</span> <span class="nf">ClickCancel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination1</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination2</span> <span class="o">-=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span></div></div>
+
+<div class="viewcode-block" id="SingleDestinationPicker"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.SingleDestinationPicker">[docs]</a><span class="k">class</span> <span class="nc">SingleDestinationPicker</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">Dialog</span><span class="p">):</span>
+    <span class="c1">#fields</span>
+    <span class="n">universe</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">destination</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">universe</span><span class="p">,</span> <span class="n">destination</span><span class="p">):</span>
+
+        <span class="n">wx</span><span class="o">.</span><span class="n">Dialog</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetTitle</span><span class="p">(</span><span class="s2">&quot;Destination Picker&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">universe</span> <span class="o">=</span> <span class="n">universe</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblDestination</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Location&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DestinationPicker</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">ListBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">destination_menu</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">LB_SINGLE</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnOK</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;OK&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnCancel</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Cancel&quot;</span><span class="p">)</span>
+
+        <span class="n">maingrid</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">FlexGridSizer</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+        
+        <span class="n">maingrid</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">lblDestination</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">DestinationPicker</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">btnOK</span><span class="p">,</span>
+                          <span class="bp">self</span><span class="o">.</span><span class="n">btnCancel</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetSizerAndFit</span><span class="p">(</span><span class="n">maingrid</span><span class="p">)</span>
+
+        <span class="n">destination</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination</span> <span class="o">=</span> <span class="n">destination</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DestinationPicker</span><span class="o">.</span><span class="n">SetSelection</span><span class="p">(</span><span class="n">destination</span><span class="p">)</span>
+
+        <span class="n">font</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetFont</span><span class="p">()</span>
+        <span class="n">font</span><span class="o">.</span><span class="n">SetWeight</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">FONTWEIGHT_BOLD</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblDestination</span><span class="o">.</span><span class="n">SetFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnOK</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ClickOK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnCancel</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ClickCancel</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SingleDestinationPicker.ClickOK"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.SingleDestinationPicker.ClickOK">[docs]</a>    <span class="k">def</span> <span class="nf">ClickOK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">DestinationPicker</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination</span> <span class="o">-=</span> <span class="mi">1</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SingleDestinationPicker.ClickCancel"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.SingleDestinationPicker.ClickCancel">[docs]</a>    <span class="k">def</span> <span class="nf">ClickCancel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination</span> <span class="o">-=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span></div></div>
+
+
+<div class="viewcode-block" id="SequencePicker"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.SequencePicker">[docs]</a><span class="k">class</span> <span class="nc">SequencePicker</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">Dialog</span><span class="p">):</span>
+    <span class="c1">#fields</span>
+    <span class="n">universe</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">missionoptions</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ActiveJourney</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ActiveSequence</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ActivePhase</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">ListOfSequences</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">CurrentSequence</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">SaveOldSequence</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">universe</span><span class="p">,</span> <span class="n">missionoptions</span><span class="p">,</span> <span class="n">ActiveJourney</span><span class="p">):</span>
+
+        <span class="n">wx</span><span class="o">.</span><span class="n">Dialog</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetSize</span><span class="p">((</span><span class="mi">800</span><span class="p">,</span><span class="mi">500</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetTitle</span><span class="p">(</span><span class="s2">&quot;Flyby Picker&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">universe</span> <span class="o">=</span> <span class="n">universe</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblAvailableBodies</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Available flyby bodies&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblCurrentSequence</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Sequence&quot;</span><span class="p">)</span>
+        <span class="n">font</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetFont</span><span class="p">()</span>
+        <span class="n">font</span><span class="o">.</span><span class="n">SetWeight</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">FONTWEIGHT_BOLD</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblAvailableBodies</span><span class="o">.</span><span class="n">SetFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblCurrentSequence</span><span class="o">.</span><span class="n">SetFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">universe</span> <span class="o">=</span> <span class="n">universe</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span> <span class="o">=</span> <span class="n">missionoptions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span> <span class="o">=</span> <span class="n">ActiveJourney</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SaveOldSequence</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">AvailableBodiesPicker</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">ListBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">flyby_menu</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">LB_SINGLE</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">UpdateLists</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">CurrentSequencePicker</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">ListBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">CurrentSequence</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">500</span><span class="p">,</span><span class="mi">300</span><span class="p">),</span> <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">LB_SINGLE</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnAddFlyby</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Add flyby&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnRemoveFlyby</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Remove flyby&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnMoveFlybyUp</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Move flyby up&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnMoveFlybyDown</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Move flyby down&quot;</span><span class="p">)</span>
+        <span class="n">buttongrid</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">GridSizer</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">buttongrid</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">btnAddFlyby</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btnRemoveFlyby</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btnMoveFlybyUp</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btnMoveFlybyDown</span><span class="p">])</span>
+
+        <span class="n">selectorstacker</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">VERTICAL</span><span class="p">)</span>
+        <span class="n">selectorstacker</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">lblCurrentSequence</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">CurrentSequencePicker</span><span class="p">])</span>
+
+        <span class="n">availablebodiesstacker</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">VERTICAL</span><span class="p">)</span>
+        <span class="n">availablebodiesstacker</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">lblAvailableBodies</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">AvailableBodiesPicker</span><span class="p">])</span>
+
+        <span class="n">pickerbox</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">)</span>
+        <span class="n">pickerbox</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="n">availablebodiesstacker</span><span class="p">,</span> <span class="n">buttongrid</span><span class="p">,</span> <span class="n">selectorstacker</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnOK</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;OK&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnCancel</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Cancel&quot;</span><span class="p">)</span>
+
+        <span class="n">bottombox</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">)</span>
+        <span class="n">bottombox</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">btnOK</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btnCancel</span><span class="p">])</span>
+
+        <span class="n">mainbox</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">VERTICAL</span><span class="p">)</span>
+        
+        <span class="n">mainbox</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="n">pickerbox</span><span class="p">,</span> <span class="n">bottombox</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnOK</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ClickOK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnCancel</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ClickCancel</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnAddFlyby</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ClickAddFlyby</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnRemoveFlyby</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ClickRemoveFlyby</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnMoveFlybyUp</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ClickMoveFlybyUp</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnMoveFlybyDown</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ClickMoveFlybyDown</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">AvailableBodiesPicker</span><span class="o">.</span><span class="n">SetSelection</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">CurrentSequencePicker</span><span class="o">.</span><span class="n">SetSelection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetSizerAndFit</span><span class="p">(</span><span class="n">mainbox</span><span class="p">)</span>
+
+<div class="viewcode-block" id="SequencePicker.UpdateLists"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.SequencePicker.UpdateLists">[docs]</a>    <span class="k">def</span> <span class="nf">UpdateLists</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CurrentSequence</span> <span class="o">=</span> <span class="p">[]</span>
+    
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">b</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">CurrentSequence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">flyby_menu</span><span class="p">[</span><span class="n">b</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="SequencePicker.UpdateListBoxes"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.SequencePicker.UpdateListBoxes">[docs]</a>    <span class="k">def</span> <span class="nf">UpdateListBoxes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CurrentSequencePicker</span><span class="o">.</span><span class="n">SetItems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CurrentSequence</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SequencePicker.ClickOK"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.SequencePicker.ClickOK">[docs]</a>    <span class="k">def</span> <span class="nf">ClickOK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="c1">#current information is saved by default; do nothing</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SequencePicker.ClickCancel"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.SequencePicker.ClickCancel">[docs]</a>    <span class="k">def</span> <span class="nf">ClickCancel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="c1">#restore old information</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="n">copy</span><span class="o">.</span><span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">SaveOldSequence</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SequencePicker.ClickAddFlyby"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.SequencePicker.ClickAddFlyby">[docs]</a>    <span class="k">def</span> <span class="nf">ClickAddFlyby</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="n">BodyChoice</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">AvailableBodiesPicker</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">BodyChoice</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">BodyChoice</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">BodyChoice</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">UpdateLists</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UpdateListBoxes</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SequencePicker.ClickRemoveFlyby"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.SequencePicker.ClickRemoveFlyby">[docs]</a>    <span class="k">def</span> <span class="nf">ClickRemoveFlyby</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">CurrentSequencePicker</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UpdateLists</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UpdateListBoxes</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="SequencePicker.ClickMoveFlybyUp"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.SequencePicker.ClickMoveFlybyUp">[docs]</a>    <span class="k">def</span> <span class="nf">ClickMoveFlybyUp</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">CurrentSequencePicker</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span> <span class="o">-</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span> <span class="o">=</span> <span class="mi">1</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">UpdateLists</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UpdateListBoxes</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CurrentSequencePicker</span><span class="o">.</span><span class="n">SetSelection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="SequencePicker.ClickMoveFlybyDown"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.SequencePicker.ClickMoveFlybyDown">[docs]</a>    <span class="k">def</span> <span class="nf">ClickMoveFlybyDown</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">CurrentSequencePicker</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span> <span class="o">+</span> <span class="mi">1</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveJourney</span><span class="p">]</span><span class="o">.</span><span class="n">sequence</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">UpdateLists</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UpdateListBoxes</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CurrentSequencePicker</span><span class="o">.</span><span class="n">SetSelection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ActivePhase</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="DistanceConstraintBodyPicker"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.DistanceConstraintBodyPicker">[docs]</a><span class="k">class</span> <span class="nc">DistanceConstraintBodyPicker</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">Dialog</span><span class="p">):</span>
+    <span class="c1">#fields</span>
+    <span class="n">universe</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">list_of_constraints</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">list_of_constraint_strings</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                 <span class="n">parent</span><span class="p">,</span>
+                 <span class="nb">id</span><span class="p">,</span>
+                 <span class="n">universe</span><span class="p">,</span> 
+                 <span class="n">journey_distance_constraint_number_of_bodies</span><span class="p">,</span>
+                 <span class="n">journey_distance_constraint_bodies</span><span class="p">,</span>
+                 <span class="n">journey_distance_constraint_bounds</span><span class="p">):</span>
+
+        <span class="n">wx</span><span class="o">.</span><span class="n">Dialog</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parent</span><span class="p">,</span> <span class="nb">id</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetTitle</span><span class="p">(</span><span class="s2">&quot;Distance Constraint Body Picker&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">universe</span> <span class="o">=</span> <span class="n">universe</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblChosenBodiesPicker</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Active constraints&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblNewBodiesPicker</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Body choices&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ChosenBodiesPicker</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">ListBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraint_strings</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">LB_SINGLE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">NewBodiesPicker</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">ListBox</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">distance_menu</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">300</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">LB_SINGLE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblMinDistance</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Minimum Distance (km)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblMaxDistance</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Maximum Distance (km)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">txtMinDistance</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">TextCtrl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Minimum Distance (km)&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">txtMaxDistance</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">TextCtrl</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Maximum Distance (km)&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnAdd</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Add&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnDelete</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Delete&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnOK</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;OK&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnCancel</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;Cancel&quot;</span><span class="p">)</span>
+
+        <span class="n">leftbox</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">VERTICAL</span><span class="p">)</span>
+        <span class="n">midbox</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">VERTICAL</span><span class="p">)</span>
+        <span class="n">rightbox</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">VERTICAL</span><span class="p">)</span>
+        <span class="n">topbox</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">)</span>
+        <span class="n">bottombox</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">)</span>
+        <span class="n">mainbox</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">VERTICAL</span><span class="p">)</span>
+        <span class="n">mindistancebox</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">)</span>
+        <span class="n">maxdistancebox</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">)</span>
+
+        <span class="n">leftbox</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">lblChosenBodiesPicker</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ChosenBodiesPicker</span><span class="p">])</span>
+        <span class="n">mindistancebox</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">lblMinDistance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">txtMinDistance</span><span class="p">])</span>
+        <span class="n">maxdistancebox</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">lblMaxDistance</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">txtMaxDistance</span><span class="p">])</span>
+        <span class="n">midbox</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">btnAdd</span><span class="p">,</span> <span class="n">mindistancebox</span><span class="p">,</span> <span class="n">maxdistancebox</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btnDelete</span><span class="p">])</span>
+        <span class="n">rightbox</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">lblNewBodiesPicker</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">NewBodiesPicker</span><span class="p">])</span>
+        <span class="n">topbox</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="n">leftbox</span><span class="p">,</span> <span class="n">midbox</span><span class="p">,</span> <span class="n">rightbox</span><span class="p">])</span>
+        <span class="n">bottombox</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">btnOK</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">btnCancel</span><span class="p">])</span>
+        <span class="n">mainbox</span><span class="o">.</span><span class="n">AddMany</span><span class="p">([</span><span class="n">topbox</span><span class="p">,</span> <span class="n">bottombox</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetSizerAndFit</span><span class="p">(</span><span class="n">mainbox</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_number_of_bodies</span> <span class="o">=</span> <span class="n">journey_distance_constraint_number_of_bodies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_bodies</span> <span class="o">=</span> <span class="n">journey_distance_constraint_bodies</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_bounds</span> <span class="o">=</span> <span class="n">journey_distance_constraint_bounds</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ActiveConstraint</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ActiveBody</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">InitializeConstraintList</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UpdateConstraintStrings</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UpdateListBoxes</span><span class="p">()</span>
+
+        <span class="n">font</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetFont</span><span class="p">()</span>
+        <span class="n">font</span><span class="o">.</span><span class="n">SetWeight</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">FONTWEIGHT_BOLD</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblChosenBodiesPicker</span><span class="o">.</span><span class="n">SetFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblNewBodiesPicker</span><span class="o">.</span><span class="n">SetFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">ChosenBodiesPicker</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_LISTBOX</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PickFromChosenBodies</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">NewBodiesPicker</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_LISTBOX</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">PickFromNewBodies</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">txtMinDistance</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_KILL_FOCUS</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ChangeMinDistance</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">txtMaxDistance</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_KILL_FOCUS</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ChangeMaxDistance</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnAdd</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ClickAdd</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnDelete</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ClickDelete</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnOK</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ClickOK</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">btnCancel</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ClickCancel</span><span class="p">)</span>
+
+<div class="viewcode-block" id="DistanceConstraintBodyPicker.InitializeConstraintList"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.DistanceConstraintBodyPicker.InitializeConstraintList">[docs]</a>    <span class="k">def</span> <span class="nf">InitializeConstraintList</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraints</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_number_of_bodies</span><span class="p">):</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_bodies</span><span class="p">[</span><span class="n">b</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">2</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraints</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_bounds</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_bounds</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="mi">1</span><span class="p">]])</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraints</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_bodies</span><span class="p">[</span><span class="n">b</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_bounds</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_bounds</span><span class="p">[</span><span class="n">b</span><span class="p">][</span><span class="mi">1</span><span class="p">]])</span></div>
+
+<div class="viewcode-block" id="DistanceConstraintBodyPicker.UpdateConstraintStrings"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.DistanceConstraintBodyPicker.UpdateConstraintStrings">[docs]</a>    <span class="k">def</span> <span class="nf">UpdateConstraintStrings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraint_strings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraints</span><span class="p">:</span>
+            <span class="n">bodyname</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">if</span> <span class="n">constraint</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">bodyname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">central_body_name</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bodyname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">bodies</span><span class="p">[</span><span class="n">constraint</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span><span class="o">.</span><span class="n">name</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraint_strings</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">bodyname</span> <span class="o">+</span> <span class="s1">&#39;, minR = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">constraint</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="o">+</span> <span class="s1">&#39;, maxR = &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">constraint</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="DistanceConstraintBodyPicker.UpdateListBoxes"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.DistanceConstraintBodyPicker.UpdateListBoxes">[docs]</a>    <span class="k">def</span> <span class="nf">UpdateListBoxes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ChosenBodiesPicker</span><span class="o">.</span><span class="n">SetItems</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraint_strings</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraints</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ChosenBodiesPicker</span><span class="o">.</span><span class="n">SetSelection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveConstraint</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">txtMinDistance</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraints</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveConstraint</span><span class="p">][</span><span class="mi">1</span><span class="p">]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">txtMaxDistance</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraints</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveConstraint</span><span class="p">][</span><span class="mi">2</span><span class="p">]))</span></div>
+
+<div class="viewcode-block" id="DistanceConstraintBodyPicker.PickFromChosenBodies"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.DistanceConstraintBodyPicker.PickFromChosenBodies">[docs]</a>    <span class="k">def</span> <span class="nf">PickFromChosenBodies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraints</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ActiveConstraint</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ChosenBodiesPicker</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">UpdateListBoxes</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DistanceConstraintBodyPicker.PickFromNewBodies"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.DistanceConstraintBodyPicker.PickFromNewBodies">[docs]</a>    <span class="k">def</span> <span class="nf">PickFromNewBodies</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ActiveBody</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">NewBodiesPicker</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">txtMinDistance</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="mf">0.0</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">txtMaxDistance</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="mf">1.0e+11</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DistanceConstraintBodyPicker.ChangeMinDistance"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.DistanceConstraintBodyPicker.ChangeMinDistance">[docs]</a>    <span class="k">def</span> <span class="nf">ChangeMinDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="n">distancestring</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">txtMinDistance</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span>
+        <span class="n">distancecell</span> <span class="o">=</span> <span class="n">distancestring</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">distancecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">distancecell</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">distancecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;lu&#39;</span><span class="p">:</span>
+                <span class="n">distance</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">LU</span>
+            <span class="k">elif</span> <span class="n">distancecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;au&#39;</span><span class="p">:</span>
+                <span class="n">distance</span> <span class="o">*=</span> <span class="mf">1.49597870691e+8</span>
+            <span class="k">elif</span> <span class="n">distancecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;rcb&#39;</span><span class="p">:</span>
+                <span class="n">distance</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">central_body_radius</span>
+            <span class="k">elif</span> <span class="n">distancecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;rb&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ActiveBody</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">distance</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">bodies</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveBody</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">radius</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">txtMinDistance</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">distance</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DistanceConstraintBodyPicker.ChangeMaxDistance"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.DistanceConstraintBodyPicker.ChangeMaxDistance">[docs]</a>    <span class="k">def</span> <span class="nf">ChangeMaxDistance</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="n">distancestring</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">txtMaxDistance</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span>
+        <span class="n">distancecell</span> <span class="o">=</span> <span class="n">distancestring</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">distancecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">distancecell</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">distancecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;lu&#39;</span><span class="p">:</span>
+                <span class="n">distance</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">LU</span>
+            <span class="k">elif</span> <span class="n">distancecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;au&#39;</span><span class="p">:</span>
+                <span class="n">distance</span> <span class="o">*=</span> <span class="mf">1.49597870691e+8</span>
+            <span class="k">elif</span> <span class="n">distancecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;rcb&#39;</span><span class="p">:</span>
+                <span class="n">distance</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">central_body_radius</span>
+            <span class="k">elif</span> <span class="n">distancecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;rb&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">ActiveBody</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">distance</span> <span class="o">*=</span> <span class="bp">self</span><span class="o">.</span><span class="n">universe</span><span class="o">.</span><span class="n">bodies</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveBody</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">radius</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">txtMaxDistance</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">distance</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="DistanceConstraintBodyPicker.ClickAdd"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.DistanceConstraintBodyPicker.ClickAdd">[docs]</a>    <span class="k">def</span> <span class="nf">ClickAdd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="c1">#first check to make sure that the body being added is not already in the constraints list</span>
+        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraints</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">constraint</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">ActiveBody</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">errordlg</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">MessageDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Cannot add two distance constraints to the same body in the same journey.&quot;</span><span class="p">,</span> <span class="s2">&quot;EMTG Error&quot;</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span>
+                <span class="n">errordlg</span><span class="o">.</span><span class="n">ShowModal</span><span class="p">()</span>
+                <span class="n">errordlg</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+                <span class="k">return</span>
+        <span class="c1">#if we got this far, add to the list of constraints</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraints</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveBody</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">txtMinDistance</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()),</span> <span class="nb">float</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">txtMaxDistance</span><span class="o">.</span><span class="n">GetValue</span><span class="p">())])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UpdateConstraintStrings</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UpdateListBoxes</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DistanceConstraintBodyPicker.ClickDelete"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.DistanceConstraintBodyPicker.ClickDelete">[docs]</a>    <span class="k">def</span> <span class="nf">ClickDelete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraints</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ActiveConstraint</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ActiveConstraint</span> <span class="o">-=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UpdateConstraintStrings</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">UpdateListBoxes</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DistanceConstraintBodyPicker.ClickOK"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.DistanceConstraintBodyPicker.ClickOK">[docs]</a>    <span class="k">def</span> <span class="nf">ClickOK</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_number_of_bodies</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraints</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_bodies</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_bounds</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">constraint</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">list_of_constraints</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">constraint</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_bodies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_bodies</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">constraint</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">journey_distance_constraint_bounds</span><span class="o">.</span><span class="n">append</span><span class="p">([</span><span class="n">constraint</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">constraint</span><span class="p">[</span><span class="mi">2</span><span class="p">]])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="DistanceConstraintBodyPicker.ClickCancel"><a class="viewcode-back" href="../PyEMTG/BodyPicker.html#BodyPicker.DistanceConstraintBodyPicker.ClickCancel">[docs]</a>    <span class="k">def</span> <span class="nf">ClickCancel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,494 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>StateConverter module &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="ThrottleTable module" href="ThrottleTable.html" />
+    <link rel="prev" title="SolverOptionsPanel module" href="SolverOptionsPanel.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-StateConverter">
+<span id="stateconverter-module"></span><h1>StateConverter module<a class="headerlink" href="#module-StateConverter" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="StateConverter.StateConverter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">StateConverter.</span></span><span class="sig-name descname"><span class="pre">StateConverter</span></span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.COEtoCartesian">
+<span class="sig-name descname"><span class="pre">COEtoCartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCOE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.COEtoCartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.COEtoCartesian" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert from classical orbital elements to Cartesian state representation.
+Any units can be used, but must be consistent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stateCOE</strong> (<em>6-element list</em><em> of </em><em>floats</em>) – State in classical orbital elements: [SMA, ECC, INC, RAAN, AOP, TA]</p></li>
+<li><p><strong>mu</strong> (<em>float</em>) – Gravitational parameter of central body</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>State in Cartesian: [x, y, z, vx, vy, vz]</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>6-element list of floats</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.COEtoIncomingBplane">
+<span class="sig-name descname"><span class="pre">COEtoIncomingBplane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCOE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.COEtoIncomingBplane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.COEtoIncomingBplane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.COEtoIncomingBplaneRpTA">
+<span class="sig-name descname"><span class="pre">COEtoIncomingBplaneRpTA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCOE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.COEtoIncomingBplaneRpTA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.COEtoIncomingBplaneRpTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.COEtoMEE">
+<span class="sig-name descname"><span class="pre">COEtoMEE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCOE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.COEtoMEE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.COEtoMEE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.COEtoOutgoingBplane">
+<span class="sig-name descname"><span class="pre">COEtoOutgoingBplane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCOE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.COEtoOutgoingBplane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.COEtoOutgoingBplane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.COEtoOutgoingBplaneRpTA">
+<span class="sig-name descname"><span class="pre">COEtoOutgoingBplaneRpTA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCOE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.COEtoOutgoingBplaneRpTA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.COEtoOutgoingBplaneRpTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.COEtoSphericalAZFPA">
+<span class="sig-name descname"><span class="pre">COEtoSphericalAZFPA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCOE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.COEtoSphericalAZFPA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.COEtoSphericalAZFPA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.COEtoSphericalRADEC">
+<span class="sig-name descname"><span class="pre">COEtoSphericalRADEC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCOE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.COEtoSphericalRADEC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.COEtoSphericalRADEC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.CartesiantoCOE">
+<span class="sig-name descname"><span class="pre">CartesiantoCOE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCartesian</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.CartesiantoCOE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.CartesiantoCOE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.CartesiantoIncomingBplane">
+<span class="sig-name descname"><span class="pre">CartesiantoIncomingBplane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCartesian</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.CartesiantoIncomingBplane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.CartesiantoIncomingBplane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.CartesiantoIncomingBplaneRpTA">
+<span class="sig-name descname"><span class="pre">CartesiantoIncomingBplaneRpTA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCartesian</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.CartesiantoIncomingBplaneRpTA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.CartesiantoIncomingBplaneRpTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.CartesiantoMEE">
+<span class="sig-name descname"><span class="pre">CartesiantoMEE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCartesian</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.CartesiantoMEE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.CartesiantoMEE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.CartesiantoOutgoingBplane">
+<span class="sig-name descname"><span class="pre">CartesiantoOutgoingBplane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCartesian</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.CartesiantoOutgoingBplane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.CartesiantoOutgoingBplane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.CartesiantoOutgoingBplaneRpTA">
+<span class="sig-name descname"><span class="pre">CartesiantoOutgoingBplaneRpTA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCartesian</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.CartesiantoOutgoingBplaneRpTA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.CartesiantoOutgoingBplaneRpTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.CartesiantoSphericalAZFPA">
+<span class="sig-name descname"><span class="pre">CartesiantoSphericalAZFPA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCartesian</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.CartesiantoSphericalAZFPA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.CartesiantoSphericalAZFPA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.CartesiantoSphericalRADEC">
+<span class="sig-name descname"><span class="pre">CartesiantoSphericalRADEC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateCartesian</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.CartesiantoSphericalRADEC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.CartesiantoSphericalRADEC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplaneRpTAtoCOE">
+<span class="sig-name descname"><span class="pre">IncomingBplaneRpTAtoCOE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplaneRpTAtoCOE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplaneRpTAtoCOE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplaneRpTAtoCartesian">
+<span class="sig-name descname"><span class="pre">IncomingBplaneRpTAtoCartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplaneRpTAtoCartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplaneRpTAtoCartesian" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplaneRpTAtoIncomingBplane">
+<span class="sig-name descname"><span class="pre">IncomingBplaneRpTAtoIncomingBplane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplaneRpTAtoIncomingBplane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplaneRpTAtoIncomingBplane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplaneRpTAtoMEE">
+<span class="sig-name descname"><span class="pre">IncomingBplaneRpTAtoMEE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplaneRpTAtoMEE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplaneRpTAtoMEE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplaneRpTAtoOutgoingBplane">
+<span class="sig-name descname"><span class="pre">IncomingBplaneRpTAtoOutgoingBplane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplaneRpTAtoOutgoingBplane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplaneRpTAtoOutgoingBplane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplaneRpTAtoOutgoingBplaneRpTA">
+<span class="sig-name descname"><span class="pre">IncomingBplaneRpTAtoOutgoingBplaneRpTA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplaneRpTAtoOutgoingBplaneRpTA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplaneRpTAtoOutgoingBplaneRpTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplaneRpTAtoSphericalAZFPA">
+<span class="sig-name descname"><span class="pre">IncomingBplaneRpTAtoSphericalAZFPA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplaneRpTAtoSphericalAZFPA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplaneRpTAtoSphericalAZFPA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplaneRpTAtoSphericalRADEC">
+<span class="sig-name descname"><span class="pre">IncomingBplaneRpTAtoSphericalRADEC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplaneRpTAtoSphericalRADEC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplaneRpTAtoSphericalRADEC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplanetoCOE">
+<span class="sig-name descname"><span class="pre">IncomingBplanetoCOE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplanetoCOE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplanetoCOE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplanetoCartesian">
+<span class="sig-name descname"><span class="pre">IncomingBplanetoCartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplanetoCartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplanetoCartesian" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplanetoIncomingBplaneRpTA">
+<span class="sig-name descname"><span class="pre">IncomingBplanetoIncomingBplaneRpTA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplanetoIncomingBplaneRpTA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplanetoIncomingBplaneRpTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplanetoMEE">
+<span class="sig-name descname"><span class="pre">IncomingBplanetoMEE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplanetoMEE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplanetoMEE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplanetoOutgoingBplane">
+<span class="sig-name descname"><span class="pre">IncomingBplanetoOutgoingBplane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplanetoOutgoingBplane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplanetoOutgoingBplane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplanetoOutgoingBplaneRpTA">
+<span class="sig-name descname"><span class="pre">IncomingBplanetoOutgoingBplaneRpTA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplanetoOutgoingBplaneRpTA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplanetoOutgoingBplaneRpTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplanetoSphericalAZFPA">
+<span class="sig-name descname"><span class="pre">IncomingBplanetoSphericalAZFPA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplanetoSphericalAZFPA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplanetoSphericalAZFPA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.IncomingBplanetoSphericalRADEC">
+<span class="sig-name descname"><span class="pre">IncomingBplanetoSphericalRADEC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateIncomingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.IncomingBplanetoSphericalRADEC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.IncomingBplanetoSphericalRADEC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.MEEtoCOE">
+<span class="sig-name descname"><span class="pre">MEEtoCOE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateMEE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prograde</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.MEEtoCOE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.MEEtoCOE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.MEEtoCartesian">
+<span class="sig-name descname"><span class="pre">MEEtoCartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateMEE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prograde</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.MEEtoCartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.MEEtoCartesian" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.MEEtoIncomingAsymptote">
+<span class="sig-name descname"><span class="pre">MEEtoIncomingAsymptote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateMEE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prograde</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.MEEtoIncomingAsymptote"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.MEEtoIncomingAsymptote" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.MEEtoOutgoingAsymptote">
+<span class="sig-name descname"><span class="pre">MEEtoOutgoingAsymptote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateMEE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prograde</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.MEEtoOutgoingAsymptote"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.MEEtoOutgoingAsymptote" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.MEEtoSphericalAZFPA">
+<span class="sig-name descname"><span class="pre">MEEtoSphericalAZFPA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateMEE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prograde</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.MEEtoSphericalAZFPA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.MEEtoSphericalAZFPA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.MEEtoSphericalRADEC">
+<span class="sig-name descname"><span class="pre">MEEtoSphericalRADEC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateMEE</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prograde</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.MEEtoSphericalRADEC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.MEEtoSphericalRADEC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplaneRpTAtoCOE">
+<span class="sig-name descname"><span class="pre">OutgoingBplaneRpTAtoCOE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplaneRpTAtoCOE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplaneRpTAtoCOE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplaneRpTAtoCartesian">
+<span class="sig-name descname"><span class="pre">OutgoingBplaneRpTAtoCartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplaneRpTAtoCartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplaneRpTAtoCartesian" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplaneRpTAtoIncomingBplane">
+<span class="sig-name descname"><span class="pre">OutgoingBplaneRpTAtoIncomingBplane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplaneRpTAtoIncomingBplane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplaneRpTAtoIncomingBplane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplaneRpTAtoIncomingBplaneRpTA">
+<span class="sig-name descname"><span class="pre">OutgoingBplaneRpTAtoIncomingBplaneRpTA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplaneRpTAtoIncomingBplaneRpTA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplaneRpTAtoIncomingBplaneRpTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplaneRpTAtoMEE">
+<span class="sig-name descname"><span class="pre">OutgoingBplaneRpTAtoMEE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplaneRpTAtoMEE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplaneRpTAtoMEE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplaneRpTAtoOutgoingBplane">
+<span class="sig-name descname"><span class="pre">OutgoingBplaneRpTAtoOutgoingBplane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplaneRpTAtoOutgoingBplane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplaneRpTAtoOutgoingBplane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplaneRpTAtoSphericalAZFPA">
+<span class="sig-name descname"><span class="pre">OutgoingBplaneRpTAtoSphericalAZFPA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplaneRpTAtoSphericalAZFPA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplaneRpTAtoSphericalAZFPA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplaneRpTAtoSphericalRADEC">
+<span class="sig-name descname"><span class="pre">OutgoingBplaneRpTAtoSphericalRADEC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplaneRpTA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplaneRpTAtoSphericalRADEC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplaneRpTAtoSphericalRADEC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplanetoCOE">
+<span class="sig-name descname"><span class="pre">OutgoingBplanetoCOE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplanetoCOE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplanetoCOE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplanetoCartesian">
+<span class="sig-name descname"><span class="pre">OutgoingBplanetoCartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplanetoCartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplanetoCartesian" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplanetoIncomingBplane">
+<span class="sig-name descname"><span class="pre">OutgoingBplanetoIncomingBplane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplanetoIncomingBplane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplanetoIncomingBplane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplanetoIncomingBplaneRpTA">
+<span class="sig-name descname"><span class="pre">OutgoingBplanetoIncomingBplaneRpTA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplanetoIncomingBplaneRpTA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplanetoIncomingBplaneRpTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplanetoMEE">
+<span class="sig-name descname"><span class="pre">OutgoingBplanetoMEE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplanetoMEE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplanetoMEE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplanetoOutgoingBplaneRpTA">
+<span class="sig-name descname"><span class="pre">OutgoingBplanetoOutgoingBplaneRpTA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplanetoOutgoingBplaneRpTA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplanetoOutgoingBplaneRpTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplanetoSphericalAZFPA">
+<span class="sig-name descname"><span class="pre">OutgoingBplanetoSphericalAZFPA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplanetoSphericalAZFPA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplanetoSphericalAZFPA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.OutgoingBplanetoSphericalRADEC">
+<span class="sig-name descname"><span class="pre">OutgoingBplanetoSphericalRADEC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateOutgoingBplane</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.OutgoingBplanetoSphericalRADEC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.OutgoingBplanetoSphericalRADEC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalAZFPAtoCOE">
+<span class="sig-name descname"><span class="pre">SphericalAZFPAtoCOE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalAZFPA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalAZFPAtoCOE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalAZFPAtoCOE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalAZFPAtoCartesian">
+<span class="sig-name descname"><span class="pre">SphericalAZFPAtoCartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalAZFPA</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalAZFPAtoCartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalAZFPAtoCartesian" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalAZFPAtoIncomingBplane">
+<span class="sig-name descname"><span class="pre">SphericalAZFPAtoIncomingBplane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalAZFPA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalAZFPAtoIncomingBplane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalAZFPAtoIncomingBplane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalAZFPAtoIncomingBplaneRpTA">
+<span class="sig-name descname"><span class="pre">SphericalAZFPAtoIncomingBplaneRpTA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalAZFPA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalAZFPAtoIncomingBplaneRpTA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalAZFPAtoIncomingBplaneRpTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalAZFPAtoMEE">
+<span class="sig-name descname"><span class="pre">SphericalAZFPAtoMEE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalAZFPA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalAZFPAtoMEE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalAZFPAtoMEE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalAZFPAtoOutgoingBplane">
+<span class="sig-name descname"><span class="pre">SphericalAZFPAtoOutgoingBplane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalAZFPA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalAZFPAtoOutgoingBplane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalAZFPAtoOutgoingBplane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalAZFPAtoOutgoingBplaneRpTA">
+<span class="sig-name descname"><span class="pre">SphericalAZFPAtoOutgoingBplaneRpTA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalAZFPA</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalAZFPAtoOutgoingBplaneRpTA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalAZFPAtoOutgoingBplaneRpTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalAZFPAtoSphericalRADEC">
+<span class="sig-name descname"><span class="pre">SphericalAZFPAtoSphericalRADEC</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalAZFPA</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalAZFPAtoSphericalRADEC"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalAZFPAtoSphericalRADEC" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalRADECtoCOE">
+<span class="sig-name descname"><span class="pre">SphericalRADECtoCOE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalRADEC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalRADECtoCOE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalRADECtoCOE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalRADECtoCartesian">
+<span class="sig-name descname"><span class="pre">SphericalRADECtoCartesian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalRADEC</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalRADECtoCartesian"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalRADECtoCartesian" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalRADECtoIncomingBplane">
+<span class="sig-name descname"><span class="pre">SphericalRADECtoIncomingBplane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalRADEC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalRADECtoIncomingBplane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalRADECtoIncomingBplane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalRADECtoIncomingBplaneRpTA">
+<span class="sig-name descname"><span class="pre">SphericalRADECtoIncomingBplaneRpTA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalRADEC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalRADECtoIncomingBplaneRpTA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalRADECtoIncomingBplaneRpTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalRADECtoMEE">
+<span class="sig-name descname"><span class="pre">SphericalRADECtoMEE</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalRADEC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalRADECtoMEE"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalRADECtoMEE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalRADECtoOutgoingBplane">
+<span class="sig-name descname"><span class="pre">SphericalRADECtoOutgoingBplane</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalRADEC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalRADECtoOutgoingBplane"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalRADECtoOutgoingBplane" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalRADECtoOutgoingBplaneRpTA">
+<span class="sig-name descname"><span class="pre">SphericalRADECtoOutgoingBplaneRpTA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalRADEC</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalRADECtoOutgoingBplaneRpTA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalRADECtoOutgoingBplaneRpTA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.SphericalRADECtoSphericalAZFPA">
+<span class="sig-name descname"><span class="pre">SphericalRADECtoSphericalAZFPA</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stateSphericalRADEC</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.SphericalRADECtoSphericalAZFPA"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.SphericalRADECtoSphericalAZFPA" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="StateConverter.StateConverter.convertDecisionVector">
+<span class="sig-name descname"><span class="pre">convertDecisionVector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">desiredStateRep</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">keywords</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exceptions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/StateConverter.html#StateConverter.convertDecisionVector"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#StateConverter.StateConverter.convertDecisionVector" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">PyEMTG documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">PyEMTG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">PyEMTG documentation</a><ul>
+  <li><a href="modules.html">PyEMTG</a><ul>
+      <li>Previous: <a href="SolverOptionsPanel.html" title="previous chapter">SolverOptionsPanel module</a></li>
+      <li>Next: <a href="ThrottleTable.html" title="next chapter">ThrottleTable module</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

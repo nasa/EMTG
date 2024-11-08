@@ -1,0 +1,1044 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PEATSAdelivery &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for PEATSAdelivery</h1><div class="highlight"><pre>
+<span></span><span class="c1">#EMTG: Evolutionary Mission Trajectory Generator</span>
+<span class="c1">#An open-source global optimization tool for preliminary mission design</span>
+<span class="c1">#Provided by NASA Goddard Space Flight Center</span>
+<span class="c1">#</span>
+<span class="c1">#Copyright (c) 2014 - 2024 United States Government as represented by the</span>
+<span class="c1">#Administrator of the National Aeronautics and Space Administration.</span>
+<span class="c1">#All Other Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#Licensed under the NASA Open Source License (the &quot;License&quot;); </span>
+<span class="c1">#You may not use this file except in compliance with the License. </span>
+<span class="c1">#You may obtain a copy of the License at:</span>
+<span class="c1">#https://opensource.org/license/nasa1-3-php</span>
+<span class="c1">#Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1">#distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1">#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either </span>
+<span class="c1">#express or implied.   See the License for the specific language</span>
+<span class="c1">#governing permissions and limitations under the License.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">PEATSAdelivery.py</span>
+<span class="sd">==================</span>
+
+<span class="sd">File holds the PEATSAdelivery class, which contains methods that make plots of PEATSA results.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="PEATSAdelivery"><a class="viewcode-back" href="../PEATSA/PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery">[docs]</a><span class="k">class</span> <span class="nc">PEATSAdelivery</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Holds the PEATSAdelivery class, which contains methods that make plots of PEATSA results.</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="PEATSAdelivery.jd2datelist"><a class="viewcode-back" href="../PEATSA/PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.jd2datelist">[docs]</a>    <span class="k">def</span> <span class="nf">jd2datelist</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">dateval</span><span class="p">,</span><span class="n">ifMJD</span> <span class="o">=</span> <span class="mi">0</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">math</span>
+        
+        <span class="n">JD</span> <span class="o">=</span> <span class="n">dateval</span>
+        <span class="k">if</span> <span class="n">ifMJD</span><span class="p">:</span>
+            <span class="n">JD</span> <span class="o">+=</span> <span class="mf">2400000.5</span>
+        <span class="n">Q</span> <span class="o">=</span> <span class="n">JD</span><span class="o">+</span><span class="mf">0.5</span>
+        <span class="n">Z</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">Q</span><span class="p">)</span>
+        <span class="n">W</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">Z</span> <span class="o">-</span> <span class="mf">1867216.25</span><span class="p">)</span><span class="o">/</span><span class="mf">36524.25</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">W</span><span class="o">/</span><span class="mf">4.0</span><span class="p">)</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">Z</span><span class="o">+</span><span class="mi">1</span><span class="o">+</span><span class="n">W</span><span class="o">-</span><span class="n">X</span>
+        <span class="n">B</span> <span class="o">=</span> <span class="n">A</span><span class="o">+</span><span class="mi">1524</span>
+        <span class="n">C</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">B</span><span class="o">-</span><span class="mf">122.1</span><span class="p">)</span><span class="o">/</span><span class="mf">365.25</span><span class="p">)</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="mf">365.25</span><span class="o">*</span><span class="n">C</span><span class="p">)</span>
+        <span class="n">E</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">((</span><span class="n">B</span><span class="o">-</span><span class="n">D</span><span class="p">)</span><span class="o">/</span><span class="mf">30.6001</span><span class="p">)</span>
+        <span class="n">F</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="mf">30.6001</span><span class="o">*</span><span class="n">E</span><span class="p">)</span>
+        <span class="n">day</span>  <span class="o">=</span> <span class="n">B</span><span class="o">-</span><span class="n">D</span><span class="o">-</span><span class="n">F</span><span class="o">+</span><span class="p">(</span><span class="n">Q</span><span class="o">-</span><span class="n">Z</span><span class="p">)</span>
+        <span class="n">month</span> <span class="o">=</span> <span class="n">E</span><span class="o">-</span><span class="mi">1</span>
+        <span class="k">if</span> <span class="n">month</span> <span class="o">&gt;=</span> <span class="mi">13</span><span class="p">:</span>
+            <span class="n">month</span> <span class="o">-=</span><span class="mi">12</span>
+        <span class="k">if</span> <span class="n">month</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">month</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">year</span> <span class="o">=</span> <span class="n">C</span><span class="o">-</span><span class="mi">4715</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">year</span> <span class="o">=</span> <span class="n">C</span><span class="o">-</span><span class="mi">4716</span>
+            
+        <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">year</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="n">month</span><span class="p">),</span><span class="nb">int</span><span class="p">(</span><span class="n">day</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="PEATSAdelivery.post_process"><a class="viewcode-back" href="../PEATSA/PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.post_process">[docs]</a>    <span class="k">def</span> <span class="nf">post_process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">logging</span>
+
+        <span class="c1"># Call the default plots if requested</span>
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">generate_default_plots</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">PEATSA_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generating default Missed Thrust plot&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">MissedThrustPlotter</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">PEATSA_type</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generating default Trade Study plot&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">TradeStudyPlotter</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Default plot for this peatsa type not created yet. Sorry.&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Call the built-in plotter if requested</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">built_in_plotter_files</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">built_in_plotter_files</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">BuiltInPlotterFromFile</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">,</span><span class="n">filename</span><span class="p">)</span>
+    
+        <span class="c1"># Call the custom post processing script if so desired    </span>
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">custom_post_processing_script</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Custom</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">move_results</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">moveFiles</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">)</span></div>
+                        
+<div class="viewcode-block" id="PEATSAdelivery.TradeStudyPlotter"><a class="viewcode-back" href="../PEATSA/PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.TradeStudyPlotter">[docs]</a>    <span class="k">def</span> <span class="nf">TradeStudyPlotter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">PEATSAchef</span>
+        
+        <span class="c1"># Create a peatsa chef</span>
+        <span class="n">chef</span> <span class="o">=</span> <span class="n">PEATSAchef</span><span class="o">.</span><span class="n">PEATSAchef</span><span class="p">()</span>
+        
+        <span class="c1"># Loop through all of the options files</span>
+        <span class="k">for</span> <span class="n">options_file_tuple</span> <span class="ow">in</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">trade_study_options_files</span><span class="p">:</span>
+            
+            <span class="c1"># Check how this options file is formatted</span>
+            <span class="k">if</span> <span class="n">options_file_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># Call the type zero trade study peatsa chef</span>
+                <span class="n">options_list</span> <span class="o">=</span> <span class="n">chef</span><span class="o">.</span><span class="n">TradeStudyTypeZero</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">options_file_tuple</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="mi">1</span><span class="p">)</span>
+                
+                <span class="c1"># Call the type zero plotter</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">TradeStudyTypeZeroPlotter</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">,</span><span class="n">options_list</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">options_file_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Sorry, the built in plotter not setup yet for this trade study type&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">options_file_tuple</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Sorry, the built in plotter not setup yet for this trade study type&quot;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="PEATSAdelivery.convert_variable_to_label"><a class="viewcode-back" href="../PEATSA/PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.convert_variable_to_label">[docs]</a>    <span class="k">def</span> <span class="nf">convert_variable_to_label</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">string</span><span class="p">):</span>
+        
+        <span class="c1"># Remove the Mission and or mission options </span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;MO&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;M&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Check if the variable is on a journey or journey options object</span>
+        <span class="k">if</span> <span class="n">string</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Journeys[&quot;</span><span class="p">):</span>
+            
+            <span class="c1"># Get the journey number</span>
+            <span class="n">journey_no</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            
+            <span class="c1"># Check if the journey_number is negative</span>
+            <span class="k">if</span> <span class="n">journey_no</span> <span class="o">==</span> <span class="s2">&quot;-1&quot;</span><span class="p">:</span>
+                <span class="n">journey_str</span> <span class="o">=</span> <span class="s2">&quot;Final_Journey&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">journey_str</span> <span class="o">=</span> <span class="s2">&quot;Journey_&quot;</span> <span class="o">+</span> <span class="n">journey_no</span>
+            
+            <span class="c1"># replace the journey bracketing</span>
+            <span class="n">string</span> <span class="o">=</span> <span class="n">journey_str</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;eys[&quot;</span> <span class="o">+</span> <span class="n">journey_no</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        
+        <span class="c1"># Check if the variable has a mission event object</span>
+        <span class="k">if</span> <span class="s2">&quot;.missionevents[&quot;</span> <span class="ow">in</span> <span class="n">string</span><span class="p">:</span>
+            
+            <span class="c1"># Get the mission event</span>
+            <span class="n">mission_event_no</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;missionevents[&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;]&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            
+            <span class="c1"># Check if the mission event is the first or last</span>
+            <span class="k">if</span> <span class="n">mission_event_no</span> <span class="o">==</span> <span class="s2">&quot;0&quot;</span><span class="p">:</span>
+                <span class="n">mission_event_string</span> <span class="o">=</span> <span class="s2">&quot;,_Initial&quot;</span>
+            <span class="k">elif</span> <span class="n">mission_event_no</span> <span class="o">==</span> <span class="s2">&quot;-1&quot;</span><span class="p">:</span>
+                <span class="n">mission_event_string</span> <span class="o">=</span> <span class="s2">&quot;,_Final&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">mission_event_string</span> <span class="o">=</span> <span class="s2">&quot;,_Mission_Event_&quot;</span> <span class="o">+</span> <span class="n">mission_event_no</span>
+            
+            <span class="c1"># Replace the mission event bracketing</span>
+            <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_.missionevents[&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">mission_event_string</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;events[&quot;</span> <span class="o">+</span> <span class="n">mission_event_no</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        
+        <span class="c1"># Convert underscores to spaces</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Capitalize each word</span>
+        <span class="n">string</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">capitalize_each_word</span><span class="p">(</span><span class="n">string</span><span class="p">)</span>
+    
+        <span class="c1"># Return the formatted label</span>
+        <span class="k">return</span> <span class="n">string</span></div>
+        
+<div class="viewcode-block" id="PEATSAdelivery.capitalize_each_word"><a class="viewcode-back" href="../PEATSA/PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.capitalize_each_word">[docs]</a>    <span class="k">def</span> <span class="nf">capitalize_each_word</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">string</span><span class="p">):</span>
+        <span class="c1"># Split the string by spaces</span>
+        <span class="n">stringsplit</span> <span class="o">=</span> <span class="n">string</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot; &quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Start a new string and capitalize the first word</span>
+        <span class="n">new_string</span> <span class="o">=</span> <span class="n">string</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+        
+        <span class="c1"># Loop through the rest of the words</span>
+        <span class="k">for</span> <span class="n">string_part</span> <span class="ow">in</span> <span class="n">stringsplit</span><span class="p">:</span>
+            <span class="c1"># Capitalize each and add to the new string</span>
+            <span class="n">new_string</span> <span class="o">+=</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">string_part</span><span class="o">.</span><span class="n">capitalize</span><span class="p">()</span>
+            
+        <span class="k">return</span> <span class="n">new_string</span></div>
+    
+<div class="viewcode-block" id="PEATSAdelivery.TradeStudyTypeZeroPlotter"><a class="viewcode-back" href="../PEATSA/PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.TradeStudyTypeZeroPlotter">[docs]</a>    <span class="k">def</span> <span class="nf">TradeStudyTypeZeroPlotter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">,</span><span class="n">options_list</span><span class="p">):</span>
+            
+        <span class="c1"># Initialize a counter</span>
+        <span class="n">plot_ctr</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="c1"># Loop through all of the options in the options list</span>
+        <span class="k">for</span> <span class="n">option</span> <span class="ow">in</span> <span class="n">options_list</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            
+            <span class="c1"># Initialize a new list of boxes</span>
+            <span class="n">new_boxes</span> <span class="o">=</span> <span class="p">[]</span>
+            
+            <span class="c1"># Loop through all of the boxes</span>
+            <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">PEATSAboxes</span><span class="p">:</span>
+                
+                <span class="c1"># Assume this box belongs on the plot</span>
+                <span class="n">box_belongs_on_plot</span> <span class="o">=</span> <span class="kc">True</span>
+                
+                <span class="c1"># Loop through the options again</span>
+                <span class="k">for</span> <span class="n">option2</span> <span class="ow">in</span> <span class="n">options_list</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    
+                    <span class="c1"># Check if the second option is the same as the first</span>
+                    <span class="k">if</span> <span class="n">option</span> <span class="o">==</span> <span class="n">option2</span><span class="p">:</span>
+                        <span class="c1"># Don&#39;t care</span>
+                        <span class="k">continue</span>
+                    
+                    <span class="c1"># Check if this box&#39;s value matches the default value</span>
+                    <span class="k">if</span> <span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;box.PEATSAdough.&quot;</span> <span class="o">+</span> <span class="n">option</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;MO&quot;</span><span class="p">))</span> <span class="o">!=</span> <span class="n">options_list</span><span class="p">[</span><span class="n">option</span><span class="p">][</span><span class="mi">0</span><span class="p">]:</span>
+                        <span class="c1"># It does not</span>
+                        <span class="n">box_belongs_on_plot</span> <span class="o">=</span> <span class="kc">False</span>
+                        <span class="c1"># No need to keep looping</span>
+                        <span class="k">break</span>
+                        
+                <span class="c1"># Check if the box belongs on the plot</span>
+                <span class="k">if</span> <span class="n">box_belongs_on_plot</span><span class="p">:</span>
+                    <span class="c1"># It does, add it to the list</span>
+                    <span class="n">new_boxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+
+            <span class="c1"># Check if this is the first iteration or not</span>
+            <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># This is the first iteration</span>
+                
+                <span class="c1"># Initialize a set of plot options</span>
+                <span class="n">PO</span> <span class="o">=</span> <span class="n">PEATSAmenu</span><span class="o">.</span><span class="n">PEATSAinstagram</span><span class="p">()</span>
+
+                <span class="c1"># Set the y_variable</span>
+                <span class="n">PO</span><span class="o">.</span><span class="n">y_variable</span> <span class="o">=</span> <span class="s2">&quot;box.objective_value&quot;</span>
+                <span class="c1"># Set the x_variable</span>
+                <span class="n">PO</span><span class="o">.</span><span class="n">x_variable</span> <span class="o">=</span> <span class="s2">&quot;box.PEATSAdough.&quot;</span> <span class="o">+</span> <span class="n">option</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;MO&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+                <span class="c1"># set the y label</span>
+                <span class="n">PO</span><span class="o">.</span><span class="n">ylabel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_variable_to_label</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">objective_formula</span><span class="p">)</span>
+                <span class="c1"># set the x label</span>
+                <span class="n">PO</span><span class="o">.</span><span class="n">xlabel</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">convert_variable_to_label</span><span class="p">(</span><span class="n">option</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+                <span class="c1"># Set the title</span>
+                <span class="n">PO</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Trade Study&quot;</span>
+                <span class="c1"># Set the file name string</span>
+                <span class="n">PO</span><span class="o">.</span><span class="n">file_name_str</span> <span class="o">=</span> <span class="s2">&quot;default_&quot;</span> <span class="o">+</span> <span class="n">option</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;MO&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_sensitivity_plot&quot;</span>
+                <span class="c1"># Tell the plotter to use lines not dots</span>
+                <span class="n">PO</span><span class="o">.</span><span class="n">lines_or_dots</span> <span class="o">=</span> <span class="s1">&#39;lines&#39;</span>
+            
+                <span class="c1"># Check if the x variable is a date and set the flag if so</span>
+                <span class="k">if</span> <span class="s2">&quot;date&quot;</span> <span class="ow">in</span> <span class="n">PO</span><span class="o">.</span><span class="n">xlabel</span><span class="p">:</span>
+                    <span class="n">PO</span><span class="o">.</span><span class="n">x_is_date</span> <span class="o">=</span> <span class="mi">1</span>
+                
+                <span class="c1"># Check if the x variable is a date and set the flag if so</span>
+                <span class="k">if</span> <span class="s2">&quot;date&quot;</span> <span class="ow">in</span> <span class="n">PO</span><span class="o">.</span><span class="n">ylabel</span><span class="p">:</span>
+                    <span class="n">PO</span><span class="o">.</span><span class="n">y_is_date</span> <span class="o">=</span> <span class="mi">1</span>
+                
+                <span class="c1"># Write the options to file   </span>
+                <span class="n">PO</span><span class="o">.</span><span class="n">write_options</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;Default_TradeStudy_Plot&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">plot_ctr</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;Options.py&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># It is not the first iteration, so this plot should have midbake options saved to file. Load from there in case </span>
+                <span class="c1"># the user modified them</span>
+                
+                <span class="c1"># Create a peatsa plot object from the mid bake file</span>
+                <span class="n">PO</span> <span class="o">=</span> <span class="n">PEATSAmenu</span><span class="o">.</span><span class="n">PEATSAinstagram</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;Default_TradeStudy_Plot&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">plot_ctr</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;Options.py&quot;</span><span class="p">)</span>
+            
+            
+            <span class="c1"># Clear the plot</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+        
+            <span class="c1"># Call the plotter</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SingleDataSetPlotter</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PO</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">)</span>
+            
+            <span class="c1"># Update the counter</span>
+            <span class="n">plot_ctr</span> <span class="o">+=</span> <span class="mi">1</span></div>
+                
+<div class="viewcode-block" id="PEATSAdelivery.MissedThrustPlotter"><a class="viewcode-back" href="../PEATSA/PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.MissedThrustPlotter">[docs]</a>    <span class="k">def</span> <span class="nf">MissedThrustPlotter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">matplotlib</span>
+        <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+        <span class="kn">import</span> <span class="nn">datetime</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.dates</span> <span class="k">as</span> <span class="nn">mdates</span>       
+        <span class="kn">import</span> <span class="nn">PEATSAmenu</span>
+        
+        <span class="c1"># Check if this is the first iteration or not</span>
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># It is. </span>
+        
+            <span class="c1"># Create a plot options object</span>
+            <span class="n">PO</span> <span class="o">=</span> <span class="n">PEATSAmenu</span><span class="o">.</span><span class="n">PEATSAinstagram</span><span class="p">()</span>
+            
+            <span class="c1"># Set the xlabel for the plot</span>
+            <span class="n">PO</span><span class="o">.</span><span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;Missed Thrust Event Date&quot;</span>
+            <span class="c1"># Set the ylabel for the plot</span>
+            <span class="n">PO</span><span class="o">.</span><span class="n">ylabel</span> <span class="o">=</span> <span class="s2">&quot;Longest Survivable Coast, days&quot;</span>
+            <span class="c1"># Set the title</span>
+            <span class="n">PO</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Missed Thrust Analysis&quot;</span>
+            <span class="c1"># Set the ylimits</span>
+            <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">PEATSAboxes</span><span class="p">:</span>
+                <span class="k">if</span> <span class="s2">&quot;FAILURE&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSAdough_path</span> <span class="ow">and</span> <span class="n">box</span><span class="o">.</span><span class="n">objective_value</span> <span class="o">!=</span> <span class="o">-</span><span class="mf">1e100</span><span class="p">:</span>
+                    <span class="n">PO</span><span class="o">.</span><span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span><span class="n">box</span><span class="o">.</span><span class="n">PEATSAdough</span><span class="o">.</span><span class="n">Journeys</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">wait_time_bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mf">5.0</span><span class="p">]</span>
+                    <span class="k">break</span>
+            <span class="c1"># Set the file name string</span>
+            <span class="n">PO</span><span class="o">.</span><span class="n">file_name_str</span> <span class="o">=</span> <span class="s2">&quot;default_missed_thrust_plot&quot;</span>
+            <span class="c1"># Tell the plotter that the x axis is dates</span>
+            <span class="n">PO</span><span class="o">.</span><span class="n">x_is_date</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="c1"># Tell the plotter that the y axis is not dates</span>
+            <span class="n">PO</span><span class="o">.</span><span class="n">y_is_date</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="c1"># Tell the plotter to use lines not dots</span>
+            <span class="n">PO</span><span class="o">.</span><span class="n">lines_or_dots</span> <span class="o">=</span> <span class="s1">&#39;dots&#39;</span>
+            <span class="c1"># Set the x_variable</span>
+            <span class="n">PO</span><span class="o">.</span><span class="n">x_variable</span> <span class="o">=</span> <span class="s2">&quot;box.seed_criteria[PEATSAorder.seed_criteria[0][0]]&quot;</span>
+            <span class="c1"># Set the y_variable</span>
+            <span class="n">PO</span><span class="o">.</span><span class="n">y_variable</span> <span class="o">=</span> <span class="s2">&quot;box.objective_value&quot;</span>
+            
+            <span class="n">PO</span><span class="o">.</span><span class="n">write_options</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;Default_MissedThrust_PlotOptions.py&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># It is not the first iteration, so this plot should have midbake options saved to file. Load from there in case </span>
+            <span class="c1"># the user modified them</span>
+            
+            <span class="c1"># Create a plot options object from the midbake plot options file</span>
+            <span class="n">PO</span> <span class="o">=</span> <span class="n">PEATSAmenu</span><span class="o">.</span><span class="n">PEATSAinstagram</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;Default_MissedThrust_PlotOptions.py&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Clear the plot</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+        
+        <span class="c1"># Call the plotter</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SingleDataSetPlotter</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PO</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MakeIterationHistory</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="s2">&quot;default_missed_thrust_plot&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PEATSAdelivery.BuiltInPlotterFromFile"><a class="viewcode-back" href="../PEATSA/PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.BuiltInPlotterFromFile">[docs]</a>    <span class="k">def</span> <span class="nf">BuiltInPlotterFromFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">,</span><span class="n">filename</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">matplotlib</span>
+        <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+        <span class="kn">import</span> <span class="nn">PEATSAmenu</span>
+        
+        <span class="c1"># Load the options from file</span>
+        <span class="n">PO</span> <span class="o">=</span> <span class="n">PEATSAmenu</span><span class="o">.</span><span class="n">PEATSAinstagram</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+        
+        <span class="c1"># Clear the current figure</span>
+        <span class="n">plt</span><span class="o">.</span><span class="n">clf</span><span class="p">()</span>
+        
+        <span class="c1"># Check if the user wants multiple groupings on one plot</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">groupings</span><span class="p">):</span>
+            <span class="c1"># The user does.</span>
+            
+            <span class="c1"># Loop through all the boxes</span>
+            <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">PEATSAboxes</span><span class="p">:</span>
+                
+                <span class="c1"># Re-initialize its plot fingerprint</span>
+                <span class="n">box</span><span class="o">.</span><span class="n">plot_fingerprint</span> <span class="o">=</span> <span class="p">[]</span>
+                
+                <span class="c1"># Loop through the different entries in the groupings list</span>
+                <span class="k">for</span> <span class="n">fingerprint</span> <span class="ow">in</span> <span class="n">PO</span><span class="o">.</span><span class="n">groupings</span><span class="p">:</span>
+                    
+                    <span class="c1"># Eval this fingerprint value and add it to the net fingerprint</span>
+                    <span class="n">box</span><span class="o">.</span><span class="n">plot_fingerprint</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">fingerprint</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+                    
+                <span class="n">box</span><span class="o">.</span><span class="n">plot_fingerprint</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">x_variable</span><span class="p">))</span>
+                    
+            <span class="c1"># Sort the plot boxes by the newly created fingerprint        </span>
+            <span class="n">plot_boxes</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">PEATSAboxes</span><span class="p">,</span> <span class="n">key</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">box</span><span class="p">:</span> <span class="n">box</span><span class="o">.</span><span class="n">plot_fingerprint</span><span class="p">)</span>
+            
+            <span class="c1"># Create a list of everytime we reach a new fingerprint</span>
+            <span class="n">switches</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            
+            <span class="c1"># Create a flag for the last good switch</span>
+            <span class="n">last_switch</span> <span class="o">=</span> <span class="mi">0</span>
+            
+            <span class="c1"># Create a list of whether to include this fingerprint in the plot</span>
+            <span class="n">includes</span> <span class="o">=</span> <span class="p">[]</span>
+            
+            <span class="c1"># Get the initial fingerprint</span>
+            <span class="n">previous_fingerprint</span> <span class="o">=</span> <span class="n">plot_boxes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">plot_fingerprint</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            
+            <span class="c1"># Initialize the legend entries</span>
+            <span class="n">legend_entries</span> <span class="o">=</span> <span class="p">[]</span>
+        
+            <span class="c1"># Loop through all of the boxes</span>
+            <span class="k">for</span> <span class="n">box_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">plot_boxes</span><span class="p">)):</span>
+            
+                <span class="c1"># Check if we are on a new plot fingerprint</span>
+                <span class="k">if</span> <span class="n">plot_boxes</span><span class="p">[</span><span class="n">box_idx</span><span class="p">]</span><span class="o">.</span><span class="n">plot_fingerprint</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">previous_fingerprint</span><span class="p">:</span>
+                    <span class="c1"># We are.</span>
+                    
+                    <span class="c1"># check if we need to skip this fingerprint</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">grouping_requirements</span><span class="p">):</span>
+                        <span class="c1"># Assume that this grouping will work</span>
+                        <span class="n">include</span> <span class="o">=</span> <span class="kc">False</span>
+                        
+                        <span class="c1"># Loop through all requirements</span>
+                        <span class="k">for</span> <span class="n">req</span> <span class="ow">in</span> <span class="n">PO</span><span class="o">.</span><span class="n">grouping_requirements</span><span class="p">:</span>
+                            
+                            <span class="c1"># Assume this requirement will be met</span>
+                            <span class="n">local_include</span> <span class="o">=</span> <span class="kc">True</span>
+                            
+                            <span class="c1"># Loop through each entry</span>
+                            <span class="k">for</span> <span class="n">req_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">previous_fingerprint</span><span class="p">)):</span>
+                                
+                                <span class="c1"># Check if we care about this entry                                </span>
+                                <span class="k">if</span> <span class="n">req</span><span class="p">[</span><span class="n">req_idx</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;NA&quot;</span><span class="p">:</span>
+                                    <span class="c1"># We care</span>
+                                    
+                                    <span class="c1"># Check if this requirement matches</span>
+                                    <span class="k">if</span> <span class="n">req</span><span class="p">[</span><span class="n">req_idx</span><span class="p">]</span> <span class="o">!=</span> <span class="n">previous_fingerprint</span><span class="p">[</span><span class="n">req_idx</span><span class="p">]:</span>
+                                        <span class="c1"># It does not</span>
+                                        <span class="n">local_include</span> <span class="o">=</span> <span class="kc">False</span>
+                                        <span class="c1"># No need to check the rest of the requirements</span>
+                                        <span class="k">break</span>
+                                        
+                            <span class="c1"># Check if we made it through all of the fingerprint matching</span>
+                            <span class="k">if</span> <span class="n">local_include</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                                <span class="c1"># We did! Huzzah. Include this in the plot</span>
+                                <span class="n">include</span> <span class="o">=</span> <span class="kc">True</span>
+                                <span class="c1"># No need to check the rest of the requirements</span>
+                                <span class="k">break</span>
+                        <span class="c1"># Add the flag to include this fingerprint or not</span>
+                        <span class="n">includes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">include</span><span class="p">)</span>
+                        
+                        <span class="c1"># Update the last switch flag</span>
+                        <span class="k">if</span> <span class="n">include</span><span class="p">:</span>
+                            <span class="n">last_switch</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">includes</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Update the last switch flag</span>
+                        <span class="n">last_switch</span> <span class="o">+=</span> <span class="mi">1</span>
+                        <span class="c1"># Add the flag to include this fingerprint or not</span>
+                        <span class="n">includes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                
+                    <span class="c1"># Add this to the switch</span>
+                    <span class="n">switches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">box_idx</span><span class="p">)</span>
+                
+                    <span class="c1"># Update the fingerprint</span>
+                    <span class="n">previous_fingerprint</span> <span class="o">=</span> <span class="n">plot_boxes</span><span class="p">[</span><span class="n">box_idx</span><span class="p">]</span><span class="o">.</span><span class="n">plot_fingerprint</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                
+                    <span class="c1"># Get the legend entry for this fingerprint</span>
+                    <span class="n">box</span> <span class="o">=</span> <span class="n">plot_boxes</span><span class="p">[</span><span class="n">box_idx</span> <span class="o">-</span> <span class="mi">1</span><span class="p">]</span>
+                    <span class="n">legend_str</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">groupings</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="c1"># Loop through the entries</span>
+                    <span class="k">for</span> <span class="n">fingerprint</span> <span class="ow">in</span> <span class="n">PO</span><span class="o">.</span><span class="n">groupings</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                        <span class="n">legend_str</span> <span class="o">+=</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">eval</span><span class="p">(</span><span class="n">fingerprint</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                        
+                    <span class="k">if</span> <span class="n">includes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+                        <span class="c1"># Add this legend string to the list</span>
+                        <span class="n">legend_entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">legend_str</span><span class="p">)</span>
+             
+            <span class="c1"># Add the final index       </span>
+            <span class="n">switches</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">plot_boxes</span><span class="p">))</span>
+            
+            <span class="c1"># Get the legend entry for the final fingerprint</span>
+            <span class="n">box</span> <span class="o">=</span> <span class="n">plot_boxes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            
+            <span class="n">legend_str</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">groupings</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span>
+            <span class="c1"># Loop through the entries</span>
+            <span class="k">for</span> <span class="n">fingerprint</span> <span class="ow">in</span> <span class="n">PO</span><span class="o">.</span><span class="n">groupings</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="n">legend_str</span> <span class="o">+=</span> <span class="s2">&quot;, &quot;</span> <span class="o">+</span> <span class="nb">eval</span><span class="p">(</span><span class="n">fingerprint</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+            
+            <span class="c1"># check if we need to skip this fingerprint</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">grouping_requirements</span><span class="p">):</span>
+                <span class="c1"># Assume that this grouping will work</span>
+                <span class="n">include</span> <span class="o">=</span> <span class="kc">False</span>
+                
+                <span class="c1"># Loop through all requirements</span>
+                <span class="k">for</span> <span class="n">req</span> <span class="ow">in</span> <span class="n">PO</span><span class="o">.</span><span class="n">grouping_requirements</span><span class="p">:</span>
+                    
+                    <span class="c1"># Assume this requirement will be met</span>
+                    <span class="n">local_include</span> <span class="o">=</span> <span class="kc">True</span>
+                    
+                    <span class="c1"># Loop through each entry</span>
+                    <span class="k">for</span> <span class="n">req_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">plot_boxes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot_fingerprint</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">])):</span>
+                        
+                        <span class="c1"># Check if we care about this entry                                </span>
+                        <span class="k">if</span> <span class="n">req</span><span class="p">[</span><span class="n">req_idx</span><span class="p">]</span> <span class="o">!=</span> <span class="s2">&quot;NA&quot;</span><span class="p">:</span>
+                            <span class="c1"># We care</span>
+                            
+                            <span class="c1"># Check if this requirement matches</span>
+                            <span class="k">if</span> <span class="n">req</span><span class="p">[</span><span class="n">req_idx</span><span class="p">]</span> <span class="o">!=</span> <span class="n">plot_boxes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">plot_fingerprint</span><span class="p">[</span><span class="n">req_idx</span><span class="p">]:</span>
+                                <span class="c1"># It does not</span>
+                                <span class="n">local_include</span> <span class="o">=</span> <span class="kc">False</span>
+                                <span class="c1"># No need to check the rest of the requirements</span>
+                                <span class="k">break</span>
+                                
+                    <span class="c1"># Check if we made it through all of the fingerprint matching</span>
+                    <span class="k">if</span> <span class="n">local_include</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                        <span class="c1"># We did! Huzzah. Include this in the plot</span>
+                        <span class="n">include</span> <span class="o">=</span> <span class="kc">True</span>
+                        <span class="c1"># No need to check the rest of the requirements</span>
+                        <span class="k">break</span>
+                <span class="c1"># Add the flag to include this fingerprint or not</span>
+                <span class="n">includes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">include</span><span class="p">)</span>
+                        
+                <span class="c1"># Update the last switch flag</span>
+                <span class="k">if</span> <span class="n">include</span><span class="p">:</span>
+                    <span class="n">last_switch</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">includes</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Update the last switch flag</span>
+                <span class="n">last_switch</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># Add the flag to include this fingerprint or not</span>
+                <span class="n">includes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+                
+            <span class="k">if</span> <span class="n">includes</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>    
+                <span class="c1"># Add this legend string to the list</span>
+                <span class="n">legend_entries</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">legend_str</span><span class="p">)</span>
+                
+            <span class="c1"># Loop through all of the switches</span>
+            <span class="k">for</span> <span class="n">switch_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">switches</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    
+                <span class="c1"># Check if we are including this data</span>
+                <span class="k">if</span> <span class="n">includes</span><span class="p">[</span><span class="n">switch_idx</span><span class="p">]:</span>
+                
+                    <span class="c1"># Call the plotting routine either with the legend entries or not (if it is the final set of data)</span>
+                    <span class="k">if</span> <span class="n">switch_idx</span> <span class="o">==</span> <span class="n">last_switch</span> <span class="ow">and</span> <span class="n">PO</span><span class="o">.</span><span class="n">legend</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">SingleDataSetPlotter</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PO</span><span class="p">,</span><span class="n">plot_boxes</span><span class="p">[</span><span class="n">switches</span><span class="p">[</span><span class="n">switch_idx</span><span class="p">]:</span><span class="n">switches</span><span class="p">[</span><span class="n">switch_idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]],</span><span class="n">legend_entries</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">SingleDataSetPlotter</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PO</span><span class="p">,</span><span class="n">plot_boxes</span><span class="p">[</span><span class="n">switches</span><span class="p">[</span><span class="n">switch_idx</span><span class="p">]:</span><span class="n">switches</span><span class="p">[</span><span class="n">switch_idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]])</span>
+                                        
+        <span class="k">else</span><span class="p">:</span>
+        
+            <span class="c1"># Call the plotting routine</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SingleDataSetPlotter</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PO</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="PEATSAdelivery.SingleDataSetPlotter"><a class="viewcode-back" href="../PEATSA/PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.SingleDataSetPlotter">[docs]</a>    <span class="k">def</span> <span class="nf">SingleDataSetPlotter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PO</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">,</span><span class="n">label_list</span> <span class="o">=</span> <span class="p">[]):</span>
+        <span class="kn">import</span> <span class="nn">matplotlib</span>
+        <span class="n">matplotlib</span><span class="o">.</span><span class="n">use</span><span class="p">(</span><span class="s1">&#39;Agg&#39;</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+        <span class="kn">import</span> <span class="nn">datetime</span>
+        <span class="kn">import</span> <span class="nn">matplotlib.dates</span> <span class="k">as</span> <span class="nn">mdates</span>       
+        <span class="kn">import</span> <span class="nn">itertools</span>
+        <span class="kn">import</span> <span class="nn">PEATSAbusboy</span>
+        
+        <span class="c1"># Create a busboy for sorting and filtering</span>
+        <span class="n">busboy</span> <span class="o">=</span> <span class="n">PEATSAbusboy</span><span class="o">.</span><span class="n">PEATSAbusboy</span><span class="p">()</span>
+
+        <span class="c1"># Get the y data</span>
+        <span class="k">if</span> <span class="n">PO</span><span class="o">.</span><span class="n">y_is_date</span><span class="p">:</span>
+            <span class="c1"># Check if the date is MJD or JD by finding the first converged case and seeing</span>
+            <span class="c1"># if it is greater than 2400000</span>
+            <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">PEATSAboxes</span><span class="p">:</span>
+                <span class="c1"># Check if this case converged</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">objective_value</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">1e100</span> <span class="ow">and</span> <span class="s2">&quot;FAILURE&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">box</span><span class="o">.</span><span class="n">mission_name</span><span class="p">:</span>
+                    <span class="c1"># It did</span>
+                    
+                    <span class="c1"># Evaluate the y variable and see if it is MJD or JD range</span>
+                    <span class="k">if</span> <span class="nb">eval</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">y_variable</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">2400000.5</span><span class="p">:</span>
+                        <span class="c1"># Variable is already JD</span>
+                        <span class="n">MJD_to_JD</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Variable needs to be converted</span>
+                        <span class="n">MJD_to_JD</span> <span class="o">=</span> <span class="mf">2400000.5</span>
+                        
+                    <span class="c1"># No need to keep looping</span>
+                    <span class="k">break</span>
+
+            <span class="c1"># Loop through all cases and get the data for the cases that converged</span>
+            <span class="n">ydata</span> <span class="o">=</span> <span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">jd2datelist</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">y_variable</span><span class="p">)</span> <span class="o">+</span> <span class="n">MJD_to_JD</span><span class="p">))</span> <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">PEATSAboxes</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">objective_value</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">1e100</span> <span class="ow">and</span> <span class="s2">&quot;FAILURE&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">box</span><span class="o">.</span><span class="n">mission_name</span><span class="p">]</span>    
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Loop through all cases and get the data for the cases that converged</span>
+            <span class="n">ydata</span> <span class="o">=</span> <span class="p">[</span><span class="nb">eval</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">y_variable</span><span class="p">)</span> <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">PEATSAboxes</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">objective_value</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">1e100</span> <span class="ow">and</span> <span class="s2">&quot;FAILURE&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">box</span><span class="o">.</span><span class="n">mission_name</span><span class="p">]</span>   
+       
+        <span class="c1"># Get the x data</span>
+        <span class="k">if</span> <span class="n">PO</span><span class="o">.</span><span class="n">x_is_date</span><span class="p">:</span>
+
+            <span class="c1"># Check if the date is MJD or JD by finding the first converged case and seeing</span>
+            <span class="c1"># if it is greater than 2400000</span>
+            <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">PEATSAboxes</span><span class="p">:</span>
+                <span class="c1"># Check if this case converged</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">objective_value</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">1e100</span> <span class="ow">and</span> <span class="s2">&quot;FAILURE&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">box</span><span class="o">.</span><span class="n">mission_name</span><span class="p">:</span>
+                    <span class="c1"># It did</span>
+                    
+                    <span class="c1"># Evaluate the y variable and see if it is MJD or JD range</span>
+                    <span class="k">if</span> <span class="nb">eval</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">x_variable</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">2400000.5</span><span class="p">:</span>
+                        <span class="c1"># Variable is already JD</span>
+                        <span class="n">MJD_to_JD</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># Variable needs to be converted</span>
+                        <span class="n">MJD_to_JD</span> <span class="o">=</span> <span class="mf">2400000.5</span>
+                        
+                    <span class="c1"># No need to keep looping</span>
+                    <span class="k">break</span>
+            <span class="c1"># Loop through all cases and get the data for the cases that converged        </span>
+            <span class="n">xdata</span> <span class="o">=</span> <span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">date</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">jd2datelist</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">x_variable</span><span class="p">)</span> <span class="o">+</span> <span class="mf">2400000.5</span><span class="p">))</span> <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">PEATSAboxes</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">objective_value</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">1e100</span> <span class="ow">and</span> <span class="s2">&quot;FAILURE&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">box</span><span class="o">.</span><span class="n">mission_name</span><span class="p">]</span>    
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Loop through all cases and get the data for the cases that converged</span>
+            <span class="n">xdata</span> <span class="o">=</span> <span class="p">[</span><span class="nb">eval</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">x_variable</span><span class="p">)</span> <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">PEATSAboxes</span> <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">objective_value</span><span class="p">)</span> <span class="o">!=</span> <span class="mf">1e100</span> <span class="ow">and</span> <span class="s2">&quot;FAILURE&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">box</span><span class="o">.</span><span class="n">mission_name</span><span class="p">]</span>   
+        
+        <span class="k">if</span> <span class="n">PO</span><span class="o">.</span><span class="n">lines_or_dots</span> <span class="o">==</span> <span class="s2">&quot;dots&quot;</span><span class="p">:</span>
+            <span class="c1"># Create a scatter plot</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span><span class="n">ydata</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">PO</span><span class="o">.</span><span class="n">lines_or_dots</span> <span class="o">==</span> <span class="s1">&#39;lines&#39;</span><span class="p">:</span>
+            <span class="c1"># Create a line plot</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span><span class="n">ydata</span><span class="p">)</span>
+            
+        <span class="c1"># Set the x label</span>
+        <span class="k">if</span> <span class="n">PO</span><span class="o">.</span><span class="n">xlabel</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">xlabel</span><span class="p">)</span>
+    
+        <span class="c1"># Set the y label</span>
+        <span class="k">if</span> <span class="n">PO</span><span class="o">.</span><span class="n">ylabel</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">ylabel</span><span class="p">)</span>
+    
+        <span class="c1"># Set the title of the plot</span>
+        <span class="k">if</span> <span class="n">PO</span><span class="o">.</span><span class="n">title</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">title</span><span class="p">)</span>
+    
+        <span class="c1"># Set the ylimits of the plot</span>
+        <span class="k">if</span> <span class="n">PO</span><span class="o">.</span><span class="n">ylim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">PO</span><span class="o">.</span><span class="n">ylim</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">ylim</span><span class="p">)</span>
+    
+        <span class="c1"># Set the xlimits of the plot</span>
+        <span class="k">if</span> <span class="n">PO</span><span class="o">.</span><span class="n">xlim</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">!=</span> <span class="n">PO</span><span class="o">.</span><span class="n">xlim</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">PO</span><span class="o">.</span><span class="n">xlim</span><span class="p">)</span>
+    
+        <span class="c1"># Check if the x-axis is dates</span>
+        <span class="k">if</span> <span class="n">PO</span><span class="o">.</span><span class="n">x_is_date</span><span class="p">:</span>
+            <span class="c1"># It is.</span>
+            
+            <span class="kn">import</span> <span class="nn">math</span>
+            
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">xdata</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                
+                <span class="c1"># Get the range of dates</span>
+                <span class="n">x_range</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">xdata</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">xdata</span><span class="p">)</span>            
+                        
+                <span class="c1"># In order to set the labels correctly, dtermine the date range</span>
+                <span class="k">if</span> <span class="n">x_range</span><span class="o">.</span><span class="n">days</span> <span class="o">&lt;</span> <span class="mi">180</span><span class="p">:</span>
+                    <span class="c1"># Fewer than 6 months, write out the day and month</span>
+                    <span class="n">fmt</span> <span class="o">=</span> <span class="n">mdates</span><span class="o">.</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s1">&#39;%b </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+                
+                    <span class="c1"># Set the interval to be 1/6th of the range in days</span>
+                    <span class="n">days</span> <span class="o">=</span> <span class="n">mdates</span><span class="o">.</span><span class="n">DayLocator</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">366</span><span class="p">),</span><span class="n">interval</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">x_range</span><span class="o">.</span><span class="n">days</span><span class="o">/</span><span class="mf">6.0</span><span class="p">)))</span>
+            
+                    <span class="c1"># Get handles to the axes and figure</span>
+                    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+                    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+                
+                    <span class="c1"># Set the tick marks to be at the 6 locations</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">days</span><span class="p">)</span>
+                    <span class="c1"># Apply the format</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">x_range</span><span class="o">.</span><span class="n">days</span> <span class="o">&lt;</span> <span class="mi">365</span><span class="o">*</span><span class="mi">6</span><span class="p">:</span>
+                    <span class="c1"># More than 6 months, but less than 6 years</span>
+                    <span class="c1"># Write out the month and year</span>
+                    <span class="n">fmt</span> <span class="o">=</span> <span class="n">mdates</span><span class="o">.</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s1">&#39;%b %Y&#39;</span><span class="p">)</span>
+                
+                
+                    <span class="c1"># Set the interval to be 1/6th of the range in months</span>
+                    <span class="n">months</span> <span class="o">=</span> <span class="n">mdates</span><span class="o">.</span><span class="n">MonthLocator</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">13</span><span class="p">),</span><span class="n">bymonthday</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">interval</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">x_range</span><span class="o">.</span><span class="n">days</span><span class="o">/</span><span class="mf">30.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">)))</span>
+        
+                    <span class="c1"># Get handles to the axes and figure</span>
+                    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+                    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+            
+                    <span class="c1"># Set the tick marks to be at the 6 locations</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">months</span><span class="p">)</span>
+                    <span class="c1"># Apply the format</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># More than 6 years. just put out the year</span>
+                    <span class="n">fmt</span> <span class="o">=</span> <span class="n">mdates</span><span class="o">.</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s1">&#39;%Y&#39;</span><span class="p">)</span>
+                
+                    <span class="c1"># Set the interval to be 1/6th of the range in years</span>
+                    <span class="n">years</span> <span class="o">=</span> <span class="n">mdates</span><span class="o">.</span><span class="n">YearLocator</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">x_range</span><span class="o">.</span><span class="n">days</span><span class="o">/</span><span class="mf">365.25</span><span class="o">/</span><span class="mf">6.0</span><span class="p">)))</span>
+        
+                    <span class="c1"># Get handles to the axes and figure</span>
+                    <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+                    <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+            
+                    <span class="c1"># Set the tick marks to be at the 6 locations</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">years</span><span class="p">)</span>
+                    <span class="c1"># Apply the format</span>
+                    <span class="n">ax</span><span class="o">.</span><span class="n">xaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+                
+            <span class="c1"># Check if the y-axis is dates</span>
+            <span class="k">if</span> <span class="n">PO</span><span class="o">.</span><span class="n">y_is_date</span><span class="p">:</span>
+                <span class="c1"># It is.</span>
+                
+                <span class="kn">import</span> <span class="nn">math</span>
+            
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">ydata</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    
+                    <span class="c1"># Get the range of dates</span>
+                    <span class="n">y_range</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">ydata</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">ydata</span><span class="p">)</span>
+            
+                    <span class="c1"># In order to set the labels correctly, dtermine the date range</span>
+                    <span class="k">if</span> <span class="n">y_range</span><span class="o">.</span><span class="n">days</span> <span class="o">&lt;</span> <span class="mi">180</span><span class="p">:</span>
+                        <span class="c1"># Fewer than 6 months, write out the day and month</span>
+                        <span class="n">fmt</span> <span class="o">=</span> <span class="n">mdates</span><span class="o">.</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s1">&#39;%b </span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+                
+                        <span class="c1"># Set the interval to be 1/6th of the range in days</span>
+                        <span class="n">days</span> <span class="o">=</span> <span class="n">mdates</span><span class="o">.</span><span class="n">DayLocator</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">366</span><span class="p">),</span><span class="n">interval</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">y_range</span><span class="o">.</span><span class="n">days</span><span class="o">/</span><span class="mf">6.0</span><span class="p">)))</span>
+            
+                        <span class="c1"># Get handles to the axes and figure</span>
+                        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+                        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+                
+                        <span class="c1"># Set the tick marks to be at the 6 locations</span>
+                        <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">days</span><span class="p">)</span>
+                        <span class="c1"># Apply the format</span>
+                        <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">y_range</span><span class="o">.</span><span class="n">days</span> <span class="o">&lt;</span> <span class="mi">365</span><span class="o">*</span><span class="mi">6</span><span class="p">:</span>
+                        <span class="c1"># More than 6 months, but less than 6 years</span>
+                        <span class="c1"># Write out the month and year</span>
+                        <span class="n">fmt</span> <span class="o">=</span> <span class="n">mdates</span><span class="o">.</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s1">&#39;%b %Y&#39;</span><span class="p">)</span>
+                
+                        <span class="c1"># Set the interval to be 1/6th of the range in months</span>
+                        <span class="n">months</span> <span class="o">=</span> <span class="n">mdates</span><span class="o">.</span><span class="n">MonthLocator</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">13</span><span class="p">),</span><span class="n">bymonthday</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span><span class="n">interval</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">y_range</span><span class="o">.</span><span class="n">days</span><span class="o">/</span><span class="mf">30.0</span><span class="o">/</span><span class="mf">6.0</span><span class="p">)))</span>
+        
+                        <span class="c1"># Get handles to the axes and figure</span>
+                        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+                        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+            
+                        <span class="c1"># Set the tick marks to be at the 6 locations</span>
+                        <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">months</span><span class="p">)</span>
+                        <span class="c1"># Apply the format</span>
+                        <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="c1"># More than 6 years. just put out the year</span>
+                        <span class="n">fmt</span> <span class="o">=</span> <span class="n">mdates</span><span class="o">.</span><span class="n">DateFormatter</span><span class="p">(</span><span class="s1">&#39;%Y&#39;</span><span class="p">)</span>
+                
+                        <span class="c1"># Set the interval to be 1/6th of the range in years</span>
+                        <span class="n">years</span> <span class="o">=</span> <span class="n">mdates</span><span class="o">.</span><span class="n">YearLocator</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">y_range</span><span class="o">.</span><span class="n">days</span><span class="o">/</span><span class="mf">365.25</span><span class="o">/</span><span class="mf">6.0</span><span class="p">)))</span>
+        
+                        <span class="c1"># Get handles to the axes and figure</span>
+                        <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+                        <span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gcf</span><span class="p">()</span>
+            
+                        <span class="c1"># Set the tick marks to be at the 6 locations</span>
+                        <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_locator</span><span class="p">(</span><span class="n">years</span><span class="p">)</span>
+                        <span class="c1"># Apply the format</span>
+                        <span class="n">ax</span><span class="o">.</span><span class="n">yaxis</span><span class="o">.</span><span class="n">set_major_formatter</span><span class="p">(</span><span class="n">fmt</span><span class="p">)</span>
+        
+        <span class="c1"># Apply any extra plot commands</span>
+        <span class="k">for</span> <span class="n">command</span> <span class="ow">in</span> <span class="n">PO</span><span class="o">.</span><span class="n">plot_commands</span><span class="p">:</span>
+            <span class="n">exec</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+        
+        <span class="c1"># Check if we need to add a legend</span>
+        <span class="k">if</span> <span class="n">label_list</span> <span class="o">!=</span> <span class="p">[]:</span>
+            <span class="c1"># we do</span>
+            <span class="n">lgd</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">label_list</span><span class="p">,</span> <span class="n">loc</span> <span class="o">=</span> <span class="s1">&#39;center left&#39;</span><span class="p">,</span> <span class="n">bbox_to_anchor</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+        
+            <span class="c1"># Save the image</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">images_dir</span> <span class="o">+</span> <span class="s2">&quot;Iteration&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">PO</span><span class="o">.</span><span class="n">file_name_str</span> <span class="o">+</span> <span class="s2">&quot;.png&quot;</span><span class="p">,</span><span class="n">bbox_etra_artists</span><span class="o">=</span><span class="p">(</span><span class="n">lgd</span><span class="p">,),</span><span class="n">bbox_inches</span><span class="o">=</span><span class="s1">&#39;tight&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+        
+            <span class="c1"># Save the image</span>
+            <span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">images_dir</span> <span class="o">+</span> <span class="s2">&quot;Iteration&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">PO</span><span class="o">.</span><span class="n">file_name_str</span> <span class="o">+</span> <span class="s2">&quot;.png&quot;</span><span class="p">)</span>
+    
+        <span class="c1"># Check if an iteration history gif should be made</span>
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span> <span class="o">!=</span> <span class="s2">&quot;Impatient&quot;</span> <span class="ow">and</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># It should. Call the method</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">MakeIterationHistory</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PO</span><span class="o">.</span><span class="n">file_name_str</span><span class="p">)</span></div>
+
+    <span class="c1"># Method to make a iteration history gif</span>
+<div class="viewcode-block" id="PEATSAdelivery.MakeIterationHistory"><a class="viewcode-back" href="../PEATSA/PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.MakeIterationHistory">[docs]</a>    <span class="k">def</span> <span class="nf">MakeIterationHistory</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">title_string</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">logging</span>
+        <span class="kn">import</span> <span class="nn">os</span>
+        <span class="kn">import</span> <span class="nn">matplotlib</span>
+        <span class="kn">from</span> <span class="nn">matplotlib.font_manager</span> <span class="kn">import</span> <span class="n">findfont</span><span class="p">,</span> <span class="n">FontProperties</span>
+        
+        <span class="c1"># Make sure imageio and PIL are actually installed</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">imageio</span>
+            <span class="kn">from</span> <span class="nn">PIL</span> <span class="kn">import</span> <span class="n">Image</span><span class="p">,</span> <span class="n">ImageFont</span><span class="p">,</span> <span class="n">ImageDraw</span>
+            <span class="kn">import</span> <span class="nn">numpy</span>
+            <span class="k">if</span> <span class="nb">int</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">__version__</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Version of numpy is old and incompatible with imageio&quot;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="c1"># They arent, cant do this</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;imageio and/or PIL not installed, so iteration history will not be generated&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+            
+        
+        <span class="c1"># If we are here, then we have imageio and PIL and can make a gif!</span>
+        
+        <span class="c1"># First load the raw images</span>
+        <span class="n">raw_images</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">images_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="n">title_string</span> <span class="o">+</span> <span class="s2">&quot;.png&quot;</span><span class="p">)]</span>
+
+        <span class="c1"># Sort the images based on iteration</span>
+        <span class="n">raw_images</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">raw_images</span><span class="p">,</span><span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">image</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">image</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;Iteration&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+
+        <span class="c1"># Create a list to store the imageio objects</span>
+        <span class="n">images</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1"># Loop through all of the images to draw their iteration number on the plot</span>
+        <span class="k">for</span> <span class="n">raw_image</span> <span class="ow">in</span> <span class="n">raw_images</span><span class="p">:</span>
+            
+            <span class="c1"># First get the iteration number</span>
+            <span class="n">Iteration_no</span> <span class="o">=</span> <span class="n">raw_image</span><span class="o">.</span><span class="n">lstrip</span><span class="p">(</span><span class="s2">&quot;Iteration&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            
+            <span class="c1"># Second, open the raw image</span>
+            <span class="n">img</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">images_dir</span> <span class="o">+</span> <span class="n">raw_image</span><span class="p">)</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s1">&#39;RGBA&#39;</span><span class="p">)</span>
+            
+            <span class="c1"># Create the draw object on the image</span>
+            <span class="n">draw</span> <span class="o">=</span> <span class="n">ImageDraw</span><span class="o">.</span><span class="n">Draw</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="s1">&#39;RGBA&#39;</span><span class="p">)</span>
+            
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Get the default matplotlib font name</span>
+                <span class="n">font_name</span> <span class="o">=</span> <span class="n">findfont</span><span class="p">(</span><span class="n">FontProperties</span><span class="p">(</span><span class="n">family</span><span class="o">=</span><span class="p">[</span><span class="n">matplotlib</span><span class="o">.</span><span class="n">rcParams</span><span class="p">[</span><span class="s1">&#39;font.family&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]]))</span>
+            
+                <span class="c1"># Setup the matplotlib default font</span>
+                <span class="n">fnt</span> <span class="o">=</span> <span class="n">ImageFont</span><span class="o">.</span><span class="n">truetype</span><span class="p">(</span><span class="n">font_name</span><span class="p">,</span><span class="mi">20</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Cant find matplotlib default font, using default and probably small font for gif iteration tag&quot;</span><span class="p">)</span>
+                
+                <span class="c1"># Set up the default font</span>
+                <span class="n">fnt</span> <span class="o">=</span> <span class="n">ImageFont</span><span class="o">.</span><span class="n">load_default</span><span class="p">()</span>
+            
+            <span class="c1"># Draw the iteration number</span>
+            <span class="n">draw</span><span class="o">.</span><span class="n">text</span><span class="p">((</span><span class="mi">30</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span><span class="s2">&quot;Iteration &quot;</span> <span class="o">+</span> <span class="n">Iteration_no</span><span class="p">,</span><span class="s2">&quot;Black&quot;</span><span class="p">,</span><span class="n">font</span><span class="o">=</span><span class="n">fnt</span><span class="p">)</span>
+            
+            <span class="c1"># Save the revised image</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">images_dir</span> <span class="o">+</span> <span class="n">raw_image</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;png&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_with_text.png&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Add the revised image to the list for imageio to work with</span>
+            <span class="n">images</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">imageio</span><span class="o">.</span><span class="n">imread</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">images_dir</span> <span class="o">+</span> <span class="n">raw_image</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;png&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;_with_text.png&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Set the duration of each frame</span>
+        <span class="n">kargs</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;duration&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">}</span>
+        
+        <span class="c1"># Create the gif</span>
+        <span class="n">imageio</span><span class="o">.</span><span class="n">mimsave</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">images_dir</span> <span class="o">+</span> <span class="s2">&quot;Iteration_history_&quot;</span> <span class="o">+</span> <span class="n">title_string</span> <span class="o">+</span> <span class="s2">&quot;.gif&quot;</span><span class="p">,</span><span class="n">images</span><span class="p">,</span><span class="s2">&quot;GIF&quot;</span><span class="p">,</span><span class="o">**</span><span class="n">kargs</span><span class="p">)</span>
+
+        <span class="c1"># Clean up the working directory</span>
+        <span class="n">raw_images</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">images_dir</span><span class="p">)</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;_with_text.png&quot;</span><span class="p">)]</span>
+        
+        <span class="c1"># Loop through and delete all of the revised images</span>
+        <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">raw_images</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">images_dir</span> <span class="o">+</span> <span class="n">img</span><span class="p">)</span></div>
+                             
+<div class="viewcode-block" id="PEATSAdelivery.Custom"><a class="viewcode-back" href="../PEATSA/PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.Custom">[docs]</a>    <span class="k">def</span> <span class="nf">Custom</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">sys</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">emtg_root_directory</span> <span class="o">+</span> <span class="s2">&quot;/PyEMTG&quot;</span><span class="p">)</span>
+        <span class="kn">import</span> <span class="nn">MissionOptions</span>
+        <span class="kn">import</span> <span class="nn">logging</span>
+        <span class="kn">import</span> <span class="nn">importlib</span>
+                
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Calling custom PEATSA post processing script&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Import the custom script</span>
+        <span class="n">custom_module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">custom_post_processing_script</span><span class="p">)</span>
+        
+        <span class="c1"># Calling the custom script</span>
+        <span class="n">custom_module</span><span class="o">.</span><span class="n">PEATSAPostProcess</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PEATSAboxes</span><span class="p">)</span>
+        
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Done running custom post processing script.&quot;</span><span class="p">)</span></div>
+
+        <span class="c1"># # Create an iter for the colors, based on how many lines are to be drawn.</span>
+        <span class="c1"># # These colors were selected from here: http://colorbrewer2.org/</span>
+        <span class="c1"># if PEATSAorder.plot_nx[idx] == 2:</span>
+        <span class="c1">#     colorIter = itertools.cycle([&quot;#d8b365&quot;,&quot;#5ab4ac&quot;])</span>
+        <span class="c1"># elif PEATSAorder.plot_nx[idx] == 3:</span>
+        <span class="c1">#     colorIter = itertools.cycle([&quot;#d8b365&quot;,&quot;#000000&quot;,&quot;#5ab4ac&quot;])</span>
+        <span class="c1"># elif PEATSAorder.plot_nx[idx] == 4:</span>
+        <span class="c1">#     colorIter = itertools.cycle([&quot;#a6611a&quot;,&quot;#dfc27d&quot;,&quot;#80cdc1&quot;,&quot;#018571&quot;])</span>
+        <span class="c1"># elif PEATSAorder.plot_nx[idx] == 5:</span>
+        <span class="c1">#     colorIter = itertools.cycle([&quot;#a6611a&quot;,&quot;#dfc27d&quot;,&quot;#000000&quot;,&quot;#80cdc1&quot;,&quot;#018571&quot;])</span>
+        <span class="c1"># elif PEATSAorder.plot_nx[idx] == 6:</span>
+        <span class="c1">#     colorIter = itertools.cycle([&quot;#8c510a&quot;,&quot;#d8b365&quot;,&quot;#f6e8c3&quot;,&quot;#c7eae5&quot;,&quot;#5ab4ac&quot;,&quot;#01665e&quot;])</span>
+        <span class="c1"># elif PEATSAorder.plot_nx[idx] == 7:</span>
+        <span class="c1">#     colorIter = itertools.cycle([&quot;#8c510a&quot;,&quot;#d8b365&quot;,&quot;#f6e8c3&quot;,&quot;#000000&quot;,&quot;#c7eae5&quot;,&quot;#5ab4ac&quot;,&quot;#01665e&quot;])</span>
+        <span class="c1"># elif PEATSAorder.plot_nx[idx] == 8:</span>
+        <span class="c1">#     colorIter = itertools.cycle([&quot;#8c510a&quot;,&quot;#bf812d&quot;,&quot;#dfc27d&quot;,&quot;#f6e8c3&quot;,&quot;#c7eae5&quot;,&quot;#80cdc1&quot;,&quot;#35978f&quot;,&quot;#01665e&quot;])</span>
+        <span class="c1"># elif PEATSAorder.plot_nx[idx] == 9:</span>
+        <span class="c1">#     colorIter = itertools.cycle([&quot;#8c510a&quot;,&quot;#bf812d&quot;,&quot;#dfc27d&quot;,&quot;#f6e8c3&quot;,&quot;#000000&quot;,&quot;#c7eae5&quot;,&quot;#80cdc1&quot;,&quot;#35978f&quot;,&quot;#01665e&quot;])</span>
+        <span class="c1"># elif PEATSAorder.plot_nx[idx] == 10:</span>
+        <span class="c1">#     colorIter = itertools.cycle([&quot;#543005&quot;,&quot;#8c510a&quot;,&quot;#bf812d&quot;,&quot;#dfc27d&quot;,&quot;#f6e8c3&quot;,&quot;#c7eae5&quot;,&quot;#80cdc1&quot;,&quot;#35978f&quot;,&quot;#01665e&quot;,&quot;#003c30&quot;])</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     colorIter = itertools.cycle([&quot;#543005&quot;,&quot;#8c510a&quot;,&quot;#bf812d&quot;,&quot;#dfc27d&quot;,&quot;#f6e8c3&quot;,&quot;#000000&quot;,&quot;#c7eae5&quot;,&quot;#80cdc1&quot;,&quot;#35978f&quot;,&quot;#01665e&quot;,&quot;#003c30&quot;])</span>
+            
+            <span class="c1"># # Create a locator for years, months and every three months</span>
+            <span class="c1"># years = mdates.YearLocator()   # every year</span>
+            <span class="c1"># months = mdates.MonthLocator()  # every month</span>
+            <span class="c1"># threemonths = mdates.MonthLocator(range(1,13),bymonthday=1,interval=3)</span>
+            <span class="c1"># monthsFmt = mdates.DateFormatter(&quot;%b &#39;%y&quot;)</span>
+       
+            <span class="c1"># # Sort and filter the results based on this plot&#39;s fingerprint</span>
+
+<div class="viewcode-block" id="PEATSAdelivery.CopyBestPeatsas"><a class="viewcode-back" href="../PEATSA/PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.CopyBestPeatsas">[docs]</a>    <span class="k">def</span> <span class="nf">CopyBestPeatsas</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">working_directory</span><span class="p">,</span><span class="n">destination_dir</span><span class="p">,</span><span class="n">iteration</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">shutil</span>
+        <span class="kn">import</span> <span class="nn">os</span>
+        
+        <span class="k">if</span> <span class="n">iteration</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">csvfiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;/docs&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.csv&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Iteration&quot;</span><span class="p">)]</span>
+            <span class="k">for</span> <span class="n">csvfile</span> <span class="ow">in</span> <span class="n">csvfiles</span><span class="p">:</span>
+                <span class="n">itno</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">csvfile</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;Iteration&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;csv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">))</span>
+                <span class="k">if</span> <span class="n">itno</span> <span class="o">&gt;</span> <span class="n">iteration</span><span class="p">:</span>
+                    <span class="n">iteration</span> <span class="o">=</span> <span class="n">itno</span>
+        
+        <span class="c1"># Open the latest iteration file</span>
+        <span class="n">csv_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;/docs/Iteration&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">iteration</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">,</span><span class="s1">&#39;r&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Loop through all lines in the file</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">csv_handle</span><span class="o">.</span><span class="n">readlines</span><span class="p">()[</span><span class="mi">1</span><span class="p">:]:</span>
+    
+            <span class="c1"># Split the line by commas</span>
+            <span class="n">linesplit</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+    
+            <span class="c1"># Make sure this isnt a fake failure file</span>
+            <span class="k">if</span> <span class="s2">&quot;FAILURE&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">1</span><span class="p">]:</span>
+    
+                <span class="c1"># Copy the file to the destination</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">linesplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="n">destination_dir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                <span class="c1"># Copy the file to the destination</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">linesplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;opt&quot;</span><span class="p">,</span><span class="n">destination_dir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;opt&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">linesplit</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.emtgopt&quot;</span><span class="p">,</span><span class="n">destination_dir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">linesplit</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">+</span> <span class="s2">&quot;.emtgopt&quot;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PEATSAdelivery.moveFiles"><a class="viewcode-back" href="../PEATSA/PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.moveFiles">[docs]</a>    <span class="k">def</span> <span class="nf">moveFiles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">PEATSAorder</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">os</span>
+        
+        <span class="n">results_base</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">move_results</span> <span class="o">+</span> <span class="s2">&quot;/latest_&quot;</span> <span class="o">+</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">run_name</span> <span class="o">+</span> <span class="s2">&quot;_results&quot;</span>
+        
+        <span class="c1"># Check if the destination already has a csv file</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">):</span>
+            <span class="c1"># It does, remove it</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">)</span>
+        <span class="c1"># Copy the latest result file to the destination</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;/docs/Iteration&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">,</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Check if the defination has a history csv file</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_history.csv&quot;</span><span class="p">):</span>
+            <span class="c1"># It does, remove it</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_history.csv&quot;</span><span class="p">)</span>
+        <span class="c1"># Copy the latest result history file to the destination</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;/docs/PEATSAhistory.csv&quot;</span><span class="p">,</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_history.csv&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Handle gif files</span>
+        <span class="n">giffiles</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;/images&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.gif&quot;</span><span class="p">)]</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">giffiles</span><span class="p">):</span>
+            <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">giffile</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">giffiles</span><span class="p">):</span>
+                <span class="c1"># Check if the destination already has this gif file</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_img&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.gif&quot;</span><span class="p">):</span>
+                    <span class="c1"># It does, remove it</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_img&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.gif&quot;</span><span class="p">)</span>
+                <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;/images/&quot;</span> <span class="o">+</span> <span class="n">giffile</span><span class="p">,</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_img&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.gif&quot;</span><span class="p">)</span>
+      
+        <span class="c1"># Handle images</span>
+        <span class="n">img_files</span> <span class="o">=</span> <span class="p">[</span><span class="n">file</span> <span class="k">for</span> <span class="n">file</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;/images&quot;</span><span class="p">)</span> <span class="k">if</span> <span class="n">file</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;.png&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">file</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Iteration&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span><span class="p">))]</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span><span class="n">img</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">img_files</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_img&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.png&quot;</span><span class="p">):</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_img&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.png&quot;</span><span class="p">)</span>
+            <span class="n">shutil</span><span class="o">.</span><span class="n">copyfile</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;/images/&quot;</span> <span class="o">+</span> <span class="n">img</span><span class="p">,</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_img&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">idx</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.png&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Get the most recent results</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_bestResults.tar.gz&quot;</span><span class="p">):</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_bestResults.tar.gz&quot;</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_bestResults&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CopyBestPeatsas</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span><span class="p">,</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_bestResults&quot;</span><span class="p">,</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;tar czf &quot;</span> <span class="o">+</span> <span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_bestResults.tar.gz &quot;</span> <span class="o">+</span> <span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_bestResults&quot;</span><span class="p">)</span>
+        <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;_bestResults&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Write out a file to update when the iteration results were written</span>
+        <span class="n">handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">results_base</span> <span class="o">+</span> <span class="s2">&quot;.txt&quot;</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;Iteration &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">latest_iteration</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot; written at &quot;</span> <span class="o">+</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">fromtimestamp</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">())</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;%Y-%m-</span><span class="si">%d</span><span class="s1"> %H:%M:%S&#39;</span><span class="p">))</span>
+        <span class="n">handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

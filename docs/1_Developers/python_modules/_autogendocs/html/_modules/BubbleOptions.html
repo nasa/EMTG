@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BubbleOptions &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for BubbleOptions</h1><div class="highlight"><pre>
+<span></span><span class="c1">#class file for BubbleOptions class</span>
+<span class="c1">#this class contains settings for bubble search</span>
+<span class="c1">#bubble search is used to find flybys of opportunity from an existing trajectory</span>
+
+<div class="viewcode-block" id="BubbleOptions"><a class="viewcode-back" href="../PyEMTG/BubbleOptions.html#BubbleOptions.BubbleOptions">[docs]</a><span class="k">class</span> <span class="nc">BubbleOptions</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">smallbodyfile</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">smallbodyfile</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">smallbodyfile</span> <span class="o">=</span> <span class="n">smallbodyfile</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">smallbodyfile</span> <span class="o">=</span> <span class="s2">&quot;blah&quot;</span>
+
+<div class="viewcode-block" id="BubbleOptions.initialize"><a class="viewcode-back" href="../PyEMTG/BubbleOptions.html#BubbleOptions.BubbleOptions.initialize">[docs]</a>    <span class="k">def</span> <span class="nf">initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">smallbodyfile</span> <span class="o">=</span> <span class="s1">&#39;./MainBeltBright.SmallBody&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LU</span> <span class="o">=</span> <span class="mf">149597870.691</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">=</span> <span class="mf">1.32712440018e+11</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">RelativePositionFilterMagnitude</span> <span class="o">=</span> <span class="mf">0.1</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">LU</span> <span class="c1"># km</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">RelativeVelocityFilterMagnitude</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="c1"># km/s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">MaximumMagnitude</span> <span class="o">=</span> <span class="mf">14.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ifSpice</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">spiceFiles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;D:/Projects/Lucy/Universe/ephemeris_files/AllTrojans.bsp&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;D:/Projects/Lucy/Universe/ephemeris_files/2436157.bsp&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;D:/Projects/Lucy/Universe/ephemeris_files/2233683.bsp&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;D:/Projects/Lucy/Universe/AllMainBelt/MainBeltBright.bsp&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;D:/Projects/Lucy/Universe/ephemeris_files/naif0011.tls&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;D:/Projects/Lucy/Universe/ephemeris_files/pck00010.tpc&#39;</span><span class="p">,</span>
+                           <span class="s1">&#39;D:/Projects/Lucy/Universe/ephemeris_files/de430.bsp&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SPICE_IDs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SPICEID_file</span> <span class="o">=</span> <span class="s1">&#39;D:/Projects/Lucy/Universe/AllTrojans.dat&#39;</span><span class="p">,</span> <span class="s1">&#39;D:/Projects/Lucy/Universe/AllMainBelt/MainBeltBrighter10.dat&#39;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">CheckForEncountersAfterMissionEnd</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PostMissionCheckDuration</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PostMissionCheckSteps</span> <span class="o">=</span> <span class="mi">10</span></div>
+
+<div class="viewcode-block" id="BubbleOptions.update_mission_panel"><a class="viewcode-back" href="../PyEMTG/BubbleOptions.html#BubbleOptions.BubbleOptions.update_mission_panel">[docs]</a>    <span class="k">def</span> <span class="nf">update_mission_panel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">missionpanel</span><span class="p">):</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">txtBubbleSearchFile</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">smallbodyfile</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">txtLU</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">LU</span><span class="p">))</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">txtmu</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mu</span><span class="p">))</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">txtRelativePositionFilterMagnitude</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">RelativePositionFilterMagnitude</span><span class="p">))</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">txtRelativeVelocityFilterMagnitude</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">RelativeVelocityFilterMagnitude</span><span class="p">))</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">txtMaximumMagnitude</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">MaximumMagnitude</span><span class="p">))</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkCheckForEncountersAfterMissionEnd</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">CheckForEncountersAfterMissionEnd</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">txtPostMissionCheckDuration</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PostMissionCheckDuration</span><span class="p">))</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">txtPostMissionCheckSteps</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PostMissionCheckSteps</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">CheckForEncountersAfterMissionEnd</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">missionpanel</span><span class="o">.</span><span class="n">lblPostMissionCheckDuration</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">missionpanel</span><span class="o">.</span><span class="n">txtPostMissionCheckDuration</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">missionpanel</span><span class="o">.</span><span class="n">lblPostMissionCheckSteps</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">missionpanel</span><span class="o">.</span><span class="n">txtPostMissionCheckSteps</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">missionpanel</span><span class="o">.</span><span class="n">lblPostMissionCheckDuration</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">missionpanel</span><span class="o">.</span><span class="n">txtPostMissionCheckDuration</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">missionpanel</span><span class="o">.</span><span class="n">lblPostMissionCheckSteps</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">missionpanel</span><span class="o">.</span><span class="n">txtPostMissionCheckSteps</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">Layout</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

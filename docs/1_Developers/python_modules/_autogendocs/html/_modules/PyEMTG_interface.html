@@ -1,0 +1,539 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PyEMTG_interface &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for PyEMTG_interface</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">MissionOptions</span> <span class="k">as</span> <span class="nn">MO</span>
+<span class="kn">import</span> <span class="nn">Mission</span>
+<span class="kn">import</span> <span class="nn">Universe</span>
+<span class="kn">import</span> <span class="nn">BodyPicker</span>
+<span class="kn">import</span> <span class="nn">Archive</span>
+<span class="kn">import</span> <span class="nn">ArchivePanel</span>
+<span class="kn">import</span> <span class="nn">NSGAIIpopulation</span>
+<span class="kn">import</span> <span class="nn">NSGAIIpanel</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">OptionsNotebook</span>
+<span class="kn">import</span> <span class="nn">MissionPanel</span>
+<span class="kn">import</span> <span class="nn">webbrowser</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">subprocess</span>
+<span class="kn">import</span> <span class="nn">platform</span>
+<span class="kn">import</span> <span class="nn">wx</span>
+<span class="kn">import</span> <span class="nn">wx.adv</span>
+<span class="kn">import</span> <span class="nn">copy</span>
+
+<div class="viewcode-block" id="PyEMTG_interface"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface">[docs]</a><span class="k">class</span> <span class="nc">PyEMTG_interface</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">Frame</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">PyEMTG_interface</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">homedir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">emtgpath</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dirname</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">de_file</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">leapseconds_file</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_universe_path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">read_PyEMTG_options_file</span><span class="p">()</span>
+        
+        <span class="n">icon</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Icon</span><span class="p">(</span><span class="s2">&quot;clemonaut.ico&quot;</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">BITMAP_TYPE_ICO</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetIcon</span><span class="p">(</span><span class="n">icon</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">initialize_GUI</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Maximize</span><span class="p">()</span>
+
+<div class="viewcode-block" id="PyEMTG_interface.read_PyEMTG_options_file"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface.read_PyEMTG_options_file">[docs]</a>    <span class="k">def</span> <span class="nf">read_PyEMTG_options_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">input_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">homedir</span><span class="p">,</span> <span class="s2">&quot;PyEMTG.options&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_thruster_file</span> <span class="o">=</span> <span class="s2">&quot; &quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">default_small_bodies_file</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">input_file_name</span><span class="p">):</span>
+            <span class="n">inputfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">input_file_name</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unable to open&quot;</span><span class="p">,</span> <span class="n">input_file_name</span><span class="p">,</span> <span class="s2">&quot;EMTG Error&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">inputfile</span><span class="p">:</span>
+            <span class="n">linecell</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;EMTG_path&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">emtgpath</span> <span class="o">=</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linecell</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">emtgpath</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">term</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">emtgpath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">emtgpath</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;default_universe_path&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_universe_path</span> <span class="o">=</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linecell</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">default_universe_path</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">term</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_universe_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_universe_path</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;de_file&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">de_file</span> <span class="o">=</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linecell</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">de_file</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">term</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">de_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">de_file</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>                
+
+            <span class="k">elif</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;leapseconds_file&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">leapseconds_file</span> <span class="o">=</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linecell</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">leapseconds_file</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">term</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">leapseconds_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">leapseconds_file</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;default_small_bodies_file&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_small_bodies_file</span> <span class="o">=</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linecell</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">default_small_bodies_file</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">term</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_small_bodies_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_small_bodies_file</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;default_HardwarePath&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_HardwarePath</span> <span class="o">=</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linecell</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">default_HardwarePath</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">term</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_HardwarePath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_HardwarePath</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;default_ThrottleTableFile&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_ThrottleTableFile</span> <span class="o">=</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linecell</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">default_ThrottleTableFile</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">term</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_ThrottleTableFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_ThrottleTableFile</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                            
+            <span class="k">elif</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;default_LaunchVehicleLibraryFile&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_LaunchVehicleLibraryFile</span> <span class="o">=</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linecell</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">default_LaunchVehicleLibraryFile</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">term</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_LaunchVehicleLibraryFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_LaunchVehicleLibraryFile</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                            
+            <span class="k">elif</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;default_PowerSystemsLibraryFile&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_PowerSystemsLibraryFile</span> <span class="o">=</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linecell</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">default_PowerSystemsLibraryFile</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">term</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_PowerSystemsLibraryFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_PowerSystemsLibraryFile</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                            
+            <span class="k">elif</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;default_PropulsionSystemsLibraryFile&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_PropulsionSystemsLibraryFile</span> <span class="o">=</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linecell</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">default_PropulsionSystemsLibraryFile</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">term</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_PropulsionSystemsLibraryFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_PropulsionSystemsLibraryFile</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                            
+            <span class="k">elif</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;default_SpacecraftOptionsFile&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_SpacecraftOptionsFile</span> <span class="o">=</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">linecell</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">term</span> <span class="ow">in</span> <span class="n">linecell</span><span class="p">[</span><span class="mi">2</span><span class="p">:]:</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">default_SpacecraftOptionsFile</span> <span class="o">+=</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">term</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">default_SpacecraftOptionsFile</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_SpacecraftOptionsFile</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="n">inputfile</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="PyEMTG_interface.reset_file_menu"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface.reset_file_menu">[docs]</a>    <span class="k">def</span> <span class="nf">reset_file_menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">MenuBar</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Menu</span><span class="p">()</span>
+        
+        <span class="n">newMenu</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Menu</span><span class="p">()</span>
+        <span class="n">fnewmission</span> <span class="o">=</span> <span class="n">newMenu</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_NEW</span><span class="p">,</span> <span class="s1">&#39;&amp;Mission</span><span class="se">\t</span><span class="s1">Ctrl+m&#39;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_ANY</span><span class="p">,</span> <span class="s1">&#39;&amp;New&#39;</span><span class="p">,</span> <span class="n">newMenu</span><span class="p">)</span>
+        <span class="n">fopen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_OPEN</span><span class="p">,</span> <span class="s1">&#39;&amp;Open</span><span class="se">\t</span><span class="s1">Ctrl+o&#39;</span><span class="p">)</span>
+        <span class="n">fsave</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_SAVE</span><span class="p">,</span> <span class="s1">&#39;&amp;Save</span><span class="se">\t</span><span class="s1">Ctrl+s&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">AppendSeparator</span><span class="p">()</span>
+        <span class="n">frun</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_ANY</span><span class="p">,</span> <span class="s1">&#39;&amp;Run</span><span class="se">\t</span><span class="s1">Ctrl+r&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">AppendSeparator</span><span class="p">()</span>
+        <span class="n">fedit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_EDIT</span><span class="p">,</span> <span class="s1">&#39;Open file in &amp;Editor</span><span class="se">\t</span><span class="s1">Ctrl+e&#39;</span><span class="p">)</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">AppendSeparator</span><span class="p">()</span>
+        <span class="n">fexit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_EXIT</span><span class="p">,</span> <span class="s1">&#39;E&amp;xit</span><span class="se">\t</span><span class="s1">Ctrl+q&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="o">.</span><span class="n">Append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="p">,</span> <span class="s1">&#39;&amp;File&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetMenuBar</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">menubar</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_MENU</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnNewMission</span><span class="p">,</span> <span class="n">fnewmission</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_NEW</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_MENU</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnOpen</span><span class="p">,</span> <span class="n">fopen</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_OPEN</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_MENU</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnSave</span><span class="p">,</span> <span class="n">fsave</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_SAVE</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_MENU</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnRun</span><span class="p">,</span> <span class="n">frun</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_ANY</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_MENU</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnEdit</span><span class="p">,</span> <span class="n">fedit</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_EDIT</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_MENU</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnExit</span><span class="p">,</span> <span class="n">fexit</span><span class="p">,</span> <span class="nb">id</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_EXIT</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_CLOSE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnExit</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_SIZE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnResize</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_MAXIMIZE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">OnResize</span><span class="p">)</span></div>
+                        
+<div class="viewcode-block" id="PyEMTG_interface.initialize_GUI"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface.initialize_GUI">[docs]</a>    <span class="k">def</span> <span class="nf">initialize_GUI</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="kn">import</span> <span class="nn">random</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_file_menu</span><span class="p">()</span>
+        
+        <span class="c1">#Disable various menu options at program start</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_SAVE</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_EDIT</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+        
+        <span class="c1">#Otherwise load welcome message</span>
+        <span class="n">messages</span> <span class="o">=</span> <span class="s2">&quot;Welcome to EMTG! </span><span class="se">\n\n</span><span class="s2">Open the default mission to get started, from File -&gt; New -&gt; Mission </span><span class="se">\n\n</span><span class="s2">Or open an existing EMTG options file (.emtgopt) or EMTG output file (.emtg).&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblWelcome</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">messages</span><span class="p">,</span> <span class="n">style</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALIGN_CENTER</span><span class="p">)</span> <span class="c1">#(self, -1, random.choice(messages), style = wx.ALIGN_CENTER)</span>
+        <span class="n">font</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetFont</span><span class="p">()</span>
+        <span class="n">font</span><span class="o">.</span><span class="n">SetPointSize</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+        <span class="n">font</span><span class="o">.</span><span class="n">SetWeight</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">FONTWEIGHT_BOLD</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lblWelcome</span><span class="o">.</span><span class="n">SetFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+
+        <span class="n">sizer</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">)</span>
+        <span class="n">sizer</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lblWelcome</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">flag</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">CENTER</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetSizer</span><span class="p">(</span><span class="n">sizer</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetTitle</span><span class="p">(</span><span class="s2">&quot;EMTG Python Interface&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Show</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="PyEMTG_interface.OnResize"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface.OnResize">[docs]</a>    <span class="k">def</span> <span class="nf">OnResize</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Layout</span><span class="p">()</span>
+        <span class="n">MySize</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">GetClientSize</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;options&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optionsnotebook</span><span class="o">.</span><span class="n">SetSize</span><span class="p">((</span><span class="n">MySize</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">MySize</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">optionsnotebook</span><span class="o">.</span><span class="n">Layout</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;mission&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">missionpanel</span><span class="o">.</span><span class="n">SetSize</span><span class="p">((</span><span class="n">MySize</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">MySize</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">missionpanel</span><span class="o">.</span><span class="n">Layout</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;archive&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">archivepanel</span><span class="o">.</span><span class="n">SetSize</span><span class="p">((</span><span class="n">MySize</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">MySize</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">archivepanel</span><span class="o">.</span><span class="n">Layout</span><span class="p">()</span>
+
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;NSGAII&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">NSGAIIpanel</span><span class="o">.</span><span class="n">SetSize</span><span class="p">((</span><span class="n">MySize</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">MySize</span><span class="o">.</span><span class="n">y</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">NSGAIIpanel</span><span class="o">.</span><span class="n">Layout</span><span class="p">()</span></div>
+            
+<div class="viewcode-block" id="PyEMTG_interface.OnNewMission"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface.OnNewMission">[docs]</a>    <span class="k">def</span> <span class="nf">OnNewMission</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="c1">#If the GUI has not yet loaded anything then create a new mission. Otherwise as for permission first.</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dirname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">homedir</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;default.emtgopt&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span> <span class="o">=</span> <span class="n">MO</span><span class="o">.</span><span class="n">MissionOptions</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span>
+            
+            <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;options&quot;</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_SAVE</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_EDIT</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lblWelcome</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">InitializeMissionOptionsEditor</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dlg</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">MessageDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+                    <span class="s2">&quot;Do you really want to create a new mission? This will clear your current GUI settings.&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;Confirm New&quot;</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">OK</span><span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">CANCEL</span><span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">ICON_QUESTION</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">dlg</span><span class="o">.</span><span class="n">ShowModal</span><span class="p">()</span>
+            <span class="n">dlg</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_OK</span><span class="p">:</span>
+                <span class="c1">#destroy previous options memory block if you have one</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;options&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">optionsnotebook</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;mission&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mission</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">missionpanel</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;archive&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">archive</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">archivepanel</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+
+                <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;NSGAII&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">NSGAII</span> <span class="o">=</span> <span class="p">[]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">NSGAIIpanel</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+
+                <span class="c1">#attempt to open a new options file</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">dirname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">homedir</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="s2">&quot;default.emtgopt&quot;</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span> <span class="o">=</span> <span class="n">MO</span><span class="o">.</span><span class="n">MissionOptions</span><span class="p">()</span>
+                
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">success</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;options&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_SAVE</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_EDIT</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">lblWelcome</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">InitializeMissionOptionsEditor</span><span class="p">()</span></div>
+        
+<div class="viewcode-block" id="PyEMTG_interface.OnOpen"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface.OnOpen">[docs]</a>    <span class="k">def</span> <span class="nf">OnOpen</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">OpenFile</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="PyEMTG_interface.OnSave"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface.OnSave">[docs]</a>    <span class="k">def</span> <span class="nf">OnSave</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetFocus</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SaveFile</span><span class="p">(</span><span class="n">e</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="PyEMTG_interface.OnRun"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface.OnRun">[docs]</a>    <span class="k">def</span> <span class="nf">OnRun</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetFocus</span><span class="p">()</span>
+        <span class="n">saved</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SaveFile</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">saved</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">platform</span><span class="o">.</span><span class="n">system</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;Windows&#39;</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s1">&#39;start &#39;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">emtgpath</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">pyemtg_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span> <span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                <span class="n">emtg_dir</span> <span class="o">=</span> <span class="n">pyemtg_dir</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/PyEMTG&#39;</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="n">os</span><span class="o">.</span><span class="n">sep</span><span class="p">),</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+                <span class="n">emtg_exec</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">emtg_dir</span><span class="p">,</span><span class="s1">&#39;emtg&#39;</span><span class="p">)</span>
+                <span class="n">full_file_name</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">)</span>
+                <span class="n">str_cmd</span> <span class="o">=</span> <span class="n">emtg_exec</span> <span class="o">+</span> <span class="s1">&#39; &#39;</span> <span class="o">+</span> <span class="n">full_file_name</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">str_cmd</span><span class="p">)</span>
+                <span class="n">proc</span> <span class="o">=</span> <span class="n">subprocess</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">str_cmd</span><span class="p">,</span><span class="n">shell</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">proc</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;call failed&quot;</span><span class="p">)</span></div>
+        
+<div class="viewcode-block" id="PyEMTG_interface.OnEdit"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface.OnEdit">[docs]</a>    <span class="k">def</span> <span class="nf">OnEdit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="n">webbrowser</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span></div>
+        
+<div class="viewcode-block" id="PyEMTG_interface.OnExit"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface.OnExit">[docs]</a>    <span class="k">def</span> <span class="nf">OnExit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetFocus</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;options&quot;</span><span class="p">:</span>
+            <span class="n">dlg</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">MessageDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span>
+            <span class="s2">&quot;Save changes?&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;Confirm Exit&quot;</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">YES</span><span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">NO</span><span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">CANCEL</span><span class="o">|</span><span class="n">wx</span><span class="o">.</span><span class="n">ICON_QUESTION</span><span class="p">)</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">dlg</span><span class="o">.</span><span class="n">ShowModal</span><span class="p">()</span>
+            <span class="n">dlg</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">result</span> <span class="o">==</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_NO</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+            <span class="k">elif</span> <span class="n">result</span> <span class="o">==</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_YES</span><span class="p">:</span>
+                <span class="n">saved</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">SaveFile</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">saved</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+        
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span></div>
+        
+    
+<div class="viewcode-block" id="PyEMTG_interface.OpenFile"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface.OpenFile">[docs]</a>    <span class="k">def</span> <span class="nf">OpenFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="n">dlg</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">FileDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s2">&quot;Open an EMTG file&quot;</span><span class="p">,</span> <span class="n">defaultDir</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">,</span> <span class="n">defaultFile</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+                            <span class="n">wildcard</span><span class="o">=</span><span class="s2">&quot;*.emtgopt;*.emtg;*.NSGAII&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">FD_OPEN</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dlg</span><span class="o">.</span><span class="n">ShowModal</span><span class="p">()</span> <span class="o">==</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_OK</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">dlg</span><span class="o">.</span><span class="n">GetFilename</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dirname</span> <span class="o">=</span> <span class="n">dlg</span><span class="o">.</span><span class="n">GetDirectory</span><span class="p">()</span>
+
+            <span class="n">fileparts</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
+        
+
+            <span class="c1">#before we actually open the new file, we need to clear memory associated with whatever file we currently have open</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;options&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">optionsnotebook</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+                
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;mission&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mission</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">missionpanel</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;archive&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">archive</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">archivepanel</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;NSGAII&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">NSGAII</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">NSGAIIpanel</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+
+            <span class="c1">#next open the new file</span>
+            <span class="k">if</span> <span class="n">fileparts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;emtgopt&quot;</span><span class="p">:</span>
+                
+
+                <span class="kn">import</span> <span class="nn">sys</span>
+                <span class="kn">import</span> <span class="nn">inspect</span>
+                <span class="n">currentdir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">getfile</span><span class="p">(</span><span class="n">inspect</span><span class="o">.</span><span class="n">currentframe</span><span class="p">())))</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">currentdir</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="s1">&#39;Converters&#39;</span><span class="p">)</span>
+                <span class="kn">from</span> <span class="nn">Convert_emtgopt_v1_to_v2</span> <span class="kn">import</span> <span class="n">Convert_emtgopt_v1_to_v2</span>
+
+                <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span> <span class="o">=</span> <span class="n">Convert_emtgopt_v1_to_v2</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span>
+
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">success</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;options&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">lblWelcome</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">InitializeMissionOptionsEditor</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_SAVE</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_EDIT</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">fileparts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;emtg&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mission</span> <span class="o">=</span> <span class="n">Mission</span><span class="o">.</span><span class="n">Mission</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mission</span><span class="o">.</span><span class="n">success</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;mission&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">lblWelcome</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">missionpanel</span> <span class="o">=</span> <span class="n">MissionPanel</span><span class="o">.</span><span class="n">MissionPanel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">mission</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">missionpanel</span><span class="o">.</span><span class="n">SetSize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GetSize</span><span class="p">())</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_EDIT</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">fileparts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;emtg_archive&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">archive</span> <span class="o">=</span> <span class="n">Archive</span><span class="o">.</span><span class="n">Archive</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">archive</span><span class="o">.</span><span class="n">success</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;archive&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">lblWelcome</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">InitializeArchiveProcessor</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_EDIT</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_SAVE</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">fileparts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;NSGAII&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">NSGAII</span> <span class="o">=</span> <span class="n">NSGAIIpopulation</span><span class="o">.</span><span class="n">NSGAII_outerloop_population</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">))</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">NSGAII</span><span class="o">.</span><span class="n">success</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="s2">&quot;NSGAII&quot;</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">lblWelcome</span><span class="o">.</span><span class="n">Show</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">InitializeNSGAIIPanel</span><span class="p">()</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_EDIT</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">fileMenu</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">ID_SAVE</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">errordlg</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">MessageDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Unrecognized file type.&quot;</span><span class="p">,</span> <span class="s2">&quot;EMTG Error&quot;</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">OK</span><span class="p">)</span>
+                <span class="n">errordlg</span><span class="o">.</span><span class="n">ShowModal</span><span class="p">()</span>
+                <span class="n">errordlg</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+
+        <span class="n">dlg</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span></div>
+
+
+    
+<div class="viewcode-block" id="PyEMTG_interface.SaveFile"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface.SaveFile">[docs]</a>    <span class="k">def</span> <span class="nf">SaveFile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">e</span><span class="p">):</span>
+        <span class="n">extension</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;options&quot;</span><span class="p">:</span>
+            <span class="n">dialogtitle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">mission_name</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="s2">&quot;.emtgopt&quot;</span>
+            <span class="n">extension</span> <span class="o">=</span> <span class="s2">&quot;*&quot;</span> <span class="o">+</span> <span class="n">ext</span>
+
+        <span class="n">dlg</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">FileDialog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="s2">&quot;Save&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">,</span> <span class="n">dialogtitle</span> <span class="o">+</span> <span class="n">ext</span><span class="p">,</span> <span class="n">extension</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">FD_SAVE</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">FD_OVERWRITE_PROMPT</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dlg</span><span class="o">.</span><span class="n">ShowModal</span><span class="p">()</span> <span class="o">==</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_OK</span><span class="p">:</span>
+            <span class="n">saved</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">dlg</span><span class="o">.</span><span class="n">GetFilename</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dirname</span> <span class="o">=</span> <span class="n">dlg</span><span class="o">.</span><span class="n">GetDirectory</span><span class="p">()</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;options&quot;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">write_options_file</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">filename</span><span class="p">),</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="o">.</span><span class="n">print_only_non_default_options</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">saved</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="n">dlg</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">saved</span></div>
+
+<div class="viewcode-block" id="PyEMTG_interface.InitializeArchiveProcessor"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface.InitializeArchiveProcessor">[docs]</a>    <span class="k">def</span> <span class="nf">InitializeArchiveProcessor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#create and size an Archive panel object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">archivepanel</span> <span class="o">=</span> <span class="n">ArchivePanel</span><span class="o">.</span><span class="n">ArchivePanel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">archive</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">archivepanel</span><span class="o">.</span><span class="n">SetSize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GetSize</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="PyEMTG_interface.InitializeNSGAIIPanel"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface.InitializeNSGAIIPanel">[docs]</a>    <span class="k">def</span> <span class="nf">InitializeNSGAIIPanel</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">NSGAIIpanel</span> <span class="o">=</span> <span class="n">NSGAIIpanel</span><span class="o">.</span><span class="n">NSGAIIpanel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">NSGAII</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">NSGAIIpanel</span><span class="o">.</span><span class="n">SetSize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GetSize</span><span class="p">())</span></div>
+        
+<div class="viewcode-block" id="PyEMTG_interface.InitializeMissionOptionsEditor"><a class="viewcode-back" href="../PyEMTG/PyEMTG_interface.html#PyEMTG_interface.PyEMTG_interface.InitializeMissionOptionsEditor">[docs]</a>    <span class="k">def</span> <span class="nf">InitializeMissionOptionsEditor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1">#create an options notebook object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optionsnotebook</span> <span class="o">=</span> <span class="n">OptionsNotebook</span><span class="o">.</span><span class="n">OptionsBook</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">missionoptions</span><span class="p">)</span>
+        
+        <span class="c1">#update the latest information from the missionoptions object into the GUI</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optionsnotebook</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">optionsnotebook</span><span class="o">.</span><span class="n">SetSize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">GetClientSize</span><span class="p">())</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

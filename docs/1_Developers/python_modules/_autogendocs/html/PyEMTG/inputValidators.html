@@ -1,0 +1,723 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>inputValidators module &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="kepler module" href="kepler.html" />
+    <link rel="prev" title="clusterize module" href="clusterize.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-inputValidators">
+<span id="inputvalidators-module"></span><h1>inputValidators module<a class="headerlink" href="#module-inputValidators" title="Permalink to this heading">¶</a></h1>
+<section id="inputvalidators-py">
+<h2>inputValidators.py<a class="headerlink" href="#inputvalidators-py" title="Permalink to this heading">¶</a></h2>
+<p>This file contains various classes and functions to support input validation for wx.TextCtrl inputs. It includes
+NumberRangeValidator, FilePathValidator, ListFormatValidator, and AlphaNumericFileValidator.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="inputValidators.AlphaNumericFileValidator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">inputValidators.</span></span><span class="sig-name descname"><span class="pre">AlphaNumericFileValidator</span></span><a class="reference internal" href="../_modules/inputValidators.html#AlphaNumericFileValidator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.AlphaNumericFileValidator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Validator</span></code></p>
+<p>Used to format and validate fields containing text that should be valid on the file system (file names, extensions)</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.AlphaNumericFileValidator.Clone">
+<span class="sig-name descname"><span class="pre">Clone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Object</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#AlphaNumericFileValidator.Clone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.AlphaNumericFileValidator.Clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>All validator classes must implement the Clone() function, which
+returns an identical copy of itself.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.AlphaNumericFileValidator.OnChar">
+<span class="sig-name descname"><span class="pre">OnChar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#AlphaNumericFileValidator.OnChar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.AlphaNumericFileValidator.OnChar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_CHAR event, fires before a character shows up in the input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.KeyEvent</em>) – Contains information about the key press that triggered this event</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.AlphaNumericFileValidator.OnKillFocus">
+<span class="sig-name descname"><span class="pre">OnKillFocus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#AlphaNumericFileValidator.OnKillFocus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.AlphaNumericFileValidator.OnKillFocus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_KILL_FOCUS event, fires before an input leaves focus</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.FocusEvent</em>) – Contains information about the input losing focus</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.AlphaNumericFileValidator.OnSetFocus">
+<span class="sig-name descname"><span class="pre">OnSetFocus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#AlphaNumericFileValidator.OnSetFocus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.AlphaNumericFileValidator.OnSetFocus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_SET_FOCUS event, fires before an input receives focus</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.FocusEvent</em>) – Contains information about the input gaining focus</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.AlphaNumericFileValidator.OnText">
+<span class="sig-name descname"><span class="pre">OnText</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#AlphaNumericFileValidator.OnText"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.AlphaNumericFileValidator.OnText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_TEXT event, fires after a character shows up in the input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.CommandEvent</em>) – Contains information about text contained within the input when this event was fired</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.AlphaNumericFileValidator.OnTextPaste">
+<span class="sig-name descname"><span class="pre">OnTextPaste</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#AlphaNumericFileValidator.OnTextPaste"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.AlphaNumericFileValidator.OnTextPaste" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_TEXT_PASTE event, fires when an input receives pasted text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.ClipboardTextEvent</em>) – Contains information about the input receiving pasted text</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.AlphaNumericFileValidator.TransferFromWindow">
+<span class="sig-name descname"><span class="pre">TransferFromWindow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#AlphaNumericFileValidator.TransferFromWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.AlphaNumericFileValidator.TransferFromWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>This overridable function is called when the value in the window must
+be transferred to the validator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.AlphaNumericFileValidator.TransferToWindow">
+<span class="sig-name descname"><span class="pre">TransferToWindow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#AlphaNumericFileValidator.TransferToWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.AlphaNumericFileValidator.TransferToWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>This overridable function is called when the value associated with the
+validator must be transferred to the window.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.AlphaNumericFileValidator.Validate">
+<span class="sig-name descname"><span class="pre">Validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#AlphaNumericFileValidator.Validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.AlphaNumericFileValidator.Validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This overridable function is called when the value in the associated
+window must be validated.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="inputValidators.FilePathValidator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">inputValidators.</span></span><span class="sig-name descname"><span class="pre">FilePathValidator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">isFolder</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pathInput</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">subdir</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#FilePathValidator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.FilePathValidator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Validator</span></code></p>
+<p>Used to validate the formatting of a file/folder path, and that the file/folder exists on the file system.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.FilePathValidator.Clone">
+<span class="sig-name descname"><span class="pre">Clone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Object</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#FilePathValidator.Clone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.FilePathValidator.Clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>All validator classes must implement the Clone() function, which
+returns an identical copy of itself.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.FilePathValidator.OnChar">
+<span class="sig-name descname"><span class="pre">OnChar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#FilePathValidator.OnChar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.FilePathValidator.OnChar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_CHAR event, fires before a character shows up in the input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.KeyEvent</em>) – Contains information about the key press that triggered this event</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.FilePathValidator.OnIdle">
+<span class="sig-name descname"><span class="pre">OnIdle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#FilePathValidator.OnIdle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.FilePathValidator.OnIdle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_IDLE event, fires once whenever wx thinks the app has become idle</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.IdleEvent</em>) – Contains information about the idle event</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.FilePathValidator.OnKillFocus">
+<span class="sig-name descname"><span class="pre">OnKillFocus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#FilePathValidator.OnKillFocus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.FilePathValidator.OnKillFocus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_KILL_FOCUS event, fires before an input leaves focus</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.FocusEvent</em>) – Contains information about the input losing focus</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.FilePathValidator.OnSetFocus">
+<span class="sig-name descname"><span class="pre">OnSetFocus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#FilePathValidator.OnSetFocus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.FilePathValidator.OnSetFocus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_SET_FOCUS event, fires before an input receives focus</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.FocusEvent</em>) – Contains information about the input gaining focus</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.FilePathValidator.OnText">
+<span class="sig-name descname"><span class="pre">OnText</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#FilePathValidator.OnText"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.FilePathValidator.OnText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_TEXT event, fires after a character shows up in the input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.CommandEvent</em>) – Contains information about text contained within the input when this event was fired</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.FilePathValidator.OnTextPaste">
+<span class="sig-name descname"><span class="pre">OnTextPaste</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#FilePathValidator.OnTextPaste"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.FilePathValidator.OnTextPaste" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_TEXT_PASTE event, fires when an input receives pasted text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.ClipboardTextEvent</em>) – Contains information about the input receiving pasted text</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.FilePathValidator.PathIsValid">
+<span class="sig-name descname"><span class="pre">PathIsValid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#FilePathValidator.PathIsValid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.FilePathValidator.PathIsValid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns whether the given path can be found on the file system,
+appends the path in pathInput if isFolder is False</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>string</em>) – The path to the folder or file to be validated</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.FilePathValidator.TransferFromWindow">
+<span class="sig-name descname"><span class="pre">TransferFromWindow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#FilePathValidator.TransferFromWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.FilePathValidator.TransferFromWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>This overridable function is called when the value in the window must
+be transferred to the validator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.FilePathValidator.TransferToWindow">
+<span class="sig-name descname"><span class="pre">TransferToWindow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#FilePathValidator.TransferToWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.FilePathValidator.TransferToWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>This overridable function is called when the value associated with the
+validator must be transferred to the window.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.FilePathValidator.Validate">
+<span class="sig-name descname"><span class="pre">Validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#FilePathValidator.Validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.FilePathValidator.Validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This overridable function is called when the value in the associated
+window must be validated.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="inputValidators.ListFormatValidator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">inputValidators.</span></span><span class="sig-name descname"><span class="pre">ListFormatValidator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">delimiter</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">restrictToNumeric</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">range</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isInt</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#ListFormatValidator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.ListFormatValidator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Validator</span></code></p>
+<p>Used to format and validate lists of ascii letters or numbers.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.ListFormatValidator.Clone">
+<span class="sig-name descname"><span class="pre">Clone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Object</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#ListFormatValidator.Clone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.ListFormatValidator.Clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>All validator classes must implement the Clone() function, which
+returns an identical copy of itself.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.ListFormatValidator.OnChar">
+<span class="sig-name descname"><span class="pre">OnChar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#ListFormatValidator.OnChar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.ListFormatValidator.OnChar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_CHAR event, fires before a character shows up in the input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.KeyEvent</em>) – Contains information about the key press that triggered this event</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.ListFormatValidator.OnKillFocus">
+<span class="sig-name descname"><span class="pre">OnKillFocus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#ListFormatValidator.OnKillFocus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.ListFormatValidator.OnKillFocus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_KILL_FOCUS event, fires before an input leaves focus</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.FocusEvent</em>) – Contains information about the input losing focus</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.ListFormatValidator.OnSetFocus">
+<span class="sig-name descname"><span class="pre">OnSetFocus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#ListFormatValidator.OnSetFocus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.ListFormatValidator.OnSetFocus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_SET_FOCUS event, fires before an input receives focus</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.FocusEvent</em>) – Contains information about the input gaining focus</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.ListFormatValidator.OnText">
+<span class="sig-name descname"><span class="pre">OnText</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#ListFormatValidator.OnText"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.ListFormatValidator.OnText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_TEXT event, fires after a character shows up in the input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.CommandEvent</em>) – Contains information about text contained within the input when this event was fired</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.ListFormatValidator.OnTextPaste">
+<span class="sig-name descname"><span class="pre">OnTextPaste</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#ListFormatValidator.OnTextPaste"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.ListFormatValidator.OnTextPaste" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_TEXT_PASTE event, fires when an input receives pasted text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.ClipboardTextEvent</em>) – Contains information about the input receiving pasted text</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.ListFormatValidator.SetIsInt">
+<span class="sig-name descname"><span class="pre">SetIsInt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">isInt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#ListFormatValidator.SetIsInt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.ListFormatValidator.SetIsInt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setter for the isInt attribute, should always be used to set isInt outside of the constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>isInt</strong> (<em>bool</em>) – If true, the input will only contain integer values. If false it will contain floating point values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.ListFormatValidator.SetRange">
+<span class="sig-name descname"><span class="pre">SetRange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#ListFormatValidator.SetRange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.ListFormatValidator.SetRange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setter for the range attribute, should always be used to set the range outside of the constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rng</strong> (<em>list</em><em>[</em><em>2</em><em>]</em>) – A two element list containing the lower bound (inclusive) and upper bound (exclusive) of the input.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.ListFormatValidator.TransferFromWindow">
+<span class="sig-name descname"><span class="pre">TransferFromWindow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#ListFormatValidator.TransferFromWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.ListFormatValidator.TransferFromWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>This overridable function is called when the value in the window must
+be transferred to the validator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.ListFormatValidator.TransferToWindow">
+<span class="sig-name descname"><span class="pre">TransferToWindow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#ListFormatValidator.TransferToWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.ListFormatValidator.TransferToWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>This overridable function is called when the value associated with the
+validator must be transferred to the window.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.ListFormatValidator.Validate">
+<span class="sig-name descname"><span class="pre">Validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#ListFormatValidator.Validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.ListFormatValidator.Validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This overridable function is called when the value in the associated
+window must be validated.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.ListFormatValidator.checkBounds">
+<span class="sig-name descname"><span class="pre">checkBounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">txt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">again</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#ListFormatValidator.checkBounds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.ListFormatValidator.checkBounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the given text is a valid number, and whether that number is within the range</p>
+<ul class="simple">
+<li><p>If the value is not a valid number, but could be with additional input the return value is (True, None)</p></li>
+<li><p>If the value contains characters that do not form a valid number the return value is (False, None)</p></li>
+<li><p>If the value is a valid number but is not in the range the return value is (False, value)</p></li>
+<li><p>If the value is a valid number and is in the range the return value is (True, value)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>txt</strong> (<em>string</em>) – The string to be checked against the range</p></li>
+<li><p><strong>again</strong> (<em>bool</em><em>, </em><em>defaults to True</em>) – Whether the string should be checked again with the last character removed, useful for checking a value like “1e”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(bool,float).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="inputValidators.NumberRangeValidator">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">inputValidators.</span></span><span class="sig-name descname"><span class="pre">NumberRangeValidator</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">isInt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#NumberRangeValidator"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.NumberRangeValidator" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Validator</span></code></p>
+<p>Used to restrict an input to numeric characters, and prevents numbers outside the given range from being entered.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.NumberRangeValidator.Clone">
+<span class="sig-name descname"><span class="pre">Clone</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Object</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#NumberRangeValidator.Clone"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.NumberRangeValidator.Clone" title="Permalink to this definition">¶</a></dt>
+<dd><p>All validator classes must implement the Clone() function, which
+returns an identical copy of itself.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.NumberRangeValidator.OnChar">
+<span class="sig-name descname"><span class="pre">OnChar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#NumberRangeValidator.OnChar"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.NumberRangeValidator.OnChar" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_CHAR event, fires before a character shows up in the input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.KeyEvent</em>) – Contains information about the key press that triggered this event</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.NumberRangeValidator.OnIdle">
+<span class="sig-name descname"><span class="pre">OnIdle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#NumberRangeValidator.OnIdle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.NumberRangeValidator.OnIdle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_IDLE event, fires once whenever wx thinks the app has become idle</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.IdleEvent</em>) – Contains information about the idle event</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.NumberRangeValidator.OnKillFocus">
+<span class="sig-name descname"><span class="pre">OnKillFocus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#NumberRangeValidator.OnKillFocus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.NumberRangeValidator.OnKillFocus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_KILL_FOCUS event, fires before an input leaves focus</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.FocusEvent</em>) – Contains information about the input losing focus</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.NumberRangeValidator.OnSetFocus">
+<span class="sig-name descname"><span class="pre">OnSetFocus</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#NumberRangeValidator.OnSetFocus"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.NumberRangeValidator.OnSetFocus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_SET_FOCUS event, fires before an input receives focus</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.FocusEvent</em>) – Contains information about the input gaining focus</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.NumberRangeValidator.OnText">
+<span class="sig-name descname"><span class="pre">OnText</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#NumberRangeValidator.OnText"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.NumberRangeValidator.OnText" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_TEXT event, fires after a character shows up in the input</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.CommandEvent</em>) – Contains information about text contained within the input when this event was fired</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.NumberRangeValidator.OnTextPaste">
+<span class="sig-name descname"><span class="pre">OnTextPaste</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">event</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#NumberRangeValidator.OnTextPaste"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.NumberRangeValidator.OnTextPaste" title="Permalink to this definition">¶</a></dt>
+<dd><p>Handler for the wx.EVT_TEXT_PASTE event, fires when an input receives pasted text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>event</strong> (<em>wx.ClipboardTextEvent</em>) – Contains information about the input receiving pasted text</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.NumberRangeValidator.SetIsInt">
+<span class="sig-name descname"><span class="pre">SetIsInt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">isInt</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#NumberRangeValidator.SetIsInt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.NumberRangeValidator.SetIsInt" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setter for the isInt attribute, should always be used to set isInt outside of the constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>isInt</strong> (<em>bool</em>) – If true, the input will only contain integer values. If false it will contain floating point values.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.NumberRangeValidator.SetRange">
+<span class="sig-name descname"><span class="pre">SetRange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rng</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#NumberRangeValidator.SetRange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.NumberRangeValidator.SetRange" title="Permalink to this definition">¶</a></dt>
+<dd><p>Setter for the range attribute, should always be used to set the range outside of the constructor</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rng</strong> (<em>list</em><em>[</em><em>2</em><em>]</em>) – A two element list containing the lower bound (inclusive) and upper bound (exclusive) of the input.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.NumberRangeValidator.TransferFromWindow">
+<span class="sig-name descname"><span class="pre">TransferFromWindow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#NumberRangeValidator.TransferFromWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.NumberRangeValidator.TransferFromWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>This overridable function is called when the value in the window must
+be transferred to the validator.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.NumberRangeValidator.TransferToWindow">
+<span class="sig-name descname"><span class="pre">TransferToWindow</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#NumberRangeValidator.TransferToWindow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.NumberRangeValidator.TransferToWindow" title="Permalink to this definition">¶</a></dt>
+<dd><p>This overridable function is called when the value associated with the
+validator must be transferred to the window.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.NumberRangeValidator.Validate">
+<span class="sig-name descname"><span class="pre">Validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="../_modules/inputValidators.html#NumberRangeValidator.Validate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.NumberRangeValidator.Validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>This overridable function is called when the value in the associated
+window must be validated.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="inputValidators.NumberRangeValidator.checkBounds">
+<span class="sig-name descname"><span class="pre">checkBounds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">txt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">again</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#NumberRangeValidator.checkBounds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.NumberRangeValidator.checkBounds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks whether the given text is a valid number, and whether that number is within the range</p>
+<ul class="simple">
+<li><p>If the value is not a valid number, but could be with additional input the return value is (True, None)</p></li>
+<li><p>If the value contains characters that do not form a valid number the return value is (False, None)</p></li>
+<li><p>If the value is a valid number but is not in the range the return value is (False, value)</p></li>
+<li><p>If the value is a valid number and is in the range the return value is (True, value)</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>txt</strong> (<em>string</em>) – The string to be checked against the range</p></li>
+<li><p><strong>again</strong> (<em>bool</em><em>, </em><em>defaults to True</em>) – Whether the string should be checked again with the last character removed, useful for checking a value like “1e”</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple(bool,float).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="inputValidators.findall">
+<span class="sig-prename descclassname"><span class="pre">inputValidators.</span></span><span class="sig-name descname"><span class="pre">findall</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">searchStr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#findall"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.findall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finds every instance in text of the given searchStr</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>string</em>) – The string that should be searched</p></li>
+<li><p><strong>searchStr</strong> (<em>string</em>) – The string to search for</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>list[float].</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="inputValidators.rereplace">
+<span class="sig-prename descclassname"><span class="pre">inputValidators.</span></span><span class="sig-name descname"><span class="pre">rereplace</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">toReplace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacer</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/inputValidators.html#rereplace"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#inputValidators.rereplace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Repeats replace until there are no instances of the toReplace string
+(e.g. if text=C:\\\\Users, toReplace=\\, replacer=\ then C:\\\\Users -&gt; C:\\\Users -&gt; C:\\Users -&gt; C:\Users)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>string</em>) – The string that should be modified</p></li>
+<li><p><strong>toReplace</strong> (<em>string</em>) – The string to replace in “text”</p></li>
+<li><p><strong>replacer</strong> (<em>string</em>) – The string to replace “toReplace” with</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">PyEMTG documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">PyEMTG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">PyEMTG documentation</a><ul>
+  <li><a href="modules.html">PyEMTG</a><ul>
+      <li>Previous: <a href="clusterize.html" title="previous chapter">clusterize module</a></li>
+      <li>Next: <a href="kepler.html" title="next chapter">kepler module</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2023, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

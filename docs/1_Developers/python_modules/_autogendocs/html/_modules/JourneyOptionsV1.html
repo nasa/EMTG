@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JourneyOptionsV1 &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for JourneyOptionsV1</h1><div class="highlight"><pre>
+<span></span><span class="c1">#Python class file for EMTG JourneyOptions</span>
+<div class="viewcode-block" id="JourneyOptions"><a class="viewcode-back" href="../PyEMTG/JourneyOptionsV1.html#JourneyOptionsV1.JourneyOptions">[docs]</a><span class="k">class</span> <span class="nc">JourneyOptions</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="c1">#************************************************************************************constructor</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">phase_type</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_names</span> <span class="o">=</span> <span class="s1">&#39;New_Journey&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_override_num_steps</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_number_of_steps</span> <span class="o">=</span> <span class="mi">20</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_bounded_departure_date</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_timebounded</span> <span class="o">=</span> <span class="mi">0</span><span class="c1">#0: unbounded, 1: bounded flight time, 2: bounded arrival date</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_departure_date_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_wait_time_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="c1">#days</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_flight_time_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_arrival_date_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_initial_impulse_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span> <span class="c1">#in km/s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_arrival_type</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#0: orbit insertion (use chemical Isp), 1: rendezvous (use chemical Isp), 2: flyby with bounded VHP, 3: low-thrust rendezvous (does not work if terminal phase is not low-thrust), 4: match v-infinity, 5: match v-infinity low-thrust, 6: E=0, 7: capture spiral</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_arrival_class</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_arrival_ellipsoid_axes</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0e6</span><span class="p">,</span> <span class="mf">1.0e6</span><span class="p">,</span> <span class="mf">1.0e6</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_departure_type</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#0: launch or direct insertion, 1: depart from parking orbit (you can use this one in place of a launch vehicle model, and the departure burn will be done with the EDS motor), 2: &#39;free&#39; direct departure, i.e. do not burn to get the departure v_infinity, 3: Start from Sphere of Influence (use SOI angles chosen by previous journey&#39;s endpoint, i.e. after a spiral-out or fully modeled departure from parking orbit), 3: flyby (only valid for successive journeys), 4: flyby with fixed VHP, 5: escape spiral</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_departure_class</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_departure_ellipsoid_axes</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1.0e6</span><span class="p">,</span> <span class="mf">1.0e6</span><span class="p">,</span> <span class="mf">1.0e6</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_arrival_elements_type</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#0: cartesian, 1: COE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_arrival_elements_frame</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#0: ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_arrival_elements</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="mi">6</span> <span class="c1">#a(km), e, i, RAAN, AOP, TA</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_arrival_elements_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="mi">12</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_arrival_elements_vary_flag</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">6</span>    
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_arrival_elements_reference_epoch</span> <span class="o">=</span> <span class="mf">51544.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AllowJourneyFreePointArrivalToPropagate</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_departure_elements_type</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#0: cartesian, 1: COE</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_departure_elements_frame</span> <span class="o">=</span> <span class="mi">1</span> <span class="c1">#0: ICRF, 1: J2000_BCI, 2: J2000_BCF, 3: TrueOfDate_BCI, 4: TrueOfDate_BCF</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_departure_elements</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="mi">6</span> <span class="c1">#a(km), e, i, RAAN, AOP, TA</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_departure_elements_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="mi">12</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_departure_elements_vary_flag</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">6</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AllowJourneyFreePointDepartureToPropagate</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_departure_elements_reference_epoch</span> <span class="o">=</span> <span class="mf">51544.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_override_flyby_altitude_bounds</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_flyby_altitude_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">1000.0</span><span class="p">,</span> <span class="mf">10000.0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_central_body</span> <span class="o">=</span> <span class="s1">&#39;Sun&#39;</span> <span class="c1">#spice names</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_final_velocity</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">]</span> <span class="c1">#in km/s</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_fixed_ending_mass_increment</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#in kg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_fixed_starting_mass_increment</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#in kg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_minimum_starting_mass_increment</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#in kg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_maximum_starting_mass_increment</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#in kg</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_variable_mass_increment</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#whether or not the optimizer can choose the mass increment (ignored for non-positive mass increments)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_maximum_initial_mass</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_constrain_initial_mass</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_arrival_declination_constraint_flag</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_arrival_declination_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">]</span><span class="o">*</span><span class="mi">2</span><span class="c1">#in degrees</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_number_of_perturbation_bodies</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_perturbation_bodies</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_escape_spiral_starting_radius</span> <span class="o">=</span> <span class="mi">6678</span><span class="c1">#in km</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_capture_spiral_final_radius</span> <span class="o">=</span> <span class="mi">6678</span><span class="c1">#in km</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_forced_terminal_coast</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1">#in days</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_forced_initial_coast</span> <span class="o">=</span> <span class="mf">0.0</span> <span class="c1">#in days</span>
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_end_deltav</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#in km/s, delta-v to be performed after the journey is over (i.e. prox ops, divert maneuvers, etc)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_end_propulsion_system</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#monoprop</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_end_TCM</span> <span class="o">=</span> <span class="mf">0.0</span><span class="c1"># in km/s</span>
+
+        <span class="c1">#staging information</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_stage_after_departure</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_stage_before_arrival</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_stage_after_arrival</span> <span class="o">=</span> <span class="kc">False</span>
+
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_PeriapseArrival_override_altitude</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_PeriapseArrival_altitude_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">300.0</span><span class="p">,</span> <span class="mf">100000.0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_PeriapseDeparture_altitude_bounds</span> <span class="o">=</span> <span class="p">[</span><span class="mf">300.0</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">]</span>
+        
+        <span class="c1">#sequence information</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_phases</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sequence</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">destination_list</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">impulses_per_phase</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">9</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_enable_periapse_burns</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">*</span><span class="mi">8</span>
+
+        <span class="c1">#outer loop selectable options settings</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outerloop_vary_journey_destination</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outerloop_vary_journey_flyby_sequence</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outerloop_vary_journey_arrival_type</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outerloop_journey_destination_choices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outerloop_journey_flyby_sequence_choices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outerloop_journey_maximum_number_of_flybys</span> <span class="o">=</span> <span class="mi">8</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">outerloop_journey_arrival_type_choices</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="c1">#solver information</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_freeze_decision_variables</span> <span class="o">=</span> <span class="mi">0</span>
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_override_duty_cycle</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_duty_cycle</span> <span class="o">=</span> <span class="mf">0.0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_override_PropagatorType</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_PropagatorType</span> <span class="o">=</span> <span class="mi">0</span><span class="c1">#Keplerian</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_override_integration_step_size</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_integration_step_size</span> <span class="o">=</span> <span class="mf">1.0</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_number_of_perturbation_bodies</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_perturbation_bodies</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">phase_type</span> <span class="ow">in</span> <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">journey_arrival_type</span> <span class="o">=</span> <span class="mi">3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">phase_type</span> <span class="o">=</span> <span class="p">[</span><span class="n">phase_type</span><span class="p">]</span> <span class="o">*</span> <span class="mi">9</span>
+
+        <span class="c1">#coast phase propagation</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_CoastPhaseMatchPointFraction</span> <span class="o">=</span> <span class="mf">0.5</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_CoastPhaseForwardIntegrationStepLength</span> <span class="o">=</span> <span class="mf">86400.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_CoastPhaseBackwardIntegrationStepLength</span> <span class="o">=</span> <span class="mf">86400.0</span>
+
+        <span class="c1">#controls        </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">journey_num_interior_control_points</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+
+
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

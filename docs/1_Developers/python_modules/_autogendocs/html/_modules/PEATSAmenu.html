@@ -1,0 +1,1214 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PEATSAmenu &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for PEATSAmenu</h1><div class="highlight"><pre>
+<span></span><span class="c1">#EMTG: Evolutionary Mission Trajectory Generator</span>
+<span class="c1">#An open-source global optimization tool for preliminary mission design</span>
+<span class="c1">#Provided by NASA Goddard Space Flight Center</span>
+<span class="c1">#</span>
+<span class="c1">#Copyright (c) 2014 - 2024 United States Government as represented by the</span>
+<span class="c1">#Administrator of the National Aeronautics and Space Administration.</span>
+<span class="c1">#All Other Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#Licensed under the NASA Open Source License (the &quot;License&quot;); </span>
+<span class="c1">#You may not use this file except in compliance with the License. </span>
+<span class="c1">#You may obtain a copy of the License at:</span>
+<span class="c1">#https://opensource.org/license/nasa1-3-php</span>
+<span class="c1">#Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1">#distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1">#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either </span>
+<span class="c1">#express or implied.   See the License for the specific language</span>
+<span class="c1">#governing permissions and limitations under the License.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">PEATSAmenu.py</span>
+<span class="sd">==================</span>
+
+<span class="sd">File holds the PEATSAmenu class AND the PEATSAinstagram class.</span>
+
+<span class="sd">PEATSAmenu holds the options for the PEATSArun.</span>
+
+<span class="sd">PEATSAinstagram holds plotting options.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1">#PEATSAmenu class</span>
+<span class="c1">#class that holds the PEATSAtoppings (options) and sets default values for those options</span>
+<span class="c1">#for a PEATSAmeal. A PEATSA order overrides many of these default PEATSAtoppings.</span>
+<span class="c1">#Jeremy Knittel 1-23-2018</span>
+
+<span class="c1"># Define a class for plotting options</span>
+<div class="viewcode-block" id="PEATSAinstagram"><a class="viewcode-back" href="../PEATSA/PEATSAmenu.html#PEATSAmenu.PEATSAinstagram">[docs]</a><span class="k">class</span> <span class="nc">PEATSAinstagram</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Holds plotting options</span>
+<span class="sd">    </span>
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    options_file : String, optional</span>
+<span class="sd">        If provided, plotting options are loaded from the provided file. The default is None.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    None.</span>
+<span class="sd">    </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">options_file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Constructor</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xlabel</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ylabel</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ylim</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xlim</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">file_name_str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_is_date</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_is_date</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">plot_commands</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lines_or_dots</span> <span class="o">=</span> <span class="s2">&quot;dots&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x_variable</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y_variable</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">groupings</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">legend</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="c1"># A list of lists. Each sub-list must be teh same length as self.groupings. </span>
+        <span class="c1"># Each entry in the sub-list should be either a value of that grouping fingerprint that you want included in the plot</span>
+        <span class="c1"># or &quot;NA&quot;. Data must match only one of the sublists, so it uses or logic</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grouping_requirements</span> <span class="o">=</span> <span class="p">[]</span> 
+        
+        <span class="k">if</span> <span class="n">options_file</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_options_from_file</span><span class="p">(</span><span class="n">options_file</span><span class="p">)</span>
+        
+<div class="viewcode-block" id="PEATSAinstagram.write_options"><a class="viewcode-back" href="../PEATSA/PEATSAmenu.html#PEATSAmenu.PEATSAinstagram.write_options">[docs]</a>    <span class="k">def</span> <span class="nf">write_options</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filename</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Writes plotting options saved in object&#39;s attributes to a file.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        filename : String</span>
+<span class="sd">            Full path and file name to which plotting options are to be written.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1"># Open the output file</span>
+        <span class="n">file_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    
+        <span class="c1"># Loop through all members</span>
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            
+            <span class="c1"># Check if the variable is a string or not and write it out</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;self.&quot;</span> <span class="o">+</span> <span class="n">member</span><span class="p">),</span><span class="nb">str</span><span class="p">):</span>
+                <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">member</span> <span class="o">+</span> <span class="s1">&#39; = &quot;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;self.&quot;</span> <span class="o">+</span> <span class="n">member</span><span class="p">))</span> <span class="o">+</span> <span class="s1">&#39;&quot;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">member</span> <span class="o">+</span> <span class="s2">&quot; = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;self.&quot;</span> <span class="o">+</span> <span class="n">member</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    
+        <span class="c1"># Close the file</span>
+        <span class="n">file_handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="PEATSAinstagram.load_options_from_file"><a class="viewcode-back" href="../PEATSA/PEATSAmenu.html#PEATSAmenu.PEATSAinstagram.load_options_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">load_options_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">options_file</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Description.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        options_file : String</span>
+<span class="sd">            DESCRIPTION.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        Exception</span>
+<span class="sd">            DESCRIPTION.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        None.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">logging</span>
+        
+        <span class="c1"># Try to read the options file        </span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">exec</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">options_file</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully read plot options file&quot;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Not able to read/run that plot options script&#39;</span><span class="p">)</span>
+    
+        <span class="c1"># Get a dictionary of all local variables</span>
+        <span class="c1"># The only local variables will be ones set from the options script</span>
+        <span class="n">local_var_dir</span> <span class="o">=</span> <span class="nb">locals</span><span class="p">()</span>
+    
+        <span class="c1"># Loop through all local variables </span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">local_var_dir</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">var</span> <span class="o">!=</span> <span class="s2">&quot;self&quot;</span> <span class="ow">and</span> <span class="n">var</span> <span class="o">!=</span> <span class="s2">&quot;options_file&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">var</span><span class="p">):</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">var</span><span class="p">,</span><span class="n">local_var_dir</span><span class="p">[</span><span class="n">var</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span> 
+                    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Unknown option: &quot;</span> <span class="o">+</span> <span class="n">var</span><span class="p">)</span>
+                    
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully taken PEATSA delivery order&quot;</span><span class="p">)</span></div></div>
+
+<div class="viewcode-block" id="PEATSAmenu"><a class="viewcode-back" href="../PEATSA/PEATSAmenu.html#PEATSAmenu.PEATSAmenu">[docs]</a><span class="k">class</span> <span class="nc">PEATSAmenu</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">options_file</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        
+        <span class="c1"># Define the sections</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">section_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Path Options&#39;</span><span class="p">,</span><span class="s2">&quot;Start Options&quot;</span><span class="p">,</span><span class="s2">&quot;Initial Case Creation Options&quot;</span><span class="p">,</span><span class="s2">&quot;EMTG Control Options&quot;</span><span class="p">,</span><span class="s2">&quot;Optimization Options&quot;</span><span class="p">,</span><span class="s2">&quot;Sorting Options&quot;</span><span class="p">,</span><span class="s2">&quot;Case Re-creation Options&quot;</span><span class="p">,</span><span class="s2">&quot;Post-processing Options&quot;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sections</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Path Options&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;run_name&quot;</span><span class="p">,</span><span class="s2">&quot;working_directory&quot;</span><span class="p">,</span><span class="s2">&quot;nCores&quot;</span><span class="p">,</span><span class="s2">&quot;emtg_root_directory&quot;</span><span class="p">,</span><span class="s2">&quot;executable_name&quot;</span><span class="p">,</span><span class="s2">&quot;logfile&quot;</span><span class="p">,</span><span class="s2">&quot;thin_crust&quot;</span><span class="p">],</span>
+                         <span class="s2">&quot;Start Options&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;execution_type&quot;</span><span class="p">,</span> <span class="s2">&quot;max_iterations&quot;</span><span class="p">,</span> <span class="s2">&quot;keep_only_current_and_previous&quot;</span><span class="p">,</span> <span class="s2">&quot;start_type&quot;</span><span class="p">,</span><span class="s2">&quot;PEATSA_type&quot;</span><span class="p">,</span><span class="s2">&quot;if_run_cases&quot;</span><span class="p">,</span><span class="s2">&quot;iteration&quot;</span><span class="p">,</span><span class="s2">&quot;restart_run_root_directory&quot;</span><span class="p">,</span><span class="s2">&quot;copy_previous_results&quot;</span><span class="p">],</span>
+                         <span class="s2">&quot;Initial Case Creation Options&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;custom_PEATSA_chef_path&quot;</span><span class="p">,</span><span class="s2">&quot;nSamples&quot;</span><span class="p">,</span><span class="s2">&quot;thrusting_standard_deviations&quot;</span><span class="p">,</span><span class="s2">&quot;epoch_range&quot;</span><span class="p">,</span><span class="s2">&quot;stop_after_journey&quot;</span><span class="p">,</span><span class="s2">&quot;reference_files_location&quot;</span><span class="p">,</span><span class="s2">&quot;reference_options_file_name&quot;</span><span class="p">,</span><span class="s2">&quot;reference_mission_file_name&quot;</span><span class="p">,</span><span class="s2">&quot;maneuver_file&quot;</span><span class="p">,</span><span class="s2">&quot;reference_spk_data_file&quot;</span><span class="p">,</span><span class="s2">&quot;trade_study_options_files&quot;</span><span class="p">,</span><span class="s2">&quot;starting_case_index&quot;</span><span class="p">,</span><span class="s2">&quot;missed_thrust_timestep&quot;</span><span class="p">,</span><span class="s2">&quot;skip_forced_coast_periods&quot;</span><span class="p">,</span><span class="s2">&quot;convert_3d_to_patched_conic&quot;</span><span class="p">,</span><span class="s2">&quot;post_missed_thrust_electric_propellant_margin&quot;</span><span class="p">,</span><span class="s2">&quot;pre_missed_thrust_electric_propellant_margin&quot;</span><span class="p">,</span><span class="s2">&quot;vent_pre_missed_thrust_electric_propellant_margin&quot;</span><span class="p">,</span><span class="s2">&quot;missed_thrust_recovery_forced_terminal_coast_reduction&quot;</span><span class="p">,</span><span class="s2">&quot;override_propulated_duty_cycle&quot;</span><span class="p">],</span>
+                         <span class="s2">&quot;EMTG Control Options&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;killtime&quot;</span><span class="p">,</span> <span class="s2">&quot;MBH_max_run_time&quot;</span><span class="p">],</span>
+                         <span class="s2">&quot;Optimization Options&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;objective_type&quot;</span><span class="p">,</span><span class="s2">&quot;objective_formula&quot;</span><span class="p">,</span><span class="s2">&quot;max_or_min&quot;</span><span class="p">,</span><span class="s2">&quot;peatsa_goal_objective&quot;</span><span class="p">,</span><span class="s2">&quot;polyfit_order&quot;</span><span class="p">,</span><span class="s2">&quot;polyfit_margin&quot;</span><span class="p">,</span><span class="s2">&quot;constraint_walking&quot;</span><span class="p">],</span>
+                         <span class="s2">&quot;Sorting Options&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;fingerprint&quot;</span><span class="p">],</span>
+                         <span class="s2">&quot;Case Re-creation Options&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;find_seeds_in_parallel&quot;</span><span class="p">,</span> <span class="s2">&quot;find_seeds_in_parallel_nCores&quot;</span><span class="p">,</span> <span class="s2">&quot;write_seeds_in_parallel&quot;</span><span class="p">,</span> <span class="s2">&quot;write_seeds_in_parallel_nCores&quot;</span><span class="p">,</span> <span class="s2">&quot;seed_folders&quot;</span><span class="p">,</span><span class="s2">&quot;seed_from_seed_folders_on_fresh_start&quot;</span><span class="p">,</span><span class="s2">&quot;allow_cases_to_seed_themselves&quot;</span><span class="p">,</span><span class="s2">&quot;initial_guess_type&quot;</span><span class="p">,</span><span class="s2">&quot;new_timestep&quot;</span><span class="p">,</span><span class="s2">&quot;turn_off_seed_MBH_when_unseeded&quot;</span><span class="p">,</span><span class="s2">&quot;seed_from_infeasible_self_when_unseeded&quot;</span><span class="p">,</span><span class="s2">&quot;seed_from_infeasible_cases_if_no_feasible_seeds_found&quot;</span><span class="p">,</span><span class="s2">&quot;seed_from_cases_that_havent_met_target&quot;</span><span class="p">,</span><span class="s2">&quot;only_one_seed_in_all_seed_directions&quot;</span><span class="p">,</span><span class="s2">&quot;seed_criteria&quot;</span><span class="p">,</span><span class="s2">&quot;wait_until_seeded&quot;</span><span class="p">,</span><span class="s2">&quot;only_rerun_if&quot;</span><span class="p">,</span><span class="s2">&quot;override_options&quot;</span><span class="p">],</span>
+                         <span class="s2">&quot;Post-processing Options&quot;</span> <span class="p">:</span> <span class="p">[</span><span class="s2">&quot;parse_in_parallel&quot;</span><span class="p">,</span><span class="s2">&quot;parse_in_parallel_nCores&quot;</span><span class="p">,</span> <span class="s2">&quot;extra_csv_column_definitions&quot;</span><span class="p">,</span><span class="s2">&quot;generate_default_plots&quot;</span><span class="p">,</span><span class="s2">&quot;built_in_plotter_files&quot;</span><span class="p">,</span><span class="s2">&quot;custom_post_processing_script&quot;</span><span class="p">,</span><span class="s2">&quot;move_results&quot;</span><span class="p">]}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptions</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">requirements</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">available_midbake</span> <span class="o">=</span> <span class="p">{}</span>
+        
+        <span class="c1"># -------------- DEFINE ALL DEFAULT VALUES ----------------------------------                </span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed_from_seed_folders_on_fresh_start</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;seed_from_seed_folders_on_fresh_start&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Fresh&#39;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;# When fresh starting, if you have an external seed folder, would you like to use it before the first iteration runs?&quot;</span>
+        <span class="p">)</span>
+        
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed_from_infeasible_cases_if_no_feasible_seeds_found</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;seed_from_infeasible_cases_if_no_feasible_seeds_found&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;# Would you like cases to be able to be seeded from infeasible seeds if no feasible seeds were found?&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">override_propulated_duty_cycle</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;override_propulated_duty_cycle&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.PEATSA_type == 5&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;# Would you like to use the default duty cycle to propulate or a different value? If a different</span><span class="se">\n\</span>
+<span class="s2">        # value, then enter the duty cycle (i.e. .95). Otherwise enter zero.&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">thin_crust</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;thin_crust&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;# Would you like PEATSA to run in a slimmer memory mode? It will use less memory but will require more time between iterations.&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">keep_only_current_and_previous</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;keep_only_current_and_previous&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;# Would you like PEATSA to keep only two Cases and Results subdirectories? (IterationPrevious and IterationCurrent).</span><span class="se">\n\</span>
+<span class="s2">             # If true, you will use less disk space but lose the exhaustive history of PEATSA iterations.</span><span class="se">\n\</span>
+<span class="s2">             # Currently can only be used with a Fresh start.&quot;</span>
+             <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">constraint_walking</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;constraint_walking&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;# Would you like to release constraints if PEATSA stalls? Enter a list of tuples. Each tuple has the form:</span><span class="se">\n\</span>
+<span class="s2">        # (string of constraint as a PyEMTG MissionOption,how many failed iterations to wait before loosening constraint, increment)</span><span class="se">\n\</span>
+<span class="s2">        # The first entry should be a variable in the PyEMTG MissionOption class, such as: &#39;MO.Journeys[-1].arrival_date_bounds[1]&#39;</span><span class="se">\n\</span>
+<span class="s2">        # The second entry is how many times no PEATSA cases found improvement before the constraint will be loosened.</span><span class="se">\n\</span>
+<span class="s2">        # Finally enter the increment to change the constraint each time this event is triggered.&quot;</span>
+        <span class="p">)</span>
+    
+        <span class="bp">self</span><span class="o">.</span><span class="n">move_results</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;move_results&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;# Would you like peatsa to move the latest results to another folder for easier ftp&#39;ing?</span><span class="se">\n\</span>
+<span class="s2">        # If so, provide a full path to the desired destination. If not, leave an empty string.&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">turn_off_seed_MBH_when_unseeded</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;turn_off_seed_MBH_when_unseeded&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.wait_until_seeded == 0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;# If a case doesnt have a seed, rather than running unseeded, should it keep using whatever is in its trialX,</span><span class="se">\n\</span>
+<span class="s2">        # presumably the seed from reference mission. Or do you want to turn off seed_MBH and actually start without an initial guess?&quot;</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed_from_infeasible_self_when_unseeded</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;seed_from_infeasible_self_when_unseeded&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.wait_until_seeded == 0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;# If a case doesnt have a seed, rather than running unseeded, should it seed from the end of its last run,</span><span class="se">\n\</span>
+<span class="s2">        # even though it didnt find something feasible at the end of the last run?&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">starting_case_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;starting_case_index&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Fresh&#39; and self.PEATSA_type == 2&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;False&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;# If you are just using this code to create new cases that will be added into another </span><span class="se">\n\</span>
+<span class="s2">        # PEATSA run, then you can start the filename&#39;s X in &#39;TradeStudy_CaseX&#39; at a nonzero value.</span><span class="se">\n\</span>
+<span class="s2">        # What index should new cases start at?&quot;</span>
+        <span class="p">)</span>
+        
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">allow_cases_to_seed_themselves</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;allow_cases_to_seed_themselves&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;# Should cases be allowed to seed themselves? Or only their neighbors? Enter 1 or 0&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">initial_guess_type</span> <span class="o">=</span> <span class="s2">&quot;copy&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;initial_guess_type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;# How do you want to generate initial guesses?</span><span class="se">\n\</span>
+<span class="s2">        # if initial_guess_type == &#39;x_days&#39;, then the number of timesteps in the mission itself</span><span class="se">\n\</span>
+<span class="s2">        #                                    will be modified such that each timestep is ~ x days</span><span class="se">\n\</span>
+<span class="s2">        #                                    (use new_timestep to define x)</span><span class="se">\n\</span>
+<span class="s2">        # if initial_guess_type == &#39;n_steps&#39;, then the number of timesteps in the mission will</span><span class="se">\n\</span>
+<span class="s2">        #                                     be kept the same or modified to be n steps</span><span class="se">\n\</span>
+<span class="s2">        #                                     (use new_timestep to define x)</span><span class="se">\n\</span>
+<span class="s2">        # if initial_guess_type == &#39;copy&#39;, then PEATSA will just copy the initial guess over without</span><span class="se">\n\</span>
+<span class="s2">        #                                  attempting to interpolate&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">new_timestep</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;new_timestep&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.initial_guess_type != &#39;copy&#39;&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;True&quot;</span><span class="p">,</span>
+       <span class="s2">&quot;# What do you want the new timestep to be?</span><span class="se">\n\</span>
+<span class="s2">        # if initial_guess_type == &#39;x_days&#39;,</span><span class="se">\n\</span>
+<span class="s2">        #          if new_timestep == -2, then the number of days in each journey control step will be copied from the seed mission</span><span class="se">\n\</span>
+<span class="s2">        #          if new_timetsep &gt; 0, then all journeys will be given this timestep in days</span><span class="se">\n\</span>
+<span class="s2">        #          if new_timestep = [x,y,z], then the final 3 journeys will be given x,y,z days</span><span class="se">\n\</span>
+<span class="s2">        #                                     timesteps respectively. if len(new_timestep) &gt; len(new_timestep),</span><span class="se">\n\</span>
+<span class="s2">        #                                     entries from new_timestep will be matched backwards. I.E:</span><span class="se">\n\</span>
+<span class="s2">        #                                     MO.Journeys[-1].journey_number_of_timesteps = new_timestep[-1]</span><span class="se">\n\</span>
+<span class="s2">        #                                     MO.Journeys[-2].journey_number_of_timesteps = new_timestep[-2], etc.</span><span class="se">\n\</span>
+<span class="s2">        #                                     Note: len(new_timestep)  &lt; len(Journeys) will throw an error</span><span class="se">\n\</span>
+<span class="s2">        # if initial_guess_type == &#39;n_steps,</span><span class="se">\n\</span>
+<span class="s2">        #          if new_timestep == -2, then the number of timesteps will be copied from seed mission</span><span class="se">\n\</span>
+<span class="s2">        #          if new_timestep == -1, then the number of timesteps will not be modified from mission options</span><span class="se">\n\</span>
+<span class="s2">        #          if new_timestep &gt; 0, then all journeys will be given this number of timesteps</span><span class="se">\n\</span>
+<span class="s2">        #          if new_timestep = [x,y,z], then the final 3 journeys will be given x,y,z</span><span class="se">\n\</span>
+<span class="s2">        #                                     timesteps respectively. if len(new_timestep) &gt; len(new_timestep),</span><span class="se">\n\</span>
+<span class="s2">        #                                     entries from new_timestep will be matched backwards. I.E:</span><span class="se">\n\</span>
+<span class="s2">        #                                     MO.Journeys[-1].number_of_timesteps = new_timestep[-1]</span><span class="se">\n\</span>
+<span class="s2">        #                                     MO.Journeys[-2].number_of_timesteps = new_timestep[-2], etc.</span><span class="se">\n\</span>
+<span class="s2">        #                                     Note: len(new_timestep)  &lt; len(Journeys) will throw an error&quot;</span>
+        <span class="p">)</span>
+        
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">find_seeds_in_parallel</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;find_seeds_in_parallel&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;# CURRENTLY BUGGY, DO NOT USE.</span><span class="se">\n\</span>
+<span class="s2">            # Do you want to find seeds in parallel? (0 or 1).</span><span class="se">\n\</span>
+<span class="s2">            # Uses find_seeds_in_parallel_nCores number of cores.&quot;</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">find_seeds_in_parallel_nCores</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;find_seeds_in_parallel_nCores&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;# If find_seeds_in_parallel == 1, this is how many parallel processes are used to find seeds. Integer &gt;= 1.&quot;</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_seeds_in_parallel</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;write_seeds_in_parallel&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;# CURRENTLY BUGGY, DO NOT USE.</span><span class="se">\n\</span>
+<span class="s2">            # Do you want to write seeds in parallel? (0 or 1).&quot;</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_seeds_in_parallel_nCores</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;write_seeds_in_parallel_nCores&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;# If write_seeds_in_parallel == 1, this is how many parallel processes are used to write seeds. Integer &gt;= 1.&quot;</span><span class="p">)</span>
+            
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed_folders</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;seed_folders&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+       <span class="s2">&quot;# Are there additional folders that contain emtg cases that can be used as seeds</span><span class="se">\n\</span>
+<span class="s2">        # for the current PEATSA run, but are not valid cases. For example, a group of results</span><span class="se">\n\</span>
+<span class="s2">        # that seem feasible to PEATSA, but the EMTG feasibility criteria changed internally to</span><span class="se">\n\</span>
+<span class="s2">        # EMTG, so all the old cases need to be tossed, but the initial guesses are still useful.</span><span class="se">\n\</span>
+<span class="s2">        # Enter a list of tuples:</span><span class="se">\n\</span>
+<span class="s2">        # (folder_type,full_folder_path)</span><span class="se">\n\</span>
+<span class="s2">        # if folder_type == 0, then the folder is a peatsa results folder with many iteration</span><span class="se">\n\</span>
+<span class="s2">        #                      subdirectories, all of which will be included</span><span class="se">\n\</span>
+<span class="s2">        # if folder_type == 1, then the folder is an individual results folder and only its contents</span><span class="se">\n\</span>
+<span class="s2">        #                      will be parsed, with all subdirectories ignored.&quot;</span>
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">emtg_root_directory</span> <span class="o">=</span> <span class="s2">&quot;/Utilities/emtg/&quot;</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;emtg_root_directory&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# Where is EMTG located? The emtgv9 executable should be in this directory and </span><span class="se">\n\</span>
+<span class="s2">        # the PyEMTG files should be located in: emtg_root_directory + &#39;/PyEMTG&#39;.</span><span class="se">\n\</span>
+<span class="s2">        # Enter a string.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">executable_name</span> <span class="o">=</span> <span class="s1">&#39;EMTGv9&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;executable_name&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# What is the name of the executable? Enter as a string. Typically emtg or EMTGv9&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">skip_forced_coast_periods</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;skip_forced_coast_periods&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Fresh&#39; and (self.PEATSA_type == 1 or self.PEATSA_type == 3)&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# Should missed thrust recovery cases be started during forced coasting periods? Enter a 1 or 0.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">convert_3d_to_patched_conic</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;convert_3d_to_patched_conic&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Fresh&#39; and (self.PEATSA_type == 1 or self.PEATSA_type == 3)&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# If the mission has coast phases, would you like to remove these from the missed thrust recovery cases?&quot;</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">if_run_cases</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;if_run_cases&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# Should cases be run or not? Should the PEATSA oven be called? Enter a 1 or 0.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">logfile</span> <span class="o">=</span> <span class="s2">&quot;peatsa.out&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;logfile&quot;</span><span class="p">,</span> 
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# Where would you like to log the results? Enter a string.&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">execution_type</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span><span class="s2">&quot;execution_type&quot;</span><span class="p">,</span>
+                      <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+                      <span class="kc">True</span><span class="p">,</span>
+                      <span class="s2">&quot;#Choose which execution method is used.</span><span class="se">\n\</span>
+<span class="s2">                        # 0: Traditional PEATSA</span><span class="se">\n\</span>
+<span class="s2">                        # 1: Noble&#39;s new version</span><span class="se">\n\</span>
+<span class="s2">                        # 2: Noble&#39;s new verion with pebble&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_type</span> <span class="o">=</span> <span class="s2">&quot;Fresh&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;start_type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# How should PEATSA start?</span><span class="se">\n\</span>
+<span class="s2">        # start_type = &#39;Fresh&#39;, New PEATSA cases will be created</span><span class="se">\n\</span>
+<span class="s2">        # start_type = &#39;Warm&#39;, PEATSA will start by running cases in an existing folder</span><span class="se">\n\</span>
+<span class="s2">        # start_type = &#39;Hot&#39;, PEATSA will start by parsing a set of cases, re-seeding them</span><span class="se">\n\</span>
+<span class="s2">        #                       and then running those new cases&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_name</span> <span class="o">=</span> <span class="s2">&quot;PEATSA_run&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;run_name&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# Where should PEATSA work? Enter a string.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">=</span> <span class="s2">&quot;/Utilities/emtg/scratch/PEATSA&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;working_directory&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# Where should PEATSA work? Enter a string.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">copy_previous_results</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;copy_previous_results&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Hot&#39;&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# If start_type == &#39;Hot&#39;, do you want to copy the results from previous peatsa runs</span><span class="se">\n\</span>
+<span class="s2">        # into the current run&#39;s iteration0 results folder? This will take a long time, but</span><span class="se">\n\</span>
+<span class="s2">        # will save time in future hot starts. Enter a 1 or 0.&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_iterations</span> <span class="o">=</span> <span class="mf">1e10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;max_iterations&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+            <span class="s2">&quot;# What is the maximum number of iterations PEATSA is allowed to run before exiting? (Integer &gt;= 0)&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">iteration</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;iteration&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Warm&#39;&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# If start_type == &#39;Warm&#39;, what iteration to start from? Enter an integer.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">restart_run_root_directory</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;/Utilities/emtg/scratch/PEATSA/PEATSA_run&quot;</span><span class="p">,</span><span class="s1">&#39;Full&#39;</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;restart_run_root_directory&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Warm&#39; or self.start_type == &#39;Hot&#39;&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# If start_type == &#39;Hot&#39; or &#39;Warm&#39;, where are the results to start from? Enter a list of tuples:</span><span class="se">\n\</span>
+<span class="s2">        # (&#39;path to results&#39;,&#39;parse_type&#39;</span><span class="se">\n\</span>
+<span class="s2">        # parse_type = &#39;Full&#39; : PEATSA will load every emtg and emtgopt in every subdirectory pointed to by the path/to/results</span><span class="se">\n\</span>
+<span class="s2">        #                       It is assumed that the folder structure is: /path/to/results/Iteration#/EMTGandEMTGOPTfiles</span><span class="se">\n\</span>
+<span class="s2">        # parse_type = &#39;Best&#39; : PEATSA will only load the emtg and emtgopt files specified in the latest iteration csv in each /path/to/results/docs</span><span class="se">\n\</span>
+<span class="s2">        #                       It is assumed that the path/to/results is actually a path to a peatsa root folder</span><span class="se">\n\</span>
+<span class="s2">        # parse_type = &#39;Warm&#39; : PEATSA will not load any results, it will just run the cases in /path/to/results/cases/&quot;</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">PEATSA_type</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;PEATSA_type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# What type of PEATSA run is this? </span><span class="se">\n\</span>
+<span class="s2">        # PEATSA_type = 0, custom </span><span class="se">\n\</span>
+<span class="s2">        # PEATSA_type = 1, missed thrust</span><span class="se">\n\</span>
+<span class="s2">        # PEATSA_type = 2, trade study</span><span class="se">\n\</span>
+<span class="s2">        # PEATSA_type = 3, missed thrust trade study</span><span class="se">\n\</span>
+<span class="s2">        # PEATSA_type = 4, batch run a single case</span><span class="se">\n\</span>
+<span class="s2">        # PEATSA_type = 5, maneuver execution error monte carlo&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">maneuver_file</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;maneuver_file&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# Provide a path to the manuever_spec file for the reference mission&quot;</span>
+        <span class="p">)</span>
+         
+        <span class="bp">self</span><span class="o">.</span><span class="n">nSamples</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;nSamples&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.PEATSA_type == 5&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# How many samples would you like to run in the monte carlo?&quot;</span>    
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">thrusting_standard_deviations</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">,</span><span class="mf">0.0</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;thrusting_standard_deviations&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.PEATSA_type == 5 and self.start_type == &#39;Fresh&#39;&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# What are the standard deviations of thrusting error? Enter a list:</span><span class="se">\n\</span>
+<span class="s2">        # [% Magnitude error,Body Fixed Angle 1 [deg], Body Fixed Angle 2 [deg]]&quot;</span>    
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">epoch_range</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mf">1e10</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;epoch_range&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.PEATSA_type == 5 and self.start_type == &#39;Fresh&#39;&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# What is the range of epochs over which you want to monte carlo the maneuvers? Enter a list:</span><span class="se">\n\</span>
+<span class="s2">        # [Earliest Julian Date, Latest Julian Date]&quot;</span>    
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">stop_after_journey</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;stop_after_journey&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.PEATSA_type == 5 and self.start_type == &#39;Fresh&#39;&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# When optimizing monte carlo &#39;missions to go&#39;, do you want to optimize through the full reference mission,</span><span class="se">\n\</span>
+<span class="s2">        # or stop after a specified journey? Enter the last journey you want in the &#39;mission to go&#39; optimizations.</span><span class="se">\n\</span>
+<span class="s2">        # Note: python negative indexing is fine&quot;</span>    
+        <span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">nCores</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;local&quot;</span><span class="p">,</span><span class="mi">1</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;nCores&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+       <span class="s2">&quot;# What machine(s) will run the emtg cases? </span><span class="se">\n\</span>
+<span class="s2">        # This is a list of tuples. Each tuple is: </span><span class="se">\n\</span>
+<span class="s2">        # (an IP address string or &#39;local&#39; for the current machine, number of cores available on that host)</span><span class="se">\n\</span>
+<span class="s2">        # NOTE! DO NOT USE ANYTHING BUT LOCAL UNLESS ALL MACHINES HAVE SHARED MEMORY AND</span><span class="se">\n\</span>
+<span class="s2">        # working_directory is pointing to a shared folder on all machines&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">killtime</span> <span class="o">=</span> <span class="mi">1000000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;killtime&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+       <span class="s2">&quot;# How long (in seconds) before a case needs to be killed?</span><span class="se">\n\</span>
+<span class="s2">       # Make this value at least the MBH max run time + the NLP max run time + some buffer time</span><span class="se">\n\</span>
+<span class="s2">       # for writing to file. Buffer time depends on the complexity of the case, whether</span><span class="se">\n\</span>
+<span class="s2">       # or not you are generating ephemeris files, etc. Recommend at least 30 seconds.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">MBH_max_run_time</span> <span class="o">=</span> <span class="mi">1000000</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;MBH_max_run_time&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Fresh&#39;&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# How long (in seconds) should cases be run in EMTG?&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">objective_type</span> <span class="o">=</span> <span class="mi">0</span> 
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;objective_type&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.PEATSA_type != 4&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+       <span class="s2">&quot;# What is the objective type?</span><span class="se">\n\</span>
+<span class="s2">        # objective_type == 0, objective_function better than peatsa_objective</span><span class="se">\n\</span>
+<span class="s2">        # objective_type == 1, objective_function better than polyfit = objective_fun(seed_value)&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">objective_formula</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;objective_formula&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# How can PEATSA evaluate the objective value?</span><span class="se">\n\</span>
+<span class="s2">        # Input a string that can be evaluated. EMTG Mission data can be gathered using &#39;M.&#39; and </span><span class="se">\n\</span>
+<span class="s2">        # Mission option data is available using &#39;MO.&#39;&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_or_min</span> <span class="o">=</span> <span class="s2">&quot;max&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;max_or_min&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# Is this a maximization or minimization problem? Enter &#39;max&#39; or &#39;min&#39;.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">peatsa_goal_objective</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;peatsa_goal_objective&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.objective_type == 0&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+       <span class="s2">&quot;# If PEATSA&#39;s objective_type == 0, what is the target objective value? I.E. for missed thrust, the </span><span class="se">\n\</span>
+<span class="s2">        # target could be 60 days. Or for maximum mass, the target could be 100 </span><span class="se">\n\</span>
+<span class="s2">        # kg. In some cases the goal objective will be the same as the EMTG</span><span class="se">\n\</span>
+<span class="s2">        # objective_type, but it doesnt have to be. If a good target is not</span><span class="se">\n\</span>
+<span class="s2">        # known, then simply set it to something impossible to reach. I.e. for </span><span class="se">\n\</span>
+<span class="s2">        # missed thrust, 1e100, or for minumum time, -1 days. The value here should </span><span class="se">\n\</span>
+<span class="s2">        # have the same units as whatever the &#39;objective_formula&#39; will evaluate to.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">polyfit_order</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;polyfit_order&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.objective_type == 1 or 4 in [criteria[3] for criteria in self.seed_criteria]&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+       <span class="s2">&quot;# If PEATSA&#39;s objective_type == 1, then an order for the polynomial fit is needed. Enter an integer.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">polyfit_margin</span> <span class="o">=</span> <span class="mf">.1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;polyfit_margin&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.objective_type == 1&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+       <span class="s2">&quot;# If PEATSA&#39;s objective_type == 1, then a margin is used so that the case value does not</span><span class="se">\n\</span>
+<span class="s2">        # need to exceed the EXACT expected value from the polynomial fit. For example, if the polyfit</span><span class="se">\n\</span>
+<span class="s2">        # predicts a value of 100, and the result for this case is 99, then we would need a margin of .01 </span><span class="se">\n\</span>
+<span class="s2">        # or 1% to prevent the case from being re-run. If the result for the case is 95, then it still is likely </span><span class="se">\n\</span>
+<span class="s2">        # &#39;good enough&#39;, and doesnt need to be re-run, so a margin of 5 to 10</span><span class="si">% i</span><span class="s2">s typically appropriate. Enter a float 0 to 1.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">only_one_seed_in_all_seed_directions</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;only_one_seed_in_all_seed_directions&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.PEATSA_type != 4&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+       <span class="s2">&quot;# Flag to override the individual seed selection criterias specified in &#39;seed_criteria&#39;.</span><span class="se">\n\</span>
+<span class="s2">        # Instead, only one total seed will be selected regardless of which seed criteria was used. </span><span class="se">\n\</span>
+<span class="s2">        # Note: This variable is a replacement for the old only_seed_from_best_in_all_seed_directions variable </span><span class="se">\n\</span>
+<span class="s2">        # Valid choices: </span><span class="se">\n\</span>
+<span class="s2">        # 0: Do not use </span><span class="se">\n\</span>
+<span class="s2">        # 1: Only the best seed from all directions will be used (i.e., the old only_seed_from_best_in_all_seed_directions) </span><span class="se">\n\</span>
+<span class="s2">        # 2: One randomly selected seed from amongst all seed directions that produced a valid seed will be used.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed_from_cases_that_havent_met_target</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;seed_from_cases_that_havent_met_target&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+       <span class="s2">&quot;# Should cases that don&#39;t meet the goal criteria be considered as potential seeds?</span><span class="se">\n\</span>
+<span class="s2">        # WARNING: potential seed cases will be evaluated against peatsa_goal_objective</span><span class="se">\n\</span>
+<span class="s2">        # even if PEATSA_objective_type == 1. </span><span class="se">\n\</span>
+<span class="s2">        # Enter a 1 or 0.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">seed_criteria</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;seed_criteria&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+       <span class="s2">&quot;# How can PEATSA evaluate the seed criteria?</span><span class="se">\n\</span>
+<span class="s2">        # Input a list of tuples. Each tuple is: </span><span class="se">\n\</span>
+<span class="s2">        # (a string that can be evaluated, max negative seed range, max positive seed range, seed selection criteria)</span><span class="se">\n\</span>
+<span class="s2">        # For the evaluation string, EMTG Mission data can be gathered using</span><span class="se">\n\</span>
+<span class="s2">        # &#39;MO.&#39;. Don&#39;t use mission data, because even failed cases need to know how to</span><span class="se">\n\</span>
+<span class="s2">        # pick a seed.</span><span class="se">\n\</span>
+<span class="s2">        # For the max seed range, answer if there should be a maximum range for seeding, and if so, how long?</span><span class="se">\n\</span>
+<span class="s2">        # max_negative_seed_range &gt; 0, there is no maximum range in the negative direction</span><span class="se">\n\</span>
+<span class="s2">        # max_negative_seed_range &lt;= 0, this is the maximum range, in the units of whatever</span><span class="se">\n\</span>
+<span class="s2">        #       seed_criteria evaluates in </span><span class="se">\n\</span>
+<span class="s2">        # max_positive_seed_range &lt; 0, there is no maximum range in the negative direction</span><span class="se">\n\</span>
+<span class="s2">        # max_positive_seed_range &gt;= 0, this is the maximum range, in the units of whatever</span><span class="se">\n\</span>
+<span class="s2">        #       seed_criteria evaluates in </span><span class="se">\n\</span>
+<span class="s2">        # For the seed selection criteria, specify how PEATSA should select new seeds?</span><span class="se">\n\</span>
+<span class="s2">        # seed_selection_criteria == 0, seed from the closest potential seed</span><span class="se">\n\</span>
+<span class="s2">        # seed_selection_criteria == 1, seed from all potential seeds</span><span class="se">\n\</span>
+<span class="s2">        # seed_selection_criteria == 2, seed from only the best potential seed</span><span class="se">\n\</span>
+<span class="s2">        # seed_selection_criteria == 3, seed from random potential seed</span><span class="se">\n\</span>
+<span class="s2">        # seed_selection_criteria == 4, seed from a curve fit of all potential seeds.</span><span class="se">\n\</span>
+<span class="s2">        #                               Each decision vector variable is a curve fit</span><span class="se">\n\</span>
+<span class="s2">        #                               of a curve fit of the corresponding decision vector values</span><span class="se">\n\</span>
+<span class="s2">        #                               from all of the seeds. Uses polyfit_order for the curve fit order.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">extra_csv_column_definitions</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;extra_csv_column_definitions&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+       <span class="s2">&quot;# Do you want any extra data printed to each iteration&#39;s csv summary?</span><span class="se">\n\</span>
+<span class="s2">        # If not, leave this as an empty list</span><span class="se">\n\</span>
+<span class="s2">        # If so, add tuples of:</span><span class="se">\n\</span>
+<span class="s2">        # (&#39;column header&#39;,&#39;string of formula to be evaluated&#39;)</span><span class="se">\n\</span>
+<span class="s2">        # For data from an EMTG mission, use &#39;M.&#39;, and for an EMTG mission option, use &#39;MO.&#39;&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">parse_in_parallel</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;parse_in_parallel&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+       <span class="s2">&quot;# Should peatsa parse using multiple local cores? Enter a 1 or 0.</span><span class="se">\n\</span>
+<span class="s2">        # A 1 means that peatsa will parse results in parallel using parse_in_parallel_nCores.</span><span class="se">\n\</span>
+<span class="s2">        # Note that starting up parallelization is not free, which means that parallelizing will actually</span><span class="se">\n\</span>
+<span class="s2">        # be SLOWER if the number of cases is not much greater than the number of cores being used.</span><span class="se">\n\</span>
+<span class="s2">        # However, if you have thousands or tens of thousands of cases, you can definitely save time by parallelizing.&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">parse_in_parallel_nCores</span> <span class="o">=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;parse_in_parallel_nCores&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>
+       <span class="s2">&quot;# If parse_in_parallel == 1, how many cores should PEATSA use to parse in parallel?</span><span class="se">\n\</span>
+<span class="s2">        # Enter an integer &gt;= 1 and &lt;= the number of available cores.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fingerprint</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;fingerprint&quot;</span><span class="p">,</span>  
+            <span class="s2">&quot;self.PEATSA_type != 4&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>     
+       <span class="s2">&quot;# What makes each case in this PEATSA run unique? Write a list of strings</span><span class="se">\n\</span>
+<span class="s2">        # that will be evaluated for each case to give it a unique fingerprint. </span><span class="se">\n\</span>
+<span class="s2">        # For data from an EMTG mission option, use &#39;MO.&#39;. Do not use data</span><span class="se">\n\</span>
+<span class="s2">        # from an EMTG mission. Cases need fingerprints even if they dont converge.</span><span class="se">\n\</span>
+<span class="s2">        # Do not put any formulas that are already in the seed_criteria list.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_files_location</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;reference_files_location&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;(self.start_type == &#39;Fresh&#39; and (self.PEATSA_type == 1 or self.PEATSA_type == 4)) or self.PEATSA_type == 5&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>
+       <span class="s2">&quot;# Where are the reference files? Enter a path as a string.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_options_file_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;reference_options_file_name&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;(self.start_type == &#39;Fresh&#39; and (self.PEATSA_type == 1 or self.PEATSA_type == 4)) or self.PEATSA_type == 5&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>  
+       <span class="s2">&quot;# What is the name of the reference options file? Enter a string.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_mission_file_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;reference_mission_file_name&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Fresh&#39; and (self.PEATSA_type == 1 or self.PEATSA_type == 3 or self.PEATSA_type == 5)&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>  
+       <span class="s2">&quot;# What is the name of the reference mission file? Enter a string.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">missed_thrust_timestep</span> <span class="o">=</span> <span class="mi">7</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;missed_thrust_timestep&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Fresh&#39; and (self.PEATSA_type == 1 or self.PEATSA_type == 3)&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>  
+       <span class="s2">&quot;# If running a missed thrust case, how frequently, should cases be created?</span><span class="se">\n\</span>
+<span class="s2">        # If missed_thrust_timestep &lt;= 1 : PEATSA will create a timestep that is that percentage of the given phase&#39;s timestep</span><span class="se">\n\</span>
+<span class="s2">        # If missed_thrust_timestep &gt; 1 : PEATSA will use the timestep directly as number of days&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">reference_spk_data_file</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;reference_spk_data_file&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Fresh&#39; and (self.PEATSA_type == 1 or self.PEATSA_type == 3 or self.PEATSA_type == 5)&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>  
+       <span class="s2">&quot;# If running a missed thrust case, what is the path to the spk input data file</span><span class="se">\n\</span>
+<span class="s2">        # that contains ephemeris for the reference trajectory. Enter a path as a string.</span><span class="se">\n\</span>
+<span class="s2">        # PEATSA expects a .ephemeris file with a mass column.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">post_missed_thrust_electric_propellant_margin</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;post_missed_thrust_electric_propellant_margin&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Fresh&#39; and (self.PEATSA_type == 1 or self.PEATSA_type == 3)&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>  
+       <span class="s2">&quot;# If running a missed thrust case, what propellant margin should the mission maintain?</span><span class="se">\n\</span>
+<span class="s2">        # for the propellant remaining when the missed thrust event is over? Because Bruno Sarli</span><span class="se">\n\</span>
+<span class="s2">        # is bad at math, you can specify units using either &#39;pct&#39; or &#39;kg&#39;. The whole thing</span><span class="se">\n\</span>
+<span class="s2">        # must be a string. For example, &#39;10 pct&#39; or &#39;100 kg&#39;.</span><span class="se">\n\</span>
+<span class="s2">        # If no units are specified, it will be assumed that the value is a percentage as a number from 0 to 1.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pre_missed_thrust_electric_propellant_margin</span> <span class="o">=</span> <span class="o">-</span><span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;pre_missed_thrust_electric_propellant_margin&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Fresh&#39; and (self.PEATSA_type == 1 or self.PEATSA_type == 3)&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>  
+       <span class="s2">&quot;# If running a missed thrust case, what propellant margin should the mission consider</span><span class="se">\n\</span>
+<span class="s2">        # itself to have used before the missed thrust event?</span><span class="se">\n\</span>
+<span class="s2">        # For example, if the mission used 200 kg of propellant before the missed thrust</span><span class="se">\n\</span>
+<span class="s2">        # event, and there are 100 kg of propellant remaining &#39;in the tank&#39;, we need to</span><span class="se">\n\</span>
+<span class="s2">        # determine how much of the remaining 100 kg are actually usable. If the mission</span><span class="se">\n\</span>
+<span class="s2">        # is to maintain a 10</span><span class="si">%%</span><span class="s2"> propellant margin over the entire mission, then only 80 kg</span><span class="se">\n\</span>
+<span class="s2">        # of the remaning propellant are usable, because the margin on the 200 kg used</span><span class="se">\n\</span>
+<span class="s2">        # so far is 20 kg.  </span><span class="se">\n\</span>
+<span class="s2">        # pre_missed_thrust_electric_propellant_margin &lt; 0, use the value from the reference mission</span><span class="se">\n\</span>
+<span class="s2">        # pre_missed_thrust_electric_propellant_margin &gt; 0 use the percentage specified (enter a number 0 to 1)&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">vent_pre_missed_thrust_electric_propellant_margin</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span> 
+            <span class="s2">&quot;vent_pre_missed_thrust_electric_propellant_margin&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Fresh&#39; and (self.PEATSA_type == 1 or self.PEATSA_type == 3)&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>  
+       <span class="s2">&quot;# If running a missed thrust case, should the pre-missed thrust event propellant</span><span class="se">\n\</span>
+<span class="s2">        # be vented? Once the missed thrust event is over, the propellant that was book-kept</span><span class="se">\n\</span>
+<span class="s2">        # as margin for the propellant used up until the event, is nominally converted to</span><span class="se">\n\</span>
+<span class="s2">        # &#39;dry mass&#39; in EMTG. However, this mass could be vented instead, which would reduce</span><span class="se">\n\</span>
+<span class="s2">        # the mass on-board for missed thrust recovery</span><span class="se">\n\</span>
+<span class="s2">        # Enter 1 or 0.&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">missed_thrust_recovery_forced_terminal_coast_reduction</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;missed_thrust_recovery_forced_terminal_coast_reduction&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Fresh&#39; and (self.PEATSA_type == 1 or self.PEATSA_type == 3)&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>  
+       <span class="s2">&quot;# How many days should be removed from any terminal forced coasts for missed thrust recovery cases?</span><span class="se">\n\</span>
+<span class="s2">        # If missed_thrust_recovery_forced_terminal_coast_reduction &gt; 0 : PEATSA will reduce the coast by an amount that is that percentage of the given phase&#39;s timestep. Enter a float, but integers are probably smarter.</span><span class="se">\n\</span>
+<span class="s2">        # If missed_thrust_recovery_forced_terminal_coast_reduction &lt; 0 : PEATSA will use the reduction directly directly as a number of days.&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">override_options</span> <span class="o">=</span> <span class="p">[(</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;MO.snopt_max_run_time = 300&quot;</span><span class="p">),(</span><span class="s2">&quot;1&quot;</span><span class="p">,</span><span class="s2">&quot;MO.MBH_max_run_time = 600&quot;</span><span class="p">)]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;override_options&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.PEATSA_type != 4&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>  
+       <span class="s2">&quot;# Are there any options that you want to override from the default options?</span><span class="se">\n\</span>
+<span class="s2">        # Enter a tuple of: </span><span class="se">\n\</span>
+<span class="s2">        # (string of condition of when to use the option, string of formula for option)</span><span class="se">\n\</span>
+<span class="s2">        # Use MO for the mission options object.</span><span class="se">\n\</span>
+<span class="s2">        # It is very likely that you want to at least override the directory paths for</span><span class="se">\n\</span>
+<span class="s2">        # HardwareModels and Universe.</span><span class="se">\n\</span>
+<span class="s2">        # Example: override_options = [(&#39;1&#39;,&#39;MO.launch_window_open_date = 23432&#39;),(&#39;len(MO.Journeys) &gt; 3&#39;,&#39;MO.Journeys[3].destination_list[1] = 2&#39;)]&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait_until_seeded</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;wait_until_seeded&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.PEATSA_type != 4&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>  
+       <span class="s2">&quot;# NOTE: We are currently not sure whether or not this actually works.</span><span class="se">\n\</span>
+<span class="s2">       # Should cases not be run until a seed can be found for them?</span><span class="se">\n\</span>
+<span class="s2">        # Note: they will be run for the 0th iteration. But in the reseeding process,</span><span class="se">\n\</span>
+<span class="s2">        # If a seed cant be found for it, then it will not be put back on the queue</span><span class="se">\n\</span>
+<span class="s2">        # Enter 1 or 0&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">trade_study_options_files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;trade_study_options_files&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;(self.start_type == &#39;Fresh&#39; or self.generate_default_plots) and (self.PEATSA_type == 2 or self.PEATSA_type == 3)&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>  
+       <span class="s2">&quot;# If performing a trade study, where are the options being traded stored?</span><span class="se">\n\</span>
+<span class="s2">        # Enter a list of tuples. Each tuple should have the format:</span><span class="se">\n\</span>
+<span class="s2">        # (string of path to csv file,options file type)</span><span class="se">\n\</span>
+<span class="s2">        # The path to the file should be full, not relative from anywhere.</span><span class="se">\n\</span>
+<span class="s2">        # There are three formats that the file can be created. All three formats</span><span class="se">\n\</span>
+<span class="s2">        # should be csv files though (It is assumed you will use excel to create the file</span><span class="se">\n\</span>
+<span class="s2">        # and then save it as a csv). The three formats are:</span><span class="se">\n\</span>
+<span class="s2">        # options file type = 0: Trade all values for a given variable individually against the default values of all other variables.</span><span class="se">\n\</span>
+<span class="s2">        #                        First two rows specify the reference files location and emtgopt filename respectively</span><span class="se">\n\</span>
+<span class="s2">        #                        Third row specifies the PyEMTG MissionOptions variables being traded. Use &#39;MO.&#39; to access mission option data,</span><span class="se">\n\</span>
+<span class="s2">        #                                                                                              Use &#39;SO.&#39; to access spacecraft option data</span><span class="se">\n\</span>
+<span class="s2">        #                                                                                              Use &#39;StgO[n].&#39; to access stage n option data</span><span class="se">\n\</span>
+<span class="s2">        #                        Fourth row lists the default value for the column it resides.</span><span class="se">\n\</span>
+<span class="s2">        #                        Subsequent rows, as many as desired, indicate all other options for that variable.</span><span class="se">\n\</span>
+<span class="s2">        #                        An example version of this file is in the PEATSA folder named &#39;opt_file_type_one.csv&#39;</span><span class="se">\n\</span>
+<span class="s2">        #                        The total number of cases generated will be equal to the sum of the number of all entries in the third row and below</span><span class="se">\n\</span>
+<span class="s2">        # options file type = 1: Trade all values of each variable against all values of all other variables.</span><span class="se">\n\</span>
+<span class="s2">        #                        First two rows specify the reference files location and emtgopt filename respectively</span><span class="se">\n\</span>
+<span class="s2">        #                        Third row specifies the PyEMTG MissionOptions variables being traded. Use &#39;MO.&#39; to access mission option data.</span><span class="se">\n\</span>
+<span class="s2">        #                                                                                              Use &#39;SO.&#39; to access spacecraft option data</span><span class="se">\n\</span>
+<span class="s2">        #                                                                                              Use &#39;StgO[n].&#39; to access stage n option data</span><span class="se">\n\</span>
+<span class="s2">        #                        Subsequent rows, as many as desired, indicate all other options for that variable.</span><span class="se">\n\</span>
+<span class="s2">        #                        An example version of this file is in the PEATSA folder named &#39;opt_file_type_two.csv&#39;</span><span class="se">\n\</span>
+<span class="s2">        #                        The total number of cases generated will be equal to the multiplicative of the number of entries in each column (not counting the top row)</span><span class="se">\n\</span>
+<span class="s2">        # options file type = 2: List out the exact combinations of each variable.</span><span class="se">\n\</span>
+<span class="s2">        #                        First two rows specify the reference files location and emtgopt filename respectively</span><span class="se">\n\</span>
+<span class="s2">        #                        Third row specifies the PyEMTG MissionOptions variables being traded. Use &#39;MO.&#39; to access mission option data.</span><span class="se">\n\</span>
+<span class="s2">        #                                                                                              Use &#39;SO.&#39; to access spacecraft option data</span><span class="se">\n\</span>
+<span class="s2">        #                                                                                              Use &#39;StgO[n].&#39; to access stage n option data</span><span class="se">\n\</span>
+<span class="s2">        #                        Subsequent rows, as many as desired indicate the combinations of those variables to be considered.</span><span class="se">\n\</span>
+<span class="s2">        #                        An example version of this file is in the PEATSA folder named &#39;opt_file_type_three.csv&#39;</span><span class="se">\n\</span>
+<span class="s2">        #                        The total number of cases generated will be equal to the number of rows (not counting the top row)&quot;</span>
+        <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">custom_PEATSA_chef_path</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;custom_PEATSA_chef_path&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.start_type == &#39;Fresh&#39; and self.PEATSA_type == 0&quot;</span><span class="p">,</span>
+            <span class="kc">False</span><span class="p">,</span>  
+       <span class="s2">&quot;# If PEATSA_type == 0, enter the path to a python script which will generate</span><span class="se">\n\</span>
+<span class="s2">        # the cases as part of the PEATSA run. This is meant to be used if the default</span><span class="se">\n\</span>
+<span class="s2">        # PEATSA file generators for trade studies and missed thrust studies aren&#39;t</span><span class="se">\n\</span>
+<span class="s2">        # sufficient for any reason. Enter a path as a string. The file must:</span><span class="se">\n\</span>
+<span class="s2">        #      1)  Be valid python code, ending with .py</span><span class="se">\n\</span>
+<span class="s2">        #      2)  Define a method called &#39;CustomPEATSAchef&#39;</span><span class="se">\n\</span>
+<span class="s2">        #      3)  CustomPEATSAchef must take a PEATSAmenu object as it&#39;s only input</span><span class="se">\n\</span>
+<span class="s2">        #      4)  Write the mission objects into PEATSAorder.cases_directory</span><span class="se">\n\</span>
+<span class="s2">        #      5)  Return a list of PEATSAbox objects with nothing but the PEATSAdough path set&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">only_rerun_if</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;only_rerun_if&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.PEATSA_type != 4&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>  
+       <span class="s2">&quot;# Enter a list of strings that will can be evaluated as a conditional statement. Each condition will filter out cases that should be ignored. These conditions</span><span class="se">\n\</span>
+<span class="s2">        # are applied using &#39;or&#39; logic, assuming that no cases will be re-run unless these conditions are met.</span><span class="se">\n\</span>
+<span class="s2">        # If left empty, the normal conditions apply. If applied, the cases will still be compared to the PEATSA objective, so</span><span class="se">\n\</span>
+<span class="s2">        # cases that meet the &#39;only_rerun_if&#39;, still might not be re-run if they also meet the stopping criteria.</span><span class="se">\n\</span>
+<span class="s2">        # Note: this does not remove cases from the PEATSA run entirely. It only adds</span><span class="se">\n\</span>
+<span class="s2">        # a condition, which if not met, will prevent cases from being re-run. But</span><span class="se">\n\</span>
+<span class="s2">        # thoses filtered cases will still appear in csv summary files.</span><span class="se">\n\</span>
+<span class="s2">        # Use &#39;M.&#39; to access EMTG mission object data and &#39;MO.&#39; to access EMTG mission options data.</span><span class="se">\n\</span>
+<span class="s2">        # Example only_rerun_if = [&#39;MO.launch_window_open_date &gt; 64000&#39;,&#39;M.spacecraft_dry_mass &lt; 100 and M.total_flight_time_years &gt; 30&#39;]&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">generate_default_plots</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;generate_default_plots&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.PEATSA_type != 4&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>  
+       <span class="s2">&quot;# NOTE: These plots are not necessarily all that useful, but see for yourself.</span><span class="se">\n\</span>
+<span class="s2">       # Should the default plots be generated?</span><span class="se">\n\</span>
+<span class="s2">        # For trade studies, each option being traded will be plotted </span><span class="se">\n\</span>
+<span class="s2">        # on the x axis vs. the &#39;objective_value&#39; on the y-axis. Note: this </span><span class="se">\n\</span>
+<span class="s2">        # currently only works for trade study type 0 files.</span><span class="se">\n\</span>
+<span class="s2">        # For missed thrust, missed thrust event date will be plotted on the x axis vs departure coast possible on the y-axis.&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">built_in_plotter_files</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;built_in_plotter_files&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;self.PEATSA_type != 4&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>  
+       <span class="s2">&quot;# Would you like to generate custom plots using the built-in plotter? If so, enter a list of paths as strings to csv files which</span><span class="se">\n\</span>
+<span class="s2">        # contain options for a plot&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">custom_post_processing_script</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">init_var</span><span class="p">(</span>
+            <span class="s2">&quot;custom_post_processing_script&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;1&quot;</span><span class="p">,</span>
+            <span class="kc">True</span><span class="p">,</span>  
+       <span class="s2">&quot;# Would you like to call a custom post processing script? Enter a path as a string.</span><span class="se">\n\</span>
+<span class="s2">        # This script will be called after each iteration. It can generate extra summary files, in addition to</span><span class="se">\n\</span>
+<span class="s2">        # the .csv file generated already, or extra plots, in addition to the defaults or any made with the built-in plotting routine.</span><span class="se">\n\</span>
+<span class="s2">        # Enter the path of a python module. The file must:</span><span class="se">\n\</span>
+<span class="s2">        #      1)  Be valid python code, ending with .py</span><span class="se">\n\</span>
+<span class="s2">        #      2)  Define a method called &#39;PEATSAPostProcess&#39;</span><span class="se">\n\</span>
+<span class="s2">        #      3)  PEATSAPostProcess must take a PEATSAmenu object as its first input</span><span class="se">\n\</span>
+<span class="s2">        #      4)  PEATSAPostProcess must take a python list of PEATSAbox objects as its second input</span><span class="se">\n\</span>
+<span class="s2">        # It is not necessary, but data files can be saved to &#39;PEATSAorder.docs_dir&#39; and plots can be saved to &#39;PEATSAorder.images_dir&#39;&quot;</span><span class="p">)</span>
+                   
+        <span class="c1"># --------------- LOAD USER OPTIONS ---------------------------</span>
+        <span class="k">if</span> <span class="n">options_file</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">load_options_from_file</span><span class="p">(</span><span class="n">options_file</span><span class="p">)</span>
+
+<div class="viewcode-block" id="PEATSAmenu.load_options_from_file"><a class="viewcode-back" href="../PEATSA/PEATSAmenu.html#PEATSAmenu.PEATSAmenu.load_options_from_file">[docs]</a>    <span class="k">def</span> <span class="nf">load_options_from_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">options_file</span><span class="p">,</span><span class="n">if_mid_bake</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        <span class="c1"># Read the options file        </span>
+        <span class="n">exec</span><span class="p">(</span><span class="nb">open</span><span class="p">(</span><span class="n">options_file</span><span class="p">)</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">if_mid_bake</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">logging</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully read options file&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Successfully read options file&quot;</span><span class="p">)</span>
+    
+        <span class="c1"># Get a dictionary of all local variables</span>
+        <span class="c1"># The only local variables will be ones set from the options script</span>
+        <span class="n">local_var_dir</span> <span class="o">=</span> <span class="nb">locals</span><span class="p">()</span>
+    
+        <span class="c1"># Loop through all local variables </span>
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">local_var_dir</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">var</span> <span class="o">!=</span> <span class="s2">&quot;self&quot;</span> <span class="ow">and</span> <span class="n">var</span> <span class="o">!=</span> <span class="s2">&quot;options_file&quot;</span> <span class="ow">and</span> <span class="n">var</span> <span class="o">!=</span> <span class="s2">&quot;if_mid_bake&quot;</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">var</span><span class="p">):</span>
+                    <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">var</span><span class="p">,</span><span class="n">local_var_dir</span><span class="p">[</span><span class="n">var</span><span class="p">])</span>
+                <span class="k">else</span><span class="p">:</span> 
+                    <span class="k">if</span> <span class="n">if_mid_bake</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Unknown option: &quot;</span> <span class="o">+</span> <span class="n">var</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Unknown option: &quot;</span> <span class="o">+</span> <span class="n">var</span><span class="p">)</span>
+        
+        <span class="n">needed_vars</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_needed_options</span><span class="p">()</span>
+        
+        <span class="n">any_missing</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">needed_vars</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">local_var_dir</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: Missing variable: &quot;</span> <span class="o">+</span> <span class="n">var</span><span class="p">)</span>
+                <span class="n">any_missing</span> <span class="o">=</span> <span class="kc">True</span>
+                
+        <span class="k">if</span> <span class="n">any_missing</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;WARNING: Maybe you need to run /PyEMTG/PEATSA/update_existing_PEATSA_script.py&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># for idx,seed_crit in enumerate(self.seed_criteria):</span>
+        <span class="c1">#     if len(seed_crit) == 3:</span>
+        <span class="c1">#         seed_crit += ([],)</span>
+        <span class="c1">#         self.seed_criteria[idx] = seed_crit      </span>
+                    
+        <span class="k">if</span> <span class="n">if_mid_bake</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">logging</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully taken PEATSA order&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Successfully taken PEATSA order&quot;</span><span class="p">)</span></div>
+    
+<div class="viewcode-block" id="PEATSAmenu.get_needed_options"><a class="viewcode-back" href="../PEATSA/PEATSAmenu.html#PEATSAmenu.PEATSAmenu.get_needed_options">[docs]</a>    <span class="k">def</span> <span class="nf">get_needed_options</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        
+        <span class="n">needed_vars</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="n">allvars</span> <span class="o">=</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        
+        <span class="n">ignore_list</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;sections&quot;</span><span class="p">,</span><span class="s2">&quot;section_order&quot;</span><span class="p">,</span><span class="s2">&quot;descriptions&quot;</span><span class="p">,</span><span class="s2">&quot;requirements&quot;</span><span class="p">,</span><span class="s2">&quot;available_midbake&quot;</span><span class="p">,</span><span class="s2">&quot;load_options_from_file&quot;</span><span class="p">,</span><span class="s2">&quot;get_needed_options&quot;</span><span class="p">,</span><span class="s2">&quot;init_var&quot;</span><span class="p">,</span><span class="s2">&quot;write_to_file&quot;</span><span class="p">,</span><span class="s2">&quot;conditionally_write_to_file&quot;</span><span class="p">]</span>
+        
+        <span class="k">for</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">allvars</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">var</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;__&quot;</span><span class="p">):</span>
+                <span class="k">continue</span>
+            <span class="k">if</span> <span class="n">var</span> <span class="ow">in</span> <span class="n">ignore_list</span><span class="p">:</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="n">var</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">requirements</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">continue</span>
+            
+            <span class="k">if</span> <span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">requirements</span><span class="p">[</span><span class="n">var</span><span class="p">])):</span>
+                <span class="n">needed_vars</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">var</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="n">needed_vars</span></div>
+            
+<div class="viewcode-block" id="PEATSAmenu.init_var"><a class="viewcode-back" href="../PEATSA/PEATSAmenu.html#PEATSAmenu.PEATSAmenu.init_var">[docs]</a>    <span class="k">def</span> <span class="nf">init_var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">var_name</span><span class="p">,</span><span class="n">requirements_string</span><span class="p">,</span><span class="n">midbake</span><span class="p">,</span><span class="n">description_string</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">descriptions</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">var_name</span> <span class="p">:</span> <span class="n">description_string</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">requirements</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">var_name</span> <span class="p">:</span> <span class="n">requirements_string</span><span class="p">})</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">available_midbake</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">var_name</span> <span class="p">:</span> <span class="n">midbake</span><span class="p">})</span></div>
+        
+<div class="viewcode-block" id="PEATSAmenu.write_to_file"><a class="viewcode-back" href="../PEATSA/PEATSAmenu.html#PEATSAmenu.PEATSAmenu.write_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">write_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filename</span><span class="p">,</span><span class="n">requirement_check</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span><span class="n">mid_bake_file</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+        
+        <span class="kn">from</span> <span class="nn">math</span> <span class="kn">import</span> <span class="n">floor</span><span class="p">,</span> <span class="n">ceil</span>
+        
+        <span class="c1"># Get all of the member variables from the class, excpet for the descriptions dictionary</span>
+        <span class="c1"># members = [attr for attr in dir(self) if not callable(getattr(self, attr)) and not attr.startswith(&quot;__&quot;) and not isinstance(eval(&quot;self.&quot; + attr),dict)]</span>
+    
+        <span class="c1"># Open the output file</span>
+        <span class="n">file_handle</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+    
+        <span class="c1"># Write the header for the sample options file</span>
+        <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# PEATSA &quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mid_bake_file</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span> 
+            <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;mid-bake &quot;</span><span class="p">)</span>
+        <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;options script&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# written by PEATSA menu class&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># If this is a midbake file, let the user know these options can be changed while peatsa is running</span>
+        <span class="k">if</span> <span class="n">mid_bake_file</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# These options can be modified while a PEATSA run is baking, and they will be updated as soon as the current iteration cases are done cooking&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+        <span class="c1"># Define the length of the section headers</span>
+        <span class="n">section_header_length</span> <span class="o">=</span> <span class="mi">100</span>
+    
+        <span class="c1"># Loop through all the sections</span>
+        <span class="k">for</span> <span class="n">section</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">section_order</span><span class="p">:</span>
+            
+            <span class="c1"># Get the length of the section title itself</span>
+            <span class="n">sec_len</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">section</span><span class="p">)</span>
+            
+            <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;# &quot;</span><span class="p">)</span>
+            <span class="c1"># Loop through the front dashes</span>
+            <span class="k">for</span> <span class="n">dash_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">floor</span><span class="p">((</span><span class="n">section_header_length</span><span class="o">-</span><span class="n">sec_len</span><span class="p">)</span><span class="o">/</span><span class="mf">2.0</span><span class="p">))):</span>
+                <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Write the section title</span>
+            <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="n">section</span> <span class="o">+</span> <span class="s2">&quot; &quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Loop through the end dashes</span>
+            <span class="k">for</span> <span class="n">dash_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">ceil</span><span class="p">((</span><span class="n">section_header_length</span><span class="o">-</span><span class="n">sec_len</span><span class="p">)</span><span class="o">/</span><span class="mf">2.0</span><span class="p">))):</span>
+                <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+            
+            <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+            <span class="c1"># Loop through all member variables</span>
+            <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">sections</span><span class="p">[</span><span class="n">section</span><span class="p">]:</span>
+            
+                <span class="c1"># Check if this is a midbake file</span>
+                <span class="k">if</span> <span class="n">mid_bake_file</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="c1"># It is.</span>
+                    
+                    <span class="c1"># Check if this variable is available mid-bake</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">available_midbake</span><span class="p">[</span><span class="n">member</span><span class="p">]</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+                        <span class="c1"># It is not</span>
+                        <span class="k">continue</span>
+                        
+                <span class="c1"># Check if we are checking conditions for the option to be present</span>
+                <span class="k">if</span> <span class="n">requirement_check</span><span class="p">:</span>
+                    <span class="c1"># We are</span>
+                
+                    <span class="c1"># Check if the requirement is set</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">requirements</span><span class="p">[</span><span class="n">member</span><span class="p">])):</span>
+                        <span class="c1"># Condition is not met, go to the next member variable</span>
+                        <span class="k">continue</span>
+            
+                <span class="c1"># Write the description comment to file</span>
+                <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">descriptions</span><span class="p">[</span><span class="n">member</span><span class="p">])</span>
+                <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+
+                <span class="c1"># Check if the member variable is a string, and then write it out with or without quotes as appropriate</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;self.&quot;</span> <span class="o">+</span> <span class="n">member</span><span class="p">),</span><span class="nb">str</span><span class="p">):</span>
+                    <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">member</span> <span class="o">+</span> <span class="s2">&quot; = &#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;self.&quot;</span> <span class="o">+</span> <span class="n">member</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;&#39;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;self.&quot;</span> <span class="o">+</span> <span class="n">member</span><span class="p">),</span><span class="nb">list</span><span class="p">):</span>
+                    <span class="n">listvals</span> <span class="o">=</span> <span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;self.&quot;</span> <span class="o">+</span> <span class="n">member</span><span class="p">)</span>
+                    <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">member</span> <span class="o">+</span> <span class="s2">&quot; = [&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="k">for</span> <span class="n">eidx</span><span class="p">,</span><span class="n">entry</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">listvals</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">entry</span><span class="p">,</span><span class="nb">str</span><span class="p">):</span>
+                            <span class="k">if</span> <span class="s1">&#39;&quot;&#39;</span> <span class="ow">in</span> <span class="n">entry</span><span class="p">:</span>
+                                <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;    &#39;&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;&#39;&quot;</span><span class="p">)</span>
+                            <span class="k">else</span><span class="p">:</span>
+                                <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;    &quot;&#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">entry</span><span class="p">)</span> <span class="o">+</span> <span class="s1">&#39;&quot;&#39;</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;    &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">entry</span><span class="p">))</span>
+                        <span class="k">if</span> <span class="n">eidx</span> <span class="o">+</span> <span class="mi">1</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">listvals</span><span class="p">):</span>
+                            <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+                        <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot; &quot;</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">member</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;   ]&quot;</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">member</span> <span class="o">+</span> <span class="s2">&quot; = &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">eval</span><span class="p">(</span><span class="s2">&quot;self.&quot;</span> <span class="o">+</span> <span class="n">member</span><span class="p">))</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                    <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+            <span class="n">file_handle</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    
+        <span class="c1"># Close the file</span>
+        <span class="n">file_handle</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+        
+<div class="viewcode-block" id="PEATSAmenu.conditionally_write_to_file"><a class="viewcode-back" href="../PEATSA/PEATSAmenu.html#PEATSAmenu.PEATSAmenu.conditionally_write_to_file">[docs]</a>    <span class="k">def</span> <span class="nf">conditionally_write_to_file</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">filename</span><span class="p">):</span>
+        <span class="c1"># Nothing to do but call the normal file writer, but with the requirements flag set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">write_to_file</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

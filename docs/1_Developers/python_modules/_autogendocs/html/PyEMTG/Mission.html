@@ -1,0 +1,222 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Mission module &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="MissionEvent module" href="MissionEvent.html" />
+    <link rel="prev" title="JourneyOptionsV1 module" href="JourneyOptionsV1.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-Mission">
+<span id="mission-module"></span><h1>Mission module<a class="headerlink" href="#module-Mission" title="Permalink to this heading">¶</a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="Mission.Mission">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Mission.</span></span><span class="sig-name descname"><span class="pre">Mission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.AutoTableMission">
+<span class="sig-name descname"><span class="pre">AutoTableMission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">TableFileName</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PlotOptions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.AutoTableMission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.AutoTableMission" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.BubbleSearch">
+<span class="sig-name descname"><span class="pre">BubbleSearch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">BubbleOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputfilename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">OutputWindow</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.BubbleSearch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.BubbleSearch" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.CalculateThrottleTableHistory">
+<span class="sig-name descname"><span class="pre">CalculateThrottleTableHistory</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.CalculateThrottleTableHistory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.CalculateThrottleTableHistory" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.Comparatron">
+<span class="sig-name descname"><span class="pre">Comparatron</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">baseline_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">csv_file_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_output</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance_dict</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{}</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1e-15</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attributes_to_ignore</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.Comparatron"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.Comparatron" title="Permalink to this definition">¶</a></dt>
+<dd><p>baseline_path: the file location of the emtg case to compare against. This is the only required argument.
+csv_file_name: can specify the output file name. A csv file is only output if there are mismatches between cases. By default, it uses the mission name as the name for the csv output file
+full_output: determines whether all cases that disagree between self and the baseline will be saved to csv. If True, all cases that are not in exact agreement will be saved. If False, only cases that do not meet the tolerance will be saved to the csv output.
+tolerance_dict: a dictionary of tolerences that, if provided, will override the default value. Provide a dictionary with the attribute name as the key and the alternate tolerance as the value (i.e. {‘total_statistical_deltav’:1e-6,’Declination’:1e-8})
+default_tolerance: the tolerance value used for all attributes that do not appear in the tolerance_dict
+attributes_to_ignore: list of attributes that should not be compared between the baseline and self. i.e., we do not care if the values are different.
+prepend Mission attributes with M., Journey attributes with J., and MissionEvent attributes with E.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.Generate1Dto2DInitialGuess">
+<span class="sig-name descname"><span class="pre">Generate1Dto2DInitialGuess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">throttle_table_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">command_var</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.Generate1Dto2DInitialGuess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.Generate1Dto2DInitialGuess" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.Generate2Dto1DInitialGuess">
+<span class="sig-name descname"><span class="pre">Generate2Dto1DInitialGuess</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.Generate2Dto1DInitialGuess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.Generate2Dto1DInitialGuess" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.GenerateDataPlot">
+<span class="sig-name descname"><span class="pre">GenerateDataPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PlotOptions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.GenerateDataPlot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.GenerateDataPlot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.GenerateThrottleHistogram">
+<span class="sig-name descname"><span class="pre">GenerateThrottleHistogram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PlotOptions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.GenerateThrottleHistogram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.GenerateThrottleHistogram" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.GenerateThrottlePlot">
+<span class="sig-name descname"><span class="pre">GenerateThrottlePlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">throttletablefile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reportfilename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.GenerateThrottlePlot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.GenerateThrottlePlot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.GenerateThrottleReport">
+<span class="sig-name descname"><span class="pre">GenerateThrottleReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reportfilename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.GenerateThrottleReport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.GenerateThrottleReport" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.PlotMission">
+<span class="sig-name descname"><span class="pre">PlotMission</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PlotOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ShowFigure</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CustomLabels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.PlotMission"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.PlotMission" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.UpdateLabelPositions">
+<span class="sig-name descname"><span class="pre">UpdateLabelPositions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.UpdateLabelPositions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.UpdateLabelPositions" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.UpdateLabelPositionsEvent">
+<span class="sig-name descname"><span class="pre">UpdateLabelPositionsEvent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">e</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.UpdateLabelPositionsEvent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.UpdateLabelPositionsEvent" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.WriteDataReport">
+<span class="sig-name descname"><span class="pre">WriteDataReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PlotOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reportfilename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.WriteDataReport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.WriteDataReport" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.getJourneyIndex">
+<span class="sig-name descname"><span class="pre">getJourneyIndex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">journeyNameString</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.getJourneyIndex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.getJourneyIndex" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Mission.Mission.mission_name">
+<span class="sig-name descname"><span class="pre">mission_name</span></span><a class="headerlink" href="#Mission.Mission.mission_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mission name (string)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Mission.Mission.parse_mission_file">
+<span class="sig-name descname"><span class="pre">parse_mission_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_file_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Mission.html#Mission.parse_mission_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Mission.Mission.parse_mission_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Mission.Mission.total_deterministic_deltav">
+<span class="sig-name descname"><span class="pre">total_deterministic_deltav</span></span><a class="headerlink" href="#Mission.Mission.total_deterministic_deltav" title="Permalink to this definition">¶</a></dt>
+<dd><p>Total deterministic Delta v, km/s</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">PyEMTG documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">PyEMTG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">PyEMTG documentation</a><ul>
+  <li><a href="modules.html">PyEMTG</a><ul>
+      <li>Previous: <a href="JourneyOptionsV1.html" title="previous chapter">JourneyOptionsV1 module</a></li>
+      <li>Next: <a href="MissionEvent.html" title="next chapter">MissionEvent module</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,162 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>combine_PEATSA_output_csv_files module &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="combine_existing_PEATSA_scripts module" href="combine_existing_PEATSA_scripts.html" />
+    <link rel="prev" title="analyze_convergence module" href="analyze_convergence.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-combine_PEATSA_output_csv_files">
+<span id="combine-peatsa-output-csv-files-module"></span><h1>combine_PEATSA_output_csv_files module<a class="headerlink" href="#module-combine_PEATSA_output_csv_files" title="Permalink to this heading">¶</a></h1>
+<section id="combine-peatsa-output-csv-files-py">
+<h2>combine_PEATSA_output_csv_files.py<a class="headerlink" href="#combine-peatsa-output-csv-files-py" title="Permalink to this heading">¶</a></h2>
+<p>Contains function that combines the contents of multiple
+PEATSA output csv files (the Iteration#.csv files).</p>
+<p>It only makes sense to use this function if all the input .csv files
+have the same columns.</p>
+</section>
+<dl class="py function">
+<dt class="sig sig-object py" id="combine_PEATSA_output_csv_files.combine_PEATSA_output_csv_files">
+<span class="sig-prename descclassname"><span class="pre">combine_PEATSA_output_csv_files.</span></span><span class="sig-name descname"><span class="pre">combine_PEATSA_output_csv_files</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inputFiles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outputFile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/combine_PEATSA_output_csv_files.html#combine_PEATSA_output_csv_files"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#combine_PEATSA_output_csv_files.combine_PEATSA_output_csv_files" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that combines the contents of multiple
+PEATSA output csv files (the Iteration#.csv files).</p>
+<p>It only makes sense to use this function if all the input .csv files
+have the same columns.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>inputFiles</strong> (<em>List</em><em> of </em><em>strings</em>) – List of full file paths to all input files to be combined.
+Column headers for the output file are taken from the first element in the list</p></li>
+<li><p><strong>outputFile</strong> (<em>String</em>) – Full file path to the csv file to which the combined contents are to be written.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="combine_PEATSA_output_csv_files.find_latest_PEATSA_output_csv_file_in_directory">
+<span class="sig-prename descclassname"><span class="pre">combine_PEATSA_output_csv_files.</span></span><span class="sig-name descname"><span class="pre">find_latest_PEATSA_output_csv_file_in_directory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">directory</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/combine_PEATSA_output_csv_files.html#find_latest_PEATSA_output_csv_file_in_directory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#combine_PEATSA_output_csv_files.find_latest_PEATSA_output_csv_file_in_directory" title="Permalink to this definition">¶</a></dt>
+<dd><p>Function that finds the latest “Iteration#.csv” file in a given directory</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>directory</strong> (<em>String</em>) – The directory in which to look for files</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>fileName</strong> – The latest PEATSA output csv file in the directory. None if there are none</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>String</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">PEATSA documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">PEATSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">PEATSA documentation</a><ul>
+  <li><a href="modules.html">PEATSA</a><ul>
+      <li>Previous: <a href="analyze_convergence.html" title="previous chapter">analyze_convergence module</a></li>
+      <li>Next: <a href="combine_existing_PEATSA_scripts.html" title="next chapter">combine_existing_PEATSA_scripts module</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

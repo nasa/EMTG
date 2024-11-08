@@ -1,0 +1,790 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PEATSA &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for PEATSA</h1><div class="highlight"><pre>
+<span></span><span class="c1">#EMTG: Evolutionary Mission Trajectory Generator</span>
+<span class="c1">#An open-source global optimization tool for preliminary mission design</span>
+<span class="c1">#Provided by NASA Goddard Space Flight Center</span>
+<span class="c1">#</span>
+<span class="c1">#Copyright (c) 2014 - 2024 United States Government as represented by the</span>
+<span class="c1">#Administrator of the National Aeronautics and Space Administration.</span>
+<span class="c1">#All Other Rights Reserved.</span>
+<span class="c1">#</span>
+<span class="c1">#Licensed under the NASA Open Source License (the &quot;License&quot;); </span>
+<span class="c1">#You may not use this file except in compliance with the License. </span>
+<span class="c1">#You may obtain a copy of the License at:</span>
+<span class="c1">#https://opensource.org/license/nasa1-3-php</span>
+<span class="c1">#Unless required by applicable law or agreed to in writing, software</span>
+<span class="c1">#distributed under the License is distributed on an &quot;AS IS&quot; BASIS,</span>
+<span class="c1">#WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either </span>
+<span class="c1">#express or implied.   See the License for the specific language</span>
+<span class="c1">#governing permissions and limitations under the License.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">PEATSA.py</span>
+<span class="sd">============</span>
+<span class="sd">This file contains the main PEATSA executable script.</span>
+
+<span class="sd">Calling sequence: python PEATSA.py &lt;path/to/options/file.py&gt;</span>
+
+<span class="sd">PEATSA nomenclature:</span>
+<span class="sd">    </span>
+<span class="sd">   PEATSAbox: sortable container for a mission and its options script</span>
+<span class="sd">   PEATSAchef: creates .emtgopt files</span>
+<span class="sd">   PEATSAcrust: output (.emtg files)</span>
+<span class="sd">   PEATSAdelivery: plots</span>
+<span class="sd">   PEATSAdough: input (.emtgopt files)</span>
+<span class="sd">   PEATSAmeal: a PEATSA iteration</span>
+<span class="sd">   PEATSAmenu: holds options for PEATSA run (i.e., the PEATSAtoppings)</span>
+<span class="sd">   PEATSAoven: executes EMTG cases</span>
+<span class="sd">   PEATSAtopping: the input options</span>
+<span class="sd">   PEATSAwaiter: pre/post-processor</span>
+
+<span class="sd">Jeremy Knittel 1-23-2018</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../PEATSA/PEATSA.html#PEATSA.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The PEATSA main() function requires a single command-line input argument: A PEATSA options script.</span>
+<span class="sd">    </span>
+<span class="sd">    The function performs the following steps:</span>
+<span class="sd">    </span>
+<span class="sd">    #1) Reads a PEATSA options script (command-line argument)</span>
+<span class="sd">    </span>
+<span class="sd">    #2) Creates a set of .emtgopt files</span>
+<span class="sd">    </span>
+<span class="sd">    #3) Executes the .emtgopt files to produce .emtg files</span>
+<span class="sd">    </span>
+<span class="sd">    #4) Analyzes the resulting .emtg files and oganizes them </span>
+<span class="sd">    </span>
+<span class="sd">    #4) Creates plots</span>
+<span class="sd">    </span>
+<span class="sd">    #5) Determines which .emtgopts made poor .emtgs and need to be rerun</span>
+<span class="sd">    </span>
+<span class="sd">    #6) Picks better initial guesses for the cases that need to be rerun</span>
+<span class="sd">    </span>
+<span class="sd">    #7) Returns to #3)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--------------------- Starting PEATSA ---------------------&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Import system modules</span>
+    <span class="kn">import</span> <span class="nn">sys</span>
+    <span class="kn">import</span> <span class="nn">logging</span>
+    <span class="kn">import</span> <span class="nn">os</span>
+    <span class="kn">import</span> <span class="nn">time</span>
+    <span class="kn">import</span> <span class="nn">shutil</span>
+    
+    <span class="n">dir_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span> <span class="c1"># get path to PEATSA.py</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">dir_path</span> <span class="o">+</span> <span class="s2">&quot;/..&quot;</span><span class="p">)</span> <span class="c1"># add PyETMG directory to path</span>
+    
+    <span class="c1"># Import PEATSA modules</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span> <span class="nn">PyHardware</span>
+        <span class="n">pyhardware_warning</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="n">pyhardware_warning</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="nb">print</span> <span class="p">(</span><span class="s2">&quot;WARNING: PyHardware not available. Might cause errors. You have been warned&quot;</span><span class="p">)</span>
+    <span class="kn">import</span> <span class="nn">PEATSAmenu</span>
+    <span class="kn">import</span> <span class="nn">PEATSAchef</span>
+    <span class="kn">import</span> <span class="nn">PEATSAwaiter</span>
+    <span class="kn">import</span> <span class="nn">PEATSAbusboy</span>
+    <span class="kn">import</span> <span class="nn">PEATSAoven</span>
+    <span class="kn">import</span> <span class="nn">PEATSAdelivery</span>
+    <span class="kn">import</span> <span class="nn">PEATSAbox</span>
+    
+    <span class="c1"># Ensure that an options script was specified</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Specify the options script! Calling sequence: python PEATSA.py &lt;path/to/options/file.py&gt;&#39;</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s1">&#39;Too many options specified. Just give one options script! Calling sequence: python PEATSA.py &lt;path/to/options/file.py&gt;&#39;</span><span class="p">)</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Attempting to load options script: &quot;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="c1"># Create the options class</span>
+    <span class="n">PEATSAorder</span> <span class="o">=</span> <span class="n">PEATSAmenu</span><span class="o">.</span><span class="n">PEATSAmenu</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Attempting to open logfile: &quot;</span> <span class="o">+</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">logfile</span><span class="p">)</span>
+    
+    <span class="c1"># Set up a log file script</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">logfile</span><span class="p">,</span><span class="n">filemode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">,</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">,</span><span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Successfully opened logfile&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Successfully opened logfile, all status updates will now be logged instead of printed to console.&quot;</span><span class="p">)</span>
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Error opening logfile&quot;</span><span class="p">)</span>
+        
+    <span class="k">def</span> <span class="nf">myError</span><span class="p">(</span><span class="n">excType</span><span class="p">,</span> <span class="n">excValue</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Define a custom error handler so that the errors go to the logfile, not the console</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;*************** PEATSA encountered an error. ****************&quot;</span><span class="p">,</span>
+                     <span class="n">exc_info</span><span class="o">=</span><span class="p">(</span><span class="n">excType</span><span class="p">,</span> <span class="n">excValue</span><span class="p">,</span> <span class="n">traceback</span><span class="p">))</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">excepthook</span> <span class="o">=</span> <span class="n">myError</span>
+    
+    <span class="c1"># start peatsa</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Welcome to PEATSA.&quot;</span><span class="p">)</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Running version &quot;</span> <span class="o">+</span> <span class="n">sys</span><span class="o">.</span><span class="n">version</span><span class="p">)</span>
+    
+    <span class="c1"># check if PyHardware class was imported</span>
+    <span class="k">if</span> <span class="n">pyhardware_warning</span><span class="p">:</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;WARNING: PyHardware not available. Might cause errors. You have been warned&quot;</span><span class="p">)</span>
+        
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Making working directories&quot;</span><span class="p">)</span>
+    
+    <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span><span class="p">)</span>
+    
+    <span class="n">root_working_directory</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span>
+    
+    <span class="c1"># keep_only_current_and_previous requires a fresh start and trade study study type</span>
+    <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">keep_only_current_and_previous</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">start_type</span> <span class="o">!=</span> <span class="s2">&quot;Fresh&quot;</span> <span class="ow">or</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">PEATSA_type</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;keep_only_current_and_previous == True is currently only compatible with a Fresh start and PEATSA_type == 2.&quot;</span><span class="p">)</span>
+            
+    
+    <span class="c1"># If warm-starting, then a new folder is not needed</span>
+    <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">start_type</span> <span class="o">==</span> <span class="s2">&quot;Warm&quot;</span><span class="p">:</span>
+        <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">run_name</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+        
+        <span class="c1"># Get a path of the results and case folders</span>
+        <span class="n">base_results_dir</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s1">&#39;results/&#39;</span>
+        <span class="n">base_cases_dir</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s1">&#39;cases/&#39;</span>
+        <span class="n">base_docs_dir</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s1">&#39;docs/&#39;</span>
+        <span class="n">base_images_dir</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s1">&#39;images/&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># A new working folder is needed. But, first we need to make sure we arent</span>
+        <span class="c1"># writing over previous results</span>
+        
+        <span class="c1"># Get a base name for the working directory without anything appended</span>
+        <span class="n">base_name</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">run_name</span>
+        <span class="n">new_name</span> <span class="o">=</span> <span class="n">base_name</span>
+        <span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
+        
+        <span class="c1"># While the name exists, try increasing the counter. This way the working</span>
+        <span class="c1"># folder will be the first unused working_directory_#</span>
+        <span class="k">while</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">new_name</span><span class="p">):</span>
+            <span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">new_name</span> <span class="o">=</span> <span class="n">base_name</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">counter</span><span class="p">)</span>
+            
+        <span class="c1"># Found it. Update the peatsa order</span>
+        <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">=</span> <span class="n">new_name</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span><span class="p">)</span>
+        
+        <span class="c1"># Get a path of the results and case folders</span>
+        <span class="n">base_results_dir</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s1">&#39;results/&#39;</span>
+        <span class="n">base_cases_dir</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s1">&#39;cases/&#39;</span>
+        <span class="n">base_docs_dir</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s1">&#39;docs/&#39;</span>
+        <span class="n">base_images_dir</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s1">&#39;images/&#39;</span>
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">start_type</span> <span class="o">==</span> <span class="s2">&quot;Fresh&quot;</span><span class="p">:</span>
+            <span class="n">base_hardware_dir</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s1">&#39;HardwareModels/&#39;</span>
+        
+        <span class="c1"># Make the main four working subdirectories</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">base_results_dir</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">base_cases_dir</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">base_docs_dir</span><span class="p">)</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">base_images_dir</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">start_type</span> <span class="o">==</span> <span class="s2">&quot;Fresh&quot;</span><span class="p">:</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">base_hardware_dir</span><span class="p">)</span>
+        
+        <span class="c1"># Since this is a new peatsa run, set the iteration</span>
+        <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span> <span class="o">=</span> <span class="mi">0</span>
+    
+    <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">root_working_directory</span> <span class="o">+</span> <span class="s2">&quot;/running&quot;</span><span class="p">):</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">root_working_directory</span> <span class="o">+</span> <span class="s2">&quot;/running&quot;</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">symlink</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span><span class="p">,</span><span class="n">root_working_directory</span> <span class="o">+</span> <span class="s2">&quot;/running&quot;</span><span class="p">)</span>
+    
+    <span class="c1"># Copy the options to the working directory</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Copying options script to working directory&quot;</span><span class="p">)</span>
+    <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">write_to_file</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s1">&#39;PEATSA_ExecutedOptions.py&#39;</span><span class="p">)</span>
+    
+    <span class="c1"># Loop through built in plotter files</span>
+    <span class="n">plot_file_ct</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">new_plot_files</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">plotfile</span> <span class="ow">in</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">built_in_plotter_files</span><span class="p">:</span>
+        <span class="c1"># Load the plot options</span>
+        <span class="n">PO</span> <span class="o">=</span> <span class="n">PEATSAmenu</span><span class="o">.</span><span class="n">PEATSAinstagram</span><span class="p">(</span><span class="n">plotfile</span><span class="p">)</span>
+        
+        <span class="c1"># Write out the plot options</span>
+        <span class="n">PO</span><span class="o">.</span><span class="n">write_options</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;Plot&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">plot_file_ct</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;Options.py&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Add the new plot file name to the list</span>
+        <span class="n">new_plot_files</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;Plot&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">plot_file_ct</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;Options.py&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Update the counter</span>
+        <span class="n">plot_file_ct</span> <span class="o">+=</span> <span class="mi">1</span>
+    
+    <span class="c1"># Point the peatsa options at the updated plot files</span>
+    <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">built_in_plotter_files</span> <span class="o">=</span> <span class="n">new_plot_files</span>
+    
+    <span class="c1"># Write out the midbake options</span>
+    <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">write_to_file</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s1">&#39;PEATSA_MidBake_Options.py&#39;</span><span class="p">,</span><span class="kc">True</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="c1"># Put the docs directory on the PEATSAorder object</span>
+    <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">docs_dir</span> <span class="o">=</span> <span class="n">base_docs_dir</span>
+    <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">images_dir</span> <span class="o">=</span> <span class="n">base_images_dir</span>
+    <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">start_type</span> <span class="o">==</span> <span class="s2">&quot;Fresh&quot;</span><span class="p">:</span>
+        <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">hardware_dir</span> <span class="o">=</span> <span class="n">base_hardware_dir</span>
+    
+    <span class="c1"># Fix home folder relative paths if they exist</span>
+    <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">restart_run_root_directory</span> <span class="o">=</span> <span class="p">[(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">restart_dir</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span><span class="n">restart_dir</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">restart_dir</span> <span class="ow">in</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">restart_run_root_directory</span><span class="p">]</span>
+    <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">emtg_root_directory</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">expanduser</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">emtg_root_directory</span><span class="p">)</span>
+    
+    <span class="c1"># Create the oven (running emtg) class</span>
+    <span class="n">oven</span> <span class="o">=</span> <span class="n">PEATSAoven</span><span class="o">.</span><span class="n">PEATSAoven</span><span class="p">()</span>
+    <span class="c1"># Create the waiter (re-seeder) class</span>
+    <span class="n">waiter</span> <span class="o">=</span> <span class="n">PEATSAwaiter</span><span class="o">.</span><span class="n">PEATSAwaiter</span><span class="p">()</span>
+    <span class="c1"># Create the busboy (harvester) class</span>
+    <span class="n">busboy</span> <span class="o">=</span> <span class="n">PEATSAbusboy</span><span class="o">.</span><span class="n">PEATSAbusboy</span><span class="p">()</span>
+    <span class="c1"># Create the delivery (plotting) class</span>
+    <span class="n">delivery</span> <span class="o">=</span> <span class="n">PEATSAdelivery</span><span class="o">.</span><span class="n">PEATSAdelivery</span><span class="p">()</span>
+    
+    <span class="c1">#create an empty &quot;boxes2run&quot; variable</span>
+    <span class="n">boxes2run</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">boxes</span> <span class="o">=</span> <span class="p">[]</span>
+    
+    <span class="c1"># create a dictionary to store all of the used seeds</span>
+    <span class="n">history</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;seed&#39;</span><span class="p">:[],</span><span class="s1">&#39;run&#39;</span><span class="p">:[],</span><span class="s1">&#39;objective&#39;</span><span class="p">:[],</span> <span class="s1">&#39;firstSolveFeasible&#39;</span><span class="p">:[],</span> <span class="s1">&#39;bestSolutionIndex&#39;</span><span class="p">:[],</span> <span class="s1">&#39;solutionAttempts&#39;</span><span class="p">:[]}</span>
+    
+    <span class="c1"># Check if we are running things in parallel</span>
+    <span class="c1"># if PEATSAorder.parse_in_parallel:</span>
+        <span class="c1"># # I dont really know how this stuff works. I got it from here:</span>
+        <span class="c1"># # https://bytes.com/topic/python/answers/552476-why-cant-you-pickle-instancemethods</span>
+        <span class="c1"># # But, it is necessary to run things in parallel</span>
+        
+        <span class="c1"># try:</span>
+            <span class="c1"># def _pickle_method(method):</span>
+                <span class="c1"># func_name = method.im_func.__name__</span>
+                <span class="c1"># obj = method.im_self</span>
+                <span class="c1"># cls = method.im_class</span>
+                <span class="c1"># return _unpickle_method, (func_name, obj, cls)</span>
+            
+            <span class="c1"># def _unpickle_method(func_name, obj, cls):</span>
+                <span class="c1"># for cls in cls.mro():</span>
+                    <span class="c1"># try:</span>
+                        <span class="c1"># func = cls.__dict__[func_name]</span>
+                    <span class="c1"># except KeyError:</span>
+                        <span class="c1"># pass</span>
+                    <span class="c1"># else:</span>
+                        <span class="c1"># break</span>
+                <span class="c1"># return func.__get__(obj, cls)</span>
+            
+            
+            <span class="c1"># from joblib import Parallel, delayed</span>
+            <span class="c1"># import copy_reg</span>
+            <span class="c1"># import types</span>
+        
+            <span class="c1"># copy_reg.pickle(types.MethodType, _pickle_method, _unpickle_method)</span>
+        
+        <span class="c1"># except:</span>
+            <span class="c1"># logging.info(&quot;Cant setup parallel, so running in serial&quot;)</span>
+            <span class="c1"># PEATSAorder.parse_in_parallel = 0</span>
+          
+    <span class="c1"># Load the extenral seed boxes. Do so now, so that if there is a problem, it doesnt take down</span>
+    <span class="c1"># the peatsa run  </span>
+    <span class="n">external_seed_boxes</span> <span class="o">=</span> <span class="n">busboy</span><span class="o">.</span><span class="n">load_external_seed_boxes</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">)</span>
+    
+    <span class="c1"># Set flags regarding if midbake options have changed</span>
+    <span class="n">update_external_seed_cases_flag</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">update_seed_criteria_or_fingerprint_flag</span> <span class="o">=</span> <span class="kc">False</span>
+    
+    <span class="c1"># Set a flag to indicate this is our first warm iteration if it is</span>
+    <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">start_type</span> <span class="o">==</span> <span class="s2">&quot;Warm&quot;</span><span class="p">:</span>
+        <span class="n">if_first_warm_iteration</span> <span class="o">=</span> <span class="mi">1</span>
+         
+    <span class="c1"># Iterate until we reach a break</span>
+    <span class="n">notdone</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">while</span> <span class="n">notdone</span><span class="p">:</span>
+        
+        <span class="c1"># Add a new dictionary to the history lists</span>
+        <span class="n">history</span><span class="p">[</span><span class="s1">&#39;seed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span>
+        <span class="n">history</span><span class="p">[</span><span class="s1">&#39;run&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span>
+        <span class="n">history</span><span class="p">[</span><span class="s1">&#39;objective&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span>
+        <span class="n">history</span><span class="p">[</span><span class="s1">&#39;firstSolveFeasible&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span>
+        <span class="n">history</span><span class="p">[</span><span class="s1">&#39;bestSolutionIndex&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span>
+        <span class="n">history</span><span class="p">[</span><span class="s1">&#39;solutionAttempts&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({})</span>
+        
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">history</span><span class="p">[</span><span class="s1">&#39;objective&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">history</span><span class="p">[</span><span class="s2">&quot;objective&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span><span class="p">:(</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;objective&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span><span class="n">history</span><span class="p">[</span><span class="s2">&quot;objective&quot;</span><span class="p">][</span><span class="o">-</span><span class="mi">2</span><span class="p">][</span><span class="n">key</span><span class="p">][</span><span class="mi">1</span><span class="p">],</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">)})</span>
+        
+        <span class="c1"># Get the paths to the current results and case folders</span>
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">keep_only_current_and_previous</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">results_directory</span> <span class="o">=</span> <span class="n">base_results_dir</span> <span class="o">+</span> <span class="s2">&quot;IterationCurrent/&quot;</span>
+            <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">cases_directory</span>   <span class="o">=</span> <span class="n">base_cases_dir</span>   <span class="o">+</span> <span class="s2">&quot;IterationCurrent/&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">results_directory</span> <span class="o">=</span> <span class="n">base_results_dir</span> <span class="o">+</span> <span class="s2">&quot;Iteration&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+            <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">cases_directory</span>   <span class="o">=</span> <span class="n">base_cases_dir</span>   <span class="o">+</span> <span class="s2">&quot;Iteration&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span>
+        <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">csv_file</span>          <span class="o">=</span> <span class="n">base_docs_dir</span>    <span class="o">+</span> <span class="s2">&quot;Iteration&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;.csv&quot;</span>
+        
+        <span class="c1"># If this isnt the first entry of a warm start, then we need to create the results and case directories</span>
+        <span class="c1"># if PEATSAorder.keep_only_current_and_previous, this will be IterationCurrent</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">start_type</span> <span class="o">==</span> <span class="s2">&quot;Warm&quot;</span><span class="p">:</span>
+            <span class="c1"># if this isn&#39;t the first iteration of a fresh start</span>
+            <span class="c1"># that is using keep_only_current_and_previous, then the</span>
+            <span class="c1"># IterationCurrent directory already exists, so we don&#39;t</span>
+            <span class="c1"># want to recreate it.</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">keep_only_current_and_previous</span><span class="p">)</span> <span class="ow">or</span>  <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">cases_directory</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">results_directory</span><span class="p">)</span>
+        
+        <span class="c1"># Handle the starting conditions</span>
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">start_type</span> <span class="o">==</span> <span class="s2">&quot;Warm&quot;</span> <span class="ow">and</span> <span class="n">if_first_warm_iteration</span> <span class="o">==</span> <span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">start_type</span> <span class="o">==</span> <span class="s2">&quot;Fresh&quot;</span><span class="p">:</span>
+                <span class="c1"># We are starting a brand new peatsa run    </span>
+                
+                <span class="c1"># Create a chef to create all of the .emtgopt files</span>
+                <span class="n">chef</span> <span class="o">=</span> <span class="n">PEATSAchef</span><span class="o">.</span><span class="n">PEATSAchef</span><span class="p">()</span>
+                <span class="c1"># Create the emtgopt files</span>
+                <span class="n">boxes2run</span> <span class="o">=</span> <span class="n">chef</span><span class="o">.</span><span class="n">create_PEATSAs</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">)</span>
+                <span class="c1"># Initialize the boxes list</span>
+                <span class="n">boxes</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="c1"># Check which cases actually need to be run</span>
+                <span class="n">boxes2run</span> <span class="o">=</span> <span class="n">waiter</span><span class="o">.</span><span class="n">check_only_run_if</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">boxes2run</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
+                
+                <span class="c1"># If user wants to go ahead and seed these cases from the external cases</span>
+                <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">seed_from_seed_folders_on_fresh_start</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">external_seed_boxes</span><span class="p">):</span>
+                    
+                    <span class="c1"># If the objective type is not those, then the seed cases need to be found now</span>
+                    <span class="n">boxes2run</span> <span class="o">=</span> <span class="n">waiter</span><span class="o">.</span><span class="n">find_all_seed_cases</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">boxes2run</span><span class="p">,</span><span class="n">boxes</span><span class="p">,</span><span class="n">external_seed_boxes</span><span class="p">)</span>
+            
+                    <span class="c1"># Create new .emtgopt files </span>
+                    <span class="n">boxes2run</span> <span class="o">=</span> <span class="n">waiter</span><span class="o">.</span><span class="n">reseed</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">boxes2run</span><span class="p">,</span><span class="n">history</span><span class="p">)</span>
+                
+                
+            <span class="k">elif</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">start_type</span> <span class="o">==</span> <span class="s2">&quot;Hot&quot;</span><span class="p">:</span>
+                <span class="c1"># At least one iteration of results already exists.</span>
+                    
+                <span class="n">boxes</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="k">for</span> <span class="n">result_dir</span> <span class="ow">in</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">restart_run_root_directory</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">result_dir</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Best&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;/BestFromPrevious/&quot;</span><span class="p">):</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;/BestFromPrevious/&quot;</span><span class="p">)</span>
+                            
+                        <span class="n">delivery</span><span class="o">.</span><span class="n">CopyBestPeatsas</span><span class="p">(</span><span class="n">result_dir</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;/BestFromPrevious/&quot;</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+                        
+                        <span class="c1"># Call the busboy to parse the results</span>
+                        <span class="n">boxes</span><span class="p">,</span> <span class="n">history</span> <span class="o">=</span> <span class="n">busboy</span><span class="o">.</span><span class="n">parse_results</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s2">&quot;/BestFromPrevious/&quot;</span><span class="p">,</span><span class="n">boxes</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">history</span><span class="p">)</span>
+                    
+                    <span class="k">elif</span> <span class="n">result_dir</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;Full&#39;</span><span class="p">:</span>
+                        <span class="c1"># Call the waiter to parse the results_directory</span>
+                        <span class="n">boxes_out</span><span class="p">,</span> <span class="n">history</span> <span class="o">=</span> <span class="n">busboy</span><span class="o">.</span><span class="n">fresh_parse_results</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">result_dir</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">history</span><span class="p">)</span>
+                        <span class="n">boxes</span> <span class="o">+=</span> <span class="n">boxes_out</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Unknown parse type&quot;</span><span class="p">)</span>
+                    
+                <span class="c1"># Sort the results and eliminate lesser cases</span>
+                <span class="n">boxes</span> <span class="o">=</span> <span class="n">busboy</span><span class="o">.</span><span class="n">sort_and_filter</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">boxes</span><span class="p">)</span>
+                                    
+                <span class="c1"># Write the 0th iteration results to file</span>
+                <span class="n">busboy</span><span class="o">.</span><span class="n">write_to_csv</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">boxes</span><span class="p">)</span>
+        
+                <span class="c1"># Write the history file</span>
+                <span class="n">busboy</span><span class="o">.</span><span class="n">write_history_file</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">history</span><span class="p">)</span>
+                
+                <span class="c1"># If the options say so, copy the results files into the iteration 0 folder</span>
+                <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">copy_previous_results</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">boxes</span> <span class="o">=</span> <span class="n">busboy</span><span class="o">.</span><span class="n">copy_results</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">boxes</span><span class="p">)</span>
+        
+                <span class="c1"># Call the delivery</span>
+                <span class="n">delivery</span><span class="o">.</span><span class="n">post_process</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">boxes</span><span class="p">)</span>
+                
+                <span class="c1"># No cases to be run yet. Need to loop back around now</span>
+                <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">continue</span>
+                
+            <span class="k">elif</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">start_type</span> <span class="o">==</span> <span class="s2">&quot;Warm&quot;</span><span class="p">:</span>
+                <span class="c1"># Flip the switch</span>
+                <span class="n">if_first_warm_iteration</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># We are not on the first iteration, so we need to determine which cases need to be re-run</span>
+            
+            <span class="c1"># Check which cases need to be re-run</span>
+            <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">PEATSA_type</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+                <span class="n">boxes2run</span><span class="p">,</span><span class="n">boxes</span> <span class="o">=</span> <span class="n">waiter</span><span class="o">.</span><span class="n">propulate</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">boxes</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">boxes2run</span> <span class="o">=</span> <span class="n">waiter</span><span class="o">.</span><span class="n">check_optimality</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">boxes</span><span class="p">)</span>
+            
+            <span class="c1"># If the objective type is 1, the seed cases were already found. Either way, if we </span>
+            <span class="c1"># have new external seed cases, then we need to refind seed cases</span>
+            <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">objective_type</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">update_external_seed_cases_flag</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                
+                <span class="c1"># Check if we need to update the external boxes</span>
+                <span class="k">if</span> <span class="n">update_external_seed_cases_flag</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+                    <span class="n">external_seed_boxes</span> <span class="o">=</span> <span class="n">busboy</span><span class="o">.</span><span class="n">load_external_seed_boxes</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">)</span>
+                
+                <span class="c1"># If the objective type is not those, then the seed cases need to be found now</span>
+                <span class="n">boxes2run</span> <span class="o">=</span> <span class="n">waiter</span><span class="o">.</span><span class="n">find_all_seed_cases</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">boxes2run</span><span class="p">,</span><span class="n">boxes</span><span class="p">,</span><span class="n">external_seed_boxes</span><span class="p">)</span>
+            
+            <span class="c1"># Create new .emtgopt files </span>
+            <span class="n">boxes2run</span> <span class="o">=</span> <span class="n">waiter</span><span class="o">.</span><span class="n">reseed</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">boxes2run</span><span class="p">,</span><span class="n">history</span><span class="p">)</span>
+         
+        <span class="c1"># Check to make sure there are still cases to run </span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">boxes2run</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">notdone</span> <span class="o">=</span> <span class="kc">False</span>
+            <span class="k">continue</span>
+          
+        <span class="c1"># Check if we can fill all cores with the current PEATSA run</span>
+        <span class="c1"># We must first check how many cores we have available:</span>
+        <span class="n">net_cores</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="c1"># Loop through all cores</span>
+        <span class="k">for</span> <span class="n">host</span> <span class="ow">in</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">nCores</span><span class="p">:</span>
+            <span class="n">net_cores</span> <span class="o">+=</span> <span class="n">host</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="c1"># Check if have more cores than cases</span>
+        <span class="k">if</span> <span class="n">net_cores</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">boxes2run</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">boxes2run</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="kn">import</span> <span class="nn">MissionOptions</span>
+            <span class="c1"># We have more cores than cases. lets create some copies of cases so that all cores are filled</span>
+            <span class="n">loop_number</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="n">new_boxes</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">while</span> <span class="n">net_cores</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">boxes2run</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_boxes</span><span class="p">):</span>
+                <span class="n">loop_number</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="c1"># Loop through all boxes</span>
+                <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">boxes2run</span><span class="p">:</span>
+                    <span class="c1"># Load the options into a mission options objet</span>
+                    <span class="n">MO</span> <span class="o">=</span> <span class="n">MissionOptions</span><span class="o">.</span><span class="n">MissionOptions</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">PEATSApath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSAdough_path</span><span class="p">)</span>
+                    <span class="c1"># Give the object the new mission name</span>
+                    <span class="n">MO</span><span class="o">.</span><span class="n">mission_name</span> <span class="o">+=</span> <span class="s2">&quot;_v&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">loop_number</span><span class="p">)</span>
+                    <span class="c1"># Save the new mission options object to file with the new mission name</span>
+                    <span class="n">MO</span><span class="o">.</span><span class="n">write_options_file</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">PEATSApath</span> <span class="o">+</span> <span class="s2">&quot;/&quot;</span> <span class="o">+</span> <span class="n">MO</span><span class="o">.</span><span class="n">mission_name</span> <span class="o">+</span> <span class="s2">&quot;.emtgopt&quot;</span><span class="p">)</span>
+                    <span class="c1"># Create a new box for this case</span>
+                    <span class="n">new_box</span> <span class="o">=</span> <span class="n">PEATSAbox</span><span class="o">.</span><span class="n">PEATSAbox</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">box</span><span class="o">.</span><span class="n">PEATSApath</span><span class="p">,</span><span class="n">MO</span><span class="o">.</span><span class="n">mission_name</span> <span class="o">+</span> <span class="s2">&quot;.emtgopt&quot;</span><span class="p">)</span>
+                    <span class="c1"># Append the new box</span>
+                    <span class="n">new_boxes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_box</span><span class="p">)</span>
+                    
+                    <span class="c1"># Check if we have created enough cases yet</span>
+                    <span class="k">if</span> <span class="n">net_cores</span> <span class="o">&lt;=</span> <span class="nb">len</span><span class="p">(</span><span class="n">boxes2run</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_boxes</span><span class="p">):</span>
+                        <span class="k">break</span>
+            <span class="c1"># Add the new boxes into the boxes to run</span>
+            <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">new_boxes</span><span class="p">:</span>
+                <span class="n">boxes2run</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">box</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">if_run_cases</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Debugging has been completed, go check what happened&quot;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;Options say not to run cases. If you did want to run cases set if_run_cases = 1&quot;</span><span class="p">)</span>
+        <span class="c1"># Before running the cases, update the seed history</span>
+        <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">boxes2run</span><span class="p">:</span>
+            <span class="c1"># Get the base mission name, as this will be used as the key in the dictionary</span>
+            <span class="n">key</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">mission_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_seeded_by&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_v&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="c1"># Check if this key is already in the dictionary</span>
+            <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">history</span><span class="p">[</span><span class="s1">&#39;seed&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="c1"># It is. so multiple versions of this case are being run. Add the case to list</span>
+                <span class="n">history</span><span class="p">[</span><span class="s1">&#39;seed&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">box</span><span class="o">.</span><span class="n">used_seed</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># This case is not yet in the history. Add it, along with the seed details as the first entry in a list</span>
+                <span class="n">history</span><span class="p">[</span><span class="s1">&#39;seed&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span><span class="p">:[</span><span class="n">box</span><span class="o">.</span><span class="n">used_seed</span><span class="p">]})</span> 
+                   
+        <span class="c1"># Run the cases</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;made it to the oven with &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">boxes2run</span><span class="p">)))</span>
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">execution_type</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">oven</span><span class="o">.</span><span class="n">executeV2</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span> <span class="n">boxes2run</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">execution_type</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">execution_type</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">oven</span><span class="o">.</span><span class="n">executeWithPebble</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span> <span class="n">boxes2run</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">oven</span><span class="o">.</span><span class="n">cook</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">boxes2run</span><span class="p">)</span>
+        
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;made it through the oven&#39;</span><span class="p">)</span>
+        
+        <span class="c1"># Store the relevent options so that we know if they have changed when we load the midbake options</span>
+        <span class="n">local_seed_folders</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">seed_folders</span>
+        <span class="n">local_fingerprint</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">fingerprint</span>
+        <span class="n">local_seed_criteria</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">seed_criteria</span>
+        <span class="n">local_extra_csv_columns</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">extra_csv_column_definitions</span>
+        
+        <span class="c1"># Update the mid-bake options in case the user changed something</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">load_options_from_file</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">working_directory</span> <span class="o">+</span> <span class="s1">&#39;PEATSA_MidBake_Options.py&#39;</span><span class="p">,</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;WARNING: Unable to update options mid-bake:&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+            <span class="k">if</span> <span class="s2">&quot;text&quot;</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="n">e</span><span class="p">):</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;*******************************************&quot;</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="n">e</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39; &#39;</span> <span class="o">*</span> <span class="n">e</span><span class="o">.</span><span class="n">offset</span> <span class="o">+</span> <span class="s2">&quot;^&quot;</span><span class="p">)</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;*******************************************&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Check if local_seed_folders have changed</span>
+        <span class="k">if</span> <span class="n">local_seed_folders</span> <span class="o">!=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">seed_folders</span><span class="p">:</span>
+            <span class="c1"># They did change, so update the flag</span>
+            <span class="n">update_external_seed_cases_flag</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># They did not change, but make sure the flag is off</span>
+            <span class="n">update_external_seed_cases_flag</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="c1"># Check if the seed criteria or fingerprint formulas changed    </span>
+        <span class="k">if</span> <span class="n">local_fingerprint</span> <span class="o">!=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">fingerprint</span> <span class="ow">or</span> <span class="n">local_seed_criteria</span> <span class="o">!=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">seed_criteria</span> <span class="ow">or</span> <span class="n">local_extra_csv_columns</span> <span class="o">!=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">extra_csv_column_definitions</span><span class="p">:</span>
+            <span class="c1"># They did change. update the flag</span>
+            <span class="n">update_seed_criteria_or_fingerprint_flag</span> <span class="o">=</span> <span class="kc">True</span>
+            
+            <span class="c1"># need to update the fingerprint of the external seeds, too</span>
+            <span class="n">update_external_seed_cases_flag</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># They did not change, but make sure the flag is off</span>
+            <span class="n">update_seed_criteria_or_fingerprint_flag</span> <span class="o">=</span> <span class="kc">False</span>
+    
+        <span class="c1"># Call the busboy to parse the results</span>
+        <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;made it to parse_results&#39;</span><span class="p">)</span>
+        <span class="n">boxes</span><span class="p">,</span> <span class="n">history</span> <span class="o">=</span> <span class="n">busboy</span><span class="o">.</span><span class="n">parse_results</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">results_directory</span><span class="p">,</span><span class="n">boxes</span><span class="p">,</span><span class="n">update_seed_criteria_or_fingerprint_flag</span><span class="p">,</span><span class="n">history</span><span class="p">)</span>
+        <span class="c1">#logging.info(boxes[0].PEATSApath)</span>
+        <span class="c1">#logging.info(&quot;had &quot; + str(len(boxes)) + &quot; cases&quot;)</span>
+        
+        <span class="c1"># Sort the results and eliminate lesser cases</span>
+        <span class="n">boxes</span> <span class="o">=</span> <span class="n">busboy</span><span class="o">.</span><span class="n">sort_and_filter</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">boxes</span><span class="p">)</span>
+        <span class="c1">#logging.info(&quot;kept &quot; + str(len(boxes)) + &quot; cases&quot;)</span>
+        <span class="c1">#logging.info(&quot;After filtering:&quot;)</span>
+        <span class="c1">#for box in boxes:</span>
+            <span class="c1">#string = box.PEATSApath + box.PEATSAcrust_path</span>
+            <span class="c1">#logging.info(string)</span>
+        
+        <span class="c1"># Combine stuff from &quot;IterationCurrent&quot; to &quot;IterationPrevious&quot;</span>
+        <span class="c1"># Also need to update the information in the spreadsheet about where</span>
+        <span class="c1"># the results are.</span>
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">keep_only_current_and_previous</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="c1"># if iteration 0, then we need to create the &quot;IterationPrevious&quot; directories</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">base_cases_dir</span>   <span class="o">+</span> <span class="s2">&quot;IterationPrevious/&quot;</span><span class="p">)</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">base_results_dir</span>   <span class="o">+</span> <span class="s2">&quot;IterationPrevious/&quot;</span><span class="p">)</span>
+                
+                <span class="c1"># update the results directories for each &quot;box&quot;</span>
+                <span class="c1"># they were IterationCurrent, but they need to be changed to IterationPrevious</span>
+                <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">boxes</span><span class="p">:</span>
+                    <span class="n">box</span><span class="o">.</span><span class="n">PEATSApath</span> <span class="o">=</span> <span class="n">base_results_dir</span>   <span class="o">+</span> <span class="s2">&quot;IterationPrevious/&quot;</span>
+                
+                <span class="c1"># also, there will not actually be anything in IterationPrevious</span>
+                <span class="c1"># to start with, so &quot;combining&quot; will actually just be moving</span>
+                <span class="c1"># Current into Previous</span>
+                
+                <span class="c1"># move cases</span>
+                <span class="n">sourceDir</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">cases_directory</span>
+                <span class="n">destinationDir</span> <span class="o">=</span> <span class="n">base_cases_dir</span>   <span class="o">+</span> <span class="s2">&quot;IterationPrevious/&quot;</span>
+                <span class="n">filesToMove</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">sourceDir</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">filesToMove</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">sourceDir</span> <span class="o">+</span> <span class="n">f</span><span class="p">,</span> <span class="n">destinationDir</span> <span class="o">+</span> <span class="n">f</span><span class="p">)</span>
+                    
+                <span class="c1"># move results</span>
+                <span class="n">sourceDir</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">results_directory</span>
+                <span class="n">destinationDir</span> <span class="o">=</span> <span class="n">base_results_dir</span>   <span class="o">+</span> <span class="s2">&quot;IterationPrevious/&quot;</span>
+                <span class="n">filesToMove</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">sourceDir</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">filesToMove</span><span class="p">:</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">sourceDir</span> <span class="o">+</span> <span class="n">f</span><span class="p">,</span> <span class="n">destinationDir</span> <span class="o">+</span> <span class="n">f</span><span class="p">)</span>
+                    
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># IterationPrevious directories already exist and contain stuff</span>
+                <span class="c1"># we want to keep everything that is in boxes and get rid of everything that is</span>
+                <span class="c1"># not in boxes</span>
+                <span class="n">sourceDirCases</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">cases_directory</span>
+                <span class="n">destinationDirCases</span> <span class="o">=</span> <span class="n">base_cases_dir</span>   <span class="o">+</span> <span class="s2">&quot;IterationPrevious/&quot;</span>
+                <span class="n">sourceDirResults</span> <span class="o">=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">results_directory</span>
+                <span class="n">destinationDirResults</span> <span class="o">=</span> <span class="n">base_results_dir</span>   <span class="o">+</span> <span class="s2">&quot;IterationPrevious/&quot;</span>
+                <span class="k">for</span> <span class="n">box</span> <span class="ow">in</span> <span class="n">boxes</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="s2">&quot;Previous&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSApath</span><span class="p">:</span>
+                        <span class="c1"># if Previous IS in PEATSApath then we don&#39;t have to do anything</span>
+                        <span class="c1"># because the one in previous is the one we want to keep and it is</span>
+                        <span class="c1"># already there.</span>
+                        <span class="c1"># on the other hand, if Previous is NOT in PEATSApath, then Current</span>
+                        <span class="c1"># is the one we want to keep. We need to get rid of any of the same</span>
+                        <span class="c1"># fingerprint in cases/IterationPrevious and results/IterationPrevious</span>
+                        <span class="c1"># before moving over the one from Current.</span>
+                        <span class="c1"># update the directories for each &quot;box&quot;</span>
+                        <span class="c1"># they were IterationCurrent, but they need to be changed to IterationPrevious</span>
+                        <span class="n">string</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSApath</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSAcrust_path</span>
+                        <span class="n">box</span><span class="o">.</span><span class="n">PEATSApath</span> <span class="o">=</span> <span class="n">base_results_dir</span>   <span class="o">+</span> <span class="s2">&quot;IterationPrevious/&quot;</span>
+                        
+                        <span class="c1"># if an emtgopt file with the same fingerprint (case number) exists in IterationPrevious already, delete it</span>
+                        <span class="c1"># remove &quot;seeded_by&quot; and &quot;v&quot; because these still reference the same case,</span>
+                        <span class="c1"># just different versions of it</span>
+                        <span class="n">key</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">mission_name</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_seeded_by&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;_v&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+                        <span class="c1">#caseNumberString = box.PEATSAdough_path.lstrip(&quot;TradeStudy_&quot;).rstrip(&quot;.emtgopt&quot;)</span>
+                        <span class="c1">#underscoreIndex = caseNumberString.find(&quot;_&quot;)</span>
+                        <span class="c1">#if underscoreIndex &gt; -1:</span>
+                        <span class="c1">#    caseNumberString[0:underscoreIndex]</span>
+                            
+                        <span class="c1"># at this point, caseNumberString is just &quot;Case###&quot;</span>
+                        <span class="kn">import</span> <span class="nn">glob</span>
+                        <span class="c1"># filesToDelete will find everything that starts with our TradeStudy case index, which is what we want</span>
+                        <span class="c1"># will remove all the files, regardless of file name</span>
+                        <span class="c1">#filesToDelete = glob.glob(destinationDirCases + &quot;TradeStudy_&quot; + caseNumberString + &quot;*&quot;)</span>
+                        
+                        <span class="c1"># key gives us TradeStudy_Case0 (e.g.)</span>
+                        <span class="c1"># delete everything that starts with that, followed immediately by and underscore</span>
+                        <span class="n">filesToDelete</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">destinationDirCases</span> <span class="o">+</span> <span class="n">key</span> <span class="o">+</span> <span class="s2">&quot;_*&quot;</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">filesToDelete</span><span class="p">:</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                            
+                        <span class="c1"># delete from old results as well as from old cases</span>
+                        <span class="n">filesToDelete</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">destinationDirResults</span> <span class="o">+</span> <span class="n">key</span> <span class="o">+</span> <span class="s2">&quot;_*&quot;</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">filesToDelete</span><span class="p">:</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                            
+                        <span class="c1"># also delete any FAILURE emtg files</span>
+                        <span class="n">filesToDelete</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">destinationDirResults</span> <span class="o">+</span> <span class="s2">&quot;FAILURE_*&quot;</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">filesToDelete</span><span class="p">:</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                            
+                        <span class="c1"># also delete any snopt crash files</span>
+                        <span class="n">filesToDelete</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">destinationDirResults</span> <span class="o">+</span> <span class="s2">&quot;*.SNOPTcrash&quot;</span><span class="p">)</span>
+                        <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">filesToDelete</span><span class="p">:</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                        
+                        <span class="c1"># move the case to Previous</span>
+                        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">sourceDirCases</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSAdough_path</span><span class="p">):</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">sourceDirCases</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSAdough_path</span><span class="p">,</span> <span class="n">destinationDirCases</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSAdough_path</span><span class="p">)</span>
+                        
+                        <span class="c1">#logging.info(&quot;moved &quot; + sourceDirCases + box.PEATSAdough_path + &quot; to &quot; + destinationDirCases + box.PEATSAdough_path)</span>
+                        
+                        
+                        
+                        <span class="c1"># move the result to Previous</span>
+                        <span class="c1"># also need to move the emtg_spacecraftopt file</span>
+                        <span class="c1"># also need to move the _probe.emtg file if it exists</span>
+                        <span class="c1"># the .emtgopt needs to be in both places</span>
+                        <span class="n">spacecraftoptFile</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSAcrust_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.emtg&#39;</span><span class="p">,</span> <span class="s1">&#39;.emtg_spacecraftopt&#39;</span><span class="p">)</span>
+                        <span class="n">probeFile</span> <span class="o">=</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSAcrust_path</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.emtg&#39;</span><span class="p">,</span> <span class="s1">&#39;_probe.emtg&#39;</span><span class="p">)</span>
+                        
+                        <span class="c1">#logging.info(&quot;moving &quot; + sourceDirResults + box.PEATSAdough_path + &quot; to &quot; + destinationDirResults + box.PEATSAdough_path)</span>
+                        <span class="c1">#logging.info(&quot;moving &quot; + sourceDirResults + box.PEATSAcrust_path + &quot; to &quot; + destinationDirResults + box.PEATSAcrust_path)</span>
+                        <span class="c1">#logging.info(&quot;moving &quot; + sourceDirResults + spacecraftoptFile + &quot; to &quot; + destinationDirResults + spacecraftoptFile)</span>
+                                                
+                        
+                        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">sourceDirResults</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSAdough_path</span><span class="p">):</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">sourceDirResults</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSAdough_path</span><span class="p">,</span> <span class="n">destinationDirResults</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSAdough_path</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">sourceDirResults</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSAcrust_path</span><span class="p">):</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">sourceDirResults</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSAcrust_path</span><span class="p">,</span> <span class="n">destinationDirResults</span> <span class="o">+</span> <span class="n">box</span><span class="o">.</span><span class="n">PEATSAcrust_path</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">sourceDirResults</span> <span class="o">+</span> <span class="n">spacecraftoptFile</span><span class="p">):</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">sourceDirResults</span> <span class="o">+</span> <span class="n">spacecraftoptFile</span><span class="p">,</span> <span class="n">destinationDirResults</span> <span class="o">+</span> <span class="n">spacecraftoptFile</span><span class="p">)</span>
+                        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">sourceDirResults</span> <span class="o">+</span> <span class="n">probeFile</span><span class="p">):</span>
+                            <span class="n">os</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">sourceDirResults</span> <span class="o">+</span> <span class="n">probeFile</span><span class="p">,</span> <span class="n">destinationDirResults</span> <span class="o">+</span> <span class="n">probeFile</span><span class="p">)</span>
+                        
+                        
+                
+            <span class="c1"># finish by empyting out the IterationCurrent directories</span>
+            <span class="c1"># in preparation for the next iteration</span>
+            <span class="kn">import</span> <span class="nn">glob</span>
+            <span class="n">filesToDelete</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">cases_directory</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">filesToDelete</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+            <span class="n">filesToDelete</span> <span class="o">=</span> <span class="n">glob</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="o">.</span><span class="n">results_directory</span> <span class="o">+</span> <span class="s2">&quot;*&quot;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">filesToDelete</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+                
+        <span class="c1"># Write this iteration&#39;s results to file</span>
+        <span class="n">busboy</span><span class="o">.</span><span class="n">write_to_csv</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">boxes</span><span class="p">,</span><span class="n">history</span><span class="p">)</span>
+        
+        <span class="c1"># Write the history file</span>
+        <span class="n">PEATSAorder</span> <span class="o">=</span> <span class="n">busboy</span><span class="o">.</span><span class="n">write_history_file</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">history</span><span class="p">)</span>
+        
+        <span class="c1"># Call the delivery</span>
+        <span class="n">delivery</span><span class="o">.</span><span class="n">post_process</span><span class="p">(</span><span class="n">PEATSAorder</span><span class="p">,</span><span class="n">boxes</span><span class="p">)</span>
+            
+        
+        <span class="c1"># We are all done </span>
+        <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">iteration</span> <span class="o">&gt;=</span> <span class="n">PEATSAorder</span><span class="o">.</span><span class="n">max_iterations</span><span class="p">:</span>
+            <span class="k">break</span>
+        
+    <span class="n">logging</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;All done! The meal is over. Closing the restaurant. See ya when you want your next slice&quot;</span><span class="p">)</span>
+        
+
+    <span class="k">return</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+    
+    
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,355 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>PEATSA &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Burn module" href="Burn.html" />
+    <link rel="prev" title="PEATSA documentation" href="index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="peatsa">
+<h1>PEATSA<a class="headerlink" href="#peatsa" title="Permalink to this heading">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="Burn.html">Burn module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Burn.html#Burn.burn"><code class="docutils literal notranslate"><span class="pre">burn</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.assumed_duration"><code class="docutils literal notranslate"><span class="pre">burn.assumed_duration</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.assumed_start"><code class="docutils literal notranslate"><span class="pre">burn.assumed_start</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.dec"><code class="docutils literal notranslate"><span class="pre">burn.dec</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.deltaV"><code class="docutils literal notranslate"><span class="pre">burn.deltaV</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.duration"><code class="docutils literal notranslate"><span class="pre">burn.duration</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.final_mass"><code class="docutils literal notranslate"><span class="pre">burn.final_mass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.frame"><code class="docutils literal notranslate"><span class="pre">burn.frame</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.linked"><code class="docutils literal notranslate"><span class="pre">burn.linked</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.mass_flow"><code class="docutils literal notranslate"><span class="pre">burn.mass_flow</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.name"><code class="docutils literal notranslate"><span class="pre">burn.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.parse_maneuver_spec_line"><code class="docutils literal notranslate"><span class="pre">burn.parse_maneuver_spec_line()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.ra"><code class="docutils literal notranslate"><span class="pre">burn.ra</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.start_epoch"><code class="docutils literal notranslate"><span class="pre">burn.start_epoch</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.start_mass"><code class="docutils literal notranslate"><span class="pre">burn.start_mass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.thrust"><code class="docutils literal notranslate"><span class="pre">burn.thrust</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="Burn.html#Burn.burn.thrust_dir"><code class="docutils literal notranslate"><span class="pre">burn.thrust_dir</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="EMTGInterfaceReaders.html">EMTGInterfaceReaders module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="EMTGInterfaceReaders.html#EMTGInterfaceReaders.convert_month_string_to_int"><code class="docutils literal notranslate"><span class="pre">convert_month_string_to_int()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="EMTGInterfaceReaders.html#EMTGInterfaceReaders.convert_time_string_to_hours_float"><code class="docutils literal notranslate"><span class="pre">convert_time_string_to_hours_float()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="EMTGInterfaceReaders.html#EMTGInterfaceReaders.date_list_to_JD"><code class="docutils literal notranslate"><span class="pre">date_list_to_JD()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="EMTGInterfaceReaders.html#EMTGInterfaceReaders.read_spk_data_to_list_of_lists"><code class="docutils literal notranslate"><span class="pre">read_spk_data_to_list_of_lists()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="EMTGInterfaceWriters.html">EMTGInterfaceWriters module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PEATSA.html">PEATSA module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PEATSA.html#peatsa-py">PEATSA.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PEATSA.html#PEATSA.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PEATSA_script_generator.html">PEATSA_script_generator module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="PEATSAbox.html">PEATSAbox module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAbox.html#peatsabox-py">PEATSAbox.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAbox.html#PEATSAbox.PEATSAbox"><code class="docutils literal notranslate"><span class="pre">PEATSAbox</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbox.html#PEATSAbox.PEATSAbox.PEATSAcrust_path"><code class="docutils literal notranslate"><span class="pre">PEATSAbox.PEATSAcrust_path</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbox.html#PEATSAbox.PEATSAbox.PEATSAdough_fullpath"><code class="docutils literal notranslate"><span class="pre">PEATSAbox.PEATSAdough_fullpath</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbox.html#PEATSAbox.PEATSAbox.PEATSApath"><code class="docutils literal notranslate"><span class="pre">PEATSAbox.PEATSApath</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbox.html#PEATSAbox.PEATSAbox.converged"><code class="docutils literal notranslate"><span class="pre">PEATSAbox.converged</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbox.html#PEATSAbox.PEATSAbox.final_mass"><code class="docutils literal notranslate"><span class="pre">PEATSAbox.final_mass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbox.html#PEATSAbox.PEATSAbox.fingerprint"><code class="docutils literal notranslate"><span class="pre">PEATSAbox.fingerprint</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbox.html#PEATSAbox.PEATSAbox.initialize"><code class="docutils literal notranslate"><span class="pre">PEATSAbox.initialize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbox.html#PEATSAbox.PEATSAbox.initializeAfterReading"><code class="docutils literal notranslate"><span class="pre">PEATSAbox.initializeAfterReading()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbox.html#PEATSAbox.PEATSAbox.initializeReadOnly"><code class="docutils literal notranslate"><span class="pre">PEATSAbox.initializeReadOnly()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbox.html#PEATSAbox.PEATSAbox.seed_boxes"><code class="docutils literal notranslate"><span class="pre">PEATSAbox.seed_boxes</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbox.html#PEATSAbox.PEATSAbox.time_of_flight"><code class="docutils literal notranslate"><span class="pre">PEATSAbox.time_of_flight</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PEATSAbusboy.html">PEATSAbusboy module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAbusboy.html#peatsabusboy-py">PEATSAbusboy.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.PEATSAbusboy"><code class="docutils literal notranslate"><span class="pre">PEATSAbusboy</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.PEATSAbusboy.copy_results"><code class="docutils literal notranslate"><span class="pre">PEATSAbusboy.copy_results()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.PEATSAbusboy.fresh_parse_results"><code class="docutils literal notranslate"><span class="pre">PEATSAbusboy.fresh_parse_results()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.PEATSAbusboy.load_external_seed_boxes"><code class="docutils literal notranslate"><span class="pre">PEATSAbusboy.load_external_seed_boxes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.PEATSAbusboy.parse_fun"><code class="docutils literal notranslate"><span class="pre">PEATSAbusboy.parse_fun()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.PEATSAbusboy.parse_fun_after_reading"><code class="docutils literal notranslate"><span class="pre">PEATSAbusboy.parse_fun_after_reading()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.PEATSAbusboy.parse_fun_read_only"><code class="docutils literal notranslate"><span class="pre">PEATSAbusboy.parse_fun_read_only()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.PEATSAbusboy.parse_results"><code class="docutils literal notranslate"><span class="pre">PEATSAbusboy.parse_results()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.PEATSAbusboy.sort_and_filter"><code class="docutils literal notranslate"><span class="pre">PEATSAbusboy.sort_and_filter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.PEATSAbusboy.update_history"><code class="docutils literal notranslate"><span class="pre">PEATSAbusboy.update_history()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.PEATSAbusboy.write_history_file"><code class="docutils literal notranslate"><span class="pre">PEATSAbusboy.write_history_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.PEATSAbusboy.write_to_csv"><code class="docutils literal notranslate"><span class="pre">PEATSAbusboy.write_to_csv()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.parallelCallback"><code class="docutils literal notranslate"><span class="pre">parallelCallback()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.parallelParser"><code class="docutils literal notranslate"><span class="pre">parallelParser()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.parallelParserNotReadingRegions"><code class="docutils literal notranslate"><span class="pre">parallelParserNotReadingRegions()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAbusboy.html#PEATSAbusboy.parallelParserRegions"><code class="docutils literal notranslate"><span class="pre">parallelParserRegions()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PEATSAchef.html">PEATSAchef module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAchef.html#peatsachef-py">PEATSAchef.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAchef.html#PEATSAchef.PEATSAchef"><code class="docutils literal notranslate"><span class="pre">PEATSAchef</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAchef.html#PEATSAchef.PEATSAchef.BatchRun"><code class="docutils literal notranslate"><span class="pre">PEATSAchef.BatchRun()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAchef.html#PEATSAchef.PEATSAchef.Custom"><code class="docutils literal notranslate"><span class="pre">PEATSAchef.Custom()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAchef.html#PEATSAchef.PEATSAchef.MissedThrust"><code class="docutils literal notranslate"><span class="pre">PEATSAchef.MissedThrust()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAchef.html#PEATSAchef.PEATSAchef.MonteCarlo"><code class="docutils literal notranslate"><span class="pre">PEATSAchef.MonteCarlo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAchef.html#PEATSAchef.PEATSAchef.ThreeD_Flybys_to_PatchedConic"><code class="docutils literal notranslate"><span class="pre">PEATSAchef.ThreeD_Flybys_to_PatchedConic()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAchef.html#PEATSAchef.PEATSAchef.TradeStudy"><code class="docutils literal notranslate"><span class="pre">PEATSAchef.TradeStudy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAchef.html#PEATSAchef.PEATSAchef.TradeStudyTypeOne"><code class="docutils literal notranslate"><span class="pre">PEATSAchef.TradeStudyTypeOne()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAchef.html#PEATSAchef.PEATSAchef.TradeStudyTypeTwo"><code class="docutils literal notranslate"><span class="pre">PEATSAchef.TradeStudyTypeTwo()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAchef.html#PEATSAchef.PEATSAchef.TradeStudyTypeZero"><code class="docutils literal notranslate"><span class="pre">PEATSAchef.TradeStudyTypeZero()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAchef.html#PEATSAchef.PEATSAchef.cleanup_line_endings"><code class="docutils literal notranslate"><span class="pre">PEATSAchef.cleanup_line_endings()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAchef.html#PEATSAchef.PEATSAchef.create_PEATSAs"><code class="docutils literal notranslate"><span class="pre">PEATSAchef.create_PEATSAs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAchef.html#PEATSAchef.PEATSAchef.parse_ephem_file"><code class="docutils literal notranslate"><span class="pre">PEATSAchef.parse_ephem_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAchef.html#PEATSAchef.PEATSAchef.parse_maneuver_spec"><code class="docutils literal notranslate"><span class="pre">PEATSAchef.parse_maneuver_spec()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAchef.html#PEATSAchef.PEATSAchef.process_reference"><code class="docutils literal notranslate"><span class="pre">PEATSAchef.process_reference()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PEATSAdelivery.html">PEATSAdelivery module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAdelivery.html#peatsadelivery-py">PEATSAdelivery.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery"><code class="docutils literal notranslate"><span class="pre">PEATSAdelivery</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.BuiltInPlotterFromFile"><code class="docutils literal notranslate"><span class="pre">PEATSAdelivery.BuiltInPlotterFromFile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.CopyBestPeatsas"><code class="docutils literal notranslate"><span class="pre">PEATSAdelivery.CopyBestPeatsas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.Custom"><code class="docutils literal notranslate"><span class="pre">PEATSAdelivery.Custom()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.MakeIterationHistory"><code class="docutils literal notranslate"><span class="pre">PEATSAdelivery.MakeIterationHistory()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.MissedThrustPlotter"><code class="docutils literal notranslate"><span class="pre">PEATSAdelivery.MissedThrustPlotter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.SingleDataSetPlotter"><code class="docutils literal notranslate"><span class="pre">PEATSAdelivery.SingleDataSetPlotter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.TradeStudyPlotter"><code class="docutils literal notranslate"><span class="pre">PEATSAdelivery.TradeStudyPlotter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.TradeStudyTypeZeroPlotter"><code class="docutils literal notranslate"><span class="pre">PEATSAdelivery.TradeStudyTypeZeroPlotter()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.capitalize_each_word"><code class="docutils literal notranslate"><span class="pre">PEATSAdelivery.capitalize_each_word()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.convert_variable_to_label"><code class="docutils literal notranslate"><span class="pre">PEATSAdelivery.convert_variable_to_label()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.jd2datelist"><code class="docutils literal notranslate"><span class="pre">PEATSAdelivery.jd2datelist()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.moveFiles"><code class="docutils literal notranslate"><span class="pre">PEATSAdelivery.moveFiles()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAdelivery.html#PEATSAdelivery.PEATSAdelivery.post_process"><code class="docutils literal notranslate"><span class="pre">PEATSAdelivery.post_process()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PEATSAmenu.html">PEATSAmenu module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAmenu.html#peatsamenu-py">PEATSAmenu.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAmenu.html#PEATSAmenu.PEATSAinstagram"><code class="docutils literal notranslate"><span class="pre">PEATSAinstagram</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAmenu.html#PEATSAmenu.PEATSAinstagram.load_options_from_file"><code class="docutils literal notranslate"><span class="pre">PEATSAinstagram.load_options_from_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAmenu.html#PEATSAmenu.PEATSAinstagram.write_options"><code class="docutils literal notranslate"><span class="pre">PEATSAinstagram.write_options()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAmenu.html#PEATSAmenu.PEATSAmenu"><code class="docutils literal notranslate"><span class="pre">PEATSAmenu</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAmenu.html#PEATSAmenu.PEATSAmenu.conditionally_write_to_file"><code class="docutils literal notranslate"><span class="pre">PEATSAmenu.conditionally_write_to_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAmenu.html#PEATSAmenu.PEATSAmenu.get_needed_options"><code class="docutils literal notranslate"><span class="pre">PEATSAmenu.get_needed_options()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAmenu.html#PEATSAmenu.PEATSAmenu.init_var"><code class="docutils literal notranslate"><span class="pre">PEATSAmenu.init_var()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAmenu.html#PEATSAmenu.PEATSAmenu.load_options_from_file"><code class="docutils literal notranslate"><span class="pre">PEATSAmenu.load_options_from_file()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAmenu.html#PEATSAmenu.PEATSAmenu.write_to_file"><code class="docutils literal notranslate"><span class="pre">PEATSAmenu.write_to_file()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PEATSAoven.html">PEATSAoven module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAoven.html#peatsaoven-py">PEATSAoven.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAoven.html#PEATSAoven.PEATSAoven"><code class="docutils literal notranslate"><span class="pre">PEATSAoven</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAoven.html#PEATSAoven.PEATSAoven.cook"><code class="docutils literal notranslate"><span class="pre">PEATSAoven.cook()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAoven.html#PEATSAoven.PEATSAoven.execute"><code class="docutils literal notranslate"><span class="pre">PEATSAoven.execute()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAoven.html#PEATSAoven.PEATSAoven.executeV2"><code class="docutils literal notranslate"><span class="pre">PEATSAoven.executeV2()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAoven.html#PEATSAoven.PEATSAoven.executeWithPebble"><code class="docutils literal notranslate"><span class="pre">PEATSAoven.executeWithPebble()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAoven.html#PEATSAoven.PEATSAoven.pop_and_kill"><code class="docutils literal notranslate"><span class="pre">PEATSAoven.pop_and_kill()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAoven.html#PEATSAoven.PEATSAoven.writeKillFile"><code class="docutils literal notranslate"><span class="pre">PEATSAoven.writeKillFile()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAoven.html#PEATSAoven.executeSingleRunInParallel"><code class="docutils literal notranslate"><span class="pre">executeSingleRunInParallel()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAoven.html#PEATSAoven.executeSingleRunInParellelWithPebble"><code class="docutils literal notranslate"><span class="pre">executeSingleRunInParellelWithPebble()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAoven.html#PEATSAoven.pebbleScheduledTaskDone"><code class="docutils literal notranslate"><span class="pre">pebbleScheduledTaskDone()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="PEATSAwaiter.html">PEATSAwaiter module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.CreateSplines"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.CreateSplines()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.check_only_run_if"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.check_only_run_if()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.check_optimality"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.check_optimality()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.find_all_seed_cases"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.find_all_seed_cases()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.find_seed_cases"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.find_seed_cases()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.get_ephem_lists_from_emtg_mission"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.get_ephem_lists_from_emtg_mission()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.modified_timestep_initial_guess_generator"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.modified_timestep_initial_guess_generator()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.propulate"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.propulate()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.reseed"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.reseed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.seed_from_all"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.seed_from_all()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.seed_from_best"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.seed_from_best()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.seed_from_closest"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.seed_from_closest()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.seed_from_curve_fit"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.seed_from_curve_fit()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.seed_from_random"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.seed_from_random()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.write_seeded_case"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.write_seeded_case()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="PEATSAwaiter.html#PEATSAwaiter.PEATSAwaiter.write_unseeded_case"><code class="docutils literal notranslate"><span class="pre">PEATSAwaiter.write_unseeded_case()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="State.html">State module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="State.html#state-py">State.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="State.html#State.state"><code class="docutils literal notranslate"><span class="pre">state</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.b_dot_r"><code class="docutils literal notranslate"><span class="pre">state.b_dot_r</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.b_dot_t"><code class="docutils literal notranslate"><span class="pre">state.b_dot_t</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.central_body"><code class="docutils literal notranslate"><span class="pre">state.central_body</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.epoch"><code class="docutils literal notranslate"><span class="pre">state.epoch</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.frame"><code class="docutils literal notranslate"><span class="pre">state.frame</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.getList"><code class="docutils literal notranslate"><span class="pre">state.getList()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.getState"><code class="docutils literal notranslate"><span class="pre">state.getState()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.getStateName"><code class="docutils literal notranslate"><span class="pre">state.getStateName()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.mass"><code class="docutils literal notranslate"><span class="pre">state.mass</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.name"><code class="docutils literal notranslate"><span class="pre">state.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.parse_ephem_line"><code class="docutils literal notranslate"><span class="pre">state.parse_ephem_line()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.parse_target_spec_line"><code class="docutils literal notranslate"><span class="pre">state.parse_target_spec_line()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.printState"><code class="docutils literal notranslate"><span class="pre">state.printState()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.updateStates"><code class="docutils literal notranslate"><span class="pre">state.updateStates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.updateStatesFromState"><code class="docutils literal notranslate"><span class="pre">state.updateStatesFromState()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.vx"><code class="docutils literal notranslate"><span class="pre">state.vx</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.vy"><code class="docutils literal notranslate"><span class="pre">state.vy</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.vz"><code class="docutils literal notranslate"><span class="pre">state.vz</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.x"><code class="docutils literal notranslate"><span class="pre">state.x</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.y"><code class="docutils literal notranslate"><span class="pre">state.y</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="State.html#State.state.z"><code class="docutils literal notranslate"><span class="pre">state.z</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="Util.html">Util module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="Util.html#util-py">Util.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="Util.html#Util.cart2kep"><code class="docutils literal notranslate"><span class="pre">cart2kep()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Util.html#Util.convert_month_string_to_int"><code class="docutils literal notranslate"><span class="pre">convert_month_string_to_int()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Util.html#Util.convert_time_string_to_JD"><code class="docutils literal notranslate"><span class="pre">convert_time_string_to_JD()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Util.html#Util.convert_time_string_to_date_list"><code class="docutils literal notranslate"><span class="pre">convert_time_string_to_date_list()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Util.html#Util.convert_time_string_to_hours_float"><code class="docutils literal notranslate"><span class="pre">convert_time_string_to_hours_float()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Util.html#Util.date_list_to_JD"><code class="docutils literal notranslate"><span class="pre">date_list_to_JD()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Util.html#Util.jd2datestr"><code class="docutils literal notranslate"><span class="pre">jd2datestr()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="Util.html#Util.kep2cart"><code class="docutils literal notranslate"><span class="pre">kep2cart()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="analyze_convergence.html">analyze_convergence module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="analyze_convergence.html#analyze-convergence-py">analyze_convergence.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analyze_convergence.html#analyze_convergence.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="combine_PEATSA_output_csv_files.html">combine_PEATSA_output_csv_files module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="combine_PEATSA_output_csv_files.html#combine-peatsa-output-csv-files-py">combine_PEATSA_output_csv_files.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="combine_PEATSA_output_csv_files.html#combine_PEATSA_output_csv_files.combine_PEATSA_output_csv_files"><code class="docutils literal notranslate"><span class="pre">combine_PEATSA_output_csv_files()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="combine_PEATSA_output_csv_files.html#combine_PEATSA_output_csv_files.find_latest_PEATSA_output_csv_file_in_directory"><code class="docutils literal notranslate"><span class="pre">find_latest_PEATSA_output_csv_file_in_directory()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="combine_existing_PEATSA_scripts.html">combine_existing_PEATSA_scripts module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="get_most_recent_doc.html">get_most_recent_doc module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="grab_best_peatsa_results.html">grab_best_peatsa_results module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="impatiently_run_post_process_now.html">impatiently_run_post_process_now module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="kill_iteration.html">kill_iteration module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="make_fresh_peatsa_run_hot.html">make_fresh_peatsa_run_hot module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="moveFiles.html">moveFiles module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="run_locally.html">run_locally module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="update_existing_PEATSA_script.html">update_existing_PEATSA_script module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="update_existing_PEATSA_script.html#update-existing-peatsa-script-py">update_existing_PEATSA_script.py</a></li>
+<li class="toctree-l2"><a class="reference internal" href="update_existing_PEATSA_script.html#update_existing_PEATSA_script.main"><code class="docutils literal notranslate"><span class="pre">main()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">PEATSA documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">PEATSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">PEATSA documentation</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">PEATSA documentation</a></li>
+      <li>Next: <a href="Burn.html" title="next chapter">Burn module</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

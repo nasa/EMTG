@@ -1,0 +1,851 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BPlane2PosVelOut &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for BPlane2PosVelOut</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">from</span> <span class="nn">mathUtilities</span> <span class="kn">import</span> <span class="n">mathUtilities</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span> <span class="c1"># use the autograd version of np</span>
+
+<div class="viewcode-block" id="BPlane2PosVelOut"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut">[docs]</a><span class="k">class</span> <span class="nc">BPlane2PosVelOut</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="c1"># x = [vInfMag, vInfRA, vInfDec, bScalar, bTheta, TA]</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span> <span class="o">=</span> <span class="n">mathUtilities</span><span class="p">()</span>
+        <span class="k">return</span>
+
+    <span class="c1"># the stuff</span>
+<div class="viewcode-block" id="BPlane2PosVelOut.eMag"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.eMag">[docs]</a>    <span class="k">def</span> <span class="nf">eMag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        magnitude of eccentricity</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vInfMag</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vInfRA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">vInfDec</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">bScalar</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">bTheta</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+
+        <span class="n">eMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="p">((</span><span class="n">vInfMag</span><span class="o">**</span><span class="mi">4</span> <span class="o">*</span> <span class="n">bScalar</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">mu</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">eMag</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.eMag_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.eMag_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">eMag_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of magnitude of eccentricity</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vInfMag</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vInfRA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">vInfDec</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">bScalar</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">bTheta</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+
+        <span class="n">term</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="p">(</span><span class="n">vInfMag</span><span class="o">**</span><span class="mi">4</span> <span class="o">*</span> <span class="n">bScalar</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="n">mu</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="n">deMagdx</span> <span class="o">=</span> <span class="n">term</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">4.0</span> <span class="o">*</span> <span class="n">vInfMag</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">bScalar</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">mu</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> 
+                                   <span class="mf">0.0</span><span class="p">,</span> 
+                                   <span class="mf">0.0</span><span class="p">,</span>
+                                   <span class="mf">2.0</span> <span class="o">*</span> <span class="n">vInfMag</span><span class="o">**</span><span class="mi">4</span> <span class="o">*</span> <span class="n">bScalar</span> <span class="o">/</span> <span class="n">mu</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span>
+                                   <span class="mf">0.0</span><span class="p">,</span>
+                                   <span class="mf">0.0</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">deMagdx</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.bScalar_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.bScalar_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">bScalar_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of b scalar parameter</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dbScalardx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+        <span class="n">dbScalardx</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">return</span> <span class="n">dbScalardx</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.bTheta_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.bTheta_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">bTheta_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of b theta parameter</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dbThetadx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+        <span class="n">dbThetadx</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="k">return</span> <span class="n">dbThetadx</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.TA_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.TA_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">TA_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of true anomaly</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dTAdx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">dTAdx</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.rpMag"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.rpMag">[docs]</a>    <span class="k">def</span> <span class="nf">rpMag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        periapsis magnitude</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vInfMag</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">eMag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eMag</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">rpMag</span> <span class="o">=</span> <span class="p">(</span><span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="n">eMag</span> <span class="o">-</span> <span class="mi">1</span><span class="p">))</span> <span class="o">/</span> <span class="n">vInfMag</span><span class="o">**</span><span class="mi">2</span>
+        <span class="k">return</span> <span class="n">rpMag</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.vInfVector"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.vInfVector">[docs]</a>    <span class="k">def</span> <span class="nf">vInfVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        v infinity vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vInfMag</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vInfRA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">vInfDec</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">bScalar</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">bTheta</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+
+        <span class="n">vInfVector</span> <span class="o">=</span> <span class="n">vInfMag</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">vInfDec</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">vInfRA</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">vInfDec</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">vInfRA</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">vInfDec</span><span class="p">)])</span>
+        <span class="k">return</span> <span class="n">vInfVector</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.sVector"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.sVector">[docs]</a>    <span class="k">def</span> <span class="nf">sVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        s vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vInfMag</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vInfRA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">vInfDec</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">bScalar</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">bTheta</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vInfVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="n">vInfMag</span>
+        <span class="k">return</span> <span class="n">s</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.sVector_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.sVector_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">sVector_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of s vector</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vInfMag</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vInfRA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">vInfDec</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">bScalar</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">bTheta</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+
+        <span class="n">ca</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">vInfRA</span><span class="p">)</span>
+        <span class="n">sa</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">vInfRA</span><span class="p">)</span>
+        <span class="n">cd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">vInfDec</span><span class="p">)</span>
+        <span class="n">sd</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">vInfDec</span><span class="p">)</span>
+
+        <span class="n">dsdx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
+        <span class="n">dsdx</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">cd</span> <span class="o">*</span> <span class="n">sa</span>
+        <span class="n">dsdx</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">sd</span> <span class="o">*</span> <span class="n">ca</span>
+        <span class="n">dsdx</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">cd</span> <span class="o">*</span> <span class="n">ca</span>
+        <span class="n">dsdx</span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="o">-</span><span class="n">sd</span> <span class="o">*</span> <span class="n">sa</span>
+        <span class="n">dsdx</span><span class="p">[</span><span class="mi">2</span><span class="p">,</span><span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">cd</span>
+
+        <span class="k">return</span> <span class="n">dsdx</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.hMag"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.hMag">[docs]</a>    <span class="k">def</span> <span class="nf">hMag</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        angular momentum magnitude</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vInfMag</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vInfRA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">vInfDec</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">bScalar</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">bTheta</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+
+        <span class="n">hMag</span> <span class="o">=</span> <span class="n">vInfMag</span> <span class="o">*</span> <span class="n">bScalar</span>
+        <span class="k">return</span> <span class="n">hMag</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.hMag_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.hMag_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">hMag_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of angular momentum magnitude</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vInfMag</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vInfRA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">vInfDec</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">bScalar</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">bTheta</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="n">dhMagdx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">bScalar</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">vInfMag</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">dhMagdx</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.tVector"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.tVector">[docs]</a>    <span class="k">def</span> <span class="nf">tVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        T vector as a unit vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tVectorNotUnit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">t</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">t</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.tVector_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.tVector_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">tVector_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of the T unit vector</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># choose the reference vector here</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span><span class="o">.</span><span class="n">k_unit</span><span class="p">()</span>
+        <span class="n">referenceVector</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="n">dreferenceVectordx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span> <span class="c1"># for k reference vector (or any constant reference vector)</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">crossProduct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">referenceVector</span><span class="p">)</span>
+        <span class="n">crossProductMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">)</span>
+        <span class="n">dcrossProductds</span><span class="p">,</span> <span class="n">dcrossProductdreferenceVector</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span><span class="o">.</span><span class="n">d_crossproduct</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">referenceVector</span><span class="p">)</span>
+        
+        <span class="n">dsdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sVector_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dtdxNotUnit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dcrossProductds</span><span class="p">,</span> <span class="n">dsdx</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dcrossProductdreferenceVector</span><span class="p">,</span> <span class="n">dreferenceVectordx</span><span class="p">)</span>
+        <span class="n">dOneByCrossProductMagdx</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">,</span> <span class="n">dtdxNotUnit</span><span class="p">)</span>
+        <span class="n">dtdx</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">dtdxNotUnit</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">,</span> <span class="n">dOneByCrossProductMagdx</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">dtdx</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.tVectorNotUnit"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.tVectorNotUnit">[docs]</a>    <span class="k">def</span> <span class="nf">tVectorNotUnit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        T vector, not necessarily as a unit vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span><span class="o">.</span><span class="n">k_unit</span><span class="p">()</span>
+        <span class="c1">#h = self.hVector(x)</span>
+        <span class="n">referenceVector</span> <span class="o">=</span> <span class="n">k</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">referenceVector</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">t</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.rVector"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.rVector">[docs]</a>    <span class="k">def</span> <span class="nf">rVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        bplane R vector as a unit vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rVectorNotUnit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">rmag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">R</span><span class="p">)</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">R</span> <span class="o">/</span> <span class="n">rmag</span>
+        <span class="k">return</span> <span class="n">R</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.rVector_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.rVector_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">rVector_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        bplane R unit vector derivatives</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">crossProduct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">crossProductMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">)</span>
+        <span class="n">dcrossProductds</span><span class="p">,</span> <span class="n">dcrossProductdt</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span><span class="o">.</span><span class="n">d_crossproduct</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="n">dsdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sVector_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dtdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tVector_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dRdxNotUnit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dcrossProductds</span><span class="p">,</span> <span class="n">dsdx</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dcrossProductdt</span><span class="p">,</span> <span class="n">dtdx</span><span class="p">)</span>
+        <span class="n">dOneByCrossProductMagdx</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">,</span> <span class="n">dRdxNotUnit</span><span class="p">)</span>
+        <span class="n">dRdx</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">dRdxNotUnit</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">,</span> <span class="n">dOneByCrossProductMagdx</span><span class="p">)</span>
+
+        <span class="c1">#term1 = (1.0 / crossProductMag) * dRdxNotUnit</span>
+        <span class="c1">#term2 = np.outer(crossProduct, dOneByCrossProductMagdx)</span>
+        <span class="c1">#print(&#39;***&#39;)</span>
+        <span class="c1">#print(&#39;dRdx&#39;)</span>
+        <span class="c1">#print(&#39;crossProduct: &#39;, crossProduct)</span>
+        <span class="c1">#print(&#39;dRdxNotUnit column1: &#39;, dRdxNotUnit[0:3,1])</span>
+        <span class="c1">#print(crossProduct[0]*dRdxNotUnit[0,1], crossProduct[1]*dRdxNotUnit[1,1])</span>
+        <span class="c1">#print(crossProduct[2], dOneByCrossProductMagdx[1])</span>
+        <span class="c1">#print(dRdxNotUnit[2,1], term2[2,1])</span>
+        <span class="c1">#print(&#39;***&#39;)</span>
+        <span class="k">return</span> <span class="n">dRdx</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.rVectorNotUnit"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.rVectorNotUnit">[docs]</a>    <span class="k">def</span> <span class="nf">rVectorNotUnit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        bplane R vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">t</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">R</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.bDotR"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.bDotR">[docs]</a>    <span class="k">def</span> <span class="nf">bDotR</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        B dot R</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vInfMag</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vInfRA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">vInfDec</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">bScalar</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">bTheta</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+
+        <span class="n">BR</span> <span class="o">=</span> <span class="n">bScalar</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">bTheta</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">BR</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.bDotT"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.bDotT">[docs]</a>    <span class="k">def</span> <span class="nf">bDotT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        B dot T</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vInfMag</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vInfRA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">vInfDec</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">bScalar</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">bTheta</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+
+        <span class="n">BT</span> <span class="o">=</span> <span class="n">bScalar</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">bTheta</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">BT</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.bVector"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.bVector">[docs]</a>    <span class="k">def</span> <span class="nf">bVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        b plane vector B</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vInfMag</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vInfRA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">vInfDec</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">bScalar</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">bTheta</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+
+        <span class="n">BR</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bDotR</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">BT</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bDotT</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">BR</span> <span class="o">*</span> <span class="n">R</span> <span class="o">+</span> <span class="n">BT</span> <span class="o">*</span> <span class="n">T</span>
+        <span class="k">return</span> <span class="n">b</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.bVector_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.bVector_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">bVector_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of b plane vector B</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">vInfMag</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">vInfRA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">vInfDec</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="n">bScalar</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+        <span class="n">bTheta</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+
+        <span class="n">sTheta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">bTheta</span><span class="p">)</span>
+        <span class="n">cTheta</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">bTheta</span><span class="p">)</span>
+
+        <span class="n">dbScalardx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bScalar_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dbThetadx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bTheta_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dsThetadx</span> <span class="o">=</span> <span class="n">cTheta</span> <span class="o">*</span> <span class="n">dbThetadx</span>
+        <span class="n">dcThetadx</span> <span class="o">=</span> <span class="o">-</span><span class="n">sTheta</span> <span class="o">*</span> <span class="n">dbThetadx</span>
+        <span class="n">R</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dRdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">rVector_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dTdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tVector_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dBdx</span> <span class="o">=</span> <span class="n">sTheta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">dbScalardx</span><span class="p">)</span> <span class="o">+</span> <span class="n">bScalar</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">R</span><span class="p">,</span> <span class="n">dsThetadx</span><span class="p">)</span> <span class="o">+</span> <span class="n">bScalar</span> <span class="o">*</span> <span class="n">sTheta</span> <span class="o">*</span> <span class="n">dRdx</span> <span class="o">+</span> <span class="n">cTheta</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">dbScalardx</span><span class="p">)</span> <span class="o">+</span> <span class="n">bScalar</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">dcThetadx</span><span class="p">)</span> <span class="o">+</span> <span class="n">bScalar</span> <span class="o">*</span> <span class="n">cTheta</span> <span class="o">*</span> <span class="n">dTdx</span>
+        
+        <span class="c1">#term1 = sTheta * np.outer(R, dbScalardx)</span>
+        <span class="c1">#term2 = bScalar * np.outer(R, dsThetadx)</span>
+        <span class="c1">#term3 = bScalar * sTheta * dRdx</span>
+        <span class="c1">#term4 = cTheta * np.outer(T, dbScalardx)</span>
+        <span class="c1">#term5 = bScalar * np.outer(T, dcThetadx)</span>
+        <span class="c1">#term6 = bScalar * cTheta * dTdx</span>
+        <span class="c1">#print(&#39;***&#39;)</span>
+        <span class="c1">#print(&#39;term1: &#39;, term1[2,1])</span>
+        <span class="c1">#print(&#39;term2: &#39;, term2[2,1]) </span>
+        <span class="c1">#print(&#39;term3: &#39;, term3[2,1]) </span>
+        <span class="c1">#print(&#39;term4: &#39;, term4[2,1]) </span>
+        <span class="c1">#print(&#39;term5: &#39;, term5[2,1]) </span>
+        <span class="c1">#print(&#39;term6: &#39;, term6[2,1])</span>
+        <span class="c1">#print(&#39;***&#39;)</span>
+        <span class="k">return</span> <span class="n">dBdx</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.hUnit"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.hUnit">[docs]</a>    <span class="k">def</span> <span class="nf">hUnit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        angular momentum unit vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">hUnit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="n">hUnit</span> <span class="o">=</span> <span class="n">hUnit</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">hUnit</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">hUnit</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.hUnit_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.hUnit_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">hUnit_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of angular momentum unit vector</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">crossProduct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="n">crossProductMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">)</span>
+        <span class="n">dcrossProductdb</span><span class="p">,</span> <span class="n">dcrossProductds</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span><span class="o">.</span><span class="n">d_crossproduct</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+        <span class="n">dbdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bVector_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dsdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sVector_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dhdxNotUnit</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dcrossProductdb</span><span class="p">,</span> <span class="n">dbdx</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dcrossProductds</span><span class="p">,</span> <span class="n">dsdx</span><span class="p">)</span>
+        <span class="n">dOneByCrossProductMagdx</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="o">**</span><span class="mi">3</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">,</span> <span class="n">dhdxNotUnit</span><span class="p">)</span>        
+        <span class="n">dhUnitdx</span> <span class="o">=</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">dhdxNotUnit</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">,</span> <span class="n">dOneByCrossProductMagdx</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dhUnitdx</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.hVector"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.hVector">[docs]</a>    <span class="k">def</span> <span class="nf">hVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        angular momentum vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hUnit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hUnit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">hMag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hMag</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="n">hMag</span> <span class="o">*</span> <span class="n">hUnit</span>
+        <span class="k">return</span> <span class="n">h</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.hVector_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.hVector_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">hVector_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        angular momentum vector derivatives</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hMag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hMag</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dhMagdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hMag_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">hUnit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hUnit</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dhUnitdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hUnit_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dhdx</span> <span class="o">=</span> <span class="n">hMag</span> <span class="o">*</span> <span class="n">dhUnitdx</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">hUnit</span><span class="p">,</span> <span class="n">dhMagdx</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dhdx</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.TAinf"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.TAinf">[docs]</a>    <span class="k">def</span> <span class="nf">TAinf</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        true anomaly of the outgoing asymptote</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">eMag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eMag</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">TAinf</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arccos</span><span class="p">(</span><span class="o">-</span><span class="mf">1.0</span><span class="o">/</span><span class="n">eMag</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">TAinf</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.TAinf_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.TAinf_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">TAinf_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of true anomaly of the outgoing asymptote</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">eMag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eMag</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">deMagdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eMag_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">dTAinfdx</span> <span class="o">=</span> <span class="o">-</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">eMag</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">eMag</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">)))</span> <span class="o">*</span> <span class="n">deMagdx</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dTAinfdx</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.eVector"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.eVector">[docs]</a>    <span class="k">def</span> <span class="nf">eVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        eccentricity vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">eMag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eMag</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">TAinf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TAinf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">bUnit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">bUnit</span> <span class="o">=</span> <span class="n">bUnit</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">bUnit</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">TAinf</span><span class="p">)</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">TAinf</span><span class="p">)</span> <span class="o">*</span> <span class="n">bUnit</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">e</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">eMag</span> <span class="o">*</span> <span class="n">e</span>
+        <span class="k">return</span> <span class="n">e</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.eVector_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.eVector_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">eVector_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        eccentricity vector derivatives</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">eMag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eMag</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">deMagdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eMag_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">eUnit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eUnitVector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">deUnitdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eUnitVector_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">dedx</span> <span class="o">=</span> <span class="n">eMag</span> <span class="o">*</span> <span class="n">deUnitdx</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">eUnit</span><span class="p">,</span> <span class="n">deMagdx</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">dedx</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.eUnitVector"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.eUnitVector">[docs]</a>    <span class="k">def</span> <span class="nf">eUnitVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        unit vector in direction of eccentricity vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">TAinf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TAinf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">bUnit</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">bUnit</span> <span class="o">=</span> <span class="n">bUnit</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">bUnit</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eVector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="n">e</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">e</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.eUnitVector_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.eUnitVector_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">eUnitVector_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of unit vector in direction of eccentricity vector</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">TAinf</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TAinf</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">dTAinfdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TAinf_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dsdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sVector_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">bUnit</span> <span class="o">=</span> <span class="n">b</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">dbdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bVector_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dbUnitdb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span><span class="o">.</span><span class="n">unit_vector_deriv</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+        <span class="n">dbUnitdx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dbUnitdb</span><span class="p">,</span> <span class="n">dbdx</span><span class="p">)</span>
+
+        <span class="n">arg</span> <span class="o">=</span> <span class="n">TAinf</span>
+        <span class="n">cArg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="n">sArg</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
+        <span class="n">dcArgdx</span> <span class="o">=</span> <span class="o">-</span><span class="n">sArg</span> <span class="o">*</span> <span class="n">dTAinfdx</span>
+        <span class="n">dsArgdx</span> <span class="o">=</span> <span class="n">cArg</span> <span class="o">*</span> <span class="n">dTAinfdx</span>
+
+        <span class="n">term</span> <span class="o">=</span> <span class="n">cArg</span> <span class="o">*</span> <span class="n">s</span> <span class="o">+</span> <span class="n">sArg</span> <span class="o">*</span> <span class="n">bUnit</span>
+        
+        <span class="c1"># term is a unit vector because s and bUnit are unit vectors</span>
+        <span class="c1"># so we don&#39;t need to add the magnitude terms</span>
+        <span class="c1">#termMag = np.linalg.norm(term)</span>
+
+        <span class="n">dTermdx</span> <span class="o">=</span> <span class="n">dsdx</span> <span class="o">*</span> <span class="n">cArg</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">dcArgdx</span><span class="p">)</span> <span class="o">+</span> <span class="n">dbUnitdx</span> <span class="o">*</span> <span class="n">sArg</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">bUnit</span><span class="p">,</span> <span class="n">dsArgdx</span><span class="p">)</span>
+        
+        <span class="c1">#dOneByTermMagdx = (-1.0 / termMag**3) * np.dot(term, dTermdx)</span>
+        <span class="c1">#deUnitdx = (1.0 / termMag) * dTermdx + np.outer(term, dOneByTermMagdx)</span>
+        
+        <span class="n">deUnitdx</span> <span class="o">=</span> <span class="n">dTermdx</span>
+
+        <span class="k">return</span> <span class="n">deUnitdx</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.positionVector"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.positionVector">[docs]</a>    <span class="k">def</span> <span class="nf">positionVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        position vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eVector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">hMag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hMag</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">eMag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eMag</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">crossp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span><span class="o">.</span><span class="n">crossmat</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">crosspMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">crossp</span><span class="p">)</span>
+
+        <span class="n">rMag</span> <span class="o">=</span> <span class="n">hMag</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">eMag</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">TA</span><span class="p">)))</span>
+        <span class="n">term1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span> <span class="o">/</span> <span class="n">eMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">e</span>
+        <span class="n">term2</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span> <span class="o">/</span> <span class="n">crosspMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">crossp</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">rMag</span> <span class="o">*</span> <span class="p">(</span><span class="n">term1</span> <span class="o">+</span> <span class="n">term2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.positionVectorFromheTA"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.positionVectorFromheTA">[docs]</a>    <span class="k">def</span> <span class="nf">positionVectorFromheTA</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">TA</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        position from from h, e, TA for testing purposes</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">hMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">eMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">crossp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span><span class="o">.</span><span class="n">crossmat</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">crosspMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">crossp</span><span class="p">)</span>
+
+        <span class="n">rMag</span> <span class="o">=</span> <span class="n">hMag</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="p">(</span><span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">eMag</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">TA</span><span class="p">)))</span>
+        <span class="n">term1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span> <span class="o">/</span> <span class="n">eMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">e</span>
+        <span class="n">term2</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span> <span class="o">/</span> <span class="n">crosspMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">crossp</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">rMag</span> <span class="o">*</span> <span class="p">(</span><span class="n">term1</span> <span class="o">+</span> <span class="n">term2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">r</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.dPositionVectordh"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.dPositionVectordh">[docs]</a>    <span class="k">def</span> <span class="nf">dPositionVectordh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of position vector wrt angular momentum vector</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="n">cTA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span>
+        <span class="n">sTA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eVector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">hMag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hMag</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">eMag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eMag</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">eUnit</span> <span class="o">=</span> <span class="n">e</span> <span class="o">/</span> <span class="n">eMag</span>
+        <span class="n">crossProduct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">crossProductMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">)</span>
+
+        <span class="n">factor</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">eMag</span> <span class="o">*</span> <span class="n">cTA</span><span class="p">))</span>
+
+        <span class="n">term1</span> <span class="o">=</span> <span class="n">cTA</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">eUnit</span><span class="p">,</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">h</span><span class="p">)</span>
+        <span class="c1">#term2 = sTA * np.dot((1.0 / crossProductMag) * (np.identity(3) - (1.0 / crossProductMag**2) * np.outer(crossProduct, crossProduct)), -self.mathUtil.crossmat(e))</span>
+        
+        <span class="n">term2</span> <span class="o">=</span> <span class="p">(</span><span class="n">sTA</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="mf">2.</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">,</span> <span class="n">h</span><span class="p">)</span> <span class="o">+</span> 
+            <span class="n">hMag</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">((</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> 
+                       <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">,</span> <span class="n">crossProduct</span><span class="p">)),</span> 
+                             <span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span><span class="o">.</span><span class="n">crossmat</span><span class="p">(</span><span class="n">e</span><span class="p">)))</span>
+        <span class="n">drdh</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">*</span> <span class="p">(</span><span class="n">term1</span> <span class="o">+</span> <span class="n">term2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">drdh</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.dPositionVectorde"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.dPositionVectorde">[docs]</a>    <span class="k">def</span> <span class="nf">dPositionVectorde</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of position vector wrt eccentricity vector</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="n">cTA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span>
+        <span class="n">sTA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eVector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">hMag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hMag</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">eMag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eMag</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">eUnit</span> <span class="o">=</span> <span class="n">e</span> <span class="o">/</span> <span class="n">eMag</span>
+        <span class="n">crossProduct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">crossProductMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">)</span>
+        <span class="n">crossProductUnit</span> <span class="o">=</span> <span class="n">crossProduct</span> <span class="o">/</span> <span class="n">crossProductMag</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="n">hMag</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">mu</span>
+        <span class="c1">#term1_old = np.outer((-cTA / ((1.0 + eMag * cTA)**2)) * eUnit, eUnit * cTA + crossProduct / crossProductMag * sTA)</span>
+        
+        <span class="n">term1</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="n">cTA</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">+</span> <span class="n">eMag</span> <span class="o">*</span> <span class="n">cTA</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span>
+            <span class="n">cTA</span> <span class="o">*</span> <span class="n">eUnit</span> <span class="o">+</span> <span class="n">sTA</span> <span class="o">*</span> <span class="n">crossProductUnit</span><span class="p">,</span> <span class="n">eUnit</span><span class="p">)</span>
+        
+        <span class="n">factor2</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">eMag</span> <span class="o">*</span> <span class="n">cTA</span><span class="p">)</span>
+        <span class="c1">#term2_old = factor2 * ((cTA / eMag) * (np.identity(3) - (1.0 / eMag**2) * np.outer(e, e)) + (sTA / crossProductMag) * np.dot((np.identity(3) - (1.0 / crossProductMag**2) * np.outer(crossProduct, crossProduct)), self.mathUtil.crossmat(h)))</span>
+                
+        <span class="n">term2</span> <span class="o">=</span> <span class="n">factor2</span> <span class="o">*</span> <span class="p">(</span>
+            <span class="p">(</span><span class="n">cTA</span> <span class="o">/</span> <span class="n">eMag</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">eMag</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span> <span class="o">+</span>
+            <span class="p">(</span><span class="n">sTA</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">,</span> <span class="n">crossProduct</span><span class="p">)),</span> <span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span><span class="o">.</span><span class="n">crossmat</span><span class="p">(</span><span class="n">h</span><span class="p">)))</span>
+        
+        <span class="c1">#term2 = term2_old</span>
+        <span class="c1"># print(term1_old)</span>
+        <span class="c1"># print(&quot;\n&quot;)</span>
+        <span class="c1"># print(term1)</span>
+        <span class="c1"># print(&quot;\n&quot;)</span>
+        <span class="c1"># print(&quot;\n&quot;)</span>
+        <span class="c1"># print(&quot;\n&quot;)</span>
+        <span class="c1"># print(&quot;\n&quot;)</span>
+        <span class="c1"># print(term2_old)</span>
+        <span class="c1"># print(&quot;\n&quot;)</span>
+        <span class="c1"># print(term2)</span>
+        <span class="c1"># print(&quot;\n&quot;)</span>
+        <span class="c1"># print(term3)</span>
+        <span class="c1"># print(&quot;\n&quot;)</span>
+        
+        <span class="n">drde</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">*</span> <span class="p">(</span><span class="n">term1</span> <span class="o">+</span> <span class="n">term2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">drde</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.dPositionVectordTA"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.dPositionVectordTA">[docs]</a>    <span class="k">def</span> <span class="nf">dPositionVectordTA</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of position vector wrt true anomaly</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="n">cTA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span>
+        <span class="n">sTA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eVector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">hMag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hMag</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">eMag</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eMag</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">eUnit</span> <span class="o">=</span> <span class="n">e</span> <span class="o">/</span> <span class="n">eMag</span>
+        <span class="n">crossProduct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">crossProductMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">)</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="n">hMag</span><span class="o">**</span><span class="mi">2</span> <span class="o">/</span> <span class="n">mu</span>
+        <span class="n">factor1</span> <span class="o">=</span> <span class="p">(</span><span class="n">eMag</span> <span class="o">*</span> <span class="n">sTA</span><span class="p">)</span> <span class="o">/</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">eMag</span> <span class="o">*</span> <span class="n">cTA</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">term1</span> <span class="o">=</span> <span class="n">factor1</span> <span class="o">*</span> <span class="p">(</span><span class="n">eUnit</span> <span class="o">*</span> <span class="n">cTA</span> <span class="o">+</span> <span class="p">(</span><span class="n">sTA</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">crossProduct</span><span class="p">)</span>
+        <span class="n">factor2</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="n">eMag</span> <span class="o">*</span> <span class="n">cTA</span><span class="p">)</span>
+        <span class="n">term2</span> <span class="o">=</span> <span class="n">factor2</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">sTA</span> <span class="o">*</span> <span class="n">eUnit</span> <span class="o">+</span> <span class="p">(</span><span class="n">cTA</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">crossProduct</span><span class="p">)</span>
+        <span class="n">drdTA</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">*</span> <span class="p">(</span><span class="n">term1</span> <span class="o">+</span> <span class="n">term2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">drdTA</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.positionVector_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.positionVector_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">positionVector_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of position vector</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">drdh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dPositionVectordh</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">drde</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dPositionVectorde</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">drdTA</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dPositionVectordTA</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">dhdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hVector_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dedx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eVector_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">dTAdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TA_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">drdx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">drdh</span><span class="p">,</span> <span class="n">dhdx</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">drde</span><span class="p">,</span> <span class="n">dedx</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">drdTA</span><span class="p">,</span> <span class="n">dTAdx</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">drdx</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.velocityVector"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.velocityVector">[docs]</a>    <span class="k">def</span> <span class="nf">velocityVector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        velocity vector</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eVector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">hMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">eMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">crossp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span><span class="o">.</span><span class="n">crossmat</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">crosspMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">crossp</span><span class="p">)</span>
+
+        <span class="n">factor</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu</span> <span class="o">/</span> <span class="n">hMag</span>
+        <span class="n">term1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span> <span class="o">/</span> <span class="n">eMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">e</span>
+        <span class="n">term2</span> <span class="o">=</span> <span class="o">-</span><span class="p">((</span><span class="n">eMag</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">TA</span><span class="p">))</span> <span class="o">/</span> <span class="n">crosspMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">crossp</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">*</span> <span class="p">(</span><span class="n">term1</span> <span class="o">+</span> <span class="n">term2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">v</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.velocityVectorFromheTA"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.velocityVectorFromheTA">[docs]</a>    <span class="k">def</span> <span class="nf">velocityVectorFromheTA</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">h</span><span class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="n">TA</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        velocity vector as function of h, e, TA</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">hMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">eMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">crossp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span><span class="o">.</span><span class="n">crossmat</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">crosspMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">crossp</span><span class="p">)</span>
+
+        <span class="n">factor</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu</span> <span class="o">/</span> <span class="n">hMag</span>
+        <span class="n">term1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span> <span class="o">/</span> <span class="n">eMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">e</span>
+        <span class="n">term2</span> <span class="o">=</span> <span class="o">-</span><span class="p">((</span><span class="n">eMag</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">TA</span><span class="p">))</span> <span class="o">/</span> <span class="n">crosspMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">crossp</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">*</span> <span class="p">(</span><span class="n">term1</span> <span class="o">+</span> <span class="n">term2</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">v</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.dVelocityVectordh"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.dVelocityVectordh">[docs]</a>    <span class="k">def</span> <span class="nf">dVelocityVectordh</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of Velocity vector wrt angular momentum vector</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="n">sTA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span>
+        <span class="n">cTA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eVector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">eCross</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span><span class="o">.</span><span class="n">crossmat</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">hMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">eMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">eUnit</span> <span class="o">=</span> <span class="n">e</span> <span class="o">/</span> <span class="n">eMag</span>
+        <span class="n">crossProduct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">crossProductMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">)</span>
+
+        <span class="n">factor1</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">/</span> <span class="n">hMag</span><span class="o">**</span><span class="mi">3</span>
+        <span class="n">term1</span> <span class="o">=</span> <span class="n">factor1</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">sTA</span> <span class="o">*</span> <span class="n">eUnit</span> <span class="o">-</span> <span class="p">((</span><span class="n">eMag</span> <span class="o">+</span> <span class="n">cTA</span><span class="p">)</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">crossProduct</span><span class="p">,</span> <span class="n">h</span><span class="p">))</span>
+        <span class="n">factor2</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">eMag</span> <span class="o">+</span> <span class="n">cTA</span><span class="p">))</span> <span class="o">/</span> <span class="p">(</span><span class="n">hMag</span> <span class="o">*</span> <span class="n">crossProductMag</span><span class="p">)</span>
+        <span class="n">term2</span> <span class="o">=</span> <span class="n">factor2</span> <span class="o">*</span> <span class="p">(</span><span class="o">-</span><span class="n">eCross</span> <span class="o">+</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">,</span> <span class="n">crossProduct</span><span class="p">),</span> <span class="n">eCross</span><span class="p">))</span>
+
+        <span class="n">dvdh</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu</span> <span class="o">*</span> <span class="p">(</span><span class="n">term1</span> <span class="o">+</span> <span class="n">term2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dvdh</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.dVelocityVectorde"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.dVelocityVectorde">[docs]</a>    <span class="k">def</span> <span class="nf">dVelocityVectorde</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of Velocity vector wrt eccentricity vector</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="n">sTA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span>
+        <span class="n">cTA</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eVector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">hCross</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span><span class="o">.</span><span class="n">crossmat</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">hMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">eMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">crossProduct</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cross</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">crossProductMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">)</span>
+
+        <span class="n">term1</span> <span class="o">=</span> <span class="n">sTA</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">eMag</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">identity</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">eMag</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+        <span class="n">term21</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">((</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">crossProduct</span><span class="p">,</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">eMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">term22</span> <span class="o">=</span> <span class="p">(</span><span class="n">eMag</span> <span class="o">+</span> <span class="n">cTA</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">hCross</span> <span class="o">-</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">/</span> <span class="n">crossProductMag</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">crossProduct</span><span class="p">,</span> <span class="n">crossProduct</span><span class="p">),</span> <span class="n">hCross</span><span class="p">))</span>
+        <span class="n">term2</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">term21</span> <span class="o">+</span> <span class="n">term22</span><span class="p">)</span>
+
+        <span class="n">factor</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu</span> <span class="o">/</span> <span class="n">hMag</span>
+
+        <span class="n">dvde</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">*</span> <span class="p">(</span><span class="n">term1</span> <span class="o">+</span> <span class="n">term2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dvde</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.dVelocityVectordTA"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.dVelocityVectordTA">[docs]</a>    <span class="k">def</span> <span class="nf">dVelocityVectordTA</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of Velocity vector wrt true anomaly</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">TA</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
+        <span class="n">h</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hVector</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">e</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eVector</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">hMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">h</span><span class="p">)</span>
+        <span class="n">eMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+        <span class="n">crossp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">mathUtil</span><span class="o">.</span><span class="n">crossmat</span><span class="p">(</span><span class="n">h</span><span class="p">),</span> <span class="n">e</span><span class="p">)</span>
+        <span class="n">crosspMag</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">crossp</span><span class="p">)</span>
+
+        <span class="n">factor</span> <span class="o">=</span> <span class="o">-</span><span class="n">mu</span> <span class="o">/</span> <span class="n">hMag</span>
+        <span class="n">term1</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">TA</span><span class="p">)</span> <span class="o">/</span> <span class="n">eMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">e</span>
+        <span class="n">term2</span> <span class="o">=</span> <span class="p">((</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">TA</span><span class="p">))</span> <span class="o">/</span> <span class="n">crosspMag</span><span class="p">)</span> <span class="o">*</span> <span class="n">crossp</span>
+        <span class="n">dvdTA</span> <span class="o">=</span> <span class="n">factor</span> <span class="o">*</span> <span class="p">(</span><span class="n">term1</span> <span class="o">+</span> <span class="n">term2</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dvdTA</span></div>
+
+<div class="viewcode-block" id="BPlane2PosVelOut.velocityVector_derivs"><a class="viewcode-back" href="../PyEMTG/BPlane2PosVelOut.html#BPlane2PosVelOut.BPlane2PosVelOut.velocityVector_derivs">[docs]</a>    <span class="k">def</span> <span class="nf">velocityVector_derivs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        derivatives of Velocity vector</span>
+<span class="sd">        typed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">dvdh</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dVelocityVectordh</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">dvde</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dVelocityVectorde</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">dvdTA</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dVelocityVectordTA</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">dhdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">hVector_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dedx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">eVector_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">mu</span><span class="p">)</span>
+        <span class="n">dTAdx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">TA_derivs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+        <span class="n">dvdx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dvdh</span><span class="p">,</span> <span class="n">dhdx</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">dvde</span><span class="p">,</span> <span class="n">dedx</span><span class="p">)</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">outer</span><span class="p">(</span><span class="n">dvdTA</span><span class="p">,</span> <span class="n">dTAdx</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dvdx</span></div></div>
+        
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

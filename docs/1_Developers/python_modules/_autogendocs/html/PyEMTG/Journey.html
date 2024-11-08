@@ -1,0 +1,291 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>Journey module &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="JourneyOptions module" href="JourneyOptions.html" />
+    <link rel="prev" title="GlobalOptionsPanel module" href="GlobalOptionsPanel.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-Journey">
+<span id="journey-module"></span><h1>Journey module<a class="headerlink" href="#module-Journey" title="Permalink to this heading">¶</a></h1>
+<section id="journey-py">
+<h2>Journey.py<a class="headerlink" href="#journey-py" title="Permalink to this heading">¶</a></h2>
+<p>This file contains the Journey class.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="Journey.Journey">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">Journey.</span></span><span class="sig-name descname"><span class="pre">Journey</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Journey.html#Journey"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Journey.Journey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Contains attributes and methods related to the ‘output’ of an EMTG journey.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>parent</strong> (<em>Mission object</em>) – The Mission of which this Journey is a member.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="Journey.Journey.AutoTableJourney">
+<span class="sig-name descname"><span class="pre">AutoTableJourney</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">TableFile</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PlotOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skipNext</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Journey.html#Journey.AutoTableJourney"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Journey.Journey.AutoTableJourney" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Journey.Journey.GenerateJourneyDataPlot">
+<span class="sig-name descname"><span class="pre">GenerateJourneyDataPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DataAxesLeft</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">DataAxesRight</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PlotOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstpass</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Journey.html#Journey.GenerateJourneyDataPlot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Journey.Journey.GenerateJourneyDataPlot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Journey.Journey.GetBoundaryConstraintOutputValueByName">
+<span class="sig-name descname"><span class="pre">GetBoundaryConstraintOutputValueByName</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stringIn</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">floatOrStringOut</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'string'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Journey.html#Journey.GetBoundaryConstraintOutputValueByName"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Journey.Journey.GetBoundaryConstraintOutputValueByName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return float value of boundary constraint. Which boundary constraint
+is determined by looking for input string in self.BoundaryConstraintOutputs.
+The first time string is found, the value of that boundary constraint is returned
+as the type specified by floatOrStringOut.
+If string is never found, then None is returned</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stringIn</strong> (<em>string</em>) – string to search for in the “left-hand sides” of self.BoundaryConstraintOutputs</p></li>
+<li><p><strong>floatOrStringOut</strong> (<em>string</em><em>, </em><em>optional</em>) – how to output the returned value: “string” or “float”</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Journey.Journey.LU">
+<span class="sig-name descname"><span class="pre">LU</span></span><a class="headerlink" href="#Journey.Journey.LU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Length unit for this journey, used for scaling</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Journey.Journey.PlotJourney">
+<span class="sig-name descname"><span class="pre">PlotJourney</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">JourneyAxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PlotOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CustomLabels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Journey.html#Journey.PlotJourney"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Journey.Journey.PlotJourney" title="Permalink to this definition">¶</a></dt>
+<dd><p>Plot each mission event</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>JourneyAxes</strong> (<em>Matplotlib axes</em>) – Matplotlib axes on which to plot</p></li>
+<li><p><strong>PlotOptions</strong> (<em>PlotOptions object</em>) – Options for plotting</p></li>
+<li><p><strong>CustomLabels</strong> (<em>List</em><em> of </em><em>lists</em><em>, </em><em>optional</em>) – [[eventNumber, labelstring], …]. The default is None.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Journey.Journey.PlotJourneyBoundaryOrbits">
+<span class="sig-name descname"><span class="pre">PlotJourneyBoundaryOrbits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">JourneyAxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PlotOptions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Journey.html#Journey.PlotJourneyBoundaryOrbits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Journey.Journey.PlotJourneyBoundaryOrbits" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Journey.Journey.PlotJourneyCentralBodyOrbits">
+<span class="sig-name descname"><span class="pre">PlotJourneyCentralBodyOrbits</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">JourneyAxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PlotOptions</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Journey.html#Journey.PlotJourneyCentralBodyOrbits"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Journey.Journey.PlotJourneyCentralBodyOrbits" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Journey.Journey.PlotPhaseBoundariesOnDataPlot">
+<span class="sig-name descname"><span class="pre">PlotPhaseBoundariesOnDataPlot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">DataAxes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">PlotOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">firstpass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ybounds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Journey.html#Journey.PlotPhaseBoundariesOnDataPlot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Journey.Journey.PlotPhaseBoundariesOnDataPlot" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Journey.Journey.TU">
+<span class="sig-name descname"><span class="pre">TU</span></span><a class="headerlink" href="#Journey.Journey.TU" title="Permalink to this definition">¶</a></dt>
+<dd><p>Time unit for this journey, used for scaling</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Journey.Journey.UpdateLabelPosition">
+<span class="sig-name descname"><span class="pre">UpdateLabelPosition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Figure</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Axes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Journey.html#Journey.UpdateLabelPosition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Journey.Journey.UpdateLabelPosition" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Journey.Journey.WriteDateReport">
+<span class="sig-name descname"><span class="pre">WriteDateReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">PlotOptions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reportfile</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Journey.html#Journey.WriteDateReport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Journey.Journey.WriteDateReport" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Journey.Journey.boundary_states">
+<span class="sig-name descname"><span class="pre">boundary_states</span></span><a class="headerlink" href="#Journey.Journey.boundary_states" title="Permalink to this definition">¶</a></dt>
+<dd><p>Boundary states for this journey (a list)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Journey.Journey.central_body">
+<span class="sig-name descname"><span class="pre">central_body</span></span><a class="headerlink" href="#Journey.Journey.central_body" title="Permalink to this definition">¶</a></dt>
+<dd><p>Journey central body (a string)</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Journey.Journey.central_body_radius">
+<span class="sig-name descname"><span class="pre">central_body_radius</span></span><a class="headerlink" href="#Journey.Journey.central_body_radius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Radius of central body, km</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Journey.Journey.getMGAPhaseUnpoweredFlyby">
+<span class="sig-name descname"><span class="pre">getMGAPhaseUnpoweredFlyby</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Journey.html#Journey.getMGAPhaseUnpoweredFlyby"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Journey.Journey.getMGAPhaseUnpoweredFlyby" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method returns missionevent object for an unpowered flyby in an MGA phase.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>Integer</em><em>, </em><em>optional</em>) – The index of the unpowered flyby to return. The default is 0.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Journey.Journey.getManeuver">
+<span class="sig-name descname"><span class="pre">getManeuver</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phaseIndex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maneuverIndex</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Journey.html#Journey.getManeuver"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Journey.Journey.getManeuver" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="Journey.Journey.getPeriapseDistance">
+<span class="sig-name descname"><span class="pre">getPeriapseDistance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/Journey.html#Journey.getPeriapseDistance"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#Journey.Journey.getPeriapseDistance" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Journey.Journey.journey_name">
+<span class="sig-name descname"><span class="pre">journey_name</span></span><a class="headerlink" href="#Journey.Journey.journey_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Journey name</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Journey.Journey.journey_number">
+<span class="sig-name descname"><span class="pre">journey_number</span></span><a class="headerlink" href="#Journey.Journey.journey_number" title="Permalink to this definition">¶</a></dt>
+<dd><p>Journey number, 0-indexed</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Journey.Journey.missionevents">
+<span class="sig-name descname"><span class="pre">missionevents</span></span><a class="headerlink" href="#Journey.Journey.missionevents" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of missionevents for this Journey</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Journey.Journey.mu">
+<span class="sig-name descname"><span class="pre">mu</span></span><a class="headerlink" href="#Journey.Journey.mu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gravitational parameter of central body, km^3/s2</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="Journey.Journey.parent">
+<span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#Journey.Journey.parent" title="Permalink to this definition">¶</a></dt>
+<dd><p>The Mission of which this Journey is a member.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">PyEMTG documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">PyEMTG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">PyEMTG documentation</a><ul>
+  <li><a href="modules.html">PyEMTG</a><ul>
+      <li>Previous: <a href="GlobalOptionsPanel.html" title="previous chapter">GlobalOptionsPanel module</a></li>
+      <li>Next: <a href="JourneyOptions.html" title="next chapter">JourneyOptions module</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

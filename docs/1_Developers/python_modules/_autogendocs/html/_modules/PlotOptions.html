@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PlotOptions &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for PlotOptions</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="PlotOptions"><a class="viewcode-back" href="../PyEMTG/PlotOptions.html#PlotOptions.PlotOptions">[docs]</a><span></span><span class="k">class</span> <span class="nc">PlotOptions</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">throttletablefile</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">default_universe_path</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">de_file</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="n">leapseconds_file</span><span class="o">=</span><span class="s1">&#39;none&#39;</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ShowPlotAxes</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ShowBoundaryOrbits</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ShowFreePointBoundaryOrbits</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ShowCentralBodyOrbits</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ShowMissionEvents</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ShowPropagatedTrajectory</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ShowThrustVectors</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LabelEvents</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ShowTextDescriptions</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">NumberEventLabels</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DisplayEventSpecs</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DisplayEventDates</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DisplayEventMass</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DisplayArrivalPhaseAngle</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotR</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotV</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotThrust</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotIsp</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotMdot</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotEfficiency</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotThrottle</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotPower</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotGamma</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotDelta</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotVelocityThrustAngle</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotArray_Thrust_Angle</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotMass</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotNumberOfEngines</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotActivePower</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotWasteHeat</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotCriticalEvents</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotEarthDistance</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotSpacecraftViewingAngle</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotSunSpacecraftEarthAngle</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotThrottleLevel</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotSunBoresightAngle</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throttlesetmode</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">throttletablefile</span> <span class="o">=</span> <span class="n">throttletablefile</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">FontSize</span> <span class="o">=</span> <span class="mi">10</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotCB_thrust_angle</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">IncludeStateVectorInReport</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">PlotCentralBody</span> <span class="o">=</span> <span class="s1">&#39;Journey central body&#39;</span>        
+        <span class="bp">self</span><span class="o">.</span><span class="n">SPICEpath</span> <span class="o">=</span> <span class="n">default_universe_path</span> <span class="o">+</span> <span class="s1">&#39;/ephemeris_files/&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">DEfile</span> <span class="o">=</span> <span class="n">default_universe_path</span> <span class="o">+</span> <span class="s1">&#39;/ephemeris_files/&#39;</span> <span class="o">+</span> <span class="n">de_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">LeapSecondsFile</span> <span class="o">=</span> <span class="n">default_universe_path</span> <span class="o">+</span> <span class="s1">&#39;/ephemeris_files/&#39;</span> <span class="o">+</span> <span class="n">leapseconds_file</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">AutoTableDeltavColumn</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AutoTableAltitudeColumn</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">AutoTableTCMcolumn</span> <span class="o">=</span> <span class="kc">False</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">EventCounter</span> <span class="o">=</span> <span class="mi">1</span>
+
+<div class="viewcode-block" id="PlotOptions.update_mission_panel"><a class="viewcode-back" href="../PyEMTG/PlotOptions.html#PlotOptions.PlotOptions.update_mission_panel">[docs]</a>    <span class="k">def</span> <span class="nf">update_mission_panel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">missionpanel</span><span class="p">):</span>
+        <span class="c1">#trajectory plot options</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkShowPlotAxes</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ShowPlotAxes</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkShowBoundaryOrbits</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ShowBoundaryOrbits</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkShowMissionEvents</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ShowMissionEvents</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkShowPropagatedTrajectory</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ShowPropagatedTrajectory</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkShowThrustVectors</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ShowThrustVectors</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkShowEventLabels</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">LabelEvents</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkShowTextDescriptions</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ShowTextDescriptions</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkNumberEventLabels</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">NumberEventLabels</span><span class="p">)</span>          
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkDisplayEventDates</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DisplayEventDates</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkDisplayEventSpecs</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DisplayEventSpecs</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkDisplayEventMass</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DisplayEventMass</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkDisplayArrivalPhaseAngle</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">DisplayArrivalPhaseAngle</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkAutoTableTCMcolumn</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">AutoTableTCMcolumn</span><span class="p">)</span>
+
+        <span class="c1">#data plot options</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotR</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotR</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotV</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotV</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotThrust</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotThrust</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotIsp</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotIsp</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotMdot</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotMdot</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotEfficiency</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotEfficiency</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotThrottle</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotThrottle</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotPower</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotPower</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotActivePower</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotActivePower</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotNumberOfEngines</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotNumberOfEngines</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotGamma</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotGamma</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotDelta</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotDelta</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotVelocityThrustAngle</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotVelocityThrustAngle</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotArray_Thrust_Angle</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotArray_Thrust_Angle</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotMass</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotMass</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotNumberOfEngines</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotNumberOfEngines</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotActivePower</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotActivePower</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotWasteHeat</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotWasteHeat</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotCriticalEvents</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotCriticalEvents</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotEarthDistance</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotEarthDistance</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotSunSpacecraftEarthAngle</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotSunSpacecraftEarthAngle</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotSpacecraftViewingAngle</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotSpacecraftViewingAngle</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkPlotThrottleLevel</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">PlotThrottleLevel</span><span class="p">)</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">chkIncludeStateVectorInReport</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">IncludeStateVectorInReport</span><span class="p">)</span>
+
+        <span class="c1">#throttle matching options</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">cmbThrottleSetChoices</span><span class="o">.</span><span class="n">SetSelection</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">throttlesetmode</span><span class="p">)</span>
+
+        <span class="c1">#format options</span>
+        <span class="n">missionpanel</span><span class="o">.</span><span class="n">spnctrlFontSizeControl</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FontSize</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../PEATSA/index.html">PEATSA documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

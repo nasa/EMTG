@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>PEATSAmenu module &#8212; EMTG python  documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="PEATSAoven module" href="PEATSAoven.html" />
+    <link rel="prev" title="PEATSAdelivery module" href="PEATSAdelivery.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <section id="module-PEATSAmenu">
+<span id="peatsamenu-module"></span><h1>PEATSAmenu module<a class="headerlink" href="#module-PEATSAmenu" title="Permalink to this heading">¶</a></h1>
+<section id="peatsamenu-py">
+<h2>PEATSAmenu.py<a class="headerlink" href="#peatsamenu-py" title="Permalink to this heading">¶</a></h2>
+<p>File holds the PEATSAmenu class AND the PEATSAinstagram class.</p>
+<p>PEATSAmenu holds the options for the PEATSArun.</p>
+<p>PEATSAinstagram holds plotting options.</p>
+</section>
+<dl class="py class">
+<dt class="sig sig-object py" id="PEATSAmenu.PEATSAinstagram">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PEATSAmenu.</span></span><span class="sig-name descname"><span class="pre">PEATSAinstagram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PEATSAmenu.html#PEATSAinstagram"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PEATSAmenu.PEATSAinstagram" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Holds plotting options</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>options_file</strong> (<em>String</em><em>, </em><em>optional</em>) – If provided, plotting options are loaded from the provided file. The default is None.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="PEATSAmenu.PEATSAinstagram.load_options_from_file">
+<span class="sig-name descname"><span class="pre">load_options_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options_file</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PEATSAmenu.html#PEATSAinstagram.load_options_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PEATSAmenu.PEATSAinstagram.load_options_from_file" title="Permalink to this definition">¶</a></dt>
+<dd><p>Description.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>options_file</strong> (<em>String</em>) – DESCRIPTION.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>Exception</strong> – DESCRIPTION.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PEATSAmenu.PEATSAinstagram.write_options">
+<span class="sig-name descname"><span class="pre">write_options</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PEATSAmenu.html#PEATSAinstagram.write_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PEATSAmenu.PEATSAinstagram.write_options" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes plotting options saved in object’s attributes to a file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>filename</strong> (<em>String</em>) – Full path and file name to which plotting options are to be written.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="PEATSAmenu.PEATSAmenu">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">PEATSAmenu.</span></span><span class="sig-name descname"><span class="pre">PEATSAmenu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PEATSAmenu.html#PEATSAmenu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PEATSAmenu.PEATSAmenu" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="PEATSAmenu.PEATSAmenu.conditionally_write_to_file">
+<span class="sig-name descname"><span class="pre">conditionally_write_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PEATSAmenu.html#PEATSAmenu.conditionally_write_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PEATSAmenu.PEATSAmenu.conditionally_write_to_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PEATSAmenu.PEATSAmenu.get_needed_options">
+<span class="sig-name descname"><span class="pre">get_needed_options</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PEATSAmenu.html#PEATSAmenu.get_needed_options"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PEATSAmenu.PEATSAmenu.get_needed_options" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PEATSAmenu.PEATSAmenu.init_var">
+<span class="sig-name descname"><span class="pre">init_var</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">var_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requirements_string</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">midbake</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description_string</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PEATSAmenu.html#PEATSAmenu.init_var"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PEATSAmenu.PEATSAmenu.init_var" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PEATSAmenu.PEATSAmenu.load_options_from_file">
+<span class="sig-name descname"><span class="pre">load_options_from_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">options_file</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">if_mid_bake</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PEATSAmenu.html#PEATSAmenu.load_options_from_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PEATSAmenu.PEATSAmenu.load_options_from_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="PEATSAmenu.PEATSAmenu.write_to_file">
+<span class="sig-name descname"><span class="pre">write_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filename</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">requirement_check</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mid_bake_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/PEATSAmenu.html#PEATSAmenu.write_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#PEATSAmenu.PEATSAmenu.write_to_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">EMTG python</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../PyEMTG/index.html">PyEMTG documentation</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">PEATSA documentation</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="modules.html">PEATSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../OptionsOverhaul/index.html">OptionsOverhaul documentation</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">PEATSA documentation</a><ul>
+  <li><a href="modules.html">PEATSA</a><ul>
+      <li>Previous: <a href="PEATSAdelivery.html" title="previous chapter">PEATSAdelivery module</a></li>
+      <li>Next: <a href="PEATSAoven.html" title="next chapter">PEATSAoven module</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2024, Jacob Englander, Donald Ellison, Jeremy Knittel, Noble Hatten.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 5.3.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.13</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
